@@ -1,3 +1,5 @@
+/*
+
 //
 // Created by puscas on 14-10-2016.
 //
@@ -12,3 +14,5 @@ class DrawView {
 
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H
+
+ */
