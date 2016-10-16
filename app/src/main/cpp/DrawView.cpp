@@ -2,10 +2,11 @@
 // Created by puscas on 14-10-2016.
 //
 
-//#include "DrawView.h"
+#include "DrawView.h"
 
 #include <jni.h>
 #include <android/bitmap.h>
+#include "MobileRT/myPoint.h"
 
 /**
  * Draws something into the given bitmap
@@ -36,6 +37,15 @@ extern "C"
     auto start = width*height*4/2;
 
 
+    /*if(sceneComplete_)
+    {
+
+    }
+    else
+    {
+
+    }*/
+
     for(auto i = start; i < size; i+=4)
     {
         rgb[i] = 255;
@@ -46,4 +56,41 @@ extern "C"
 
     // Unlock the dst's pixels
     AndroidBitmap_unlockPixels(env, dstBitmap);
+}
+
+
+DrawView::DrawView() : sceneComplete_(false)
+{
+
+   /* Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader) {
+        float vfov;
+        RT_H = RT_W = renderRes;
+        LowX = (pcanvasW-RT_W) >> 1;
+        LowY = (pcanvasH-RT_H) >> 1;
+
+        // create and load the Scene, parameterize the camera
+        switch (whichScene) {
+            case 0 : // cornell
+                mScene = new SceneCornell();
+                fov = 45.f;
+                From=new myPoint(0.f, 0.f, -3.4f);
+                break;
+            case 1 : // spheres
+                mScene = new SceneSpheres();
+                fov=60.f;
+                From=new myPoint(0.f, .5f, 1.f);
+                break;
+        }
+
+        // create the ray tracer
+        mRTracer = new RayTrace(mScene, whichShader);
+
+        // create the camera
+        vfov = fov * (((float)RT_H) / ((float)RT_W));
+        mCamera = new RTCamera (From, fov, vfov);
+
+        mToneMapper = new ToneMapper();
+
+    }*/
+
 }
