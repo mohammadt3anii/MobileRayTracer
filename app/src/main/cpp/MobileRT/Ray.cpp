@@ -20,6 +20,7 @@ Ray::Ray (myPoint* porig, myVect* pdir) {
     depth = 0;
     dir->normalize();
 }
+
 Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T) {
     orig = porig;
     dir = pdir;
@@ -27,6 +28,7 @@ Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T) {
     depth = 0;
     dir->normalize();
 }
+
 Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T, int d) {
     orig = porig;
     dir = pdir;

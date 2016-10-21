@@ -6,7 +6,8 @@
 
 #include <jni.h>
 #include <android/bitmap.h>
-#include "MobileRT/myPoint.h"
+#include <android/log.h>
+#include <unistd.h>
 
 /**
  * Draws something into the given bitmap
@@ -17,80 +18,51 @@
  * @param  height      The bitmap height
  * @param  elapsedTime The number of milliseconds since the app was started
  */
+
+unsigned char* canvas;
+int mCanvasWidth =  1;
+int mCanvasHeight = 1;
+int whichScene = 0;
+int whichShader = 0;
+int mRenderRes = 500;
+long size;
+long start;
+int x = 0;
+Renderer* r = new Renderer(mCanvasWidth, mCanvasHeight, mRenderRes, whichScene, whichShader);
+
 extern "C"
-/*JNIEXPORT*/ void /*JNICALL*/ Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
+void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         JNIEnv* env,
         jobject /*thiz*/,
         jobject dstBitmap,
         jint width,
         jint height,
-        jlong /*elapsedTime*/)
-{
+        jlong /*elapsedTime*/) {
+
     // Grab the dst bitmap info and pixels
     AndroidBitmapInfo dstInfo;
     void* dstPixels;
-    AndroidBitmap_getInfo(env, dstBitmap, &dstInfo);
+    size = width*height*4;
+    start = width*height*4/2;
+
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
-
-    unsigned char * rgb = static_cast<unsigned char*>(dstPixels);
-    auto size = width*height*4;
-    auto start = width*height*4/2;
-
-
-    /*if(sceneComplete_)
-    {
-
+    AndroidBitmap_getInfo(env, dstBitmap, &dstInfo);
+    canvas = static_cast<unsigned char*>(dstPixels);
+    for(auto i = start; i < size; i+=4) {
+        canvas[i] = 255;
+        canvas[i+1] = 0;
+        canvas[i+2] = 0;
+        canvas[i+3] = 255;
     }
-    else
-    {
-
-    }*/
-
-    for(auto i = start; i < size; i+=4)
-    {
-        rgb[i] = 255;
-        rgb[i+1] = 255;
-        rgb[i+2] = 255;
-        rgb[i+3] = 255;
+    int RT_W = width;
+    int RT_H = height;
+    int horizontal_blocks = 5;
+    int vertical_blocks = 5;
+    for(int y = 0; y<RT_H; y+=RT_H/vertical_blocks) {
+        for (x = 0; x < RT_W; x += RT_W / horizontal_blocks) {
+            r->render(canvas, RT_W, RT_H, x, y, RT_W / horizontal_blocks, RT_H / vertical_blocks);
+        }
     }
-
     // Unlock the dst's pixels
     AndroidBitmap_unlockPixels(env, dstBitmap);
-}
-
-
-DrawView::DrawView() : sceneComplete_(false)
-{
-
-   /* Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader) {
-        float vfov;
-        RT_H = RT_W = renderRes;
-        LowX = (pcanvasW-RT_W) >> 1;
-        LowY = (pcanvasH-RT_H) >> 1;
-
-        // create and load the Scene, parameterize the camera
-        switch (whichScene) {
-            case 0 : // cornell
-                mScene = new SceneCornell();
-                fov = 45.f;
-                From=new myPoint(0.f, 0.f, -3.4f);
-                break;
-            case 1 : // spheres
-                mScene = new SceneSpheres();
-                fov=60.f;
-                From=new myPoint(0.f, .5f, 1.f);
-                break;
-        }
-
-        // create the ray tracer
-        mRTracer = new RayTrace(mScene, whichShader);
-
-        // create the camera
-        vfov = fov * (((float)RT_H) / ((float)RT_W));
-        mCamera = new RTCamera (From, fov, vfov);
-
-        mToneMapper = new ToneMapper();
-
-    }*/
-
 }

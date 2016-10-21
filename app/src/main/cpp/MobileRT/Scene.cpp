@@ -7,20 +7,18 @@
 
 using namespace MobileRT;
 
-Scene::Scene ()
-{
+Scene::Scene () {
+
 }
 
-Intersection* Scene::trace (const Ray& r)
-{
+Intersection* Scene::trace (const Ray& r) {
     Intersection* isect = new Intersection();
     Intersection* f_isect = new Intersection();
     float minT = 1E10f;
     int i;
     int  n = primitives.size();
 
-    for (i=0 ; i < n ; i++)
-    {
+    for (i=0 ; i < n ; i++) {
         isect = primitives[i]->Intersect(r);
         if (isect->intersected) {
             if (isect->t <= minT) {
@@ -29,12 +27,10 @@ Intersection* Scene::trace (const Ray& r)
             }
         }
     }
-
     return f_isect;
 }
 
-Intersection* Scene::shadowTrace (const Ray& r)
-{
+Intersection* Scene::shadowTrace (const Ray& r) {
     Intersection* isect;
     int i;
     int  n = primitives.size();

@@ -11,6 +11,7 @@
 namespace MobileRT {
     class myShape {
     private:
+
     public:
         myShape ();
 

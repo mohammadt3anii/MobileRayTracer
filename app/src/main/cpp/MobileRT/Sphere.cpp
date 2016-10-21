@@ -9,14 +9,12 @@
 
 using namespace MobileRT;
 
-void Sphere::square_params ()
-{
+void Sphere::square_params () {
     sq_radius = radius * radius;
     sq_center = new myPoint(center->x * center->x, center->y * center->y, center->z * center->z);
 }
 
-Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C)
-{
+Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C) {
     float t0, t1;
     float discrim = B * B - 4.f * A * C;
     if (discrim <= 0.) return new Quadratic_Sol();
@@ -35,37 +33,32 @@ Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C)
     return new Quadratic_Sol(t0, t1);
 }
 
-Sphere::Sphere ()
-{  // unit sphere
+Sphere::Sphere () {  // unit sphere
     center = new myPoint(); // (0,0,0)
     radius = 1.f;
     square_params();
 }
 
-Sphere::Sphere (float r)
-{
+Sphere::Sphere (float r) {
     center = new myPoint();
     radius = r;
     square_params();
 }
 
-Sphere::Sphere (myPoint* c)
-{
+Sphere::Sphere (myPoint* c) {
 center = c;
 radius = 1.f;
 square_params();
 }
 
-Sphere::Sphere (myPoint* c, float r)
-{
+Sphere::Sphere (myPoint* c, float r) {
 center = c;
 radius = r;
 square_params();
 }
 
 
-Intersection* Sphere::Intersect (const Ray& r)
-{
+Intersection* Sphere::Intersect (const Ray& r) {
     // pull the ray origin a small epsilon along the ray direction
     myPoint* org = new myPoint(*r.orig);
     org->x += r.dir->x * 1e-5f;
@@ -116,5 +109,3 @@ Intersection* Sphere::Intersect (const Ray& r)
 
     return isect;
 }
-
-

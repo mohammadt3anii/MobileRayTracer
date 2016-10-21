@@ -7,29 +7,25 @@
 
 using namespace MobileRT;
 
-myVect::myVect () : x(0.f), y(0.f), z(0.f)
-{
+myVect::myVect () : x(0.f), y(0.f), z(0.f) {
+
 }
 
-myVect::myVect (const float px, const float py, const float pz)
-{
+myVect::myVect (const float px, const float py, const float pz) {
     x=px;
     y=py;
     z=pz;
 }
 
-myVect::myVect (const myVect& v)
-{
+myVect::myVect (const myVect& v) {
     x = v.x;
     y = v.y;
     z = v.z;
 }
 
- float myVect::normalize ()
- {
+ float myVect::normalize () {
     float length = myVect::length();
-    if (length!=0.f)
-    {
+    if (length!=0.f) {
         float inv_length = 1.f / length;
         x *= inv_length;
         y *= inv_length;
@@ -39,46 +35,38 @@ myVect::myVect (const myVect& v)
 }
 
 // symetric vector
-myVect* myVect::symmetric ()
-{
+myVect* myVect::symmetric () {
     return new myVect(-x, -y, -z);
 }
 
 // dot product
-float myVect::dot (const myVect& v)
-{
+float myVect::dot (const myVect& v) {
     return (x*v.x + y*v.y + z*v.z);
 }
 
-void myVect::mult (const float f)
-{
+void myVect::mult (const float f) {
     x *= f;
     y *= f;
     z *= f;
 }
 
- void myVect::sub (const myVect& v)
- {
+ void myVect::sub (const myVect& v) {
     x -= v.x;
     y -= v.y;
     z -= v.z;
 }
 
-float myVect::length ()
-{
-
+float myVect::length () {
     return (float) sqrt(myVect::dot(*this));
 }
 
-void myVect::add (const myVect& v)
-{
+void myVect::add (const myVect& v) {
     x += v.x;
     y += v.y;
     z += v.z;
 }
 
 // dot product
-float myVect::dot (const myPoint& v)
-{
+float myVect::dot (const myPoint& v) {
     return (x*v.x + y*v.y + z*v.z);
 }

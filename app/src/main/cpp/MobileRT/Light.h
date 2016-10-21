@@ -8,10 +8,8 @@
 #include "RGB.h"
 #include "myPoint.h"
 
-namespace MobileRT
-{
-    class Light
-    {
+namespace MobileRT {
+    class Light {
     private:
 
     public:
@@ -22,6 +20,5 @@ namespace MobileRT
     };
 
 }
-
 
 #endif //MOBILERAYTRACER_LIGHT_H

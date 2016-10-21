@@ -26,5 +26,4 @@ Ray* RTCamera::getRay (float u, float v) {
     dir = new myVect((float)atan(u_alpha), (float)atan(v_alpha), 1.f);
 
     return new Ray (orig, dir);  // note that depth will be 0 : primary ray
-
 }

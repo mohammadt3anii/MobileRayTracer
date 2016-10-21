@@ -7,10 +7,12 @@
 
 #include "MobileRT/All.h"
 
-class DrawView
-{
+using namespace MobileRT;
+
+class DrawView {
 private:
     bool sceneComplete_;
+
 public:
     DrawView ();
 };

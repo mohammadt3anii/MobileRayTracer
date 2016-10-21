@@ -13,11 +13,11 @@ RayTrace::RayTrace (Scene pScene, int whichShader) {
     switch (whichShader) {
         case 0:
              mShader = (Shader*) new ShaderNoShadows (this, mScene);
-        break;
+            break;
 
         case 1:
             mShader = (Shader*) new ShaderWhitted (this, mScene);
-        break;
+            break;
 
         default:
             break;

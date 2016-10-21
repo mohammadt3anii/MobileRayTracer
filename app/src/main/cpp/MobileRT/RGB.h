@@ -5,10 +5,8 @@
 #ifndef MOBILERAYTRACER_RGB_H
 #define MOBILERAYTRACER_RGB_H
 
-namespace MobileRT
-{
-    class RGB
-    {
+namespace MobileRT {
+    class RGB {
     private:
 
     public:

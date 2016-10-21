@@ -7,13 +7,12 @@
 
 #include "myShape.h"
 
-namespace MobileRT
-{
-    class Sphere : public myShape
-    {
+namespace MobileRT {
+    class Sphere : public myShape {
     private:
-        class Quadratic_Sol
-        {
+        class Quadratic_Sol {
+        private:
+
         public:
             bool has_sol;
             float t0, t1;
@@ -24,7 +23,6 @@ namespace MobileRT
         myPoint* center;
         myPoint* sq_center;
         float radius, sq_radius;
-
         Quadratic_Sol* Quadratic (float A, float B, float C);
 
     public:
@@ -36,7 +34,5 @@ namespace MobileRT
         Intersection* Intersect (const Ray& r);
     };
 }
-
-
 
 #endif //MOBILERAYTRACER_SPHERE_H

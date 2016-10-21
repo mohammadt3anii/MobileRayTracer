@@ -6,8 +6,7 @@
 
 using namespace MobileRT;
 
-myShape::myShape ()
-{
+myShape::myShape () {
 
 }
 

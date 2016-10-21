@@ -25,21 +25,3 @@ namespace MobileRT {
 }
 
 #endif //MOBILERAYTRACER_SHADER_H
-
-/*
-package com.example.lps.mobilert;
-
-public class Shader {
-protected Scene mScene;
-protected RayTrace mRT;
-
-    Shader (RayTrace pRT, Scene pScene) {
-        mScene = pScene;
-        mRT = pRT;
-    }
-
-    RGB Shade (Ray mR, Intersection isect) {
-        return new RGB();
-    }
-}
-*/

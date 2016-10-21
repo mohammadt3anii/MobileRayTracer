@@ -29,7 +29,6 @@ SceneCornell::SceneCornell () {
     // left blue wall
     primitives.push_back(new Primitive(new Plane(new myPoint(1.f, 0.f, 0.f), new myVect(-1.f, 0.f, 0.f)), blueMat));
 
-
     myMaterial* MirrorMat = new myMaterial(new RGB(), new RGB(.8f, .8f, .8f));
     // create one sphere
     primitives.push_back(new Primitive(new Sphere(new myPoint(.45f, -.65f, .4f), .35f), MirrorMat));

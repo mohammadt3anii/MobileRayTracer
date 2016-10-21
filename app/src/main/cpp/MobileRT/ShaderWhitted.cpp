@@ -7,4 +7,5 @@
 using namespace MobileRT;
 
 ShaderWhitted::ShaderWhitted (RayTrace* mRT, Scene mScene) : Shader(mRT, mScene) {
+
 }

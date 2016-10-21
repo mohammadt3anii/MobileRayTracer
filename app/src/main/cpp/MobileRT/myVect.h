@@ -10,14 +10,14 @@
 namespace MobileRT {
     class myVect {
     private:
+
     public:
         float x,y,z;
 
         myVect ();
         myVect (const float px, const float py, const float pz);
         myVect (const myVect& v);
-
-    float normalize ();
+        float normalize ();
 
         // symetric vector
      myVect* symmetric ();
@@ -32,8 +32,7 @@ namespace MobileRT {
 
      //dot product
      float dot (const myPoint& v);
-};
+    };
 }
-
 
 #endif //MOBILERAYTRACER_MYVEC_H
