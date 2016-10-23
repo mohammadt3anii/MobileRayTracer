@@ -4,6 +4,7 @@
 
 #include "Scene.h"
 #include "Intersection.h"
+#include "Constants.h"
 
 using namespace MobileRT;
 
@@ -14,7 +15,7 @@ Scene::Scene () {
 Intersection* Scene::trace (const Ray& r) {
     Intersection* isect = new Intersection();
     Intersection* f_isect = new Intersection();
-    float minT = 1E10f;
+    float minT = MAX_T;
     int i;
     int  n = primitives.size();
 

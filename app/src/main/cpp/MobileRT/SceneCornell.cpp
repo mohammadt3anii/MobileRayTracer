@@ -10,7 +10,7 @@ using namespace MobileRT;
 
 SceneCornell::SceneCornell () {
     // create one light source
-    lights.push_back(new Light (new RGB(1.f, 1.f, 1.f), new myPoint(0.f, 0.99f, 0.f)));
+    lights.push_back(new Light (RGB(1.f, 1.f, 1.f), myPoint(0.f, 0.99f, 0.f)));
 
     // white Material
     myMaterial* lightGrayMat = new myMaterial(new RGB(.9f, .9f, .9f));

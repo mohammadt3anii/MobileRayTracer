@@ -95,17 +95,17 @@ Intersection* Sphere::Intersect (const Ray& r) {
 
     isect->t = t;
 
-    isect->p->x = org->x + t * r.dir->x;
-    isect->p->y = org->y + t * r.dir->y;
-    isect->p->z = org->z + t * r.dir->z;
+    isect->p.x = org->x + t * r.dir->x;
+    isect->p.y = org->y + t * r.dir->y;
+    isect->p.z = org->z + t * r.dir->z;
 
-    isect->N->x = isect->p->x - center->x;
-    isect->N->y = isect->p->y - center->y;
-    isect->N->z = isect->p->z - center->z;
+    isect->N.x = isect->p.x - center->x;
+    isect->N.y = isect->p.y - center->y;
+    isect->N.z = isect->p.z - center->z;
 
     // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
     //if (C2O.length() < radius) isect->N.mult(-1.f);
-    isect->N->normalize();
+    isect->N.normalize();
 
     return isect;
 }

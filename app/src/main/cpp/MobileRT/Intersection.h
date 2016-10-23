@@ -15,10 +15,10 @@ namespace MobileRT {
 
     public:
         bool intersected; // was there an intersection?
-        myPoint* p;   // intersection point
-        myVect* N;    // intersection normal
+        myPoint p;   // intersection point
+        myVect N;    // intersection normal
         float t;     // ray length parameter
-        myMaterial* m;  // material of the intersected primitive
+        const myMaterial* m;  // material of the intersected primitive
 
         Intersection ();
     };

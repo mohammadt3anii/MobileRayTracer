@@ -10,7 +10,7 @@ using namespace MobileRT;
 
 SceneSpheres::SceneSpheres () {
     // create one light source
-    lights.push_back(new Light (new RGB(1.f, 1.f, 1.f), new myPoint(0.f, 15.f, 4.f)));
+    lights.push_back(new Light (RGB(1.f, 1.f, 1.f), myPoint(0.f, 15.f, 4.f)));
 
     // create diffuse Materials
     myMaterial* sandMat = new myMaterial(new RGB(.914f, .723f, .531f));

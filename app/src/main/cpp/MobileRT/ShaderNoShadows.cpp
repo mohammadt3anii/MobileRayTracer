@@ -11,7 +11,7 @@ ShaderNoShadows::ShaderNoShadows (RayTrace* mRT, Scene mScene) : Shader(mRT, mSc
 
 }
 
-RGB* ShaderNoShadows::Shade (Ray r, Intersection isect) {
+RGB* ShaderNoShadows::Shade (const Ray& r, const Intersection& isect) {
     RGB* ambient = new RGB (0.1f, 0.1f, 0.1f);
     RGB* rad = new RGB();
 
@@ -24,15 +24,15 @@ RGB* ShaderNoShadows::Shade (Ray r, Intersection isect) {
         for (l=0 ; l < Nl ; l++) {
             Light* ml = mScene.lights[l];
 
-            L->x = ml->pos->x - isect.p->x;
-            L->y = ml->pos->y - isect.p->y;
-            L->z = ml->pos->z - isect.p->z;
+            L->x = ml->pos.x - isect.p.x;
+            L->y = ml->pos.y - isect.p.y;
+            L->z = ml->pos.z - isect.p.z;
             L->normalize();
-            float cos_N_L = L->dot(*isect.N);
+            float cos_N_L = L->dot(isect.N);
             if (cos_N_L > 0.f) {
-                rad->R += isect.m->Kd->R * cos_N_L * ml->rad->R;
-                rad->G += isect.m->Kd->G * cos_N_L * ml->rad->G;
-                rad->B += isect.m->Kd->B * cos_N_L * ml->rad->B;
+                rad->R += isect.m->Kd->R * cos_N_L * ml->rad.R;
+                rad->G += isect.m->Kd->G * cos_N_L * ml->rad.G;
+                rad->B += isect.m->Kd->B * cos_N_L * ml->rad.B;
             }
         }
         // ambient light

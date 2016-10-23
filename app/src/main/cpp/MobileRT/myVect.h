@@ -20,18 +20,18 @@ namespace MobileRT {
         float normalize ();
 
         // symetric vector
-     myVect* symmetric ();
+        myVect symmetric () const;
 
         // dot product
-     float dot (const myVect& v);
-     void mult (const float f);
-     void sub (const myVect& v);
-     float length ();
+        float dot (const myVect& v);
+        void mult (const float f);
+        void sub (const myVect& v);
+        float length ();
 
-     void add (const myVect& v);
+        void add (const myVect& v);
 
-     //dot product
-     float dot (const myPoint& v);
+        //dot product
+        float dot (const myPoint& v);
     };
 }
 

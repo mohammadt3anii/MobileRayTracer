@@ -20,7 +20,7 @@ namespace MobileRT {
 
         public:
             Shader (RayTrace* pRT, Scene pScene);
-            RGB* Shade (Ray mR, Intersection isect);
+        virtual RGB* Shade (const Ray& r, const Intersection& isect);
     };
 }
 

@@ -12,6 +12,6 @@ Shader::Shader (RayTrace* pRT, Scene pScene) {
     mRT = pRT;
 }
 
-RGB* Shader::Shade (Ray mR, Intersection isect) {
+RGB* Shader::Shade (const Ray& mR, const Intersection& isect) {
     return new RGB();
 }

@@ -15,7 +15,7 @@ namespace MobileRT {
         int MAX_DEPTH;
         RGB ambient;
         ShaderWhitted (RayTrace* mRT, Scene mScene);
-        RGB Shade (Ray r, Intersection isect);
+        virtual RGB* Shade (const Ray& r, const Intersection& isect);
     };
 }
 

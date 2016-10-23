@@ -11,14 +11,14 @@ using namespace MobileRT;
     return -N->dot(*P);
 }
 
-Plane::Plane (myPoint* pP, myVect* pN) {
-    P = pP;
-    N = pN;
+Plane::Plane (myPoint* pP, myVect* pN) :
+    P(pP), N(pN)
+{
     N->normalize();
     d = compute_d ();
 }
 
-Intersection* Plane::Intersect (Ray r) {
+Intersection* Plane::Intersect (const Ray& r) {
     myPoint* org = r.orig;
 
     float N_dir = N->dot(*r.dir);
@@ -47,13 +47,13 @@ Intersection* Plane::Intersect (Ray r) {
 
     isect->t = t;
 
-    isect->p->x = org->x + t * r.dir->x;
-    isect->p->y = org->y + t * r.dir->y;
-    isect->p->z = org->z + t * r.dir->z;
+    isect->p.x = org->x + t * r.dir->x;
+    isect->p.y = org->y + t * r.dir->y;
+    isect->p.z = org->z + t * r.dir->z;
 
-    isect->N->x = N->x;
-    isect->N->y = N->y;
-    isect->N->z = N->z;
+    isect->N.x = N->x;
+    isect->N.y = N->y;
+    isect->N.z = N->z;
 
     return isect;
 }

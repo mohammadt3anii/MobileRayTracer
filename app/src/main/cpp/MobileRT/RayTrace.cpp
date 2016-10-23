@@ -12,11 +12,11 @@ RayTrace::RayTrace (Scene pScene, int whichShader) {
     mScene = pScene;
     switch (whichShader) {
         case 0:
-             mShader = (Shader*) new ShaderNoShadows (this, mScene);
+             mShader = dynamic_cast<Shader*>(new ShaderNoShadows (this, mScene));
             break;
 
         case 1:
-            mShader = (Shader*) new ShaderWhitted (this, mScene);
+            mShader = dynamic_cast<Shader*>(new ShaderWhitted (this, mScene));
             break;
 
         default:
@@ -24,7 +24,7 @@ RayTrace::RayTrace (Scene pScene, int whichShader) {
     }
 }
 
-RGB* RayTrace::RayV (Ray r) {
+RGB* RayTrace::RayV (const Ray& r) {
     // compute radiance
     Intersection* isect;
     RGB* background = new RGB(0.1f, 0.1f, 0.9f);

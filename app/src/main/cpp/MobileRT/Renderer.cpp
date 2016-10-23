@@ -41,35 +41,25 @@ Renderer::Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, i
 
 }
 
-void Renderer::render (unsigned char* c, int RT_width, int RT_height, int xmin, int ymin,
-                       int xincrement,int yincrement){
-    //Paint p;
-    float u, v;
-    RGB* rayRGB;
-    float INV_IMG_HEIGHT = 1.f / (float) RT_height;
-    float INV_IMG_WIDTH = 1.f / (float) RT_width;
-
-    for(int y=ymin; y<(ymin+yincrement) && y< RT_height; y++) {
-        for (int x = xmin; x < (xmin+xincrement) && x < RT_width; x++) {
+void Renderer::render (uint32_t* canvas, int width, int height){
+    float INV_IMG_WIDTH = 1.0f / RT_W;
+    float INV_IMG_HEIGHT = 1.0f / RT_H;
+    for(int y=0; y<RT_H; y++) {
+        for (int x = 0; x < RT_W; x++) {
             // generate the ray
-            u = (float) x * INV_IMG_WIDTH;
-            v = (float) y * INV_IMG_HEIGHT;
-            //__android_log_print(ANDROID_LOG_DEBUG, "LOG", "1 (x,y)=(%d,%d)\n", x, y);fflush(stdout);
+            float u = (float) x * INV_IMG_WIDTH;
+            float v = (float) y * INV_IMG_HEIGHT;
             Ray* r = mCamera->getRay (u,v);
-            /*__android_log_print(ANDROID_LOG_DEBUG, "ORIG", "(x,y,z)=(%f,%f,%f) \n", r->orig->x, r->orig->y, r->orig->z);fflush(stdout);
-            __android_log_print(ANDROID_LOG_DEBUG, "DIR", "(x,y,z)=(%f,%f,%f) \n", r->dir->x, r->dir->y, r->dir->z);fflush(stdout);*/
-            //__android_log_print(ANDROID_LOG_DEBUG, "LOG", "2 (x,y)=(%d,%d)\n", x, y);fflush(stdout);
-
-            /*if ((x==150) && (y==150))
-                rayRGB = mRTracer->RayV(*r);
-            else rayRGB = mRTracer->RayV(*r);*/
+            RGB* rayRGB = mRTracer->RayV(*r);
 
             // tonemap and convert to Paint
             //p = mToneMapper.RGB2Color (rayRGB);
 
-            /*c[x + LowX + (y + LowY)*4 + 0] = rayRGB->R;
-            c[x + LowX + (y + LowY)*4 + 1] = rayRGB->G;
-            c[x + LowX + (y + LowY)*4 + 2] = rayRGB->B;*/
+            unsigned char cr = static_cast<uint8_t>(rayRGB->R*255);
+            unsigned char cg = static_cast<uint8_t>(rayRGB->G*255);
+            unsigned char cb = static_cast<uint8_t>(rayRGB->B*255);
+            canvas[x + y*width] = 0xFF000000 | (cb << 16) | (cg << 8) | cr;
+            //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Need to print : %02x %02x %02x %08x\n", cr, cg, cb, canvas[x + y*width]);
         }
     }
 }

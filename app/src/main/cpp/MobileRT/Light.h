@@ -13,10 +13,10 @@ namespace MobileRT {
     private:
 
     public:
-        RGB* rad;
-        myPoint* pos;
+        const RGB rad;
+        const myPoint pos;
 
-        Light (RGB* prad, myPoint* ppos);
+        Light (const RGB& prad, const myPoint& ppos);
     };
 
 }

@@ -11,14 +11,15 @@ namespace MobileRT {
     class Plane : public myShape {
     private:
         float d;    // 0th degree coefiicient of the plane equation
+        float compute_d ();
 
     public:
         myPoint* P;   // point in the plane
         myVect* N;    // normal to the plane
 
-        float compute_d ();
+
         Plane (myPoint* pP, myVect* pN);
-        Intersection* Intersect (Ray r);
+        virtual Intersection* Intersect (const Ray& r);
     };
 }
 

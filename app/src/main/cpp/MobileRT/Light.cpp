@@ -7,6 +7,7 @@
 
 using namespace MobileRT;
 
-Light::Light (RGB* prad, myPoint* ppos) : rad(prad), pos(ppos) {
-
+Light::Light (const RGB& prad, const myPoint& ppos) :
+    rad(prad), pos(ppos)
+{
 }

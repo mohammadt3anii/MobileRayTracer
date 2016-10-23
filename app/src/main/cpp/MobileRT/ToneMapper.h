@@ -16,7 +16,7 @@ namespace MobileRT {
 
     public:
         ToneMapper ();
-        std::array<unsigned char, 1>* RGB2Color (RGB px);
+        std::array<unsigned char, 1>* RGB2Color (const RGB& px);
     };
 }
 

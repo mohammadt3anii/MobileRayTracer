@@ -54,7 +54,7 @@ public class DrawView extends View {
         canvas.drawBitmap(bitmap_, 0, 0, null);
 
         //TODO:: We need to call this when the user whant or in 1 in 1 second
-        invalidate();
+        //invalidate();
     }
 
     private native void drawIntoBitmap(Bitmap image, int width, int height, long elapsedTime);

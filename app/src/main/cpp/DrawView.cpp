@@ -19,15 +19,12 @@
  * @param  elapsedTime The number of milliseconds since the app was started
  */
 
-unsigned char* canvas;
-int mCanvasWidth =  1;
-int mCanvasHeight = 1;
-int whichScene = 0;
+
+int mCanvasWidth =  900;
+int mCanvasHeight = 900;
+int whichScene = 1;
 int whichShader = 0;
-int mRenderRes = 500;
-long size;
-long start;
-int x = 0;
+int mRenderRes = 900;
 Renderer* r = new Renderer(mCanvasWidth, mCanvasHeight, mRenderRes, whichScene, whichShader);
 
 extern "C"
@@ -42,27 +39,22 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     // Grab the dst bitmap info and pixels
     AndroidBitmapInfo dstInfo;
     void* dstPixels;
-    size = width*height*4;
-    start = width*height*4/2;
 
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_getInfo(env, dstBitmap, &dstInfo);
-    canvas = static_cast<unsigned char*>(dstPixels);
-    for(auto i = start; i < size; i+=4) {
-        canvas[i] = 255;
-        canvas[i+1] = 0;
-        canvas[i+2] = 0;
-        canvas[i+3] = 255;
+
+    uint32_t* canvas = static_cast<uint32_t*>(dstPixels);
+
+    //clear background to black
+    for(uint32_t i = 0; i < width*height; i+=1)
+    {
+        //A B G R
+        canvas[i] = 0xFF000000;
     }
-    int RT_W = width;
-    int RT_H = height;
-    int horizontal_blocks = 5;
-    int vertical_blocks = 5;
-    for(int y = 0; y<RT_H; y+=RT_H/vertical_blocks) {
-        for (x = 0; x < RT_W; x += RT_W / horizontal_blocks) {
-            r->render(canvas, RT_W, RT_H, x, y, RT_W / horizontal_blocks, RT_H / vertical_blocks);
-        }
-    }
+
+    // draw scene
+    r->render(canvas, width, height);
+
     // Unlock the dst's pixels
     AndroidBitmap_unlockPixels(env, dstBitmap);
 }

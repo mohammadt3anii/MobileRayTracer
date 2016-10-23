@@ -26,8 +26,7 @@ namespace MobileRT {
 
     public:
         Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader);
-        void render (unsigned char* c, int RT_width, int RT_height, int xmin, int ymin,
-                               int xincrement,int yincrement);
+        void render (uint32_t* canvas, int width, int height);
     };
 }
 

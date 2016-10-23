@@ -11,7 +11,7 @@ ToneMapper::ToneMapper () {
 
 };
 
-std::array<unsigned char, 1>* ToneMapper::RGB2Color (RGB px) {
+std::array<unsigned char, 1>* ToneMapper::RGB2Color (const RGB& px) {
     int r, g, b;
     std::array<unsigned char, 1>* p = new std::array<unsigned char, 1> ();
 

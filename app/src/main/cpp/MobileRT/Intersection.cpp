@@ -3,13 +3,14 @@
 //
 
 #include "Intersection.h"
+#include "Constants.h"
 
 using namespace MobileRT;
 
-Intersection::Intersection () {  // constructor for no intersection
-    intersected = false;
-    t = 1E10f;      // this is the max-T used through out this implementation
-    p = new myPoint();
-    N = new myVect();
-    m = new myMaterial();
+// constructor for no intersection
+Intersection::Intersection () :
+    intersected(false),
+    t(MAX_T),
+    m(nullptr)
+{
 }

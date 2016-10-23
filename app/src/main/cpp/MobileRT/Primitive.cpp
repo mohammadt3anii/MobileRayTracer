@@ -10,9 +10,9 @@ Primitive::Primitive (myShape* ps, myMaterial* pm) {
     shape=ps; material=pm;
 }
 
-Intersection* Primitive::Intersect (Ray r) {
-    Intersection* isect = Primitive::shape->Intersect(r);
-    if (isect->intersected) isect->m = Primitive::material;
+Intersection* Primitive::Intersect (const Ray& r) {
+    Intersection* isect = shape->Intersect(r);
+    if (isect->intersected) isect->m = material;
 
     return isect;
 }

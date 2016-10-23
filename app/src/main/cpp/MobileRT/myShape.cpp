@@ -10,6 +10,6 @@ myShape::myShape () {
 
 }
 
-Intersection* myShape::Intersect (Ray r) {
+Intersection* myShape::Intersect (const Ray& r) {
     return (new Intersection());
 }

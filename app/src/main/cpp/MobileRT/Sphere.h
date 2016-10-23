@@ -31,7 +31,7 @@ namespace MobileRT {
         Sphere (myPoint* c);
         Sphere (myPoint* c, float r);
         void square_params ();
-        Intersection* Intersect (const Ray& r);
+        virtual Intersection* Intersect (const Ray& r);
     };
 }
 
