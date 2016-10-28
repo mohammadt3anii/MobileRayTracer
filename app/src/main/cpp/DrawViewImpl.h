@@ -9,12 +9,12 @@
 
 using namespace MobileRT;
 
-class DrawView {
+class DrawViewImpl {
 private:
     bool sceneComplete_;
 
 public:
-    DrawView ();
+    DrawViewImpl ();
 };
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

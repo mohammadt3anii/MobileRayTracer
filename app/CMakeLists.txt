@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds it for you.
 # Gradle automatically packages shared libraries with your APK.
 
-file(GLOB_RECURSE _MOBILE_RT_SRCS "src/main/cpp/MobileRT/*.cpp")
+file(GLOB_RECURSE MOBILE_RT_SRCS "src/main/cpp/MobileRT/*.cpp")
 
 add_library( # Sets the name of the library.
              DrawView
@@ -20,8 +20,8 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              # Associated headers in the same location as their source
              # file are automatically included.
-             src/main/cpp/DrawView.cpp
-             ${_MOBILE_RT_SRCS})
+             src/main/cpp/DrawViewImpl.cpp
+             ${MOBILE_RT_SRCS})
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because system libraries are included in the search path by

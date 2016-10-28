@@ -2,7 +2,7 @@
 // Created by puscas on 14-10-2016.
 //
 
-#include "DrawView.h"
+#include "DrawViewImpl.h"
 
 #include <jni.h>
 #include <android/bitmap.h>
@@ -19,7 +19,6 @@
  * @param  elapsedTime The number of milliseconds since the app was started
  */
 
-
 int mCanvasWidth =  900;
 int mCanvasHeight = 900;
 int whichScene = 1;
@@ -28,13 +27,13 @@ int mRenderRes = 900;
 Renderer* r = new Renderer(mCanvasWidth, mCanvasHeight, mRenderRes, whichScene, whichShader);
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
+void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(
         JNIEnv* env,
-        jobject /*thiz*/,
+        jobject thiz,
         jobject dstBitmap,
         jint width,
         jint height,
-        jlong /*elapsedTime*/) {
+        jlong elapsedTime) {
 
     // Grab the dst bitmap info and pixels
     AndroidBitmapInfo dstInfo;
