@@ -36,9 +36,6 @@ public class DrawViewImpl
 
         // Present the bitmap on the screen
         canvas.drawBitmap(bitmap_, 0, 0, null);
-
-        //TODO:: need to call this when the user want or in 1 in 1 second
-        //invalidate();
     }
 
 }

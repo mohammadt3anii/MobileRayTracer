@@ -12,11 +12,12 @@
     tools:context="com.example.puscas.mobileraytracer.MainActivity">
 
     <view
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.puscas.mobileraytracer.DrawView"
         android:id="@+id/viewDraw"
         android:elevation="0dp"
         tools:targetApi="lollipop"
+        android:layout_width="match_parent"
         />
+
 </RelativeLayout>
