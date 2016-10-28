@@ -35,7 +35,8 @@ public class DrawViewImpl
         drawIntoBitmap(bitmap_, width_, height_, SystemClock.elapsedRealtime());
 
         // Present the bitmap on the screen
-        canvas.drawBitmap(bitmap_, 0, 0, null);
+        canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
+
     }
 
 }
