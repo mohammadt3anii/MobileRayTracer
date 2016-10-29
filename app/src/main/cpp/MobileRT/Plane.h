@@ -13,13 +13,12 @@ namespace MobileRT {
         float d;    // 0th degree coefiicient of the plane equation
         float compute_d ();
 
+        const Point point_;   // point in the plane
+        const Vect normal_;    // normal to the plane
+
     public:
-        Point* P;   // point in the plane
-        Vect* N;    // normal to the plane
-
-
-        Plane (Point* pP, Vect* pN);
-        virtual Intersection* Intersect (const Ray& r);
+        Plane (const Point& point, const Vect& normal);
+        virtual Intersection* Intersect (const Ray& ray);
     };
 }
 

@@ -19,12 +19,20 @@
  * @param  elapsedTime The number of milliseconds since the app was started
  */
 
-int mCanvasWidth =  900;
-int mCanvasHeight = 900;
-int whichScene = 1;
-int whichShader = 0;
-int mRenderRes = 900;
-Renderer* r = new Renderer(mCanvasWidth, mCanvasHeight, mRenderRes, whichScene, whichShader);
+
+static Renderer* r;
+
+extern "C"
+void Java_com_example_puscas_mobileraytracer_DrawViewImpl_initialize(
+        JNIEnv* env,
+        jobject thiz,
+        jint whichScene,
+        jint whichShader,
+        jint width,
+        jint height)
+{
+    r = new Renderer(width, height, width > height ? height : width, whichScene, whichShader);
+}
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(

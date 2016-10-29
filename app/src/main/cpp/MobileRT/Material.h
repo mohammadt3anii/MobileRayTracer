@@ -13,12 +13,12 @@ namespace MobileRT {
         private:
 
         public:
-            RGB* Kd;   // diffuse reflection
-            RGB* Ks;   // specular reflection
+            const RGB Kd;   // diffuse reflection
+            const RGB Ks;   // specular reflection
 
         Material ();
-        Material (RGB* pKd);
-        Material (RGB* pKd, RGB* pKs);
+        Material (const RGB& pKd);
+        Material (const RGB& pKd, const RGB& pKs);
     };
 }
 #endif //MOBILERAYTRACER_MYMATERIAL_H

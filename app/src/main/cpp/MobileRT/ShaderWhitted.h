@@ -10,9 +10,12 @@
 namespace MobileRT {
     class ShaderWhitted : public Shader {
     private:
+        enum{
+            MAX_DEPTH = 5
+        };
 
     public:
-        int MAX_DEPTH;
+
         RGB ambient;
         ShaderWhitted (RayTrace* mRT, Scene mScene);
         virtual RGB* Shade (const Ray& r, const Intersection& isect);

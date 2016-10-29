@@ -13,10 +13,10 @@ SceneSpheres::SceneSpheres () {
     lights.push_back(new Light (RGB(1.f, 1.f, 1.f), Point(0.f, 15.f, 4.f)));
 
     // create diffuse Materials
-    Material* sandMat = new Material(new RGB(.914f, .723f, .531f));
-    Material* redMat = new Material(new RGB(0.9f, .0f, 0.f));
-    Material* MirrorMat = new Material(new RGB(), new RGB(.8f, .8f, .8f));
-    Material* GreenMat = new Material(new RGB(.0f, .9f, .0f));
+    Material* sandMat = new Material(RGB(.914f, .723f, .531f));
+    Material* redMat = new Material(RGB(0.9f, .0f, 0.f));
+    Material* MirrorMat = new Material(RGB(), RGB(.8f, .8f, .8f));
+    Material* GreenMat = new Material(RGB(.0f, .9f, .0f));
     // create one sphere
     primitives.push_back(new Primitive(new Sphere(new Point(-1.f, 1.f, 6.f)), redMat));
     primitives.push_back(new Primitive(new Sphere(new Point(1.5f, 2.f, 7.f)), MirrorMat));

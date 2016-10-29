@@ -14,6 +14,7 @@ public class DrawViewImpl
     static {
         System.loadLibrary("DrawView");
     }
+    private native void initialize(int scene, int shader, int width, int height);
     private native void drawIntoBitmap(Bitmap image, int width, int height, long elapsedTime);
 
     private int width_ = 0;
@@ -23,6 +24,8 @@ public class DrawViewImpl
     public DrawViewImpl( int width, int height) {
         width_ = width;
         height_ = height;
+
+        initialize( 1, 1, width, height);
     }
 
     public void onDraw(Canvas canvas) {

@@ -17,7 +17,8 @@ RGB::RGB (const RGB& rgb) {
     R = rgb.R; G = rgb.G; B = rgb.B;
 }
 
-bool RGB::isZero () {
+bool RGB::isZero () const
+{
     if ((R >0.f) || (G >0.f) || (B >0.f))
         return false;
     return true;

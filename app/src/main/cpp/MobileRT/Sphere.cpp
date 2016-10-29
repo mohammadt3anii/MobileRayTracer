@@ -60,13 +60,13 @@ square_params();
 
 Intersection* Sphere::Intersect (const Ray& r) {
     // pull the ray origin a small epsilon along the ray direction
-    Point org(*r.orig + ((*r.dir)*1e-5f));
+    Point org(r.orig + ((r.dir)*1e-5f));
     Vect C2O(org - *center);
 
     // compute the quadratic equation coefficients
     float B, C;
 
-    B = 2.f * C2O.dot(*r.dir);
+    B = 2.f * C2O.dot(r.dir);
     C = (org - (*center * 2.f)).not_dot(org);
     C += sq_center->sumCoordenates() - sq_radius;
 
@@ -86,7 +86,7 @@ Intersection* Sphere::Intersect (const Ray& r) {
     }
 
 
-    Point point(org + ((*r.dir) * t));
+    Point point(org + ((r.dir) * t));
     Vect normal(point - *center);
     // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
     //if (C2O.length() < radius) isect->N.mult(-1.f);

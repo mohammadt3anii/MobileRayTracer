@@ -6,17 +6,18 @@
 
 using namespace MobileRT;
 
-Material::Material () {
-    Kd = new RGB();
-    Ks = new RGB();
+Material::Material ()
+{
 }
 
-Material::Material (RGB* pKd) { // diffuse only material
-    Kd = pKd;
-    Ks = new RGB();
+// diffuse only material
+Material::Material (const RGB& pKd) :
+    Kd(pKd)
+{
 }
 
-Material::Material (RGB *pKd, RGB *pKs) { // diffuse only material
-    Kd = pKd;
-    Ks = pKs;
+Material::Material (const RGB& pKd, const RGB& pKs) :
+    Kd(pKd),
+    Ks(pKs)
+{
 }

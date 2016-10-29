@@ -16,7 +16,7 @@ namespace MobileRT {
         RGB (const float r, const float g, const float b);
         RGB (const RGB& rgb);
 
-        bool isZero();
+        bool isZero() const;
         void add (const RGB& rgb);
         void mult (const RGB& rgb);
         void mult (const float f);

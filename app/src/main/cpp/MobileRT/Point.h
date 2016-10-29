@@ -16,9 +16,6 @@ namespace MobileRT {
         Point(const float& x, const float& y, const float& z);
         Point(const Point& point);
 
-        /**
-         *
-         */
         Point square() const;
         Point multiply(const Vect& vector) const;
         float sumCoordenates() const;

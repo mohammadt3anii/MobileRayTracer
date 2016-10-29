@@ -16,7 +16,7 @@ RGB* ShaderNoShadows::Shade (const Ray& r, const Intersection& isect) {
     RGB* rad = new RGB();
 
     // direct lighting - only for diffuse materials
-    if (!isect.material()->Kd->isZero()) {
+    if (!isect.material()->Kd.isZero()) {
 
         int l;
         int Nl = mScene.lights.size();
@@ -28,15 +28,15 @@ RGB* ShaderNoShadows::Shade (const Ray& r, const Intersection& isect) {
             L.normalize();
             float cos_N_L = L.dot(isect.normal());
             if (cos_N_L > 0.f) {
-                rad->R += isect.material()->Kd->R * cos_N_L * ml->rad.R;
-                rad->G += isect.material()->Kd->G * cos_N_L * ml->rad.G;
-                rad->B += isect.material()->Kd->B * cos_N_L * ml->rad.B;
+                rad->R += isect.material()->Kd.R * cos_N_L * ml->rad.R;
+                rad->G += isect.material()->Kd.G * cos_N_L * ml->rad.G;
+                rad->B += isect.material()->Kd.B * cos_N_L * ml->rad.B;
             }
         }
         // ambient light
-        rad->R += isect.material()->Kd->R * ambient->R;
-        rad->G += isect.material()->Kd->G * ambient->G;
-        rad->B += isect.material()->Kd->B * ambient->B;
+        rad->R += isect.material()->Kd.R * ambient->R;
+        rad->G += isect.material()->Kd.G * ambient->G;
+        rad->B += isect.material()->Kd.B * ambient->B;
     } // end direct + ambient
     return rad;
 }

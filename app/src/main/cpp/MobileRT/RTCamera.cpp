@@ -18,12 +18,11 @@ RTCamera::RTCamera (Point* ppos, float phfov, float pvfov) {
 
 Ray* RTCamera::getRay (float u, float v) {
     double u_alpha, v_alpha;
-    Vect* dir;
 
     u_alpha = hfov * (u-0.5);
     v_alpha = -vfov * (v-0.5);
 
-    dir = new Vect((float)atan(u_alpha), (float)atan(v_alpha), 1.f);
+    Vect dir = Vect((float)atan(u_alpha), (float)atan(v_alpha), 1.f);
 
-    return new Ray (orig, dir);  // note that depth will be 0 : primary ray
+    return new Ray (*orig, dir);  // note that depth will be 0 : primary ray
 }

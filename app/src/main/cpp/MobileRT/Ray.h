@@ -13,15 +13,15 @@ namespace MobileRT {
     private:
 
     public:
-        Point* orig;
-        Vect* dir;
+        Point orig;
+        Vect dir;
         float max_T;
         int depth;
 
         Ray ();
-        Ray (Point* porig, Vect* pdir);
-        Ray (Point* porig, Vect* pdir, float pmax_T);
-        Ray (Point* porig, Vect* pdir, float pmax_T, int d);
+        Ray (const Point& porig, const Vect& pdir);
+        Ray (const Point& porig, const Vect& pdir, const float& pmax_T);
+        Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const int& d);
     };
 }
 

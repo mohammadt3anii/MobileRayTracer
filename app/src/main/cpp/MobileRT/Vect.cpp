@@ -35,6 +35,13 @@ Vect::Vect (const Vect& v) :
     return length;
 }
 
+Vect Vect::returnNormalized() const
+{
+    Vect normalized(*this);
+    normalized.normalize();
+    return normalized;
+}
+
 // symetric vector
 Vect Vect::symmetric () const
 {
@@ -42,7 +49,7 @@ Vect Vect::symmetric () const
 }
 
 // dot product
-float Vect::dot (const Vect& v)
+float Vect::dot (const Vect& v) const
 {
     return (x*v.x + y*v.y + z*v.z);
 }
@@ -73,7 +80,7 @@ void Vect::add (const Vect& v)
 }
 
 // dot product
-float Vect::not_dot (const Point& v)
+float Vect::not_dot (const Point& v) const
 {
     return v.multiply(*this).sumCoordenates();
 }
@@ -83,7 +90,7 @@ float Vect::not_dot (const Point& v)
 
 
 
-Vect Vect::operator*(const float& value)
+Vect Vect::operator*(const float& value) const
 {
     return Vect(x*value, y*value, z*value);
 }
