@@ -15,19 +15,19 @@ SceneCornell::SceneCornell () {
     // white Material
     Material* lightGrayMat = new Material(RGB(.9f, .9f, .9f));
     // back wall
-    primitives.push_back(new Primitive(new Plane(new Point(0.f, 0.f, 1.f), new Vect(0.f, 0.f, -1.f)), lightGrayMat));
+    primitives.push_back(new Primitive(new Plane(Point(0.f, 0.f, 1.f), Vect(0.f, 0.f, -1.f)), lightGrayMat));
     // floor
-    primitives.push_back(new Primitive(new Plane(new Point(0.f, -1.f, 0.f), new Vect(0.f, 1.f, 0.f)), lightGrayMat));
+    primitives.push_back(new Primitive(new Plane(Point(0.f, -1.f, 0.f), Vect(0.f, 1.f, 0.f)), lightGrayMat));
     // ceiling
-    primitives.push_back(new Primitive(new Plane(new Point(0.f, 1.f, 0.f), new Vect(0.f, -1.f, 0.f)), lightGrayMat));
+    primitives.push_back(new Primitive(new Plane(Point(0.f, 1.f, 0.f), Vect(0.f, -1.f, 0.f)), lightGrayMat));
     // red Material
     Material* redMat = new Material(RGB(0.9f, .0f, 0.f));
     // left red wall
-    primitives.push_back(new Primitive(new Plane(new Point(-1.f, 0.f, 0.f), new Vect(1.f, 0.f, 0.f)), redMat));
+    primitives.push_back(new Primitive(new Plane(Point(-1.f, 0.f, 0.f), Vect(1.f, 0.f, 0.f)), redMat));
     // blue Material
     Material* blueMat = new Material(RGB(0.f, .0f, 0.9f));
     // left blue wall
-    primitives.push_back(new Primitive(new Plane(new Point(1.f, 0.f, 0.f), new Vect(-1.f, 0.f, 0.f)), blueMat));
+    primitives.push_back(new Primitive(new Plane(Point(1.f, 0.f, 0.f), Vect(-1.f, 0.f, 0.f)), blueMat));
 
     Material* MirrorMat = new Material(RGB(), RGB(.8f, .8f, .8f));
     // create one sphere
