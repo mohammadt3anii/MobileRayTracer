@@ -5,20 +5,20 @@
 #ifndef MOBILERAYTRACER_PLANE_H
 #define MOBILERAYTRACER_PLANE_H
 
-#include "myShape.h"
+#include "Shape.h"
 
 namespace MobileRT {
-    class Plane : public myShape {
+    class Plane : public Shape {
     private:
         float d;    // 0th degree coefiicient of the plane equation
         float compute_d ();
 
     public:
-        myPoint* P;   // point in the plane
-        myVect* N;    // normal to the plane
+        Point* P;   // point in the plane
+        Vect* N;    // normal to the plane
 
 
-        Plane (myPoint* pP, myVect* pN);
+        Plane (Point* pP, Vect* pN);
         virtual Intersection* Intersect (const Ray& r);
     };
 }

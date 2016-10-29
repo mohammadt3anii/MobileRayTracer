@@ -31,7 +31,7 @@ RGB* RayTrace::RayV (const Ray& r) {
     RGB* rad;
 
     isect = mScene.trace(r);
-    if (isect->intersected) {
+    if (isect->intersected()) {
         rad = mShader->Shade(r, *isect);
     }
     else {  // ray lost on background

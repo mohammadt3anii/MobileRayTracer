@@ -5,10 +5,10 @@
 #ifndef MOBILERAYTRACER_SPHERE_H
 #define MOBILERAYTRACER_SPHERE_H
 
-#include "myShape.h"
+#include "Shape.h"
 
 namespace MobileRT {
-    class Sphere : public myShape {
+    class Sphere : public Shape {
     private:
         class Quadratic_Sol {
         private:
@@ -20,16 +20,16 @@ namespace MobileRT {
             Quadratic_Sol (float pt0, float pt1) { has_sol = true; t0 = pt0; t1 = pt1; }
         };
 
-        myPoint* center;
-        myPoint* sq_center;
+        Point* center;
+        Point* sq_center;
         float radius, sq_radius;
         Quadratic_Sol* Quadratic (float A, float B, float C);
 
     public:
         Sphere ();
         Sphere (float r);
-        Sphere (myPoint* c);
-        Sphere (myPoint* c, float r);
+        Sphere (Point* c);
+        Sphere (Point* c, float r);
         void square_params ();
         virtual Intersection* Intersect (const Ray& r);
     };

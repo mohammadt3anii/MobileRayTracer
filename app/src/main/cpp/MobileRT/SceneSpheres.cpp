@@ -10,16 +10,16 @@ using namespace MobileRT;
 
 SceneSpheres::SceneSpheres () {
     // create one light source
-    lights.push_back(new Light (RGB(1.f, 1.f, 1.f), myPoint(0.f, 15.f, 4.f)));
+    lights.push_back(new Light (RGB(1.f, 1.f, 1.f), Point(0.f, 15.f, 4.f)));
 
     // create diffuse Materials
-    myMaterial* sandMat = new myMaterial(new RGB(.914f, .723f, .531f));
-    myMaterial* redMat = new myMaterial(new RGB(0.9f, .0f, 0.f));
-    myMaterial* MirrorMat = new myMaterial(new RGB(), new RGB(.8f, .8f, .8f));
-    myMaterial* GreenMat = new myMaterial(new RGB(.0f, .9f, .0f));
+    Material* sandMat = new Material(new RGB(.914f, .723f, .531f));
+    Material* redMat = new Material(new RGB(0.9f, .0f, 0.f));
+    Material* MirrorMat = new Material(new RGB(), new RGB(.8f, .8f, .8f));
+    Material* GreenMat = new Material(new RGB(.0f, .9f, .0f));
     // create one sphere
-    primitives.push_back(new Primitive(new Sphere(new myPoint(-1.f, 1.f, 6.f)), redMat));
-    primitives.push_back(new Primitive(new Sphere(new myPoint(1.5f, 2.f, 7.f)), MirrorMat));
-    primitives.push_back(new Primitive(new Plane(new myPoint(0.f, 0.f, 0.f), new myVect(0.f, 1.f, 0.f)), sandMat));
-    primitives.push_back(new Primitive(new Sphere(new myPoint(.0f, .5f, 4.5f), .5f), GreenMat));
+    primitives.push_back(new Primitive(new Sphere(new Point(-1.f, 1.f, 6.f)), redMat));
+    primitives.push_back(new Primitive(new Sphere(new Point(1.5f, 2.f, 7.f)), MirrorMat));
+    primitives.push_back(new Primitive(new Plane(new Point(0.f, 0.f, 0.f), new Vect(0.f, 1.f, 0.f)), sandMat));
+    primitives.push_back(new Primitive(new Sphere(new Point(.0f, .5f, 4.5f), .5f), GreenMat));
 }

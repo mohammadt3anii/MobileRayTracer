@@ -34,7 +34,7 @@ super (mRT, mScene);
 
 public RGB Shade (Ray r, Intersection isect) {
     RGB rad = new RGB();
-    myVect shadingN;
+    Vect shadingN;
     final float cosRN = r.dir.dot(isect.N);
 
     // the normal always points to outside objects (e.g., spheres)
@@ -42,7 +42,7 @@ public RGB Shade (Ray r, Intersection isect) {
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
     if (cosRN<0.f) { // entering the object
-        shadingN = new myVect(isect.N);
+        shadingN = new Vect(isect.N);
     } else {
         // We have to reverse the normal now
         shadingN = isect.N.symmetric();
@@ -51,7 +51,7 @@ public RGB Shade (Ray r, Intersection isect) {
 
     // shadowed direct lighting - only for diffuse materials
     if (!isect.m.Kd.isZero()) {
-        myVect L = new myVect();
+        Vect L = new Vect();
         int l;
         final int Nl = mScene.lights.size();
 
@@ -87,13 +87,13 @@ public RGB Shade (Ray r, Intersection isect) {
     if ((!isect.m.Ks.isZero()) && (r.depth < MAX_DEPTH)) {
         Ray specRay;
         RGB specRad;
-        myVect specDir, sym_vRay;
+        Vect specDir, sym_vRay;
         float RV_dot;
 
         // compute specular reflection
         sym_vRay = r.dir.symmetric();
         RV_dot = 2.f * shadingN.dot(sym_vRay);
-        specDir = new myVect(shadingN);
+        specDir = new Vect(shadingN);
         specDir.mult (RV_dot);
         specDir.sub (sym_vRay);
         specDir.normalize();

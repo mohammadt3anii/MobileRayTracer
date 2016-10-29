@@ -5,23 +5,23 @@
 #ifndef MOBILERAYTRACER_RAY_H
 #define MOBILERAYTRACER_RAY_H
 
-#include "myPoint.h"
-#include "myVect.h"
+#include "Point.h"
+#include "Vect.h"
 
 namespace MobileRT {
     class Ray {
     private:
 
     public:
-        myPoint* orig;
-        myVect* dir;
+        Point* orig;
+        Vect* dir;
         float max_T;
         int depth;
 
         Ray ();
-        Ray (myPoint* porig, myVect* pdir);
-        Ray (myPoint* porig, myVect* pdir, float pmax_T);
-        Ray (myPoint* porig, myVect* pdir, float pmax_T, int d);
+        Ray (Point* porig, Vect* pdir);
+        Ray (Point* porig, Vect* pdir, float pmax_T);
+        Ray (Point* porig, Vect* pdir, float pmax_T, int d);
     };
 }
 

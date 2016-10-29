@@ -21,12 +21,12 @@ Renderer::Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, i
         case 0 : // cornell
             mScene = new SceneCornell();
             fov = 45.f;
-            From=new myPoint(0.f, 0.f, -3.4f);
+            From=new Point(0.f, 0.f, -3.4f);
             break;
         case 1 : // spheres
             mScene = new SceneSpheres();
             fov=60.f;
-            From=new myPoint(0.f, .5f, 1.f);
+            From=new Point(0.f, .5f, 1.f);
             break;
     }
 

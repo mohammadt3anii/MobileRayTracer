@@ -6,7 +6,7 @@
 #define MOBILERAYTRACER_LIGHT_H
 
 #include "RGB.h"
-#include "myPoint.h"
+#include "Point.h"
 
 namespace MobileRT {
     class Light {
@@ -14,9 +14,9 @@ namespace MobileRT {
 
     public:
         const RGB rad;
-        const myPoint pos;
+        const Point pos;
 
-        Light (const RGB& prad, const myPoint& ppos);
+        Light (const RGB& prad, const Point& ppos);
     };
 
 }

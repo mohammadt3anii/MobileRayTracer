@@ -11,7 +11,7 @@ using namespace MobileRT;
 
 void Sphere::square_params () {
     sq_radius = radius * radius;
-    sq_center = new myPoint(center->x * center->x, center->y * center->y, center->z * center->z);
+    sq_center = new Point(center->square());
 }
 
 Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C) {
@@ -34,24 +34,24 @@ Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C) {
 }
 
 Sphere::Sphere () {  // unit sphere
-    center = new myPoint(); // (0,0,0)
+    center = new Point(); // (0,0,0)
     radius = 1.f;
     square_params();
 }
 
 Sphere::Sphere (float r) {
-    center = new myPoint();
+    center = new Point();
     radius = r;
     square_params();
 }
 
-Sphere::Sphere (myPoint* c) {
+Sphere::Sphere (Point* c) {
 center = c;
 radius = 1.f;
 square_params();
 }
 
-Sphere::Sphere (myPoint* c, float r) {
+Sphere::Sphere (Point* c, float r) {
 center = c;
 radius = r;
 square_params();
@@ -60,21 +60,18 @@ square_params();
 
 Intersection* Sphere::Intersect (const Ray& r) {
     // pull the ray origin a small epsilon along the ray direction
-    myPoint* org = new myPoint(*r.orig);
-    org->x += r.dir->x * 1e-5f;
-    org->y += r.dir->y * 1e-5f;
-    org->z += r.dir->z * 1e-5f;
-    myVect* C2O = new myVect (org->x-center->x, org->y - center->y, org->z - center->z);
+    Point org(*r.orig + ((*r.dir)*1e-5f));
+    Vect C2O(org - *center);
 
     // compute the quadratic equation coefficients
-    float A, B, C;
+    float B, C;
 
-    A = 1.f;  // the ray direction is NORMALIZED
-    B = 2.f * (C2O->x* r.dir->x + C2O->y * r.dir->y + C2O->z * r.dir->z);
-    C = (org->x - 2.f*center->x) * org->x + (org->y - 2.f*center->y) * org->y + (org->z - 2.f*center->z) * org->z;
-    C += sq_center->x + sq_center->y + sq_center->z - sq_radius;
+    B = 2.f * C2O.dot(*r.dir);
+    C = (org - (*center * 2.f)).not_dot(org);
+    C += sq_center->sumCoordenates() - sq_radius;
 
-    Sphere::Quadratic_Sol* q_sol = Quadratic(A, B, C);
+    // the ray direction is NORMALIZED ( A = 1.0f)
+    Sphere::Quadratic_Sol* q_sol = Quadratic(1.f, B, C);
     if (!q_sol->has_sol)
         return new Intersection();
 
@@ -88,24 +85,18 @@ Intersection* Sphere::Intersect (const Ray& r) {
         if (t > r.max_T) return new Intersection();
     }
 
-    // if so, then we have an intersection
-    Intersection* isect = new Intersection();
 
-    isect->intersected = true;
-
-    isect->t = t;
-
-    isect->p.x = org->x + t * r.dir->x;
-    isect->p.y = org->y + t * r.dir->y;
-    isect->p.z = org->z + t * r.dir->z;
-
-    isect->N.x = isect->p.x - center->x;
-    isect->N.y = isect->p.y - center->y;
-    isect->N.z = isect->p.z - center->z;
-
+    Point point(org + ((*r.dir) * t));
+    Vect normal(point - *center);
     // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
     //if (C2O.length() < radius) isect->N.mult(-1.f);
-    isect->N.normalize();
+    normal.normalize();
+
+    // if so, then we have an intersection
+    Intersection* isect = new Intersection(
+            point,
+            normal,
+            t);
 
     return isect;
 }

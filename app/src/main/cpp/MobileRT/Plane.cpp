@@ -8,10 +8,10 @@
 using namespace MobileRT;
 
  float Plane::compute_d () {
-    return -N->dot(*P);
+    return -N->not_dot(*P);
 }
 
-Plane::Plane (myPoint* pP, myVect* pN) :
+Plane::Plane (Point* pP, Vect* pN) :
     P(pP), N(pN)
 {
     N->normalize();
@@ -19,7 +19,7 @@ Plane::Plane (myPoint* pP, myVect* pN) :
 }
 
 Intersection* Plane::Intersect (const Ray& r) {
-    myPoint* org = r.orig;
+    Point org(*r.orig);
 
     float N_dir = N->dot(*r.dir);
     // is ray parallel or contained in the Plane ??
@@ -27,7 +27,7 @@ Intersection* Plane::Intersect (const Ray& r) {
 
     // planes have two sides!!!
 
-    float N_O = N->dot(*org);
+    float N_O = N->not_dot(org);
 
     float t = -(d + N_O) / N_dir;
 
@@ -41,19 +41,10 @@ Intersection* Plane::Intersect (const Ray& r) {
     }
 
     // if so, then we have an intersection
-    Intersection* isect = new Intersection();
-
-    isect->intersected = true;
-
-    isect->t = t;
-
-    isect->p.x = org->x + t * r.dir->x;
-    isect->p.y = org->y + t * r.dir->y;
-    isect->p.z = org->z + t * r.dir->z;
-
-    isect->N.x = N->x;
-    isect->N.y = N->y;
-    isect->N.z = N->z;
+    Intersection* isect = new Intersection(
+        org + ((*r.dir) * t),
+        *N,
+        t);
 
     return isect;
 }

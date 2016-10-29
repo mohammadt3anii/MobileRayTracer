@@ -9,16 +9,16 @@
 
 namespace MobileRT {
 
-    class myMaterial {
+    class Material {
         private:
 
         public:
             RGB* Kd;   // diffuse reflection
             RGB* Ks;   // specular reflection
 
-        myMaterial ();
-        myMaterial (RGB* pKd);
-        myMaterial (RGB* pKd, RGB* pKs);
+        Material ();
+        Material (RGB* pKd);
+        Material (RGB* pKd, RGB* pKs);
     };
 }
 #endif //MOBILERAYTRACER_MYMATERIAL_H

@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_RENDERER_H
 #define MOBILERAYTRACER_RENDERER_H
 
-#include "myPoint.h"
+#include "Point.h"
 #include "Scene.h"
 #include "RayTrace.h"
 #include "RTCamera.h"
@@ -16,7 +16,7 @@ namespace MobileRT {
     class Renderer {
     private:
         float fov;
-        myPoint* From;
+        Point* From;
         int RT_W, RT_H;
         int LowX=-0, LowY=0;
         Scene* mScene;

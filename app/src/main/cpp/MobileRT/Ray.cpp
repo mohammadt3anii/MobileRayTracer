@@ -8,21 +8,21 @@
 using namespace MobileRT;
 
 Ray::Ray () {
-    orig = new myPoint (0.f,0.f,0.f);
-    dir = new myVect (0.f,0.f,1.f);
-    max_T = MAX_T;
+    orig = new Point (0.f,0.f,0.f);
+    dir = new Vect (0.f,0.f,1.f);
+    max_T = MAX_LENGTH;
     depth = 0;
 }
 
-Ray::Ray (myPoint* porig, myVect* pdir) {
+Ray::Ray (Point* porig, Vect* pdir) {
     orig = porig;
     dir = pdir;
-    max_T = MAX_T;
+    max_T = MAX_LENGTH;
     depth = 0;
     dir->normalize();
 }
 
-Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T) {
+Ray::Ray (Point* porig, Vect* pdir, float pmax_T) {
     orig = porig;
     dir = pdir;
     max_T = pmax_T;
@@ -30,7 +30,7 @@ Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T) {
     dir->normalize();
 }
 
-Ray::Ray (myPoint* porig, myVect* pdir, float pmax_T, int d) {
+Ray::Ray (Point* porig, Vect* pdir, float pmax_T, int d) {
     orig = porig;
     dir = pdir;
     max_T = pmax_T;

@@ -15,16 +15,16 @@ Scene::Scene () {
 Intersection* Scene::trace (const Ray& r) {
     Intersection* isect = new Intersection();
     Intersection* f_isect = new Intersection();
-    float minT = MAX_T;
+    float minT = MAX_LENGTH;
     int i;
     int  n = primitives.size();
 
     for (i=0 ; i < n ; i++) {
         isect = primitives[i]->Intersect(r);
-        if (isect->intersected) {
-            if (isect->t <= minT) {
+        if (isect->intersected()) {
+            if (isect->length() <= minT) {
                 f_isect = isect;
-                minT = f_isect->t;
+                minT = f_isect->length();
             }
         }
     }
@@ -38,7 +38,7 @@ Intersection* Scene::shadowTrace (const Ray& r) {
 
     for (i=0 ; i < n ; i++) {
         isect = primitives[i]->Intersect(r);
-        if (isect->intersected) return isect;
+        if (isect->intersected()) return isect;
     }
     return new Intersection();
 }
