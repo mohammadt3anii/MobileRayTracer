@@ -22,7 +22,6 @@ namespace MobileRT {
         Scene* mScene;
         RayTrace* mRTracer;
         RTCamera* mCamera;
-        ToneMapper* mToneMapper;
 
     public:
         Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader);

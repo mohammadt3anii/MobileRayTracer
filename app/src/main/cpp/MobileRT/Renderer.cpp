@@ -37,8 +37,6 @@ Renderer::Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, i
     vfov = fov * (((float)RT_H) / ((float)RT_W));
     mCamera = new RTCamera (From, fov, vfov);
 
-    mToneMapper = new ToneMapper();
-
 }
 
 void Renderer::render (uint32_t* canvas, int width, int height){
@@ -53,12 +51,8 @@ void Renderer::render (uint32_t* canvas, int width, int height){
             RGB* rayRGB = mRTracer->RayV(*r);
 
             // tonemap and convert to Paint
-            //p = mToneMapper.RGB2Color (rayRGB);
+            canvas[x + y*width] = ToneMapper::RGB2Color(*rayRGB);
 
-            unsigned char cr = static_cast<uint8_t>(rayRGB->R*255);
-            unsigned char cg = static_cast<uint8_t>(rayRGB->G*255);
-            unsigned char cb = static_cast<uint8_t>(rayRGB->B*255);
-            canvas[x + y*width] = 0xFF000000 | (cb << 16) | (cg << 8) | cr;
             //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Need to print : %02x %02x %02x %08x\n", cr, cg, cb, canvas[x + y*width]);
         }
     }

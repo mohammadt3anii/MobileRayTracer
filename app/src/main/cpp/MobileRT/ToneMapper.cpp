@@ -3,26 +3,17 @@
 //
 
 #include "ToneMapper.h"
-#include <array>
 
 using namespace MobileRT;
 
-ToneMapper::ToneMapper () {
+uint32_t ToneMapper::RGB2Color (const RGB& pixel)
+{
+    float r = pixel.R >1.0f ? 1.0f : (pixel.R < 0.0f ? 0.0f : pixel.R);
+    float g = pixel.G >1.0f ? 1.0f : (pixel.G < 0.0f ? 0.0f : pixel.G);
+    float b = pixel.B >1.0f ? 1.0f : (pixel.B < 0.0f ? 0.0f : pixel.B);
 
-};
-
-std::array<unsigned char, 1>* ToneMapper::RGB2Color (const RGB& px) {
-    int r, g, b;
-    std::array<unsigned char, 1>* p = new std::array<unsigned char, 1> ();
-
-    // convert to int
-    r = (int)(px.R*Dlimit);
-    g = (int)(px.G*Dlimit);
-    b = (int)(px.B*Dlimit);
-    // clamp above
-    r = (r>Ilimit ? Ilimit : r);
-    g = (g>Ilimit ? Ilimit : g);
-    b = (b>Ilimit ? Ilimit : b);
-    //p.setARGB (255, (r<0? 0 : r), (g<0? 0 : g), (b<0? 0 : b));
-    return p;
+    unsigned char cr = static_cast<uint8_t>(r*255);
+    unsigned char cg = static_cast<uint8_t>(g*255);
+    unsigned char cb = static_cast<uint8_t>(b*255);
+    return 0xFF000000 | (cb << 16) | (cg << 8) | cr;
 }

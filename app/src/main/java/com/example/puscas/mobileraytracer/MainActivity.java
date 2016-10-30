@@ -2,6 +2,7 @@ package com.example.puscas.mobileraytracer;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -12,8 +13,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        /*TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());*/
+        TextView textView = (TextView) findViewById(R.id.timeText);
+        DrawView drawView = (DrawView) findViewById(R.id.viewDraw);
+        drawView.setTextView(textView);
     }
 }

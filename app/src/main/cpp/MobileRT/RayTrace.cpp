@@ -27,7 +27,6 @@ RayTrace::RayTrace (Scene pScene, int whichShader) {
 RGB* RayTrace::RayV (const Ray& r) {
     // compute radiance
     Intersection* isect;
-    RGB* background = new RGB(0.1f, 0.1f, 0.9f);
     RGB* rad;
 
     isect = mScene.trace(r);
@@ -35,7 +34,7 @@ RGB* RayTrace::RayV (const Ray& r) {
         rad = mShader->Shade(r, *isect);
     }
     else {  // ray lost on background
-        rad = background;
+        rad = new RGB(0.1f, 0.1f, 0.9f);
     }
 
     return rad;

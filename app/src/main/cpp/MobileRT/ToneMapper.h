@@ -9,14 +9,10 @@
 #include "RGB.h"
 
 namespace MobileRT {
-    class ToneMapper {
-    private:
-        float Dlimit = 256.f;
-        int Ilimit = 255;
-
+    class ToneMapper
+    {
     public:
-        ToneMapper ();
-        std::array<unsigned char, 1>* RGB2Color (const RGB& px);
+        static uint32_t RGB2Color (const RGB& px);
     };
 }
 

@@ -33,9 +33,14 @@ public class DrawViewImpl
         bitmap_ = Bitmap.createBitmap( width_, height_, Bitmap.Config.ARGB_8888);
         bitmap_.eraseColor(Color.BLUE);
 
+        long start = SystemClock.elapsedRealtime();
+
         // Call into our C++ code that renders to the bitmap
         //System.out.println(bitmap_.getWidth() + " " + bitmap_.getHeight());
         drawIntoBitmap(bitmap_, width_, height_, SystemClock.elapsedRealtime());
+
+        long end = SystemClock.elapsedRealtime() - start;
+        System.out.println(end);
 
         // Present the bitmap on the screen
         canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
