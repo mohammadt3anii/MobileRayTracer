@@ -16,12 +16,11 @@ namespace MobileRT {
     class Renderer {
     private:
         float fov;
-        Point* From;
         int RT_W, RT_H;
         int LowX=-0, LowY=0;
-        Scene* mScene;
-        RayTrace* mRTracer;
-        RTCamera* mCamera;
+        std::unique_ptr<Scene> scene_;
+        std::unique_ptr<RayTrace> rTracer_;
+        std::unique_ptr<RTCamera> camera_;
 
     public:
         Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader);

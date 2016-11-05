@@ -5,18 +5,21 @@
 #ifndef MOBILERAYTRACER_RTCAMERA_H
 #define MOBILERAYTRACER_RTCAMERA_H
 
+#include <bits/unique_ptr.h>
 #include "Point.h"
 #include "Ray.h"
 
 namespace MobileRT {
     class RTCamera {
     private:
-        double hfov, vfov;
-        Point* orig;
+        const float hFov_;
+        const float vFov_;
+        const Point position_;
 
     public:
-        RTCamera (Point* ppos, float phfov, float pvfov);
-        Ray* getRay (float u, float v);
+        RTCamera(const Point &position, const float &hFov, const float &vFov);
+
+        Ray getRay(float u, float v);
     };
 }
 

@@ -8,18 +8,16 @@
 
 using namespace MobileRT;
 
-RayTrace::RayTrace (Scene pScene, int whichShader) {
-    mScene = pScene;
+RayTrace::RayTrace(Scene &scene, const int &whichShader) :
+        scene_(scene) {
     switch (whichShader) {
-        case 0:
-             mShader = dynamic_cast<Shader*>(new ShaderNoShadows (this, mScene));
+        case 0: {
+            shader_ = std::unique_ptr<ShaderNoShadows>(new ShaderNoShadows(this, scene));
+        }
             break;
-
-        case 1:
-            mShader = dynamic_cast<Shader*>(new ShaderWhitted (this, mScene));
-            break;
-
-        default:
+        case 1: {
+            shader_ = std::unique_ptr<ShaderWhitted>(new ShaderWhitted(this, scene));
+        }
             break;
     }
 }
@@ -29,9 +27,9 @@ RGB* RayTrace::RayV (const Ray& r) {
     Intersection* isect;
     RGB* rad;
 
-    isect = mScene.trace(r);
+    isect = scene_.trace(r);
     if (isect->intersected()) {
-        rad = mShader->Shade(r, *isect);
+        rad = shader_->Shade(r, *isect);
     }
     else {  // ray lost on background
         rad = new RGB(0.1f, 0.1f, 0.9f);

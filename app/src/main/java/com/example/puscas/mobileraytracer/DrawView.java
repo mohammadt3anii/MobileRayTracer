@@ -17,25 +17,32 @@ public class DrawView extends View {
 
     public DrawView(Context context) {
         super(context);
-        this.init(context);
+        init(context);
     }
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.init(context);
+        init(context);
     }
 
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.init(context);
+        init(context);
     }
 
     public void createScene(int scene, int shader, TextView textView) {
-        this.scene_ = scene;
-        this.shader_ = shader;
-        this.lastRenderTime_ = 0;
-        this.textView_ = textView;
-        this.impl_ = new DrawViewImpl(this.getWidth(), this.getHeight(), this.scene_, this.shader_);
+        scene_ = scene;
+        shader_ = shader;
+        lastRenderTime_ = 0;
+        textView_ = textView;
+        if (impl_ == null) {
+            impl_ = new DrawViewImpl();
+        }
+        if (getWidth() != impl_.getWidth() ||
+                getHeight() != impl_.getHeight()) {
+            impl_.setResolution(getWidth(), getHeight());
+        }
+        impl_.initialize(scene_, shader_);
     }
 
     private void init(Context context) {
@@ -44,23 +51,23 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (!this.isInEditMode())
+        if (!isInEditMode())
         {
             long start = SystemClock.elapsedRealtime();
 
             //Call the implementation (it has the connection to c++)
-            this.impl_.onDraw(canvas);
+            impl_.onDraw(canvas);
 
-            this.lastRenderTime_ = SystemClock.elapsedRealtime() - start;
-            if (this.textView_ != null)
+            lastRenderTime_ = SystemClock.elapsedRealtime() - start;
+            if (textView_ != null)
             {
-                this.textView_.setText("w:" + this.getWidth() + ", h:" + this.getHeight() + ", t:" + this.lastRenderTime_ + " ms");
+                textView_.setText("w:" + getWidth() + ", h:" + getHeight() + ", t:" + lastRenderTime_ + " ms");
             }
         }
     }
 
     public long getLastRenderTime()
     {
-        return this.lastRenderTime_;
+        return lastRenderTime_;
     }
 }

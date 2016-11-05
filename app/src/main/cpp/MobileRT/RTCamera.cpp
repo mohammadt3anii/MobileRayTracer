@@ -4,25 +4,21 @@
 
 #include "RTCamera.h"
 #include <math.h>
+#include <memory>
 
 using namespace MobileRT;
 
-RTCamera::RTCamera (Point* ppos, float phfov, float pvfov) {
-    hfov = (double)phfov; // in degrees
-    vfov = (double)pvfov; // in degrees
-    // convert to radians
-    hfov *= M_PI  / 180.;
-    vfov *= M_PI  / 180.;
-    orig = ppos;
+RTCamera::RTCamera(const Point &position, const float &hFov, const float &vFov) :
+        position_(std::move(position)),
+        // convert to radians
+        hFov_(hFov * M_PI / 180.),
+        vFov_(vFov * M_PI / 180.) {
 }
 
-Ray* RTCamera::getRay (float u, float v) {
-    double u_alpha, v_alpha;
-
-    u_alpha = hfov * (u-0.5);
-    v_alpha = -vfov * (v-0.5);
-
-    Vect dir = Vect((float)atan(u_alpha), (float)atan(v_alpha), 1.f);
-
-    return new Ray (*orig, dir);  // note that depth will be 0 : primary ray
+Ray RTCamera::getRay(float u, float v) {
+    float u_alpha = hFov_ * (u - 0.5);
+    float v_alpha = -vFov_ * (v - 0.5);
+    Vect dir = Vect(static_cast<float>(atan(u_alpha)), static_cast<float>(atan(v_alpha)), 1.f);
+    // note that depth will be 0 : primary ray
+    return Ray(position_, dir);
 }

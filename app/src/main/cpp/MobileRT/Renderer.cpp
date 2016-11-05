@@ -5,38 +5,38 @@
 #include "Renderer.h"
 #include "SceneCornell.h"
 #include "SceneSpheres.h"
-#include <android/log.h>
-#include "ToneMapper.h"
 
 using namespace MobileRT;
 
-Renderer::Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader) {
-    float vfov;
+Renderer::Renderer(int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader) {
     RT_H = RT_W = renderRes;
     LowX = (pcanvasW-RT_W) >> 1;
     LowY = (pcanvasH-RT_H) >> 1;
 
+    float ratio = static_cast<float>(RT_H) / static_cast<float>(RT_W);
+
     // create and load the Scene, parameterize the camera
     switch (whichScene) {
         case 0 : // cornell
-            mScene = new SceneCornell();
-            fov = 45.f;
-            From=new Point(0.f, 0.f, -3.4f);
+        {
+            scene_ = std::unique_ptr<SceneCornell>(new SceneCornell());
+            float hFov = 45.f;
+            float vFov = hFov * ratio;
+            camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.f, 0.f, -3.4f), hFov, vFov));
+        }
             break;
         case 1 : // spheres
-            mScene = new SceneSpheres();
-            fov=60.f;
-            From=new Point(0.f, .5f, 1.f);
+        {
+            scene_ = std::unique_ptr<SceneSpheres>(new SceneSpheres());
+            float hFov = 60.f;
+            float vFov = hFov * ratio;
+            camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.f, .5f, 1.f), hFov, vFov));
+        }
             break;
     }
 
     // create the ray tracer
-    mRTracer = new RayTrace(*mScene, whichShader);
-
-    // create the camera
-    vfov = fov * (((float)RT_H) / ((float)RT_W));
-    mCamera = new RTCamera (From, fov, vfov);
-
+    rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
 }
 
 void Renderer::render (uint32_t* canvas, int width, int height){
@@ -47,8 +47,8 @@ void Renderer::render (uint32_t* canvas, int width, int height){
             // generate the ray
             float u = (float) x * INV_IMG_WIDTH;
             float v = (float) y * INV_IMG_HEIGHT;
-            Ray* r = mCamera->getRay (u,v);
-            RGB* rayRGB = mRTracer->RayV(*r);
+            Ray r = std::move(camera_->getRay(u, v));
+            RGB *rayRGB = rTracer_->RayV(r);
 
             // tonemap and convert to Paint
             canvas[x + y*width] = ToneMapper::RGB2Color(*rayRGB);

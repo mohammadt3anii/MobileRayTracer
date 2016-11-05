@@ -5,6 +5,7 @@
 #ifndef MOBILERAYTRACER_RAYTRACE_H
 #define MOBILERAYTRACER_RAYTRACE_H
 
+#include <bits/unique_ptr.h>
 #include "Scene.h"
 #include "Shader.h"
 
@@ -13,11 +14,11 @@ namespace MobileRT {
 
     class RayTrace {
         private:
-            Scene mScene;
-            Shader* mShader;
+        Scene &scene_;
+        std::unique_ptr<Shader> shader_;
 
         public:
-            RayTrace (Scene pScene, int whichShader);
+        RayTrace(Scene &pScene, const int &whichShader);
             RGB* RayV (const Ray& r);
     };
 }
