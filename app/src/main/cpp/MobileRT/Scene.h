@@ -17,8 +17,10 @@ namespace MobileRT {
         std::vector<Primitive*> primitives;
 
         Scene ();
-        Intersection* trace (const Ray& r);
-        Intersection* shadowTrace (const Ray& r);
+
+        Intersection trace(const Ray &ray);
+
+        Intersection shadowTrace(const Ray &ray);
     };
 }
 

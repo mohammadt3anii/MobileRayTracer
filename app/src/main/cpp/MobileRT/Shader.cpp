@@ -3,15 +3,13 @@
 //
 
 #include "Shader.h"
-#include "RGB.h"
 
 using namespace MobileRT;
 
-Shader::Shader (RayTrace* pRT, Scene pScene) {
-    mScene = pScene;
-    mRT = pRT;
+Shader::Shader(RayTrace &rayTrace, Scene &scene) :
+        rayTrace_(rayTrace), scene_(scene) {
 }
 
-RGB* Shader::Shade (const Ray& mR, const Intersection& isect) {
-    return new RGB();
+RGB Shader::Shade(const Ray &, const Intersection &) {
+    return RGB();
 }

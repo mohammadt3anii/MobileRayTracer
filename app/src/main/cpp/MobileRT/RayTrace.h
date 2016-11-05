@@ -19,7 +19,8 @@ namespace MobileRT {
 
         public:
         RayTrace(Scene &pScene, const int &whichShader);
-            RGB* RayV (const Ray& r);
+
+        RGB RayV(const Ray &ray);
     };
 }
 

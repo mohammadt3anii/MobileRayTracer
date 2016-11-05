@@ -58,45 +58,47 @@ square_params();
 }
 
 
-Intersection* Sphere::Intersect (const Ray& r) {
+Intersection Sphere::Intersect(const Ray &ray) {
     // pull the ray origin a small epsilon along the ray direction
-    Point org(r.orig + ((r.dir)*1e-5f));
+    Point org(ray.orig + ((ray.dir) * 1e-5f));
     Vect C2O(org - *center);
 
     // compute the quadratic equation coefficients
     float B, C;
 
-    B = 2.f * C2O.dot(r.dir);
+    B = 2.f * C2O.dot(ray.dir);
     C = (org - (*center * 2.f)).not_dot(org);
     C += sq_center->sumCoordenates() - sq_radius;
 
     // the ray direction is NORMALIZED ( A = 1.0f)
     Sphere::Quadratic_Sol* q_sol = Quadratic(1.f, B, C);
-    if (!q_sol->has_sol)
-        return new Intersection();
+    if (!q_sol->has_sol) {
+        return Intersection();
+    }
 
     float t0=q_sol->t0, t1=q_sol->t1;
 
-    if (t0 > r.max_T || t1 < 1e-6f)
-        return new Intersection();
+    if (t0 > ray.max_T || t1 < 1e-6f) {
+        return Intersection();
+    }
+
     float t = t0;
     if (t < 1e-6f) {
         t = t1;
-        if (t > r.max_T) return new Intersection();
+        if (t > ray.max_T) {
+            return Intersection();
+        }
     }
 
-
-    Point point(org + ((r.dir) * t));
+    Point point(org + ((ray.dir) * t));
     Vect normal(point - *center);
     // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
     //if (C2O.length() < radius) isect->N.mult(-1.f);
     normal.normalize();
 
     // if so, then we have an intersection
-    Intersection* isect = new Intersection(
+    return Intersection(
             point,
             normal,
             t);
-
-    return isect;
 }

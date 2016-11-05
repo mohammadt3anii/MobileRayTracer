@@ -17,7 +17,8 @@ namespace MobileRT {
         Shape *shape;
         Material *material;
         Primitive (Shape* ps, Material* pm);
-        Intersection* Intersect (const Ray& r);
+
+        Intersection Intersect(const Ray &ray);
     };
 }
 

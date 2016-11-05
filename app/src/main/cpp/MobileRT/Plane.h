@@ -18,7 +18,8 @@ namespace MobileRT {
 
     public:
         Plane (const Point& point, const Vect& normal);
-        virtual Intersection* Intersect (const Ray& ray);
+
+        virtual Intersection Intersect(const Ray &ray);
     };
 }
 

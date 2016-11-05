@@ -12,28 +12,21 @@ RayTrace::RayTrace(Scene &scene, const int &whichShader) :
         scene_(scene) {
     switch (whichShader) {
         case 0: {
-            shader_ = std::unique_ptr<ShaderNoShadows>(new ShaderNoShadows(this, scene));
+            shader_ = std::unique_ptr<ShaderNoShadows>(new ShaderNoShadows(*this, scene));
         }
             break;
         case 1: {
-            shader_ = std::unique_ptr<ShaderWhitted>(new ShaderWhitted(this, scene));
+            shader_ = std::unique_ptr<ShaderWhitted>(new ShaderWhitted(*this, scene));
         }
             break;
     }
 }
 
-RGB* RayTrace::RayV (const Ray& r) {
+RGB RayTrace::RayV(const Ray &ray) {
     // compute radiance
-    Intersection* isect;
-    RGB* rad;
-
-    isect = scene_.trace(r);
-    if (isect->intersected()) {
-        rad = shader_->Shade(r, *isect);
+    Intersection intersection(std::move(scene_.trace(ray)));
+    if (intersection.intersected()) {
+        return shader_->Shade(ray, intersection);
     }
-    else {  // ray lost on background
-        rad = new RGB(0.1f, 0.1f, 0.9f);
-    }
-
-    return rad;
+    return RGB(0.1f, 0.1f, 0.9f);
 }

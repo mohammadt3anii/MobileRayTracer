@@ -7,13 +7,14 @@
 
 using namespace MobileRT;
 
-ShaderWhitted::ShaderWhitted (RayTrace* mRT, Scene mScene) : Shader(mRT, mScene)
+ShaderWhitted::ShaderWhitted(RayTrace &rayTrace, Scene &scene) :
+        Shader(rayTrace, scene)
 {
 }
 
-RGB* ShaderWhitted::Shade (const Ray& r, const Intersection& isect)
+RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect)
 {
-    RGB* rad = new RGB();
+    RGB rad;
     Vect shadingN;
     float cosRN = r.dir.dot(isect.normal());
 
@@ -32,10 +33,10 @@ RGB* ShaderWhitted::Shade (const Ray& r, const Intersection& isect)
     // shadowed direct lighting - only for diffuse materials
     if (!isect.material()->Kd.isZero()) {
         int l;
-        int Nl = mScene.lights.size();
+        int Nl = scene_.lights.size();
 
         for (l=0 ; l < Nl ; l++) {
-            Light* ml = mScene.lights[l];
+            Light *ml = scene_.lights[l];
             float ml_distance;
 
             Vect L(ml->pos - isect.point());
@@ -44,24 +45,23 @@ RGB* ShaderWhitted::Shade (const Ray& r, const Intersection& isect)
             if (cos_N_L > 0.f) {
                 Point p = isect.point();
                 Ray shadowRay(p, L, ml_distance, r.depth+1);
-                Intersection* Lsect = mScene.shadowTrace (shadowRay);
-                if (!Lsect->intersected()) {
+                Intersection Lsect(std::move(scene_.shadowTrace(shadowRay)));
+                if (!Lsect.intersected()) {
                     RGB diffuseRad (ml->rad);
                     diffuseRad.mult(isect.material()->Kd);
                     diffuseRad.mult (cos_N_L);
-                    rad->add(diffuseRad);
+                    rad.add(diffuseRad);
                 }
             }
         }
         // ambient light
-        rad->R += isect.material()->Kd.R * ambient.R;
-        rad->G += isect.material()->Kd.G * ambient.G;
-        rad->B += isect.material()->Kd.B * ambient.B;
+        rad.R += isect.material()->Kd.R * ambient.R;
+        rad.G += isect.material()->Kd.G * ambient.G;
+        rad.B += isect.material()->Kd.B * ambient.B;
     } // end direct + ambient
     // specular reflection
     if ((!isect.material()->Ks.isZero()) && (r.depth < MAX_DEPTH)) {
-        ;
-        RGB* specRad;
+
         Vect specDir;
         Vect sym_vRay;
         float RV_dot;
@@ -76,9 +76,9 @@ RGB* ShaderWhitted::Shade (const Ray& r, const Intersection& isect)
 
         Point p = isect.point();
         Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
-        specRad = mRT->RayV(specRay);
-        specRad->mult(isect.material()->Ks);
-        rad->add(*specRad);
+        RGB specRad(std::move(std::move(rayTrace_.RayV(specRay))));
+        specRad.mult(isect.material()->Ks);
+        rad.add(specRad);
     }
     return rad;
 }

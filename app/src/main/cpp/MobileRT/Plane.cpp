@@ -17,12 +17,12 @@ Plane::Plane (const Point& point, const Vect& normal) :
     d = compute_d ();
 }
 
-Intersection* Plane::Intersect (const Ray& r) {
-    Point org(r.orig);
+Intersection Plane::Intersect(const Ray &ray) {
+    Point org(ray.orig);
 
-    float N_dir = normal_.dot(r.dir);
+    float N_dir = normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
-    if (fabs(N_dir) < 1e-8f) return new Intersection();  // zero
+    if (fabs(N_dir) < 1e-8f) return Intersection();  // zero
 
     // planes have two sides!!!
 
@@ -32,18 +32,16 @@ Intersection* Plane::Intersect (const Ray& r) {
 
     // is it in front of the eye?
     if (t <= 1.e-6f) {
-        return new Intersection();
+        return Intersection();
     }
     //* is it farther than the ray length ??
-    if (t >= r.max_T) {
-        return new Intersection();
+    if (t >= ray.max_T) {
+        return Intersection();
     }
 
     // if so, then we have an intersection
-    Intersection* isect = new Intersection(
-        org + (r.dir * t),
+    return Intersection(
+            org + (ray.dir * t),
         normal_,
         t);
-
-    return isect;
 }

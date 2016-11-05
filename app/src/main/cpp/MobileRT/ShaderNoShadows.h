@@ -11,8 +11,9 @@ namespace MobileRT{
     class ShaderNoShadows : public Shader {
     private:
     public:
-        ShaderNoShadows (RayTrace* mRT, Scene mScene);
-        virtual RGB* Shade (const Ray& r, const Intersection& isect);
+        ShaderNoShadows(RayTrace &rayTrace, Scene &scene);
+
+        virtual RGB Shade(const Ray &ray, const Intersection &intersection);
     };
 }
 

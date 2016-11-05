@@ -3,42 +3,38 @@
 //
 
 #include "Scene.h"
-#include "Intersection.h"
 #include "Constants.h"
 
 using namespace MobileRT;
 
-Scene::Scene () {
+Scene::Scene() {
 
 }
 
-Intersection* Scene::trace (const Ray& r) {
-    Intersection* isect = new Intersection();
-    Intersection* f_isect = new Intersection();
+Intersection Scene::trace(const Ray &r) {
+    Intersection f_intersection;
     float minT = MAX_LENGTH;
-    int i;
     int  n = primitives.size();
 
-    for (i=0 ; i < n ; i++) {
-        isect = primitives[i]->Intersect(r);
-        if (isect->intersected()) {
-            if (isect->length() <= minT) {
-                f_isect = isect;
-                minT = f_isect->length();
+    for (int i = 0; i < n; i++) {
+        Intersection intersection(std::move(primitives[i]->Intersect(r)));
+        if (intersection.intersected()) {
+            if (intersection.length() <= minT) {
+                f_intersection = intersection;
+                minT = f_intersection.length();
             }
         }
     }
-    return f_isect;
+    return f_intersection;
 }
 
-Intersection* Scene::shadowTrace (const Ray& r) {
-    Intersection* isect;
-    int i;
+Intersection Scene::shadowTrace(const Ray &ray) {
     int  n = primitives.size();
-
-    for (i=0 ; i < n ; i++) {
-        isect = primitives[i]->Intersect(r);
-        if (isect->intersected()) return isect;
+    for (int i = 0; i < n; i++) {
+        Intersection intersection(std::move(primitives[i]->Intersect(ray)));
+        if (intersection.intersected()) {
+            return intersection;
+        }
     }
-    return new Intersection();
+    return Intersection();
 }

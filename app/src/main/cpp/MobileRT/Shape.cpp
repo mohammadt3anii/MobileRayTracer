@@ -10,7 +10,7 @@ Shape::Shape () {
 
 }
 
-Intersection* Shape::Intersect (const Ray& r)
+Intersection Shape::Intersect(const Ray &r)
 {
-    return (new Intersection());
+    return Intersection();
 }

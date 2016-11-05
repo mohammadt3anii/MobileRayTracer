@@ -39,19 +39,19 @@ Renderer::Renderer(int pcanvasW, int pcanvasH, int renderRes, int whichScene, in
     rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
 }
 
-void Renderer::render (uint32_t* canvas, int width, int height){
+void Renderer::render(uint32_t *canvas, int width, int height) {
     float INV_IMG_WIDTH = 1.0f / RT_W;
     float INV_IMG_HEIGHT = 1.0f / RT_H;
     for(int y=0; y<RT_H; y++) {
         for (int x = 0; x < RT_W; x++) {
             // generate the ray
-            float u = (float) x * INV_IMG_WIDTH;
-            float v = (float) y * INV_IMG_HEIGHT;
+            float u = static_cast<float>(x * INV_IMG_WIDTH);
+            float v = static_cast<float>(y * INV_IMG_HEIGHT);
             Ray r = std::move(camera_->getRay(u, v));
-            RGB *rayRGB = rTracer_->RayV(r);
+            RGB rayRGB(std::move(rTracer_->RayV(r)));
 
             // tonemap and convert to Paint
-            canvas[x + y*width] = ToneMapper::RGB2Color(*rayRGB);
+            canvas[x + y * width] = ToneMapper::RGB2Color(rayRGB);
 
             //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Need to print : %02x %02x %02x %08x\n", cr, cg, cb, canvas[x + y*width]);
         }

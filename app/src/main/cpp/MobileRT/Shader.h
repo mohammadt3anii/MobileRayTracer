@@ -15,12 +15,13 @@ namespace MobileRT {
         private:
 
         protected:
-            Scene mScene;
-            RayTrace* mRT;
+        Scene &scene_;
+        RayTrace &rayTrace_;
 
         public:
-            Shader (RayTrace* pRT, Scene pScene);
-        virtual RGB* Shade (const Ray& r, const Intersection& isect);
+        Shader(RayTrace &rayTrace, Scene &scene);
+
+        virtual RGB Shade(const Ray &, const Intersection &);
     };
 }
 

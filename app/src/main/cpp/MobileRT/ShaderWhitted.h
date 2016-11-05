@@ -17,8 +17,10 @@ namespace MobileRT {
     public:
 
         RGB ambient;
-        ShaderWhitted (RayTrace* mRT, Scene mScene);
-        virtual RGB* Shade (const Ray& r, const Intersection& isect);
+
+        ShaderWhitted(RayTrace &rayTrace, Scene &scene);
+
+        virtual RGB Shade(const Ray &ray, const Intersection &intersection);
     };
 }
 
