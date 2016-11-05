@@ -1,34 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.puscas.mobileraytracer.MainActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.example.puscas.mobileraytracer.MainActivity">
 
     <view
-        android:layout_height="wrap_content"
-        class="com.example.puscas.mobileraytracer.DrawView"
         android:id="@+id/viewDraw"
+        class="com.example.puscas.mobileraytracer.DrawView"
+        android:layout_width="355dp"
+        android:layout_height="227dp"
+        android:layout_above="@+id/timeText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/renderButton"
+        android:layout_marginBottom="19dp"
         android:elevation="0dp"
-        tools:targetApi="lollipop"
-        android:layout_width="match_parent"
-        />
+        tools:targetApi="lollipop"/>
 
     <TextView
-        android:text="time"
+        android:id="@+id/timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/timeText"
+        android:text="@string/time"
         android:textColor="@android:color/holo_green_dark"
         android:textSize="18sp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupScene"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <RadioButton
+            android:id="@+id/radioCornell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.27"
+            android:onClick="onSceneRadioButtonClicked"
+            android:paddingEnd="43dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="43dp"
+            android:paddingStart="0dp"
+            android:text="@string/cornell"/>
+
+        <RadioButton
+            android:id="@+id/radioSpheres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onSceneRadioButtonClicked"
+            android:text="@string/spheres"/>
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroupShader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioGroupScene"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        tools:ignore="RtlHardcoded">
+
+        <RadioButton
+            android:id="@+id/radioNoShadows"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.41"
+            android:onClick="onShaderRadioButtonClicked"
+            android:paddingEnd="10dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="10dp"
+            android:paddingStart="0dp"
+            android:text="@string/noShadows"/>
+
+        <RadioButton
+            android:id="@+id/radioWhitted"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.14"
+            android:onClick="onShaderRadioButtonClicked"
+            android:text="@string/whitted"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/renderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioGroupShader"
+        android:onClick="startRender"
+        android:text="@string/render"/>
+
 
 </RelativeLayout>

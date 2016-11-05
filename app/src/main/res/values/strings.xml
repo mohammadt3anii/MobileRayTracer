@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MobileRayTracer</string>
+    <string name="time">Time</string>
+    <string name="render">Render</string>
+    <string name="radiobutton">RadioButton</string>
+    <string name="cornell">Cornell</string>
+    <string name="spheres">Spheres</string>
+    <string name="noShadows">NoShadows</string>
+    <string name="whitted">Whitted</string>
 </resources>
