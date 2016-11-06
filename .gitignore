@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/cpp/**/*.o
+/app/src/main/cpp/**/*.d
+/app/src/main/cpp/raytracer
