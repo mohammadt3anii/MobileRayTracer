@@ -32,11 +32,10 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect)
 
     // shadowed direct lighting - only for diffuse materials
     if (!isect.material()->Kd.isZero()) {
-        int l;
         int Nl = scene_.lights.size();
 
-        for (l=0 ; l < Nl ; l++) {
-            Light *ml = scene_.lights[l];
+        for (int l=0 ; l < Nl ; l++) {
+            Light* ml = scene_.lights[l];
             float ml_distance;
 
             Vect L(ml->pos - isect.point());
