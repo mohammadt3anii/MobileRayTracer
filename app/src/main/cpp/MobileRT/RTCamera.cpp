@@ -15,7 +15,7 @@ RTCamera::RTCamera(const Point &position, const float &hFov, const float &vFov) 
         vFov_(vFov * M_PI / 180.) {
 }
 
-double FastArcTan(double x){
+float FastArcTan(float x){
     return M_PI_4*x - x*(fabs(x) - 1)*(0.2447 + 0.0663*fabs(x));
 }
 
