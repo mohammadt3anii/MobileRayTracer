@@ -17,7 +17,9 @@ int main(int argc, char** argv)
 {
     const int w = 932;
     const int h = 932;
-	Renderer renderer(w, h, w, 0, 1);
+    int scene = atoi(argv[1]);
+    int shader = atoi(argv[2]);
+	Renderer renderer(w, h, w, scene, shader);
     uint32_t canvas[h*w];
 
     clock_t start = clock();
