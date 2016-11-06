@@ -10,7 +10,7 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, Scene &scene) :
         Shader(rayTrace, scene) {
 }
 
-RGB ShaderNoShadows::Shade(const Ray &r, const Intersection &isect) {
+RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const {
 
     RGB rad;
 

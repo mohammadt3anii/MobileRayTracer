@@ -17,39 +17,39 @@ Intersection::Intersection () :
 
 Intersection::Intersection (const Point& point, const Vect& normal, const float& length) :
     intersected_(true),
-    length_(length),
-    material_(nullptr),
     point_(point),
-    normal_(normal)
+    normal_(normal),
+    length_(length),
+    material_(nullptr)
 {
 }
 
-void Intersection::material(const Material& material)
+void Intersection::material(Material& material)
 {
     material_ = &material;
 }
 
-const Material* Intersection::material() const
+Material* Intersection::material() const
 {
     return material_;
 }
 
-const bool Intersection::intersected() const
+bool Intersection::intersected() const
 {
     return intersected_;
 }
 
-const Point Intersection::point() const
+Point Intersection::point() const
 {
     return point_;
 }
 
-const Vect Intersection::normal() const
+Vect Intersection::normal() const
 {
     return normal_;
 }
 
-const float Intersection::length() const
+float Intersection::length() const
 {
     return length_;
 }

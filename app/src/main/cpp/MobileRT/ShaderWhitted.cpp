@@ -12,7 +12,7 @@ ShaderWhitted::ShaderWhitted(RayTrace &rayTrace, Scene &scene) :
 {
 }
 
-RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect)
+RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 {
     RGB rad;
     Vect shadingN;

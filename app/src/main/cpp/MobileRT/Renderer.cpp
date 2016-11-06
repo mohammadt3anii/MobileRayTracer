@@ -8,7 +8,7 @@
 
 using namespace MobileRT;
 
-Renderer::Renderer(int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader) {
+Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader) {
     RT_H = RT_W = renderRes;
     LowX = (pcanvasW-RT_W) >> 1;
     LowY = (pcanvasH-RT_H) >> 1;
@@ -39,7 +39,7 @@ Renderer::Renderer(int pcanvasW, int pcanvasH, int renderRes, int whichScene, in
     rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
 }
 
-void Renderer::render(uint32_t *canvas, int width, int height) {
+void Renderer::render(uint32_t *canvas, const int width) {
     float INV_IMG_WIDTH = 1.0f / RT_W;
     float INV_IMG_HEIGHT = 1.0f / RT_H;
     for(int y=0; y<RT_H; y++) {

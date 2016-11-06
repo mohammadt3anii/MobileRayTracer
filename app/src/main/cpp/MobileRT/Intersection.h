@@ -16,19 +16,19 @@ namespace MobileRT {
         Point point_;   // intersection point
         Vect normal_;    // intersection normal
         float length_;     // ray length parameter
-        const Material* material_;  // material of the intersected primitive
+        Material* material_;  // material of the intersected primitive
 
     public:
         Intersection ();
         Intersection (const Point& point, const Vect& normal, const float& length);
 
-        void material(const Material& material);
-        const Material* material() const;
+        void material(Material& material);
+        Material* material() const;
 
-        const bool intersected() const;
-        const Point point() const;
-        const Vect normal() const;
-        const float length() const;
+        bool intersected() const;
+        Point point() const;
+        Vect normal() const;
+        float length() const;
     };
 }
 

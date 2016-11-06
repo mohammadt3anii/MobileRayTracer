@@ -86,10 +86,6 @@ float Vect::not_dot (const Point& v) const
 }
 
 
-
-
-
-
 Vect Vect::operator*(const float& value) const
 {
     return Vect(x*value, y*value, z*value);

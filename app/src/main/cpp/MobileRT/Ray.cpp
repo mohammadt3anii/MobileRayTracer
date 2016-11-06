@@ -8,7 +8,7 @@
 using namespace MobileRT;
 
 Ray::Ray () :
-    max_T(MAX_LENGTH),depth(0), dir(Vect(0.0f, 0.0f, 1.0f))
+    dir(Vect(0.0f, 0.0f, 1.0f)), max_T(MAX_LENGTH),depth(0)
 {
 }
 

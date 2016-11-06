@@ -8,7 +8,7 @@
 using namespace MobileRT;
 
 /* Another callback */
-void destroy( GtkWidget *widget, gpointer data)
+void destroy( GtkWidget*, gpointer)
 {
     gtk_main_quit();
 }
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     uint32_t canvas[h*w];
 
     clock_t start = clock();
-    renderer.render(canvas, w, h);
+    renderer.render(canvas, w);
     clock_t end = clock() - start;
     double elapsed_secs = double(end) / CLOCKS_PER_SEC;
     std::cout << "\nTime in secs::" << elapsed_secs << std::endl;

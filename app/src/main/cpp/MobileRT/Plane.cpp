@@ -7,7 +7,7 @@
 
 using namespace MobileRT;
 
- float Plane::compute_d () {
+ float Plane::compute_d () const {
     return -normal_.not_dot(point_);
 }
 
@@ -31,17 +31,14 @@ Intersection Plane::Intersect(const Ray &ray) {
     float t = -(d + N_O) / N_dir;
 
     // is it in front of the eye?
-    if (t <= 1.e-6f) {
-        return Intersection();
-    }
     //* is it farther than the ray length ??
-    if (t >= ray.max_T) {
+    if (t <= 1.e-6f || t >= ray.max_T) {
         return Intersection();
     }
 
     // if so, then we have an intersection
     return Intersection(
-            org + (ray.dir * t),
+        org + (ray.dir * t),
         normal_,
         t);
 }

@@ -23,8 +23,8 @@ namespace MobileRT {
         std::unique_ptr<RTCamera> camera_;
 
     public:
-        Renderer (int pcanvasW, int pcanvasH, int renderRes, int whichScene, int whichShader);
-        void render (uint32_t* canvas, int width, int height);
+        Renderer (const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader);
+        void render (uint32_t* canvas, const int width);
     };
 }
 

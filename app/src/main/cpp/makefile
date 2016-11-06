@@ -7,12 +7,12 @@ LD := $(CC)
 MAKEFLAGS := -j5
 
 CCFLAGS := -MMD -MP -Wall -Wextra -std=c++11
-CCFLAGS += -Ofast -march=native -ftree-vectorize #-fopenmp
+CCFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
 CCFLAGS += -I./
-
 CCFLAGS += $(shell pkg-config --cflags gtk+-2.0)
+
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0)
-#LDFLAGS += -fopenmp
+LDFLAGS += -fopenmp
 
 ################################################################################
 
