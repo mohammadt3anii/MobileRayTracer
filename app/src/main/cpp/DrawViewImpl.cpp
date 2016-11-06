@@ -6,8 +6,6 @@
 
 #include <jni.h>
 #include <android/bitmap.h>
-#include <android/log.h>
-#include <unistd.h>
 
 /**
  * Draws something into the given bitmap
@@ -24,8 +22,8 @@ static Renderer* r;
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawViewImpl_initialize(
-        JNIEnv* env,
-        jobject thiz,
+        JNIEnv *,// env,
+        jobject, //thiz,
         jint whichScene,
         jint whichShader,
         jint width,
@@ -37,11 +35,10 @@ void Java_com_example_puscas_mobileraytracer_DrawViewImpl_initialize(
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(
         JNIEnv* env,
-        jobject thiz,
+        jobject, //thiz,
         jobject dstBitmap,
         jint width,
-        jint height,
-        jlong elapsedTime) {
+        jint height) {
 
     // Grab the dst bitmap info and pixels
     AndroidBitmapInfo dstInfo;
@@ -60,7 +57,7 @@ void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(
     }
 
     // draw scene
-    r->render(canvas, width, height);
+    r->render(canvas, width);
 
     // Unlock the dst's pixels
     AndroidBitmap_unlockPixels(env, dstBitmap);

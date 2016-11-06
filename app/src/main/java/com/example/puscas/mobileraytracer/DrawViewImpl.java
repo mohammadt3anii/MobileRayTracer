@@ -1,6 +1,7 @@
 package com.example.puscas.mobileraytracer;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
@@ -20,14 +21,14 @@ public class DrawViewImpl
     private Bitmap bitmap_;
 
     public DrawViewImpl() {
-        width_ = 0;
-        height_ = 0;
+        this.width_ = 0;
+        this.height_ = 0;
     }
 
     public void setResolution(int width, int height) {
         width_ = width;
         height_ = height;
-        bitmap_ = Bitmap.createBitmap(width_, height_, Bitmap.Config.ARGB_8888);
+        bitmap_ = Bitmap.createBitmap(this.width_, this.height_, Config.ARGB_8888);
     }
 
     public void initialize(int scene, int shader) {
@@ -38,7 +39,7 @@ public class DrawViewImpl
 
     private native void initialize(int scene, int shader, int width, int height);
 
-    private native void drawIntoBitmap(Bitmap image, int width, int height, long elapsedTime);
+    private native void drawIntoBitmap(Bitmap image, int width, int height);
 
     public void onDraw(Canvas canvas) {
         //Clear screen with background color
@@ -49,10 +50,9 @@ public class DrawViewImpl
 
         // Call into our C++ code that renders to the bitmap
         //System.out.println(bitmap_.getWidth() + " " + bitmap_.getHeight());
-        drawIntoBitmap(bitmap_, width_, height_, SystemClock.elapsedRealtime());
+        drawIntoBitmap(bitmap_, width_, height_);
 
         long end = SystemClock.elapsedRealtime() - start;
-        System.out.println(end);
 
         // Present the bitmap on the screen
         canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
