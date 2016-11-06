@@ -14,10 +14,10 @@ void Sphere::square_params () {
     sq_center = new Point(center->square());
 }
 
-Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C) {
+Sphere::Quadratic_Sol Sphere::Quadratic (float A, float B, float C) {
     float t0, t1;
     float discrim = B * B - 4.f * A * C;
-    if (discrim <= 0.) return new Quadratic_Sol();
+    if (discrim <= 0.) return Quadratic_Sol();
     float rootDiscrim = (float) std::sqrt((double)discrim);
 
     float q;
@@ -30,7 +30,7 @@ Sphere::Quadratic_Sol* Sphere::Quadratic (float A, float B, float C) {
         t0 = t1;
         t1 = temp;
     }
-    return new Quadratic_Sol(t0, t1);
+    return Quadratic_Sol(t0, t1);
 }
 
 Sphere::Sphere () {  // unit sphere
@@ -71,12 +71,12 @@ Intersection Sphere::Intersect(const Ray &ray) {
     C += sq_center->sumCoordenates() - sq_radius;
 
     // the ray direction is NORMALIZED ( A = 1.0f)
-    Sphere::Quadratic_Sol* q_sol = Quadratic(1.f, B, C);
-    if (!q_sol->has_sol) {
+    Sphere::Quadratic_Sol q_sol = Quadratic(1.f, B, C);
+    if (!q_sol.has_sol) {
         return Intersection();
     }
 
-    float t0=q_sol->t0, t1=q_sol->t1;
+    float t0=q_sol.t0, t1=q_sol.t1;
 
     if (t0 > ray.max_T || t1 < 1e-6f) {
         return Intersection();

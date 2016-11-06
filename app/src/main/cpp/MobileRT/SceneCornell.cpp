@@ -13,9 +13,9 @@ SceneCornell::SceneCornell () {
     lights.push_back(new Light (RGB(1.f, 1.f, 1.f), Point(0.f, 0.99f, 0.f)));
 
     // white Material
-    Material* lightGrayMat = new Material(RGB(.9f, .9f, .9f));
+    Material* lightGrayMat = new Material(RGB(.9f, .9f, .9f));//shared
     // back wall
-    primitives.push_back(new Primitive(new Plane(Point(0.f, 0.f, 1.f), Vect(0.f, 0.f, -1.f)), lightGrayMat));
+    primitives.push_back(new Primitive(new Plane(Point(0.f, 0.f, 1.f), Vect(0.f, 0.f, -1.f)), lightGrayMat));//recebe referencia de plano e copia
     // floor
     primitives.push_back(new Primitive(new Plane(Point(0.f, -1.f, 0.f), Vect(0.f, 1.f, 0.f)), lightGrayMat));
     // ceiling

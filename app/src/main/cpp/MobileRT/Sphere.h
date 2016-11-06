@@ -23,7 +23,7 @@ namespace MobileRT {
         Point* center;
         Point* sq_center;
         float radius, sq_radius;
-        Quadratic_Sol* Quadratic (float A, float B, float C);
+        Quadratic_Sol Quadratic (float A, float B, float C);
 
     public:
         Sphere ();
