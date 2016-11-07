@@ -5,14 +5,18 @@
 #ifndef MOBILERAYTRACER_TONEMAPPER_H
 #define MOBILERAYTRACER_TONEMAPPER_H
 
-#include <array>
 #include "RGB.h"
+#include <stdint.h>
 
-namespace MobileRT {
+namespace MobileRT
+{
     class ToneMapper
     {
-    public:
-        static uint32_t RGB2Color (const RGB& px);
+        private:
+            
+
+        public:
+            static uint32_t RGB2Color (const RGB& px);
     };
 }
 

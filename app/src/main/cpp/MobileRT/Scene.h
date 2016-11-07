@@ -9,18 +9,22 @@
 #include "Primitive.h"
 #include <vector>
 
-namespace MobileRT {
-    class Scene {
-    private:
-    public:
-        std::vector<Light*> lights;
-        std::vector<Primitive*> primitives;
+namespace MobileRT
+{
+    class Scene
+    {
+        private:
 
-        Scene ();
+            
+        public:
+            std::vector<Light*> lights;
+            std::vector<Primitive*> primitives;
 
-        Intersection trace(const Ray &ray);
+            Scene ();
 
-        Intersection shadowTrace(const Ray &ray);
+            Intersection trace(const Ray &ray);
+
+            Intersection shadowTrace(const Ray &ray);
     };
 }
 

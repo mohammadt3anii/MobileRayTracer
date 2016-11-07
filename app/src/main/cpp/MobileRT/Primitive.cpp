@@ -3,18 +3,19 @@
 //
 
 #include "Primitive.h"
-#include <memory>
 
 using namespace MobileRT;
 
-Primitive::Primitive (Shape* ps, Material* pm) : shape(ps), material(pm){
+Primitive::Primitive (Shape* ps, Material* pm) :
+    shape(ps), material(pm)
+{
 }
 
 Intersection Primitive::Intersect(const Ray &r) {
-    Intersection isect(std::move(shape->Intersect(r)));
+    Intersection isect(shape->Intersect(r));
     if (isect.intersected())
     {
-        isect.material(*material);
+        isect.material(*this->material);
     }
     return isect;
 }

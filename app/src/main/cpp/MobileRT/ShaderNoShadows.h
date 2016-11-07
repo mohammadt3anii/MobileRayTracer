@@ -7,13 +7,16 @@
 
 #include "Shader.h"
 
-namespace MobileRT{
-    class ShaderNoShadows : public Shader {
-    private:
-    public:
-        ShaderNoShadows(RayTrace &rayTrace, Scene &scene);
+namespace MobileRT
+{
+    class ShaderNoShadows : public Shader
+    {
+        private:
+            
+        public:
+            ShaderNoShadows(RayTrace &rayTrace, Scene &scene);
 
-        virtual RGB Shade(const Ray&, const Intersection &intersection) const;
+            virtual RGB Shade(const Ray&, const Intersection &intersection) const;
     };
 }
 

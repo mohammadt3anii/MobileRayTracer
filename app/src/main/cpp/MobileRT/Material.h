@@ -7,18 +7,22 @@
 
 #include "RGB.h"
 
-namespace MobileRT {
-
-    class Material {
+namespace MobileRT
+{
+    class Material
+    {
         private:
-
-        public:
             const RGB Kd;   // diffuse reflection
             const RGB Ks;   // specular reflection
 
-        Material ();
-        Material (const RGB& pKd);
-        Material (const RGB& pKd, const RGB& pKs);
+        public:
+            Material ();
+            Material (const RGB& pKd);
+            Material (const RGB& pKd, const RGB& pKs);
+
+            const RGB& getKd () const;
+            const RGB& getKs () const;
     };
 }
+
 #endif //MOBILERAYTRACER_MYMATERIAL_H

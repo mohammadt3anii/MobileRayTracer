@@ -26,30 +26,30 @@ Intersection::Intersection (const Point& point, const Vect& normal, const float&
 
 void Intersection::material(Material& material)
 {
-    material_ = &material;
+    this->material_ = &material;
 }
 
 Material* Intersection::material() const
 {
-    return material_;
+    return this->material_;
 }
 
 bool Intersection::intersected() const
 {
-    return intersected_;
+    return this->intersected_;
 }
 
 Point Intersection::point() const
 {
-    return point_;
+    return this->point_;
 }
 
 Vect Intersection::normal() const
 {
-    return normal_;
+    return this->normal_;
 }
 
 float Intersection::length() const
 {
-    return length_;
+    return this->length_;
 }

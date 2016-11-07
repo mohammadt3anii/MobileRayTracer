@@ -7,9 +7,11 @@
 using namespace MobileRT;
 
 Shader::Shader(RayTrace &rayTrace, Scene &scene) :
-        scene_(scene), rayTrace_(rayTrace){
+        scene_(scene), rayTrace_(rayTrace)
+{
 }
 
-RGB Shader::Shade(const Ray &, const Intersection &) const {
+RGB Shader::Shade(const Ray &, const Intersection &) const
+{
     return RGB();
 }

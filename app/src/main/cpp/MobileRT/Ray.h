@@ -8,20 +8,22 @@
 #include "Point.h"
 #include "Vect.h"
 
-namespace MobileRT {
-    class Ray {
-    private:
+namespace MobileRT
+{
+    class Ray
+    {
+        private:
 
-    public:
-        Point orig;
-        Vect dir;
-        float max_T;
-        int depth;
+        public:
+            Point orig;
+            Vect dir;
+            float max_T;
+            int depth;
 
-        Ray ();
-        Ray (const Point& porig, const Vect& pdir);
-        Ray (const Point& porig, const Vect& pdir, const float& pmax_T);
-        Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const int& d);
+            Ray ();
+            Ray (const Point& porig, const Vect& pdir);
+            Ray (const Point& porig, const Vect& pdir, const float& pmax_T);
+            Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const int& d);
     };
 }
 

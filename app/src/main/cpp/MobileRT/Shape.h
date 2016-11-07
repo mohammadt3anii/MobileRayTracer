@@ -8,14 +8,16 @@
 #include "Ray.h"
 #include "Intersection.h"
 
-namespace MobileRT {
-    class Shape {
-    private:
+namespace MobileRT
+{
+    class Shape
+    {
+        private:
 
-    public:
-        Shape ();
+        public:
+            Shape ();
 
-        virtual Intersection Intersect(const Ray&);
+            virtual Intersection Intersect(const Ray&);
     };
 }
 

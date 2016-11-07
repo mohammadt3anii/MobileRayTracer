@@ -7,19 +7,21 @@
 
 #include "Shape.h"
 
-namespace MobileRT {
-    class Plane : public Shape {
-    private:
-        float d;    // 0th degree coefiicient of the plane equation
-        float compute_d () const;
+namespace MobileRT
+{
+    class Plane : public Shape
+    {
+        private:
+            float d_;    // 0th degree coefiicient of the plane equation
+            float compute_d () const;
 
-        const Point point_;   // point in the plane
-        const Vect normal_;    // normal to the plane
+            const Point point_;   // point in the plane
+            const Vect normal_;    // normal to the plane
 
-    public:
-        Plane (const Point& point, const Vect& normal);
+        public:
+            Plane (const Point& point, const Vect& normal);
 
-        virtual Intersection Intersect(const Ray &ray);
+            Intersection Intersect(const Ray &ray) override;
     };
 }
 

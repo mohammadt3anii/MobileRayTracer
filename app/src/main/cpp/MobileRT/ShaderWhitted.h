@@ -7,20 +7,20 @@
 
 #include "Shader.h"
 
-namespace MobileRT {
-    class ShaderWhitted : public Shader {
-    private:
-        enum{
-            MAX_DEPTH = 5
-        };
+namespace MobileRT
+{
+    class ShaderWhitted : public Shader
+    {
+        private:
+            enum{
+                MAX_DEPTH = 5
+            };
+            RGB ambient;
 
-    public:
+        public:
+            ShaderWhitted(RayTrace &rayTrace, Scene &scene);
 
-        RGB ambient;
-
-        ShaderWhitted(RayTrace &rayTrace, Scene &scene);
-
-        virtual RGB Shade(const Ray &ray, const Intersection &intersection) const;
+            RGB Shade(const Ray &ray, const Intersection &intersection) const override;
     };
 }
 

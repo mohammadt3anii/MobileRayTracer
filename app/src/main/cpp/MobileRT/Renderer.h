@@ -5,15 +5,14 @@
 #ifndef MOBILERAYTRACER_RENDERER_H
 #define MOBILERAYTRACER_RENDERER_H
 
-#include "Point.h"
 #include "Scene.h"
 #include "RayTrace.h"
 #include "RTCamera.h"
-#include "ToneMapper.h"
-#include <array>
 
-namespace MobileRT {
-    class Renderer {
+namespace MobileRT
+{
+    class Renderer
+    {
     private:
         float fov;
         int RT_W, RT_H;

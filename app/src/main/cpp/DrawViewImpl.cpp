@@ -3,7 +3,6 @@
 //
 
 #include "DrawViewImpl.h"
-
 #include <jni.h>
 #include <android/bitmap.h>
 
@@ -16,7 +15,6 @@
  * @param  height      The bitmap height
  * @param  elapsedTime The number of milliseconds since the app was started
  */
-
 
 static Renderer* r;
 

@@ -8,15 +8,19 @@
 #include "RGB.h"
 #include "Point.h"
 
-namespace MobileRT {
-    class Light {
-    private:
+namespace MobileRT
+{
+    class Light
+    {
+        private:
+            const RGB rad_;
+            const Point pos_;
 
-    public:
-        const RGB rad;
-        const Point pos;
+        public:
+            Light (const RGB& prad, const Point& ppos);
 
-        Light (const RGB& prad, const Point& ppos);
+            const RGB& getRad () const;
+            const Point& getPos () const;
     };
 
 }

@@ -22,11 +22,11 @@ RayTrace::RayTrace(Scene &scene, const int &whichShader) :
     }
 }
 
-RGB RayTrace::RayV(const Ray &ray) {
+RGB RayTrace::RayV(const Ray &ray) {//trace do raio e verifica se interseta algo
     // compute radiance
-    Intersection intersection(std::move(scene_.trace(ray)));
-    if (intersection.intersected()) {
+    const Intersection intersection(scene_.trace(ray));//trace do raio
+    if (intersection.intersected()) {//se interseta alguma primitiva
         return shader_->Shade(ray, intersection);
     }
-    return RGB(0.1f, 0.1f, 0.9f);
+    return RGB(0.1f, 0.1f, 0.9f);//cor do pixel sem interseçao
 }

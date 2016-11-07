@@ -9,26 +9,28 @@
 #include "Vect.h"
 #include "Material.h"
 
-namespace MobileRT {
-    class Intersection {
-    private:
-        bool intersected_; // was there an intersection?
-        Point point_;   // intersection point
-        Vect normal_;    // intersection normal
-        float length_;     // ray length parameter
-        Material* material_;  // material of the intersected primitive
+namespace MobileRT
+{
+    class Intersection
+    {
+        private:
+            bool intersected_; // was there an intersection?
+            Point point_;   // intersection point
+            Vect normal_;    // intersection normal
+            float length_;     // ray length parameter
+            Material* material_;  // material of the intersected primitive
 
-    public:
-        Intersection ();
-        Intersection (const Point& point, const Vect& normal, const float& length);
+        public:
+            Intersection ();
+            Intersection (const Point& point, const Vect& normal, const float& length);
 
-        void material(Material& material);
-        Material* material() const;
+            void material(Material& material);
+            Material* material() const;
 
-        bool intersected() const;
-        Point point() const;
-        Vect normal() const;
-        float length() const;
+            bool intersected() const;
+            Point point() const;
+            Vect normal() const;
+            float length() const;
     };
 }
 

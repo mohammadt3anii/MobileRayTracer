@@ -3,11 +3,21 @@
 //
 
 #include "Light.h"
-#include "RGB.h"
 
 using namespace MobileRT;
 
 Light::Light (const RGB& prad, const Point& ppos) :
-    rad(prad), pos(ppos)
+    rad_(prad),
+    pos_(ppos)
 {
+}
+
+const RGB& Light::getRad () const
+{
+    return this->rad_;
+}
+
+const Point& Light::getPos () const
+{
+    return this->pos_;
 }

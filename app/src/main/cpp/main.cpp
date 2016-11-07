@@ -1,8 +1,6 @@
-#include <iostream>
 #include "MobileRT/All.h"
-
+#include <iostream>
 #include <gtk/gtk.h>
-
 #include <ctime>
 
 using namespace MobileRT;
@@ -27,7 +25,6 @@ int main(int argc, char** argv)
     clock_t end = clock() - start;
     double elapsed_secs = double(end) / CLOCKS_PER_SEC;
     std::cout << "\nTime in secs::" << elapsed_secs << std::endl;
-
 
     //RGBA
     unsigned char buffer[h*w*4];

@@ -9,12 +9,13 @@
 
 using namespace MobileRT;
 
-class DrawViewImpl {
-private:
-    bool sceneComplete_;
+class DrawViewImpl
+{
+    private:
+        
 
-public:
-    DrawViewImpl ();
+    public:
+
 };
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

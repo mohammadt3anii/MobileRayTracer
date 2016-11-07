@@ -8,7 +8,7 @@
 using namespace MobileRT;
 
 Vect::Vect ()
-    : x(0.f), y(0.f), z(0.f)
+    : x(0.0f), y(0.0f), z(0.0f)
 {
 }
 
@@ -24,10 +24,10 @@ Vect::Vect (const Vect& v) :
 
  float Vect::normalize ()
  {
-    float length = Vect::length();
-    if (length!=0.f)
+    const float length = Vect::length();
+    if (length != 0.0f)
     {
-        float inv_length = 1.f / length;
+        float inv_length = 1.0f / length;
         x *= inv_length;
         y *= inv_length;
         z *= inv_length;
@@ -69,7 +69,7 @@ void Vect::mult (const float& f) {
 
 float Vect::length ()
 {
-    return static_cast<float>(sqrt(Vect::dot(*this)));
+    return sqrt(Vect::dot(*this));
 }
 
 void Vect::add (const Vect& v)

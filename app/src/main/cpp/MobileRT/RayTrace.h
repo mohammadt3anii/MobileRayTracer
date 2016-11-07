@@ -9,18 +9,20 @@
 #include "Scene.h"
 #include "Shader.h"
 
-namespace MobileRT {
+namespace MobileRT
+{
     class Shader;
 
-    class RayTrace {
+    class RayTrace
+    {
         private:
-        Scene &scene_;
-        std::unique_ptr<Shader> shader_;
+            Scene &scene_;
+            std::unique_ptr<Shader> shader_;
 
         public:
-        RayTrace(Scene &pScene, const int &whichShader);
+            RayTrace(Scene &pScene, const int &whichShader);
 
-        RGB RayV(const Ray &ray);
+            RGB RayV(const Ray &ray);
     };
 }
 

@@ -8,6 +8,7 @@ MAKEFLAGS := -j5
 
 CCFLAGS := -MMD -MP -Wall -Wextra -std=c++11
 CCFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
+#CCFLAGS += -g3
 CCFLAGS += -I./
 CCFLAGS += $(shell pkg-config --cflags gtk+-2.0)
 

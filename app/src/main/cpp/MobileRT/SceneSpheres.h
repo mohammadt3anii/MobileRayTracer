@@ -7,12 +7,14 @@
 
 #include "Scene.h"
 
-namespace MobileRT {
-    class SceneSpheres : public Scene {
-    private:
+namespace MobileRT
+{
+    class SceneSpheres : public Scene
+    {
+        private:
 
-    public:
-        SceneSpheres ();
+        public:
+            SceneSpheres ();
     };
 }
 

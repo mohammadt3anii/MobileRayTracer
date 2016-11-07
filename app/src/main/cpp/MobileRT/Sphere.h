@@ -10,14 +10,15 @@
 namespace MobileRT {
     class Sphere : public Shape {
     private:
-        class Quadratic_Sol {
-        private:
+        class Quadratic_Sol
+        {
+            private:
 
-        public:
-            bool has_sol;
-            float t0, t1;
-            Quadratic_Sol () { has_sol = false; t0 = 0.f; t1 = 0.f; }
-            Quadratic_Sol (float pt0, float pt1) { has_sol = true; t0 = pt0; t1 = pt1; }
+            public:
+                bool has_sol;
+                float t0, t1;
+                Quadratic_Sol () { has_sol = false; t0 = 0.0f; t1 = 0.0f; }
+                Quadratic_Sol (float pt0, float pt1) { has_sol = true; t0 = pt0; t1 = pt1; }
         };
 
         Point* center;
