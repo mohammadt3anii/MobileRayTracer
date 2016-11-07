@@ -17,17 +17,17 @@ public class DrawView extends View {
 
     public DrawView(Context context) {
         super(context);
-        init(context);
+        this.init(context);
     }
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        this.init(context);
     }
 
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        this.init(context);
     }
 
     public void createScene(int scene, int shader, TextView textView) {
@@ -61,13 +61,8 @@ public class DrawView extends View {
             lastRenderTime_ = SystemClock.elapsedRealtime() - start;
             if (textView_ != null)
             {
-                textView_.setText("w:" + getWidth() + ", h:" + getHeight() + ", t:" + lastRenderTime_ + " ms");
+                textView_.setText("w:" + getWidth() + ", h:" + this.getHeight() + ", t:" + lastRenderTime_ + " ms");
             }
         }
-    }
-
-    public long getLastRenderTime()
-    {
-        return lastRenderTime_;
     }
 }

@@ -7,9 +7,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.example.puscas.mobileraytracer.R.id;
-import com.example.puscas.mobileraytracer.R.layout;
-
 public class MainActivity extends Activity {
 
     private Button mRenderButton;
@@ -21,22 +18,21 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        this.textView = (TextView) this.findViewById(id.timeText);
-        this.drawView = (DrawView) this.findViewById(id.viewDraw);
-        this.mRenderButton = (Button) this.findViewById(id.renderButton);
+        textView = (TextView) findViewById(R.id.timeText);
+        drawView = (DrawView) findViewById(R.id.viewDraw);
+        mRenderButton = (Button) findViewById(R.id.renderButton);
 
-        this.drawView.setVisibility(View.INVISIBLE);
+        drawView.setVisibility(View.INVISIBLE);
     }
 
     public void startRender(View view) {
-        this.mRenderButton.setEnabled(false);
-        System.out.println("scene = " + this.scene_);
-        this.drawView.invalidate();
-        this.drawView.createScene(this.scene_, this.shader_, this.textView);
-        this.drawView.setVisibility(View.VISIBLE);
-        this.mRenderButton.setEnabled(true);
+        mRenderButton.setEnabled(false);
+        drawView.invalidate();
+        drawView.createScene(scene_, shader_, textView);
+        drawView.setVisibility(View.VISIBLE);
+        mRenderButton.setEnabled(true);
     }
 
     public void onSceneRadioButtonClicked(View view) {
@@ -45,14 +41,19 @@ public class MainActivity extends Activity {
 
         // Check which radio button was clicked
         switch (view.getId()) {
-            case id.radioCornell:
-                if (checked)
-                    this.scene_ = 0; // cornell
+            case R.id.radioCornell:
+                if (checked) {
+                    scene_ = 0; // cornell
+                }
                 break;
 
-            case id.radioSpheres:
-                if (checked)
-                    this.scene_ = 1; // spheres
+            case R.id.radioSpheres:
+                if (checked) {
+                    scene_ = 1; // spheres
+                }
+                break;
+
+            default:
                 break;
         }
     }
@@ -63,14 +64,18 @@ public class MainActivity extends Activity {
 
         // Check which radio button was clicked
         switch (view.getId()) {
-            case id.radioNoShadows:
-                if (checked)
-                    this.shader_ = 0; // No Shadows
+            case R.id.radioNoShadows:
+                if (checked) {
+                    shader_ = 0; // No Shadows
+                }
                 break;
 
-            case id.radioWhitted:
-                if (checked)
-                    this.shader_ = 1; // Whitted
+            case R.id.radioWhitted:
+                if (checked) {
+                    shader_ = 1; // Whitted
+                }
+                break;
+            default:
                 break;
         }
     }

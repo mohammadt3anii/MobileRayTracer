@@ -33,6 +33,8 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
             camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.f, .5f, 1.f), hFov, vFov));
         }
             break;
+        default:
+            break;
     }
 
     // create the ray tracer
@@ -52,8 +54,6 @@ void Renderer::render(uint32_t *canvas, const int width) {
 
             // tonemap and convert to Paint
             canvas[x + y * width] = ToneMapper::RGB2Color(rayRGB);
-
-            //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Need to print : %02x %02x %02x %08x\n", cr, cg, cb, canvas[x + y*width]);
         }
     }
 }
