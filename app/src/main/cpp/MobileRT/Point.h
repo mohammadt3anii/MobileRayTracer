@@ -18,7 +18,7 @@ namespace MobileRT
 
         public:
             Point();
-            Point(const float& x, const float& y, const float& z);
+            Point(const float x, const float y, const float z);
             Point(const Point& point);
 
             Point square() const;
@@ -27,7 +27,7 @@ namespace MobileRT
 
             Point operator+(const Vect& vector) const;
             Vect operator-(const Point& point) const;
-            Point operator*(const float& scale) const;
+            Point operator*(const float scale) const;
     };
 }
 

@@ -8,7 +8,7 @@
 
 using namespace MobileRT;
 
-RayTrace::RayTrace(Scene &scene, const unsigned int &whichShader) :
+RayTrace::RayTrace(const Scene& scene, const unsigned int whichShader) :
     scene_(scene)
 {
     switch (whichShader)
@@ -29,7 +29,7 @@ RayTrace::RayTrace(Scene &scene, const unsigned int &whichShader) :
     }
 }
 
-RGB RayTrace::RayV(const Ray &ray)//trace do raio e verifica se interseta algo
+RGB RayTrace::RayV (const Ray& ray)//trace do raio e verifica se interseta algo
 {
     // compute radiance
     const Intersection intersection(this->scene_.trace(ray));//trace do raio

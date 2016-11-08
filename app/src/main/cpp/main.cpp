@@ -13,14 +13,13 @@ void destroy( GtkWidget*, gpointer)
 
 int main(int argc, char** argv)
 {
+    clock_t start = clock();
     const int w = 932;
     const int h = 932;
     int scene = atoi(argv[1]);
     int shader = atoi(argv[2]);
 	Renderer renderer(w, h, w, scene, shader);
     uint32_t canvas[h*w];
-
-    clock_t start = clock();
     renderer.render(canvas, w);
     clock_t end = clock() - start;
     double elapsed_secs = double(end) / CLOCKS_PER_SEC;

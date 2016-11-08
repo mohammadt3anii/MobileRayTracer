@@ -16,8 +16,8 @@ namespace MobileRT
         private:
             const unsigned int RT_W;
             const unsigned int RT_H;
-            const unsigned int LowX = -0;
-            const unsigned int LowY = 0;
+            const unsigned int LowX;
+            const unsigned int LowY;
             std::unique_ptr<Scene> scene_;
             std::unique_ptr<RayTrace> rTracer_;
             std::unique_ptr<RTCamera> camera_;

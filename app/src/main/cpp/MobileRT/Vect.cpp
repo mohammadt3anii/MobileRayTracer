@@ -14,7 +14,7 @@ Vect::Vect () :
 {
 }
 
-Vect::Vect (const float& px, const float& py, const float& pz) :
+Vect::Vect (const float px, const float py, const float pz) :
     x(px),
     y(py),
     z(pz)
@@ -60,7 +60,7 @@ float Vect::dot (const Vect& v) const
     return (this->x * v.x + this->y * v.y + this->z * v.z);
 }
 
-void Vect::mult (const float& f) {
+void Vect::mult (const float f) {
     this->x *= f;
     this->y *= f;
     this->z *= f;
@@ -92,7 +92,7 @@ float Vect::not_dot (const Point& v) const
 }
 
 
-Vect Vect::operator*(const float& value) const
+Vect Vect::operator*(const float value) const
 {
     return Vect(this->x * value, this->y * value, this->z * value);
 }

@@ -7,12 +7,6 @@
 
 using namespace MobileRT;
 
-void Sphere::square_params ()
-{
-    this->sq_radius = radius * radius;
-    this->sq_center = new Point(center->square());
-}
-
 Sphere::Quadratic_Sol Sphere::Quadratic (const float A, const float B, const float C) const
 {
     const float discrim = B * B - 4.0f * A * C;
@@ -31,43 +25,47 @@ Sphere::Quadratic_Sol Sphere::Quadratic (const float A, const float B, const flo
 }
 
 Sphere::Sphere () :
-    center(new Point()),// (0,0,0)
-    radius(1.0f)
+    center(Point()),// (0,0,0)
+    sq_center (Point(this->center.square())),
+    radius (1.0f),
+    sq_radius (this->radius * this->radius)
 {  // unit sphere
-    square_params();
 }
 
 Sphere::Sphere (const float r) :
-    center(new Point()),// (0,0,0)
-    radius(r)
+    center(Point()),// (0,0,0)
+    sq_center (Point(this->center.square())),
+    radius(r),
+    sq_radius (this->radius * this->radius)
 {
-    square_params();
 }
 
-Sphere::Sphere (Point* c) :
+Sphere::Sphere (const Point& c) :
     center(c),
-    radius(1.0f)
+    sq_center (Point(this->center.square())),
+    radius(1.0f),
+    sq_radius (this->radius * this->radius)
 {
-    square_params();
 }
 
-Sphere::Sphere (Point* c, const float r) :
+Sphere::Sphere (const Point& c, const float r) :
     center(c),
-    radius(r)
+    sq_center (Point(this->center.square())),
+    radius(r),
+    sq_radius (this->radius * this->radius)
 {
-    square_params();
 }
 
 Intersection Sphere::Intersect(const Ray &ray) const
 {
     // pull the ray origin a small epsilon along the ray direction
     const Point org(ray.orig + ((ray.dir) * 1.0e-5f));
-    const Vect C2O(org - *this->center);
+    const Vect C2O(org - this->center);
 
     // compute the quadratic equation coefficients
     const float B = 2.0f * C2O.dot(ray.dir);
-    const float C = ((org - (*this->center * 2.0f)).not_dot(org)) +
-        this->sq_center->sumCoordenates() - this->sq_radius;
+    const float C = ((org - (this->center * 2.0f)).not_dot(org)) +
+        this->sq_center.sumCoordenates() - this->sq_radius;
 
     // the ray direction is NORMALIZED ( A = 1.0f)
     const Sphere::Quadratic_Sol q_sol = Quadratic(1.0f, B, C);
@@ -95,7 +93,7 @@ Intersection Sphere::Intersect(const Ray &ray) const
     }
 
     const Point point(org + ((ray.dir) * t));
-    Vect normal(point - *this->center);
+    Vect normal(point - this->center);
     // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
     //if (C2O.length() < radius) isect->N.mult(-1.0f);
     normal.normalize();

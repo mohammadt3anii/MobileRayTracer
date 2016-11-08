@@ -16,13 +16,13 @@ namespace MobileRT
     class RayTrace
     {
         private:
-            const Scene &scene_;
+            const Scene& scene_;
             std::unique_ptr<Shader> shader_;
 
         public:
-            RayTrace(Scene &pScene, const unsigned int &whichShader);
+            RayTrace(const Scene& pScene, const unsigned int whichShader);
 
-            RGB RayV(const Ray &ray);
+            RGB RayV(const Ray& ray);
     };
 }
 

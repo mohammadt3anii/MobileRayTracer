@@ -7,7 +7,7 @@
 
 using namespace MobileRT;
 
-RTCamera::RTCamera(const Point &position, const float &hFov, const float &vFov) :
+RTCamera::RTCamera(const Point &position, const float hFov, const float vFov) :
         // convert to radians
         hFov_(hFov * M_PI / 180.0f),
         vFov_(vFov * M_PI / 180.0f),
@@ -26,5 +26,5 @@ Ray RTCamera::getRay(const float u, const float v)
     const float v_alpha = -vFov_ * (v - 0.5f);
     const Vect dir = Vect(FastArcTan(u_alpha), FastArcTan(v_alpha), 1.0f);
     // note that depth will be 0 : primary ray
-    return Ray(position_, dir);
+    return Ray(this->position_, dir);
 }

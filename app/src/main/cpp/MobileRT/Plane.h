@@ -19,7 +19,7 @@ namespace MobileRT
         public:
             Plane (const Point& point, const Vect& normal);
 
-            Intersection Intersect(const Ray &ray) const override;
+            Intersection Intersect(const Ray& ray) const override;
     };
 }
 

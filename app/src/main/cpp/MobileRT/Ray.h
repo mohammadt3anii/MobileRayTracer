@@ -23,8 +23,8 @@ namespace MobileRT
 
             Ray ();
             Ray (const Point& porig, const Vect& pdir);
-            Ray (const Point& porig, const Vect& pdir, const float& pmax_T);
-            Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const unsigned int& d);
+            Ray (const Point& porig, const Vect& pdir, const float pmax_T);
+            Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsigned int d);
     };
 }
 

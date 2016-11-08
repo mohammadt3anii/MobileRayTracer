@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, Scene &scene) :
+ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, const Scene &scene) :
     Shader(rayTrace, scene)
 {
 }
@@ -14,7 +14,7 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, Scene &scene) :
 RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
 {
     RGB rad;
-    const RGB& kD = isect.material()->Kd;
+    const RGB& kD = isect.material().Kd;
 
     // direct lighting - only for diffuse materials
     if (kD.isZero() == false)

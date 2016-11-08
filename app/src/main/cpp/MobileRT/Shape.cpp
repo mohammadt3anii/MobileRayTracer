@@ -8,7 +8,6 @@ using namespace MobileRT;
 
 Shape::Shape ()
 {
-
 }
 
 Intersection Shape::Intersect(const Ray&) const

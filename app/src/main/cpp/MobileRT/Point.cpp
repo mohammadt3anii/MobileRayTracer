@@ -14,7 +14,7 @@ Point::Point () :
 {
 }
 
-Point::Point (const float& px, const float& py, const float& pz) :
+Point::Point (const float px, const float py, const float pz) :
     x_(px),
     y_(py),
     z_(pz)
@@ -54,7 +54,7 @@ Vect Point::operator-(const Point& point) const
     return Vect(this->x_ - point.x_, this->y_ - point.y_, this->z_ - point.z_);
 }
 
-Point Point::operator*(const float& scale) const
+Point Point::operator*(const float scale) const
 {
     return Point(this->x_ * scale, this->y_ * scale, this->z_ * scale);
 }

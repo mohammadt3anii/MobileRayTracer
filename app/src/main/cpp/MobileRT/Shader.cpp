@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-Shader::Shader(RayTrace &rayTrace, Scene &scene) :
+Shader::Shader(RayTrace& rayTrace, const Scene& scene) :
         scene_(scene),
         rayTrace_(rayTrace)
 {

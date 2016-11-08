@@ -20,7 +20,7 @@ namespace MobileRT
             float z;
             
             Vect ();
-            Vect (const float& px, const float& py, const float& pz);
+            Vect (const float px, const float py, const float pz);
             Vect (const Vect& v);
 
             float normalize ();
@@ -31,7 +31,7 @@ namespace MobileRT
 
             // dot product
             float dot (const Vect& v) const;
-            void mult (const float& f);
+            void mult (const float f);
             void sub (const Vect& v);
             float length ();
 
@@ -40,7 +40,7 @@ namespace MobileRT
             //dot product
             float not_dot (const Point& v) const;
 
-            Vect operator*(const float& value) const;
+            Vect operator*(const float value) const;
     };
 }
 

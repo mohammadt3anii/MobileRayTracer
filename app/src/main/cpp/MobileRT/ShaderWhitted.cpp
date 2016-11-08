@@ -7,7 +7,7 @@
 
 using namespace MobileRT;
 
-ShaderWhitted::ShaderWhitted(RayTrace &rayTrace, Scene &scene) :
+ShaderWhitted::ShaderWhitted(RayTrace& rayTrace, const Scene& scene) :
         Shader(rayTrace, scene)
 {
 }
@@ -25,7 +25,7 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 
     RGB rad;
     // shadowed direct lighting - only for diffuse materials
-    if (isect.material()->Kd.isZero() == false)
+    if (isect.material().Kd.isZero() == false)
     {
         const unsigned int Nl = scene_.lights.size();
 
@@ -44,19 +44,19 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
                 if (Lsect.intersected() == false)//se nao ha nenhuma primitiva entre a interseçao e a luz
                 {
                     RGB diffuseRad (ml->rad);//R=1, G=1, B=1
-                    diffuseRad.mult(isect.material()->Kd);//cor da luz
+                    diffuseRad.mult(isect.material().Kd);//cor da luz
                     diffuseRad.mult (cos_N_L);//angulo em relaçao a normal
                     rad.add(diffuseRad);//adiciona a cor da luz
                 }
             }
         }
         // ambient light
-        rad.R += isect.material()->Kd.R * 0.1f;
-        rad.G += isect.material()->Kd.G * 0.1f;
-        rad.B += isect.material()->Kd.B * 0.1f;
+        rad.R += isect.material().Kd.R * 0.1f;
+        rad.G += isect.material().Kd.G * 0.1f;
+        rad.B += isect.material().Kd.B * 0.1f;
     } // end direct + ambient
     // specular reflection
-    if ((isect.material()->Ks.isZero() == false) && (r.depth < this->MAX_DEPTH))
+    if ((isect.material().Ks.isZero() == false) && (r.depth < this->MAX_DEPTH))
     {
         // compute specular reflection
         const Vect sym_vRay = r.dir.symmetric();//raio de reflexao
@@ -68,8 +68,8 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 
         const Point p = isect.point();
         const Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
-        RGB specRad(rayTrace_.RayV(specRay));
-        specRad.mult(isect.material()->Ks);
+        RGB specRad(this->rayTrace_.RayV(specRay));
+        specRad.mult(isect.material().Ks);
         rad.add(specRad);
     }
     return rad;

@@ -18,7 +18,7 @@ namespace MobileRT
             const Point position_;
 
         public:
-            RTCamera(const Point &position, const float &hFov, const float &vFov);
+            RTCamera(const Point& position, const float hFov, const float vFov);
             float FastArcTan(const float x) const;
             Ray getRay(const float u, const float v);
     };
