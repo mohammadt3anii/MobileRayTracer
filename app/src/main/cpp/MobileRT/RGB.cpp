@@ -28,9 +28,7 @@ RGB::RGB (const RGB& rgb) :
 
 bool RGB::isZero () const
 {
-    if ((this->R > 0.0f) || (this->G > 0.0f) || (this->B > 0.0f))
-        return false;
-    return true;
+    return (((this->R > 0.0f) || (this->G > 0.0f) || (this->B > 0.0f)) == true)? false : true;
 }
 
 void RGB::add (const RGB& rgb)

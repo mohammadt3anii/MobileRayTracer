@@ -15,7 +15,6 @@ namespace MobileRT
             enum{
                 MAX_DEPTH = 5
             };
-            const RGB ambient_;
 
         public:
             ShaderWhitted(RayTrace &rayTrace, Scene &scene);

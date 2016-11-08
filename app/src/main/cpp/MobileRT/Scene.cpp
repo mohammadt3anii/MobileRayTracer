@@ -20,7 +20,7 @@ Intersection Scene::trace(const Ray &r) const//TODO: utilizar estrutura de acele
     for (unsigned int i = 0; i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
         Intersection intersection(this->primitives[i]->Intersect(r));
-        if (intersection.intersected() && intersection.length() <= minT)//se o que interseta é a primitva mais proxima
+        if ((intersection.intersected() == true) && intersection.length() <= minT)//se o que interseta é a primitva mais proxima
         {
             f_intersection = intersection;
             minT = f_intersection.length();

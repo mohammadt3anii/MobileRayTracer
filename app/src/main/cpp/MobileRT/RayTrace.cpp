@@ -33,7 +33,7 @@ RGB RayTrace::RayV(const Ray &ray)//trace do raio e verifica se interseta algo
 {
     // compute radiance
     const Intersection intersection(this->scene_.trace(ray));//trace do raio
-    if (intersection.intersected())//se interseta alguma primitiva
+    if (intersection.intersected() == true)//se interseta alguma primitiva
     {
         return this->shader_->Shade(ray, intersection);
     }

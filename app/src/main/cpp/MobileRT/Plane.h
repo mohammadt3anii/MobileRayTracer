@@ -15,7 +15,6 @@ namespace MobileRT
             const Point point_;   // point in the plane
             const Vect normal_;    // normal to the plane
             const float d_;    // 0th degree coefiicient of the plane equation
-            float compute_d () const;
 
         public:
             Plane (const Point& point, const Vect& normal);

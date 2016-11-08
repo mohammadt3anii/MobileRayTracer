@@ -18,6 +18,7 @@ namespace MobileRT
         public:
             const RGB rad;
             const Point pos;
+            
             Light (const RGB& prad, const Point& ppos);
     };
 

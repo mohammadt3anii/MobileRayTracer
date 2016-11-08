@@ -15,7 +15,7 @@ Primitive::Primitive (Shape* ps, Material* pm) :
 Intersection Primitive::Intersect(const Ray &r)
 {
     Intersection isect(this->shape->Intersect(r));
-    if (isect.intersected())
+    if (isect.intersected() == true)
     {
         isect.material(*this->material);
     }

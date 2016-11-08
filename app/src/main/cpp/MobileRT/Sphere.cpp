@@ -19,9 +19,7 @@ Sphere::Quadratic_Sol Sphere::Quadratic (const float A, const float B, const flo
     if (discrim <= 0.0f) return Quadratic_Sol();
     const float rootDiscrim = std::sqrt(discrim);
 
-    float q;
-    if (B < 0.0f) q = - 0.5f * (B - rootDiscrim);
-    else q = -0.5f * (B + rootDiscrim);
+    const float q = (B < 0.0f)? -0.5f * (B - rootDiscrim) : -0.5f * (B + rootDiscrim);
     float t0 = q / A;
     float t1 = C / q;
     if (t0 > t1) {

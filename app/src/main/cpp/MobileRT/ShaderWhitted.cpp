@@ -8,28 +8,20 @@
 using namespace MobileRT;
 
 ShaderWhitted::ShaderWhitted(RayTrace &rayTrace, Scene &scene) :
-        Shader(rayTrace, scene),
-        ambient_(RGB(0.1f, 0.1f, 0.1f))
+        Shader(rayTrace, scene)
 {
 }
 
 RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 {
     const float cosRN = r.dir.dot(isect.normal());
-    Vect shadingN;
-
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    if (cosRN < 0.0f)// entering the object
-    { 
-        shadingN = Vect(isect.normal());
-    } else
-    {
-        // We have to reverse the normal now
-        shadingN = isect.normal().symmetric();
-    }
+    const Vect shadingN = cosRN < 0.0f?
+        Vect(isect.normal())// entering the object
+        : isect.normal().symmetric();// We have to reverse the normal now
 
     RGB rad;
     // shadowed direct lighting - only for diffuse materials
@@ -59,12 +51,12 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
             }
         }
         // ambient light
-        rad.R += isect.material()->Kd.R * this->ambient_.R;
-        rad.G += isect.material()->Kd.G * this->ambient_.G;
-        rad.B += isect.material()->Kd.B * this->ambient_.B;
+        rad.R += isect.material()->Kd.R * 0.1f;
+        rad.G += isect.material()->Kd.G * 0.1f;
+        rad.B += isect.material()->Kd.B * 0.1f;
     } // end direct + ambient
     // specular reflection
-    if ((isect.material()->Ks.isZero() == false) && (r.depth < MAX_DEPTH))
+    if ((isect.material()->Ks.isZero() == false) && (r.depth < this->MAX_DEPTH))
     {
         // compute specular reflection
         const Vect sym_vRay = r.dir.symmetric();//raio de reflexao

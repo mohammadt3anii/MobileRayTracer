@@ -37,7 +37,6 @@ RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
             }
         }
         // ambient light
-        //const RGB ambient(0.1f, 0.1f, 0.1f);
         rad.R += kD.R * 0.1f;
         rad.G += kD.G * 0.1f;
         rad.B += kD.B * 0.1f;

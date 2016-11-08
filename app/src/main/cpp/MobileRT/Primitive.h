@@ -17,8 +17,8 @@ namespace MobileRT
             
 
         public:
-            Shape *shape;
-            Material *material;
+            Shape* shape;
+            Material* material;
 
             Primitive (Shape* ps, Material* pm);
 

@@ -8,15 +8,10 @@
 
 using namespace MobileRT;
 
-float Plane::compute_d () const
-{
-    return -(this->normal_.not_dot(this->point_));
-}
-
 Plane::Plane (const Point& point, const Vect& normal) :
     point_(point),
     normal_(normal.returnNormalized()),
-    d_(compute_d ())
+    d_(-(this->normal_.not_dot(this->point_)))
 {
 }
 
