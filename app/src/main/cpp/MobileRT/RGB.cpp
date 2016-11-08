@@ -28,28 +28,28 @@ RGB::RGB (const RGB& rgb) :
 
 bool RGB::isZero () const
 {
-    if ((R > 0.0f) || (G > 0.0f) || (B > 0.0f))
+    if ((this->R > 0.0f) || (this->G > 0.0f) || (this->B > 0.0f))
         return false;
     return true;
 }
 
 void RGB::add (const RGB& rgb)
 {
-    R += rgb.R;
-    G += rgb.G;
-    B += rgb.B;
+    this->R += rgb.R;
+    this->G += rgb.G;
+    this->B += rgb.B;
 }
 
 void RGB::mult (const RGB& rgb)
 {
-    R *= rgb.R;
-    G *= rgb.G;
-    B *= rgb.B;
+    this->R *= rgb.R;
+    this->G *= rgb.G;
+    this->B *= rgb.B;
 }
 
 void RGB::mult (const float f)
 {
-    R *= f;
-    G *= f;
-    B *= f;
+    this->R *= f;
+    this->G *= f;
+    this->B *= f;
 }

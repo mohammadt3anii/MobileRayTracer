@@ -31,7 +31,7 @@ Ray::Ray (const Point& porig, const Vect& pdir, const float& pmax_T) :
     dir.normalize();
 }
 
-Ray::Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const int& d) :
+Ray::Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const unsigned int& d) :
     orig(porig),
     dir(pdir),
     max_T(pmax_T),

@@ -22,8 +22,8 @@ float RTCamera::FastArcTan(const float x) const
 
 Ray RTCamera::getRay(const float u, const float v)
 {
-    const float u_alpha = hFov_ * (u - 0.5);
-    const float v_alpha = -vFov_ * (v - 0.5);
+    const float u_alpha = hFov_ * (u - 0.5f);
+    const float v_alpha = -vFov_ * (v - 0.5f);
     const Vect dir = Vect(FastArcTan(u_alpha), FastArcTan(v_alpha), 1.0f);
     // note that depth will be 0 : primary ray
     return Ray(position_, dir);

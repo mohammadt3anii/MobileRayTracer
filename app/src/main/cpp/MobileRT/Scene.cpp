@@ -15,9 +15,9 @@ Intersection Scene::trace(const Ray &r) const//TODO: utilizar estrutura de acele
 {
     Intersection f_intersection;
     float minT = MAX_LENGTH;
-    const int  n = this->primitives.size();
+    const unsigned int  n = this->primitives.size();
 
-    for (int i = 0; i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
+    for (unsigned int i = 0; i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
         Intersection intersection(this->primitives[i]->Intersect(r));
         if (intersection.intersected() && intersection.length() <= minT)//se o que interseta é a primitva mais proxima
@@ -31,8 +31,8 @@ Intersection Scene::trace(const Ray &r) const//TODO: utilizar estrutura de acele
 
 Intersection Scene::shadowTrace(const Ray &ray) const//TODO: utilizar estrutura de aceleraçao
 {
-    const int  n = this->primitives.size();
-    for (int i = 0; i < n; i++)//fazer trace do shadow ray
+    const unsigned int  n = this->primitives.size();
+    for (unsigned int i = 0; i < n; i++)//fazer trace do shadow ray
     {
         const Intersection intersection(this->primitives[i]->Intersect(ray));
         if (intersection.intersected())

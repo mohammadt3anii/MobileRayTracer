@@ -17,6 +17,7 @@ namespace MobileRT
         public:
             const RGB Kd;   // diffuse reflection
             const RGB Ks;   // specular reflection
+            
             Material ();
             Material (const RGB& pKd);
             Material (const RGB& pKd, const RGB& pKs);

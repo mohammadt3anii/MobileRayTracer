@@ -5,21 +5,25 @@
 #ifndef MOBILERAYTRACER_RGB_H
 #define MOBILERAYTRACER_RGB_H
 
-namespace MobileRT {
-    class RGB {
-    private:
+namespace MobileRT
+{
+    class RGB
+    {
+        private:
 
-    public:
-        float R, G, B;
+        public:
+            float R;
+            float G;
+            float B;
 
-        RGB ();
-        RGB (const float r, const float g, const float b);
-        RGB (const RGB& rgb);
+            RGB ();
+            RGB (const float r, const float g, const float b);
+            RGB (const RGB& rgb);
 
-        bool isZero() const;
-        void add (const RGB& rgb);
-        void mult (const RGB& rgb);
-        void mult (const float f);
+            bool isZero() const;
+            void add (const RGB& rgb);
+            void mult (const RGB& rgb);
+            void mult (const float f);
     };
 }
 

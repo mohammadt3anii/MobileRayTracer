@@ -9,7 +9,7 @@
 
 using namespace MobileRT;
 
-Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader) :
+Renderer::Renderer(const unsigned int pcanvasW, const unsigned int pcanvasH, const unsigned int renderRes, const unsigned int whichScene, const unsigned int whichShader) :
     RT_W(renderRes),
     RT_H(renderRes),
     LowX((pcanvasW-RT_W) >> 1),
@@ -46,14 +46,14 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
     this->rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
 }
 
-void Renderer::render(uint32_t *canvas, const int width) const//TODO: permitir lançar mais de 1 raio por pixel
+void Renderer::render(uint32_t *canvas, const unsigned int width) const//TODO: permitir lançar mais de 1 raio por pixel
 {
     const float INV_IMG_WIDTH = 1.0f / this->RT_W;
     const float INV_IMG_HEIGHT = 1.0f / this->RT_H;
     //#pragma omp parallel for num_threads(4)
-    for(int y = 0; y < this->RT_H; y++)
+    for(unsigned int y = 0; y < this->RT_H; y++)
     {
-        for (int x = 0; x < this->RT_W; x++)
+        for (unsigned int x = 0; x < this->RT_W; x++)
         {
             // generate the ray
             const float u = static_cast<float>(x * INV_IMG_WIDTH);

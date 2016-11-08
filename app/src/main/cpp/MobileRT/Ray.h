@@ -19,12 +19,12 @@ namespace MobileRT
             const Point orig;
             Vect dir;
             const float max_T;
-            const int depth;
+            const unsigned int depth;
 
             Ray ();
             Ray (const Point& porig, const Vect& pdir);
             Ray (const Point& porig, const Vect& pdir, const float& pmax_T);
-            Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const int& d);
+            Ray (const Point& porig, const Vect& pdir, const float& pmax_T, const unsigned int& d);
     };
 }
 

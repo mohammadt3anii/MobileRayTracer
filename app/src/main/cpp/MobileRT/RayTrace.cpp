@@ -8,7 +8,7 @@
 
 using namespace MobileRT;
 
-RayTrace::RayTrace(Scene &scene, const int &whichShader) :
+RayTrace::RayTrace(Scene &scene, const unsigned int &whichShader) :
     scene_(scene)
 {
     switch (whichShader)
@@ -22,6 +22,9 @@ RayTrace::RayTrace(Scene &scene, const int &whichShader) :
         {
             this->shader_ = std::unique_ptr<ShaderWhitted>(new ShaderWhitted(*this, scene));
         }
+            break;
+
+        default:
             break;
     }
 }

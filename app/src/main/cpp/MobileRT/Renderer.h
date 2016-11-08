@@ -14,17 +14,17 @@ namespace MobileRT
     class Renderer
     {
         private:
-            const int RT_W;
-            const int RT_H;
-            const int LowX = -0;
-            const int LowY = 0;
+            const unsigned int RT_W;
+            const unsigned int RT_H;
+            const unsigned int LowX = -0;
+            const unsigned int LowY = 0;
             std::unique_ptr<Scene> scene_;
             std::unique_ptr<RayTrace> rTracer_;
             std::unique_ptr<RTCamera> camera_;
 
         public:
-            Renderer (const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader);
-            void render (uint32_t* canvas, const int width) const;
+            Renderer (const unsigned int pcanvasW, const unsigned int pcanvasH, const unsigned int renderRes, const unsigned int whichScene, const unsigned int whichShader);
+            void render (uint32_t* canvas, const unsigned int width) const;
     };
 }
 

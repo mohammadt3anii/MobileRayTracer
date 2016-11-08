@@ -14,32 +14,33 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, Scene &scene) :
 RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
 {
     RGB rad;
+    const RGB& kD = isect.material()->Kd;
 
     // direct lighting - only for diffuse materials
-    if (!isect.material()->Kd.isZero())
+    if (kD.isZero() == false)
     {
-        int Nl = scene_.lights.size();
+        const unsigned int Nl = scene_.lights.size();
 
-        for (int l=0 ; l < Nl ; l++)
+        for (unsigned int l = 0 ; l < Nl ; l++)
         {
-            Light *ml = scene_.lights[l];
+            const Light *ml = scene_.lights[l];
 
             Vect L(ml->pos - isect.point());
             L.normalize();
-            float cos_N_L = L.dot(isect.normal());
+            const float cos_N_L = L.dot(isect.normal());
             if (cos_N_L > 0.0f)
             {
-                rad.R += isect.material()->Kd.R * cos_N_L * ml->rad.R;
-                rad.G += isect.material()->Kd.G * cos_N_L * ml->rad.G;
-                rad.B += isect.material()->Kd.B * cos_N_L * ml->rad.B;
+                const RGB radLight = ml->rad;
+                rad.R += kD.R * cos_N_L * radLight.R;
+                rad.G += kD.G * cos_N_L * radLight.G;
+                rad.B += kD.B * cos_N_L * radLight.B;
             }
         }
         // ambient light
-        RGB ambient(0.1f, 0.1f, 0.1f);
-        const RGB& v = isect.material()->Kd;
-        rad.R += v.R * ambient.R;
-        rad.G += v.G * ambient.G;
-        rad.B += v.B * ambient.B;
+        //const RGB ambient(0.1f, 0.1f, 0.1f);
+        rad.R += kD.R * 0.1f;
+        rad.G += kD.G * 0.1f;
+        rad.B += kD.B * 0.1f;
     } // end direct + ambient
     return rad;
 }

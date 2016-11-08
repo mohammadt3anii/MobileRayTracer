@@ -33,13 +33,13 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 
     RGB rad;
     // shadowed direct lighting - only for diffuse materials
-    if (!isect.material()->Kd.isZero())
+    if (isect.material()->Kd.isZero() == false)
     {
-        const int Nl = scene_.lights.size();
+        const unsigned int Nl = scene_.lights.size();
 
-        for (int l = 0; l < Nl ; l++)//para cada luz
+        for (unsigned int l = 0; l < Nl ; l++)//para cada luz
         {
-            Light* ml = scene_.lights[l];
+            const Light* ml = scene_.lights[l];
 
             Vect L (ml->pos - isect.point());//calcula vetor desde a interseçao até à luz
             const float ml_distance = L.normalize();//distancia do vetor (e normaliza-o)
