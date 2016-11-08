@@ -25,12 +25,12 @@ namespace MobileRT
             Intersection (const Point& point, const Vect& normal, const float& length);
 
             void material(Material& material);
-            Material* material() const;
-
-            bool intersected() const;
-            Point point() const;
-            Vect normal() const;
-            float length() const;
+            
+            const bool& intersected() const;
+            const Point& point() const;
+            const Vect& normal() const;
+            const float& length() const;
+            const Material* material() const;
     };
 }
 

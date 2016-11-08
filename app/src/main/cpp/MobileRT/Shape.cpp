@@ -11,7 +11,7 @@ Shape::Shape ()
 
 }
 
-Intersection Shape::Intersect(const Ray&)
+Intersection Shape::Intersect(const Ray&) const
 {
     return Intersection();
 }

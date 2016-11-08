@@ -8,7 +8,8 @@
 using namespace MobileRT;
 
 ShaderWhitted::ShaderWhitted(RayTrace &rayTrace, Scene &scene) :
-        Shader(rayTrace, scene)
+        Shader(rayTrace, scene),
+        ambient_()
 {
 }
 
@@ -32,7 +33,7 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
 
     RGB rad;
     // shadowed direct lighting - only for diffuse materials
-    if (!isect.material()->getKd().isZero())
+    if (!isect.material()->Kd.isZero())
     {
         const int Nl = scene_.lights.size();
 
@@ -40,7 +41,7 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
         {
             Light* ml = scene_.lights[l];
 
-            Vect L (ml->getPos() - isect.point());//calcula vetor desde a interseçao até à luz
+            Vect L (ml->pos - isect.point());//calcula vetor desde a interseçao até à luz
             const float ml_distance = L.normalize();//distancia do vetor (e normaliza-o)
             const float cos_N_L = L.dot(shadingN);//x*x + y*y + z*z
             if (cos_N_L > 0.0f)
@@ -50,20 +51,20 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
                 Intersection Lsect(scene_.shadowTrace(shadowRay));//interseçao do raio de sombra com a primitiva mais proxima
                 if (!Lsect.intersected())//se nao ha nenhuma primitiva entre a interseçao e a luz
                 {
-                    RGB diffuseRad (ml->getRad());//R=1, G=1, B=1
-                    diffuseRad.mult(isect.material()->getKd());//cor da luz
+                    RGB diffuseRad (ml->rad);//R=1, G=1, B=1
+                    diffuseRad.mult(isect.material()->Kd);//cor da luz
                     diffuseRad.mult (cos_N_L);//angulo em relaçao a normal
                     rad.add(diffuseRad);//adiciona a cor da luz
                 }
             }
         }
         // ambient light
-        rad.R += isect.material()->getKd().R * ambient.R;
-        rad.G += isect.material()->getKd().G * ambient.G;
-        rad.B += isect.material()->getKd().B * ambient.B;
+        rad.R += isect.material()->Kd.R * this->ambient_.R;
+        rad.G += isect.material()->Kd.G * this->ambient_.G;
+        rad.B += isect.material()->Kd.B * this->ambient_.B;
     } // end direct + ambient
     // specular reflection
-    if ((isect.material()->getKs().isZero() == false) && (r.depth < MAX_DEPTH))
+    if ((isect.material()->Ks.isZero() == false) && (r.depth < MAX_DEPTH))
     {
         // compute specular reflection
         const Vect sym_vRay = r.dir.symmetric();//raio de reflexao
@@ -76,7 +77,7 @@ RGB ShaderWhitted::Shade(const Ray &r, const Intersection &isect) const
         const Point p = isect.point();
         const Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
         RGB specRad(rayTrace_.RayV(specRay));
-        specRad.mult(isect.material()->getKs());
+        specRad.mult(isect.material()->Ks);
         rad.add(specRad);
     }
     return rad;

@@ -11,11 +11,11 @@ namespace MobileRT
 {
     class SceneCornell : public Scene
     {
-    private:
+        private:
+            
 
-
-    public:
-        SceneCornell ();
+        public:
+            SceneCornell ();
     };
 }
 

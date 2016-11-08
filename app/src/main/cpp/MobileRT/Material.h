@@ -12,16 +12,14 @@ namespace MobileRT
     class Material
     {
         private:
-            const RGB Kd;   // diffuse reflection
-            const RGB Ks;   // specular reflection
+            
 
         public:
+            const RGB Kd;   // diffuse reflection
+            const RGB Ks;   // specular reflection
             Material ();
             Material (const RGB& pKd);
             Material (const RGB& pKd, const RGB& pKs);
-
-            const RGB& getKd () const;
-            const RGB& getKs () const;
     };
 }
 

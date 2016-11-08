@@ -14,12 +14,13 @@ float Plane::compute_d () const
 }
 
 Plane::Plane (const Point& point, const Vect& normal) :
-    point_(point), normal_(normal.returnNormalized())
+    point_(point),
+    normal_(normal.returnNormalized()),
+    d_(compute_d ())
 {
-    this->d_ = compute_d ();
 }
 
-Intersection Plane::Intersect(const Ray &ray)
+Intersection Plane::Intersect(const Ray &ray) const
 {
     const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??

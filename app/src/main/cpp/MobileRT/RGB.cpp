@@ -6,17 +6,23 @@
 using namespace MobileRT;
 
 RGB::RGB () :
-    R(0.0f), G(0.0f), B(0.0f)
+    R(0.0f),
+    G(0.0f),
+    B(0.0f)
 {
 }
 
 RGB::RGB (const float r, const float g, const float b) :
-    R(r), G(g), B(b)
+    R(r),
+    G(g),
+    B(b)
 {
 }
 
 RGB::RGB (const RGB& rgb) :
-    R(rgb.R), G(rgb.G), B(rgb.B)
+    R(rgb.R),
+    G(rgb.G),
+    B(rgb.B)
 {
 }
 

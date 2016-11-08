@@ -29,27 +29,28 @@ void Intersection::material(Material& material)
     this->material_ = &material;
 }
 
-Material* Intersection::material() const
-{
-    return this->material_;
-}
 
-bool Intersection::intersected() const
+const bool& Intersection::intersected() const
 {
     return this->intersected_;
 }
 
-Point Intersection::point() const
+const Point& Intersection::point() const
 {
     return this->point_;
 }
 
-Vect Intersection::normal() const
+const Vect& Intersection::normal() const
 {
     return this->normal_;
 }
 
-float Intersection::length() const
+const float& Intersection::length() const
 {
     return this->length_;
+}
+
+const Material* Intersection::material() const
+{
+    return this->material_;
 }

@@ -9,7 +9,8 @@
 
 using namespace MobileRT;
 
-Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader) {
+Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, const int whichScene, const int whichShader)
+{
     RT_H = RT_W = renderRes;
     LowX = (pcanvasW-RT_W) >> 1;
     LowY = (pcanvasH-RT_H) >> 1;
@@ -17,7 +18,8 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
     float ratio = static_cast<float>(RT_H) / static_cast<float>(RT_W);
 
     // create and load the Scene, parameterize the camera
-    switch (whichScene) {
+    switch (whichScene)
+    {
         case 0 : // cornell
         {
             scene_ = std::unique_ptr<SceneCornell>(new SceneCornell());
@@ -26,6 +28,7 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
             camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.0f, 0.0f, -3.4f), hFov, vFov));
         }
             break;
+
         case 1 : // spheres
         {
             scene_ = std::unique_ptr<SceneSpheres>(new SceneSpheres());
@@ -34,6 +37,7 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
             camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.0f, 0.5f, 1.0f), hFov, vFov));
         }
             break;
+
         default:
             break;
     }
@@ -42,11 +46,14 @@ Renderer::Renderer(const int pcanvasW, const int pcanvasH, const int renderRes, 
     rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
 }
 
-void Renderer::render(uint32_t *canvas, const int width) {//TODO: permitir lançar mais de 1 raio por pixel
+void Renderer::render(uint32_t *canvas, const int width)//TODO: permitir lançar mais de 1 raio por pixel
+{
     const float INV_IMG_WIDTH = 1.0f / RT_W;
     const float INV_IMG_HEIGHT = 1.0f / RT_H;
-    for(int y = 0; y < RT_H; y++) {
-        for (int x = 0; x < RT_W; x++) {
+    for(int y = 0; y < RT_H; y++)
+    {
+        for (int x = 0; x < RT_W; x++)
+        {
             // generate the ray
             const float u = static_cast<float>(x * INV_IMG_WIDTH);
             const float v = static_cast<float>(y * INV_IMG_HEIGHT);

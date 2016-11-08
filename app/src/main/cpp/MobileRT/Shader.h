@@ -11,10 +11,11 @@
 namespace MobileRT
 {
     class RayTrace;
+    
     class Shader
     {
         protected:
-            Scene &scene_;
+            const Scene &scene_;
             RayTrace &rayTrace_;
 
         public:

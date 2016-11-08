@@ -7,12 +7,14 @@
 using namespace MobileRT;
 
 Primitive::Primitive (Shape* ps, Material* pm) :
-    shape(ps), material(pm)
+    shape(ps),
+    material(pm)
 {
 }
 
-Intersection Primitive::Intersect(const Ray &r) {
-    Intersection isect(shape->Intersect(r));
+Intersection Primitive::Intersect(const Ray &r)
+{
+    Intersection isect(this->shape->Intersect(r));
     if (isect.intersected())
     {
         isect.material(*this->material);

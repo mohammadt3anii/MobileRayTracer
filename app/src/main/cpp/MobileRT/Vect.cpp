@@ -7,18 +7,24 @@
 
 using namespace MobileRT;
 
-Vect::Vect ()
-    : x(0.0f), y(0.0f), z(0.0f)
+Vect::Vect () :
+    x(0.0f),
+    y(0.0f),
+    z(0.0f)
 {
 }
 
 Vect::Vect (const float& px, const float& py, const float& pz) :
-    x(px), y(py), z(pz)
+    x(px),
+    y(py),
+    z(pz)
 {
 }
 
 Vect::Vect (const Vect& v) :
-    x(v.x), y(v.y), z(v.z)
+    x(v.x),
+    y(v.y),
+    z(v.z)
 {
 }
 
@@ -28,9 +34,9 @@ Vect::Vect (const Vect& v) :
     if (length != 0.0f)
     {
         float inv_length = 1.0f / length;
-        x *= inv_length;
-        y *= inv_length;
-        z *= inv_length;
+        this->x *= inv_length;
+        this->y *= inv_length;
+        this->z *= inv_length;
     }
     return length;
 }
@@ -45,26 +51,26 @@ Vect Vect::returnNormalized() const
 // symetric vector
 Vect Vect::symmetric () const
 {
-    return Vect(-x, -y, -z);
+    return Vect(-this->x, -this->y, -this->z);
 }
 
 // dot product
 float Vect::dot (const Vect& v) const
 {
-    return (x*v.x + y*v.y + z*v.z);
+    return (this->x * v.x + this->y * v.y + this->z * v.z);
 }
 
 void Vect::mult (const float& f) {
-    x *= f;
-    y *= f;
-    z *= f;
+    this->x *= f;
+    this->y *= f;
+    this->z *= f;
 }
 
  void Vect::sub (const Vect& v)
  {
-    x -= v.x;
-    y -= v.y;
-    z -= v.z;
+    this->x -= v.x;
+    this->y -= v.y;
+    this->z -= v.z;
 }
 
 float Vect::length ()
@@ -74,9 +80,9 @@ float Vect::length ()
 
 void Vect::add (const Vect& v)
 {
-    x += v.x;
-    y += v.y;
-    z += v.z;
+    this->x += v.x;
+    this->y += v.y;
+    this->z += v.z;
 }
 
 // dot product
@@ -88,5 +94,5 @@ float Vect::not_dot (const Point& v) const
 
 Vect Vect::operator*(const float& value) const
 {
-    return Vect(x*value, y*value, z*value);
+    return Vect(this->x * value, this->y * value, this->z * value);
 }

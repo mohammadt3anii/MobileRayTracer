@@ -12,6 +12,7 @@ namespace MobileRT
     class SceneSpheres : public Scene
     {
         private:
+            
 
         public:
             SceneSpheres ();

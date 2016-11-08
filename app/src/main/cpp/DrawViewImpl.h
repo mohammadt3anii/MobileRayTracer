@@ -15,7 +15,7 @@ class DrawViewImpl
         
 
     public:
-
+        
 };
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

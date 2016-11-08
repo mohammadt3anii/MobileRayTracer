@@ -14,10 +14,12 @@ namespace MobileRT
     class Primitive
     {
         private:
+            
 
         public:
             Shape *shape;
             Material *material;
+
             Primitive (Shape* ps, Material* pm);
 
             Intersection Intersect(const Ray &ray);

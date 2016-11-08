@@ -13,12 +13,13 @@ namespace MobileRT
     class Ray
     {
         private:
+            
 
         public:
-            Point orig;
+            const Point orig;
             Vect dir;
-            float max_T;
-            int depth;
+            const float max_T;
+            const int depth;
 
             Ray ();
             Ray (const Point& porig, const Vect& pdir);

@@ -8,10 +8,13 @@
 namespace MobileRT
 {
     class Vect;
+    
     class Point
     {
         private:
-            float x_, y_, z_;
+            float x_;
+            float y_;
+            float z_;
 
         public:
             Point();

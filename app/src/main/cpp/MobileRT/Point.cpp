@@ -8,17 +8,23 @@
 using namespace MobileRT;
 
 Point::Point () :
-    x_(0.0f), y_(0.0f), z_(0.0f)
+    x_(0.0f),
+    y_(0.0f),
+    z_(0.0f)
 {
 }
 
 Point::Point (const float& px, const float& py, const float& pz) :
-    x_(px), y_(py), z_(pz)
+    x_(px),
+    y_(py),
+    z_(pz)
 {
 }
 
 Point::Point (const Point& p) :
-    x_(p.x_), y_(p.y_), z_(p.z_)
+    x_(p.x_),
+    y_(p.y_),
+    z_(p.z_)
 {
 }
 
@@ -34,7 +40,7 @@ Point Point::multiply(const Vect& vector) const
 
 float Point::sumCoordenates() const
 {
-    return x_ + y_ + z_;
+    return this->x_ + this->y_ + this->z_;
 }
 
 

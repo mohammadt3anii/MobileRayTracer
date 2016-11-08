@@ -13,14 +13,12 @@ namespace MobileRT
     class Light
     {
         private:
-            const RGB rad_;
-            const Point pos_;
+            
 
         public:
+            const RGB rad;
+            const Point pos;
             Light (const RGB& prad, const Point& ppos);
-
-            const RGB& getRad () const;
-            const Point& getPos () const;
     };
 
 }

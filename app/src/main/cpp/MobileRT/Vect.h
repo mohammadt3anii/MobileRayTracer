@@ -12,9 +12,12 @@ namespace MobileRT
     class Vect
     {
         private:
+            
 
         public:
-            float x,y,z;
+            float x;
+            float y;
+            float z;
             
             Vect ();
             Vect (const float& px, const float& py, const float& pz);

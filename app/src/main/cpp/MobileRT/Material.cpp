@@ -21,13 +21,3 @@ Material::Material (const RGB& pKd, const RGB& pKs) :
     Ks(pKs)
 {
 }
-
-const RGB& Material::getKd () const
-{
-    return this->Kd;
-}
-
-const RGB& Material::getKs () const
-{
-    return this->Ks;
-}
