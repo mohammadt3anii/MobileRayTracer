@@ -10,6 +10,7 @@ namespace MobileRT
     class RGB
     {
         private:
+            
 
         public:
             float R;

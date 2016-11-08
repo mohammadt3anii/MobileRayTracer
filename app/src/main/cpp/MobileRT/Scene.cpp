@@ -35,7 +35,7 @@ Intersection Scene::shadowTrace(const Ray &ray) const//TODO: utilizar estrutura 
     for (unsigned int i = 0; i < n; i++)//fazer trace do shadow ray
     {
         const Intersection intersection(this->primitives[i]->Intersect(ray));
-        if (intersection.intersected())
+        if (intersection.intersected() == true)
         {
             return intersection;
         }
