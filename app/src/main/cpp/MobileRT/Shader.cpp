@@ -12,6 +12,10 @@ Shader::Shader(RayTrace& rayTrace, const Scene& scene) :
 {
 }
 
+Shader::~Shader ()
+{
+}
+
 RGB Shader::Shade(const Ray &, const Intersection &) const
 {
     return RGB();

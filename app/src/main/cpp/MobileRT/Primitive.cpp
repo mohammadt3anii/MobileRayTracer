@@ -14,6 +14,7 @@ Primitive::Primitive (const Shape* const ps, const Material& pm) :
 
 Primitive::~Primitive ()
 {
+    delete this->shape_;
 }
 
 Intersection Primitive::Intersect(const Ray& r)
@@ -24,9 +25,4 @@ Intersection Primitive::Intersect(const Ray& r)
         isect.material(&this->material_);
     }
     return isect;
-}
-
-void Primitive::eraseShape ()
-{
-    delete this->shape_;
 }

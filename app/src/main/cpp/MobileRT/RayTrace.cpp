@@ -15,18 +15,23 @@ RayTrace::RayTrace(const Scene& scene, const unsigned int whichShader) :
     {
         case 0:
         {
-            this->shader_ = std::unique_ptr<ShaderNoShadows>(new ShaderNoShadows(*this, scene));
+            this->shader_ = new ShaderNoShadows(*this, scene);
         }
             break;
         case 1:
         {
-            this->shader_ = std::unique_ptr<ShaderWhitted>(new ShaderWhitted(*this, scene));
+            this->shader_ = new ShaderWhitted(*this, scene);
         }
             break;
 
         default:
             break;
     }
+}
+
+RayTrace::~RayTrace ()
+{
+    delete this->shader_;
 }
 
 RGB RayTrace::RayV (const Ray& ray)//trace do raio e verifica se interseta algo

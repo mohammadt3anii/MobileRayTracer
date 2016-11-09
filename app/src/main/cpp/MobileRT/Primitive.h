@@ -22,8 +22,6 @@ namespace MobileRT
             virtual ~Primitive ();
 
             Intersection Intersect(const Ray& ray);
-
-            virtual void eraseShape ();
     };
 }
 

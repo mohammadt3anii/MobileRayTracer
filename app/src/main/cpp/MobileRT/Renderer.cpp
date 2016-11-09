@@ -64,7 +64,6 @@ void Renderer::render(uint32_t *canvas, const unsigned int width) const//TODO: p
             canvas[x + y * width] = ToneMapper::RGB2Color(rayRGB);
         }
     }
-    this->scene_->eraseScene();
     delete this->scene_;
     delete this->camera_;
     delete this->rTracer_;

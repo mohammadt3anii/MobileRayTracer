@@ -11,6 +11,19 @@ Scene::Scene()
 {
 }
 
+Scene::~Scene()
+{
+    for (unsigned i = 0; i < this->lights.size(); i++)
+    {
+        delete this->lights[i];
+    }
+    
+    for (unsigned i = 0; i < this->primitives.size(); i++)
+    {
+        delete this->primitives[i];
+    }
+}
+
 Intersection Scene::trace(const Ray &r) const//TODO: utilizar estrutura de aceleraçao
 {
     Intersection f_intersection;
@@ -41,17 +54,4 @@ Intersection Scene::shadowTrace(const Ray &ray) const//TODO: utilizar estrutura 
         }
     }
     return Intersection();
-}
-
-void Scene::eraseScene ()
-{
-    for (unsigned i = 0; i < this->lights.size(); i++)
-    {
-        delete this->lights[i];
-    }
-    for (unsigned i = 0; i < this->primitives.size(); i++)
-    {
-        primitives[i]->eraseShape();
-        delete this->primitives[i];
-    }
 }
