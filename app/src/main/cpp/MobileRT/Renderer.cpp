@@ -22,28 +22,27 @@ Renderer::Renderer(const unsigned int pcanvasW, const unsigned int pcanvasH, con
     {
         case 0 : // cornell
         {
-            this->scene_ = std::unique_ptr<SceneCornell>(new SceneCornell());
+            this->scene_ = new SceneCornell();
             const float hFov = 45.0f;
             const float vFov = hFov * ratio;
-            this->camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.0f, 0.0f, -3.4f), hFov, vFov));
+            this->camera_ = new RTCamera(Point(0.0f, 0.0f, -3.4f), hFov, vFov);
         }
             break;
 
         case 1 : // spheres
         {
-            this->scene_ = std::unique_ptr<SceneSpheres>(new SceneSpheres());
+            this->scene_ = new SceneSpheres();
             const float hFov = 60.0f;
             const float vFov = hFov * ratio;
-            this->camera_ = std::unique_ptr<RTCamera>(new RTCamera(Point(0.0f, 0.5f, 1.0f), hFov, vFov));
+            this->camera_ = new RTCamera(Point(0.0f, 0.5f, 1.0f), hFov, vFov);
         }
             break;
 
         default:
             break;
     }
-
     // create the ray tracer
-    this->rTracer_ = std::unique_ptr<RayTrace>(new RayTrace(*scene_, whichShader));
+    this->rTracer_ = new RayTrace(*this->scene_, whichShader);
 }
 
 void Renderer::render(uint32_t *canvas, const unsigned int width) const//TODO: permitir lançar mais de 1 raio por pixel
@@ -58,11 +57,15 @@ void Renderer::render(uint32_t *canvas, const unsigned int width) const//TODO: p
             // generate the ray
             const float u = static_cast<float>(x * INV_IMG_WIDTH);
             const float v = static_cast<float>(y * INV_IMG_HEIGHT);
-            const Ray r = camera_->getRay(u, v);//constroi raio
-            const RGB rayRGB(rTracer_->RayV(r));//faz trace do raio
+            const Ray r = this->camera_->getRay(u, v);//constroi raio
+            const RGB rayRGB(this->rTracer_->RayV(r));//faz trace do raio
 
             // tonemap and convert to Paint
             canvas[x + y * width] = ToneMapper::RGB2Color(rayRGB);
         }
     }
+    this->scene_->eraseScene();
+    delete this->scene_;
+    delete this->camera_;
+    delete this->rTracer_;
 }

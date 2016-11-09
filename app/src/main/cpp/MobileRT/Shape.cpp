@@ -10,6 +10,10 @@ Shape::Shape ()
 {
 }
 
+Shape::~Shape ()
+{
+}
+
 Intersection Shape::Intersect(const Ray&) const
 {
     return Intersection();

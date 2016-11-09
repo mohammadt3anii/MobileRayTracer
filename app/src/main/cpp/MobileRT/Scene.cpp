@@ -42,3 +42,16 @@ Intersection Scene::shadowTrace(const Ray &ray) const//TODO: utilizar estrutura 
     }
     return Intersection();
 }
+
+void Scene::eraseScene ()
+{
+    for (unsigned i = 0; i < this->lights.size(); i++)
+    {
+        delete this->lights[i];
+    }
+    for (unsigned i = 0; i < this->primitives.size(); i++)
+    {
+        primitives[i]->eraseShape();
+        delete this->primitives[i];
+    }
+}

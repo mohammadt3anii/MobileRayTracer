@@ -25,6 +25,8 @@ namespace MobileRT
             Intersection trace(const Ray& ray) const;
 
             Intersection shadowTrace(const Ray& ray) const;
+
+            void eraseScene ();
     };
 }
 

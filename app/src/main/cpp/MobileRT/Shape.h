@@ -17,6 +17,7 @@ namespace MobileRT
 
         public:
             Shape ();
+            virtual ~Shape ();
 
             virtual Intersection Intersect(const Ray&) const;
     };

@@ -18,9 +18,9 @@ namespace MobileRT
             const unsigned int RT_H;
             const unsigned int LowX;
             const unsigned int LowY;
-            std::unique_ptr<Scene> scene_;
-            std::unique_ptr<RayTrace> rTracer_;
-            std::unique_ptr<RTCamera> camera_;
+            Scene* scene_;
+            RayTrace* rTracer_;
+            RTCamera* camera_;
 
         public:
             Renderer (const unsigned int pcanvasW, const unsigned int pcanvasH, const unsigned int renderRes, const unsigned int whichScene, const unsigned int whichShader);

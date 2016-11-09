@@ -7,7 +7,7 @@
 
 using namespace MobileRT;
 
-RTCamera::RTCamera(const Point &position, const float hFov, const float vFov) :
+RTCamera::RTCamera(const Point& position, const float hFov, const float vFov) :
         // convert to radians
         hFov_(hFov * M_PI / 180.0f),
         vFov_(vFov * M_PI / 180.0f),
