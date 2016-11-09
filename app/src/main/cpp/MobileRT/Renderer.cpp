@@ -45,7 +45,7 @@ Renderer::Renderer(const unsigned int pcanvasW, const unsigned int pcanvasH, con
     this->rTracer_ = new RayTrace(*this->scene_, whichShader);
 }
 
-void Renderer::render(uint32_t *canvas, const unsigned int width) const//TODO: permitir lançar mais de 1 raio por pixel
+void Renderer::render(unsigned int* canvas, const unsigned int width) const//TODO: permitir lançar mais de 1 raio por pixel
 {
     const float INV_IMG_WIDTH = 1.0f / this->RT_W;
     const float INV_IMG_HEIGHT = 1.0f / this->RT_H;

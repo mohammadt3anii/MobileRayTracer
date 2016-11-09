@@ -5,7 +5,6 @@
 #ifndef MOBILERAYTRACER_RAYTRACE_H
 #define MOBILERAYTRACER_RAYTRACE_H
 
-#include <bits/unique_ptr.h>
 #include "Scene.h"
 #include "Shader.h"
 
