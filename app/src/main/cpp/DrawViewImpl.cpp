@@ -17,6 +17,7 @@
  */
 
 static Renderer* r;
+static void* dstPixels;
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawViewImpl_initialize(
@@ -40,7 +41,6 @@ void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(
 
     // Grab the dst bitmap info and pixels
     //AndroidBitmapInfo dstInfo;
-    void* dstPixels;
 
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     //AndroidBitmap_getInfo(env, dstBitmap, &dstInfo);
@@ -49,5 +49,5 @@ void Java_com_example_puscas_mobileraytracer_DrawViewImpl_drawIntoBitmap(
     r->render(static_cast<uint32_t *>(dstPixels), width);
 
     // Unlock the dst's pixels
-    //AndroidBitmap_unlockPixels(env, dstBitmap);
+    AndroidBitmap_unlockPixels(env, dstBitmap);
 }

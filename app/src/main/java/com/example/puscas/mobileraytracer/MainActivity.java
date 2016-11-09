@@ -7,49 +7,55 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
-
-    private Button mRenderButton;
-    private TextView textView;
-    private DrawView drawView;
+public class MainActivity extends Activity
+{
+    private Button mRenderButton_;
+    private TextView textView_;
+    private DrawView drawView_;
     private int scene_;
     private int shader_;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.timeText);
-        drawView = (DrawView) findViewById(R.id.viewDraw);
-        mRenderButton = (Button) findViewById(R.id.renderButton);
+        this.textView_ = (TextView) findViewById(R.id.timeText);
+        this.drawView_ = (DrawView) findViewById(R.id.viewDraw);
+        this.mRenderButton_ = (Button) findViewById(R.id.renderButton);
 
-        drawView.setVisibility(View.INVISIBLE);
+        this.drawView_.setVisibility(View.INVISIBLE);
     }
 
-    public void startRender(View view) {
-        mRenderButton.setEnabled(false);
-        drawView.invalidate();
-        drawView.createScene(scene_, shader_, textView);
-        drawView.setVisibility(View.VISIBLE);
-        mRenderButton.setEnabled(true);
+    public void startRender(View view)
+    {
+        this.mRenderButton_.setEnabled(false);
+        this.drawView_.invalidate();
+        this.drawView_.createScene(this.scene_, this.shader_, this.textView_);
+        this.drawView_.setVisibility(View.VISIBLE);
+        this.mRenderButton_.setEnabled(true);
     }
 
-    public void onSceneRadioButtonClicked(View view) {
+    public void onSceneRadioButtonClicked(View view)
+    {
         // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
+        final boolean checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch (view.getId()) {
+        switch (view.getId())
+        {
             case R.id.radioCornell:
-                if (checked) {
-                    scene_ = 0; // cornell
+                if (checked)
+                {
+                    this.scene_ = 0; // cornell
                 }
                 break;
 
             case R.id.radioSpheres:
-                if (checked) {
-                    scene_ = 1; // spheres
+                if (checked)
+                {
+                    this.scene_ = 1; // spheres
                 }
                 break;
 
@@ -58,23 +64,28 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void onShaderRadioButtonClicked(View view) {
+    public void onShaderRadioButtonClicked(View view)
+    {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch (view.getId()) {
+        switch (view.getId())
+        {
             case R.id.radioNoShadows:
-                if (checked) {
-                    shader_ = 0; // No Shadows
+                if (checked)
+                {
+                    this.shader_ = 0; // No Shadows
                 }
                 break;
 
             case R.id.radioWhitted:
-                if (checked) {
-                    shader_ = 1; // Whitted
+                if (checked)
+                {
+                    this.shader_ = 1; // Whitted
                 }
                 break;
+
             default:
                 break;
         }
