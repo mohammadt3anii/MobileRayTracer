@@ -37,7 +37,7 @@ namespace MobileRT
             Sphere (const Point& c);
             Sphere (const Point& c, const float r);
 
-            virtual Intersection Intersect(const Ray& ray) const;
+            virtual Intersection* Intersect(const Ray& ray, const Material* material, float dist) const;
     };
 }
 

@@ -21,7 +21,7 @@ namespace MobileRT
             Primitive (const Shape* const ps, const Material& pm);
             virtual ~Primitive ();
 
-            Intersection Intersect(const Ray& ray);
+            Intersection* Intersect(const Ray& ray, float dist);
     };
 }
 

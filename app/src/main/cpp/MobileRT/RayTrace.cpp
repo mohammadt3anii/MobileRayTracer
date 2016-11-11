@@ -37,10 +37,10 @@ RayTrace::~RayTrace ()
 RGB RayTrace::RayV (const Ray& ray)//trace do raio e verifica se interseta algo
 {
     // compute radiance
-    const Intersection intersection(this->scene_.trace(ray));//trace do raio
-    if (intersection.intersected() == true)//se interseta alguma primitiva
+    const Intersection* intersection = this->scene_.trace(ray);//trace do raio
+    if (intersection != nullptr)//se interseta alguma primitiva
     {
-        return this->shader_->Shade(ray, intersection);
+        return this->shader_->Shade(ray, *intersection);
     }
     return RGB(0.1f, 0.1f, 0.9f);//cor do pixel sem interseçao
 }

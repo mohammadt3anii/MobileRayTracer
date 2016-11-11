@@ -14,23 +14,26 @@ namespace MobileRT
     class Intersection
     {
         private:
+
+        public:
             bool intersected_; // was there an intersection?
             Point point_;   // intersection point
             Vect normal_;    // intersection normal
             float length_;     // ray length parameter
-            const Material* material_;  // material of the intersected primitive
+            const Material* material;  // material of the intersected primitive
 
-        public:
             Intersection ();
-            Intersection (const Point& point, const Vect& normal, const float length);
+            Intersection (const Point& point, const Vect& normal, const float length, const Material* material);
 
-            void material(const Material* const material);
+            void operator= (Intersection& intersection);
+
+            //void material (const Material* const material);
             
-            bool intersected() const;
-            const Point& point() const;
-            const Vect& normal() const;
-            float length() const;
-            const Material& material() const;
+            bool intersected () const;
+            const Point& point () const;
+            const Vect& normal () const;
+            float length () const;
+            //const Material& material () const;
     };
 }
 

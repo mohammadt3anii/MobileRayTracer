@@ -14,7 +14,7 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, const Scene &scene) :
 RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
 {
     RGB rad;
-    const RGB& kD = isect.material().Kd;
+    const RGB& kD = isect.material->Kd;
 
     // direct lighting - only for diffuse materials
     if (kD.isZero() == false)
@@ -41,5 +41,6 @@ RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
         rad.G += kD.G * 0.1f;
         rad.B += kD.B * 0.1f;
     } // end direct + ambient
+    delete &isect;
     return rad;
 }

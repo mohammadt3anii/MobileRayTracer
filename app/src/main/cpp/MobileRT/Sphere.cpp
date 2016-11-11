@@ -25,9 +25,9 @@ Sphere::Quadratic_Sol Sphere::Quadratic (const float A, const float B, const flo
 {
     const float discriminant = B * B - 4.0f * A * C;
     if (discriminant <= 0.0f) return Quadratic_Sol();
-    const float rootDiscrim = std::sqrt(discriminant);
+    const float rootDiscriminant = std::sqrt(discriminant);
 
-    const float q = (B < 0.0f)? -0.5f * (B - rootDiscrim) : -0.5f * (B + rootDiscrim);
+    const float q = (B < 0.0f)? -0.5f * (B - rootDiscriminant) : -0.5f * (B + rootDiscriminant);
     float t0 = q / A;
     float t1 = C / q;
     if (t0 > t1) {
@@ -70,7 +70,7 @@ Sphere::Sphere (const Point& c, const float r) :
 {
 }
 
-Intersection Sphere::Intersect(const Ray &ray) const
+Intersection* Sphere::Intersect(const Ray &ray, const Material* material, float dist) const
 {
     // pull the ray origin a small epsilon along the ray direction
     const Point org(ray.orig + ((ray.dir) * 1.0e-5f));
@@ -85,7 +85,8 @@ Intersection Sphere::Intersect(const Ray &ray) const
     const Sphere::Quadratic_Sol q_sol = Quadratic(1.0f, B, C);
     if (q_sol.has_sol == false)
     {
-        return Intersection();
+        //return Intersection();
+        return nullptr;
     }
 
     const float t0 = q_sol.t0;
@@ -93,7 +94,7 @@ Intersection Sphere::Intersect(const Ray &ray) const
 
     if (t0 > ray.max_T || t1 < 1.0e-6f)
     {
-        return Intersection();
+        return nullptr;
     }
 
     float t = t0;
@@ -102,9 +103,11 @@ Intersection Sphere::Intersect(const Ray &ray) const
         t = t1;
         if (t > ray.max_T)
         {
-            return Intersection();
+            return nullptr;
         }
     }
+
+    if(t >= dist) return nullptr;
 
     const Point point(org + ((ray.dir) * t));
     Vect normal(point - this->center);
@@ -113,8 +116,9 @@ Intersection Sphere::Intersect(const Ray &ray) const
     normal.normalize();
 
     // if so, then we have an intersection
-    return Intersection(
+    return new Intersection(
             point,
             normal,
-            t);
+            t,
+            material);
 }

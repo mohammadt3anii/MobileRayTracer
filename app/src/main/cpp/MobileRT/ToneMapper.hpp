@@ -6,7 +6,6 @@
 #define MOBILERAYTRACER_TONEMAPPER_HPP
 
 #include "RGB.hpp"
-#include <stdint.h>
 
 namespace MobileRT
 {
@@ -16,7 +15,7 @@ namespace MobileRT
             
 
         public:
-            static uint32_t RGB2Color (const RGB& px);
+            static unsigned int RGB2Color (const RGB& px);
     };
 }
 

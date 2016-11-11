@@ -23,9 +23,9 @@ namespace MobileRT
             Scene ();
             ~Scene ();
 
-            Intersection trace(const Ray& ray) const;
+            const Intersection* trace(const Ray& ray) const;
 
-            Intersection shadowTrace(const Ray& ray) const;
+            const Intersection* shadowTrace(const Ray& ray) const;
     };
 }
 

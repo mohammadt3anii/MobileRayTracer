@@ -11,24 +11,33 @@ using namespace MobileRT;
 Intersection::Intersection () :
     intersected_(false),
     length_(MAX_LENGTH),
-    material_(nullptr)
+    material(nullptr)
 {
 }
 
-Intersection::Intersection (const Point& point, const Vect& normal, const float length) :
+Intersection::Intersection (const Point& point, const Vect& normal, const float length, const Material* m) :
     intersected_(true),
     point_(point),
     normal_(normal),
     length_(length),
-    material_(nullptr)
+    material(m)
 {
 }
 
+void Intersection::operator= (Intersection& intersection)
+{
+    intersected_ = intersection.intersected_;
+    point_ = intersection.point_;
+    normal_ = intersection.normal_;
+    length_ = intersection.length_;
+    material = intersection.material;
+}
+/*
 void Intersection::material(const Material* const material)
 {
     this->material_ = material;
 }
-
+*/
 
 bool Intersection::intersected() const
 {
@@ -50,8 +59,8 @@ float Intersection::length() const
     return this->length_;
 }
 
-
+/*
 const Material& Intersection::material() const
 {
     return *this->material_;
-}
+}*/

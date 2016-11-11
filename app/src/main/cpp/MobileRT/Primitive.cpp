@@ -17,12 +17,13 @@ Primitive::~Primitive ()
     delete this->shape_;
 }
 
-Intersection Primitive::Intersect(const Ray& r)
+Intersection* Primitive::Intersect(const Ray& r, float dist)
 {
-    Intersection isect (this->shape_->Intersect(r));
-    if (isect.intersected() == true)
+    //Intersection isect (this->shape_->Intersect(r));
+    //Intersection isect (this->shape_->Intersect(r, &this->material_));
+    /*if (isect.intersected() == true)
     {
         isect.material(&this->material_);
-    }
-    return isect;
+    }*/
+    return this->shape_->Intersect(r, &this->material_, dist);
 }

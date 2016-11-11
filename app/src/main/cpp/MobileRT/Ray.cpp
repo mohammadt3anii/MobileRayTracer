@@ -20,7 +20,7 @@ Ray::Ray (const Point& porig, const Vect& pdir) :
         max_T(MAX_LENGTH),
         depth(0)
 {
-    dir.normalize();
+    this->dir.normalize();
 }
 
 Ray::Ray (const Point& porig, const Vect& pdir, const float pmax_T) :
@@ -28,7 +28,7 @@ Ray::Ray (const Point& porig, const Vect& pdir, const float pmax_T) :
     max_T(pmax_T),
     depth(0)
 {
-    dir.normalize();
+    this->dir.normalize();
 }
 
 Ray::Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsigned int d) :
@@ -37,5 +37,5 @@ Ray::Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsign
     max_T(pmax_T),
     depth(d)
 {
-    dir.normalize();
+    this->dir.normalize();
 }

@@ -4,7 +4,6 @@
 
 #include "Plane.hpp"
 #include "Constants.hpp"
-#include <cmath>
 
 using namespace MobileRT;
 
@@ -15,11 +14,11 @@ Plane::Plane (const Point& point, const Vect& normal) :
 {
 }
 
-Intersection Plane::Intersect(const Ray &ray) const
+Intersection* Plane::Intersect(const Ray &ray, const Material* material, float dist) const
 {
     const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
-    if (std::fabs(N_dir) < 1e-8f) return Intersection();  // zero
+    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return nullptr;  // zero
 
     // planes have two sides!!!
 
@@ -29,14 +28,16 @@ Intersection Plane::Intersect(const Ray &ray) const
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (t <= MIN_LENGTH || t >= ray.max_T)
+    if (t <= MIN_LENGTH || t >= ray.max_T || t >= dist)
     {
-        return Intersection();
+        //return Intersection();
+        return nullptr;
     }
 
     // if so, then we have an intersection
-    return Intersection(
+    return new Intersection(
         ray.orig + (ray.dir * t),
         this->normal_,
-        t);
+        t,
+        material);
 }

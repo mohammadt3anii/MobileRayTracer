@@ -6,7 +6,7 @@ CXX := c++
 LD := $(CXX)
 MAKEFLAGS := -j5
 
-CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors
+CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors -m64
 CXXFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
 CXXFLAGS += -g3
 CXXFLAGS += -I./
