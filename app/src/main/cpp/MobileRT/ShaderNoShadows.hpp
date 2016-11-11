@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SHADERNOSHADOWS_H
-#define MOBILERAYTRACER_SHADERNOSHADOWS_H
+#ifndef MOBILERAYTRACER_SHADERNOSHADOWS_HPP
+#define MOBILERAYTRACER_SHADERNOSHADOWS_HPP
 
-#include "Shader.h"
+#include "Shader.hpp"
 
 namespace MobileRT
 {
@@ -21,4 +21,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SHADERNOSHADOWS_H
+#endif //MOBILERAYTRACER_SHADERNOSHADOWS_HPP

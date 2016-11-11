@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_MYPOINT_H
-#define MOBILERAYTRACER_MYPOINT_H
+#ifndef MOBILERAYTRACER_MYPOINT_HPP
+#define MOBILERAYTRACER_MYPOINT_HPP
 
 namespace MobileRT
 {
@@ -31,4 +31,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_MYPOINT_H
+#endif //MOBILERAYTRACER_MYPOINT_HPP

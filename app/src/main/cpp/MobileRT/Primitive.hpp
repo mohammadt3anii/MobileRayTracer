@@ -2,12 +2,12 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_PRIMITIVE_H
-#define MOBILERAYTRACER_PRIMITIVE_H
+#ifndef MOBILERAYTRACER_PRIMITIVE_HPP
+#define MOBILERAYTRACER_PRIMITIVE_HPP
 
-#include "Shape.h"
-#include "Material.h"
-#include "Ray.h"
+#include "Shape.hpp"
+#include "Material.hpp"
+#include "Ray.hpp"
 
 namespace MobileRT
 {
@@ -25,4 +25,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_PRIMITIVE_H
+#endif //MOBILERAYTRACER_PRIMITIVE_HPP

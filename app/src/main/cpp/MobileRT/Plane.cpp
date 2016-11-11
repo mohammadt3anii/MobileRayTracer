@@ -2,9 +2,9 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Plane.h"
-#include <math.h>
-#include "Constants.h"
+#include "Plane.hpp"
+#include "Constants.hpp"
+#include <cmath>
 
 using namespace MobileRT;
 
@@ -19,7 +19,7 @@ Intersection Plane::Intersect(const Ray &ray) const
 {
     const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
-    if (fabs(N_dir) < 1e-8f) return Intersection();  // zero
+    if (std::fabs(N_dir) < 1e-8f) return Intersection();  // zero
 
     // planes have two sides!!!
 

@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Point.h"
-#include "Vect.h"
+#include "Point.hpp"
+#include "Vect.hpp"
 
 using namespace MobileRT;
 

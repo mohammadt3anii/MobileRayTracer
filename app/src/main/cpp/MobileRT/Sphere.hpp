@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SPHERE_H
-#define MOBILERAYTRACER_SPHERE_H
+#ifndef MOBILERAYTRACER_SPHERE_HPP
+#define MOBILERAYTRACER_SPHERE_HPP
 
-#include "Shape.h"
+#include "Shape.hpp"
 
 namespace MobileRT
 {
@@ -21,8 +21,8 @@ namespace MobileRT
                     const bool has_sol;
                     const float t0;
                     const float t1;
-                    Quadratic_Sol () : has_sol (false), t0 (0.0f), t1 (0.0f) {}
-                    Quadratic_Sol (const float pt0, const float pt1) : has_sol (true), t0 (pt0), t1 (pt1) {}
+                    Quadratic_Sol ();
+                    Quadratic_Sol (const float pt0, const float pt1);
             };
 
             const Point center;
@@ -41,4 +41,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SPHERE_H
+#endif //MOBILERAYTRACER_SPHERE_HPP

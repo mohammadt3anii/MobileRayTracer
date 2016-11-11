@@ -2,11 +2,11 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_LIGHT_H
-#define MOBILERAYTRACER_LIGHT_H
+#ifndef MOBILERAYTRACER_LIGHT_HPP
+#define MOBILERAYTRACER_LIGHT_HPP
 
-#include "RGB.h"
-#include "Point.h"
+#include "RGB.hpp"
+#include "Point.hpp"
 
 namespace MobileRT
 {
@@ -24,4 +24,4 @@ namespace MobileRT
 
 }
 
-#endif //MOBILERAYTRACER_LIGHT_H
+#endif //MOBILERAYTRACER_LIGHT_HPP

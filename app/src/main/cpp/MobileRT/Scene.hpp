@@ -2,11 +2,11 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SCENE_H
-#define MOBILERAYTRACER_SCENE_H
+#ifndef MOBILERAYTRACER_SCENE_HPP
+#define MOBILERAYTRACER_SCENE_HPP
 
-#include "Light.h"
-#include "Primitive.h"
+#include "Light.hpp"
+#include "Primitive.hpp"
 #include <vector>
 
 namespace MobileRT
@@ -29,4 +29,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SCENE_H
+#endif //MOBILERAYTRACER_SCENE_HPP

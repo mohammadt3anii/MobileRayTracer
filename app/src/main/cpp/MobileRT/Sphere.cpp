@@ -2,16 +2,30 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Sphere.h"
+#include "Sphere.hpp"
 #include <cmath>
 
 using namespace MobileRT;
 
+Sphere::Quadratic_Sol::Quadratic_Sol () :
+    has_sol (false),
+    t0 (0.0f),
+    t1 (0.0f)
+{
+}
+
+Sphere::Quadratic_Sol::Quadratic_Sol (const float pt0, const float pt1) :
+    has_sol (true),
+    t0 (pt0),
+    t1 (pt1)
+{
+}
+
 Sphere::Quadratic_Sol Sphere::Quadratic (const float A, const float B, const float C) const
 {
-    const float discrim = B * B - 4.0f * A * C;
-    if (discrim <= 0.0f) return Quadratic_Sol();
-    const float rootDiscrim = std::sqrt(discrim);
+    const float discriminant = B * B - 4.0f * A * C;
+    if (discriminant <= 0.0f) return Quadratic_Sol();
+    const float rootDiscrim = std::sqrt(discriminant);
 
     const float q = (B < 0.0f)? -0.5f * (B - rootDiscrim) : -0.5f * (B + rootDiscrim);
     float t0 = q / A;

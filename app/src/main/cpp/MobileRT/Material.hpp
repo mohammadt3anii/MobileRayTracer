@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_MYMATERIAL_H
-#define MOBILERAYTRACER_MYMATERIAL_H
+#ifndef MOBILERAYTRACER_MATERIAL_HPP
+#define MOBILERAYTRACER_MATERIAL_HPP
 
-#include "RGB.h"
+#include "RGB.hpp"
 
 namespace MobileRT
 {
@@ -24,4 +24,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_MYMATERIAL_H
+#endif //MOBILERAYTRACER_MATERIAL_HPP

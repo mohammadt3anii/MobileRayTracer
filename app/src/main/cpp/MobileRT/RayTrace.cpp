@@ -2,9 +2,9 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "RayTrace.h"
-#include "ShaderNoShadows.h"
-#include "ShaderWhitted.h"
+#include "RayTrace.hpp"
+#include "ShaderNoShadows.hpp"
+#include "ShaderWhitted.hpp"
 
 using namespace MobileRT;
 

@@ -2,7 +2,7 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Material.h"
+#include "Material.hpp"
 
 using namespace MobileRT;
 

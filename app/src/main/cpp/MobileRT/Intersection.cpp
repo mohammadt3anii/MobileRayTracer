@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Intersection.h"
-#include "Constants.h"
+#include "Intersection.hpp"
+#include "Constants.hpp"
 
 using namespace MobileRT;
 

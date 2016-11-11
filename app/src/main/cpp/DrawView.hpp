@@ -2,10 +2,10 @@
 // Created by puscas on 14-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_DRAWVIEW_H
-#define MOBILERAYTRACER_DRAWVIEW_H
+#ifndef MOBILERAYTRACER_DRAWVIEW_HPP
+#define MOBILERAYTRACER_DRAWVIEW_HPP
 
-#include "MobileRT/All.h"
+#include "MobileRT/All.hpp"
 
 using namespace MobileRT;
 
@@ -18,4 +18,4 @@ class DrawViewImpl
         
 };
 
-#endif //MOBILERAYTRACER_DRAWVIEW_H
+#endif //MOBILERAYTRACER_DRAWVIEW_HPP

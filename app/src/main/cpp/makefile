@@ -2,27 +2,27 @@
 .PHONY: all
 
 EXE := raytracer
-CC := c++
-LD := $(CC)
+CXX := c++
+LD := $(CXX)
 MAKEFLAGS := -j5
 
-CCFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors
-CCFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
-CCFLAGS += -g3
-CCFLAGS += -I./
-CCFLAGS += $(shell pkg-config --cflags gtk+-2.0)
+CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors
+CXXFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
+CXXFLAGS += -g3
+CXXFLAGS += -I./
+CXXFLAGS += $(shell pkg-config --cflags gtk+-2.0)
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0)
 LDFLAGS += -fopenmp
 
 ################################################################################
 
-SOURCES := $(shell find . ! -name "DrawViewImpl.cpp" -regextype gnu-awk -iname "*.cpp" -print)
+SOURCES := $(shell find . ! -name "DrawView.cpp" -regextype gnu-awk -iname "*.cpp" -print)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
 DEPS := $(addsuffix .d,$(basename $(SOURCES)))
 
 %.o: %.cpp
-	$(CC) $(CCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(EXE): $(OBJS)
 	$(LD) $(OBJS) -o $@ $(LDFLAGS)

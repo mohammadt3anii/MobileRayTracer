@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "RTCamera.h"
-#include <math.h>
+#include "RTCamera.hpp"
+#include <cmath>
 
 using namespace MobileRT;
 
@@ -17,7 +17,7 @@ RTCamera::RTCamera(const Point& position, const float hFov, const float vFov) :
 
 float RTCamera::FastArcTan(const float x) const
 {
-    return M_PI_4*x - x*(fabs(x) - 1)*(0.2447 + 0.0663*fabs(x));
+    return M_PI_4*x - x*(std::fabs(x) - 1)*(0.2447 + 0.0663*std::fabs(x));
 }
 
 Ray RTCamera::getRay(const float u, const float v)

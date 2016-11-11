@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Ray.h"
-#include "Constants.h"
+#include "Ray.hpp"
+#include "Constants.hpp"
 
 using namespace MobileRT;
 

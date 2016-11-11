@@ -2,9 +2,9 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "SceneCornell.h"
-#include "Plane.h"
-#include "Sphere.h"
+#include "SceneCornell.hpp"
+#include "Plane.hpp"
+#include "Sphere.hpp"
 
 using namespace MobileRT;
 

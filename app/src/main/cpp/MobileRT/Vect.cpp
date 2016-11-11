@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Vect.h"
-#include <math.h>
+#include "Vect.hpp"
+#include <cmath>
 
 using namespace MobileRT;
 
@@ -75,7 +75,7 @@ void Vect::mult (const float f) {
 
 float Vect::length ()
 {
-    return sqrt(Vect::dot(*this));
+    return std::sqrt(Vect::dot(*this));
 }
 
 void Vect::add (const Vect& v)

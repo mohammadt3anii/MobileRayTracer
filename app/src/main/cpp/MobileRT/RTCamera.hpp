@@ -2,11 +2,11 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_RTCAMERA_H
-#define MOBILERAYTRACER_RTCAMERA_H
+#ifndef MOBILERAYTRACER_RTCAMERA_HPP
+#define MOBILERAYTRACER_RTCAMERA_HPP
 
-#include "Point.h"
-#include "Ray.h"
+#include "Point.hpp"
+#include "Ray.hpp"
 
 namespace MobileRT
 {
@@ -24,4 +24,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_RTCAMERA_H
+#endif //MOBILERAYTRACER_RTCAMERA_HPP
