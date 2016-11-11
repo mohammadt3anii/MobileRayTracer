@@ -20,7 +20,7 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              # Associated headers in the same location as their source
              # file are automatically included.
-             src/main/cpp/DrawViewImpl.cpp
+             src/main/cpp/DrawView.cpp
              ${MOBILE_RT_SRCS})
 
 # Searches for a specified prebuilt library and stores the path as a
