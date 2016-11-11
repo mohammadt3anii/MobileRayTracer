@@ -14,7 +14,7 @@ Plane::Plane (const Point& point, const Vect& normal) :
 {
 }
 
-Intersection* Plane::Intersect(const Ray &ray, const Material* material, float dist) const
+Intersection* Plane::Intersect(const Ray& ray, const Material* material, const float maxRayDist) const
 {
     const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
@@ -28,7 +28,7 @@ Intersection* Plane::Intersect(const Ray &ray, const Material* material, float d
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (t <= MIN_LENGTH || t >= ray.max_T || t >= dist)
+    if (t <= MIN_LENGTH || t >= ray.max_T || t >= maxRayDist)
     {
         //return Intersection();
         return nullptr;

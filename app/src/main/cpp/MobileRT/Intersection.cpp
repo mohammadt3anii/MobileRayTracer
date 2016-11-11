@@ -24,14 +24,6 @@ Intersection::Intersection (const Point& point, const Vect& normal, const float 
 {
 }
 
-void Intersection::operator= (Intersection& intersection)
-{
-    intersected_ = intersection.intersected_;
-    point_ = intersection.point_;
-    normal_ = intersection.normal_;
-    length_ = intersection.length_;
-    material = intersection.material;
-}
 /*
 void Intersection::material(const Material* const material)
 {

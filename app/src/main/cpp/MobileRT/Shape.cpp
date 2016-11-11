@@ -14,7 +14,7 @@ Shape::~Shape ()
 {
 }
 
-Intersection* Shape::Intersect(const Ray&, const Material*, float) const
+Intersection* Shape::Intersect(const Ray&, const Material*, const float) const
 {
     return nullptr;
 }

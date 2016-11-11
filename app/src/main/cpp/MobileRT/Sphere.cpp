@@ -70,7 +70,7 @@ Sphere::Sphere (const Point& c, const float r) :
 {
 }
 
-Intersection* Sphere::Intersect(const Ray &ray, const Material* material, float dist) const
+Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const float maxRayDist) const
 {
     // pull the ray origin a small epsilon along the ray direction
     const Point org(ray.orig + ((ray.dir) * 1.0e-5f));
@@ -107,7 +107,7 @@ Intersection* Sphere::Intersect(const Ray &ray, const Material* material, float 
         }
     }
 
-    if(t >= dist) return nullptr;
+    if(t >= maxRayDist) return nullptr;//se distancia desta interseçao for maior que a anterior
 
     const Point point(org + ((ray.dir) * t));
     Vect normal(point - this->center);

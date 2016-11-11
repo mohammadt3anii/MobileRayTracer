@@ -17,7 +17,7 @@ Primitive::~Primitive ()
     delete this->shape_;
 }
 
-Intersection* Primitive::Intersect(const Ray& r, float dist)
+Intersection* Primitive::Intersect(const Ray& r, const float maxRayDist)
 {
     //Intersection isect (this->shape_->Intersect(r));
     //Intersection isect (this->shape_->Intersect(r, &this->material_));
@@ -25,5 +25,5 @@ Intersection* Primitive::Intersect(const Ray& r, float dist)
     {
         isect.material(&this->material_);
     }*/
-    return this->shape_->Intersect(r, &this->material_, dist);
+    return this->shape_->Intersect(r, &this->material_, maxRayDist);
 }

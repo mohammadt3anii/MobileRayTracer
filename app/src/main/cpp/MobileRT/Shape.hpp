@@ -20,7 +20,7 @@ namespace MobileRT
             virtual ~Shape ();
 
             //virtual Intersection Intersect(const Ray&) const;
-            virtual Intersection* Intersect(const Ray&, const Material* material, float dist) const;
+            virtual Intersection* Intersect(const Ray&, const Material* material, const float maxRayDist) const;
     };
 }
 
