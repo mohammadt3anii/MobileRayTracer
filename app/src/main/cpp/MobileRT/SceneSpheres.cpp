@@ -19,8 +19,8 @@ SceneSpheres::SceneSpheres ()
     Material mirrorMat (RGB(), RGB(0.8f, 0.8f, 0.8f));
     Material greenMat (RGB(0.0f, 0.9f, 0.0f));
     // create one sphere
-    this->primitives.push_back(new Primitive(new Sphere(Point(-1.0f, 1.0f, 6.0f)), redMat));
-    this->primitives.push_back(new Primitive(new Sphere(Point(1.5f, 2.0f, 7.0f)), mirrorMat));
+    this->primitives.push_back(new Primitive(new Sphere(Point(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
+    this->primitives.push_back(new Primitive(new Sphere(Point(1.5f, 2.0f, 7.0f), 1.0f), mirrorMat));
     this->primitives.push_back(new Primitive(new Plane(Point(0.0f, 0.0f, 0.0f), Vect(0.0f, 1.0f, 0.0f)), sandMat));
     this->primitives.push_back(new Primitive(new Sphere(Point(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
 }
