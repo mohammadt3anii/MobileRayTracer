@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Scene.h"
@@ -27,14 +27,14 @@ Scene::~Scene()
 bool Scene::trace(Ray& ray, Intersection& intersection) const//TODO: utilizar estrutura de aceleraçao
 {
     bool value = false;
-    ray.maxDistance = MAX_LENGTH;
+    ray.maxDistance_ = MAX_LENGTH;
     const unsigned int n = this->primitives.size();
 
     for (unsigned int i = 0; i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
         if (this->primitives[i]->Intersect(ray, intersection))
         {
-            ray.maxDistance = intersection.length();
+            ray.maxDistance_ = intersection.length_;
             value = true;
         }
     }

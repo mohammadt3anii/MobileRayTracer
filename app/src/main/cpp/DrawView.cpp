@@ -17,11 +17,14 @@
  * @param  elapsedTime The number of milliseconds since the app was started
  */
 
+enum State {
+    Idle = 0, Busy = 1, Finished = 2
+};
 static Renderer *renderer_ = NULL;
 static void *dstPixels_ = NULL;
 static pthread_t thread_handle_;
 static int width_ = 0;
-static int working_ = 0;
+static int working_ = Idle;
 /*static JNIEnv* env_ = NULL;
 static jobject dstBitmap_ = NULL;
 static JavaVM* jvm_ = NULL;*/
@@ -33,7 +36,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_isWorking() {
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_finished() {
-    working_ = 0;
+    working_ = Idle;
 }
 
 void *thread_work(void *args) {/*
@@ -42,8 +45,8 @@ void *thread_work(void *args) {/*
     jvm_->AttachCurrentThread(&myNewEnv, NULL);
     __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "1");*/
 
-    renderer_->render(static_cast<uint32_t *>(dstPixels_), width_);
-    working_ = 2;
+    renderer_->render(static_cast<uint32_t *>(dstPixels_));
+    working_ = Finished;
 
     //jvm_->DetachCurrentThread();
     return NULL;
@@ -58,10 +61,9 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint width,
         jint height
 ) {
-    working_ = 0;
+    working_ = Idle;
     width_ = width;
-    renderer_ = new Renderer(width, height, width > height ? height : width, whichScene,
-                             whichShader);
+    renderer_ = new Renderer(width, height, whichScene, whichShader);
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
@@ -91,7 +93,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels_);
 
     // JNIEnv* env; (initialized somewhere else)
-    working_ = 1;
+    working_ = Busy;
     pthread_create(&thread_handle_, NULL, thread_work, NULL);
     //pthread_join(thread_handle, NULL);
 

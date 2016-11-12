@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "RTCamera.h"
@@ -25,8 +25,6 @@ void RTCamera::getRay(const float u, const float v, Ray& ray) const
 {
     const float u_alpha = hFov_ * (u - 0.5f);
     const float v_alpha = -vFov_ * (v - 0.5f);
-    //const Vect dir = Vect(FastArcTan(u_alpha), FastArcTan(v_alpha), 1.0f);
     ray.setRay (FastArcTan(u_alpha), FastArcTan(v_alpha), 1.0f, this->position_);
     // note that depth will be 0 : primary ray
-    //return Ray(this->position_, dir);
 }

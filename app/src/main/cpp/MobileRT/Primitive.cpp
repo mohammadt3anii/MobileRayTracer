@@ -1,14 +1,14 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Primitive.h"
 
 using namespace MobileRT;
 
-Primitive::Primitive (const Shape* shape, const Material& pm) :
-    shape_(shape),
-    material_(pm)
+Primitive::Primitive(const Shape *shape, const Material &material) :
+        shape_(shape),
+        material_(material)
 {
 }
 

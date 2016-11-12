@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_SCENE_H
@@ -15,8 +15,8 @@ namespace MobileRT
     {
         private:
 
-            
-        public:
+
+    public:
             std::vector<Light*> lights;
             std::vector<Primitive*> primitives;
 

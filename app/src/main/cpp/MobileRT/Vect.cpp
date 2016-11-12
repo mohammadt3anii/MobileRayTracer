@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Vect.h"
@@ -8,35 +8,34 @@
 using namespace MobileRT;
 
 Vect::Vect () :
-    x(0.0f),
-    y(0.0f),
-    z(0.0f)
+        x_(0.0f),
+        y_(0.0f),
+        z_(0.0f)
 {
 }
 
 Vect::Vect (const float px, const float py, const float pz) :
-    x(px),
-    y(py),
-    z(pz)
+        x_(px),
+        y_(py),
+        z_(pz)
 {
 }
 
 Vect::Vect (const Vect& v) :
-    x(v.x),
-    y(v.y),
-    z(v.z)
+        x_(v.x_),
+        y_(v.y_),
+        z_(v.z_)
 {
 }
 
- float Vect::normalize ()
- {
+float Vect::normalize() {
     const float length = Vect::length();
     if (length != 0.0f)
     {
         float inv_length = 1.0f / length;
-        this->x *= inv_length;
-        this->y *= inv_length;
-        this->z *= inv_length;
+        this->x_ *= inv_length;
+        this->y_ *= inv_length;
+        this->z_ *= inv_length;
     }
     return length;
 }
@@ -51,64 +50,55 @@ Vect Vect::returnNormalized () const
 // symetric vector
 Vect Vect::symmetric () const
 {
-    return Vect(-this->x, -this->y, -this->z);
+    return Vect(-this->x_, -this->y_, -this->z_);
 }
 
 // dot product Algebraic
 float Vect::dot (const Vect& v) const
 {
-    return (this->x * v.x + this->y * v.y + this->z * v.z);
+    return (this->x_ * v.x_ + this->y_ * v.y_ + this->z_ * v.z_);
+}
+
+// dot product Algebraic
+float Vect::dot() const {
+    return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
 void Vect::mult (const float f)
 {
-    this->x *= f;
-    this->y *= f;
-    this->z *= f;
+    this->x_ *= f;
+    this->y_ *= f;
+    this->z_ *= f;
 }
 
  void Vect::sub (const Vect& v)
  {
-    this->x -= v.x;
-    this->y -= v.y;
-    this->z -= v.z;
+     this->x_ -= v.x_;
+     this->y_ -= v.y_;
+     this->z_ -= v.z_;
 }
 
 float Vect::length ()
 {
-    return std::sqrt(Vect::dot(*this));
+    return std::sqrt(dot());
 }
-
-void Vect::add (const Vect& v)
-{
-    this->x += v.x;
-    this->y += v.y;
-    this->z += v.z;
-}
-
-// dot product
-float Vect::not_dot (const Point& point) const
-{
-    return point.multiply(*this).sumCoordenates();
-}
-
 
 Vect Vect::operator* (const float value) const
 {
-    return Vect(this->x * value, this->y * value, this->z * value);
+    return Vect(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
 void Vect::setVect (const float px, const float py, const float pz)
 {
-    this->x = px;
-    this->y = py;
-    this->z = pz;
+    this->x_ = px;
+    this->y_ = py;
+    this->z_ = pz;
     normalize();
 }
 
 void Vect::setVect (const Point& dest, const Point& orig)
 {
-    this->x = dest.x_ - orig.x_;
-    this->y = dest.y_ - orig.y_;
-    this->z = dest.z_ - orig.z_;
+    this->x_ = dest.x_ - orig.x_;
+    this->y_ = dest.y_ - orig.y_;
+    this->z_ = dest.z_ - orig.z_;
 }

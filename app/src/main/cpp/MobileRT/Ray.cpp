@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Ray.h"
@@ -7,32 +7,23 @@
 
 using namespace MobileRT;
 
-Ray::Ray (const Point& porig, const Vect& pdir) :
-        orig(porig),
-        dir(pdir),
-        maxDistance(MAX_LENGTH),
-        depth(0)
+Ray::Ray() :
+        maxDistance_(MAX_LENGTH),
+        depth_(0)
 {
-    this->dir.normalize();
 }
 
-Ray::Ray (const Point& porig, const Vect& pdir, const float maxDistance, const unsigned int d) :
-    orig(porig),
-    dir(pdir),
-    maxDistance(maxDistance),
-    depth(d)
+Ray::Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned int depth) :
+        origin_(orig),
+        direction_(dir),
+        maxDistance_(maxDist),
+        depth_(depth)
 {
-    this->dir.normalize();
-}
-
-Ray::Ray () :
-        maxDistance(MAX_LENGTH),
-        depth(0)
-{
+    this->direction_.normalize();
 }
 
 void Ray::setRay (const float px, const float py, const float pz, const Point& org)
 {
-    this->dir.setVect(px, py, pz);
-    this->orig = org;
+    this->direction_.setVect(px, py, pz);
+    this->origin_ = org;
 }

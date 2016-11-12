@@ -19,8 +19,8 @@ int main(int argc, char** argv)
     double start = omp_get_wtime ();
     const int scene = atoi(argv[1]);
     const int shader = atoi(argv[2]);
-	Renderer renderer(w, h, w, scene, shader);
-    renderer.render(canvas, w);
+    Renderer renderer(w, h, scene, shader);
+    renderer.render(canvas);
 
     double end = omp_get_wtime () - start;
     std::cout << "\nTime in secs::" << end << std::endl;
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     for(unsigned int i = 0, j = 0; i < w * h * 4; i += 4, j+=1)
     {
         unsigned int color = canvas[j];
-        buffer[i  ] = color & 0xFF;
+        buffer[i + 0] = (color & 0x000000FF) >> 0;
         buffer[i+1] = (color & 0x0000FF00) >> 8;
         buffer[i+2] = (color & 0x00FF0000) >> 16;
         buffer[i+3] = (color & 0xFF000000) >> 24;

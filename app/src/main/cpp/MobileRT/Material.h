@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_MATERIAL_H
@@ -15,12 +15,12 @@ namespace MobileRT
             
 
         public:
-            const RGB Kd;   // diffuse reflection
-            const RGB Ks;   // specular reflection
-            
-            Material ();
-            Material (const RGB& pKd);
-            Material (const RGB& pKd, const RGB& pKs);
+        const RGB Kd_;   // diffuse reflection
+        const RGB Ks_;   // specular reflection
+
+        Material(const RGB &Kd);
+
+        Material(const RGB &Kd, const RGB &Ks);
     };
 }
 

@@ -1,10 +1,10 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Sphere.h"
+#include "Constants.h"
 #include <cmath>
-#include <algorithm>
 
 using namespace MobileRT;
 
@@ -17,11 +17,11 @@ Sphere::Sphere (const Point& center, const float radius) :
 bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& intersection) const
 {
     //http://stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const Vect centerToOrigin(ray.orig - this->center_);
+    const Vect centerToOrigin(ray.origin_ - this->center_);
 
     //A = 1.0
-    const float B = 2.0f * centerToOrigin.dot(ray.dir);
-    const float C = ((centerToOrigin.x*centerToOrigin.x) + (centerToOrigin.y*centerToOrigin.y) + (centerToOrigin.z*centerToOrigin.z) - this->sq_radius_);
+    const float B = 2.0f * centerToOrigin.dot(ray.direction_);
+    const float C = centerToOrigin.dot() - this->sq_radius_;
     
     const float discriminant = B * B - 4.0f * C;
     if (discriminant <= 0.0f) return false;
@@ -29,11 +29,11 @@ bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& i
     const float rootDiscriminant = std::sqrt(discriminant);
     const float t0 = (-B + rootDiscriminant) * 0.5f;
     const float t1 = (-B - rootDiscriminant) * 0.5f;
-    const float distance = std::min(t0, t1);
+    const float distance = (t0 < t1) ? t0 : t1;
 
-    if (distance > ray.maxDistance || distance < 1.0e-6f) return false;
+    if (distance > ray.maxDistance_ || distance < MIN_RAY_DIST) return false;
 
-    const Point point(ray.orig + ((ray.dir) * distance));
+    const Point point(ray.origin_ + (ray.direction_ * distance));
     Vect normal(point - this->center_);
     normal.normalize();
 
@@ -43,5 +43,6 @@ bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& i
         normal,
         distance,
         material);
+
     return true;
 }

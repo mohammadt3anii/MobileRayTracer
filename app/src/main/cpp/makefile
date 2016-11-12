@@ -29,5 +29,8 @@ $(EXE): $(OBJS)
 
 clean:
 	@rm -f $(OBJS) $(DEPS) $(EXE)
+	@echo "Clean done"
 
 all: $(EXE)
+	@rm -f $(OBJS) $(DEPS)
+	@echo "Compilation done"

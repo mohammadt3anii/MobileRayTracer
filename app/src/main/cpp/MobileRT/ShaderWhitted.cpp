@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "ShaderWhitted.h"
@@ -12,20 +12,20 @@ ShaderWhitted::ShaderWhitted(RayTrace& rayTrace, const Scene& scene) :
 {
 }
 
-void ShaderWhitted::Shade(const Ray& r, const Intersection& isect, RGB& rgb) const
+void ShaderWhitted::Shade(const Ray &ray, const Intersection &isect, RGB &rgb) const
 {
-    const float cosRN = r.dir.dot(isect.normal());
+    const float cosRN = ray.direction_.dot(isect.normal_);
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
     const Vect shadingN = (cosRN < 0.0f)?
-        Vect(isect.normal())// entering the object
-        : isect.normal().symmetric();// We have to reverse the normal now
+                          Vect(isect.normal_)// entering the object
+                                        : isect.normal_.symmetric();// We have to reverse the normal now
 
     rgb.setRGB();
     // shadowed direct lighting - only for diffuse materials
-    if (isect.material->Kd.isZero() == false)
+    if (isect.material_->Kd_.isZero() == false)
     {
         const unsigned int Nl = scene_.lights.size();
         Intersection Lsect;
@@ -35,44 +35,45 @@ void ShaderWhitted::Shade(const Ray& r, const Intersection& isect, RGB& rgb) con
         {
             const Light* ml = scene_.lights[l];
 
-            L.setVect (ml->pos, isect.point());//calcula vetor desde a interseçao até à luz
+            L.setVect(ml->pos_, isect.point_);//calcula vetor desde a interseçao até à luz
             const float ml_distance = L.normalize();//distancia do vetor (e normaliza-o)
             const float cos_N_L = L.dot(shadingN);//x*x + y*y + z*z
             if (cos_N_L > 0.0f)
             {
-                Point p = isect.point();
-                Ray shadowRay (p, L, ml_distance, r.depth+1);//raio de sombra - orig=interseçao, dir=luz
+                Point p = isect.point_;
+                Ray shadowRay(p, L, ml_distance,
+                              ray.depth_ + 1);//raio de sombra - orig=interseçao, dir=luz
                 //Lsect = ();//interseçao do raio de sombra com a primitiva mais proxima
                 if (scene_.shadowTrace(shadowRay, Lsect) == false)//se nao ha nenhuma primitiva entre a interseçao e a luz
                 {
-                    RGB diffuseRad (ml->rad);//R=1, G=1, B=1
-                    diffuseRad.mult(isect.material->Kd);//cor da luz
+                    RGB diffuseRad(ml->rad_);//R=1, G=1, B=1
+                    diffuseRad.mult(isect.material_->Kd_);//cor da luz
                     diffuseRad.mult (cos_N_L);//angulo em relaçao a normal
                     rgb.add(diffuseRad);//adiciona a cor da luz
                 }
             }
         }
         // ambient light
-        rgb.R += isect.material->Kd.R * 0.1f;
-        rgb.G += isect.material->Kd.G * 0.1f;
-        rgb.B += isect.material->Kd.B * 0.1f;
+        rgb.R_ += isect.material_->Kd_.R_ * 0.1f;
+        rgb.G_ += isect.material_->Kd_.G_ * 0.1f;
+        rgb.B_ += isect.material_->Kd_.B_ * 0.1f;
     } // end direct + ambient
     // specular reflection
-    if ((isect.material->Ks.isZero() == false) && (r.depth < this->MAX_DEPTH))
+    if ((isect.material_->Ks_.isZero() == false) && (ray.depth_ < this->MAX_DEPTH))
     {
         // compute specular reflection
-        const Vect sym_vRay = r.dir.symmetric();//raio de reflexao
+        const Vect sym_vRay = ray.direction_.symmetric();//raio de reflexao
         const float RN_dot = 2.0f * shadingN.dot(sym_vRay);
         Vect specDir = shadingN;
         specDir.mult (RN_dot);
         specDir.sub (sym_vRay);
         specDir.normalize();
 
-        const Point p = isect.point();
-        Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
+        const Point p = isect.point_;
+        Ray specRay(p, specDir, MAX_LENGTH, ray.depth_ + 1);
         RGB specRad;
         this->rayTrace_.RayV(specRay, specRad);
-        specRad.mult(isect.material->Ks);
+        specRad.mult(isect.material_->Ks_);
         rgb.add(specRad);
     }
 }

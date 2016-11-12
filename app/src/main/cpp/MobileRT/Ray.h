@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_RAY_H
@@ -16,14 +16,14 @@ namespace MobileRT
             
 
         public:
-            Point orig;
-            Vect dir;
-            float maxDistance;
-            const unsigned int depth;
+        Point origin_;
+        Vect direction_;
+        float maxDistance_;
+        const unsigned int depth_;
 
             Ray ();
-            Ray (const Point& porig, const Vect& pdir);
-            Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsigned int d);
+
+        Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned int depth);
 
             void setRay (const float px, const float py, const float pz, const Point& org);
     };

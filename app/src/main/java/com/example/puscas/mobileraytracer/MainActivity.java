@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.puscas.mobileraytracer.R.id;
+import com.example.puscas.mobileraytracer.R.layout;
+
 public class MainActivity extends Activity
 {
     static {
@@ -20,28 +23,28 @@ public class MainActivity extends Activity
     private DrawView drawView_;
     private int scene_;
     private int shader_;
-    private MainActivity.MessageHandler handler_;
+    private MessageHandler handler_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        this.setContentView(layout.activity_main);
 
-        textView_ = (TextView) findViewById(R.id.timeText);
-        drawView_ = (DrawView) findViewById(R.id.viewDraw);
-        handler_ = new MainActivity.MessageHandler();
-        drawView_.setHandler(handler_);
-        mRenderButton_ = (Button) findViewById(R.id.renderButton);
-        drawView_.setVisibility(View.INVISIBLE);
+        this.textView_ = (TextView) this.findViewById(id.timeText);
+        this.drawView_ = (DrawView) this.findViewById(id.viewDraw);
+        this.handler_ = new MessageHandler();
+        this.drawView_.setHandler(this.handler_);
+        this.mRenderButton_ = (Button) this.findViewById(id.renderButton);
+        this.drawView_.setVisibility(View.INVISIBLE);
     }
 
     public void startRender(View view)
     {
-        mRenderButton_.setEnabled(false);
-        drawView_.createScene(scene_, shader_, textView_);
-        drawView_.invalidate();
-        drawView_.setVisibility(View.VISIBLE);
+        this.mRenderButton_.setEnabled(false);
+        this.drawView_.createScene(this.scene_, this.shader_, this.textView_);
+        this.drawView_.invalidate();
+        this.drawView_.setVisibility(View.VISIBLE);
     }
 
     public void onSceneRadioButtonClicked(View view)
@@ -52,12 +55,12 @@ public class MainActivity extends Activity
         // Check which radio button was clicked
         switch (view.getId())
         {
-            case R.id.radioCornell:
-                this.scene_ = 0; // cornell
+            case id.radioCornell:
+                scene_ = 0; // cornell
                 break;
 
-            case R.id.radioSpheres:
-                this.scene_ = 1; // spheres
+            case id.radioSpheres:
+                scene_ = 1; // spheres
                 break;
 
             default:
@@ -73,12 +76,12 @@ public class MainActivity extends Activity
         // Check which radio button was clicked
         switch (view.getId())
         {
-            case R.id.radioNoShadows:
-                this.shader_ = 0; // No Shadows
+            case id.radioNoShadows:
+                shader_ = 0; // No Shadows
                 break;
 
-            case R.id.radioWhitted:
-                this.shader_ = 1; // Whitted
+            case id.radioWhitted:
+                shader_ = 1; // Whitted
                 break;
 
             default:
@@ -91,7 +94,7 @@ public class MainActivity extends Activity
         public void handleMessage(Message inputMessage) {
             switch (inputMessage.what) {
                 case 1:        // Render finished
-                    MainActivity.this.mRenderButton_.setEnabled(true);
+                    mRenderButton_.setEnabled(true);
                     break;
 
                 default:

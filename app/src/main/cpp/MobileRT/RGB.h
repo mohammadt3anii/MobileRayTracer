@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_RGB_H
@@ -13,9 +13,9 @@ namespace MobileRT
             
 
         public:
-            float R;
-            float G;
-            float B;
+        float R_;
+        float G_;
+        float B_;
 
             RGB ();
             RGB (const float r, const float g, const float b);

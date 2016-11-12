@@ -1,13 +1,13 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Light.h"
 
 using namespace MobileRT;
 
-Light::Light (const RGB& prad, const Point& ppos) :
-    rad(prad),
-    pos(ppos)
+Light::Light(const RGB &rad, const Point &pos) :
+        rad_(rad),
+        pos_(pos)
 {
 }

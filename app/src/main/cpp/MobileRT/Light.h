@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_LIGHT_H
@@ -16,12 +16,11 @@ namespace MobileRT
             
 
         public:
-            const RGB rad;
-            const Point pos;
-            
-            Light (const RGB& prad, const Point& ppos);
-    };
+        const RGB rad_;
+        const Point pos_;
 
+        Light(const RGB &rad, const Point &pos);
+    };
 }
 
 #endif //MOBILERAYTRACER_LIGHT_H

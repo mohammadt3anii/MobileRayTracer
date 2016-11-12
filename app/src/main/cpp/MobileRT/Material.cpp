@@ -1,23 +1,19 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Material.h"
 
 using namespace MobileRT;
 
-Material::Material ()
-{
-}
-
 // diffuse only material
-Material::Material (const RGB& pKd) :
-    Kd(pKd)
+Material::Material(const RGB &Kd) :
+        Kd_(Kd)
 {
 }
 
-Material::Material (const RGB& pKd, const RGB& pKs) :
-    Kd(pKd),
-    Ks(pKs)
+Material::Material(const RGB &Kd, const RGB &Ks) :
+        Kd_(Kd),
+        Ks_(Ks)
 {
 }

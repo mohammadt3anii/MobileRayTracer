@@ -2,6 +2,7 @@ package com.example.puscas.mobileraytracer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
@@ -33,46 +34,46 @@ public class DrawView extends View
     private native void finished();
 
     public void setHandler(Handler pHandle) {
-        handler_ = pHandle;
+        this.handler_ = pHandle;
     }
 
     public void createScene(int scene, int shader, TextView textView)
     {
-        textView_ = textView;
-        bitmapW_ = createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        initialize(scene, shader, getWidth(), getHeight());
-        bitmapW_.eraseColor(Color.BLUE);
+        this.textView_ = textView;
+        this.bitmapW_ = createBitmap(this.getWidth(), this.getHeight(), Config.ARGB_8888);
+        this.initialize(scene, shader, this.getWidth(), this.getHeight());
+        this.bitmapW_.eraseColor(Color.BLUE);
     }
 
     @Override
     public void onDraw(Canvas canvas)
     {
-        if (isInEditMode() == false)
+        if (this.isInEditMode() == false)
         {
-            switch (isWorking()) {
+            switch (this.isWorking()) {
                 case 0://Iniciar renderizaçao
-                    start_ = SystemClock.elapsedRealtime();
-                    drawIntoBitmap(bitmapW_);//correr ray tracer no bitmapW
-                    invalidate();
+                    this.start_ = SystemClock.elapsedRealtime();
+                    this.drawIntoBitmap(this.bitmapW_);//correr ray tracer no bitmapW
+                    this.invalidate();
                     break;
 
                 case 1://Enquanto ray-tracer ainda está a funcionar
-                    bitmapR_ = createBitmap(bitmapW_);//copiar bitmap
-                    canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
-                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
-                    textView_.setText("Rendering -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
-                    invalidate();
+                    this.bitmapR_ = createBitmap(this.bitmapW_);//copiar bitmap
+                    canvas.drawBitmap(bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
+                    this.renderTime_ = SystemClock.elapsedRealtime() - start_;
+                    this.textView_.setText("Rendering -> w:" + this.getWidth() + ", h:" + this.getHeight() + ", t:" + this.renderTime_ + " ms");
+                    this.invalidate();
                     break;
 
                 case 2://Quando ray-tracer acabar
-                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
-                    finished();
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
-                    textView_.setText("Rendered -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
-                    renderTime_ = 0;
-                    bitmapW_.recycle();
-                    bitmapR_.recycle();
-                    Message completeMessage = this.handler_.obtainMessage(1);
+                    this.renderTime_ = SystemClock.elapsedRealtime() - start_;
+                    this.finished();
+                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
+                    this.textView_.setText("Rendered -> w:" + this.getWidth() + ", h:" + this.getHeight() + ", t:" + this.renderTime_ + " ms");
+                    this.renderTime_ = 0;
+                    this.bitmapW_.recycle();
+                    this.bitmapR_.recycle();
+                    Message completeMessage = handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
                     break;
 

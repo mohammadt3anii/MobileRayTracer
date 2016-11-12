@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "ShaderNoShadows.h"
@@ -13,7 +13,7 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, const Scene &scene) :
 
 void ShaderNoShadows::Shade(const Ray&, const Intersection &isect, RGB& rgb) const
 {
-    const RGB& kD = isect.material->Kd;
+    const RGB &kD = isect.material_->Kd_;
     rgb.setRGB ();
 
     // direct lighting - only for diffuse materials
@@ -26,20 +26,20 @@ void ShaderNoShadows::Shade(const Ray&, const Intersection &isect, RGB& rgb) con
         {
             const Light *ml = scene_.lights[l];
 
-            L.setVect(ml->pos, isect.point());
+            L.setVect(ml->pos_, isect.point_);
             L.normalize();
-            const float cos_N_L = L.dot(isect.normal());
+            const float cos_N_L = L.dot(isect.normal_);
             if (cos_N_L > 0.0f)
             {
-                const RGB radLight = ml->rad;
-                rgb.R += kD.R * cos_N_L * radLight.R;
-                rgb.G += kD.G * cos_N_L * radLight.G;
-                rgb.B += kD.B * cos_N_L * radLight.B;
+                const RGB radLight = ml->rad_;
+                rgb.R_ += kD.R_ * cos_N_L * radLight.R_;
+                rgb.G_ += kD.G_ * cos_N_L * radLight.G_;
+                rgb.B_ += kD.B_ * cos_N_L * radLight.B_;
             }
         }
         // ambient light
-        rgb.R += kD.R * 0.1f;
-        rgb.G += kD.G * 0.1f;
-        rgb.B += kD.B * 0.1f;
+        rgb.R_ += kD.R_ * 0.1f;
+        rgb.G_ += kD.G_ * 0.1f;
+        rgb.B_ += kD.B_ * 0.1f;
     } // end direct + ambient
 }

@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_INTERSECTION_H
@@ -15,26 +15,16 @@ namespace MobileRT
     {
         private:
 
-        public:
-            bool intersected_; // was there an intersection?
+
+    public:
             Point point_;   // intersection point
             Vect normal_;    // intersection normal
             float length_;     // ray length parameter
-            const Material* material;  // material of the intersected primitive
+        const Material *material_;  // material of the intersected primitive
 
             Intersection ();
-            Intersection (const Intersection& intersection);
-            Intersection (const Point& point, const Vect& normal, const float length, const Material* material);
 
-            //void material (const Material* const material);
-            
-            bool intersected () const;
-            const Point& point () const;
-            const Vect& normal () const;
-            float length () const;
-            void setIntersection (const Intersection& intersection);
             void setIntersection (const Point& point, const Vect& normal, const float length, const Material* material);
-            //const Material& material () const;
     };
 }
 

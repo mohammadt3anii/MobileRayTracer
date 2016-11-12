@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Point.h"
@@ -28,14 +28,9 @@ Point::Point (const Point& p) :
 {
 }
 
-Point Point::square() const
-{
-    return Point(this->x_ * this->x_, this->y_ * this->y_, this->z_ * this->z_);
-}
-
 Point Point::multiply(const Vect& vector) const
 {
-    return Point(this->x_ * vector.x, this->y_ * vector.y, this->z_ * vector.z);
+    return Point(this->x_ * vector.x_, this->y_ * vector.y_, this->z_ * vector.z_);
 }
 
 float Point::sumCoordenates() const
@@ -43,18 +38,12 @@ float Point::sumCoordenates() const
     return this->x_ + this->y_ + this->z_;
 }
 
-
 Point Point::operator+(const Vect& vector) const
 {
-    return Point(this->x_ + vector.x, this->y_ + vector.y, this->z_ + vector.z);
+    return Point(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 
 Vect Point::operator-(const Point& point) const
 {
     return Vect(this->x_ - point.x_, this->y_ - point.y_, this->z_ - point.z_);
-}
-
-Point Point::operator*(const float scale) const
-{
-    return Point(this->x_ * scale, this->y_ * scale, this->z_ * scale);
 }

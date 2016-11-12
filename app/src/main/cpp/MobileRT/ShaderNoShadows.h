@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_SHADERNOSHADOWS_H
@@ -12,9 +12,9 @@ namespace MobileRT
     class ShaderNoShadows : public Shader
     {
         private:
-            
-            
-        public:
+
+
+    public:
             ShaderNoShadows(RayTrace& rayTrace, const Scene& scene);
 
             void Shade(const Ray&, const Intersection& intersection, RGB& rgb) const;

@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_VEC_H
@@ -15,10 +15,10 @@ namespace MobileRT
             
 
         public:
-            float x;
-            float y;
-            float z;
-            
+        float x_;
+        float y_;
+        float z_;
+
             Vect ();
             Vect (const float px, const float py, const float pz);
             Vect (const Vect& v);
@@ -31,14 +31,11 @@ namespace MobileRT
 
             // dot product
             float dot (const Vect& v) const;
+
+        float dot() const;
             void mult (const float f);
             void sub (const Vect& v);
             float length ();
-
-            void add (const Vect& v);
-
-            //dot product
-            float not_dot (const Point& point) const;
 
             Vect operator*(const float value) const;
 

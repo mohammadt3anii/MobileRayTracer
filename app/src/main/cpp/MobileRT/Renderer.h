@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_RENDERER_H
@@ -14,17 +14,17 @@ namespace MobileRT
     class Renderer
     {
         private:
-            const unsigned int RT_W;
-            const unsigned int RT_H;
-            const unsigned int LowX;
-            const unsigned int LowY;
+        const unsigned int width_;
+        const unsigned int height_;
             Scene* scene_;
             RayTrace* rTracer_;
             RTCamera* camera_;
 
         public:
-            Renderer (const unsigned int pcanvasW, const unsigned int pcanvasH, const unsigned int renderRes, const unsigned int whichScene, const unsigned int whichShader);
-            void render (unsigned int* canvas, const unsigned int width) const;
+        Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,
+                 const unsigned int whichShader);
+
+        void render(unsigned int *canvas) const;
     };
 }
 

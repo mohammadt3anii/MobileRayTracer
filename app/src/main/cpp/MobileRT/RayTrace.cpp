@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "RayTrace.h"
@@ -18,6 +18,7 @@ RayTrace::RayTrace(const Scene& scene, const unsigned int whichShader) :
             this->shader_ = new ShaderNoShadows(*this, scene);
         }
             break;
+
         case 1:
         {
             this->shader_ = new ShaderWhitted(*this, scene);

@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #include "Intersection.h"
@@ -7,79 +7,16 @@
 
 using namespace MobileRT;
 
-// constructor for no intersection
 Intersection::Intersection () :
-    intersected_(false),
-    length_(MAX_LENGTH),
-    material(nullptr)
-{
-}
-
-Intersection::Intersection (const Intersection& intersection) :
-    intersected_(intersection.intersected_),
-    point_(intersection.point_),
-    normal_(intersection.normal_),
-    length_(intersection.length_),
-    material(intersection.material)
-{
-}
-
-Intersection::Intersection (const Point& point, const Vect& normal, const float length, const Material* m) :
-    intersected_(true),
-    point_(point),
-    normal_(normal),
-    length_(length),
-    material(m)
+        length_(MAX_LENGTH),
+        material_(nullptr)
 {
 }
 
 void Intersection::setIntersection (const Point& point, const Vect& normal, const float length, const Material* m)
 {
-    intersected_ = true;
     point_ = point;
     normal_ = normal;
     length_ = length;
-    material = m;
+    material_ = m;
 }
-
-void Intersection::setIntersection (const Intersection& intersection)
-{
-    intersected_ = intersection.intersected_;
-    point_ = intersection.point_;
-    normal_ = intersection.normal_;
-    length_ = intersection.length_;
-    material = intersection.material;
-}
-
-/*
-void Intersection::material(const Material* const material)
-{
-    this->material_ = material;
-}
-*/
-
-bool Intersection::intersected() const
-{
-    return this->intersected_;
-}
-
-const Point& Intersection::point() const
-{
-    return this->point_;
-}
-
-const Vect& Intersection::normal() const
-{
-    return this->normal_;
-}
-
-float Intersection::length() const
-{
-    return this->length_;
-}
-
-/*
-const Material& Intersection::material() const
-{
-    return *this->material_;
-}*/

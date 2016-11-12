@@ -1,3 +1,7 @@
+//
+// Created by Tiago on 16/10/2016.
+//
+
 #ifndef MOBILERAYTRACER_ALL_H
 #define MOBILERAYTRACER_ALL_H
 

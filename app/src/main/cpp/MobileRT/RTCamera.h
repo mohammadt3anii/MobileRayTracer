@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_RTCAMERA_H
@@ -17,9 +17,10 @@ namespace MobileRT
             const float vFov_;
             Point position_;
 
+        float FastArcTan(const float x) const;
+
         public:
             RTCamera(const Point& position, const float hFov, const float vFov);
-            float FastArcTan(const float x) const;
             void getRay(const float u, const float v, Ray& ray) const;
     };
 }

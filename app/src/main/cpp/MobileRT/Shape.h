@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_MYSHAPE_H
@@ -12,6 +12,9 @@ namespace MobileRT
 {
     class Shape
     {
+    private:
+            
+
         public:
             virtual ~Shape() = default;
             virtual bool Intersect(const Ray&, const Material*, Intersection&) const = 0;

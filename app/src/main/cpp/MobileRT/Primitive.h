@@ -1,5 +1,5 @@
 //
-// Created by puscas on 16-10-2016.
+// Created by Tiago on 16-10-2016.
 //
 
 #ifndef MOBILERAYTRACER_PRIMITIVE_H
@@ -19,7 +19,8 @@ namespace MobileRT
 
         public:
             Primitive (const Shape* shape, const Material& material);
-            virtual ~Primitive ();
+
+        ~Primitive();
 
             bool Intersect(const Ray& ray, Intersection& intersection) const;
     };
