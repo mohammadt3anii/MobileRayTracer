@@ -25,6 +25,9 @@ namespace MobileRT
             void add (const RGB& rgb);
             void mult (const RGB& rgb);
             void mult (const float f);
+
+            void setRGB ();
+            void setRGB (const float r, const float g, const float b);
     };
 }
 

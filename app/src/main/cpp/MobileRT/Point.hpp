@@ -12,11 +12,12 @@ namespace MobileRT
     class Point
     {
         private:
+
+        public:
             float x_;
             float y_;
             float z_;
 
-        public:
             Point();
             Point(const float x, const float y, const float z);
             Point(const Point& point);

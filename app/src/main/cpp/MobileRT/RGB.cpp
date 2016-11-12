@@ -51,3 +51,17 @@ void RGB::mult (const float f)
     this->G *= f;
     this->B *= f;
 }
+
+void RGB::setRGB ()
+{
+    this->R = 0.0f;
+    this->G = 0.0f;
+    this->B = 0.0f;
+}
+
+void RGB::setRGB (const float r, const float g, const float b)
+{
+    this->R = r;
+    this->G = g;
+    this->B = b;
+}

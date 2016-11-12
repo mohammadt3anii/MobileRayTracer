@@ -16,13 +16,16 @@ namespace MobileRT
             
 
         public:
-            const Point orig;
+            Point orig;
             Vect dir;
             const float max_T;
             const unsigned int depth;
 
+            Ray ();
             Ray (const Point& porig, const Vect& pdir);
             Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsigned int d);
+
+            void setRay (const float px, const float py, const float pz, const Point& org);
     };
 }
 

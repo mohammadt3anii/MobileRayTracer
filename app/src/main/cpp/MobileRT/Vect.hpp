@@ -41,6 +41,9 @@ namespace MobileRT
             float not_dot (const Point& v) const;
 
             Vect operator*(const float value) const;
+
+            void setVect (const float px, const float py, const float pz);
+            void setVect (const Point& dest, const Point& orig);
     };
 }
 

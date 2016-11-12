@@ -97,3 +97,18 @@ Vect Vect::operator* (const float value) const
 {
     return Vect(this->x * value, this->y * value, this->z * value);
 }
+
+void Vect::setVect (const float px, const float py, const float pz)
+{
+    this->x = px;
+    this->y = py;
+    this->z = pz;
+    normalize();
+}
+
+void Vect::setVect (const Point& dest, const Point& orig)
+{
+    this->x = dest.x_ - orig.x_;
+    this->y = dest.y_ - orig.y_;
+    this->z = dest.z_ - orig.z_;
+}

@@ -119,11 +119,6 @@ bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& i
             t,
             material);
     return true;
-    // return new Intersection(
-    //         point,
-    //         normal,
-    //         t,
-    //         material);
 }
 
 bool Sphere::Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection)
@@ -177,9 +172,4 @@ bool Sphere::Intersect(const Ray& ray, const Material* material, const float max
             t,
             material);
     return true;
-    // return new Intersection(
-    //         point,
-    //         normal,
-    //         t,
-    //         material);
 }

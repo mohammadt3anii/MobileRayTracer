@@ -49,6 +49,8 @@ void Renderer::render(unsigned int* canvas, const unsigned int width) const//TOD
 {
     const float INV_IMG_WIDTH = 1.0f / this->RT_W;
     const float INV_IMG_HEIGHT = 1.0f / this->RT_H;
+    Ray ray;
+    RGB rayRGB;
     //#pragma omp parallel for num_threads(4)
     for(unsigned int y = 0; y < this->RT_H; y++)
     {
@@ -57,8 +59,8 @@ void Renderer::render(unsigned int* canvas, const unsigned int width) const//TOD
             // generate the ray
             const float u = static_cast<float>(x * INV_IMG_WIDTH);
             const float v = static_cast<float>(y * INV_IMG_HEIGHT);
-            const Ray r = this->camera_->getRay(u, v);//constroi raio
-            const RGB rayRGB(this->rTracer_->RayV(r));//faz trace do raio
+            this->camera_->getRay(u, v, ray);//constroi raio
+            this->rTracer_->RayV(ray, rayRGB);//faz trace do raio e escreve resultado em rayRGB
 
             // tonemap and convert to Paint
             canvas[x + y * width] = ToneMapper::RGB2Color(rayRGB);

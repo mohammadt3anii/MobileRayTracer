@@ -41,11 +41,6 @@ bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& in
         t,
         material);
     return true;
-    // return new Intersection(
-    //     ray.orig + (ray.dir * t),
-    //     this->normal_,
-    //     t,
-    //     material);
 }
 
 bool Plane::Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection)
@@ -75,9 +70,4 @@ bool Plane::Intersect(const Ray& ray, const Material* material, const float maxR
         t,
         material);
     return true;
-    // return new Intersection(
-    //     ray.orig + (ray.dir * t),
-    //     this->normal_,
-    //     t,
-    //     material);
 }

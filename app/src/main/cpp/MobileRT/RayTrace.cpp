@@ -34,13 +34,15 @@ RayTrace::~RayTrace ()
     delete this->shader_;
 }
 
-RGB RayTrace::RayV (const Ray& ray)//trace do raio e verifica se interseta algo
+void RayTrace::RayV (const Ray& ray, RGB& rgb) const//trace do raio e verifica se interseta algo
 {
     // compute radiance
     Intersection intersection;
-    if (this->scene_.trace(ray, intersection))//se interseta alguma primitiva
+    if (this->scene_.trace(ray, intersection) == true)//se interseta alguma primitiva
     {
-        return this->shader_->Shade(ray, intersection);
+        this->shader_->Shade(ray, intersection, rgb);
+    } else
+    {
+        rgb.setRGB (0.1f, 0.1f, 0.9f);//cor do pixel sem interseçao
     }
-    return RGB(0.1f, 0.1f, 0.9f);//cor do pixel sem interseçao
 }
