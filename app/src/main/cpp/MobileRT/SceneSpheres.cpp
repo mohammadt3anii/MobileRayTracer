@@ -2,9 +2,9 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "SceneSpheres.hpp"
-#include "Sphere.hpp"
-#include "Plane.hpp"
+#include "SceneSpheres.h"
+#include "Sphere.h"
+#include "Plane.h"
 
 using namespace MobileRT;
 

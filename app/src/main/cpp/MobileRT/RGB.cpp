@@ -1,7 +1,7 @@
 //
 // Created by puscas on 16-10-2016.
 //
-#include "RGB.hpp"
+#include "RGB.h"
 
 using namespace MobileRT;
 

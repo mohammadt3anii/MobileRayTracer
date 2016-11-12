@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Renderer.hpp"
-#include "SceneCornell.hpp"
-#include "SceneSpheres.hpp"
-#include "ToneMapper.hpp"
+#include "Renderer.h"
+#include "SceneCornell.h"
+#include "SceneSpheres.h"
+#include "ToneMapper.h"
 
 using namespace MobileRT;
 

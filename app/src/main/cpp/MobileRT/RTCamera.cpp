@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "RTCamera.hpp"
-#include "Constants.hpp"
+#include "RTCamera.h"
+#include "Constants.h"
 
 using namespace MobileRT;
 

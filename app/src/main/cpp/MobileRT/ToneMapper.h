@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_TONEMAPPER_HPP
-#define MOBILERAYTRACER_TONEMAPPER_HPP
+#ifndef MOBILERAYTRACER_TONEMAPPER_H
+#define MOBILERAYTRACER_TONEMAPPER_H
 
-#include "RGB.hpp"
+#include "RGB.h"
 
 namespace MobileRT
 {
@@ -19,4 +19,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_TONEMAPPER_HPP
+#endif //MOBILERAYTRACER_TONEMAPPER_H

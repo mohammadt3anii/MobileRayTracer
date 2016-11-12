@@ -2,7 +2,7 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Sphere.hpp"
+#include "Sphere.h"
 #include <cmath>
 #include <algorithm>
 

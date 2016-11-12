@@ -2,7 +2,7 @@
 // Created by puscas on 14-10-2016.
 //
 
-#include "DrawView.hpp"
+#include "DrawView.h"
 #include <jni.h>
 #include <android/bitmap.h>
 #include <pthread.h>

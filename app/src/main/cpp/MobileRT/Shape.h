@@ -2,11 +2,11 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_MYSHAPE_HPP
-#define MOBILERAYTRACER_MYSHAPE_HPP
+#ifndef MOBILERAYTRACER_MYSHAPE_H
+#define MOBILERAYTRACER_MYSHAPE_H
 
-#include "Ray.hpp"
-#include "Intersection.hpp"
+#include "Ray.h"
+#include "Intersection.h"
 
 namespace MobileRT
 {
@@ -18,4 +18,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_MYSHAPE_HPP
+#endif //MOBILERAYTRACER_MYSHAPE_H

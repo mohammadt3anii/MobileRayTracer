@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_VEC_HPP
-#define MOBILERAYTRACER_VEC_HPP
+#ifndef MOBILERAYTRACER_VEC_H
+#define MOBILERAYTRACER_VEC_H
 
-#include "Point.hpp"
+#include "Point.h"
 
 namespace MobileRT
 {
@@ -47,4 +47,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_VEC_HPP
+#endif //MOBILERAYTRACER_VEC_H

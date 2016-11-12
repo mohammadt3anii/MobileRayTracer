@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_PLANE_HPP
-#define MOBILERAYTRACER_PLANE_HPP
+#ifndef MOBILERAYTRACER_PLANE_H
+#define MOBILERAYTRACER_PLANE_H
 
-#include "Shape.hpp"
+#include "Shape.h"
 
 namespace MobileRT
 {
@@ -22,4 +22,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_PLANE_HPP
+#endif //MOBILERAYTRACER_PLANE_H

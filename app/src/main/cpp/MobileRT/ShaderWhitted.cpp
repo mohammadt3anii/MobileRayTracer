@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "ShaderWhitted.hpp"
-#include "Constants.hpp"
+#include "ShaderWhitted.h"
+#include "Constants.h"
 
 using namespace MobileRT;
 

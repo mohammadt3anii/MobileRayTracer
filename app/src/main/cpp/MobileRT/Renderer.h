@@ -2,12 +2,12 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_RENDERER_HPP
-#define MOBILERAYTRACER_RENDERER_HPP
+#ifndef MOBILERAYTRACER_RENDERER_H
+#define MOBILERAYTRACER_RENDERER_H
 
-#include "Scene.hpp"
-#include "RayTrace.hpp"
-#include "RTCamera.hpp"
+#include "Scene.h"
+#include "RayTrace.h"
+#include "RTCamera.h"
 
 namespace MobileRT
 {
@@ -28,4 +28,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_RENDERER_HPP
+#endif //MOBILERAYTRACER_RENDERER_H

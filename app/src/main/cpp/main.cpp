@@ -1,11 +1,10 @@
-#include "MobileRT/All.hpp"
+#include "MobileRT/All.h"
 #include <iostream>
 #include <gtk/gtk.h>
 #include <omp.h>
 
 using namespace MobileRT;
 
-/* Another callback */
 void destroy( GtkWidget*, gpointer)
 {
     gtk_main_quit();
@@ -14,14 +13,7 @@ void destroy( GtkWidget*, gpointer)
 static const int w = 932;
 static const int h = 932;
 static unsigned int canvas[h*w];
-/*
-void *thread_work(void* args)
-{
-    Renderer *ta = (Renderer*) args;
-    ta->render(canvas, w);
-    return NULL;
-}
-*/
+
 int main(int argc, char** argv)
 {
     double start = omp_get_wtime ();
@@ -29,10 +21,7 @@ int main(int argc, char** argv)
     const int shader = atoi(argv[2]);
 	Renderer renderer(w, h, w, scene, shader);
     renderer.render(canvas, w);
-/*
-    pthread_t *thread_handles = (pthread_t*) malloc(1*sizeof(pthread_t));
-    pthread_create(&thread_handles[0], (pthread_attr_t*) NULL, thread_work, (void*) &renderer);
-*/
+
     double end = omp_get_wtime () - start;
     std::cout << "\nTime in secs::" << end << std::endl;
 
@@ -47,9 +36,8 @@ int main(int argc, char** argv)
         buffer[i+2] = (color & 0x00FF0000) >> 16;
         buffer[i+3] = (color & 0xFF000000) >> 24;
     }
-
     //return 0;
-    //GTK
+
     gtk_init (&argc, &argv);
     GtkWidget* window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     GdkPixbuf* pixbuff = gdk_pixbuf_new_from_data (buffer, GDK_COLORSPACE_RGB, TRUE, 8, w, h, w * 4, NULL, NULL); 

@@ -2,7 +2,7 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Shader.hpp"
+#include "Shader.h"
 
 using namespace MobileRT;
 

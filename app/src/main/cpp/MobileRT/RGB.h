@@ -2,8 +2,8 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_RGB_HPP
-#define MOBILERAYTRACER_RGB_HPP
+#ifndef MOBILERAYTRACER_RGB_H
+#define MOBILERAYTRACER_RGB_H
 
 namespace MobileRT
 {
@@ -31,4 +31,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_RGB_HPP
+#endif //MOBILERAYTRACER_RGB_H

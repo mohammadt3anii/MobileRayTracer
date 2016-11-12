@@ -2,11 +2,11 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SHADER_HPP
-#define MOBILERAYTRACER_SHADER_HPP
+#ifndef MOBILERAYTRACER_SHADER_H
+#define MOBILERAYTRACER_SHADER_H
 
-#include "Scene.hpp"
-#include "RayTrace.hpp"
+#include "Scene.h"
+#include "RayTrace.h"
 
 namespace MobileRT
 {
@@ -26,4 +26,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SHADER_HPP
+#endif //MOBILERAYTRACER_SHADER_H

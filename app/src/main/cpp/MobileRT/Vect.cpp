@@ -2,7 +2,7 @@
 // Created by puscas on 16-10-2016.
 //
 
-#include "Vect.hpp"
+#include "Vect.h"
 #include <cmath>
 
 using namespace MobileRT;

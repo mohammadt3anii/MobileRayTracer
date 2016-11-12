@@ -2,12 +2,12 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_INTERSECTION_HPP
-#define MOBILERAYTRACER_INTERSECTION_HPP
+#ifndef MOBILERAYTRACER_INTERSECTION_H
+#define MOBILERAYTRACER_INTERSECTION_H
 
-#include "Point.hpp"
-#include "Vect.hpp"
-#include "Material.hpp"
+#include "Point.h"
+#include "Vect.h"
+#include "Material.h"
 
 namespace MobileRT
 {
@@ -38,4 +38,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_INTERSECTION_HPP
+#endif //MOBILERAYTRACER_INTERSECTION_H

@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SPHERE_HPP
-#define MOBILERAYTRACER_SPHERE_HPP
+#ifndef MOBILERAYTRACER_SPHERE_H
+#define MOBILERAYTRACER_SPHERE_H
 
-#include "Shape.hpp"
+#include "Shape.h"
 
 namespace MobileRT
 {
@@ -22,4 +22,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SPHERE_HPP
+#endif //MOBILERAYTRACER_SPHERE_H

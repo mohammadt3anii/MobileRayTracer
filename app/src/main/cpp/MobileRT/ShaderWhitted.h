@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SHADERWHITTED_HPP
-#define MOBILERAYTRACER_SHADERWHITTED_HPP
+#ifndef MOBILERAYTRACER_SHADERWHITTED_H
+#define MOBILERAYTRACER_SHADERWHITTED_H
 
-#include "Shader.hpp"
+#include "Shader.h"
 
 namespace MobileRT
 {
@@ -23,4 +23,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SHADERWHITTED_HPP
+#endif //MOBILERAYTRACER_SHADERWHITTED_H

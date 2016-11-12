@@ -2,10 +2,10 @@
 // Created by puscas on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SCENECORNELL_HPP
-#define MOBILERAYTRACER_SCENECORNELL_HPP
+#ifndef MOBILERAYTRACER_SCENECORNELL_H
+#define MOBILERAYTRACER_SCENECORNELL_H
 
-#include "Scene.hpp"
+#include "Scene.h"
 
 namespace MobileRT
 {
@@ -19,4 +19,4 @@ namespace MobileRT
     };
 }
 
-#endif //MOBILERAYTRACER_SCENECORNELL_HPP
+#endif //MOBILERAYTRACER_SCENECORNELL_H
