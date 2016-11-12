@@ -9,26 +9,24 @@ using namespace MobileRT;
 
 Plane::Plane (const Point& point, const Vect& normal) :
     point_(point),
-    normal_(normal.returnNormalized()),
-    d_(-(this->normal_.not_dot(this->point_)))
+    normal_(normal.returnNormalized())
 {
 }
 
 bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& intersection)
 {
-    const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
-    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return false;  // zero
-
     // planes have two sides!!!
+    const float normalized_projection = this->normal_.dot(ray.dir);
+    if (normalized_projection >= -MIN_VECT_PROJ && 
+        normalized_projection <= MIN_VECT_PROJ) return false;  // zero
 
-    const float N_O = this->normal_.not_dot(ray.orig);
-
-    const float t = -(this->d_ + N_O) / N_dir;
+    //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
+    const float distance = this->normal_.dot(this->point_ - ray.orig) / normalized_projection;
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (t <= MIN_LENGTH || t >= ray.max_T)
+    if (distance <= MIN_LENGTH || distance >= ray.maxDistance)
     {
         //return Intersection();
         return false;
@@ -36,38 +34,9 @@ bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& in
 
     // if so, then we have an intersection
     intersection.setIntersection(
-        ray.orig + (ray.dir * t),
+        ray.orig + (ray.dir * distance),
         this->normal_,
-        t,
-        material);
-    return true;
-}
-
-bool Plane::Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection)
-{
-    const float N_dir = this->normal_.dot(ray.dir);
-    // is ray parallel or contained in the Plane ??
-    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return false;  // zero
-
-    // planes have two sides!!!
-
-    const float N_O = this->normal_.not_dot(ray.orig);
-
-    const float t = -(this->d_ + N_O) / N_dir;
-
-    // is it in front of the eye?
-    //* is it farther than the ray length ??
-    if (t <= MIN_LENGTH || t >= ray.max_T || t >= maxRayDist)
-    {
-        //return Intersection();
-        return false;
-    }
-
-    // if so, then we have an intersection
-    intersection.setIntersection(
-        ray.orig + (ray.dir * t),
-        this->normal_,
-        t,
+        distance,
         material);
     return true;
 }

@@ -18,7 +18,7 @@ namespace MobileRT
         public:
             Point orig;
             Vect dir;
-            const float max_T;
+            float maxDistance;
             const unsigned int depth;
 
             Ray ();

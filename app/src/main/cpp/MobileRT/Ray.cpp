@@ -10,23 +10,23 @@ using namespace MobileRT;
 Ray::Ray (const Point& porig, const Vect& pdir) :
         orig(porig),
         dir(pdir),
-        max_T(MAX_LENGTH),
+        maxDistance(MAX_LENGTH),
         depth(0)
 {
     this->dir.normalize();
 }
 
-Ray::Ray (const Point& porig, const Vect& pdir, const float pmax_T, const unsigned int d) :
+Ray::Ray (const Point& porig, const Vect& pdir, const float maxDistance, const unsigned int d) :
     orig(porig),
     dir(pdir),
-    max_T(pmax_T),
+    maxDistance(maxDistance),
     depth(d)
 {
     this->dir.normalize();
 }
 
 Ray::Ray () :
-        max_T(MAX_LENGTH),
+        maxDistance(MAX_LENGTH),
         depth(0)
 {
 }

@@ -34,7 +34,7 @@ RayTrace::~RayTrace ()
     delete this->shader_;
 }
 
-void RayTrace::RayV (const Ray& ray, RGB& rgb) const//trace do raio e verifica se interseta algo
+void RayTrace::RayV (Ray& ray, RGB& rgb) const//trace do raio e verifica se interseta algo
 {
     // compute radiance
     Intersection intersection;

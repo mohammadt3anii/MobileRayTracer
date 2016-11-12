@@ -24,17 +24,17 @@ Scene::~Scene()
     }
 }
 
-bool Scene::trace(const Ray& ray, Intersection& intersection) const//TODO: utilizar estrutura de aceleraçao
+bool Scene::trace(Ray& ray, Intersection& intersection) const//TODO: utilizar estrutura de aceleraçao
 {
     bool value = false;
-    float minT = MAX_LENGTH;
+    ray.maxDistance = MAX_LENGTH;
     const unsigned int n = this->primitives.size();
 
     for (unsigned int i = 0; i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
-        if (this->primitives[i]->Intersect(ray, minT, intersection))
+        if (this->primitives[i]->Intersect(ray, intersection))
         {
-            minT = intersection.length();
+            ray.maxDistance = intersection.length();
             value = true;
         }
     }

@@ -21,7 +21,6 @@ namespace MobileRT
             Primitive (Shape* ps, const Material& pm);
             virtual ~Primitive ();
 
-            bool Intersect(const Ray& ray, const float maxRayDist, Intersection& intersection);
             bool Intersect(const Ray& ray, Intersection& intersection);
     };
 }

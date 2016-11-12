@@ -23,7 +23,7 @@ namespace MobileRT
             Scene ();
             ~Scene ();
 
-            bool trace(const Ray& ray, Intersection& intersection) const;
+            bool trace(Ray& ray, Intersection& intersection) const;
 
             bool shadowTrace(const Ray& ray, Intersection& intersection) const;
     };

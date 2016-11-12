@@ -15,7 +15,6 @@ namespace MobileRT
         public:
             virtual ~Shape() = default;
 
-            virtual bool Intersect(const Ray&, const Material*, const float, Intersection&) = 0;
             virtual bool Intersect(const Ray&, const Material*, Intersection&) = 0;
     };
 }

@@ -48,7 +48,7 @@ int main(int argc, char** argv)
         buffer[i+3] = (color & 0xFF000000) >> 24;
     }
 
-    //exit (0);
+    //return 0;
     //GTK
     gtk_init (&argc, &argv);
     GtkWidget* window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

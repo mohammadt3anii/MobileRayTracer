@@ -54,7 +54,7 @@ Vect Vect::symmetric () const
     return Vect(-this->x, -this->y, -this->z);
 }
 
-// dot product
+// dot product Algebraic
 float Vect::dot (const Vect& v) const
 {
     return (this->x * v.x + this->y * v.y + this->z * v.z);
@@ -87,9 +87,9 @@ void Vect::add (const Vect& v)
 }
 
 // dot product
-float Vect::not_dot (const Point& v) const
+float Vect::not_dot (const Point& point) const
 {
-    return v.multiply(*this).sumCoordenates();
+    return point.multiply(*this).sumCoordenates();
 }
 
 

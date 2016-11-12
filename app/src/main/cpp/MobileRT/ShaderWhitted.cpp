@@ -69,7 +69,7 @@ void ShaderWhitted::Shade(const Ray& r, const Intersection& isect, RGB& rgb) con
         specDir.normalize();
 
         const Point p = isect.point();
-        const Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
+        Ray specRay(p, specDir, MAX_LENGTH, r.depth+1);
         RGB specRad;
         this->rayTrace_.RayV(specRay, specRad);
         specRad.mult(isect.material->Ks);

@@ -14,12 +14,10 @@ namespace MobileRT
         private:
             const Point point_;   // point in the plane
             const Vect normal_;    // normal to the plane
-            const float d_;    // 0th degree coefiicient of the plane equation
+            //const float d_;    // 0th degree coefiicient of the plane equation
 
         public:
             Plane (const Point& point, const Vect& normal);
-
-            bool Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection) override;
             bool Intersect(const Ray& ray, const Material* material, Intersection& intersection) override;
     };
 }

@@ -38,7 +38,7 @@ namespace MobileRT
             void add (const Vect& v);
 
             //dot product
-            float not_dot (const Point& v) const;
+            float not_dot (const Point& point) const;
 
             Vect operator*(const float value) const;
 
