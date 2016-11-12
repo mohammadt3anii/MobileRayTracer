@@ -15,6 +15,15 @@ Intersection::Intersection () :
 {
 }
 
+Intersection::Intersection (const Intersection& intersection) :
+    intersected_(intersection.intersected_),
+    point_(intersection.point_),
+    normal_(intersection.normal_),
+    length_(intersection.length_),
+    material(intersection.material)
+{
+}
+
 Intersection::Intersection (const Point& point, const Vect& normal, const float length, const Material* m) :
     intersected_(true),
     point_(point),
@@ -22,6 +31,24 @@ Intersection::Intersection (const Point& point, const Vect& normal, const float 
     length_(length),
     material(m)
 {
+}
+
+void Intersection::setIntersection (const Point& point, const Vect& normal, const float length, const Material* m)
+{
+    intersected_ = true;
+    point_ = point;
+    normal_ = normal;
+    length_ = length;
+    material = m;
+}
+
+void Intersection::setIntersection (const Intersection& intersection)
+{
+    intersected_ = intersection.intersected_;
+    point_ = intersection.point_;
+    normal_ = intersection.normal_;
+    length_ = intersection.length_;
+    material = intersection.material;
 }
 
 /*

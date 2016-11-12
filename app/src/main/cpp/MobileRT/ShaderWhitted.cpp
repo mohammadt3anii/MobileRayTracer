@@ -28,7 +28,7 @@ RGB ShaderWhitted::Shade(const Ray& r, const Intersection& isect) const
     if (isect.material->Kd.isZero() == false)
     {
         const unsigned int Nl = scene_.lights.size();
-        const Intersection* Lsect;
+        Intersection Lsect;
 
         for (unsigned int l = 0; l < Nl ; l++)//para cada luz
         {
@@ -41,8 +41,8 @@ RGB ShaderWhitted::Shade(const Ray& r, const Intersection& isect) const
             {
                 Point p = isect.point();
                 Ray shadowRay (p, L, ml_distance, r.depth+1);//raio de sombra - orig=interseçao, dir=luz
-                Lsect = (scene_.shadowTrace(shadowRay));//interseçao do raio de sombra com a primitiva mais proxima
-                if (Lsect == nullptr)//se nao ha nenhuma primitiva entre a interseçao e a luz
+                //Lsect = ();//interseçao do raio de sombra com a primitiva mais proxima
+                if (scene_.shadowTrace(shadowRay, Lsect) == false)//se nao ha nenhuma primitiva entre a interseçao e a luz
                 {
                     RGB diffuseRad (ml->rad);//R=1, G=1, B=1
                     diffuseRad.mult(isect.material->Kd);//cor da luz
@@ -73,6 +73,5 @@ RGB ShaderWhitted::Shade(const Ray& r, const Intersection& isect) const
         specRad.mult(isect.material->Ks);
         rad.add(specRad);
     }
-    delete &isect;
     return rad;
 }

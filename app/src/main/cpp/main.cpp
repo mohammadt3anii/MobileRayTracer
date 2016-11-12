@@ -1,8 +1,7 @@
 #include "MobileRT/All.hpp"
 #include <iostream>
 #include <gtk/gtk.h>
-#include <ctime>
-//#include <pthread.h>
+#include <omp.h>
 
 using namespace MobileRT;
 
@@ -25,7 +24,7 @@ void *thread_work(void* args)
 */
 int main(int argc, char** argv)
 {
-    clock_t start = clock();
+    double start = omp_get_wtime ();
     const int scene = atoi(argv[1]);
     const int shader = atoi(argv[2]);
 	Renderer renderer(w, h, w, scene, shader);
@@ -34,9 +33,8 @@ int main(int argc, char** argv)
     pthread_t *thread_handles = (pthread_t*) malloc(1*sizeof(pthread_t));
     pthread_create(&thread_handles[0], (pthread_attr_t*) NULL, thread_work, (void*) &renderer);
 */
-    clock_t end = clock() - start;
-    double elapsed_secs = double(end) / CLOCKS_PER_SEC;
-    std::cout << "\nTime in secs::" << elapsed_secs << std::endl;
+    double end = omp_get_wtime () - start;
+    std::cout << "\nTime in secs::" << end << std::endl;
 
     //RGBA
     unsigned char buffer[h*w*4];

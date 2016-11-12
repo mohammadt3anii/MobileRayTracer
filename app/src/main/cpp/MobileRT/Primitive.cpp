@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-Primitive::Primitive (const Shape* const ps, const Material& pm) :
+Primitive::Primitive (Shape* ps, const Material& pm) :
     shape_(ps),
     material_(pm)
 {
@@ -17,7 +17,7 @@ Primitive::~Primitive ()
     delete this->shape_;
 }
 
-Intersection* Primitive::Intersect(const Ray& r, const float maxRayDist)
+bool Primitive::Intersect(const Ray& r, const float maxRayDist, Intersection& intersection)
 {
     //Intersection isect (this->shape_->Intersect(r));
     //Intersection isect (this->shape_->Intersect(r, &this->material_));
@@ -25,5 +25,11 @@ Intersection* Primitive::Intersect(const Ray& r, const float maxRayDist)
     {
         isect.material(&this->material_);
     }*/
-    return this->shape_->Intersect(r, &this->material_, maxRayDist);
+    //return this->shape_->Intersect(r, &this->material_, maxRayDist);
+    return this->shape_->Intersect(r, &this->material_, maxRayDist, intersection);
+}
+
+bool Primitive::Intersect(const Ray& r, Intersection& intersection)
+{
+    return this->shape_->Intersect(r, &this->material_, intersection);
 }

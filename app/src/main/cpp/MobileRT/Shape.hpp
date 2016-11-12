@@ -12,15 +12,11 @@ namespace MobileRT
 {
     class Shape
     {
-        private:
-            
-
         public:
-            Shape ();
-            virtual ~Shape ();
+            virtual ~Shape() = default;
 
-            //virtual Intersection Intersect(const Ray&) const;
-            virtual Intersection* Intersect(const Ray&, const Material* material, const float maxRayDist) const;
+            virtual bool Intersect(const Ray&, const Material*, const float, Intersection&) = 0;
+            virtual bool Intersect(const Ray&, const Material*, Intersection&) = 0;
     };
 }
 

@@ -14,14 +14,15 @@ namespace MobileRT
     class Primitive
     {
         private:
-            const Shape* const shape_;
+            Shape* shape_;
             const Material material_;
 
         public:
-            Primitive (const Shape* const ps, const Material& pm);
+            Primitive (Shape* ps, const Material& pm);
             virtual ~Primitive ();
 
-            Intersection* Intersect(const Ray& ray, const float maxRayDist);
+            bool Intersect(const Ray& ray, const float maxRayDist, Intersection& intersection);
+            bool Intersect(const Ray& ray, Intersection& intersection);
     };
 }
 

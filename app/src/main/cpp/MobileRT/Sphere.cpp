@@ -70,7 +70,7 @@ Sphere::Sphere (const Point& c, const float r) :
 {
 }
 
-Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const float maxRayDist) const
+bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& intersection)
 {
     // pull the ray origin a small epsilon along the ray direction
     const Point org(ray.orig + ((ray.dir) * 1.0e-5f));
@@ -86,7 +86,7 @@ Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const 
     if (q_sol.has_sol == false)
     {
         //return Intersection();
-        return nullptr;
+        return false;
     }
 
     const float t0 = q_sol.t0;
@@ -94,7 +94,7 @@ Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const 
 
     if (t0 > ray.max_T || t1 < 1.0e-6f)
     {
-        return nullptr;
+        return false;
     }
 
     float t = t0;
@@ -103,11 +103,9 @@ Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const 
         t = t1;
         if (t > ray.max_T)
         {
-            return nullptr;
+            return false;
         }
     }
-
-    if(t >= maxRayDist) return nullptr;//se distancia desta interseçao for maior que a anterior
 
     const Point point(org + ((ray.dir) * t));
     Vect normal(point - this->center);
@@ -116,9 +114,72 @@ Intersection* Sphere::Intersect(const Ray &ray, const Material* material, const 
     normal.normalize();
 
     // if so, then we have an intersection
-    return new Intersection(
-            point,
+    intersection.setIntersection(point,
             normal,
             t,
             material);
+    return true;
+    // return new Intersection(
+    //         point,
+    //         normal,
+    //         t,
+    //         material);
+}
+
+bool Sphere::Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection)
+{
+    // pull the ray origin a small epsilon along the ray direction
+    const Point org(ray.orig + ((ray.dir) * 1.0e-5f));
+    const Vect C2O(org - this->center);
+
+    // compute the quadratic equation coefficients
+    const float B = 2.0f * C2O.dot(ray.dir);
+    const float C = ((org - (this->center * 2.0f)).not_dot(org)) +
+        this->sq_center.sumCoordenates() - this->sq_radius;
+
+    // the ray direction is NORMALIZED ( A = 1.0f)
+    const Sphere::Quadratic_Sol q_sol = Quadratic(1.0f, B, C);
+    if (q_sol.has_sol == false)
+    {
+        //return Intersection();
+        return false;
+    }
+
+    const float t0 = q_sol.t0;
+    const float t1 = q_sol.t1;
+
+    if (t0 > ray.max_T || t1 < 1.0e-6f)
+    {
+        return false;
+    }
+
+    float t = t0;
+    if (t < 1.0e-6f)
+    {
+        t = t1;
+        if (t > ray.max_T)
+        {
+            return false;
+        }
+    }
+
+    if(t >= maxRayDist) return false;//se distancia desta interseçao for maior que a anterior
+
+    const Point point(org + ((ray.dir) * t));
+    Vect normal(point - this->center);
+    // if the length of the C2O vector is less that radius then the ray origin is inside the sphere
+    //if (C2O.length() < radius) isect->N.mult(-1.0f);
+    normal.normalize();
+
+    // if so, then we have an intersection
+    intersection.setIntersection(point,
+            normal,
+            t,
+            material);
+    return true;
+    // return new Intersection(
+    //         point,
+    //         normal,
+    //         t,
+    //         material);
 }

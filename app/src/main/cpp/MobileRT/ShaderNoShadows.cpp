@@ -41,6 +41,5 @@ RGB ShaderNoShadows::Shade(const Ray&, const Intersection &isect) const
         rad.G += kD.G * 0.1f;
         rad.B += kD.B * 0.1f;
     } // end direct + ambient
-    delete &isect;
     return rad;
 }

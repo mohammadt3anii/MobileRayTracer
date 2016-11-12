@@ -14,11 +14,45 @@ Plane::Plane (const Point& point, const Vect& normal) :
 {
 }
 
-Intersection* Plane::Intersect(const Ray& ray, const Material* material, const float maxRayDist) const
+bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& intersection)
 {
     const float N_dir = this->normal_.dot(ray.dir);
     // is ray parallel or contained in the Plane ??
-    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return nullptr;  // zero
+    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return false;  // zero
+
+    // planes have two sides!!!
+
+    const float N_O = this->normal_.not_dot(ray.orig);
+
+    const float t = -(this->d_ + N_O) / N_dir;
+
+    // is it in front of the eye?
+    //* is it farther than the ray length ??
+    if (t <= MIN_LENGTH || t >= ray.max_T)
+    {
+        //return Intersection();
+        return false;
+    }
+
+    // if so, then we have an intersection
+    intersection.setIntersection(
+        ray.orig + (ray.dir * t),
+        this->normal_,
+        t,
+        material);
+    return true;
+    // return new Intersection(
+    //     ray.orig + (ray.dir * t),
+    //     this->normal_,
+    //     t,
+    //     material);
+}
+
+bool Plane::Intersect(const Ray& ray, const Material* material, const float maxRayDist, Intersection& intersection)
+{
+    const float N_dir = this->normal_.dot(ray.dir);
+    // is ray parallel or contained in the Plane ??
+    if (((N_dir >= 0)? N_dir : -N_dir) < 1e-8f) return false;  // zero
 
     // planes have two sides!!!
 
@@ -31,13 +65,19 @@ Intersection* Plane::Intersect(const Ray& ray, const Material* material, const f
     if (t <= MIN_LENGTH || t >= ray.max_T || t >= maxRayDist)
     {
         //return Intersection();
-        return nullptr;
+        return false;
     }
 
     // if so, then we have an intersection
-    return new Intersection(
+    intersection.setIntersection(
         ray.orig + (ray.dir * t),
         this->normal_,
         t,
         material);
+    return true;
+    // return new Intersection(
+    //     ray.orig + (ray.dir * t),
+    //     this->normal_,
+    //     t,
+    //     material);
 }
