@@ -14,7 +14,7 @@ Sphere::Sphere (const Point& center, const float radius) :
 {
 }
 
-bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& intersection)
+bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& intersection) const
 {
     //http://stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vect centerToOrigin(ray.orig - this->center_);

@@ -6,18 +6,17 @@
 
 using namespace MobileRT;
 
-Primitive::Primitive (Shape* ps, const Material& pm) :
-    shape_(ps),
+Primitive::Primitive (const Shape* shape, const Material& pm) :
+    shape_(shape),
     material_(pm)
 {
 }
 
 Primitive::~Primitive ()
 {
-    delete this->shape_;
 }
 
-bool Primitive::Intersect(const Ray& r, Intersection& intersection)
+bool Primitive::Intersect(const Ray& ray, Intersection& intersection) const
 {
-    return this->shape_->Intersect(r, &this->material_, intersection);
+    return this->shape_->Intersect(ray, &this->material_, intersection);
 }

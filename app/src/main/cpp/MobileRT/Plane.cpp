@@ -13,7 +13,7 @@ Plane::Plane (const Point& point, const Vect& normal) :
 {
 }
 
-bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& intersection)
+bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& intersection) const
 {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!

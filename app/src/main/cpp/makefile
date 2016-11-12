@@ -6,8 +6,8 @@ CXX := c++
 LD := $(CXX)
 MAKEFLAGS := -j5
 
-CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors -m64
-CXXFLAGS += -Ofast -march=native -ftree-vectorize -fopenmp
+CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors -m64 -fopenmp
+CXXFLAGS += -Ofast -march=native -ftree-vectorize
 CXXFLAGS += -g3
 CXXFLAGS += -I./
 CXXFLAGS += $(shell pkg-config --cflags gtk+-2.0)
