@@ -72,15 +72,24 @@ void Renderer::call_from_thread(unsigned int *canvas, unsigned int startY, unsig
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
 {
-    unsigned int verticalSection = this->height_ / numThreads;
-    std::thread *threads = new std::thread[numThreads];
-    for (unsigned int i = 0, h = 0; i < numThreads; i++, h += verticalSection) {
-        threads[i] = std::thread(&Renderer::call_from_thread, this, canvas, h, h + verticalSection);
+    unsigned int h = 0;
+    std::thread *threads = nullptr;
+    if (numThreads > 1) {
+        unsigned int verticalSection = this->height_ / numThreads;
+
+        threads = new std::thread[numThreads - 1];
+
+        for (unsigned int i = 0; i < numThreads - 1; i++, h += verticalSection) {
+            threads[i] = std::thread(&Renderer::call_from_thread, this, canvas, h,
+                                     h + verticalSection);
+        }
     }
-    for (unsigned int i = 0; i < numThreads; i++) {
+    call_from_thread(canvas, h, this->height_);
+    for (unsigned int i = 0; i < numThreads - 1; i++) {
         threads[i].join();
     }
-    delete threads;
+
+    if (threads != nullptr) delete[] threads;
     delete this->scene_;
     delete this->camera_;
     delete this->rTracer_;

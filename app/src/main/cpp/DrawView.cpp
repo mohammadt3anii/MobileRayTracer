@@ -5,6 +5,7 @@
 #include "DrawView.h"
 #include <jni.h>
 #include <android/bitmap.h>
+#include <android/log.h>
 #include <pthread.h>
 
 /**
@@ -91,7 +92,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
 
     //dstBitmap_ = dstBitmap;
 
-    numThreads_ = nThreads;
+    numThreads_ = static_cast<unsigned int> (nThreads);
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Threads = %d \n", numThreads_);
     // Grab the dst bitmap info and pixels
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels_);
 

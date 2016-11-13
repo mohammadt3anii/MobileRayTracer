@@ -7,5 +7,5 @@
     <string name="spheres">Spheres</string>
     <string name="noShadows">NoShadows</string>
     <string name="whitted">Whitted</string>
-    <string name="numThreads">Number of Threads</string>
+    <string name="numThreads">#Threads</string>
 </resources>

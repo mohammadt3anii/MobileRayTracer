@@ -38,31 +38,23 @@
         android:id="@+id/radioGroupScene"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioCornell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.27"
+            android:width="120dp"
             android:onClick="onSceneRadioButtonClicked"
-            android:paddingEnd="43dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="43dp"
-            android:paddingStart="0dp"
             android:text="@string/cornell"/>
 
         <RadioButton
             android:id="@+id/radioSpheres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onSceneRadioButtonClicked"
-            android:text="@string/spheres"/>
+            android:text="@string/spheres"
+            />
 
     </RadioGroup>
 
@@ -73,29 +65,23 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/radioGroupScene"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        tools:ignore="RtlHardcoded">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioNoShadows"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.41"
+            android:width="120dp"
             android:onClick="onShaderRadioButtonClicked"
-            android:paddingEnd="10dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="10dp"
-            android:paddingStart="0dp"
             android:text="@string/noShadows"/>
 
         <RadioButton
             android:id="@+id/radioWhitted"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.14"
+            android:layout_height="wrap_content"
             android:onClick="onShaderRadioButtonClicked"
-            android:text="@string/whitted"/>
+            android:text="@string/whitted"
+            />
 
     </RadioGroup>
 
