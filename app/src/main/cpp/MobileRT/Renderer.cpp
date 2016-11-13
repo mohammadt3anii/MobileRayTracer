@@ -6,6 +6,8 @@
 #include "SceneCornell.h"
 #include "SceneSpheres.h"
 #include "ToneMapper.h"
+#include <thread>
+#include <iostream>
 
 using namespace MobileRT;
 
@@ -44,14 +46,14 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
     this->rTracer_ = new RayTrace(*this->scene_, whichShader);
 }
 
-void Renderer::render(unsigned int *canvas) const//TODO: permitir lançar mais de 1 raio por pixel
+void Renderer::call_from_thread(unsigned int *canvas, unsigned int startY, unsigned int stopY) const
 {
     const float INV_IMG_WIDTH = 1.0f / this->width_;
     const float INV_IMG_HEIGHT = 1.0f / this->height_;
     Ray ray;
     RGB rayRGB;
     //#pragma omp parallel for num_threads(4)
-    for (unsigned int y = 0; y < this->height_; y++)
+    for (unsigned int y = startY; y < stopY; y++)
     {
         for (unsigned int x = 0; x < this->width_; x++)
         {
@@ -65,6 +67,20 @@ void Renderer::render(unsigned int *canvas) const//TODO: permitir lançar mais d
             canvas[x + y * this->width_] = ToneMapper::RGB2Color(rayRGB);
         }
     }
+}
+
+void Renderer::render(unsigned int *canvas,
+                      const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
+{
+    unsigned int verticalSection = this->height_ / numThreads;
+    std::thread *threads = new std::thread[numThreads];
+    for (unsigned int i = 0, h = 0; i < numThreads; i++, h += verticalSection) {
+        threads[i] = std::thread(&Renderer::call_from_thread, this, canvas, h, h + verticalSection);
+    }
+    for (unsigned int i = 0; i < numThreads; i++) {
+        threads[i].join();
+    }
+    delete threads;
     delete this->scene_;
     delete this->camera_;
     delete this->rTracer_;

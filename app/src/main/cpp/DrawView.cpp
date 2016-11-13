@@ -18,13 +18,14 @@
  */
 
 enum State {
-    Idle = 0, Busy = 1, Finished = 2
+    IDLE = 0, BUSY = 1, FINISHED = 2
 };
 static Renderer *renderer_ = NULL;
 static void *dstPixels_ = NULL;
 static pthread_t thread_handle_;
 static int width_ = 0;
-static int working_ = Idle;
+static int working_ = IDLE;
+static unsigned int numThreads_ = 1;
 /*static JNIEnv* env_ = NULL;
 static jobject dstBitmap_ = NULL;
 static JavaVM* jvm_ = NULL;*/
@@ -36,7 +37,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_isWorking() {
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_finished() {
-    working_ = Idle;
+    working_ = IDLE;
 }
 
 void *thread_work(void *args) {/*
@@ -45,8 +46,8 @@ void *thread_work(void *args) {/*
     jvm_->AttachCurrentThread(&myNewEnv, NULL);
     __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "1");*/
 
-    renderer_->render(static_cast<uint32_t *>(dstPixels_));
-    working_ = Finished;
+    renderer_->render(static_cast<unsigned int *>(dstPixels_), numThreads_);
+    working_ = FINISHED;
 
     //jvm_->DetachCurrentThread();
     return NULL;
@@ -61,7 +62,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint width,
         jint height
 ) {
-    working_ = Idle;
+    working_ = IDLE;
     width_ = width;
     renderer_ = new Renderer(width, height, whichScene, whichShader);
 }
@@ -75,7 +76,8 @@ extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         JNIEnv *env,
         jobject,//thiz,
-        jobject dstBitmap
+        jobject dstBitmap,
+        jint nThreads
 ) {
     /* Get a reference to jctf object's class */
     //jclass object = env->GetObjectClass(thiz);
@@ -89,11 +91,12 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
 
     //dstBitmap_ = dstBitmap;
 
+    numThreads_ = nThreads;
     // Grab the dst bitmap info and pixels
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels_);
 
     // JNIEnv* env; (initialized somewhere else)
-    working_ = Busy;
+    working_ = BUSY;
     pthread_create(&thread_handle_, NULL, thread_work, NULL);
     //pthread_join(thread_handle, NULL);
 

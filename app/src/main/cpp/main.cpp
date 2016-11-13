@@ -10,8 +10,8 @@ void destroy( GtkWidget*, gpointer)
     gtk_main_quit();
 }
 
-static const int w = 932;
-static const int h = 932;
+static const int w = 1024;
+static const int h = 1024;
 static unsigned int canvas[h*w];
 
 int main(int argc, char** argv)
@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     const int scene = atoi(argv[1]);
     const int shader = atoi(argv[2]);
     Renderer renderer(w, h, scene, shader);
-    renderer.render(canvas);
+    renderer.render(canvas, 4);
 
     double end = omp_get_wtime () - start;
     std::cout << "\nTime in secs::" << end << std::endl;

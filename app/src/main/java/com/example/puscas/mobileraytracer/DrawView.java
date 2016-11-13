@@ -2,7 +2,6 @@ package com.example.puscas.mobileraytracer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
@@ -22,6 +21,7 @@ public class DrawView extends View
     private Bitmap bitmapW_;
     private Bitmap bitmapR_;
     private Handler handler_;
+    private int numThreads_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -29,51 +29,53 @@ public class DrawView extends View
     }
 
     private native void initialize(int scene, int shader, int width, int height);
-    private native void drawIntoBitmap(Bitmap image);
+
+    private native void drawIntoBitmap(Bitmap image, int numThreads);
     private native int isWorking();
     private native void finished();
 
     public void setHandler(Handler pHandle) {
-        this.handler_ = pHandle;
+        handler_ = pHandle;
     }
 
-    public void createScene(int scene, int shader, TextView textView)
+    public void createScene(int scene, int shader, int numThreads, TextView textView)
     {
-        this.textView_ = textView;
-        this.bitmapW_ = createBitmap(this.getWidth(), this.getHeight(), Config.ARGB_8888);
-        this.initialize(scene, shader, this.getWidth(), this.getHeight());
-        this.bitmapW_.eraseColor(Color.BLUE);
+        textView_ = textView;
+        bitmapW_ = createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        initialize(scene, shader, getWidth(), getHeight());
+        bitmapW_.eraseColor(Color.WHITE);
+        numThreads_ = numThreads;
     }
 
     @Override
     public void onDraw(Canvas canvas)
     {
-        if (this.isInEditMode() == false)
+        if (isInEditMode() == false)
         {
-            switch (this.isWorking()) {
+            switch (isWorking()) {
                 case 0://Iniciar renderizaçao
-                    this.start_ = SystemClock.elapsedRealtime();
-                    this.drawIntoBitmap(this.bitmapW_);//correr ray tracer no bitmapW
-                    this.invalidate();
+                    start_ = SystemClock.elapsedRealtime();
+                    drawIntoBitmap(bitmapW_, numThreads_);//correr ray tracer no bitmapW
+                    invalidate();
                     break;
 
                 case 1://Enquanto ray-tracer ainda está a funcionar
-                    this.bitmapR_ = createBitmap(this.bitmapW_);//copiar bitmap
-                    canvas.drawBitmap(bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
-                    this.renderTime_ = SystemClock.elapsedRealtime() - start_;
-                    this.textView_.setText("Rendering -> w:" + this.getWidth() + ", h:" + this.getHeight() + ", t:" + this.renderTime_ + " ms");
-                    this.invalidate();
+                    bitmapR_ = createBitmap(bitmapW_);//copiar bitmap
+                    canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
+                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
+                    textView_.setText("Rendering -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
+                    invalidate();
                     break;
 
                 case 2://Quando ray-tracer acabar
-                    this.renderTime_ = SystemClock.elapsedRealtime() - start_;
-                    this.finished();
-                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
-                    this.textView_.setText("Rendered -> w:" + this.getWidth() + ", h:" + this.getHeight() + ", t:" + this.renderTime_ + " ms");
-                    this.renderTime_ = 0;
-                    this.bitmapW_.recycle();
-                    this.bitmapR_.recycle();
-                    Message completeMessage = handler_.obtainMessage(1);
+                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
+                    finished();
+                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
+                    textView_.setText("Rendered -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
+                    renderTime_ = 0;
+                    bitmapW_.recycle();
+                    bitmapR_.recycle();
+                    Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
                     break;
 

@@ -24,7 +24,9 @@ namespace MobileRT
         Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,
                  const unsigned int whichShader);
 
-        void render(unsigned int *canvas) const;
+        void render(unsigned int *canvas, const unsigned int numThreads) const;
+
+        void call_from_thread(unsigned int *canvas, unsigned int startY, unsigned int stopY) const;
     };
 }
 
