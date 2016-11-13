@@ -52,7 +52,6 @@ void Renderer::call_from_thread(unsigned int *canvas, unsigned int startY, unsig
     const float INV_IMG_HEIGHT = 1.0f / this->height_;
     Ray ray;
     RGB rayRGB;
-    //#pragma omp parallel for num_threads(4)
     for (unsigned int y = startY; y < stopY; y++)
     {
         for (unsigned int x = 0; x < this->width_; x++)
@@ -69,22 +68,46 @@ void Renderer::call_from_thread(unsigned int *canvas, unsigned int startY, unsig
     }
 }
 
+void Renderer::call_from_thread2(unsigned int *canvas, unsigned int tid,
+                                 unsigned int numThreads) const {
+    const float INV_IMG_WIDTH = 1.0f / this->width_;
+    const float INV_IMG_HEIGHT = 1.0f / this->height_;
+    Ray ray;
+    RGB rayRGB;
+    unsigned int yWidth = 0;
+    for (unsigned int y = tid; y < this->height_; y += numThreads, yWidth = y * this->width_) {
+        for (unsigned int x = 0; x < this->width_; x += 1) {
+            // generate the ray
+            const float u = static_cast<float>(x * INV_IMG_WIDTH);
+            const float v = static_cast<float>(y * INV_IMG_HEIGHT);
+            this->camera_->getRay(u, v, ray);//constroi raio
+            this->rTracer_->RayV(ray, rayRGB);//faz trace do raio e escreve resultado em rayRGB
+
+            // tonemap and convert to Paint
+            canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);
+        }
+    }
+}
+
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
 {
     unsigned int h = 0;
     std::thread *threads = nullptr;
     if (numThreads > 1) {
-        unsigned int verticalSection = this->height_ / numThreads;
-
         threads = new std::thread[numThreads - 1];
-
+        /*
+        unsigned int verticalSection = this->height_ / numThreads;
         for (unsigned int i = 0; i < numThreads - 1; i++, h += verticalSection) {
             threads[i] = std::thread(&Renderer::call_from_thread, this, canvas, h,
                                      h + verticalSection);
         }
+        */
+        for (unsigned int i = 0; i < numThreads - 1; i++) {
+            threads[i] = std::thread(&Renderer::call_from_thread2, this, canvas, i, numThreads);
+        }
     }
-    call_from_thread(canvas, h, this->height_);
+    call_from_thread2(canvas, numThreads - 1, numThreads);
     for (unsigned int i = 0; i < numThreads - 1; i++) {
         threads[i].join();
     }

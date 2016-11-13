@@ -26,6 +26,9 @@ namespace MobileRT
 
         void render(unsigned int *canvas, const unsigned int numThreads) const;
 
+        void call_from_thread2(unsigned int *canvas, unsigned int tid,
+                               unsigned int numThreads) const;
+
         void call_from_thread(unsigned int *canvas, unsigned int startY, unsigned int stopY) const;
     };
 }
