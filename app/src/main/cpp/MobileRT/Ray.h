@@ -16,17 +16,17 @@ namespace MobileRT
             
 
         public:
-        Point3D origin_;
-        Vector3D direction_;
-        float maxDistance_;
-        const unsigned int depth_;
-        Vector3D symDirection_;
+            Point3D origin_;
+            Vector3D direction_;
+            float maxDistance_;
+            const unsigned int depth_;
+            Vector3D symDirection_;
 
-        Ray ();
+            Ray ();
+            Ray(const float x, const float y, const float z, Point3D position);
+            Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth);
 
-        Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth);
-
-        void setRay (const float px, const float py, const float pz, const Point3D& org);
+            void recycle (const float x, const float y, const float z, const Point3D& origin);
     };
 }
 

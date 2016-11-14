@@ -21,7 +21,7 @@ namespace MobileRT
             Primitive (const Shape* shape, const Material& material);
             ~Primitive();
 
-            bool intersect(const Ray& ray, Intersection& intersection) const;
+            bool intersect(Intersection& intersection, const Ray& ray) const;
     };
 }
 

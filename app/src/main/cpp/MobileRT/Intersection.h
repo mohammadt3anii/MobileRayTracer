@@ -25,7 +25,7 @@ namespace MobileRT
 
         Intersection ();
 
-        void setIntersection (const Point3D& point, const Vector3D& normal, const float length, const Material* material);
+        void recycle (const Point3D& point, const Vector3D& normal, const float length, const Material* material);
         Vector3D& getSymNormal();
     };
 }

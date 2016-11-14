@@ -90,7 +90,7 @@ Vector3D Vector3D::operator* (const float value) const
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
-void Vector3D::setVect (const float x, const float y, const float z)
+void Vector3D::recycle (const float x, const float y, const float z)
 {
     this->x_ = x;
     this->y_ = y;
@@ -98,7 +98,7 @@ void Vector3D::setVect (const float x, const float y, const float z)
     normalize();
 }
 
-void Vector3D::setVect (const Point3D& dest, const Point3D& orig)
+void Vector3D::recycle (const Point3D& dest, const Point3D& orig)
 {
     this->x_ = dest.x_ - orig.x_;
     this->y_ = dest.y_ - orig.y_;

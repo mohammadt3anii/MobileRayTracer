@@ -13,6 +13,16 @@ Ray::Ray() :
 {
 }
 
+Ray::Ray(const float x, const float y, const float z, Point3D origin) :
+        origin_(origin),
+        direction_(x, y, z),
+        maxDistance_(MAX_LENGTH),
+        depth_(0),
+        symDirection_(-x, -y, -z)
+{
+    this->direction_.normalize();
+}
+
 Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth) :
         origin_(orig),
         direction_(dir),
@@ -22,9 +32,9 @@ Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const un
     this->direction_.normalize();
 }
 
-void Ray::setRay (const float px, const float py, const float pz, const Point3D& org)
+void Ray::recycle (const float x, const float y, const float z, const Point3D& origin)
 {
-    this->direction_.setVect(px, py, pz);
-    this->symDirection_.setVect(-px, -py, -pz);
-    this->origin_ = org;
+    this->direction_.recycle(x, y, z);
+    this->symDirection_.recycle(-x, -y, -z);
+    this->origin_ = origin;
 }

@@ -13,15 +13,15 @@ namespace MobileRT
     class PerspectiveCamera
     {
         private:
-            const float hFov_;
-            const float vFov_;
             const Point3D position_;
 
-            float FastArcTan(const float x) const;
-
         public:
+            const float hFov_;
+            const float vFov_;
+
             PerspectiveCamera(const Point3D& position, const float hFov, const float vFov);
-            void getRay(const float u, const float v, Ray& ray) const;
+            void getRay(Ray& ray, const float u_alpha, const float v_alpha) const;
+            Ray getRay(const float u, const float v) const;
     };
 }
 

@@ -39,8 +39,8 @@ namespace MobileRT
 
             Vector3D operator*(const float value) const;
 
-            void setVect (const float x, const float y, const float z);
-            void setVect (const Point3D& dest, const Point3D& orig);
+            void recycle (const float x, const float y, const float z);
+            void recycle (const Point3D& dest, const Point3D& orig);
     };
 }
 

@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_MATERIAL_H
 #define MOBILERAYTRACER_MATERIAL_H
 
-#include "Color_Model/RGB.h"
+#include "Color_Models/RGB.h"
 
 namespace MobileRT
 {

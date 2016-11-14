@@ -22,7 +22,7 @@ namespace MobileRT
             RayTracer(const Scene& scene, const unsigned int shader);
             ~RayTracer();
 
-            void rayTrace(Ray& ray, RGB& rgb, Intersection& intersection) const;
+            void rayTrace(RGB& rgb, Ray& ray, Intersection& intersection, Vector3D& vector) const;
     };
 }
 

@@ -25,15 +25,15 @@ Scene::~Scene()
     }
 }
 
-bool Scene::trace(Ray& ray, Intersection& intersection) const//TODO: utilizar estrutura de aceleraçao
+bool Scene::trace(Intersection& intersection, Ray& ray) const//TODO: utilizar estrutura de aceleraçao
 {
     bool value (false);
     ray.maxDistance_ = MAX_LENGTH;
-    const unsigned int n (this->primitives.size());
+    const unsigned int sizePrimitives (this->primitives.size());
 
-    for (unsigned int i (0); i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
+    for (unsigned int i (0); i < sizePrimitives; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
-        if (this->primitives[i]->intersect(ray, intersection) == true)
+        if (this->primitives[i]->intersect(intersection, ray) == true)
         {
             ray.maxDistance_ = intersection.length_;
             value = true;
@@ -42,12 +42,12 @@ bool Scene::trace(Ray& ray, Intersection& intersection) const//TODO: utilizar es
     return value;
 }
 
-bool Scene::shadowTrace(const Ray& ray, Intersection& intersection) const//TODO: utilizar estrutura de aceleraçao
+bool Scene::shadowTrace(Intersection& intersection, const Ray& ray) const//TODO: utilizar estrutura de aceleraçao
 {
-    const unsigned int  n (this->primitives.size());
-    for (unsigned int i (0); i < n; i++)//fazer trace do shadow ray
+    const unsigned int sizePrimitives (this->primitives.size());
+    for (unsigned int i (0); i < sizePrimitives; i++)//fazer trace do shadow ray
     {
-        if (this->primitives[i]->intersect(ray, intersection) == true)
+        if (this->primitives[i]->intersect(intersection, ray) == true)
         {
             return true;
         }

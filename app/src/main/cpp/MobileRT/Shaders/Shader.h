@@ -22,7 +22,7 @@ namespace MobileRT
             Shader(RayTracer& rayTracer, const Scene& scene);
             virtual ~Shader();
 
-            virtual void shade(const Ray&, Intersection&, RGB&) const;
+            virtual void shade(RGB&, Intersection&, const Ray&, Vector3D&) const;
     };
 }
 

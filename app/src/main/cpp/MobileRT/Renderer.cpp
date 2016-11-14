@@ -5,7 +5,8 @@
 #include "Renderer.h"
 #include "Scenes/SceneCornell.h"
 #include "Scenes/SceneSpheres.h"
-#include "Color_Model/ToneMapper.h"
+#include "Color_Models/ToneMapper.h"
+#include "Utils.h"
 #include <thread>
 #include <iostream>
 
@@ -52,19 +53,23 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
     const float height (this->height_);
     const float INV_IMG_WIDTH (1.0f / width);
     const float INV_IMG_HEIGHT (1.0f / height);
-    Ray ray;
+    
     RGB rayRGB;
     Intersection isect;
+    Vector3D vector;
+    Ray ray;
     for (unsigned int y = tid; y < height; y += numThreads)
     {
         const unsigned int yWidth (y * width);
-        const float& v (static_cast<float>(y * INV_IMG_HEIGHT));
+        const float v (static_cast<float>(y * INV_IMG_HEIGHT));
+        const float v_alpha (fastArcTan(-this->camera_->vFov_ * (v - 0.5f)));
         for (unsigned int x (0); x < width; x += 1)
         {
             // generate the ray
-            const float& u (static_cast<float>(x * INV_IMG_WIDTH));
-            this->camera_->getRay(u, v, ray);//constroi raio
-            this->rayTracer_->rayTrace(ray, rayRGB, isect);//faz trace do raio e escreve resultado em rayRGB
+            const float u (static_cast<float>(x * INV_IMG_WIDTH));
+            const float u_alpha (fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
+            this->camera_->getRay(ray, u_alpha, v_alpha);//constroi raio e coloca em ray
+            this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);//faz trace do raio e coloca a cor em rayRGB
 
             // tonemap and convert to Paint
             canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);

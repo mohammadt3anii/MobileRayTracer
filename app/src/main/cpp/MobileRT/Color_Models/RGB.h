@@ -26,8 +26,8 @@ namespace MobileRT
             void mult (const RGB& rgb);
             void mult (const float f);
 
-            void resetRGB ();
-            void setRGB (const float r, const float g, const float b);
+            void recycle ();
+            void recycle (const float r, const float g, const float b);
     };
 }
 

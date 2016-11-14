@@ -15,7 +15,7 @@ namespace MobileRT
             
 
         public:
-            static unsigned int RGB2Color (const RGB& px);
+            static unsigned int RGB2Color (const RGB& pixel);
     };
 }
 

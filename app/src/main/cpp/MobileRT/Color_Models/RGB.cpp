@@ -52,14 +52,14 @@ void RGB::mult (const float f)
     this->B_ *= f;
 }
 
-void RGB::resetRGB ()
+void RGB::recycle ()
 {
     this->R_ = 0.0f;
     this->G_ = 0.0f;
     this->B_ = 0.0f;
 }
 
-void RGB::setRGB (const float r, const float g, const float b)
+void RGB::recycle (const float r, const float g, const float b)
 {
     this->R_ = r;
     this->G_ = g;
