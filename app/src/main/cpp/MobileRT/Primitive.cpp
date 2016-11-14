@@ -16,7 +16,7 @@ Primitive::~Primitive ()
 {
 }
 
-bool Primitive::Intersect(const Ray& ray, Intersection& intersection) const
+bool Primitive::intersect(const Ray& ray, Intersection& intersection) const
 {
-    return this->shape_->Intersect(ray, &this->material_, intersection);
+    return this->shape_->intersect(ray, &this->material_, intersection);
 }

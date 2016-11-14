@@ -12,12 +12,12 @@ namespace MobileRT
     class ShaderNoShadows : public Shader
     {
         private:
+            
 
+        public:
+            ShaderNoShadows(RayTracer& rayTracer, const Scene& scene);
 
-    public:
-            ShaderNoShadows(RayTrace& rayTrace, const Scene& scene);
-
-            void Shade(const Ray&, Intersection& intersection, RGB& rgb) const;
+            void shade(const Ray&, Intersection& intersection, RGB& rgb) const;
     };
 }
 

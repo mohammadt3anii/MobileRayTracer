@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_MATERIAL_H
 #define MOBILERAYTRACER_MATERIAL_H
 
-#include "RGB.h"
+#include "Color_Model/RGB.h"
 
 namespace MobileRT
 {
@@ -18,9 +18,9 @@ namespace MobileRT
         const RGB Kd_;   // diffuse reflection
         const RGB Ks_;   // specular reflection
 
-        Material(const RGB &Kd);
+        Material(const RGB& Kd);
 
-        Material(const RGB &Kd, const RGB &Ks);
+        Material(const RGB& Kd, const RGB& Ks);
     };
 }
 

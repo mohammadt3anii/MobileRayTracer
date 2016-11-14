@@ -13,7 +13,7 @@ Ray::Ray() :
 {
 }
 
-Ray::Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned int depth) :
+Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth) :
         origin_(orig),
         direction_(dir),
         maxDistance_(maxDist),
@@ -22,7 +22,7 @@ Ray::Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned
     this->direction_.normalize();
 }
 
-void Ray::setRay (const float px, const float py, const float pz, const Point& org)
+void Ray::setRay (const float px, const float py, const float pz, const Point3D& org)
 {
     this->direction_.setVect(px, py, pz);
     this->symDirection_.setVect(-px, -py, -pz);

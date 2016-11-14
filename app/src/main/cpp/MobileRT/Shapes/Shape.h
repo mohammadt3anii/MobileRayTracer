@@ -5,8 +5,8 @@
 #ifndef MOBILERAYTRACER_MYSHAPE_H
 #define MOBILERAYTRACER_MYSHAPE_H
 
-#include "Ray.h"
-#include "Intersection.h"
+#include "../Ray.h"
+#include "../Intersection.h"
 
 namespace MobileRT
 {
@@ -17,7 +17,7 @@ namespace MobileRT
 
         public:
             virtual ~Shape() = default;
-            virtual bool Intersect(const Ray&, const Material*, Intersection&) const = 0;
+            virtual bool intersect(const Ray&, const Material*, Intersection&) const = 0;
     };
 }
 

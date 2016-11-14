@@ -3,7 +3,7 @@
 //
 
 #include "Scene.h"
-#include "Constants.h"
+#include "../Constants.h"
 
 using namespace MobileRT;
 
@@ -33,7 +33,7 @@ bool Scene::trace(Ray& ray, Intersection& intersection) const//TODO: utilizar es
 
     for (unsigned int i (0); i < n; i++)//nao e preciso tar sempre a verificar todas as primitivas
     {
-        if (this->primitives[i]->Intersect(ray, intersection) == true)
+        if (this->primitives[i]->intersect(ray, intersection) == true)
         {
             ray.maxDistance_ = intersection.length_;
             value = true;
@@ -47,7 +47,7 @@ bool Scene::shadowTrace(const Ray& ray, Intersection& intersection) const//TODO:
     const unsigned int  n (this->primitives.size());
     for (unsigned int i (0); i < n; i++)//fazer trace do shadow ray
     {
-        if (this->primitives[i]->Intersect(ray, intersection) == true)
+        if (this->primitives[i]->intersect(ray, intersection) == true)
         {
             return true;
         }

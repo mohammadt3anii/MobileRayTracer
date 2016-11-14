@@ -3,24 +3,24 @@
 //
 
 #include "Sphere.h"
-#include "Constants.h"
+#include "../Constants.h"
 #include <cmath>
 
 using namespace MobileRT;
 
-Sphere::Sphere (const Point& center, const float radius) :
+Sphere::Sphere (const Point3D& center, const float radius) :
     center_(center),
     sq_radius_(radius*radius)
 {
 }
 
-bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& intersection) const
+bool Sphere::intersect(const Ray& ray, const Material* material, Intersection& intersection) const
 {
     //http://stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const Vect centerToOrigin(ray.origin_ - this->center_);
+    const Vector3D centerToOrigin(ray.origin_ - this->center_);
 
     //A = 1.0
-    const float B (2.0f * centerToOrigin.dot(ray.direction_));
+    const float B (2.0f * centerToOrigin.dotProduct(ray.direction_));
     const float C (centerToOrigin.dot() - this->sq_radius_);
     
     const float discriminant (B * B - 4.0f * C);
@@ -33,8 +33,8 @@ bool Sphere::Intersect(const Ray& ray, const Material* material, Intersection& i
 
     if (distance > ray.maxDistance_ || distance < MIN_RAY_DIST) return false;
 
-    const Point point(ray.origin_ + (ray.direction_ * distance));
-    Vect normal(point - this->center_);
+    const Point3D point(ray.origin_ + (ray.direction_ * distance));
+    Vector3D normal(point - this->center_);
     normal.normalize();
 
     // if so, then we have an intersection

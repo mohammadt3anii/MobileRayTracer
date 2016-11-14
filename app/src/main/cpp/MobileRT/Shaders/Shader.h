@@ -5,24 +5,24 @@
 #ifndef MOBILERAYTRACER_SHADER_H
 #define MOBILERAYTRACER_SHADER_H
 
-#include "Scene.h"
-#include "RayTrace.h"
+#include "../Scenes/Scene.h"
+#include "../RayTracer.h"
 
 namespace MobileRT
 {
-    class RayTrace;
+    class RayTracer;
     
     class Shader
     {
         protected:
             const Scene& scene_;
-            RayTrace& rayTrace_;
+            RayTracer& rayTracer_;
 
         public:
-            Shader(RayTrace& rayTrace, const Scene& scene);
+            Shader(RayTracer& rayTracer, const Scene& scene);
             virtual ~Shader();
 
-            virtual void Shade(const Ray&, Intersection&, RGB&) const;
+            virtual void shade(const Ray&, Intersection&, RGB&) const;
     };
 }
 

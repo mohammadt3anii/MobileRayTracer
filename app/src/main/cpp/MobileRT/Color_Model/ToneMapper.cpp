@@ -15,5 +15,5 @@ unsigned int ToneMapper::RGB2Color (const RGB& pixel)
     const unsigned char cr (static_cast<unsigned char> (r * 255));
     const unsigned char cg (static_cast<unsigned char> (g * 255));
     const unsigned char cb (static_cast<unsigned char> (b * 255));
-    return 0xFF000000 | (cb << 16) | (cg << 8) | cr;
+    return (0xFF000000 | (cb << 16) | (cg << 8) | cr);
 }

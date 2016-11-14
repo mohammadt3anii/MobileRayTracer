@@ -5,8 +5,8 @@
 #include "DrawView.h"
 #include <jni.h>
 #include <android/bitmap.h>
-#include <android/log.h>
-#include <pthread.h>
+//#include <android/log.h>
+#include <thread>
 
 /**
  * Draws something into the given bitmap
@@ -23,7 +23,6 @@ enum State {
 };
 static Renderer *renderer_ (nullptr);
 static void *dstPixels_ (nullptr);
-static pthread_t thread_handle_;
 static int width_ (0);
 static int working_ (IDLE);
 static unsigned int numThreads_ (1);
@@ -41,17 +40,16 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finished() {
     working_ = IDLE;
 }
 
-void *thread_work(void *args) {/*
+void thread_work()
+{/*
     jobject* kik = (jobject*) args;
     JNIEnv* myNewEnv;
-    jvm_->AttachCurrentThread(&myNewEnv, NULL);
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "1");*/
+    jvm_->AttachCurrentThread(&myNewEnv, NULL);*/
 
     renderer_->render(static_cast<unsigned int *>(dstPixels_), numThreads_);
     working_ = FINISHED;
 
     //jvm_->DetachCurrentThread();
-    return NULL;
 }
 
 extern "C"
@@ -93,14 +91,13 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     //dstBitmap_ = dstBitmap;
 
     numThreads_ = static_cast<unsigned int> (nThreads);
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Threads = %d \n", numThreads_);
+    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Threads = %d \n", numThreads_);
     // Grab the dst bitmap info and pixels
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels_);
 
     // JNIEnv* env; (initialized somewhere else)
     working_ = BUSY;
-    pthread_create(&thread_handle_, NULL, thread_work, NULL);
-    //pthread_join(thread_handle, NULL);
+    std::thread (thread_work).detach();
 
     // Unlock the dst's pixels
     AndroidBitmap_unlockPixels(env, dstBitmap);

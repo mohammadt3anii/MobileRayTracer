@@ -17,9 +17,9 @@ namespace MobileRT
             };
 
         public:
-            ShaderWhitted(RayTrace& rayTrace, const Scene& scene);
+            ShaderWhitted(RayTracer& rayTracer, const Scene& scene);
 
-            void Shade(const Ray& ray, Intersection& intersection, RGB& rgb) const override;
+            void shade(const Ray& ray, Intersection& intersection, RGB& rgb) const override;
     };
 }
 

@@ -13,16 +13,16 @@ Intersection::Intersection () :
 {
 }
 
-void Intersection::setIntersection (const Point& point, const Vect& normal, const float length, const Material* m)
+void Intersection::setIntersection (const Point3D& point, const Vector3D& normal, const float length, const Material* m)
 {
-    point_ = point;
-    normal_ = normal;
-    length_ = length;
-    material_ = m;
+    this->point_ = point;
+    this->normal_ = normal;
+    this->length_ = length;
+    this->material_ = m;
 }
 
-Vect& Intersection::getSymNormal()
+Vector3D& Intersection::getSymNormal()
 {
-    symNormal_.setVect(-normal_.x_, -normal_.y_, -normal_.z_);
+    this->symNormal_.setVect(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
     return this->symNormal_;
 }

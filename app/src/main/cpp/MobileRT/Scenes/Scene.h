@@ -5,8 +5,8 @@
 #ifndef MOBILERAYTRACER_SCENE_H
 #define MOBILERAYTRACER_SCENE_H
 
-#include "Light.h"
-#include "Primitive.h"
+#include "../Lights/PointLight.h"
+#include "../Primitive.h"
 #include <vector>
 
 namespace MobileRT
@@ -14,10 +14,10 @@ namespace MobileRT
     class Scene
     {
         private:
-
+            
 
     public:
-            std::vector<Light*> lights;
+            std::vector<PointLight*> lights;
             std::vector<Primitive*> primitives;
 
             Scene ();

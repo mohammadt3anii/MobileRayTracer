@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_PRIMITIVE_H
 #define MOBILERAYTRACER_PRIMITIVE_H
 
-#include "Shape.h"
+#include "Shapes/Shape.h"
 #include "Material.h"
 #include "Ray.h"
 
@@ -19,10 +19,9 @@ namespace MobileRT
 
         public:
             Primitive (const Shape* shape, const Material& material);
+            ~Primitive();
 
-        ~Primitive();
-
-            bool Intersect(const Ray& ray, Intersection& intersection) const;
+            bool intersect(const Ray& ray, Intersection& intersection) const;
     };
 }
 

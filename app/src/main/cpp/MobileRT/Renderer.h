@@ -5,9 +5,9 @@
 #ifndef MOBILERAYTRACER_RENDERER_H
 #define MOBILERAYTRACER_RENDERER_H
 
-#include "Scene.h"
-#include "RayTrace.h"
-#include "RTCamera.h"
+#include "Scenes/Scene.h"
+#include "RayTracer.h"
+#include "Cameras/PerspectiveCamera.h"
 
 namespace MobileRT
 {
@@ -17,8 +17,8 @@ namespace MobileRT
             const unsigned int width_;
             const unsigned int height_;
             Scene* scene_;
-            RayTrace* rTracer_;
-            RTCamera* camera_;
+            RayTracer* rayTracer_;
+            PerspectiveCamera* camera_;
 
         public:
             Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,

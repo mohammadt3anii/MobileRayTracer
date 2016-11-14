@@ -97,8 +97,8 @@ public class MainActivity extends Activity
     public void startRender(View view) {
         mRenderButton_.setEnabled(false);
         drawView_.createScene(scene_, shader_, numThreads_.getValue(), textView_);
-        drawView_.invalidate();
         drawView_.setVisibility(View.VISIBLE);
+        drawView_.invalidate();
     }
 
     public void onSceneRadioButtonClicked(View view)

@@ -2,16 +2,16 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "RayTrace.h"
-#include "ShaderNoShadows.h"
-#include "ShaderWhitted.h"
+#include "RayTracer.h"
+#include "Shaders/ShaderNoShadows.h"
+#include "Shaders/ShaderWhitted.h"
 
 using namespace MobileRT;
 
-RayTrace::RayTrace(const Scene& scene, const unsigned int whichShader) :
+RayTracer::RayTracer(const Scene& scene, const unsigned int shader) :
     scene_(scene)
 {
-    switch (whichShader)
+    switch (shader)
     {
         case 0:
         {
@@ -30,17 +30,17 @@ RayTrace::RayTrace(const Scene& scene, const unsigned int whichShader) :
     }
 }
 
-RayTrace::~RayTrace ()
+RayTracer::~RayTracer ()
 {
     delete this->shader_;
 }
 
-void RayTrace::RayV (Ray& ray, RGB& rgb, Intersection& intersection) const//trace do raio e verifica se interseta algo
+void RayTracer::rayTrace (Ray& ray, RGB& rgb, Intersection& intersection) const//trace do raio e verifica se interseta algo
 {
     // compute radiance
     if (this->scene_.trace(ray, intersection) == true)//se interseta alguma primitiva
     {
-        this->shader_->Shade(ray, intersection, rgb);
+        this->shader_->shade(ray, intersection, rgb);
     }
     else
     {

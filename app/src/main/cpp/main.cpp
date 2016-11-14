@@ -43,10 +43,10 @@ int main(int argc, char** argv)
     const int shader (atoi(argv[2]));
     const int threads (atoi(argv[3]));
     
-    double start (omp_get_wtime ());
+    const double start (omp_get_wtime ());
     Renderer renderer(w, h, scene, shader);
     renderer.render(canvas, threads);
-    double end (omp_get_wtime () - start);
+    const double end (omp_get_wtime () - start);
     std::cout << "\nTime in secs::" << end << std::endl;
 
     //RGBA
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     
     for(unsigned int i (0), j (0); i < w * h * 4; i += 4, j+=1)
     {
-        unsigned int color (canvas[j]);
+        const unsigned int color (canvas[j]);
         buffer[i + 0] = (color & 0x000000FF) >> 0;
         buffer[i+1] = (color & 0x0000FF00) >> 8;
         buffer[i+2] = (color & 0x00FF0000) >> 16;
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
     gtk_container_add (GTK_CONTAINER (window), image);
     gtk_widget_show_all (window);
-    //gtk_main ();
+    gtk_main ();
 
     return 0;
 }

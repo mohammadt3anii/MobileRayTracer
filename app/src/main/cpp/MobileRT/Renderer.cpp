@@ -3,9 +3,9 @@
 //
 
 #include "Renderer.h"
-#include "SceneCornell.h"
-#include "SceneSpheres.h"
-#include "ToneMapper.h"
+#include "Scenes/SceneCornell.h"
+#include "Scenes/SceneSpheres.h"
+#include "Color_Model/ToneMapper.h"
 #include <thread>
 #include <iostream>
 
@@ -26,7 +26,7 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
             this->scene_ = new SceneCornell();
             const float hFov = 45.0f;
             const float vFov = hFov * ratio;
-            this->camera_ = new RTCamera(Point(0.0f, 0.0f, -3.4f), hFov, vFov);
+            this->camera_ = new PerspectiveCamera(Point3D(0.0f, 0.0f, -3.4f), hFov, vFov);
         }
             break;
 
@@ -35,7 +35,7 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
             this->scene_ = new SceneSpheres();
             const float hFov = 60.0f;
             const float vFov = hFov * ratio;
-            this->camera_ = new RTCamera(Point(0.0f, 0.5f, 1.0f), hFov, vFov);
+            this->camera_ = new PerspectiveCamera(Point3D(0.0f, 0.5f, 1.0f), hFov, vFov);
         }
             break;
 
@@ -43,7 +43,7 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
             break;
     }
     // create the ray tracer
-    this->rTracer_ = new RayTrace(*this->scene_, whichShader);
+    this->rayTracer_ = new RayTracer(*this->scene_, whichShader);
 }
 
 void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
@@ -64,7 +64,7 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
             // generate the ray
             const float& u (static_cast<float>(x * INV_IMG_WIDTH));
             this->camera_->getRay(u, v, ray);//constroi raio
-            this->rTracer_->RayV(ray, rayRGB, isect);//faz trace do raio e escreve resultado em rayRGB
+            this->rayTracer_->rayTrace(ray, rayRGB, isect);//faz trace do raio e escreve resultado em rayRGB
 
             // tonemap and convert to Paint
             canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);
@@ -92,5 +92,5 @@ void Renderer::render(unsigned int *canvas,
     delete[] threads;
     delete this->scene_;
     delete this->camera_;
-    delete this->rTracer_;
+    delete this->rayTracer_;
 }
