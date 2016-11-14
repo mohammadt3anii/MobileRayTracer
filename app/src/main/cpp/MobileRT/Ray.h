@@ -20,12 +20,13 @@ namespace MobileRT
         Vect direction_;
         float maxDistance_;
         const unsigned int depth_;
+        Vect symDirection_;
 
-            Ray ();
+        Ray ();
 
         Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned int depth);
 
-            void setRay (const float px, const float py, const float pz, const Point& org);
+        void setRay (const float px, const float py, const float pz, const Point& org);
     };
 }
 

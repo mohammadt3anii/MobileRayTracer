@@ -20,3 +20,9 @@ void Intersection::setIntersection (const Point& point, const Vect& normal, cons
     length_ = length;
     material_ = m;
 }
+
+Vect& Intersection::getSymNormal()
+{
+    symNormal_.setVect(-normal_.x_, -normal_.y_, -normal_.z_);
+    return this->symNormal_;
+}

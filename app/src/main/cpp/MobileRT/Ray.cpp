@@ -25,5 +25,6 @@ Ray::Ray(const Point &orig, const Vect &dir, const float maxDist, const unsigned
 void Ray::setRay (const float px, const float py, const float pz, const Point& org)
 {
     this->direction_.setVect(px, py, pz);
+    this->symDirection_.setVect(-px, -py, -pz);
     this->origin_ = org;
 }

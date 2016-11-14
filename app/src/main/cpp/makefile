@@ -6,7 +6,7 @@ CXX := c++
 LD := $(CXX)
 MAKEFLAGS := -j5
 
-CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors -m64 -fopenmp
+CXXFLAGS := -MMD -MP -Wall -Wextra -std=c++11 -Wfatal-errors -m64 -fopenmp -Winline
 CXXFLAGS += -Ofast -march=native -ftree-vectorize
 CXXFLAGS += -g3
 CXXFLAGS += -I./
@@ -26,6 +26,7 @@ DEPS := $(addsuffix .d,$(basename $(SOURCES)))
 
 $(EXE): $(OBJS)
 	$(LD) $(OBJS) -o $@ $(LDFLAGS)
+	@echo "Compilation done"
 
 clean:
 	@rm -f $(OBJS) $(DEPS) $(EXE)
@@ -33,4 +34,3 @@ clean:
 
 all: $(EXE)
 	@rm -f $(OBJS) $(DEPS)
-	@echo "Compilation done"

@@ -14,22 +14,18 @@ namespace MobileRT
     class Renderer
     {
         private:
-        const unsigned int width_;
-        const unsigned int height_;
+            const unsigned int width_;
+            const unsigned int height_;
             Scene* scene_;
             RayTrace* rTracer_;
             RTCamera* camera_;
 
         public:
-        Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,
+            Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,
                  const unsigned int whichShader);
-
-        void render(unsigned int *canvas, const unsigned int numThreads) const;
-
-        void call_from_thread2(unsigned int *canvas, unsigned int tid,
+            void render(unsigned int *canvas, const unsigned int numThreads) const;
+            void thread_render(unsigned int *canvas, unsigned int tid,
                                unsigned int numThreads) const;
-
-        void call_from_thread(unsigned int *canvas, unsigned int startY, unsigned int stopY) const;
     };
 }
 

@@ -21,12 +21,12 @@
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2
 };
-static Renderer *renderer_ = NULL;
-static void *dstPixels_ = NULL;
+static Renderer *renderer_ (nullptr);
+static void *dstPixels_ (nullptr);
 static pthread_t thread_handle_;
-static int width_ = 0;
-static int working_ = IDLE;
-static unsigned int numThreads_ = 1;
+static int width_ (0);
+static int working_ (IDLE);
+static unsigned int numThreads_ (1);
 /*static JNIEnv* env_ = NULL;
 static jobject dstBitmap_ = NULL;
 static JavaVM* jvm_ = NULL;*/

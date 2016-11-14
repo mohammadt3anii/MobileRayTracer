@@ -15,9 +15,9 @@ namespace MobileRT
             
 
         public:
-        float x_;
-        float y_;
-        float z_;
+            float x_;
+            float y_;
+            float z_;
 
             Vect ();
             Vect (const float px, const float py, const float pz);
@@ -32,7 +32,7 @@ namespace MobileRT
             // dot product
             float dot (const Vect& v) const;
 
-        float dot() const;
+            float dot() const;
             void mult (const float f);
             void sub (const Vect& v);
             float length ();

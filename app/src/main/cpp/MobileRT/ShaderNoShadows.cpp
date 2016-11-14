@@ -11,27 +11,27 @@ ShaderNoShadows::ShaderNoShadows(RayTrace &rayTrace, const Scene &scene) :
 {
 }
 
-void ShaderNoShadows::Shade(const Ray&, const Intersection &isect, RGB& rgb) const
+void ShaderNoShadows::Shade(const Ray&, Intersection& isect, RGB& rgb) const
 {
-    const RGB &kD = isect.material_->Kd_;
-    rgb.setRGB ();
+    const RGB& kD (isect.material_->Kd_);
+    rgb.resetRGB ();
 
     // direct lighting - only for diffuse materials
     if (kD.isZero() == false)
     {
-        const unsigned int Nl = scene_.lights.size();
+        const unsigned int Nl (scene_.lights.size());
         Vect L;
 
-        for (unsigned int l = 0 ; l < Nl ; l++)
+        for (unsigned int l (0) ; l < Nl ; l++)
         {
-            const Light *ml = scene_.lights[l];
+            const Light *ml (scene_.lights[l]);
 
             L.setVect(ml->pos_, isect.point_);
             L.normalize();
-            const float cos_N_L = L.dot(isect.normal_);
+            const float cos_N_L (L.dot(isect.normal_));
             if (cos_N_L > 0.0f)
             {
-                const RGB radLight = ml->rad_;
+                const RGB& radLight (ml->rad_);
                 rgb.R_ += kD.R_ * cos_N_L * radLight.R_;
                 rgb.G_ += kD.G_ * cos_N_L * radLight.G_;
                 rgb.B_ += kD.B_ * cos_N_L * radLight.B_;

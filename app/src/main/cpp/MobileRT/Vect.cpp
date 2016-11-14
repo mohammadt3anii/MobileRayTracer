@@ -29,10 +29,10 @@ Vect::Vect (const Vect& v) :
 }
 
 float Vect::normalize() {
-    const float length = Vect::length();
+    const float length (Vect::length());
     if (length != 0.0f)
     {
-        float inv_length = 1.0f / length;
+        const float inv_length (1.0f / length);
         this->x_ *= inv_length;
         this->y_ *= inv_length;
         this->z_ *= inv_length;

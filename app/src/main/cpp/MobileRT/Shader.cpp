@@ -16,6 +16,6 @@ Shader::~Shader ()
 {
 }
 
-void Shader::Shade(const Ray &, const Intersection &, RGB&) const
+void Shader::Shade(const Ray &, Intersection &, RGB&) const
 {
 }

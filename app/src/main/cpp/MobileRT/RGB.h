@@ -13,9 +13,9 @@ namespace MobileRT
             
 
         public:
-        float R_;
-        float G_;
-        float B_;
+            float R_;
+            float G_;
+            float B_;
 
             RGB ();
             RGB (const float r, const float g, const float b);
@@ -26,7 +26,7 @@ namespace MobileRT
             void mult (const RGB& rgb);
             void mult (const float f);
 
-            void setRGB ();
+            void resetRGB ();
             void setRGB (const float r, const float g, const float b);
     };
 }

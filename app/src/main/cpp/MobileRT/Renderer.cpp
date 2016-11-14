@@ -46,42 +46,25 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
     this->rTracer_ = new RayTrace(*this->scene_, whichShader);
 }
 
-void Renderer::call_from_thread(unsigned int *canvas, unsigned int startY, unsigned int stopY) const
-{
-    const float INV_IMG_WIDTH = 1.0f / this->width_;
-    const float INV_IMG_HEIGHT = 1.0f / this->height_;
+void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
+                                 unsigned int numThreads) const {
+    const float width (this->width_);
+    const float height (this->height_);
+    const float INV_IMG_WIDTH (1.0f / width);
+    const float INV_IMG_HEIGHT (1.0f / height);
     Ray ray;
     RGB rayRGB;
-    for (unsigned int y = startY; y < stopY; y++)
+    Intersection isect;
+    for (unsigned int y = tid; y < height; y += numThreads)
     {
-        for (unsigned int x = 0; x < this->width_; x++)
+        const unsigned int yWidth (y * width);
+        const float& v (static_cast<float>(y * INV_IMG_HEIGHT));
+        for (unsigned int x (0); x < width; x += 1)
         {
             // generate the ray
-            const float u = static_cast<float>(x * INV_IMG_WIDTH);
-            const float v = static_cast<float>(y * INV_IMG_HEIGHT);
+            const float& u (static_cast<float>(x * INV_IMG_WIDTH));
             this->camera_->getRay(u, v, ray);//constroi raio
-            this->rTracer_->RayV(ray, rayRGB);//faz trace do raio e escreve resultado em rayRGB
-
-            // tonemap and convert to Paint
-            canvas[x + y * this->width_] = ToneMapper::RGB2Color(rayRGB);
-        }
-    }
-}
-
-void Renderer::call_from_thread2(unsigned int *canvas, unsigned int tid,
-                                 unsigned int numThreads) const {
-    const float INV_IMG_WIDTH = 1.0f / this->width_;
-    const float INV_IMG_HEIGHT = 1.0f / this->height_;
-    Ray ray;
-    RGB rayRGB;
-    unsigned int yWidth = 0;
-    for (unsigned int y = tid; y < this->height_; y += numThreads, yWidth = y * this->width_) {
-        for (unsigned int x = 0; x < this->width_; x += 1) {
-            // generate the ray
-            const float u = static_cast<float>(x * INV_IMG_WIDTH);
-            const float v = static_cast<float>(y * INV_IMG_HEIGHT);
-            this->camera_->getRay(u, v, ray);//constroi raio
-            this->rTracer_->RayV(ray, rayRGB);//faz trace do raio e escreve resultado em rayRGB
+            this->rTracer_->RayV(ray, rayRGB, isect);//faz trace do raio e escreve resultado em rayRGB
 
             // tonemap and convert to Paint
             canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);
@@ -92,27 +75,21 @@ void Renderer::call_from_thread2(unsigned int *canvas, unsigned int tid,
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
 {
-    unsigned int h = 0;
-    std::thread *threads = nullptr;
-    if (numThreads > 1) {
+    std::thread *threads (nullptr);
+    if (numThreads > 1)
+    {
         threads = new std::thread[numThreads - 1];
-        /*
-        unsigned int verticalSection = this->height_ / numThreads;
-        for (unsigned int i = 0; i < numThreads - 1; i++, h += verticalSection) {
-            threads[i] = std::thread(&Renderer::call_from_thread, this, canvas, h,
-                                     h + verticalSection);
-        }
-        */
-        for (unsigned int i = 0; i < numThreads - 1; i++) {
-            threads[i] = std::thread(&Renderer::call_from_thread2, this, canvas, i, numThreads);
+        for (unsigned int i (0); i < numThreads - 1; i++)
+        {
+            threads[i] = std::thread(&Renderer::thread_render, this, canvas, i, numThreads);
         }
     }
-    call_from_thread2(canvas, numThreads - 1, numThreads);
-    for (unsigned int i = 0; i < numThreads - 1; i++) {
+    thread_render(canvas, numThreads - 1, numThreads);
+    for (unsigned int i (0); i < numThreads - 1; i++)
+    {
         threads[i].join();
     }
-
-    if (threads != nullptr) delete[] threads;
+    delete[] threads;
     delete this->scene_;
     delete this->camera_;
     delete this->rTracer_;

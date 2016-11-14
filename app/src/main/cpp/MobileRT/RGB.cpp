@@ -52,7 +52,7 @@ void RGB::mult (const float f)
     this->B_ *= f;
 }
 
-void RGB::setRGB ()
+void RGB::resetRGB ()
 {
     this->R_ = 0.0f;
     this->G_ = 0.0f;

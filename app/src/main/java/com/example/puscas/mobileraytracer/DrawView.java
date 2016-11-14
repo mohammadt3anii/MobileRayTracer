@@ -63,7 +63,7 @@ public class DrawView extends View
                     bitmapR_ = createBitmap(bitmapW_);//copiar bitmap
                     canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
                     renderTime_ = SystemClock.elapsedRealtime() - this.start_;
-                    textView_.setText("Rendering -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
+                    textView_.setText("Rendering -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime_ + "ms");
                     invalidate();
                     break;
 
@@ -71,7 +71,7 @@ public class DrawView extends View
                     renderTime_ = SystemClock.elapsedRealtime() - this.start_;
                     finished();
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
-                    textView_.setText("Rendered -> w:" + getWidth() + ", h:" + getHeight() + ", t:" + renderTime_ + " ms");
+                    textView_.setText("Rendered -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime_ + "ms");
                     renderTime_ = 0;
                     bitmapW_.recycle();
                     bitmapR_.recycle();

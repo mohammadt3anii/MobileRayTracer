@@ -12,36 +12,34 @@ ShaderWhitted::ShaderWhitted(RayTrace& rayTrace, const Scene& scene) :
 {
 }
 
-void ShaderWhitted::Shade(const Ray &ray, const Intersection &isect, RGB &rgb) const
+void ShaderWhitted::Shade(const Ray& ray, Intersection& isect, RGB& rgb) const
 {
-    const float cosRN = ray.direction_.dot(isect.normal_);
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const Vect shadingN = (cosRN < 0.0f)?
-                          Vect(isect.normal_)// entering the object
-                                        : isect.normal_.symmetric();// We have to reverse the normal now
+    Vect& shadingN ((ray.direction_.dot(isect.normal_) < 0.0f)?
+                          isect.normal_// entering the object
+                        : isect.getSymNormal());// We have to reverse the normal now
 
-    rgb.setRGB();
+    rgb.resetRGB();
     // shadowed direct lighting - only for diffuse materials
     if (isect.material_->Kd_.isZero() == false)
     {
-        const unsigned int Nl = scene_.lights.size();
+        const unsigned int Nl (scene_.lights.size());
         Intersection Lsect;
         Vect L;
 
-        for (unsigned int l = 0; l < Nl ; l++)//para cada luz
+        for (unsigned int l (0); l < Nl ; l++)//para cada luz
         {
-            const Light* ml = scene_.lights[l];
+            const Light* ml (scene_.lights[l]);
 
             L.setVect(ml->pos_, isect.point_);//calcula vetor desde a interseçao até à luz
-            const float ml_distance = L.normalize();//distancia do vetor (e normaliza-o)
-            const float cos_N_L = L.dot(shadingN);//x*x + y*y + z*z
+            const float ml_distance (L.normalize());//distancia do vetor (e normaliza-o)
+            const float cos_N_L (L.dot(shadingN));//x*x + y*y + z*z
             if (cos_N_L > 0.0f)
             {
-                Point p = isect.point_;
-                Ray shadowRay(p, L, ml_distance,
+                const Ray shadowRay(isect.point_, L, ml_distance,
                               ray.depth_ + 1);//raio de sombra - orig=interseçao, dir=luz
                 //Lsect = ();//interseçao do raio de sombra com a primitiva mais proxima
                 if (scene_.shadowTrace(shadowRay, Lsect) == false)//se nao ha nenhuma primitiva entre a interseçao e a luz
@@ -62,17 +60,16 @@ void ShaderWhitted::Shade(const Ray &ray, const Intersection &isect, RGB &rgb) c
     if ((isect.material_->Ks_.isZero() == false) && (ray.depth_ < this->MAX_DEPTH))
     {
         // compute specular reflection
-        const Vect sym_vRay = ray.direction_.symmetric();//raio de reflexao
-        const float RN_dot = 2.0f * shadingN.dot(sym_vRay);
-        Vect specDir = shadingN;
-        specDir.mult (RN_dot);
-        specDir.sub (sym_vRay);
-        specDir.normalize();
+        //raio de reflexao
+        const float RN_dot (2.0f * shadingN.dot(ray.symDirection_));
+        shadingN.mult (RN_dot);
+        shadingN.sub (ray.symDirection_);
+        shadingN.normalize();
 
-        const Point p = isect.point_;
-        Ray specRay(p, specDir, MAX_LENGTH, ray.depth_ + 1);
+        Ray specRay(isect.point_, shadingN, MAX_LENGTH, ray.depth_ + 1);
         RGB specRad;
-        this->rayTrace_.RayV(specRay, specRad);
+        Intersection isec;
+        this->rayTrace_.RayV(specRay, specRad, isec);
         specRad.mult(isect.material_->Ks_);
         rgb.add(specRad);
     }

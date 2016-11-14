@@ -15,7 +15,7 @@ namespace MobileRT
         private:
             const float hFov_;
             const float vFov_;
-            Point position_;
+            const Point position_;
 
         float FastArcTan(const float x) const;
 

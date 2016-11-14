@@ -17,12 +17,12 @@ bool Plane::Intersect(const Ray& ray, const Material* material, Intersection& in
 {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
-    const float normalized_projection = this->normal_.dot(ray.direction_);
+    const float normalized_projection (this->normal_.dot(ray.direction_));
     if (normalized_projection >= -MIN_VECT_PROJ && 
         normalized_projection <= MIN_VECT_PROJ) return false;  // zero
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    const float distance = this->normal_.dot(this->point_ - ray.origin_) / normalized_projection;
+    const float distance (this->normal_.dot(this->point_ - ray.origin_) / normalized_projection);
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
