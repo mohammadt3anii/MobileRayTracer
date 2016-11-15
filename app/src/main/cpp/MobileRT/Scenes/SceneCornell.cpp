@@ -5,6 +5,7 @@
 #include "SceneCornell.h"
 #include "../Shapes/Plane.h"
 #include "../Shapes/Sphere.h"
+#include "../Shapes/Triangle.h"
 
 using namespace MobileRT;
 
@@ -38,4 +39,6 @@ SceneCornell::SceneCornell ()
 
     const Material GreenMat (RGB(0.0f, 0.9f, 0.0f), RGB(0.0f, 0.2f, 0.0f));
     this->primitives.push_back( new Primitive( new Sphere(Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
+
+    //this->primitives.push_back( new Primitive( new Triangle(Point3D(0.0f, 0.0f, 0.0f), Point3D(0.0f, 0.5f, 0.0f), Point3D(0.0, 0.0f, 0.5f)), GreenMat));
 }

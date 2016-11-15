@@ -24,7 +24,7 @@ bool Sphere::intersect(Intersection& intersection, const Ray& ray, const Materia
     const float C (centerToOrigin.dot() - this->sq_radius_);
     
     const float discriminant (B * B - 4.0f * C);
-    if (discriminant <= 0.0f) return false;
+    if (discriminant <= 0.0f) return false;//nao interseta (ignora ponto tangente da esfera)
 
     //raio interseta a esfera em 2 pontos
     const float rootDiscriminant (std::sqrt(discriminant));

@@ -55,15 +55,28 @@ Vector3D Vector3D::symmetric () const
 }
 
 // dot product Algebraic
-float Vector3D::dotProduct (const Vector3D& v) const
+float Vector3D::dotProduct (const Vector3D& vector) const
 {
-    return (this->x_ * v.x_ + this->y_ * v.y_ + this->z_ * v.z_);
+    return (this->x_ * vector.x_ + this->y_ * vector.y_ + this->z_ * vector.z_);
+}
+
+// dot product Algebraic
+float Vector3D::dotProduct (const Point3D& point) const
+{
+    return (this->x_ * point.x_ + this->y_ * point.y_ + this->z_ * point.z_);
 }
 
 // dot product Algebraic
 float Vector3D::dot() const
 {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
+}
+
+Vector3D Vector3D::crossProduct (const Vector3D& vector) const
+{
+    return Vector3D((this->y_ * vector.z_ - vector.y_ * this->z_),
+                    (vector.x_ * this->z_ - this->x_ * vector.z_),
+                    (this->x_ * vector.y_ - vector.x_ * this->y_));
 }
 
 void Vector3D::mult (const float value)

@@ -31,8 +31,10 @@ namespace MobileRT
 
             // dot product
             float dotProduct (const Vector3D& vector) const;
-
             float dot() const;
+            Vector3D crossProduct (const Vector3D& vector) const;
+            float dotProduct (const Point3D& point) const;
+
             void mult (const float value);
             void sub (const Vector3D& vector);
             float length ();
