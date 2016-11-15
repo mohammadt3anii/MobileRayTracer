@@ -23,7 +23,7 @@ namespace MobileRT
             Vector3D normal_;
 
         public:
-            Triangle (const Point3D pointA, const Point3D pointB, const Point3D pointC);
+            Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC);
 
             bool intersect(Intersection& intersection, const Ray& ray, const Material* material) const;
     };

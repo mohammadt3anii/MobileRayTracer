@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D pointC) :
+Triangle::Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC) :
     pointA_(pointA),
     pointB_(pointB),
     pointC_(pointC),
@@ -26,7 +26,7 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
 
     const float distanceTriangle (normal_.dotProduct(pointA_));
     const float b = this->normal_.dotProduct(ray.origin_ + ((this->normal_*distanceTriangle).symmetric()));
-    const float distanceIntersectCamera (-b / a);
+    const float distanceIntersectCamera (-b / a);//distancia da interseçao à camera
 
     const float Qx ((ray.direction_*distanceIntersectCamera).x_ + ray.origin_.x_);
     const float Qy ((ray.direction_*distanceIntersectCamera).y_ + ray.origin_.y_);
@@ -46,7 +46,13 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
 
     if (test1 < 0 || test2 < 0 || test3 < 0) return false;//está fora do trianglo
 
-    intersection.length_ = distanceIntersectCamera;//distancia da interseçao à camera
+    intersection.length_ = distanceIntersectCamera;
+
+    intersection.recycle(
+        ray.origin_ + (ray.direction_ * distanceIntersectCamera),
+        this->normal_,
+        distanceIntersectCamera,
+        material);
 
     return true;
 }
