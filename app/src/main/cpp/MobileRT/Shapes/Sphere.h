@@ -18,7 +18,7 @@ namespace MobileRT
         public:
             Sphere (const Point3D& center, const float radius);
 
-            bool intersect(Intersection& intersection, const Ray& ray, const Material* material) const override;
+            bool intersect(Intersection& intersection, const Ray& ray, const Material& material) const override;
     };
 }
 

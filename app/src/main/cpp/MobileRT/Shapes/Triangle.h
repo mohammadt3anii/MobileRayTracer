@@ -14,6 +14,9 @@ namespace MobileRT
     class Triangle : public Shape
     {
         private:
+
+
+        public:
             const Point3D pointA_;
             const Point3D pointB_;
             const Point3D pointC_;
@@ -22,10 +25,9 @@ namespace MobileRT
             Vector3D BC_;
             Vector3D normal_;
 
-        public:
             Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC);
 
-            bool intersect(Intersection& intersection, const Ray& ray, const Material* material) const;
+            bool intersect(Intersection& intersection, const Ray& ray, const Material& material) const;
     };
 }
 

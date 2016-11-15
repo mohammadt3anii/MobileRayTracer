@@ -18,7 +18,7 @@ Triangle::Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D&
     this->normal_.normalize();
 }
 
-bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Material* material) const
+bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Material& material) const
 {
     const float a (ray.direction_.dotProduct(normal_));
 
