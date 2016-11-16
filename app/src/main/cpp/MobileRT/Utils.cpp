@@ -9,5 +9,5 @@
 float fastArcTan (const float value)
 {
     const float abs ((value < 0)? -value : value);
-    return M_PI_4 * value - (value * (abs - 1)) * (0.2447f + (0.0663f * abs));
+    return PI_4 * value - (value * (abs - 1)) * (0.2447f + (0.0663f * abs));
 }

@@ -80,14 +80,10 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
 {
-    std::thread *threads (nullptr);
-    if (numThreads > 1)
+    std::thread *threads = new std::thread[numThreads - 1];
+    for (unsigned int i (0); i < numThreads - 1; i++)
     {
-        threads = new std::thread[numThreads - 1];
-        for (unsigned int i (0); i < numThreads - 1; i++)
-        {
-            threads[i] = std::thread(&Renderer::thread_render, this, canvas, i, numThreads);
-        }
+        threads[i] = std::thread(&Renderer::thread_render, this, canvas, i, numThreads);
     }
     thread_render(canvas, numThreads - 1, numThreads);
     for (unsigned int i (0); i < numThreads - 1; i++)

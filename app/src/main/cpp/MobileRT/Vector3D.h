@@ -12,7 +12,7 @@ namespace MobileRT
     class Vector3D
     {
         private:
-            
+
 
         public:
             float x_;
@@ -27,17 +27,17 @@ namespace MobileRT
             Vector3D returnNormalized () const;
 
             // symetric vector
-            Vector3D symmetric () const;
+            Vector3D negative () const;
 
             // dot product
             float dotProduct (const Vector3D& vector) const;
-            float dot() const;
-            Vector3D crossProduct (const Vector3D& vector) const;
             float dotProduct (const Point3D& point) const;
+            float squareLength() const;
+            Vector3D crossProduct (const Vector3D& vector) const;
 
             void mult (const float value);
             void sub (const Vector3D& vector);
-            float length ();
+            float length () const;
 
             Vector3D operator*(const float value) const;
 

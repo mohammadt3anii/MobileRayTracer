@@ -21,28 +21,29 @@ bool Sphere::intersect(Intersection& intersection, const Ray& ray, const Materia
 
     //A = 1.0 - vetores normalizados
     const float B (2.0f * centerToOrigin.dotProduct(ray.direction_));
-    const float C (centerToOrigin.dot() - this->sq_radius_);
+    const float C (centerToOrigin.squareLength() - this->sq_radius_);
     
     const float discriminant (B * B - 4.0f * C);
     if (discriminant <= 0.0f) return false;//nao interseta (ignora ponto tangente da esfera)
 
     //raio interseta a esfera em 2 pontos
     const float rootDiscriminant (std::sqrt(discriminant));
-    const float t0 ((-B + rootDiscriminant) * 0.5f);
-    const float t1 ((-B - rootDiscriminant) * 0.5f);
-    const float distance ((t0 < t1) ? t0 : t1);//distancia entre interseçao e camera
+    const float distanceToIntersection1 ((-B + rootDiscriminant) * 0.5f);
+    const float distanceToIntersection2 ((-B - rootDiscriminant) * 0.5f);
+    //distancia entre interseçao e camera = raiz menor = ponto mais proximo
+    const float distanceToIntersection ((distanceToIntersection1 < distanceToIntersection2) ? distanceToIntersection1 : distanceToIntersection2);
 
-    if (distance > ray.maxDistance_ || distance < MIN_RAY_DIST) return false;
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_) return false;
 
-    const Point3D point(ray.origin_ + (ray.direction_ * distance));
-    Vector3D normal(point - this->center_);
+    const Point3D intersectionPoint(ray.origin_ + (ray.direction_ * distanceToIntersection));
+    Vector3D normal(intersectionPoint - this->center_);
     normal.normalize();
 
     // if so, then we have an intersection
     intersection.recycle(
-        point,
+        intersectionPoint,
         normal,
-        distance,
+        distanceToIntersection,
         material);
 
     return true;

@@ -31,13 +31,12 @@ Vector3D::Vector3D (const Vector3D& vector) :
 float Vector3D::normalize()
 {
     const float length (Vector3D::length());
-    if (length != 0.0f)
-    {
-        const float inv_length (1.0f / length);
-        this->x_ *= inv_length;
-        this->y_ *= inv_length;
-        this->z_ *= inv_length;
-    }
+    if (length == 0.0f) return 0.0f;
+
+    const float inv_length (1.0f / length);
+    this->x_ *= inv_length;
+    this->y_ *= inv_length;
+    this->z_ *= inv_length;
     return length;
 }
 
@@ -49,7 +48,7 @@ Vector3D Vector3D::returnNormalized () const
 }
 
 // symetric vector
-Vector3D Vector3D::symmetric () const
+Vector3D Vector3D::negative () const
 {
     return Vector3D(-this->x_, -this->y_, -this->z_);
 }
@@ -67,16 +66,16 @@ float Vector3D::dotProduct (const Point3D& point) const
 }
 
 // dot product Algebraic
-float Vector3D::dot() const
+float Vector3D::squareLength() const
 {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
 Vector3D Vector3D::crossProduct (const Vector3D& vector) const
 {
-    return Vector3D((this->y_ * vector.z_ - vector.y_ * this->z_),
-                    (vector.x_ * this->z_ - this->x_ * vector.z_),
-                    (this->x_ * vector.y_ - vector.x_ * this->y_));
+    return Vector3D((this->y_ * vector.z_ - this->z_ * vector.y_),
+                    (this->z_ * vector.x_ - this->x_ * vector.z_),
+                    (this->x_ * vector.y_ - this->y_ * vector.x_));
 }
 
 void Vector3D::mult (const float value)
@@ -93,9 +92,9 @@ void Vector3D::mult (const float value)
      this->z_ -= vector.z_;
 }
 
-float Vector3D::length ()
+float Vector3D::length () const
 {
-    return std::sqrt(dot());
+    return std::sqrt(squareLength());
 }
 
 Vector3D Vector3D::operator* (const float value) const

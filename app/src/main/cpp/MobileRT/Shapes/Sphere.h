@@ -9,17 +9,17 @@
 
 namespace MobileRT
 {
-    class Sphere : public Shape
-    {
-        private:
-            const Point3D center_;
-            const float sq_radius_;
+	class Sphere : public Shape
+	{
+		private:
+			const Point3D center_;
+			const float sq_radius_;
 
-        public:
-            Sphere (const Point3D& center, const float radius);
+		public:
+			Sphere (const Point3D& center, const float radius);
 
-            bool intersect(Intersection& intersection, const Ray& ray, const Material& material) const override;
-    };
+			bool intersect(Intersection& intersection, const Ray& ray, const Material& material) const override;
+	};
 }
 
 #endif //MOBILERAYTRACER_SPHERE_H

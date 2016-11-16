@@ -21,8 +21,8 @@ namespace MobileRT
             const Point3D pointB_;
             const Point3D pointC_;
             Vector3D AB_;
-            Vector3D AC_;
             Vector3D BC_;
+            Vector3D CA_;
             Vector3D normal_;
 
             Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC);

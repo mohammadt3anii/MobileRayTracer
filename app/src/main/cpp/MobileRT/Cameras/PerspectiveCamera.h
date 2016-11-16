@@ -13,7 +13,7 @@ namespace MobileRT
     class PerspectiveCamera
     {
         private:
-            const Point3D position_;
+            const Point3D position_;//a olhar para o eixo +Z
 
         public:
             const float hFov_;

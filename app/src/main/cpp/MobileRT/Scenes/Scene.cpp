@@ -28,7 +28,7 @@ Scene::~Scene()
 bool Scene::trace(Intersection& intersection, Ray& ray) const//TODO: utilizar estrutura de aceleraçao
 {
     bool value (false);
-    ray.maxDistance_ = MAX_LENGTH;
+    ray.maxDistance_ = RAY_LENGTH_MAX;
     const unsigned int sizePrimitives (this->primitives.size());
 
     for (unsigned int i (0); i < sizePrimitives; i++)//nao e preciso tar sempre a verificar todas as primitivas

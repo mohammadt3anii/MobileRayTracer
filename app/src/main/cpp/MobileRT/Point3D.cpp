@@ -28,11 +28,6 @@ Point3D::Point3D (const Point3D& p) :
 {
 }
 
-Point3D Point3D::multiply(const Vector3D& vector) const
-{
-    return Point3D(this->x_ * vector.x_, this->y_ * vector.y_, this->z_ * vector.z_);
-}
-
 float Point3D::sumCoordenates() const
 {
     return this->x_ + this->y_ + this->z_;
