@@ -27,7 +27,8 @@ namespace MobileRT
 
             Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC);
 
-            bool intersect(Intersection& intersection, const Ray& ray, const Material& material) const;
+        bool intersect(Intersection &intersection, const Ray &ray,
+                       const Material &material) const;
     };
 }
 

@@ -21,7 +21,6 @@ namespace MobileRT
 
             PerspectiveCamera(const Point3D& position, const float hFov, const float vFov);
             void getRay(Ray& ray, const float u_alpha, const float v_alpha) const;
-            Ray getRay(const float u, const float v) const;
     };
 }
 

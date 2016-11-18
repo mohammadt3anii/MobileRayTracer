@@ -23,9 +23,6 @@ namespace MobileRT
             Vector3D (const float x, const float y, const float z);
             Vector3D (const Vector3D& vector);
 
-            float normalize ();
-            Vector3D returnNormalized () const;
-
             // symetric vector
             Vector3D negative () const;
 
@@ -38,6 +35,10 @@ namespace MobileRT
             void mult (const float value);
             void sub (const Vector3D& vector);
             float length () const;
+
+        float normalize();
+
+        Vector3D returnNormalized() const;
 
             Vector3D operator*(const float value) const;
 

@@ -13,7 +13,8 @@ Intersection::Intersection () :
 {
 }
 
-void Intersection::recycle (const Point3D& point, const Vector3D& normal, const float length, const Material& material)
+void Intersection::recycle(const Point3D &point, const Vector3D &normal, const float length,
+						   const Material &material)
 {
 	this->point_ = point;
 	this->normal_ = normal;

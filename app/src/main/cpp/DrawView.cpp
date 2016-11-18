@@ -34,13 +34,14 @@ extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         JNIEnv *,// env,
         jobject, //thiz,
-        jint whichScene,
-        jint whichShader,
+        jint scene,
+        jint shader,
         jint width,
         jint height
 ) {
     working_ = IDLE;
-    renderer_ = new Renderer(width, height, whichScene, whichShader);
+    renderer_ = new Renderer(static_cast<unsigned int>(width), static_cast<unsigned int>(height),
+                             static_cast<unsigned int>(scene), static_cast<unsigned int>(shader));
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {

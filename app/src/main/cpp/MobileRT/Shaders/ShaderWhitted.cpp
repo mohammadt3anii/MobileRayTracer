@@ -12,7 +12,8 @@ ShaderWhitted::ShaderWhitted(RayTracer& rayTracer, const Scene& scene) :
 {
 }
 
-void ShaderWhitted::shade(RGB& rgb, Intersection& intersection, const Ray& ray, Vector3D& vectIntersectCamera) const
+void ShaderWhitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
+						  Vector3D &vectIntersectCamera) const
 {
 	// the normal always points to outside objects (e.g., spheres)
 	// if the cosine between the ray and the normal is less than 0 then
@@ -24,24 +25,27 @@ void ShaderWhitted::shade(RGB& rgb, Intersection& intersection, const Ray& ray, 
 
 	rgb.recycle();
 	// shadowed direct lighting - only for diffuse materials
-	if (intersection.material_->Kd_.isZero() == false)
+	if (!intersection.material_->Kd_.isZero())
 	{
-		const unsigned int sizeLights (scene_.lights.size());
+		const unsigned int sizeLights(static_cast<unsigned int> (scene_.lights.size()));
 		Intersection intersectLight;
 
 		for (unsigned int i (0); i < sizeLights ; i++)//para cada luz
 		{
 			const PointLight* light (scene_.lights[i]);
 
-			vectIntersectCamera.recycle(light->position_, intersection.point_);//calcula vetor desde a interseçao até à luz
-			const float distanceToLight (vectIntersectCamera.normalize());//distancia da interseçao à luz (e normaliza-o)
+			//calcula vetor desde a interseçao até à luz
+			vectIntersectCamera.recycle(light->position_, intersection.point_);
+			//distancia da interseçao à luz (e normaliza-o)
+			const float distanceToLight(vectIntersectCamera.normalize());
 			const float cos_N_L (vectIntersectCamera.dotProduct(shadingNormal));//x*x + y*y + z*z
 			if (cos_N_L > 0.0f)
 			{
 				//raio de sombra - orig=interseçao, dir=luz
 				const Ray shadowRay(intersection.point_, vectIntersectCamera, distanceToLight, ray.depth_ + 1);
 				//intersectLight = ();//interseçao do raio de sombra com a primitiva mais proxima
-				if (scene_.shadowTrace(intersectLight, shadowRay) == false)//se nao ha nenhuma primitiva entre a interseçao e a luz
+				//se nao ha nenhuma primitiva entre a interseçao e a luz
+				if (!scene_.shadowTrace(intersectLight, shadowRay))
 				{
 					RGB diffuseRad(light->radiance_);//R=1, G=1, B=1
 					diffuseRad.mult(intersection.material_->Kd_);//cor da luz
@@ -56,7 +60,7 @@ void ShaderWhitted::shade(RGB& rgb, Intersection& intersection, const Ray& ray, 
 		rgb.B_ += intersection.material_->Kd_.B_ * 0.1f;
 	} // end direct + ambient
 	// specular reflection
-	if ((intersection.material_->Ks_.isZero() == false) && (ray.depth_ < this->MAX_DEPTH))
+	if (!intersection.material_->Ks_.isZero() && (ray.depth_ < this->MAX_DEPTH))
 	{
 		// compute specular reflection
 		//raio de reflexao

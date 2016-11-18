@@ -35,10 +35,11 @@ RayTracer::~RayTracer ()
     delete this->shader_;
 }
 
-void RayTracer::rayTrace (RGB& rgb, Ray& ray, Intersection& intersection, Vector3D& vector) const//trace do raio e verifica se interseta algo
+//trace do raio e verifica se interseta algo
+void RayTracer::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const
 {
     // compute radiance
-    if (this->scene_.trace(intersection, ray) == true)//se interseta alguma primitiva
+    if (this->scene_.trace(intersection, ray))//se interseta alguma primitiva
     {
         this->shader_->shade(rgb, intersection, ray, vector);
     }

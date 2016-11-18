@@ -21,8 +21,8 @@ namespace MobileRT
             PerspectiveCamera* camera_;
 
         public:
-            Renderer(const unsigned int width, const unsigned int height, const unsigned int whichScene,
-                 const unsigned int whichShader);
+        Renderer(const unsigned int width, const unsigned int height,
+                 const unsigned int whichScene, const unsigned int whichShader);
             void render(unsigned int *canvas, const unsigned int numThreads) const;
             void thread_render(unsigned int *canvas, unsigned int tid,
                                unsigned int numThreads) const;

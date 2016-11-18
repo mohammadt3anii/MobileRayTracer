@@ -22,7 +22,8 @@ bool Plane::intersect(Intersection& intersection, const Ray& ray, const Material
         normalized_projection > -VECT_PROJ_MIN) return false;  // zero
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    const float distance (this->normal_.dotProduct(this->point_ - ray.origin_) / normalized_projection);
+    const float distance(
+            this->normal_.dotProduct(this->point_ - ray.origin_) / normalized_projection);
 
     // is it in front of the eye?
     //* is it farther than the ray length ??

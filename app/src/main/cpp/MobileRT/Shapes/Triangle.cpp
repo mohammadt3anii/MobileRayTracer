@@ -26,7 +26,7 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
     if (a < VECT_PROJ_MIN || a > -VECT_PROJ_MIN) return false;//raio paralelo ao triangulo
 
     //const float distanceTriangle (this->normal_.dotProduct(pointA_));
-    //const float b = this->normal_.dotProduct(ray.origin_ + ((this->normal_*distanceTriangle).negative()));
+//const float b=this->normal_.dotProduct(ray.origin_+((this->normal_*distanceTriangle).negative()));
     const float D = normal_.dotProduct(pointA_);
     const float b = normal_.dotProduct(ray.origin_) + D;
     const float distanceIntersectCamera (-b / a);//distancia da interseçao à camera

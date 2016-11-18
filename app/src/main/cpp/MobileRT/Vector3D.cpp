@@ -28,16 +28,20 @@ Vector3D::Vector3D (const Vector3D& vector) :
 {
 }
 
+float Vector3D::length() const {
+    return std::sqrt(squareLength());
+}
+
 float Vector3D::normalize()
 {
-    const float length (Vector3D::length());
-    if (length == 0.0f) return 0.0f;
+    const float leng(length());
+    if (leng == 0.0f) return 0.0f;
 
-    const float inv_length (1.0f / length);
+    const float inv_length(1.0f / leng);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
     this->z_ *= inv_length;
-    return length;
+    return leng;
 }
 
 Vector3D Vector3D::returnNormalized () const
@@ -90,11 +94,6 @@ void Vector3D::mult (const float value)
      this->x_ -= vector.x_;
      this->y_ -= vector.y_;
      this->z_ -= vector.z_;
-}
-
-float Vector3D::length () const
-{
-    return std::sqrt(squareLength());
 }
 
 Vector3D Vector3D::operator* (const float value) const

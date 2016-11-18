@@ -16,7 +16,7 @@ Sphere::Sphere (const Point3D& center, const float radius) :
 
 bool Sphere::intersect(Intersection& intersection, const Ray& ray, const Material& material) const
 {
-    //http://stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
+//stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vector3D centerToOrigin(ray.origin_ - this->center_);
 
     //A = 1.0 - vetores normalizados
@@ -31,9 +31,11 @@ bool Sphere::intersect(Intersection& intersection, const Ray& ray, const Materia
     const float distanceToIntersection1 ((-B + rootDiscriminant) * 0.5f);
     const float distanceToIntersection2 ((-B - rootDiscriminant) * 0.5f);
     //distancia entre interseçao e camera = raiz menor = ponto mais proximo
-    const float distanceToIntersection ((distanceToIntersection1 < distanceToIntersection2) ? distanceToIntersection1 : distanceToIntersection2);
+    const float distanceToIntersection((distanceToIntersection1 < distanceToIntersection2) ?
+                                       distanceToIntersection1 : distanceToIntersection2);
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_) return false;
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
+        return false;
 
     const Point3D intersectionPoint(ray.origin_ + (ray.direction_ * distanceToIntersection));
     Vector3D normal(intersectionPoint - this->center_);

@@ -60,7 +60,7 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
     Ray ray;
     for (unsigned int y = tid; y < height; y += numThreads)
     {
-        const unsigned int yWidth (y * width);
+        const unsigned int yWidth(y * this->width_);
         const float v (static_cast<float>(y * INV_IMG_HEIGHT));
         const float v_alpha (fastArcTan(-this->camera_->vFov_ * (v - 0.5f)));
         for (unsigned int x (0); x < width; x += 1)
@@ -69,7 +69,8 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
             const float u (static_cast<float>(x * INV_IMG_WIDTH));
             const float u_alpha (fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
             this->camera_->getRay(ray, u_alpha, v_alpha);//constroi raio e coloca em ray
-            this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);//faz trace do raio e coloca a cor em rayRGB
+            //faz trace do raio e coloca a cor em rayRGB
+            this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);
 
             // tonemap and convert to Paint
             canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);
@@ -78,7 +79,7 @@ void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
 }
 
 void Renderer::render(unsigned int *canvas,
-                      const unsigned int numThreads) const//TODO: permitir lançar mais de 1 raio por pixel
+                      const unsigned int numThreads) const
 {
     std::thread *threads = new std::thread[numThreads - 1];
     for (unsigned int i (0); i < numThreads - 1; i++)

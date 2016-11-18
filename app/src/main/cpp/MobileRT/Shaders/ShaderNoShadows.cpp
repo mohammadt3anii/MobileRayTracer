@@ -11,15 +11,16 @@ ShaderNoShadows::ShaderNoShadows(RayTracer &rayTracer, const Scene &scene) :
 {
 }
 
-void ShaderNoShadows::shade(RGB& rgb, Intersection& intersection, const Ray&, Vector3D& vectIntersectCamera) const
+void ShaderNoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
+                            Vector3D &vectIntersectCamera) const
 {
     const RGB& kD (intersection.material_->Kd_);
     rgb.recycle ();
 
     // direct lighting - only for diffuse materials
-    if (kD.isZero() == false)
+    if (!kD.isZero())
     {
-        const unsigned int Nl (scene_.lights.size());
+        const unsigned int Nl(static_cast<unsigned int> (scene_.lights.size()));
 
         for (unsigned int l (0) ; l < Nl ; l++)
         {
