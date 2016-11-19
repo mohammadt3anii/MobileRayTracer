@@ -2,6 +2,7 @@
 #include <iostream>
 #include <gtk/gtk.h>
 #include <omp.h>
+#include <gdk/gdkkeysyms.h>
 
 using namespace MobileRT;
 
@@ -28,6 +29,16 @@ void testNRVO() {
 
 void destroy(GtkWidget *, gpointer) {
     gtk_main_quit();
+}
+
+static bool check_escape(GtkWidget *, GdkEventKey *event, gpointer)
+{
+    if (event->keyval == GDK_KEY_Escape)
+    {
+        gtk_main_quit();
+        return true;
+    }
+    return false;
 }
 
 static const int w(932);
@@ -63,6 +74,7 @@ int main(int argc, char **argv) {
                                                   NULL, NULL);
     GtkWidget *image = gtk_image_new_from_pixbuf(pixbuff);
     gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(destroy), NULL);
+    gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape), NULL);
     gtk_container_add(GTK_CONTAINER(window), image);
     gtk_widget_show_all(window);
     gtk_main();
