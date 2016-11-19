@@ -1,5 +1,6 @@
 //
 // Created by Tiago on 15-11-2016.
+// Uses: Moller and Trumbore
 //
 
 #include "Triangle.h"
@@ -12,63 +13,47 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         pointB_(pointB),
         pointC_(pointC),
         AB_(pointB - pointA),
-        BC_(pointC - pointB),
-        CA_(pointA - pointC),
-        normal_(AB_.crossProduct(pointC - pointA)) {
+        AC_(pointC - pointA),
+        normal_(AB_.crossProduct(AC_))
+{
     this->normal_.normalize();
 }
 
-bool Triangle::intersect(Intersection &intersection, const Ray &ray,
-                         const Material &material) const {
-    const float a(this->normal_.dotProduct(ray.direction_));
+bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Material &material) const
+{
+    const Vector3D perpendicularVector(ray.direction_.crossProduct(AC_));
+    float normalizedProjection(AB_.dotProduct(perpendicularVector));
 
-    if (a < VECT_PROJ_MIN || a > -VECT_PROJ_MIN) return false;//raio paralelo ao triangulo
+    if (normalizedProjection < VECT_PROJ_MIN &&
+        normalizedProjection > -VECT_PROJ_MIN)
+        return false;  // zero
 
-    //const float distanceTriangle (this->normal_.dotProduct(pointA_));
-//const float b=this->normal_.dotProduct(ray.origin_+((this->normal_*distanceTriangle).negative()));
-    const float D = normal_.dotProduct(pointA_);
-    const float b = normal_.dotProduct(ray.origin_) + D;
-    const float distanceIntersectCamera(-b / a);//distancia da interseçao à camera
+    float normalizedProjectionInv(1/normalizedProjection);
 
-    if (distanceIntersectCamera < 0) return false;//trianglo atrás da camera
-/*
-    const float Qx ((ray.direction_*distanceIntersectCamera).x_ + ray.origin_.x_);
-    const float Qy ((ray.direction_*distanceIntersectCamera).y_ + ray.origin_.y_);
-    const float Qz ((ray.direction_*distanceIntersectCamera).z_ + ray.origin_.z_);
+    const Vector3D verticeTocamera(ray.origin_ - pointA_);
 
-    const Point3D Q (Qx, Qy, Qz);
-*/
-    Point3D intersectionPoint = (ray.origin_ + (ray.direction_ * distanceIntersectCamera));
+    float u(normalizedProjectionInv * verticeTocamera.dotProduct(perpendicularVector));
 
-    Vector3D perpendicularTriangle;
+    if (u < 0.0 || u > 1.0)
+		return false;
 
-    perpendicularTriangle = AB_.crossProduct(intersectionPoint - pointA_);
-    if (normal_.dotProduct(perpendicularTriangle) < 0) return false;
+    const Vector3D upPerpendicularVector(verticeTocamera.crossProduct(AB_));
+    const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
-    perpendicularTriangle = BC_.crossProduct(intersectionPoint - pointB_);
-    if (normal_.dotProduct(perpendicularTriangle) < 0) return false;
+    if (v < 0.0 || u + v > 1.0)
+		return false;
 
-    perpendicularTriangle = CA_.crossProduct(intersectionPoint - pointC_);
-    if (normal_.dotProduct(perpendicularTriangle) < 0) return false;
+    // at this stage we can compute t to find out where
+	// the intersection point is on the line
+	const float distanceToIntersection(normalizedProjectionInv * AC_.dotProduct(upPerpendicularVector));
 
-/*
-    //CAxQA * n >= 0
-    Vector3D AQ (Q - pointA_);
-    const float test1 ((AC_.crossProduct(AQ)).dotProduct(this->normal_));
-    //BCxQC * n >= 0
-    Vector3D CQ (Q - pointC_);
-    const float test2 ((BC_.crossProduct(CQ)).dotProduct(this->normal_));
-    //ABxQB * n >= 0
-    Vector3D BQ (Q - pointB_);
-    const float test3 ((AB_.crossProduct(BQ)).dotProduct(this->normal_));
-
-    if (test1 < 0 || test2 < 0 || test3 < 0) return false;//está fora do trianglo
-*/
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
+        return false;
+        
     intersection.recycle(
-            ray.origin_ + (ray.direction_ * distanceIntersectCamera),
-            this->normal_,
-            distanceIntersectCamera,
-            material);
-
+        ray.origin_ + (ray.direction_ * distanceToIntersection),
+        this->normal_,
+        distanceToIntersection,
+        material);
     return true;
 }

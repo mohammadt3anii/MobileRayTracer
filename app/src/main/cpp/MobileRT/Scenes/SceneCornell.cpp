@@ -45,6 +45,6 @@ SceneCornell::SceneCornell() {
     // triangle - yellow
     const Material yellow(RGB(1.0f, 1.0f, 0.0f));
     this->primitives.push_back(new Primitive(new Triangle(
-            Point3D(0.0f, 0.0f, 0.5f), Point3D(0.5f, 0.0f, 0.5f), Point3D(0.5f, 0.5f, 0.5f)),
+            Point3D(-0.5f, -0.5f, 0.99f), Point3D(0.5f, -0.5f, 0.99f), Point3D(0.5f, 0.0f, 1.001f)),
                                              yellow));
 }
