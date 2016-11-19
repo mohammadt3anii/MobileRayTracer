@@ -9,13 +9,12 @@
 
 using namespace MobileRT;
 
-class DrawViewImpl
-{
-    private:
-        
+class DrawViewImpl {
+private:
 
-    public:
-        
+
+public:
+
 };
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

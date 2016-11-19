@@ -9,8 +9,7 @@ using namespace MobileRT;
 
 Ray::Ray() :
         maxDistance_(RAY_LENGTH_MAX),
-        depth_(0)
-{
+        depth_(0) {
 }
 
 Ray::Ray(const float x, const float y, const float z, Point3D origin) :
@@ -18,8 +17,7 @@ Ray::Ray(const float x, const float y, const float z, Point3D origin) :
         direction_(x, y, z),
         maxDistance_(RAY_LENGTH_MAX),
         depth_(0),
-        symDirection_(-x, -y, -z)
-{
+        symDirection_(-x, -y, -z) {
     this->direction_.normalize();
 }
 
@@ -27,13 +25,11 @@ Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const un
         origin_(orig),
         direction_(dir),
         maxDistance_(maxDist),
-        depth_(depth)
-{
+        depth_(depth) {
     this->direction_.normalize();
 }
 
-void Ray::recycle (const float x, const float y, const float z, const Point3D& origin)
-{
+void Ray::recycle(const float x, const float y, const float z, const Point3D &origin) {
     this->direction_.recycle(x, y, z);
     this->symDirection_.recycle(-x, -y, -z);
     this->origin_ = origin;

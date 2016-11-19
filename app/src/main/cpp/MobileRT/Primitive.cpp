@@ -8,15 +8,12 @@ using namespace MobileRT;
 
 Primitive::Primitive(const Shape *shape, const Material &material) :
         shape_(shape),
-        material_(material)
-{
+        material_(material) {
 }
 
-Primitive::~Primitive ()
-{
+Primitive::~Primitive() {
 }
 
-bool Primitive::intersect(Intersection& intersection, const Ray& ray) const
-{
+bool Primitive::intersect(Intersection &intersection, const Ray &ray) const {
     return this->shape_->intersect(intersection, ray, this->material_);
 }

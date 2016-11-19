@@ -7,21 +7,20 @@
 
 using namespace MobileRT;
 
-Triangle::Triangle (const Point3D& pointA, const Point3D& pointB, const Point3D& pointC) :
-    pointA_(pointA),
-    pointB_(pointB),
-    pointC_(pointC),
-    AB_(pointB - pointA),
-    BC_(pointC - pointB),
-    CA_(pointA - pointC),
-    normal_(AB_.crossProduct(pointC - pointA))
-{
+Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) :
+        pointA_(pointA),
+        pointB_(pointB),
+        pointC_(pointC),
+        AB_(pointB - pointA),
+        BC_(pointC - pointB),
+        CA_(pointA - pointC),
+        normal_(AB_.crossProduct(pointC - pointA)) {
     this->normal_.normalize();
 }
 
-bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Material& material) const
-{
-    const float a (this->normal_.dotProduct(ray.direction_));
+bool Triangle::intersect(Intersection &intersection, const Ray &ray,
+                         const Material &material) const {
+    const float a(this->normal_.dotProduct(ray.direction_));
 
     if (a < VECT_PROJ_MIN || a > -VECT_PROJ_MIN) return false;//raio paralelo ao triangulo
 
@@ -29,7 +28,7 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
 //const float b=this->normal_.dotProduct(ray.origin_+((this->normal_*distanceTriangle).negative()));
     const float D = normal_.dotProduct(pointA_);
     const float b = normal_.dotProduct(ray.origin_) + D;
-    const float distanceIntersectCamera (-b / a);//distancia da interseçao à camera
+    const float distanceIntersectCamera(-b / a);//distancia da interseçao à camera
 
     if (distanceIntersectCamera < 0) return false;//trianglo atrás da camera
 /*
@@ -42,7 +41,7 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
     Point3D intersectionPoint = (ray.origin_ + (ray.direction_ * distanceIntersectCamera));
 
     Vector3D perpendicularTriangle;
-    
+
     perpendicularTriangle = AB_.crossProduct(intersectionPoint - pointA_);
     if (normal_.dotProduct(perpendicularTriangle) < 0) return false;
 
@@ -66,10 +65,10 @@ bool Triangle::intersect(Intersection& intersection, const Ray& ray, const Mater
     if (test1 < 0 || test2 < 0 || test3 < 0) return false;//está fora do trianglo
 */
     intersection.recycle(
-        ray.origin_ + (ray.direction_ * distanceIntersectCamera),
-        this->normal_,
-        distanceIntersectCamera,
-        material);
+            ray.origin_ + (ray.direction_ * distanceIntersectCamera),
+            this->normal_,
+            distanceIntersectCamera,
+            material);
 
     return true;
 }

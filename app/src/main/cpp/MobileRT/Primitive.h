@@ -9,19 +9,18 @@
 #include "Material.h"
 #include "Ray.h"
 
-namespace MobileRT
-{
-    class Primitive
-    {
-        private:
-            const Shape* shape_;
-            const Material material_;
+namespace MobileRT {
+    class Primitive {
+    private:
+        const Shape *shape_;
+        const Material material_;
 
-        public:
-            Primitive (const Shape* shape, const Material& material);
-            ~Primitive();
+    public:
+        Primitive(const Shape *shape, const Material &material);
 
-            bool intersect(Intersection& intersection, const Ray& ray) const;
+        ~Primitive();
+
+        bool intersect(Intersection &intersection, const Ray &ray) const;
     };
 }
 

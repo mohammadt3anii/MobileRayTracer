@@ -11,8 +11,8 @@
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2
 };
-static Renderer *renderer_ (nullptr);
-static int working_ (IDLE);
+static Renderer *renderer_(nullptr);
+static int working_(IDLE);
 
 extern "C"
 int Java_com_example_puscas_mobileraytracer_DrawView_isWorking() {
@@ -24,8 +24,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finished() {
     working_ = IDLE;
 }
 
-void thread_work(void *dstPixels, unsigned int numThreads)
-{
+void thread_work(void *dstPixels, unsigned int numThreads) {
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
     working_ = FINISHED;
 }
@@ -56,11 +55,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jint nThreads
 ) {
     //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Threads = %d \n", numThreads_);
-    void* dstPixels;
+    void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
 
     working_ = BUSY;
-    std::thread (thread_work, dstPixels, static_cast<unsigned int> (nThreads)).detach();
+    std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads)).detach();
 
     AndroidBitmap_unlockPixels(env, dstBitmap);
 }

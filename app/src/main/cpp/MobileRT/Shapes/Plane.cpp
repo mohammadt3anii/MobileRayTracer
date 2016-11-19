@@ -7,19 +7,18 @@
 
 using namespace MobileRT;
 
-Plane::Plane (const Point3D& point, const Vector3D& normal) :
-    point_(point),
-    normal_(normal.returnNormalized())
-{
+Plane::Plane(const Point3D &point, const Vector3D &normal) :
+        point_(point),
+        normal_(normal.returnNormalized()) {
 }
 
-bool Plane::intersect(Intersection& intersection, const Ray& ray, const Material& material) const
-{
+bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
-    const float normalized_projection (this->normal_.dotProduct(ray.direction_));
+    const float normalized_projection(this->normal_.dotProduct(ray.direction_));
     if (normalized_projection < VECT_PROJ_MIN &&
-        normalized_projection > -VECT_PROJ_MIN) return false;  // zero
+        normalized_projection > -VECT_PROJ_MIN)
+        return false;  // zero
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
     const float distance(
@@ -27,8 +26,7 @@ bool Plane::intersect(Intersection& intersection, const Ray& ray, const Material
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (distance < RAY_LENGTH_MIN || distance > ray.maxDistance_)
-    {
+    if (distance < RAY_LENGTH_MIN || distance > ray.maxDistance_) {
         return false;
     }
 

@@ -7,19 +7,18 @@
 
 #include "Color_Models/RGB.h"
 
-namespace MobileRT
-{
-    class Material
-    {
-        private:
-            
+namespace MobileRT {
+    class Material {
+    private:
 
-        public:
-            const RGB Kd_;   // diffuse reflection
-            const RGB Ks_;   // specular reflection
 
-            Material(const RGB& Kd);
-            Material(const RGB& Kd, const RGB& Ks);
+    public:
+        const RGB Kd_;   // diffuse reflection
+        const RGB Ks_;   // specular reflection
+
+        Material(const RGB &Kd);
+
+        Material(const RGB &Kd, const RGB &Ks);
     };
 }
 

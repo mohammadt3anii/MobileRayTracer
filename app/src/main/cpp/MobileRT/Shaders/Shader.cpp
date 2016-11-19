@@ -6,16 +6,13 @@
 
 using namespace MobileRT;
 
-Shader::Shader(RayTracer& rayTracer, const Scene& scene) :
+Shader::Shader(RayTracer &rayTracer, const Scene &scene) :
         scene_(scene),
-        rayTracer_(rayTracer)
-{
+        rayTracer_(rayTracer) {
 }
 
-Shader::~Shader ()
-{
+Shader::~Shader() {
 }
 
-void Shader::shade(RGB&, Intersection&, const Ray&, Vector3D&) const
-{
+void Shader::shade(RGB &, Intersection &, const Ray &, Vector3D &) const {
 }

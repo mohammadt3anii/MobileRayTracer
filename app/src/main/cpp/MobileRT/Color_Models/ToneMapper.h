@@ -7,15 +7,13 @@
 
 #include "RGB.h"
 
-namespace MobileRT
-{
-    class ToneMapper
-    {
-        private:
-            
+namespace MobileRT {
+    class ToneMapper {
+    private:
 
-        public:
-            static unsigned int RGB2Color (const RGB& pixel);
+
+    public:
+        static unsigned int RGB2Color(const RGB &pixel);
     };
 }
 

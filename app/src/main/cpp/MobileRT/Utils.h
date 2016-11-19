@@ -5,6 +5,6 @@
 #ifndef MOBILERAYTRACER_UTILS
 #define MOBILERAYTRACER_UTILS
 
-float fastArcTan (const float value);
+float fastArcTan(const float value);
 
 #endif //MOBILERAYTRACER_UTILS

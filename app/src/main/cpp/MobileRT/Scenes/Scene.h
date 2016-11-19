@@ -9,23 +9,22 @@
 #include "../Primitive.h"
 #include <vector>
 
-namespace MobileRT
-{
-    class Scene
-    {
-        private:
-            
+namespace MobileRT {
+    class Scene {
+    private:
+
 
     public:
-            std::vector<PointLight*> lights;
-            std::vector<Primitive*> primitives;
+        std::vector<PointLight *> lights;
+        std::vector<Primitive *> primitives;
 
-            Scene ();
-            ~Scene ();
+        Scene();
 
-            bool trace(Intersection& intersection, Ray& ray) const;
+        ~Scene();
 
-            bool shadowTrace(Intersection& intersection, const Ray& ray) const;
+        bool trace(Intersection &intersection, Ray &ray) const;
+
+        bool shadowTrace(Intersection &intersection, const Ray &ray) const;
     };
 }
 

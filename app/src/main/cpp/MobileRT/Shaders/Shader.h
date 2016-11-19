@@ -8,21 +8,20 @@
 #include "../Scenes/Scene.h"
 #include "../RayTracer.h"
 
-namespace MobileRT
-{
+namespace MobileRT {
     class RayTracer;
-    
-    class Shader
-    {
-        protected:
-            const Scene& scene_;
-            RayTracer& rayTracer_;
 
-        public:
-            Shader(RayTracer& rayTracer, const Scene& scene);
-            virtual ~Shader();
+    class Shader {
+    protected:
+        const Scene &scene_;
+        RayTracer &rayTracer_;
 
-            virtual void shade(RGB&, Intersection&, const Ray&, Vector3D&) const;
+    public:
+        Shader(RayTracer &rayTracer, const Scene &scene);
+
+        virtual ~Shader();
+
+        virtual void shade(RGB &, Intersection &, const Ray &, Vector3D &) const;
     };
 }
 
