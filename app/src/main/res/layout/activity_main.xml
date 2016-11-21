@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/timeText"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/renderButton"
         android:layout_marginBottom="19dp"
@@ -27,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:text="@string/time"
         android:textColor="@android:color/holo_green_dark"
@@ -60,6 +62,7 @@
         android:id="@+id/radioGroupShader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/radioGroupScene"
         android:orientation="horizontal">
@@ -86,6 +89,7 @@
         android:id="@+id/renderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/radioGroupShader"
         android:onClick="startRender"
@@ -96,8 +100,11 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/viewDraw"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/radioGroupScene"
+        android:layout_toRightOf="@+id/radioGroupScene"
         >
 
         <NumberPicker

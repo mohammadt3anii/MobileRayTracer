@@ -1,7 +1,7 @@
 package com.example.puscas.mobileraytracer;
 
 import android.app.Activity;
-import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +11,9 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.example.puscas.mobileraytracer.R.id;
+import com.example.puscas.mobileraytracer.R.layout;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -27,7 +30,7 @@ public class MainActivity extends Activity
     private DrawView drawView_;
     private int scene_;
     private int shader_;
-    private MainActivity.MessageHandler handler_;
+    private MessageHandler handler_;
     private NumberPicker numThreads_;
     private RadioGroup groupScene_;
     private RadioGroup groupShader_;
@@ -49,10 +52,10 @@ public class MainActivity extends Activity
     }
 
     private int getNumberOfCores() {
-        if (Build.VERSION.SDK_INT >= 17) {
+        if (VERSION.SDK_INT >= 17) {
             return Runtime.getRuntime().availableProcessors();
         } else {
-            return getNumCoresOldPhones();
+            return this.getNumCoresOldPhones();
         }
     }
 
@@ -61,31 +64,32 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        this.setContentView(layout.activity_main);
 
-        textView_ = (TextView) findViewById(R.id.timeText);
-        drawView_ = (DrawView) findViewById(R.id.viewDraw);
-        handler_ = new MainActivity.MessageHandler();
-        drawView_.setHandler(handler_);
-        mRenderButton_ = (Button) findViewById(R.id.renderButton);
-        drawView_.setVisibility(View.INVISIBLE);
-        numThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
-        numThreads_.setMaxValue(getNumberOfCores() * 2);
-        numThreads_.setMinValue(1);
-        numThreads_.setWrapSelectorWheel(true);
-        numThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        this.textView_ = (TextView) this.findViewById(id.timeText);
+        this.drawView_ = (DrawView) this.findViewById(id.viewDraw);
+        this.handler_ = new MessageHandler();
+        this.drawView_.setHandler(this.handler_);
+        this.mRenderButton_ = (Button) this.findViewById(id.renderButton);
+        this.drawView_.setVisibility(View.INVISIBLE);
+        this.numThreads_ = (NumberPicker) this.findViewById(id.pickerThreads);
+        this.numThreads_.setMinValue(1);
+        this.numThreads_.setMaxValue(this.getNumberOfCores() * 2);
+        this.numThreads_.setDisplayedValues(new String[]{"One", "Two", "Three", "Four", "Five"});
+        this.numThreads_.setWrapSelectorWheel(true);
+        this.numThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        groupScene_ = (RadioGroup) findViewById(R.id.radioGroupScene);
-        groupShader_ = (RadioGroup) findViewById(R.id.radioGroupShader);
+        this.groupScene_ = (RadioGroup) this.findViewById(id.radioGroupScene);
+        this.groupShader_ = (RadioGroup) this.findViewById(id.radioGroupShader);
 
-        this.mRenderButton_.setEnabled(false);
+        mRenderButton_.setEnabled(false);
     }
 
     public void startRender(View view) {
-        mRenderButton_.setEnabled(false);
-        drawView_.createScene(scene_, shader_, numThreads_.getValue(), textView_);
-        drawView_.setVisibility(View.VISIBLE);
-        drawView_.invalidate();
+        this.mRenderButton_.setEnabled(false);
+        this.drawView_.createScene(this.scene_, this.shader_, this.numThreads_.getValue(), this.textView_);
+        this.drawView_.setVisibility(View.VISIBLE);
+        this.drawView_.invalidate();
     }
 
     public void onSceneRadioButtonClicked(View view)
@@ -95,20 +99,20 @@ public class MainActivity extends Activity
 
         // Check which radio button was clicked
         switch (view.getId()) {
-            case R.id.radioCornell:
-                this.scene_ = 0; // cornell
+            case id.radioCornell:
+                scene_ = 0; // cornell
                 break;
 
-            case R.id.radioSpheres:
-                this.scene_ = 1; // spheres
+            case id.radioSpheres:
+                scene_ = 1; // spheres
                 break;
 
             default:
                 break;
         }
 
-        if (groupShader_.getCheckedRadioButtonId() != -1) {
-            this.mRenderButton_.setEnabled(true);
+        if (this.groupShader_.getCheckedRadioButtonId() != -1) {
+            mRenderButton_.setEnabled(true);
         }
     }
 
@@ -119,19 +123,19 @@ public class MainActivity extends Activity
 
         // Check which radio button was clicked
         switch (view.getId()) {
-            case R.id.radioNoShadows:
-                this.shader_ = 0; // No Shadows
+            case id.radioNoShadows:
+                shader_ = 0; // No Shadows
                 break;
 
-            case R.id.radioWhitted:
-                this.shader_ = 1; // Whitted
+            case id.radioWhitted:
+                shader_ = 1; // Whitted
                 break;
 
             default:
                 break;
         }
-        if (groupScene_.getCheckedRadioButtonId() != -1) {
-            this.mRenderButton_.setEnabled(true);
+        if (this.groupScene_.getCheckedRadioButtonId() != -1) {
+            mRenderButton_.setEnabled(true);
         }
 
     }
@@ -141,7 +145,7 @@ public class MainActivity extends Activity
         public void handleMessage(Message inputMessage) {
             switch (inputMessage.what) {
                 case 1:        // Render finished
-                    MainActivity.this.mRenderButton_.setEnabled(true);
+                    mRenderButton_.setEnabled(true);
                     break;
 
                 default:

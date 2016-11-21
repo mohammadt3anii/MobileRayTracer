@@ -40,7 +40,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
 ) {
     working_ = IDLE;
     renderer_ = new Renderer(static_cast<unsigned int>(width), static_cast<unsigned int>(height),
-                             static_cast<unsigned int>(scene), static_cast<unsigned int>(shader));
+                             static_cast<unsigned int>(scene), static_cast<unsigned int>(shader),
+                             0);
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
