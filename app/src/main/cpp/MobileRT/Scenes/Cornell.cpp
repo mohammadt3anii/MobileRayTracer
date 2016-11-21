@@ -2,14 +2,14 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "SceneCornell.h"
+#include "Cornell.h"
 #include "../Shapes/Plane.h"
 #include "../Shapes/Sphere.h"
 #include "../Shapes/Triangle.h"
 
 using namespace MobileRT;
 
-SceneCornell::SceneCornell() {
+Cornell::Cornell() {
     // point light - white
     this->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f), Point3D(0.0f, 0.99f, 0.0f)));
 

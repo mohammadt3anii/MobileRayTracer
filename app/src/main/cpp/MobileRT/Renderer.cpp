@@ -3,102 +3,32 @@
 //
 
 #include "Renderer.h"
-#include "Scenes/SceneCornell.h"
-#include "Scenes/SceneSpheres.h"
-#include "Color_Models/ToneMapper.h"
-#include "Utils.h"
+#include "Samplers/Stratified.h"
+#include "Samplers/Jittered.h"
 #include <thread>
-#include <iostream>
 
 using namespace MobileRT;
 
 Renderer::Renderer(const unsigned int width, const unsigned int height,
-                   const unsigned int whichScene, const unsigned int whichShader) :
-        width_(width),
-        height_(height)
+                   const unsigned int whichScene, const unsigned int whichShader,
+                   const unsigned int whichSampler, const unsigned int samples)
 {
-    const float ratio = static_cast<float>(height_) / static_cast<float>(width_);
-
-    // create and load the Scene, parameterize the camera
-    switch (whichScene)
+    switch (whichSampler)
     {
-        case 0 : // cornell
+        case 0 :
         {
-            this->scene_ = new SceneCornell();
-            const float hFov = 45.0f;
-            const float vFov = hFov * ratio;
-            this->camera_ = new PerspectiveCamera(Point3D(0.0f, 0.0f, -3.4f), hFov, vFov);
+            this->sampler_ = new Stratified (width, height, whichScene, whichShader, samples);
         }
             break;
 
-        case 1 : // spheres
+        case 1 :
         {
-            this->scene_ = new SceneSpheres();
-            const float hFov = 60.0f;
-            const float vFov = hFov * ratio;
-            this->camera_ = new PerspectiveCamera(Point3D(0.0f, 0.5f, 1.0f), hFov, vFov);
+            this->sampler_ = new Jittered (width, height, whichScene, whichShader, samples);
         }
             break;
 
         default:
             break;
-    }
-    // create the ray tracer
-    this->rayTracer_ = new RayTracer(*this->scene_, whichShader);
-}
-
-void Renderer::thread_render(unsigned int *canvas, unsigned int tid,
-                                 unsigned int numThreads) const {
-    const float width (this->width_);
-    const float height (this->height_);
-    const float INV_IMG_WIDTH (1.0f / width);
-    const float INV_IMG_HEIGHT (1.0f / height);
-
-    const unsigned int jitter_rays = 0;
-    const float jitter_max = 0.001f;
-    const float half_rand_max(static_cast<float>(RAND_MAX/2));
-    
-    RGB rayRGB;
-    Intersection isect;
-    Vector3D vector;
-    Ray ray;
-    for (unsigned int y = tid; y < height; y += numThreads)
-    {
-        const unsigned int yWidth(y * this->width_);
-        const float v (static_cast<float>(y * INV_IMG_HEIGHT));
-        const float v_alpha (fastArcTan(this->camera_->vFov_ * (0.5f - v)));
-        for (unsigned int x (0); x < width; x += 1)
-        {
-            // generate the ray
-            const float u (static_cast<float>(x * INV_IMG_WIDTH));
-            const float u_alpha (fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
-
-            RGB rgb;
-
-            float count = 1.0f;
-
-            this->camera_->getRay(ray, u_alpha,v_alpha);//constroi raio e coloca em ray
-            //faz trace do raio e coloca a cor em rayRGB
-            this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);
-            rgb.add(rayRGB);
-            
-            for(unsigned int i = 0; i < jitter_rays; i++)
-            {
-                float randU(std::rand() / half_rand_max - 1.0f);
-                float randV(std::rand() / half_rand_max - 1.0f);
-                const float u_alpha_jittered = u_alpha + (randU * jitter_max);
-                const float v_alpha_jittered = v_alpha + (randV * jitter_max);
-                this->camera_->getRay(ray, u_alpha_jittered,v_alpha_jittered);//constroi raio e coloca em ray
-                //faz trace do raio e coloca a cor em rayRGB
-                this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);
-
-                rgb.add(rayRGB);
-                count += 1.0f;
-            }
-            rgb.mult(1.0f / count);
-            // tonemap and convert to Paint
-            canvas[x + yWidth] = ToneMapper::RGB2Color(rgb);
-        }
     }
 }
 
@@ -108,15 +38,13 @@ void Renderer::render(unsigned int *canvas,
     std::thread *threads = new std::thread[numThreads - 1];
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
-        threads[i] = std::thread(&Renderer::thread_render, this, canvas, i, numThreads);
+        threads[i] = std::thread(&Sampler::renderScene, this->sampler_, canvas, i, numThreads);
     }
-    thread_render(canvas, numThreads - 1, numThreads);
+    this->sampler_->renderScene(canvas, numThreads - 1, numThreads);
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
         threads[i].join();
     }
     delete[] threads;
-    delete this->scene_;
-    delete this->camera_;
-    delete this->rayTracer_;
+    delete this->sampler_;
 }

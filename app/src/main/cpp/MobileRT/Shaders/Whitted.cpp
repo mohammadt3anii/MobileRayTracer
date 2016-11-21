@@ -2,16 +2,16 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "ShaderWhitted.h"
+#include "Whitted.h"
 #include "../Constants.h"
 
 using namespace MobileRT;
 
-ShaderWhitted::ShaderWhitted(RayTracer &rayTracer, const Scene &scene) :
+Whitted::Whitted(RayTracer &rayTracer, const Scene &scene) :
         Shader(rayTracer, scene) {
 }
 
-void ShaderWhitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
+void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
                           Vector3D &vectIntersectCamera) const {
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then

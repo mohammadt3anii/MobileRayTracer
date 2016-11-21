@@ -2,15 +2,15 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "ShaderNoShadows.h"
+#include "NoShadows.h"
 
 using namespace MobileRT;
 
-ShaderNoShadows::ShaderNoShadows(RayTracer &rayTracer, const Scene &scene) :
+NoShadows::NoShadows(RayTracer &rayTracer, const Scene &scene) :
         Shader(rayTracer, scene) {
 }
 
-void ShaderNoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
+void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
                             Vector3D &vectIntersectCamera) const {
     const RGB &kD(intersection.material_->Kd_);
     rgb.recycle();

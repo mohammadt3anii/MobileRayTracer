@@ -3,8 +3,8 @@
 //
 
 #include "RayTracer.h"
-#include "Shaders/ShaderNoShadows.h"
-#include "Shaders/ShaderWhitted.h"
+#include "Shaders/NoShadows.h"
+#include "Shaders/Whitted.h"
 
 using namespace MobileRT;
 
@@ -12,12 +12,12 @@ RayTracer::RayTracer(const Scene &scene, const unsigned int shader) :
         scene_(scene) {
     switch (shader) {
         case 0: {
-            this->shader_ = new ShaderNoShadows(*this, scene);
+            this->shader_ = new NoShadows(*this, scene);
         }
             break;
 
         case 1: {
-            this->shader_ = new ShaderWhitted(*this, scene);
+            this->shader_ = new Whitted(*this, scene);
         }
             break;
 

@@ -7,25 +7,20 @@
 
 #include "Scenes/Scene.h"
 #include "RayTracer.h"
-#include "Cameras/PerspectiveCamera.h"
+#include "Cameras/Perspective.h"
+#include "Samplers/Sampler.h"
 
 namespace MobileRT {
     class Renderer {
     private:
-        const unsigned int width_;
-        const unsigned int height_;
-        Scene *scene_;
-        RayTracer *rayTracer_;
-        PerspectiveCamera *camera_;
+        Sampler *sampler_;
 
     public:
         Renderer(const unsigned int width, const unsigned int height,
-                 const unsigned int whichScene, const unsigned int whichShader);
+                 const unsigned int whichScene, const unsigned int whichShader,
+                 const unsigned int whichSampler, const unsigned int samples = 1);
 
         void render(unsigned int *canvas, const unsigned int numThreads) const;
-
-        void thread_render(unsigned int *canvas, unsigned int tid,
-                           unsigned int numThreads) const;
     };
 }
 

@@ -2,20 +2,19 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "PerspectiveCamera.h"
+#include "Perspective.h"
 #include "../Constants.h"
-//#include <cmath>
 
 using namespace MobileRT;
 
-PerspectiveCamera::PerspectiveCamera(const Point3D &position, const float hFov, const float vFov) :
+Perspective::Perspective(const Point3D &position, const float hFov, const float vFov) :
         position_(position),
         // convert to radians
         hFov_(static_cast<float>(hFov * PI / 180.0f)),
         vFov_(static_cast<float>(vFov * PI / 180.0f)) {
 }
 
-void PerspectiveCamera::getRay(Ray &ray, const float u_alpha, const float v_alpha) const {
+void Perspective::getRay(Ray &ray, const float u_alpha, const float v_alpha) const {
     // note that depth will be 0 : primary ray
     // camera a olhar para eixo +Z
     //void recycle (const float x, const float y, const float z, const Point3D& origin);

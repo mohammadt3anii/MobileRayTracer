@@ -49,9 +49,11 @@ int main(int argc, char **argv) {
     const int scene(atoi(argv[1]));
     const int shader(atoi(argv[2]));
     const int threads(atoi(argv[3]));
+    const int sampler(atoi(argv[4]));
+    const int samples(atoi(argv[5]));
 
     const double start(omp_get_wtime());
-    Renderer renderer(w, h, scene, shader);
+    Renderer renderer(w, h, scene, shader, sampler, samples);
     renderer.render(canvas, threads);
     const double end(omp_get_wtime() - start);
     std::cout << "\nTime in secs::" << end << std::endl;

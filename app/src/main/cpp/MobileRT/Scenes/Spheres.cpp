@@ -2,13 +2,13 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "SceneSpheres.h"
+#include "Spheres.h"
 #include "../Shapes/Plane.h"
 #include "../Shapes/Sphere.h"
 
 using namespace MobileRT;
 
-SceneSpheres::SceneSpheres() {
+Spheres::Spheres() {
     // create one light source
     this->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f), Point3D(0.0f, 15.0f, 4.0f)));
 
