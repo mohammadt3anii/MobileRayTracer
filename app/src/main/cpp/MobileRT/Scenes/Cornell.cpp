@@ -43,8 +43,8 @@ Cornell::Cornell() {
             Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
 
     // triangle - yellow
-    const Material yellow(RGB(1.0f, 1.0f, 0.0f));
+    const Material yellowMat(RGB(1.0f, 1.0f, 0.0f));
     this->primitives.push_back(new Primitive(new Triangle(
-            Point3D(-0.5f, -0.5f, 0.99f), Point3D(0.5f, -0.5f, 0.99f), Point3D(0.5f, 0.0f, 1.001f)),
-                                             yellow));
+            Point3D(-0.5f, -0.5f, 0.99f), Point3D(0.5f, -0.5f, 0.99f), Point3D(0.5f, 0.5f, 1.001f)),
+                                             yellowMat));
 }

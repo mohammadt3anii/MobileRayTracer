@@ -1,19 +1,14 @@
 package com.example.puscas.mobileraytracer;
 
 import android.app.Activity;
-import android.os.Build.VERSION;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.example.puscas.mobileraytracer.R.id;
-import com.example.puscas.mobileraytracer.R.layout;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -28,12 +23,11 @@ public class MainActivity extends Activity
     private Button mRenderButton_;
     private TextView textView_;
     private DrawView drawView_;
-    private int scene_;
-    private int shader_;
-    private MessageHandler handler_;
-    private NumberPicker numThreads_;
-    private RadioGroup groupScene_;
-    private RadioGroup groupShader_;
+    private NumberPicker pickerScene_;
+    private NumberPicker pickerShader_;
+    private NumberPicker pickerThreads_;
+    private NumberPicker pickerSampler_;
+    private NumberPicker pickerSamples_;
 
     private int getNumCoresOldPhones() {
         class CpuFilter implements FileFilter {
@@ -52,10 +46,10 @@ public class MainActivity extends Activity
     }
 
     private int getNumberOfCores() {
-        if (VERSION.SDK_INT >= 17) {
+        if (Build.VERSION.SDK_INT >= 17) {
             return Runtime.getRuntime().availableProcessors();
         } else {
-            return this.getNumCoresOldPhones();
+            return getNumCoresOldPhones();
         }
     }
 
@@ -64,80 +58,59 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.setContentView(layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        this.textView_ = (TextView) this.findViewById(id.timeText);
-        this.drawView_ = (DrawView) this.findViewById(id.viewDraw);
-        this.handler_ = new MessageHandler();
-        this.drawView_.setHandler(this.handler_);
-        this.mRenderButton_ = (Button) this.findViewById(id.renderButton);
-        this.drawView_.setVisibility(View.INVISIBLE);
-        this.numThreads_ = (NumberPicker) this.findViewById(id.pickerThreads);
-        this.numThreads_.setMinValue(1);
-        this.numThreads_.setMaxValue(this.getNumberOfCores() * 2);
-        this.numThreads_.setDisplayedValues(new String[]{"One", "Two", "Three", "Four", "Five"});
-        this.numThreads_.setWrapSelectorWheel(true);
-        this.numThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        mRenderButton_ = (Button) findViewById(R.id.renderButton);
+        textView_ = (TextView) findViewById(R.id.timeText);
+        drawView_ = (DrawView) findViewById(R.id.viewDraw);
+        drawView_.setHandler(new MessageHandler());
+        drawView_.setVisibility(View.INVISIBLE);
 
-        this.groupScene_ = (RadioGroup) this.findViewById(id.radioGroupScene);
-        this.groupShader_ = (RadioGroup) this.findViewById(id.radioGroupShader);
+        String[] scenes = {"Cornell", "Spheres"};
+        pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
+        pickerScene_.setMinValue(0);
+        pickerScene_.setMaxValue(scenes.length - 1);
+        pickerScene_.setDisplayedValues(scenes);
+        pickerScene_.setWrapSelectorWheel(true);
+        pickerScene_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
+        String[] shaders = {"NoShadows", "Whitted"};
+        pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
+        pickerShader_.setMinValue(0);
+        pickerShader_.setMaxValue(shaders.length - 1);
+        pickerShader_.setDisplayedValues(shaders);
+        pickerShader_.setWrapSelectorWheel(true);
+        pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        String[] samplers = {"Stratified", "Jittered"};
+        pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
+        pickerSampler_.setMinValue(0);
+        pickerSampler_.setMaxValue(samplers.length - 1);
+        pickerSampler_.setDisplayedValues(samplers);
+        pickerSampler_.setWrapSelectorWheel(true);
+        pickerSampler_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        pickerSamples_ = (NumberPicker) findViewById(R.id.pickerSamples);
+        pickerSamples_.setMinValue(1);
+        pickerSamples_.setMaxValue(16);
+        pickerSamples_.setWrapSelectorWheel(true);
+        pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
+        pickerThreads_.setMinValue(1);
+        pickerThreads_.setMaxValue(getNumberOfCores() * 2);
+        pickerThreads_.setWrapSelectorWheel(true);
+        pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+    }
+
+    public void startRender(View view)
+    {
         mRenderButton_.setEnabled(false);
-    }
-
-    public void startRender(View view) {
-        this.mRenderButton_.setEnabled(false);
-        this.drawView_.createScene(this.scene_, this.shader_, this.numThreads_.getValue(), this.textView_);
-        this.drawView_.setVisibility(View.VISIBLE);
-        this.drawView_.invalidate();
-    }
-
-    public void onSceneRadioButtonClicked(View view)
-    {
-        // Is the button now checked?
-        if (((RadioButton) view).isChecked() == false) return;
-
-        // Check which radio button was clicked
-        switch (view.getId()) {
-            case id.radioCornell:
-                scene_ = 0; // cornell
-                break;
-
-            case id.radioSpheres:
-                scene_ = 1; // spheres
-                break;
-
-            default:
-                break;
-        }
-
-        if (this.groupShader_.getCheckedRadioButtonId() != -1) {
-            mRenderButton_.setEnabled(true);
-        }
-    }
-
-    public void onShaderRadioButtonClicked(View view)
-    {
-        // Is the button now checked?
-        if (((RadioButton) view).isChecked() == false) return;
-
-        // Check which radio button was clicked
-        switch (view.getId()) {
-            case id.radioNoShadows:
-                shader_ = 0; // No Shadows
-                break;
-
-            case id.radioWhitted:
-                shader_ = 1; // Whitted
-                break;
-
-            default:
-                break;
-        }
-        if (this.groupScene_.getCheckedRadioButtonId() != -1) {
-            mRenderButton_.setEnabled(true);
-        }
-
+        drawView_.createScene(pickerScene_.getValue(), pickerShader_.getValue(),
+                pickerThreads_.getValue(), textView_, pickerSampler_.getValue(),
+                pickerSamples_.getValue());
+        drawView_.setVisibility(View.VISIBLE);
+        drawView_.invalidate();
     }
 
     private class MessageHandler extends Handler {
@@ -145,7 +118,7 @@ public class MainActivity extends Activity
         public void handleMessage(Message inputMessage) {
             switch (inputMessage.what) {
                 case 1:        // Render finished
-                    mRenderButton_.setEnabled(true);
+                    MainActivity.this.mRenderButton_.setEnabled(true);
                     break;
 
                 default:

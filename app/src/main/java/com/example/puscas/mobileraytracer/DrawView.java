@@ -28,8 +28,7 @@ public class DrawView extends View
         super(context, attrs);
     }
 
-    private native void initialize(int scene, int shader, int width, int height);
-
+    private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
     private native int isWorking();
     private native void finished();
@@ -38,11 +37,11 @@ public class DrawView extends View
         handler_ = pHandle;
     }
 
-    public void createScene(int scene, int shader, int numThreads, TextView textView)
+    public void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
     {
         textView_ = textView;
         bitmapW_ = createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        initialize(scene, shader, getWidth(), getHeight());
+        initialize(scene, shader, getWidth(), getHeight(), sampler, samples);
         bitmapW_.eraseColor(Color.WHITE);
         numThreads_ = numThreads;
     }

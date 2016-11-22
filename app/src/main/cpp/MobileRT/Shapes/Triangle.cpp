@@ -17,6 +17,8 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         normal_(AB_.crossProduct(AC_))
 {
     this->normal_.normalize();
+    /*this->AB_.normalize();
+    this->AC_.normalize();*/
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Material &material) const
@@ -34,13 +36,13 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Mater
 
     float u(normalizedProjectionInv * verticeTocamera.dotProduct(perpendicularVector));
 
-    if (u < 0.0 || u > 1.0)
+    if (u < 0.0f || u > 1.0f)
 		return false;
 
     const Vector3D upPerpendicularVector(verticeTocamera.crossProduct(AB_));
     const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
-    if (v < 0.0 || u + v > 1.0)
+    if (v < 0.0f || u + v > 1.0f)
 		return false;
 
     // at this stage we can compute t to find out where

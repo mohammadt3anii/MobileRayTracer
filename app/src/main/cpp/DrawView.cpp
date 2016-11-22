@@ -36,12 +36,15 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint scene,
         jint shader,
         jint width,
-        jint height
+        jint height,
+        jint sampler,
+        jint samples
 ) {
     working_ = IDLE;
     renderer_ = new Renderer(static_cast<unsigned int>(width), static_cast<unsigned int>(height),
                              static_cast<unsigned int>(scene), static_cast<unsigned int>(shader),
-                             0);
+                             static_cast<unsigned int>(sampler),
+                             static_cast<unsigned int> (samples));
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {

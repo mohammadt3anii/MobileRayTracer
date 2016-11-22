@@ -7,5 +7,10 @@
     <string name="spheres">Spheres</string>
     <string name="noShadows">NoShadows</string>
     <string name="whitted">Whitted</string>
+    <string name="scene">Scene</string>
+    <string name="shader">Shader</string>
+    <string name="sampler">Sampler</string>
     <string name="numThreads">#Threads</string>
+    <string name="numSamples">#Samples</string>
+    <string name="textview">TextView</string>
 </resources>
