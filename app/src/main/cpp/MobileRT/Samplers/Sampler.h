@@ -25,6 +25,8 @@ namespace MobileRT {
         virtual ~Sampler();
 
         virtual void renderScene (unsigned int *canvas, unsigned int tid, unsigned int numThreads) const = 0;
+
+        float deviation (const int index) const;
     };
 }
 

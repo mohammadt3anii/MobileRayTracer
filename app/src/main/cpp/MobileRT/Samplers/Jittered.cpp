@@ -21,7 +21,8 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
     const float height (this->height_);
     const float INV_IMG_WIDTH (1.0f / width);
     const float INV_IMG_HEIGHT (1.0f / height);
-    const float jitter_max (0.001f);
+    const float pixelHeight (0.5f/this->height_);
+    const float pixelWidth (0.5f/this->width_);
     const float half_rand_max(static_cast<float>(RAND_MAX/2));
     RGB rayRGB;
     RGB rgb;
@@ -44,8 +45,8 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
             {
                 const float randU(std::rand() / half_rand_max - 1.0f);
                 const float randV(std::rand() / half_rand_max - 1.0f);
-                const float u_alpha_jittered (u_alpha + (randU * jitter_max));
-                const float v_alpha_jittered (v_alpha + (randV * jitter_max));
+                const float u_alpha_jittered (u_alpha + (randU * pixelWidth));
+                const float v_alpha_jittered (v_alpha + (randV * pixelHeight));
                 this->camera_->getRay(ray, u_alpha_jittered,v_alpha_jittered);//constroi raio e coloca em ray
                 this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);//faz trace do raio e coloca a cor em rayRGB
                 rgb.add(rayRGB);

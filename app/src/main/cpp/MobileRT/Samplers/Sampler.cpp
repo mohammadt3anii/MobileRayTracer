@@ -55,3 +55,11 @@ Sampler::~Sampler ()
     delete this->camera_;
     delete this->rayTracer_;
 }
+
+float Sampler::deviation (const int index) const
+{
+    const float start (-0.5f);
+    const float end (0.5f);
+    const float inc ((end - start) / this->samples_);
+    return (start + (index*inc) - (inc/2.0f));
+}

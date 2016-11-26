@@ -50,7 +50,8 @@ void Stratified::renderScene(unsigned int *canvas, unsigned int tid,
     else//multiple samples per pixel
     {
         RGB rgb;
-        const float strat_max (0.001f);
+        const float pixelHeight (0.5f/this->height_);
+        const float pixelWidth (0.5f/this->width_);
         for (unsigned int y (tid); y < height; y += numThreads)
         {
             const unsigned int yWidth(y * this->width_);
@@ -62,14 +63,14 @@ void Stratified::renderScene(unsigned int *canvas, unsigned int tid,
                 const float u_alpha (fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
                 float count (0.0f);
                 rgb.recycle();
-                for(unsigned int i (0); i < this->samples_; i++)
+                for(unsigned int i (1); i <= this->samples_; i++)
                 {
-                    const float stratV ((((i+1) / this->samples_)*2 - 1.0f));
-                    for(unsigned int j (0); j < this->samples_; j++)
+                    const float stratV (deviation(i));
+                    for(unsigned int j (1); j <= this->samples_; j++)
                     {
-                        const float stratU ((((j+1) / this->samples_)*2 - 1.0f));
-                        const float u_alpha_stratified (u_alpha + (stratU * strat_max));
-                        const float v_alpha_stratified (v_alpha + (stratV * strat_max));
+                        const float stratU (deviation(j));
+                        const float u_alpha_stratified (u_alpha + (stratU * pixelWidth));
+                        const float v_alpha_stratified (v_alpha + (stratV * pixelHeight));
                         this->camera_->getRay(ray, u_alpha_stratified, v_alpha_stratified);//constroi raio e coloca em ray
                         this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);//faz trace do raio e coloca a cor em rayRGB
                         rgb.add(rayRGB);

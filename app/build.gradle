@@ -4,13 +4,14 @@ android {
     signingConfigs {
         Puscas {
             keyAlias 'Puscas'
-            storeFile file('/home/puscas/MobileRayTracer.jks')
+            storeFile file('D:/Dropbox/Universidade/' +
+                    'Dissertação em Engenharia Informática/Android Studio/MobileRayTracer.jks')
             keyPassword '@puscas99'
             storePassword '@puscas99'
         }
     }
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId "com.example.puscas.mobileraytracer"
         minSdkVersion 16
@@ -27,11 +28,27 @@ android {
         jackOptions {
             enabled true
         }
+        signingConfig signingConfigs.Puscas
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.Puscas
+            renderscriptDebuggable false
+            pseudoLocalesEnabled false
+            zipAlignEnabled false
+        }
+        debug {
+            debuggable true
+            jniDebuggable true
+            signingConfig signingConfigs.Puscas
+            renderscriptDebuggable true
+            minifyEnabled false
+            pseudoLocalesEnabled true
+            zipAlignEnabled true
         }
     }
     externalNativeBuild {
@@ -40,8 +57,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
+    }
+    dexOptions {
     }
 }
 

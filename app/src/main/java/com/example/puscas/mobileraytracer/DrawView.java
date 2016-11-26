@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import static android.graphics.Bitmap.createBitmap;
 
+/**
+ * Created by Tiago on 09/10/2016.
+ */
+
 public class DrawView extends View
 {
     private long start_;

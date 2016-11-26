@@ -14,6 +14,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
+/**
+ * Created by Tiago on 09/10/2016.
+ */
+
 public class MainActivity extends Activity
 {
     static {

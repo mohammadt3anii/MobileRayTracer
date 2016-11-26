@@ -17,8 +17,6 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         normal_(AB_.crossProduct(AC_))
 {
     this->normal_.normalize();
-    /*this->AB_.normalize();
-    this->AC_.normalize();*/
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Material &material) const
