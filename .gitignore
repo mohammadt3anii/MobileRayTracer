@@ -1,14 +1,7 @@
 **/*.iml
-**/.gradle
 **/local.properties
-**/.DS_Store
 **/build
-**/captures
 **/.externalNativeBuild
-**/.git
 **/.idea
-
-**/*.o
-**/*.d
-**/raytracer
+**/gradle
 **/.vscode
