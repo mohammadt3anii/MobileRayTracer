@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
 
 import java.io.File;
@@ -28,14 +29,14 @@ public class MainActivity extends Activity
     private NumberPicker pickerSamples_;
 
     private int getNumCoresOldPhones() {
-        class CpuFilter implements FileFilter {
+        final class CpuFilter implements FileFilter {
             public boolean accept(File pathname) {
                 return Pattern.matches("cpu[0-9]+", pathname.getName());
             }
         }
         try {
-            File dir = new File("/sys/devices/system/cpu/");
-            File[] files = dir.listFiles(new CpuFilter());
+            final File dir = new File("/sys/devices/system/cpu/");
+            final File[] files = dir.listFiles(new CpuFilter());
             return files.length;
         } catch (Exception e) {
             return 1;
@@ -61,7 +62,7 @@ public class MainActivity extends Activity
         drawView_.setHandler(new MessageHandler(this.mRenderButton_));
         drawView_.setVisibility(View.INVISIBLE);
 
-        String[] scenes = {"Cornell", "Spheres"};
+        final String[] scenes = {"Cornell", "Spheres"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
         pickerScene_.setMinValue(0);
         pickerScene_.setMaxValue(scenes.length - 1);
@@ -69,7 +70,7 @@ public class MainActivity extends Activity
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        String[] shaders = {"NoShadows", "Whitted"};
+        final String[] shaders = {"NoShadows", "Whitted"};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
         pickerShader_.setMinValue(0);
         pickerShader_.setMaxValue(shaders.length - 1);
@@ -77,19 +78,48 @@ public class MainActivity extends Activity
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        String[] samplers = {"Stratified", "Jittered"};
+        final String[] samplesStratified = new String[6];
+        for (int i = 0; i < 6; i++) {
+            samplesStratified[i] = Integer.toString((i + 1) * (i + 1));
+        }
+        final String[] samplesJittered = new String[36];
+        for (int i = 0; i < 36; i++) {
+            samplesJittered[i] = Integer.toString(i + 1);
+        }
+        pickerSamples_ = (NumberPicker) findViewById(R.id.pickerSamples);
+        pickerSamples_.setMinValue(1);
+        pickerSamples_.setMaxValue(6);
+        pickerSamples_.setDisplayedValues(samplesStratified);
+        pickerSamples_.setWrapSelectorWheel(true);
+        pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        final String[] samplers = {"Stratified", "Jittered"};
         pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
         pickerSampler_.setMinValue(0);
         pickerSampler_.setMaxValue(samplers.length - 1);
         pickerSampler_.setDisplayedValues(samplers);
         pickerSampler_.setWrapSelectorWheel(true);
         pickerSampler_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerSampler_.setOnValueChangedListener(new OnValueChangeListener() {
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                switch (newVal) {
+                    case 0://Stratified
+                        pickerSamples_.setMinValue(1);
+                        pickerSamples_.setMaxValue(6);
+                        pickerSamples_.setDisplayedValues(samplesStratified);
+                        break;
 
-        pickerSamples_ = (NumberPicker) findViewById(R.id.pickerSamples);
-        pickerSamples_.setMinValue(1);
-        pickerSamples_.setMaxValue(16);
-        pickerSamples_.setWrapSelectorWheel(true);
-        pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+                    case 1://Jittered
+                        pickerSamples_.setDisplayedValues(samplesJittered);
+                        pickerSamples_.setMinValue(1);
+                        pickerSamples_.setMaxValue(36);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
         pickerThreads_.setMinValue(1);
@@ -98,12 +128,19 @@ public class MainActivity extends Activity
         pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    public void startRender(View view)
+    final public void startRender(View view)
     {
         mRenderButton_.setEnabled(false);
-        drawView_.createScene(pickerScene_.getValue(), pickerShader_.getValue(),
-                pickerThreads_.getValue(), textView_, pickerSampler_.getValue(),
-                pickerSamples_.getValue());
+        drawView_.createScene(
+                pickerScene_.getValue(),
+                pickerShader_.getValue(),
+                pickerThreads_.getValue(),
+                textView_,
+                pickerSampler_.getValue(),
+                Integer.parseInt(
+                        pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
+                )
+        );
         drawView_.setVisibility(View.VISIBLE);
         drawView_.invalidate();
     }
