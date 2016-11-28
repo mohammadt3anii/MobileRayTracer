@@ -6,8 +6,8 @@ import android.os.Message;
 class MessageHandler extends Handler {
     private android.widget.Button mRenderButton_;
 
-    MessageHandler(android.widget.Button a) {
-        this.mRenderButton_ = a;
+    MessageHandler(android.widget.Button button) {
+        this.mRenderButton_ = button;
     }
 
     public void handleMessage(Message inputMessage) {

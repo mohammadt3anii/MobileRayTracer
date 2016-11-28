@@ -9,31 +9,13 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 
 public class CustomNumberPicker extends NumberPicker {
-
     public CustomNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void addView(View child) {
-        super.addView(child);
-        this.updateView(child);
-    }
-
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        super.addView(child, index, params);
-        this.updateView(child);
-    }
-
     public void addView(View child, ViewGroup.LayoutParams params) {
         super.addView(child, params);
-        this.updateView(child);
+        ((EditText) child).setTextSize(15);
+        ((EditText) child).setTextColor(Color.parseColor("#000000"));
     }
-
-    private void updateView(View view) {
-        if (view instanceof EditText) {
-            ((EditText) view).setTextSize(15);
-            ((EditText) view).setTextColor(Color.parseColor("#333333"));
-        }
-    }
-
 }

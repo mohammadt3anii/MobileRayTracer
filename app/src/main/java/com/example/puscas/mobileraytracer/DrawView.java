@@ -21,6 +21,7 @@ public class DrawView extends View
     private Bitmap bitmapR_;
     private Handler handler_;
     private int numThreads_;
+    private int samples_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -43,12 +44,14 @@ public class DrawView extends View
         initialize(scene, shader, getWidth(), getHeight(), sampler, samples);
         bitmapW_.eraseColor(Color.WHITE);
         numThreads_ = numThreads;
+        samples_ = samples;
     }
 
     public void onDraw(Canvas canvas)
     {
         if (!isInEditMode())
         {
+            String text = getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", S:" + this.samples_ + ", t:";
             switch (isWorking()) {
                 case 0://Start rendering
                 {
@@ -63,7 +66,7 @@ public class DrawView extends View
                     bitmapR_ = createBitmap(bitmapW_);//copy bitmap
                     canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//draw bitmapR
                     long renderTime = SystemClock.elapsedRealtime() - this.start_;
-                    textView_.setText("Rendering -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime + "ms");
+                    textView_.setText("Rendering -> " + text + renderTime + "ms");
                     invalidate();
                 }
                     break;
@@ -73,7 +76,7 @@ public class DrawView extends View
                     long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     finished();
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//draw bitmapW
-                    textView_.setText("Rendered -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime + "ms");
+                    textView_.setText("Rendered -> " + text + renderTime + "ms");
                     bitmapW_.recycle();
                     bitmapR_.recycle();
                     Message completeMessage = this.handler_.obtainMessage(1);
