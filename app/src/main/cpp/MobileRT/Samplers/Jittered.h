@@ -11,6 +11,7 @@ namespace MobileRT {
     class Jittered : public Sampler {
     private:
 
+
     public:
         Jittered(const unsigned int width, const unsigned int height,
                  const unsigned int whichScene, const unsigned int whichShader, const unsigned int samples);

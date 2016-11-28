@@ -30,14 +30,14 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Mater
 
     float normalizedProjectionInv(1/normalizedProjection);
 
-    const Vector3D verticeTocamera(ray.origin_ - pointA_);
+    const Vector3D vertexToCamera(ray.origin_ - pointA_);
 
-    float u(normalizedProjectionInv * verticeTocamera.dotProduct(perpendicularVector));
+    float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
 
     if (u < 0.0f || u > 1.0f)
 		return false;
 
-    const Vector3D upPerpendicularVector(verticeTocamera.crossProduct(AB_));
+    const Vector3D upPerpendicularVector(vertexToCamera.crossProduct(AB_));
     const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
     if (v < 0.0f || u + v > 1.0f)

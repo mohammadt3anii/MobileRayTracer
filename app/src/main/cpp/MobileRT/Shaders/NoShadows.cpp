@@ -11,7 +11,7 @@ NoShadows::NoShadows(RayTracer &rayTracer, const Scene &scene) :
 }
 
 void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
-                            Vector3D &vectIntersectCamera) const {
+                      Vector3D &vectorIntersectCamera) const {
     const RGB &kD(intersection.material_->Kd_);
     rgb.recycle();
 
@@ -22,9 +22,9 @@ void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
         for (unsigned int l(0); l < Nl; l++) {
             const PointLight *light(scene_.lights[l]);
 
-            vectIntersectCamera.recycle(light->position_, intersection.point_);
-            vectIntersectCamera.normalize();
-            const float cos_N_L(vectIntersectCamera.dotProduct(intersection.normal_));
+            vectorIntersectCamera.recycle(light->position_, intersection.point_);
+            vectorIntersectCamera.normalize();
+            const float cos_N_L(vectorIntersectCamera.dotProduct(intersection.normal_));
             if (cos_N_L > 0.0f) {
                 const RGB &radLight(light->radiance_);
                 rgb.R_ += kD.R_ * cos_N_L * radLight.R_;

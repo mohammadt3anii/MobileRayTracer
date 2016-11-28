@@ -5,11 +5,6 @@
 #include "Sampler.h"
 #include "../Scenes/Cornell.h"
 #include "../Scenes/Spheres.h"
-#include "../Color_Models/ToneMapper.h"
-#include "../Utils.h"
-#include <thread>
-#include <iostream>
-#include <cstdlib>
 
 using namespace MobileRT;
 

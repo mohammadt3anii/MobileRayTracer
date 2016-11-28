@@ -13,14 +13,9 @@ import android.widget.TextView;
 
 import static android.graphics.Bitmap.createBitmap;
 
-/**
- * Created by Tiago on 09/10/2016.
- */
-
 public class DrawView extends View
 {
     private long start_;
-    private long renderTime_;
     private TextView textView_;
     private Bitmap bitmapW_;
     private Bitmap bitmapR_;
@@ -50,36 +45,40 @@ public class DrawView extends View
         numThreads_ = numThreads;
     }
 
-    @Override
     public void onDraw(Canvas canvas)
     {
-        if (isInEditMode() == false)
+        if (!isInEditMode())
         {
             switch (isWorking()) {
-                case 0://Iniciar renderizaçao
+                case 0://Start rendering
+                {
                     start_ = SystemClock.elapsedRealtime();
-                    drawIntoBitmap(bitmapW_, numThreads_);//correr ray tracer no bitmapW
+                    drawIntoBitmap(bitmapW_, numThreads_);//run ray-tracer to bitmapW
                     invalidate();
+                }
                     break;
 
-                case 1://Enquanto ray-tracer ainda está a funcionar
-                    bitmapR_ = createBitmap(bitmapW_);//copiar bitmap
-                    canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//desenhar bitmapR
-                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
-                    textView_.setText("Rendering -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime_ + "ms");
+                case 1://While ray-tracer is busy
+                {
+                    bitmapR_ = createBitmap(bitmapW_);//copy bitmap
+                    canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//draw bitmapR
+                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
+                    textView_.setText("Rendering -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime + "ms");
                     invalidate();
+                }
                     break;
 
-                case 2://Quando ray-tracer acabar
-                    renderTime_ = SystemClock.elapsedRealtime() - this.start_;
+                case 2://When ray-tracer is finished
+                {
+                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     finished();
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//desenhar bitmapW
-                    textView_.setText("Rendered -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime_ + "ms");
-                    renderTime_ = 0;
+                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//draw bitmapW
+                    textView_.setText("Rendered -> " + getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", t:" + renderTime + "ms");
                     bitmapW_.recycle();
                     bitmapR_.recycle();
                     Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
+                }
                     break;
 
                 default:

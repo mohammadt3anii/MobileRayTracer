@@ -37,7 +37,7 @@ bool Scene::trace(Intersection &intersection, Ray &ray) const {
 
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
     const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives.size()));
-    for (unsigned int i(0); i < sizePrimitives; i++)//fazer trace do shadow ray
+    for (unsigned int i(0); i < sizePrimitives; i++)//trace shadow ray
     {
         if (this->primitives[i]->intersect(intersection, ray)) {
             return true;

@@ -16,18 +16,15 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
     switch (whichSampler)
     {
         case 0 :
-        {
             this->sampler_ = new Stratified (width, height, whichScene, whichShader, samples);
-        }
             break;
 
         case 1 :
-        {
             this->sampler_ = new Jittered (width, height, whichScene, whichShader, samples);
-        }
             break;
 
         default:
+            this->sampler_ = nullptr;
             break;
     }
 }

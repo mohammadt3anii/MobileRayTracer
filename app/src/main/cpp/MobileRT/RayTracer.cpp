@@ -11,17 +11,16 @@ using namespace MobileRT;
 RayTracer::RayTracer(const Scene &scene, const unsigned int shader) :
         scene_(scene) {
     switch (shader) {
-        case 0: {
+        case 0:
             this->shader_ = new NoShadows(*this, scene);
-        }
             break;
 
-        case 1: {
+        case 1:
             this->shader_ = new Whitted(*this, scene);
-        }
             break;
 
         default:
+            this->shader_ = nullptr;
             break;
     }
 }
@@ -30,14 +29,14 @@ RayTracer::~RayTracer() {
     delete this->shader_;
 }
 
-//trace do raio e verifica se interseta algo
+//ray trace and verifies if intersects primitives
 void RayTracer::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const {
     // compute radiance
-    if (this->scene_.trace(intersection, ray))//se interseta alguma primitiva
+    if (this->scene_.trace(intersection, ray))
     {
         this->shader_->shade(rgb, intersection, ray, vector);
     }
     else {
-        rgb.recycle(0.1f, 0.1f, 0.9f);//cor do pixel sem interseçao
+        rgb.recycle(0.0f, 0.0f, 0.0f);//pixel color without intersection
     }
 }

@@ -3,8 +3,6 @@ package com.example.puscas.mobileraytracer;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -13,10 +11,6 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
-
-/**
- * Created by Tiago on 09/10/2016.
- */
 
 public class MainActivity extends Activity
 {
@@ -35,7 +29,6 @@ public class MainActivity extends Activity
 
     private int getNumCoresOldPhones() {
         class CpuFilter implements FileFilter {
-            @Override
             public boolean accept(File pathname) {
                 return Pattern.matches("cpu[0-9]+", pathname.getName());
             }
@@ -50,15 +43,13 @@ public class MainActivity extends Activity
     }
 
     private int getNumberOfCores() {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return Runtime.getRuntime().availableProcessors();
-        } else {
+        if (Build.VERSION.SDK_INT < 17) {
             return getNumCoresOldPhones();
+        } else {
+            return Runtime.getRuntime().availableProcessors();
         }
     }
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -67,7 +58,7 @@ public class MainActivity extends Activity
         mRenderButton_ = (Button) findViewById(R.id.renderButton);
         textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.viewDraw);
-        drawView_.setHandler(new MessageHandler());
+        drawView_.setHandler(new MessageHandler(this.mRenderButton_));
         drawView_.setVisibility(View.INVISIBLE);
 
         String[] scenes = {"Cornell", "Spheres"};
@@ -115,20 +106,5 @@ public class MainActivity extends Activity
                 pickerSamples_.getValue());
         drawView_.setVisibility(View.VISIBLE);
         drawView_.invalidate();
-    }
-
-    private class MessageHandler extends Handler {
-        @Override
-        public void handleMessage(Message inputMessage) {
-            switch (inputMessage.what) {
-                case 1:        // Render finished
-                    MainActivity.this.mRenderButton_.setEnabled(true);
-                    break;
-
-                default:
-                    super.handleMessage(inputMessage);
-                    break;
-            }
-        }
     }
 }

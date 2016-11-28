@@ -30,14 +30,14 @@ float Vector3D::length() const {
 }
 
 float Vector3D::normalize() {
-    const float leng(length());
-    if (leng == 0.0f) return 0.0f;
+    const float len(length());
+    if (len == 0.0f) return 0.0f;
 
-    const float inv_length(1.0f / leng);
+    const float inv_length(1.0f / len);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
     this->z_ *= inv_length;
-    return leng;
+    return len;
 }
 
 Vector3D Vector3D::returnNormalized() const {
@@ -46,19 +46,9 @@ Vector3D Vector3D::returnNormalized() const {
     return normalized;
 }
 
-// symetric vector
-Vector3D Vector3D::negative() const {
-    return Vector3D(-this->x_, -this->y_, -this->z_);
-}
-
 // dot product Algebraic
 float Vector3D::dotProduct(const Vector3D &vector) const {
     return (this->x_ * vector.x_ + this->y_ * vector.y_ + this->z_ * vector.z_);
-}
-
-// dot product Algebraic
-float Vector3D::dotProduct(const Point3D &point) const {
-    return (this->x_ * point.x_ + this->y_ * point.y_ + this->z_ * point.z_);
 }
 
 // dot product Algebraic

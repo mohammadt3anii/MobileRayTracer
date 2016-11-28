@@ -26,18 +26,18 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
     const float half_rand_max(static_cast<float>(RAND_MAX/2));
     RGB rayRGB;
     RGB rgb;
-    Intersection isect;
+    Intersection intersection;
     Vector3D vector;
     Ray ray;
     for (unsigned int y (tid); y < height; y += numThreads)
     {
         const unsigned int yWidth(y * this->width_);
-        const float v (static_cast<float>(y * INV_IMG_HEIGHT));
+        const float v(y * INV_IMG_HEIGHT);
         const float v_alpha (fastArcTan(this->camera_->vFov_ * (0.5f - v)));
         for (unsigned int x (0); x < width; x += 1)
         {
             // generate the ray
-            const float u (static_cast<float>(x * INV_IMG_WIDTH));
+            const float u(x * INV_IMG_WIDTH);
             const float u_alpha (fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
             float count = 0.0f;
             rgb.recycle();
@@ -47,13 +47,15 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
                 const float randV(std::rand() / half_rand_max - 1.0f);
                 const float u_alpha_jittered (u_alpha + (randU * pixelWidth));
                 const float v_alpha_jittered (v_alpha + (randV * pixelHeight));
-                this->camera_->getRay(ray, u_alpha_jittered,v_alpha_jittered);//constroi raio e coloca em ray
-                this->rayTracer_->rayTrace(rayRGB, ray, isect, vector);//faz trace do raio e coloca a cor em rayRGB
+                //builds ray and puts it in ray variable
+                this->camera_->getRay(ray, u_alpha_jittered, v_alpha_jittered);
+                //ray trace and puts the color in rayRGB variable
+                this->rayTracer_->rayTrace(rayRGB, ray, intersection, vector);
                 rgb.add(rayRGB);
                 count += 1.0f;
             }
             rgb.mult(1.0f / count);
-            canvas[x + yWidth] = ToneMapper::RGB2Color(rgb);// tonemap and convert to Paint
+            canvas[x + yWidth] = ToneMapper::RGB2Color(rgb);// toneMap and convert to Paint
         }
     }
 }

@@ -2,7 +2,7 @@
 // Created by Tiago on 14-10-2016.
 //
 
-#include "DrawView.h"
+#include "MobileRT/All.h"
 #include <jni.h>
 #include <thread>
 #include <android/bitmap.h>
@@ -11,16 +11,22 @@
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2
 };
-static Renderer *renderer_(nullptr);
+static MobileRT::Renderer *renderer_(nullptr);
 static int working_(IDLE);
 
 extern "C"
-int Java_com_example_puscas_mobileraytracer_DrawView_isWorking() {
+int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
+        JNIEnv *,// env,
+        jobject //this,
+) {
     return working_;
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_finished() {
+void Java_com_example_puscas_mobileraytracer_DrawView_finished(
+        JNIEnv *,// env,
+        jobject//this,
+) {
     working_ = IDLE;
 }
 
@@ -32,7 +38,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         JNIEnv *,// env,
-        jobject, //thiz,
+        jobject, //this,
         jint scene,
         jint shader,
         jint width,
@@ -41,20 +47,18 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint samples
 ) {
     working_ = IDLE;
-    renderer_ = new Renderer(static_cast<unsigned int>(width), static_cast<unsigned int>(height),
-                             static_cast<unsigned int>(scene), static_cast<unsigned int>(shader),
-                             static_cast<unsigned int>(sampler),
-                             static_cast<unsigned int> (samples));
-}
-
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
-    return JNI_VERSION_1_6;
+    renderer_ = new MobileRT::Renderer(static_cast<unsigned int>(width),
+                                       static_cast<unsigned int>(height),
+                                       static_cast<unsigned int>(scene),
+                                       static_cast<unsigned int>(shader),
+                                       static_cast<unsigned int>(sampler),
+                                       static_cast<unsigned int> (samples));
 }
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         JNIEnv *env,
-        jobject,//thiz,
+        jobject,//this,
         jobject dstBitmap,
         jint nThreads
 ) {

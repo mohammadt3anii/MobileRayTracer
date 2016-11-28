@@ -23,13 +23,8 @@ namespace MobileRT {
 
         Vector3D(const Vector3D &vector);
 
-        // symetric vector
-        Vector3D negative() const;
-
         // dot product
         float dotProduct(const Vector3D &vector) const;
-
-        float dotProduct(const Point3D &point) const;
 
         float squareLength() const;
 

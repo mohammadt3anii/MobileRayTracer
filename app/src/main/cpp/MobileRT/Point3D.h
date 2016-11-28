@@ -23,8 +23,6 @@ namespace MobileRT {
 
         Point3D(const Point3D &point);
 
-        float sumCoordenates() const;
-
         Point3D operator+(const Vector3D &vector) const;
 
         Vector3D operator-(const Point3D &point) const;

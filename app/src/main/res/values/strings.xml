@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">MobileRayTracer</string>
-    <string name="time">Time</string>
-    <string name="render">Render</string>
-    <string name="radiobutton">RadioButton</string>
-    <string name="cornell">Cornell</string>
-    <string name="spheres">Spheres</string>
-    <string name="noShadows">NoShadows</string>
-    <string name="whitted">Whitted</string>
-    <string name="scene">Scene</string>
-    <string name="shader">Shader</string>
-    <string name="sampler">Sampler</string>
-    <string name="numThreads">#Threads</string>
-    <string name="numSamples">#Samples</string>
-    <string name="textview">TextView</string>
+    <string name="app_name" translatable="false">MobileRayTracer</string>
+    <string name="time" translatable="false">Time</string>
+    <string name="render" translatable="false">Render</string>
+    <string name="radioButton" translatable="false">RadioButton</string>
+    <string name="cornell" translatable="false">Cornell</string>
+    <string name="spheres" translatable="false">Spheres</string>
+    <string name="noShadows" translatable="false">NoShadows</string>
+    <string name="whitted" translatable="false">Whitted</string>
+    <string name="scene" translatable="false">Scene</string>
+    <string name="shader" translatable="false">Shader</string>
+    <string name="sampler" translatable="false">Sampler</string>
+    <string name="numThreads" translatable="false">#Threads</string>
+    <string name="numSamples" translatable="false">#Samples</string>
+    <string name="textView" translatable="false">TextView</string>
 </resources>
