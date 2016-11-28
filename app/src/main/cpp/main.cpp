@@ -6,12 +6,13 @@
 
 using namespace MobileRT;
 
+/*
 std::vector<int> testNRVO(int value, size_t size, const std::vector<int> **localVec) {
     std::vector<int> vec(size, value);
 
     *localVec = &vec;
 
-    /* Do something here.. */
+    // Do something here..
 
     return vec;
 }
@@ -25,7 +26,7 @@ void testNRVO() {
         std::cout << "NRVO was applied" << std::endl;
     else
         std::cout << "NRVO was not applied" << std::endl;
-}
+}*/
 
 void destroy(GtkWidget *, gpointer) {
     gtk_main_quit();
@@ -63,10 +64,10 @@ int main(int argc, char **argv) {
 
     for (unsigned int i(0), j(0); i < w * h * 4; i += 4, j += 1) {
         const unsigned int color(canvas[j]);
-        buffer[i + 0] = (color & 0x000000FF) >> 0;
-        buffer[i + 1] = (color & 0x0000FF00) >> 8;
-        buffer[i + 2] = (color & 0x00FF0000) >> 16;
-        buffer[i + 3] = (color & 0xFF000000) >> 24;
+        buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
+        buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
+        buffer[i + 2] = static_cast<unsigned char> ((color & 0x00FF0000) >> 16);
+        buffer[i + 3] = static_cast<unsigned char> ((color & 0xFF000000) >> 24);
     }
     //return 0;
 
