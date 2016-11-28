@@ -32,11 +32,11 @@ public class DrawView extends View
     private native int isWorking();
     private native void finished();
 
-    public void setHandler(Handler pHandle) {
+    void setHandler(Handler pHandle) {
         handler_ = pHandle;
     }
 
-    public void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
+    void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
     {
         textView_ = textView;
         bitmapW_ = createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
