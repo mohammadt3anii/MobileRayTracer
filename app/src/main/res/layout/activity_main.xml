@@ -45,12 +45,12 @@
 
     <com.example.puscas.mobileraytracer.CustomNumberPicker
         android:id="@+id/pickerSamples"
-        android:layout_width="20dp"
+        android:layout_width="30dp"
         android:layout_height="60dp"
         android:layout_alignBaseline="@+id/pickerSampler"
         android:layout_alignBottom="@+id/pickerSampler"
         android:layout_toEndOf="@+id/pickerScene"
-        android:layout_toRightOf="@+id/pickerScene" />
+        android:layout_toRightOf="@+id/pickerScene"/>
 
     <view
         android:id="@+id/viewDraw"

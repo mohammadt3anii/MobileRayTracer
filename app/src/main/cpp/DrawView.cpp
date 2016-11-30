@@ -4,12 +4,11 @@
 
 #include "MobileRT/All.h"
 #include <jni.h>
-#include <thread>
 #include <android/bitmap.h>
 //#include <android/log.h>
 
 enum State {
-    IDLE = 0, BUSY = 1, FINISHED = 2
+    IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
 };
 static MobileRT::Renderer *renderer_(nullptr);
 static int working_(IDLE);
@@ -28,6 +27,15 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finished(
         jobject//this,
 ) {
     working_ = IDLE;
+}
+
+extern "C"
+void Java_com_example_puscas_mobileraytracer_DrawView_stop(
+        JNIEnv *,// env,
+        jobject //this,
+) {
+    renderer_->stopRender();
+    working_ = STOPPED;
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {

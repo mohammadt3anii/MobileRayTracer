@@ -9,15 +9,19 @@
 using namespace MobileRT;
 
 Sampler::Sampler(const unsigned int width, const unsigned int height,
-                   const unsigned int whichScene, const unsigned int whichShader, const unsigned int samples) :
+                 const unsigned int scene, const unsigned int shader,
+                 const unsigned int samples) :
         width_(width),
         height_(height),
-        samples_(samples)
+        samples_(samples),
+        deviationIncrement_(1.0f / this->samples_),
+        taskLine_(0),
+        accumulate_(new RGB[this->width_ * this->height_])
 {
     const float ratio = static_cast<float>(height_) / static_cast<float>(width_);
 
     // create and load the Scene, parameterize the camera
-    switch (whichScene)
+    switch (scene)
     {
         case 0 : // cornell
         {
@@ -41,7 +45,7 @@ Sampler::Sampler(const unsigned int width, const unsigned int height,
             break;
     }
     // create the ray tracer
-    this->rayTracer_ = new RayTracer(*this->scene_, whichShader);
+    this->rayTracer_ = new RayTracer(*this->scene_, shader);
 }
 
 Sampler::~Sampler ()
@@ -49,12 +53,28 @@ Sampler::~Sampler ()
     delete this->scene_;
     delete this->camera_;
     delete this->rayTracer_;
+    delete[] this->accumulate_;
 }
 
-float Sampler::deviation (const int index) const
+const float Sampler::deviation(const int index) const
 {
-    const float start (-0.5f);
-    const float end (0.5f);
-    const float inc ((end - start) / this->samples_);
-    return (start + (index*inc) - (inc/2.0f));
+    return (-0.5f + (index * this->deviationIncrement_) - (this->deviationIncrement_ * 0.5f));
+}
+
+const unsigned int Sampler::getTask(const int sample) {
+    //unsigned int task = this->taskLine_.fetch_add(1, std::memory_order_relaxed);
+    this->mutex_.lock();
+    const unsigned int task = this->taskLine_++;
+    this->mutex_.unlock();
+    return task - sample * this->height_;
+}
+
+void Sampler::resetTask() {
+    this->taskLine_ = 0;
+}
+
+void Sampler::stopSampling() {
+    this->width_ = 0;
+    this->height_ = 0;
+    this->samples_ = 0;
 }

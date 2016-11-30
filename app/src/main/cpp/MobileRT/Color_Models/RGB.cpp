@@ -28,9 +28,11 @@ bool RGB::isZero() const {
 }
 
 void RGB::add(const RGB &rgb) {
+    mutex.lock();
     this->R_ += rgb.R_;
     this->G_ += rgb.G_;
     this->B_ += rgb.B_;
+    mutex.unlock();
 }
 
 void RGB::mult(const RGB &rgb) {
@@ -43,6 +45,14 @@ void RGB::mult(const float f) {
     this->R_ *= f;
     this->G_ *= f;
     this->B_ *= f;
+}
+
+void RGB::average(const RGB &rgb, const unsigned int number) {
+    mutex.lock();
+    this->R_ = rgb.R_ / number;
+    this->G_ = rgb.G_ / number;
+    this->B_ = rgb.B_ / number;
+    mutex.unlock();
 }
 
 void RGB::recycle() {

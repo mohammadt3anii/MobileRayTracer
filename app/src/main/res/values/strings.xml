@@ -2,6 +2,7 @@
     <string name="app_name">MobileRayTracer</string>
     <string name="time">Time</string>
     <string name="render">Render</string>
+    <string name="stop">Stop</string>
     <string name="radioButton">RadioButton</string>
     <string name="cornell">Cornell</string>
     <string name="spheres">Spheres</string>

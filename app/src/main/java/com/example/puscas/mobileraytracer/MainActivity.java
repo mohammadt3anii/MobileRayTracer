@@ -59,7 +59,7 @@ public class MainActivity extends Activity
         mRenderButton_ = (Button) findViewById(R.id.renderButton);
         textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.viewDraw);
-        drawView_.setHandler(new MessageHandler(this.mRenderButton_));
+        drawView_.setHandler(new MessageHandler(this, this.mRenderButton_));
         drawView_.setVisibility(View.INVISIBLE);
 
         final String[] scenes = {"Cornell", "Spheres"};
@@ -78,18 +78,15 @@ public class MainActivity extends Activity
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] samplesStratified = new String[6];
-        for (int i = 0; i < 6; i++) {
-            samplesStratified[i] = Integer.toString((i + 1) * (i + 1));
-        }
-        final String[] samplesJittered = new String[36];
-        for (int i = 0; i < 36; i++) {
-            samplesJittered[i] = Integer.toString(i + 1);
+        final int maxSamples = 12;
+        final String[] samples = new String[maxSamples];
+        for (int i = 0; i < maxSamples; i++) {
+            samples[i] = Integer.toString((i + 1) * (i + 1));
         }
         pickerSamples_ = (NumberPicker) findViewById(R.id.pickerSamples);
         pickerSamples_.setMinValue(1);
-        pickerSamples_.setMaxValue(6);
-        pickerSamples_.setDisplayedValues(samplesStratified);
+        pickerSamples_.setMaxValue(maxSamples);
+        pickerSamples_.setDisplayedValues(samples);
         pickerSamples_.setWrapSelectorWheel(true);
         pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
@@ -105,14 +102,14 @@ public class MainActivity extends Activity
                 switch (newVal) {
                     case 0://Stratified
                         pickerSamples_.setMinValue(1);
-                        pickerSamples_.setMaxValue(6);
-                        pickerSamples_.setDisplayedValues(samplesStratified);
+                        pickerSamples_.setMaxValue(maxSamples);
+                        pickerSamples_.setDisplayedValues(samples);
                         break;
 
                     case 1://Jittered
-                        pickerSamples_.setDisplayedValues(samplesJittered);
+                        pickerSamples_.setDisplayedValues(samples);
                         pickerSamples_.setMinValue(1);
-                        pickerSamples_.setMaxValue(36);
+                        pickerSamples_.setMaxValue(maxSamples);
                         break;
 
                     default:
@@ -130,7 +127,15 @@ public class MainActivity extends Activity
 
     final public void startRender(View view)
     {
-        mRenderButton_.setEnabled(false);
+        //mRenderButton_.setEnabled(false);
+        switch (drawView_.isWorking()) {
+            case 1://if ray-tracer is busy
+                this.drawView_.stopRender();
+                return;
+
+            default:
+                break;
+        }
         drawView_.createScene(
                 pickerScene_.getValue(),
                 pickerShader_.getValue(),
@@ -141,6 +146,7 @@ public class MainActivity extends Activity
                         pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
                 )
         );
+        mRenderButton_.setText(getString(R.string.stop));
         drawView_.setVisibility(View.VISIBLE);
         drawView_.invalidate();
     }

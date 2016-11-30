@@ -9,6 +9,7 @@
 #include "RayTracer.h"
 #include "Cameras/Perspective.h"
 #include "Samplers/Sampler.h"
+#include <thread>
 
 namespace MobileRT {
     class Renderer {
@@ -21,6 +22,8 @@ namespace MobileRT {
                  const unsigned int whichSampler, const unsigned int samples = 1);
 
         void render(unsigned int *canvas, const unsigned int numThreads) const;
+
+        void stopRender() const;
     };
 }
 

@@ -5,7 +5,6 @@
 #include "Renderer.h"
 #include "Samplers/Stratified.h"
 #include "Samplers/Jittered.h"
-#include <thread>
 
 using namespace MobileRT;
 
@@ -32,6 +31,7 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const
 {
+    this->sampler_->resetTask();
     std::thread *threads = new std::thread[numThreads - 1];
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
@@ -44,4 +44,8 @@ void Renderer::render(unsigned int *canvas,
     }
     delete[] threads;
     delete this->sampler_;
+}
+
+void Renderer::stopRender() const {
+    this->sampler_->stopSampling();
 }

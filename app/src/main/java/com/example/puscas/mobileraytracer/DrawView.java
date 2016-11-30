@@ -30,8 +30,11 @@ public class DrawView extends View
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
-    private native int isWorking();
+
+    native int isWorking();
     private native void finished();
+
+    private native void stop();
 
     void setHandler(Handler pHandle) {
         handler_ = pHandle;
@@ -45,6 +48,10 @@ public class DrawView extends View
         bitmapW_.eraseColor(Color.WHITE);
         numThreads_ = numThreads;
         samples_ = samples;
+    }
+
+    public void stopRender() {
+        stop();
     }
 
     public void onDraw(Canvas canvas)
@@ -83,6 +90,17 @@ public class DrawView extends View
                     completeMessage.sendToTarget();
                 }
                     break;
+
+                case 3://When ray-tracer is stopped
+                {
+                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
+                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//draw bitmapW
+                    textView_.setText("Stopped -> " + text + renderTime + "ms");
+                    bitmapW_.recycle();
+                    bitmapR_.recycle();
+                    Message completeMessage = this.handler_.obtainMessage(2);
+                    completeMessage.sendToTarget();
+                }
 
                 default:
                     break;

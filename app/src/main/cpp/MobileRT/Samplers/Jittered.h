@@ -15,7 +15,8 @@ namespace MobileRT {
     public:
         Jittered(const unsigned int width, const unsigned int height,
                  const unsigned int whichScene, const unsigned int whichShader, const unsigned int samples);
-        void renderScene (unsigned int *canvas, unsigned int tid, unsigned int numThreads) const override;
+
+        void renderScene(unsigned int *canvas, unsigned int tid, unsigned int numThreads) override;
     };
 }
 
