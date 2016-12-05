@@ -12,12 +12,13 @@ namespace MobileRT
     class RGB
     {
         private:
-        std::mutex mutex;
 
         public:
             float R_;
             float G_;
             float B_;
+        unsigned int samples_;
+        std::mutex mutex;
 
             RGB ();
             RGB (const float r, const float g, const float b);
@@ -28,7 +29,9 @@ namespace MobileRT
             void mult (const RGB& rgb);
             void mult (const float f);
 
-        void average(const RGB &rgb, const unsigned int number);
+        void addSample(RGB &average, const RGB &sample);
+
+        void average();
 
             void recycle ();
             void recycle (const float r, const float g, const float b);

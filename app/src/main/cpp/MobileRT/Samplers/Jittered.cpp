@@ -32,7 +32,11 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
     Ray ray;
     for (unsigned int i(0); i < this->samples_; i++)
     {
-        for (unsigned int y(getTask(i)); y < this->height_; y = getTask(i))
+        //for (unsigned int y(getTask(i)); y < this->height_; y = getTask(i))
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+        for (unsigned int y(static_cast<unsigned int> (haltonSequence(getTask(i), 2) *
+                                                       this->height_)); ; y = static_cast<unsigned int> (
+                haltonSequence(getTask(i), 2) * this->height_))
         {
             const unsigned int yWidth(y * this->width_);
             const float v(y * INV_IMG_HEIGHT);
@@ -50,8 +54,8 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
                 this->camera_->getRay(ray, u_alpha_jittered, v_alpha_jittered);
                 //ray trace and puts the color in rayRGB variable
                 this->rayTracer_->rayTrace(rayRGB, ray, intersection, vector);
-                accumulate_[x + yWidth].add(rayRGB);
-                average.average(this->accumulate_[x + yWidth], i + 1);
+                accumulate_[x + yWidth].addSample(average, rayRGB);
+                average.average();
                 // toneMap and convert to Paint
                 canvas[x + yWidth] = ToneMapper::RGB2Color(average);
             }

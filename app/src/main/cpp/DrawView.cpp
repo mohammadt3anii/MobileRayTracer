@@ -3,9 +3,10 @@
 //
 
 #include "MobileRT/All.h"
+#include "MobileRT/Utils.h"
 #include <jni.h>
 #include <android/bitmap.h>
-//#include <android/log.h>
+#include <android/log.h>
 
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
@@ -70,7 +71,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Threads = %d \n", numThreads_);
+    int number = 5;
+    for (int i = 0; i <= 60; i++) {
+        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d \n",
+                            static_cast<int> (haltonSequence(i, 2) * number));
+    }
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
 

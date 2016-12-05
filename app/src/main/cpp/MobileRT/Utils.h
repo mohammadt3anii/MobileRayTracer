@@ -7,4 +7,6 @@
 
 float fastArcTan(const float value);
 
+float haltonSequence(const int index, const int base);
+
 #endif //MOBILERAYTRACER_UTILS

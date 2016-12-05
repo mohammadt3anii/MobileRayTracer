@@ -76,9 +76,8 @@ void Stratified::renderScene(unsigned int *canvas, unsigned int tid,
                         this->camera_->getRay(ray, u_alpha_deviation, v_alpha_deviation);
                         //ray trace and puts the color in rayRGB variable
                         this->rayTracer_->rayTrace(rayRGB, ray, intersection, vector);
-                        this->accumulate_[x + yWidth].add(rayRGB);
-                        average.average(this->accumulate_[x + yWidth],
-                                        ((i - 1) * this->samples_) + j);
+                        this->accumulate_[x + yWidth].addSample(average, rayRGB);
+                        average.average();
                         // toneMap and convert to Paint
                         canvas[x + yWidth] = ToneMapper::RGB2Color(average);
                     }
