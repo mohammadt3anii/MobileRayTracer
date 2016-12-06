@@ -83,6 +83,18 @@ public class DrawView extends View
                     final Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
                 }
+                break;
+
+                case 3://When ray-tracer is stopped
+                {
+                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
+                    finished();
+                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
+                    textView_.setText("Stopped -> " + text + renderTime + "ms");
+                    bitmapW_.recycle();
+                    final Message completeMessage = this.handler_.obtainMessage(1);
+                    completeMessage.sendToTarget();
+                }
                     break;
 
                 default:

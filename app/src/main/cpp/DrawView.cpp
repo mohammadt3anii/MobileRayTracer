@@ -9,7 +9,7 @@
 #include <android/log.h>
 
 enum State {
-    IDLE = 0, BUSY = 1, FINISHED = 2
+    IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
 };
 
 static int working_(IDLE);
@@ -21,7 +21,7 @@ static std::thread thread_;
 extern "C"
 int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
         JNIEnv *,// env,
-        jobject //this,
+        jobject//this
 ) {
     return working_;
 }
@@ -29,10 +29,8 @@ int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_finished(
         JNIEnv *,// env,
-        jobject//this,
+        jobject//this
 ) {
-    working_ = IDLE;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "THREAD FINISHING");
     thread_.join();
     __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "THREAD FINISHED");
 }
@@ -40,22 +38,28 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finished(
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
         JNIEnv *,// env,
-        jobject //this,
+        jobject//this
 ) {
     renderer_->stopRender();
+    working_ = STOPPED;
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "RENDERER STOPPED");
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
-    working_ = FINISHED;
     delete camera_;
     delete sceneT_;
+    delete renderer_;
+    if (working_ != STOPPED) {
+        working_ = FINISHED;
+    }
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "RENDERER DELETED");
 }
 
 extern "C"
 void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         JNIEnv *,// env,
-        jobject, //this,
+        jobject,//this,
         jint scene,
         jint shader,
         jint width,
@@ -88,7 +92,10 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             static_cast<unsigned int>(sampler),
             *camera_,
             *sceneT_,
-            static_cast<unsigned int>(samples));
+            static_cast<unsigned int>(samples)
+    );
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", " ");
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "RENDERER CREATED");
 }
 
 extern "C"
@@ -98,11 +105,9 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    /*const int number = 5;
-    for (int i = 0; i <= 4; i++) {
+    /*for (int i = 0; i <= 4; i++)
         __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d",
-        static_cast<int> (haltonSequence(i, 2) * number));
-    }*/
+        static_cast<int> (haltonSequence(i, 2) * 5));*/
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
 
@@ -110,4 +115,5 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
 
     AndroidBitmap_unlockPixels(env, dstBitmap);
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "THREAD STARTED");
 }

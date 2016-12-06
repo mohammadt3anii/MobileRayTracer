@@ -28,6 +28,9 @@ Renderer::Renderer(const unsigned int width, const unsigned int height,
     }
 }
 
+Renderer::~Renderer() {
+}
+
 void Renderer::render(unsigned int *canvas,
                       const unsigned int numThreads) const
 {

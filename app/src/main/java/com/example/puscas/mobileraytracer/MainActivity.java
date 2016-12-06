@@ -133,7 +133,6 @@ public class MainActivity extends Activity
                 return;
 
             default:
-                System.out.println("CREATE SCENE");
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),

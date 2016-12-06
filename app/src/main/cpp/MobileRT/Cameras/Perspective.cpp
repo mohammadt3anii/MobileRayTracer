@@ -4,7 +4,6 @@
 
 #include "Perspective.h"
 #include "../Constants.h"
-#include <android/log.h>
 
 using namespace MobileRT;
 
@@ -16,7 +15,6 @@ Perspective::Perspective(const Point3D &position, const float hFov, const float 
 }
 
 Perspective::~Perspective() {
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "DELETED CAMERA");
 }
 
 void Perspective::getRay(Ray &ray, const float u_alpha, const float v_alpha) const {
