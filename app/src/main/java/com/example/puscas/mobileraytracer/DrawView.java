@@ -30,9 +30,7 @@ public class DrawView extends View
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
     private native void finished();
-
     native void stopRender();
-
     native int isWorking();
 
     void setHandler(Handler pHandle) {
