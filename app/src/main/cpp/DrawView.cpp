@@ -17,11 +17,6 @@ static const MobileRT::Scene *sceneT_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
 
-void freeMemory() {
-    delete camera_;
-    delete sceneT_;
-}
-
 extern "C"
 int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
         JNIEnv *,// env,
@@ -50,7 +45,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_stop(
 void thread_work(void *dstPixels, unsigned int numThreads) {
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
     working_ = FINISHED;
-    freeMemory();
+    delete camera_;
+    delete sceneT_;
 }
 
 extern "C"
