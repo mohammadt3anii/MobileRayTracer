@@ -9,13 +9,14 @@
 #include <android/log.h>
 
 enum State {
-    IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
+    IDLE = 0, BUSY = 1, FINISHED = 2
 };
 
 static int working_(IDLE);
 static const MobileRT::Scene *sceneT_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
+static std::thread thread_;
 
 extern "C"
 int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
@@ -31,15 +32,17 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finished(
         jobject//this,
 ) {
     working_ = IDLE;
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "THREAD FINISHING");
+    thread_.join();
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "THREAD FINISHED");
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_stop(
+void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
         JNIEnv *,// env,
         jobject //this,
 ) {
     renderer_->stopRender();
-    working_ = STOPPED;
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
@@ -78,13 +81,14 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             sceneT_ = cornellBoxScene();
             break;
     }
-    renderer_ = new MobileRT::Renderer(static_cast<unsigned int>(width),
-                                       static_cast<unsigned int>(height),
-                                       static_cast<unsigned int>(shader),
-                                       static_cast<unsigned int>(sampler),
-                                       *camera_,
-                                       *sceneT_,
-                                       static_cast<unsigned int>(samples));
+    renderer_ = new MobileRT::Renderer(
+            static_cast<unsigned int>(width),
+            static_cast<unsigned int>(height),
+            static_cast<unsigned int>(shader),
+            static_cast<unsigned int>(sampler),
+            *camera_,
+            *sceneT_,
+            static_cast<unsigned int>(samples));
 }
 
 extern "C"
@@ -94,16 +98,16 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    int number = 5;
+    /*const int number = 5;
     for (int i = 0; i <= 4; i++) {
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d \n",
-                            static_cast<int> (haltonSequence(i, 2) * number));
-    }
+        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d",
+        static_cast<int> (haltonSequence(i, 2) * number));
+    }*/
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
 
     working_ = BUSY;
-    std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads)).detach();
+    thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
 
     AndroidBitmap_unlockPixels(env, dstBitmap);
 }

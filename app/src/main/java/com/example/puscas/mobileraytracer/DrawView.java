@@ -18,7 +18,6 @@ public class DrawView extends View
     private long start_;
     private TextView textView_;
     private Bitmap bitmapW_;
-    private Bitmap bitmapR_;
     private Handler handler_;
     private int numThreads_;
     private int samples_;
@@ -30,11 +29,11 @@ public class DrawView extends View
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
-
-    native int isWorking();
     private native void finished();
 
-    private native void stop();
+    native void stopRender();
+
+    native int isWorking();
 
     void setHandler(Handler pHandle) {
         handler_ = pHandle;
@@ -50,10 +49,6 @@ public class DrawView extends View
         samples_ = samples;
     }
 
-    public void stopRender() {
-        stop();
-    }
-
     public void onDraw(Canvas canvas)
     {
         if (!isInEditMode())
@@ -63,16 +58,16 @@ public class DrawView extends View
                 case 0://Start rendering
                 {
                     start_ = SystemClock.elapsedRealtime();
-                    drawIntoBitmap(bitmapW_, numThreads_);//run ray-tracer to bitmapW
+                    drawIntoBitmap(bitmapW_, numThreads_);
                     invalidate();
                 }
                     break;
 
                 case 1://While ray-tracer is busy
                 {
-                    this.bitmapR_ = createBitmap(bitmapW_);//copy bitmap
-                    canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//draw bitmapR
-                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
+                    final Bitmap bitmapR = createBitmap(bitmapW_);
+                    canvas.drawBitmap(bitmapR, 0.0f, 0.0f, null);
+                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     textView_.setText("Rendering -> " + text + renderTime + "ms");
                     invalidate();
                 }
@@ -80,27 +75,15 @@ public class DrawView extends View
 
                 case 2://When ray-tracer is finished
                 {
-                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
+                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     finished();
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//draw bitmapW
+                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
                     textView_.setText("Rendered -> " + text + renderTime + "ms");
                     bitmapW_.recycle();
-                    bitmapR_.recycle();
-                    Message completeMessage = this.handler_.obtainMessage(1);
+                    final Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
                 }
                     break;
-
-                case 3://When ray-tracer is stopped
-                {
-                    long renderTime = SystemClock.elapsedRealtime() - this.start_;
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);//draw bitmapW
-                    textView_.setText("Stopped -> " + text + renderTime + "ms");
-                    bitmapW_.recycle();
-                    bitmapR_.recycle();
-                    Message completeMessage = this.handler_.obtainMessage(2);
-                    completeMessage.sendToTarget();
-                }
 
                 default:
                     break;

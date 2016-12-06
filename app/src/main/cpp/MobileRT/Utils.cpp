@@ -13,10 +13,10 @@ float fastArcTan(const float value) {
 }
 
 float haltonSequence(const int index, const int base) {
-    float result = 0;
-    float f = 1;
+    float f = 1.0f;
+    float result = 0.0f;
     float i = index;
-    while (i > 0) {
+    while (i > 0.0f) {
         f = f / base;
         result = result + f * (static_cast<int> (i) % base);
         i = std::floor(i / base);

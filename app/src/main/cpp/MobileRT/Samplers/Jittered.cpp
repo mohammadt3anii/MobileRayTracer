@@ -34,8 +34,9 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
     {
         //for (unsigned int y(getTask(i)); y < this->height_; y = getTask(i))
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
-        for (unsigned int y(static_cast<unsigned int> (haltonSequence(getTask(i), 2) *
-                                                       this->height_)); ; y = static_cast<unsigned int> (
+        for (unsigned int y(
+                static_cast<unsigned int> (haltonSequence(getTask(i), 2) * this->height_));
+             y < this->height_; y = static_cast<unsigned int> (
                 haltonSequence(getTask(i), 2) * this->height_))
         {
             const unsigned int yWidth(y * this->width_);

@@ -127,27 +127,28 @@ public class MainActivity extends Activity
 
     final public void startRender(View view)
     {
-        //mRenderButton_.setEnabled(false);
         switch (drawView_.isWorking()) {
             case 1://if ray-tracer is busy
                 drawView_.stopRender();
                 return;
 
             default:
+                System.out.println("CREATE SCENE");
+                drawView_.createScene(
+                        pickerScene_.getValue(),
+                        pickerShader_.getValue(),
+                        pickerThreads_.getValue(),
+                        textView_,
+                        pickerSampler_.getValue(),
+                        Integer.parseInt(
+                                pickerSamples_.getDisplayedValues()
+                                        [pickerSamples_.getValue() - 1]
+                        )
+                );
+                mRenderButton_.setText(getString(R.string.stop));
+                drawView_.setVisibility(View.VISIBLE);
+                drawView_.invalidate();
                 break;
         }
-        drawView_.createScene(
-                pickerScene_.getValue(),
-                pickerShader_.getValue(),
-                pickerThreads_.getValue(),
-                textView_,
-                pickerSampler_.getValue(),
-                Integer.parseInt(
-                        pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
-                )
-        );
-        mRenderButton_.setText(getString(R.string.stop));
-        drawView_.setVisibility(View.VISIBLE);
-        drawView_.invalidate();
     }
 }

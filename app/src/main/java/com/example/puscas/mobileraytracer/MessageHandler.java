@@ -18,10 +18,6 @@ class MessageHandler extends Handler {
                 this.mRenderButton_.setText(mainActivity_.getString(R.string.render));
                 break;
 
-            case 2:        // Render stopped
-                this.mRenderButton_.setText(mainActivity_.getString(R.string.render));
-                break;
-
             default:
                 super.handleMessage(inputMessage);
                 break;
