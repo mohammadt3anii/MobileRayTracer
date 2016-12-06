@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_SHADER_H
 #define MOBILERAYTRACER_SHADER_H
 
-#include "../Scenes/Scene.h"
+#include "../Scene.h"
 #include "../RayTracer.h"
 
 namespace MobileRT {

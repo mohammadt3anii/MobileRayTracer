@@ -3,7 +3,8 @@
 //
 
 #include "Scene.h"
-#include "../Constants.h"
+#include "Constants.h"
+#include <android/log.h>
 
 using namespace MobileRT;
 
@@ -19,6 +20,7 @@ Scene::~Scene() {
     for (unsigned int i(0); i < sizePrimitives; i++) {
         delete this->primitives[i];
     }
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "DELETED SCENE");
 }
 
 bool Scene::trace(Intersection &intersection, Ray &ray) const {

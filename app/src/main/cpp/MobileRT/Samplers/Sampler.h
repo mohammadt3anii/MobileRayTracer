@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_SAMPLER_H
 #define MOBILERAYTRACER_SAMPLER_H
 
-#include "../Scenes/Scene.h"
+#include "../Scene.h"
 #include "../RayTracer.h"
 #include "../Cameras/Perspective.h"
 #include <atomic>
@@ -16,7 +16,6 @@ namespace MobileRT {
     protected:
         unsigned int width_;
         unsigned int height_;
-        const Scene *scene_;
         const RayTracer *rayTracer_;
         const Perspective *camera_;
         unsigned int samples_;
@@ -28,8 +27,8 @@ namespace MobileRT {
 
     public:
         Sampler(const unsigned int width, const unsigned int height,
-                const unsigned int scene, const unsigned int shader,
-                const unsigned int samples);
+                const unsigned int shader, const unsigned int samples,
+                const Perspective &camera, const Scene &scene);
         virtual ~Sampler();
 
         virtual void renderScene(unsigned int *canvas, unsigned int tid,

@@ -70,7 +70,7 @@ public class DrawView extends View
 
                 case 1://While ray-tracer is busy
                 {
-                    bitmapR_ = createBitmap(bitmapW_);//copy bitmap
+                    this.bitmapR_ = createBitmap(bitmapW_);//copy bitmap
                     canvas.drawBitmap(this.bitmapR_, 0.0f, 0.0f, null);//draw bitmapR
                     long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     textView_.setText("Rendering -> " + text + renderTime + "ms");

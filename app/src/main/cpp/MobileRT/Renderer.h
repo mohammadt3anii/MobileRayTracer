@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_RENDERER_H
 #define MOBILERAYTRACER_RENDERER_H
 
-#include "Scenes/Scene.h"
+#include "Scene.h"
 #include "RayTracer.h"
 #include "Cameras/Perspective.h"
 #include "Samplers/Sampler.h"
@@ -18,8 +18,8 @@ namespace MobileRT {
 
     public:
         Renderer(const unsigned int width, const unsigned int height,
-                 const unsigned int whichScene, const unsigned int whichShader,
-                 const unsigned int whichSampler, const unsigned int samples = 1);
+                 const unsigned int whichShader, const unsigned int whichSampler,
+                 const Perspective &camera, const Scene &scene, const unsigned int samples = 1);
 
         void render(unsigned int *canvas, const unsigned int numThreads) const;
 

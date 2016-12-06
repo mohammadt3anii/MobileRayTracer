@@ -10,8 +10,9 @@
 using namespace MobileRT;
 
 Stratified::Stratified(const unsigned int width, const unsigned int height,
-            const unsigned int whichScene, const unsigned int whichShader, const unsigned int samples) :
-    Sampler(width, height, whichScene, whichShader, std::sqrt(samples)) {
+                       const unsigned int whichShader, const unsigned int samples,
+                       const Perspective &camera, const Scene &scene) :
+        Sampler(width, height, whichShader, std::sqrt(samples), camera, scene) {
 }
 
 void Stratified::renderScene(unsigned int *canvas, unsigned int tid,

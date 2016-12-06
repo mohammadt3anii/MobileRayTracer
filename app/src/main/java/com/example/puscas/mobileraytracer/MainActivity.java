@@ -130,7 +130,7 @@ public class MainActivity extends Activity
         //mRenderButton_.setEnabled(false);
         switch (drawView_.isWorking()) {
             case 1://if ray-tracer is busy
-                this.drawView_.stopRender();
+                drawView_.stopRender();
                 return;
 
             default:
