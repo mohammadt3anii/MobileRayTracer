@@ -128,11 +128,7 @@ public class MainActivity extends Activity
     final public void startRender(View view)
     {
         switch (drawView_.isWorking()) {
-            case 1://if ray-tracer is busy
-                drawView_.stopRender();
-                return;
-
-            default:
+            case 0://start ray-tracer
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
@@ -147,6 +143,19 @@ public class MainActivity extends Activity
                 mRenderButton_.setText(getString(R.string.stop));
                 drawView_.setVisibility(View.VISIBLE);
                 drawView_.invalidate();
+                break;
+
+            case 1://if ray-tracer is busy
+                drawView_.stopRender();
+                break;
+
+            case 2://if ray-tracer finished
+                break;
+
+            case 3://if ray-tracer stopped
+                break;
+
+            default:
                 break;
         }
     }

@@ -16,8 +16,20 @@ Jittered::Jittered(const unsigned int width, const unsigned int height,
 {
 }
 
-void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
-                           unsigned int numThreads) {
+bool Jittered::verifySample(unsigned int &line) const {
+    for (; line < this->height_; line++) {
+        if (this->accumulate_[line * this->width_].samples_ < this->samples_) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Jittered::renderScene(
+        unsigned int *canvas,
+        unsigned int,// tid,
+        unsigned int// numThreads
+) {
     const float width (this->width_);
     const float height (this->height_);
     const float INV_IMG_WIDTH (1.0f / width);
@@ -25,19 +37,22 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
     const float pixelHeight (0.5f/this->height_);
     const float pixelWidth (0.5f/this->width_);
     const float half_rand_max(RAND_MAX * 0.5f);
+    unsigned int line(0);
     RGB rayRGB;
     RGB average;
     Intersection intersection;
     Vector3D vector;
     Ray ray;
-    for (unsigned int i(0); i < this->samples_; i++)
+    //for (unsigned int i(0); i < this->samples_; i++)
     {
+        //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "i = %d", i);
         //for (unsigned int y(getTask(i)); y < this->height_; y = getTask(i))
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
         for (unsigned int y(
-                static_cast<unsigned int> (haltonSequence(getTask(i), 2) * this->height_));
-             y < this->height_; y = static_cast<unsigned int> (
-                haltonSequence(getTask(i), 2) * this->height_))
+                static_cast<unsigned int> (haltonSequence(getTask(0), 2) * this->height_));
+             y < this->height_;
+             y = static_cast<unsigned int> (
+                     haltonSequence(getTask(0), 2) * this->height_))
         {
             const unsigned int yWidth(y * this->width_);
             const float v(y * INV_IMG_HEIGHT);
@@ -55,10 +70,14 @@ void Jittered::renderScene(unsigned int *canvas, unsigned int tid,
                 this->camera_->getRay(ray, u_alpha_jittered, v_alpha_jittered);
                 //ray trace and puts the color in rayRGB variable
                 this->rayTracer_->rayTrace(rayRGB, ray, intersection, vector);
-                accumulate_[x + yWidth].addSample(average, rayRGB);
+                RGB &accumulated = this->accumulate_[x + yWidth];
+                accumulated.addSample(average, rayRGB);
                 average.average();
                 // toneMap and convert to Paint
                 canvas[x + yWidth] = ToneMapper::RGB2Color(average);
+            }
+            if (this->accumulate_[yWidth].samples_ == this->samples_ && verifySample(line)) {
+                return;
             }
         }
     }

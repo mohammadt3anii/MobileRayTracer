@@ -29,7 +29,8 @@ public class DrawView extends View
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
-    private native void finished();
+
+    private native void finish();
     native void stopRender();
     native int isWorking();
 
@@ -74,24 +75,24 @@ public class DrawView extends View
                 case 2://When ray-tracer is finished
                 {
                     final long renderTime = SystemClock.elapsedRealtime() - this.start_;
-                    finished();
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
                     textView_.setText("Rendered -> " + text + renderTime + "ms");
                     bitmapW_.recycle();
                     final Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
+                    finish();
                 }
                 break;
 
                 case 3://When ray-tracer is stopped
                 {
                     final long renderTime = SystemClock.elapsedRealtime() - this.start_;
-                    finished();
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
                     textView_.setText("Stopped -> " + text + renderTime + "ms");
                     bitmapW_.recycle();
                     final Message completeMessage = this.handler_.obtainMessage(1);
                     completeMessage.sendToTarget();
+                    finish();
                 }
                     break;
 
