@@ -77,6 +77,7 @@ void Jittered::renderScene(
                 canvas[x + yWidth] = ToneMapper::RGB2Color(average);
             }
             if (this->accumulate_[yWidth].samples_ == this->samples_ && verifySample(line)) {
+                stopSampling();
                 return;
             }
         }

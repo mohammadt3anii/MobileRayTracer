@@ -44,7 +44,6 @@ void Sampler::resetTask() {
 }
 
 void Sampler::stopSampling() {
-    this->width_ = 0;
     this->height_ = 0;
     this->samples_ = 0;
 }
