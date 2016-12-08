@@ -10,7 +10,7 @@
 namespace MobileRT {
     class Jittered : public Sampler {
     private:
-        bool verifySample(unsigned int &line) const;
+        bool finishSampling(unsigned int &line) const;
 
     public:
         Jittered(const unsigned int width, const unsigned int height,
