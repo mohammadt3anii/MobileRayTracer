@@ -13,11 +13,11 @@
 namespace MobileRT {
     class Sampler {
     protected:
-        unsigned int width_;
+        const unsigned int width_;
         unsigned int height_;
         const RayTracer *rayTracer_;
         const Perspective *camera_;
-        unsigned int samples_;
+        const unsigned int samples_;
         const float deviationIncrement_;
         std::atomic<unsigned int> taskLine_;
         RGB *accumulate_;
