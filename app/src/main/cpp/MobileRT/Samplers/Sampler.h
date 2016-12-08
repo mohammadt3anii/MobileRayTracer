@@ -9,7 +9,6 @@
 #include "../RayTracer.h"
 #include "../Cameras/Perspective.h"
 #include <atomic>
-#include <mutex>
 
 namespace MobileRT {
     class Sampler {
@@ -20,9 +19,7 @@ namespace MobileRT {
         const Perspective *camera_;
         unsigned int samples_;
         const float deviationIncrement_;
-        //std::atomic<unsigned int> taskLine_;
-        std::mutex mutex_;
-        unsigned int taskLine_;
+        std::atomic<unsigned int> taskLine_;
         RGB *accumulate_;
 
     public:
@@ -31,8 +28,7 @@ namespace MobileRT {
                 const Perspective &camera, const Scene &scene);
         virtual ~Sampler();
 
-        virtual void renderScene(unsigned int *canvas, unsigned int tid,
-                                 unsigned int numThreads) = 0;
+        virtual void renderScene(unsigned int *canvas) = 0;
 
         const float deviation(const int index) const;
 

@@ -26,11 +26,7 @@ bool Jittered::finishSampling(unsigned int &line) const {
     return true;
 }
 
-void Jittered::renderScene(
-        unsigned int *canvas,
-        const unsigned int,// tid,
-        const unsigned int// numThreads
-) {
+void Jittered::renderScene(unsigned int *canvas) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelHeight (0.5f/this->height_);

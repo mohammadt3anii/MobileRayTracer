@@ -38,9 +38,9 @@ void Renderer::render(unsigned int *canvas,
     std::thread *threads = new std::thread[numThreads - 1];
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
-        threads[i] = std::thread(&Sampler::renderScene, this->sampler_, canvas, i, numThreads);
+        threads[i] = std::thread(&Sampler::renderScene, this->sampler_, canvas);
     }
-    this->sampler_->renderScene(canvas, numThreads - 1, numThreads);
+    this->sampler_->renderScene(canvas);
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
         threads[i].join();

@@ -35,13 +35,41 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true" />
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
-        android:id="@+id/pickerSampler"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <view
+        android:id="@+id/viewDraw"
+        class="com.example.puscas.mobileraytracer.DrawView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/timeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/renderButton" />
+        android:layout_below="@+id/pickerSamples"
+        android:layout_toEndOf="@+id/pickerShader"
+        android:layout_toRightOf="@+id/pickerShader"
+        android:elevation="0dp"
+        tools:targetApi="lollipop"/>
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/time"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="14sp"
+        />
+
+    <Button
+        android:id="@+id/renderButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/pickerShader"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:onClick="startRender"
+        android:text="@string/render"
+        android:textAllCaps="false"
+        tools:ignore="UnknownId"/>
 
     <com.example.puscas.mobileraytracer.CustomNumberPicker
         android:id="@+id/pickerSamples"
@@ -52,38 +80,12 @@
         android:layout_toEndOf="@+id/pickerScene"
         android:layout_toRightOf="@+id/pickerScene"/>
 
-    <view
-        android:id="@+id/viewDraw"
-        class="com.example.puscas.mobileraytracer.DrawView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/timeText"
+    <com.example.puscas.mobileraytracer.CustomNumberPicker
+        android:id="@+id/pickerSampler"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/renderButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/pickerSampler"
-        android:layout_toEndOf="@+id/pickerShader"
-        android:layout_toRightOf="@+id/pickerShader"
-        android:elevation="0dp"
-        tools:targetApi="lollipop" />
-
-    <TextView
-        android:id="@+id/timeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/time"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="14sp"/>
-
-    <Button
-        android:id="@+id/renderButton"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/pickerShader"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
-        android:onClick="startRender"
-        android:text="@string/render"
-        android:textAllCaps="false"
-        tools:ignore="UnknownId" />
+        />
 </RelativeLayout>

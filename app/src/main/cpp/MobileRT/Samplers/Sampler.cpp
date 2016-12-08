@@ -33,10 +33,7 @@ const float Sampler::deviation(const int index) const
 }
 
 const unsigned int Sampler::getTask(const int sample) {
-    //unsigned int task = this->taskLine_.fetch_add(1, std::memory_order_relaxed);
-    this->mutex_.lock();
-    const unsigned int task = this->taskLine_++;
-    this->mutex_.unlock();
+    const unsigned int task = this->taskLine_.fetch_add(1, std::memory_order_relaxed);
     return task - sample * this->height_;
 }
 

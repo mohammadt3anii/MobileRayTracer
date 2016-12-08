@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
 
 import java.io.File;
@@ -97,26 +96,6 @@ public class MainActivity extends Activity
         pickerSampler_.setDisplayedValues(samplers);
         pickerSampler_.setWrapSelectorWheel(true);
         pickerSampler_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        pickerSampler_.setOnValueChangedListener(new OnValueChangeListener() {
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                switch (newVal) {
-                    case 0://Stratified
-                        pickerSamples_.setMinValue(1);
-                        pickerSamples_.setMaxValue(maxSamples);
-                        pickerSamples_.setDisplayedValues(samples);
-                        break;
-
-                    case 1://Jittered
-                        pickerSamples_.setDisplayedValues(samples);
-                        pickerSamples_.setMinValue(1);
-                        pickerSamples_.setMaxValue(maxSamples);
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        });
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
         pickerThreads_.setMinValue(1);
@@ -128,7 +107,7 @@ public class MainActivity extends Activity
     final public void startRender(View view)
     {
         switch (drawView_.isWorking()) {
-            case 0://start ray-tracer
+            case 0://if ray-tracer is idle
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
@@ -147,12 +126,6 @@ public class MainActivity extends Activity
 
             case 1://if ray-tracer is busy
                 drawView_.stopRender();
-                break;
-
-            case 2://if ray-tracer finished
-                break;
-
-            case 3://if ray-tracer stopped
                 break;
 
             default:
