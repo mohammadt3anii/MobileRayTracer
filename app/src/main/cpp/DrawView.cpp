@@ -106,7 +106,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    /*for (int i = 0; i <= 4; i++)
+    /*for (int i = 0; i <= 16; i++)
         __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d",
         static_cast<int> (haltonSequence(i, 2) * 5));*/
     void *dstPixels;
@@ -115,7 +115,6 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     working_ = BUSY;
     __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = BUSY");
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
-    //thread_.detach();
 
     AndroidBitmap_unlockPixels(env, dstBitmap);
 }

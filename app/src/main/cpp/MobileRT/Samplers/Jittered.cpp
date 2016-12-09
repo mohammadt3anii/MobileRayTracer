@@ -6,6 +6,7 @@
 #include "../Utils.h"
 #include "../Color_Models/ToneMapper.h"
 #include <cstdlib>
+//#include <random>
 
 using namespace MobileRT;
 
@@ -32,6 +33,7 @@ void Jittered::renderScene(unsigned int *canvas) {
     const float pixelHeight (0.5f/this->height_);
     const float pixelWidth (0.5f/this->width_);
     const float half_rand_max(RAND_MAX * 0.5f);
+    //const float half_rand_max((std::pow(2,96)-1) * 0.5f);
     unsigned int line(0);
     RGB rayRGB;
     RGB average;

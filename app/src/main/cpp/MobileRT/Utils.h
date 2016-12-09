@@ -6,7 +6,10 @@
 #define MOBILERAYTRACER_UTILS
 
 float fastArcTan(const float value);
-
 float haltonSequence(const int index, const int base);
+
+int fastrand();
+
+unsigned long xorshf96();
 
 #endif //MOBILERAYTRACER_UTILS
