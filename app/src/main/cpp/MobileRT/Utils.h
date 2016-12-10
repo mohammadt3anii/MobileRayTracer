@@ -5,11 +5,12 @@
 #ifndef MOBILERAYTRACER_UTILS
 #define MOBILERAYTRACER_UTILS
 
+#include <utility>
+
 float fastArcTan(const float value);
+
 float haltonSequence(const int index, const int base);
 
-int fastrand();
-
-unsigned long xorshf96();
+std::pair<float, float> limitsHaltonSequence(const unsigned int number);
 
 #endif //MOBILERAYTRACER_UTILS

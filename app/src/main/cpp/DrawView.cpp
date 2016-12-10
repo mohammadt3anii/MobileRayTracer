@@ -7,6 +7,7 @@
 #include <jni.h>
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <cmath>
 
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
@@ -106,9 +107,44 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    /*for (int i = 0; i <= 16; i++)
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Sequence = %d",
-        static_cast<int> (haltonSequence(i, 2) * 5));*/
+    //const unsigned int number (77);
+    //std::pair<float, float> limits (limitsHaltonSequence (number));
+    //const float min = limits.first;
+    //const float max = limits.second - limits.first;
+    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f", min, max);
+    //for (unsigned int i (0); i < number; i++)
+    //{
+    //    const float value (haltonSequence(i, 2));
+    //    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
+    //    "Sequence = %f - %d",
+    //    value,
+    //    static_cast<unsigned int> (round(value/min)));
+    //}
+    /*const unsigned int number (77);
+    for (unsigned int i (1); i <= number; i++)
+    {
+        const float value(haltonSequence(i, 2));
+        __android_log_print(
+                ANDROID_LOG_DEBUG, "LOG_TAG",
+                "Sequence = %f - %d",
+                value,
+                static_cast<unsigned int> (value*number));
+    }*/
+
+
+    //const float min = limits.first;
+    //const float max = limits.second - limits.first;
+    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f", min, max);
+    //for (unsigned int i (0); i < number; i++)
+    //{
+    //    const float value (haltonSequence(i, 2));
+    //    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
+    //    "Sequence = %f - %d",
+    //    value,
+    //    static_cast<unsigned int> (round(value/min)));
+    //}
+
+
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
 

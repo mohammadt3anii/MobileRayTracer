@@ -14,8 +14,9 @@ Sampler::Sampler(
         height_(height),
         samples_(samples),
         deviationIncrement_(1.0f / this->samples_),
-        taskLine_(0),
-        accumulate_(new RGB[this->width_ * this->height_])
+        taskLine_(1),
+        accumulate_(new RGB[this->width_ * this->height_]),
+        tasks_(this->width_ * this->height_ * this->samples_)
 {
     this->camera_ = &camera;
     this->rayTracer_ = new RayTracer(scene, shader);
@@ -38,9 +39,11 @@ const unsigned int Sampler::getTask(const int sample) {
 }
 
 void Sampler::resetTask() {
-    this->taskLine_ = 0;
+    this->taskLine_ = 1;
 }
 
 void Sampler::stopSampling() {
+    this->width_ = 0;
     this->height_ = 0;
+    this->tasks_ = 0;
 }
