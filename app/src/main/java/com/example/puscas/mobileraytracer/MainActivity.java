@@ -3,6 +3,8 @@ package com.example.puscas.mobileraytracer;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -58,8 +60,8 @@ public class MainActivity extends Activity
         mRenderButton_ = (Button) findViewById(R.id.renderButton);
         textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.viewDraw);
-        drawView_.setHandler(new MessageHandler(this, this.mRenderButton_));
         drawView_.setVisibility(View.INVISIBLE);
+        drawView_.setHandler(new Handler(new MessageHandler()));
 
         final String[] scenes = {"Cornell", "Spheres"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
@@ -130,6 +132,21 @@ public class MainActivity extends Activity
 
             default:
                 break;
+        }
+    }
+
+    private class MessageHandler implements Handler.Callback {
+        public boolean handleMessage(Message inputMessage) {
+            switch (inputMessage.what) {
+                case 1://Render finished
+                    MainActivity.this.mRenderButton_.setText(MainActivity.this.getString(R.string.render));
+                    break;
+
+                default:
+                    handleMessage(inputMessage);
+                    break;
+            }
+            return true;
         }
     }
 }

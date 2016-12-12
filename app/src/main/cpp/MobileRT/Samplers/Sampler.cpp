@@ -3,6 +3,7 @@
 //
 
 #include "Sampler.h"
+#include "../Utils.h"
 
 using namespace MobileRT;
 
@@ -16,7 +17,8 @@ Sampler::Sampler(
         deviationIncrement_(1.0f / this->samples_),
         taskLine_(1),
         accumulate_(new RGB[this->width_ * this->height_]),
-        tasks_(this->width_ * this->height_ * this->samples_)
+        tasks_(this->width_ * this->height_ * this->samples_),
+        maxHalton_(roundToPower2(this->tasks_))
 {
     this->camera_ = &camera;
     this->rayTracer_ = new RayTracer(scene, shader);
@@ -43,7 +45,6 @@ void Sampler::resetTask() {
 }
 
 void Sampler::stopSampling() {
-    this->width_ = 0;
     this->height_ = 0;
     this->tasks_ = 0;
 }

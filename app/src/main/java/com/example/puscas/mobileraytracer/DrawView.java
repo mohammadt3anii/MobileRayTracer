@@ -3,9 +3,7 @@ package com.example.puscas.mobileraytracer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,7 +18,7 @@ public class DrawView extends View
     private Bitmap bitmapW_;
     private Handler handler_;
     private int numThreads_;
-    private int samples_;
+    private String text_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -29,7 +27,6 @@ public class DrawView extends View
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
-
     private native void finish();
     native void stopRender();
     native int isWorking();
@@ -40,19 +37,19 @@ public class DrawView extends View
 
     void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
     {
+        int width = getWidth();
+        int height = getHeight();
         textView_ = textView;
-        bitmapW_ = createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        initialize(scene, shader, getWidth(), getHeight(), sampler, samples);
-        bitmapW_.eraseColor(Color.WHITE);
+        bitmapW_ = createBitmap(width, height, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, true);
+        initialize(scene, shader, width, height, sampler, samples);
         numThreads_ = numThreads;
-        samples_ = samples;
+        text_ = width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
     }
 
     public void onDraw(Canvas canvas)
     {
         if (!isInEditMode())
         {
-            String text = getWidth() + "x" + getHeight() + ", T:" + this.numThreads_ + ", S:" + this.samples_ + ", t:";
             switch (isWorking()) {
                 case 0://Start rendering
                 {
@@ -64,34 +61,26 @@ public class DrawView extends View
 
                 case 1://While ray-tracer is busy
                 {
-                    final Bitmap bitmapR = createBitmap(bitmapW_);
-                    canvas.drawBitmap(bitmapR, 0.0f, 0.0f, null);
-                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
-                    textView_.setText("Rendering -> " + text + renderTime + "ms");
+                    canvas.drawBitmap(createBitmap(this.bitmapW_), 0.0f, 0.0f, null);
+                    textView_.setText("Rendering -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
                     invalidate();
                 }
                     break;
 
                 case 2://When ray-tracer is finished
                 {
-                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
-                    textView_.setText("Rendered -> " + text + renderTime + "ms");
-                    bitmapW_.recycle();
-                    final Message completeMessage = this.handler_.obtainMessage(1);
-                    completeMessage.sendToTarget();
+                    textView_.setText("Rendered -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
+                    this.handler_.obtainMessage(1).sendToTarget();
                     finish();
                 }
                 break;
 
                 case 3://When ray-tracer is stopped
                 {
-                    final long renderTime = SystemClock.elapsedRealtime() - this.start_;
                     canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
-                    textView_.setText("Stopped -> " + text + renderTime + "ms");
-                    bitmapW_.recycle();
-                    final Message completeMessage = this.handler_.obtainMessage(1);
-                    completeMessage.sendToTarget();
+                    textView_.setText("Stopped -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
+                    this.handler_.obtainMessage(1).sendToTarget();
                     finish();
                 }
                     break;

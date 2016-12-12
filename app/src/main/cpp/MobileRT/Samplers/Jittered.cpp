@@ -37,7 +37,6 @@ void Jittered::renderScene(unsigned int *canvas) {
     const float pixelHeight(0.5f / this->height_);
     const float half_rand_max(RAND_MAX * 0.5f);
     //const float half_rand_max((std::pow(2,96)-1) * 0.5f);
-    unsigned int taskFinished(0);
     RGB rayRGB;
     RGB average;
     Intersection intersection;
@@ -45,12 +44,11 @@ void Jittered::renderScene(unsigned int *canvas) {
     Ray ray;
 
     unsigned int missed(0);
-    for (unsigned int taskId(getTask(0)); taskId < this->tasks_; taskId = getTask(0))
+    for (unsigned int taskId(getTask(0)); taskId < this->maxHalton_; taskId = getTask(0))
     {
-        const float halton(haltonSequence(taskId, 2));
-
-
-        const unsigned int i = static_cast<unsigned int>(round(halton * this->tasks_));
+        const double halton(haltonSequence(taskId, 2));
+        const unsigned int i = static_cast<unsigned int>(round(halton * this->maxHalton_));
+        if (i >= this->tasks_) continue;
         const unsigned int ii = i / this->samples_;
 
         RGB &accumulate = this->accumulate_[ii];
@@ -86,5 +84,5 @@ void Jittered::renderScene(unsigned int *canvas) {
         }*/
     }
 
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "MISSED=%d", missed);
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "MISSED=%u", missed);
 }

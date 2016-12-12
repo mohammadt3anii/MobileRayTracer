@@ -107,43 +107,21 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads
 ) {
-    //const unsigned int number (77);
-    //std::pair<float, float> limits (limitsHaltonSequence (number));
-    //const float min = limits.first;
-    //const float max = limits.second - limits.first;
-    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f", min, max);
-    //for (unsigned int i (0); i < number; i++)
-    //{
-    //    const float value (haltonSequence(i, 2));
-    //    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
-    //    "Sequence = %f - %d",
-    //    value,
-    //    static_cast<unsigned int> (round(value/min)));
-    //}
-    /*const unsigned int number (77);
+    const unsigned int number(8);
+    std::pair<float, float> limits(limitsHaltonSequence(number));
+    const float min = limits.first;
+    const float max = limits.second - limits.first;
+    const float ratio = (1.0f - limits.second) / 1.5f;
+    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f Ratio = %f", min, max,
+                        ratio);
     for (unsigned int i (1); i <= number; i++)
     {
-        const float value(haltonSequence(i, 2));
-        __android_log_print(
-                ANDROID_LOG_DEBUG, "LOG_TAG",
-                "Sequence = %f - %d",
-                value,
-                static_cast<unsigned int> (value*number));
-    }*/
-
-
-    //const float min = limits.first;
-    //const float max = limits.second - limits.first;
-    //__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f", min, max);
-    //for (unsigned int i (0); i < number; i++)
-    //{
-    //    const float value (haltonSequence(i, 2));
-    //    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
-    //    "Sequence = %f - %d",
-    //    value,
-    //    static_cast<unsigned int> (round(value/min)));
-    //}
-
+        const double value(haltonSequence(i, 2));
+        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
+                            "Sequence = %f - %d",
+                            value,
+                            static_cast<unsigned int> (round((value) * number)));
+    }
 
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);

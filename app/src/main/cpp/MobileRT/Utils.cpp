@@ -13,11 +13,11 @@ float fastArcTan(const float value) {
 }
 
 //https://en.wikipedia.org/wiki/Halton_sequence
-float haltonSequence(const int index, const int base) {
-    float f = 1.0f;
-    float result = 0.0f;
-    float i = index;
-    while (i > 0.0f) {
+double haltonSequence(const int index, const int base) {
+    double f = 1.0;
+    double result = 0.0;
+    double i = index;
+    while (i > 0.0) {
         f = f / base;
         result = result + f * (static_cast<int> (i) % base);
         i = std::floor(i / base);
@@ -26,12 +26,23 @@ float haltonSequence(const int index, const int base) {
 }
 
 std::pair<float, float> limitsHaltonSequence(const unsigned int number) {
-    float min = 1.0f;
-    float max = 0.0f;
+    double min = 1.0;
+    double max = 0.0;
     for (unsigned int i(1); i <= number; i++) {
-        const float temp(haltonSequence(i, 2));
+        const double temp(haltonSequence(i, 2));
         min = temp < min ? temp : min;
         max = temp > max ? temp : max;
     }
     return std::make_pair(min, max);
+}
+
+unsigned int roundToPower2(unsigned int v) {
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v++;
+    return v;
 }

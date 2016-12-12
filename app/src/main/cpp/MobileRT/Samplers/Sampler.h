@@ -22,6 +22,7 @@ namespace MobileRT {
         std::atomic<unsigned int> taskLine_;
         RGB *accumulate_;
         unsigned int tasks_;
+        unsigned int maxHalton_;
 
     public:
         Sampler(const unsigned int width, const unsigned int height,
