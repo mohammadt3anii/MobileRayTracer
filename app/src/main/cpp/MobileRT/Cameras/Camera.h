@@ -9,6 +9,8 @@
 
 namespace MobileRT {
     class Camera {
+    public:
+        virtual ~Camera() = default;
         virtual void getRay(Ray &ray, const float u_alpha, const float v_alpha) const = 0;
     };
 }

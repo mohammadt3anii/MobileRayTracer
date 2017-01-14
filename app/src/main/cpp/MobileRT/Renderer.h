@@ -14,11 +14,10 @@
 namespace MobileRT {
     class Renderer {
     private:
-        Sampler *sampler_;
+        Sampler *const sampler_;
 
     public:
-        Renderer(const unsigned int width, const unsigned int height,
-                 const Shader &shader, const unsigned int whichSampler,
+        Renderer(const Shader &shader, Sampler &sampler,
                  const Perspective &camera, const Scene &scene, const unsigned int samples = 1);
 
         ~Renderer();

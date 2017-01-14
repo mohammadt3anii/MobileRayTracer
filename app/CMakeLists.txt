@@ -12,7 +12,6 @@ cmake_minimum_required(VERSION 3.4.1)
 file(GLOB_RECURSE MOBILE_RT_SOURCES
     "src/main/cpp/MobileRT/*.cpp"
     "src/main/cpp/DrawView.cpp"
-    "src/main/cpp/Scenes.cpp"
 )
 
 add_library( # Sets the name of the library.

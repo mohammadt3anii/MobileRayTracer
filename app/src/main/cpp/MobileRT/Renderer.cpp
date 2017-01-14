@@ -3,29 +3,13 @@
 //
 
 #include "Renderer.h"
-#include "Samplers/Stratified.h"
-#include "Samplers/Jittered.h"
 
 using namespace MobileRT;
 
-Renderer::Renderer(const unsigned int width, const unsigned int height,
-                   const Shader &shader, const unsigned int whichSampler,
-                   const Perspective &camera, const Scene &scene, const unsigned int samples)
+Renderer::Renderer(const Shader &shader, Sampler &sampler,
+                   const Perspective &camera, const Scene &scene, const unsigned int samples) :
+        sampler_(&sampler)
 {
-    switch (whichSampler)
-    {
-        case 0 :
-            this->sampler_ = new Stratified(width, height, shader, samples, camera, scene);
-            break;
-
-        case 1 :
-            this->sampler_ = new Jittered(width, height, shader, samples, camera, scene);
-            break;
-
-        default:
-            this->sampler_ = nullptr;
-            break;
-    }
 }
 
 Renderer::~Renderer() {
@@ -46,7 +30,6 @@ void Renderer::render(unsigned int *canvas,
         threads[i].join();
     }
     delete[] threads;
-    delete this->sampler_;
 }
 
 void Renderer::stopRender() const {

@@ -7,12 +7,16 @@
 #include "MobileRT/Renderer.h"
 #include "MobileRT/Shaders/NoShadows.h"
 #include "MobileRT/Shaders/Whitted.h"
+#include "MobileRT/Samplers/Stratified.h"
+#include "MobileRT/Samplers/Jittered.h"
 #include "MobileRT/Shapes/Plane.h"
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
 #include <jni.h>
 #include <android/bitmap.h>
 #include <android/log.h>
+
+#define LOG(MSG) __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", MSG);
 
 using namespace MobileRT;
 
@@ -23,6 +27,7 @@ enum State {
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Shader *shader_(nullptr);
+static MobileRT::Sampler *sampler_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
 static std::thread thread_;
@@ -101,7 +106,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finish(
 ) {
     thread_.join();
     working_ = IDLE;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = IDLE");
+    LOG("WORKING = IDLE");
 }
 
 extern "C"
@@ -118,7 +123,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
         jobject//this
 ) {
     working_ = STOPPED;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = STOPPED");
+    LOG("WORKING = STOPPED");
     renderer_->stopRender();
 }
 
@@ -134,15 +139,10 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint samples
 ) {
     working_ = IDLE;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", " ");
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = IDLE");
+    LOG(" ");
+    LOG("WORKING = IDLE");
     const float ratio = static_cast<float>(height) / static_cast<float>(width);
     switch (scene) {
-        case 0:
-            camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.0f, -3.4f), 45.0f, 45.0f * ratio);
-            scene_ = cornellBoxScene();
-            break;
-
         case 1:
             camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.5f, 1.0f), 60.0f, 60.0f * ratio);
             scene_ = spheresScene();
@@ -154,25 +154,30 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             break;
     }
     switch (shader) {
-        case 0:
-            shader_ = new NoShadows(*scene_);
-            break;
-
         case 1:
             shader_ = new Whitted(*scene_);
             break;
 
         default:
-            shader_ = nullptr;
+            shader_ = new NoShadows(*scene_);
+            break;
+    }
+    const unsigned int width_(static_cast<unsigned int>(width));
+    const unsigned int height_(static_cast<unsigned int>(height));
+    const unsigned int samples_(static_cast<unsigned int>(samples));
+    switch (sampler) {
+        case 1 :
+            sampler_ = new Jittered(width_, height_, *shader_, samples_, *camera_, *scene_);
+            break;
+
+        default:
+            sampler_ = new Stratified(width_, height_, *shader_, samples_, *camera_, *scene_);
             break;
     }
 
-
     renderer_ = new MobileRT::Renderer(
-            static_cast<unsigned int>(width),
-            static_cast<unsigned int>(height),
             *shader_,
-            static_cast<unsigned int>(sampler),
+            *sampler_,
             *camera_,
             *scene_,
             static_cast<unsigned int>(samples)
@@ -183,11 +188,13 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
     if (working_ != STOPPED) {
         working_ = FINISHED;
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = FINISHED");
+        LOG("WORKING = FINISHED");
     }
     delete camera_;
     delete scene_;
     delete renderer_;
+    delete shader_;
+    delete sampler_;
 }
 
 extern "C"
@@ -195,30 +202,12 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap,
-        jint nThreads
-) {/*
-    const unsigned int number(8);
-    std::pair<float, float> limits(limitsHaltonSequence(number));
-    const float min = limits.first;
-    const float max = limits.second - limits.first;
-    const float ratio = (1.0f - limits.second) / 1.5f;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "Min = %f Max = %f Ratio = %f", min, max,
-                        ratio);
-    for (unsigned int i (1); i <= number; i++)
-    {
-        const double value(haltonSequence(i, 2));
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
-                            "Sequence = %f - %d",
-                            value,
-                            static_cast<unsigned int> (round((value) * number)));
-    }*/
-
+        jint nThreads) {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
+    AndroidBitmap_unlockPixels(env, dstBitmap);
 
     working_ = BUSY;
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = BUSY");
+    LOG("WORKING = BUSY");
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
-
-    AndroidBitmap_unlockPixels(env, dstBitmap);
 }
