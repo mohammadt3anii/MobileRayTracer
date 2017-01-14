@@ -14,7 +14,7 @@ namespace MobileRT {
 
     public:
         Stratified(const unsigned int width, const unsigned int height,
-                   const unsigned int whichShader, const unsigned int samples,
+                   const Shader &shader, const unsigned int samples,
                    const Perspective &camera, const Scene &scene);
 
         void renderScene(unsigned int *canvas,

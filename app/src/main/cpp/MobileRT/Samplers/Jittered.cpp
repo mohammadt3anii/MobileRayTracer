@@ -14,7 +14,7 @@ using namespace MobileRT;
 
 Jittered::Jittered(
         const unsigned int width, const unsigned int height,
-        const unsigned int shader, const unsigned int samples,
+        const Shader &shader, const unsigned int samples,
         const Perspective &camera, const Scene &scene) :
         Sampler(width, height, shader, samples, camera, scene)
 {

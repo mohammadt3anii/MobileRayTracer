@@ -5,6 +5,8 @@
 #include "MobileRT/Lights/PointLight.h"
 #include "MobileRT/Scene.h"
 #include "MobileRT/Renderer.h"
+#include "MobileRT/Shaders/NoShadows.h"
+#include "MobileRT/Shaders/Whitted.h"
 #include "MobileRT/Shapes/Plane.h"
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
@@ -19,7 +21,8 @@ enum State {
 };
 
 static int working_(IDLE);
-static const MobileRT::Scene *sceneT_(nullptr);
+static const MobileRT::Scene *scene_(nullptr);
+static const MobileRT::Shader *shader_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
 static std::thread thread_;
@@ -137,26 +140,41 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
     switch (scene) {
         case 0:
             camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.0f, -3.4f), 45.0f, 45.0f * ratio);
-            sceneT_ = cornellBoxScene();
+            scene_ = cornellBoxScene();
             break;
 
         case 1:
             camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.5f, 1.0f), 60.0f, 60.0f * ratio);
-            sceneT_ = spheresScene();
+            scene_ = spheresScene();
             break;
 
         default:
             camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.0f, -3.4f), 45.0f, 45.0f * ratio);
-            sceneT_ = cornellBoxScene();
+            scene_ = cornellBoxScene();
             break;
     }
+    switch (shader) {
+        case 0:
+            shader_ = new NoShadows(*scene_);
+            break;
+
+        case 1:
+            shader_ = new Whitted(*scene_);
+            break;
+
+        default:
+            shader_ = nullptr;
+            break;
+    }
+
+
     renderer_ = new MobileRT::Renderer(
             static_cast<unsigned int>(width),
             static_cast<unsigned int>(height),
-            static_cast<unsigned int>(shader),
+            *shader_,
             static_cast<unsigned int>(sampler),
             *camera_,
-            *sceneT_,
+            *scene_,
             static_cast<unsigned int>(samples)
     );
 }
@@ -168,7 +186,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
         __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "WORKING = FINISHED");
     }
     delete camera_;
-    delete sceneT_;
+    delete scene_;
     delete renderer_;
 }
 

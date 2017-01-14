@@ -18,7 +18,7 @@ namespace MobileRT {
 
     public:
         Renderer(const unsigned int width, const unsigned int height,
-                 const unsigned int whichShader, const unsigned int whichSampler,
+                 const Shader &shader, const unsigned int whichSampler,
                  const Perspective &camera, const Scene &scene, const unsigned int samples = 1);
 
         ~Renderer();
