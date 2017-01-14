@@ -17,7 +17,9 @@ namespace MobileRT {
                    const unsigned int whichShader, const unsigned int samples,
                    const Perspective &camera, const Scene &scene);
 
-        void renderScene(unsigned int *canvas) override;
+        void renderScene(unsigned int *canvas,
+                         const unsigned int threadId,
+                         const unsigned int numThreads) override;
     };
 }
 

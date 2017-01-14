@@ -15,7 +15,9 @@ Stratified::Stratified(const unsigned int width, const unsigned int height,
         Sampler(width, height, whichShader, std::sqrt(samples), camera, scene) {
 }
 
-void Stratified::renderScene(unsigned int *canvas) {
+void Stratified::renderScene(unsigned int *canvas,
+                             const unsigned int threadId,
+                             const unsigned int numThreads) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     RGB rayRGB;
@@ -24,7 +26,7 @@ void Stratified::renderScene(unsigned int *canvas) {
     Ray ray;
     if (this->samples_ < 2)//1 sample per pixel
     {
-        for (unsigned int y(getTask(0)); y < this->height_; y = getTask(0))
+        for (unsigned int y(getTasks(1, 0)); y < this->height_; y = getTasks(1, 0))
         {
             const unsigned int yWidth(y * this->width_);
             const float v_alpha(fastArcTan(this->camera_->vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
@@ -50,9 +52,10 @@ void Stratified::renderScene(unsigned int *canvas) {
             const float deviationV(deviation(i + 1));
             for (unsigned int j(0); j < this->samples_; j++)
             {
-                for (unsigned int y(getTask(i * this->samples_ + j));
-                     y < this->height_;
-                     y = getTask(i * this->samples_ + j))
+                for (
+                        unsigned int y(getTasks(1, i * this->samples_ + j));
+                        y < this->height_;
+                        y = getTasks(1, i * this->samples_ + j))
                 {
                     const unsigned int yWidth(y * this->width_);
                     const float v(y * INV_IMG_HEIGHT);

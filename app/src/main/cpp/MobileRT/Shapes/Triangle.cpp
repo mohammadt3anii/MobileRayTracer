@@ -49,8 +49,8 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray, const Mater
 
     if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
         return false;
-        
-    intersection.recycle(
+
+    intersection.reset(
         ray.origin_ + (ray.direction_ * distanceToIntersection),
         this->normal_,
         distanceToIntersection,

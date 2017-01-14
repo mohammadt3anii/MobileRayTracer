@@ -15,10 +15,13 @@ namespace MobileRT {
         };
 
     public:
-        Whitted(RayTracer &rayTracer, const Scene &scene);
+        Whitted(const Scene &scene);
 
-        void shade(RGB &rgb, Intersection &intersection, const Ray &ray,
-                   Vector3D &vectorIntersectCamera) const override;
+        void shade(RGB &rgb,
+                   Intersection &intersection,
+                   const Ray &ray,
+                   Vector3D &vectorIntersectCamera,
+                   RayTraceCall rayTraceCall) const override;
     };
 }
 

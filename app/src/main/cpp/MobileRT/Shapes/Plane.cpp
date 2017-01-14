@@ -31,7 +31,7 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
     }
 
     // if so, then we have an intersection
-    intersection.recycle(
+    intersection.reset(
             ray.origin_ + (ray.direction_ * distance),
             this->normal_,
             distance,

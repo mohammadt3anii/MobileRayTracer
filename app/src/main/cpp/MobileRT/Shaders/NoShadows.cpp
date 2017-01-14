@@ -6,14 +6,14 @@
 
 using namespace MobileRT;
 
-NoShadows::NoShadows(RayTracer &rayTracer, const Scene &scene) :
-        Shader(rayTracer, scene) {
+NoShadows::NoShadows(const Scene &scene) : Shader(scene) {
 }
 
 void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
-                      Vector3D &vectorIntersectCamera) const {
+                      Vector3D &vectorIntersectCamera,
+                      RayTraceCall rayTraceCall) const {
     const RGB &kD(intersection.material_->Kd_);
-    rgb.recycle();
+    rgb.reset();
 
     // direct lighting - only for diffuse materials
     if (!kD.isZero()) {
@@ -22,7 +22,7 @@ void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
         for (unsigned int l(0); l < Nl; l++) {
             const PointLight *light(scene_.lights[l]);
 
-            vectorIntersectCamera.recycle(light->position_, intersection.point_);
+            vectorIntersectCamera.reset(light->position_, intersection.point_);
             vectorIntersectCamera.normalize();
             const float cos_N_L(vectorIntersectCamera.dotProduct(intersection.normal_));
             if (cos_N_L > 0.0f) {

@@ -15,6 +15,8 @@ namespace MobileRT {
     private:
         const Scene &scene_;
         Shader *shader_;
+        typedef std::function<void(RGB &, Ray &, Intersection &, Vector3D &)> RayTraceCall;
+        RayTraceCall rayTraceCall_;
 
     public:
         RayTracer(const Scene &scene, const unsigned int shader);

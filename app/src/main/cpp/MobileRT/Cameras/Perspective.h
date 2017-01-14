@@ -5,11 +5,11 @@
 #ifndef MOBILERAYTRACER_PERSPECTIVE_H
 #define MOBILERAYTRACER_PERSPECTIVE_H
 
+#include "Camera.h"
 #include "../Point3D.h"
-#include "../Ray.h"
 
 namespace MobileRT {
-    class Perspective {
+    class Perspective : Camera {
     private:
         const Point3D position_;//looking at Z+
 

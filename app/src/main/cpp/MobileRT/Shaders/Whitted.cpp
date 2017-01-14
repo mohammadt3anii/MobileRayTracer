@@ -7,12 +7,14 @@
 
 using namespace MobileRT;
 
-Whitted::Whitted(RayTracer &rayTracer, const Scene &scene) :
-        Shader(rayTracer, scene) {
+Whitted::Whitted(const Scene &scene) : Shader(scene) {
 }
 
-void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
-                    Vector3D &vectorIntersectCamera) const {
+void Whitted::shade(RGB &rgb,
+                    Intersection &intersection,
+                    const Ray &ray,
+                    Vector3D &vectorIntersectCamera,
+                    RayTraceCall rayTraceCall) const {
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
@@ -21,7 +23,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
                             intersection.normal_// entering the object
                                                                                      : intersection.getSymNormal());// We have to reverse the normal now
 
-    rgb.recycle();
+    rgb.reset();
     // shadowed direct lighting - only for diffuse materials
     if (!intersection.material_->Kd_.isZero()) {
         const unsigned int sizeLights(static_cast<unsigned int> (scene_.lights.size()));
@@ -32,7 +34,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
             const PointLight *light(scene_.lights[i]);
 
             //calculates vector starting in intersection to the light
-            vectorIntersectCamera.recycle(light->position_, intersection.point_);
+            vectorIntersectCamera.reset(light->position_, intersection.point_);
             //distance from intersection to the light (and normalize it)
             const float distanceToLight(vectorIntersectCamera.normalize());
             const float cos_N_L(vectorIntersectCamera.dotProduct(shadingNormal));//x*x + y*y + z*z
@@ -68,7 +70,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray,
         Ray specRay(intersection.point_, shadingNormal, RAY_LENGTH_MAX, ray.depth_ + 1);
         RGB specRad;
         Intersection aux;
-        this->rayTracer_.rayTrace(specRad, specRay, aux, vectorIntersectCamera);
+        rayTraceCall(specRad, specRay, aux, vectorIntersectCamera);
         specRad.mult(intersection.material_->Ks_);
         rgb.add(specRad);
     }

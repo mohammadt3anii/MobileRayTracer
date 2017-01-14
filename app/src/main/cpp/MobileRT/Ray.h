@@ -27,7 +27,7 @@ namespace MobileRT {
         Ray(const Point3D &orig, const Vector3D &dir, const float maxDist,
             const unsigned int depth);
 
-        void recycle(const float x, const float y, const float z, const Point3D &origin);
+        void reset(const float x, const float y, const float z, const Point3D &origin);
     };
 }
 

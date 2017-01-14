@@ -3,8 +3,6 @@ package com.example.puscas.mobileraytracer;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -20,7 +18,6 @@ public class MainActivity extends Activity
         System.loadLibrary("DrawView");
     }
 
-    private Button mRenderButton_;
     private TextView textView_;
     private DrawView drawView_;
     private NumberPicker pickerScene_;
@@ -57,11 +54,10 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRenderButton_ = (Button) findViewById(R.id.renderButton);
         textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.viewDraw);
         drawView_.setVisibility(View.INVISIBLE);
-        drawView_.setHandler(new Handler(new MessageHandler()));
+        drawView_.setButton((Button) findViewById(R.id.renderButton));
 
         final String[] scenes = {"Cornell", "Spheres"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
@@ -121,9 +117,8 @@ public class MainActivity extends Activity
                                         [pickerSamples_.getValue() - 1]
                         )
                 );
-                mRenderButton_.setText(getString(R.string.stop));
                 drawView_.setVisibility(View.VISIBLE);
-                drawView_.invalidate();
+                drawView_.startRender(67);
                 break;
 
             case 1://if ray-tracer is busy
@@ -132,21 +127,6 @@ public class MainActivity extends Activity
 
             default:
                 break;
-        }
-    }
-
-    private class MessageHandler implements Handler.Callback {
-        public boolean handleMessage(Message inputMessage) {
-            switch (inputMessage.what) {
-                case 1://Render finished
-                    MainActivity.this.mRenderButton_.setText(MainActivity.this.getString(R.string.render));
-                    break;
-
-                default:
-                    handleMessage(inputMessage);
-                    break;
-            }
-            return true;
         }
     }
 }

@@ -33,8 +33,9 @@ namespace MobileRT
 
         void average();
 
-            void recycle ();
-            void recycle (const float r, const float g, const float b);
+        void reset();
+
+        void reset(const float r, const float g, const float b);
     };
 }
 

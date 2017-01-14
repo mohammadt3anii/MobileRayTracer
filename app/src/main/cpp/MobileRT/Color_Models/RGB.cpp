@@ -64,13 +64,13 @@ void RGB::average() {
     this->B_ /= this->samples_;
 }
 
-void RGB::recycle() {
+void RGB::reset() {
     this->R_ = 0.0f;
     this->G_ = 0.0f;
     this->B_ = 0.0f;
 }
 
-void RGB::recycle(const float r, const float g, const float b) {
+void RGB::reset(const float r, const float g, const float b) {
     this->R_ = r;
     this->G_ = g;
     this->B_ = b;

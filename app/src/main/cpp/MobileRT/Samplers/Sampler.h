@@ -30,13 +30,15 @@ namespace MobileRT {
                 const Perspective &camera, const Scene &scene);
         virtual ~Sampler();
 
-        virtual void renderScene(unsigned int *canvas) = 0;
+        virtual void renderScene(unsigned int *canvas,
+                                 const unsigned int threadId,
+                                 const unsigned int numThreads) = 0;
 
         const float deviation(const int index) const;
 
         void resetTask();
 
-        const unsigned int getTask(const int sample);
+        const unsigned int getTasks(const unsigned int tasks, const int sample);
 
         void stopSampling();
     };

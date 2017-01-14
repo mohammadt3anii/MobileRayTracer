@@ -25,17 +25,6 @@ double haltonSequence(const int index, const int base) {
     return result;
 }
 
-std::pair<float, float> limitsHaltonSequence(const unsigned int number) {
-    double min = 1.0;
-    double max = 0.0;
-    for (unsigned int i(1); i <= number; i++) {
-        const double temp(haltonSequence(i, 2));
-        min = temp < min ? temp : min;
-        max = temp > max ? temp : max;
-    }
-    return std::make_pair(min, max);
-}
-
 unsigned int roundToPower2(unsigned int v) {
     v--;
     v |= v >> 1;

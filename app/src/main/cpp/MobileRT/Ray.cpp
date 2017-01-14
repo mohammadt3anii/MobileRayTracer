@@ -29,8 +29,8 @@ Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const un
     this->direction_.normalize();
 }
 
-void Ray::recycle(const float x, const float y, const float z, const Point3D &origin) {
-    this->direction_.recycle(x, y, z);
-    this->symDirection_.recycle(-x, -y, -z);
+void Ray::reset(const float x, const float y, const float z, const Point3D &origin) {
+    this->direction_.reset(x, y, z);
+    this->symDirection_.reset(-x, -y, -z);
     this->origin_ = origin;
 }

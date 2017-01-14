@@ -3,26 +3,38 @@ package com.example.puscas.mobileraytracer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.os.Handler;
+import android.os.Debug;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.Button;
 import android.widget.TextView;
 
-import static android.graphics.Bitmap.createBitmap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-public class DrawView extends View
+import static android.graphics.Bitmap.createBitmap;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+public class DrawView extends SurfaceView
 {
     private long start_;
     private TextView textView_;
     private Bitmap bitmapW_;
-    private Handler handler_;
+    private Bitmap bitmapR_;
+    private Button buttonRender_;
     private int numThreads_;
     private String text_;
+    private ScheduledExecutorService scheduler_;
+    private SurfaceView surfaceView_;
+    private SurfaceHolder surfaceHolder_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        setWillNotDraw(false);
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
@@ -31,8 +43,37 @@ public class DrawView extends View
     native void stopRender();
     native int isWorking();
 
-    void setHandler(Handler pHandle) {
-        handler_ = pHandle;
+    void stopTimer() {
+        scheduler_.shutdown();
+        scheduler_.shutdownNow();
+        try {
+            while (!scheduler_.awaitTermination(10, SECONDS)) {
+                System.out.println("À ESPERA ...");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        finish();
+        this.buttonRender_.setText(R.string.render);
+    }
+
+    void setButton(Button button) {
+        buttonRender_ = button;
+    }
+
+    void startRender(int period) {
+        this.start_ = SystemClock.elapsedRealtime();
+        drawIntoBitmap(this.bitmapW_, this.numThreads_);
+        final Runnable timer = new Runnable() {
+            public void run() {
+                //bitmapR_ = bitmapW_.copy(Bitmap.Config.ARGB_8888, true);
+                postInvalidate();
+                bitmapR_ = createBitmap(bitmapW_);
+            }
+        };
+        scheduler_ = Executors.newScheduledThreadPool(1);
+        scheduler_.scheduleWithFixedDelay(timer, 0, period, MILLISECONDS);
+        this.buttonRender_.setText(R.string.stop);
     }
 
     void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
@@ -40,54 +81,59 @@ public class DrawView extends View
         int width = getWidth();
         int height = getHeight();
         textView_ = textView;
-        bitmapW_ = createBitmap(width, height, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, true);
+        bitmapW_ = createBitmap(width, height, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, false);
         initialize(scene, shader, width, height, sampler, samples);
         numThreads_ = numThreads;
-        text_ = width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
+        text_ = "R:" + width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
+        //mSurfaceView = (SurfaceView) this.findViewById(R.id.Surface);
+        //mSurfaceHolder = mSurfaceView.getHolder();
     }
 
     public void onDraw(Canvas canvas)
     {
+        this.setWillNotDraw(false);
         if (!isInEditMode())
         {
+            String stage;
             switch (isWorking()) {
-                case 0://Start rendering
+                case 0:
                 {
-                    start_ = SystemClock.elapsedRealtime();
-                    drawIntoBitmap(bitmapW_, numThreads_);
-                    invalidate();
+                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
                 }
-                    break;
+                return;
 
                 case 1://While ray-tracer is busy
                 {
-                    canvas.drawBitmap(createBitmap(this.bitmapW_), 0.0f, 0.0f, null);
-                    textView_.setText("Rendering -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
-                    invalidate();
+                    canvas.drawBitmap(bitmapW_.copy(Bitmap.Config.ARGB_8888, false), 0.0f, 0.0f, null);
+                    stage = "Running -> ";
                 }
                     break;
 
                 case 2://When ray-tracer is finished
                 {
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
-                    textView_.setText("Rendered -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
-                    this.handler_.obtainMessage(1).sendToTarget();
-                    finish();
+                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
+                    stopTimer();
+                    stage = "Finished -> ";
                 }
                 break;
 
                 case 3://When ray-tracer is stopped
                 {
-                    canvas.drawBitmap(this.bitmapW_, 0.0f, 0.0f, null);
-                    textView_.setText("Stopped -> " + text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms");
-                    this.handler_.obtainMessage(1).sendToTarget();
-                    finish();
+                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
+                    stopTimer();
+                    stage = "Stopped -> ";
                 }
                     break;
 
                 default:
+                    stage = "Unknown -> ";
                     break;
             }
+            double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
+            double available = Debug.getNativeHeapSize() / 1048576;
+            double free = Debug.getNativeHeapFreeSize() / 1048576;
+            textView_.setText(stage + this.text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms \nMemory -> alloc:"
+                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB]");
         }
     }
 }

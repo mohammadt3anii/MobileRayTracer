@@ -12,8 +12,8 @@ Intersection::Intersection() :
         material_(nullptr) {
 }
 
-void Intersection::recycle(const Point3D &point, const Vector3D &normal, const float length,
-                           const Material &material) {
+void Intersection::reset(const Point3D &point, const Vector3D &normal, const float length,
+                         const Material &material) {
     this->point_ = point;
     this->normal_ = normal;
     this->length_ = length;
@@ -21,6 +21,6 @@ void Intersection::recycle(const Point3D &point, const Vector3D &normal, const f
 }
 
 Vector3D &Intersection::getSymNormal() {
-    this->symNormal_.recycle(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
     return this->symNormal_;
 }

@@ -42,9 +42,9 @@ namespace MobileRT {
 
         Vector3D operator*(const float value) const;
 
-        void recycle(const float x, const float y, const float z);
+        void reset(const float x, const float y, const float z);
 
-        void recycle(const Point3D &dest, const Point3D &orig);
+        void reset(const Point3D &dest, const Point3D &orig);
     };
 }
 

@@ -41,7 +41,7 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     normal.normalize();
 
     // if so, then we have an intersection
-    intersection.recycle(
+    intersection.reset(
             intersectionPoint,
             normal,
             distanceToIntersection,

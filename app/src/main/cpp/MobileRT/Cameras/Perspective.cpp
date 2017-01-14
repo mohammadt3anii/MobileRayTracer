@@ -20,6 +20,5 @@ Perspective::~Perspective() {
 void Perspective::getRay(Ray &ray, const float u_alpha, const float v_alpha) const {
     // note that depth will be 0 : primary ray
     // camera looking at Z+
-    //void recycle (const float x, const float y, const float z, const Point3D& origin);
-    ray.recycle(u_alpha, v_alpha, 1.0f, this->position_);
+    ray.reset(u_alpha, v_alpha, 1.0f, this->position_);
 }
