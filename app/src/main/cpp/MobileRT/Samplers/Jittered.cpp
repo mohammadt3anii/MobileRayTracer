@@ -7,7 +7,6 @@
 #include "../Color_Models/ToneMapper.h"
 #include <cstdlib>
 #include <cmath>
-#include <android/log.h>
 //#include <random>
 
 using namespace MobileRT;
@@ -76,6 +75,4 @@ void Jittered::renderScene(unsigned int *canvas,
             canvas[ii] = ToneMapper::RGB2Color(average);
         }
     }
-    __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG",
-                        "MISSED=%u \t REQUEST TASKS=%u", missed, requestTasks);
 }

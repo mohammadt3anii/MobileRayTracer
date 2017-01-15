@@ -16,7 +16,11 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 
-#define LOG(MSG) __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", MSG);
+#define printf(msg, ...)\
+printf("%s:%d (%s): " msg, __FILE__, __LINE__, __func__, __VA_ARGS__);
+
+#define LOG(msg, ...)\
+__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
 using namespace MobileRT;
 
@@ -106,7 +110,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finish(
 ) {
     thread_.join();
     working_ = IDLE;
-    LOG("WORKING = IDLE");
+    LOG("%s", "WORKING = IDLE");
 }
 
 extern "C"
@@ -123,7 +127,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
         jobject//this
 ) {
     working_ = STOPPED;
-    LOG("WORKING = STOPPED");
+    LOG("%s", "WORKING = STOPPED");
     renderer_->stopRender();
 }
 
@@ -139,8 +143,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint samples
 ) {
     working_ = IDLE;
-    LOG(" ");
-    LOG("WORKING = IDLE");
+    LOG("%s", " ");
+    LOG("%s", "WORKING = IDLE");
     const float ratio = static_cast<float>(height) / static_cast<float>(width);
     switch (scene) {
         case 1:
@@ -185,10 +189,15 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
+
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    long time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    LOG ("TEMPO = %d ms", time);
     if (working_ != STOPPED) {
         working_ = FINISHED;
-        LOG("WORKING = FINISHED");
+        LOG("%s", "WORKING = FINISHED");
     }
     delete camera_;
     delete scene_;
@@ -208,6 +217,6 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
     AndroidBitmap_unlockPixels(env, dstBitmap);
 
     working_ = BUSY;
-    LOG("WORKING = BUSY");
+    LOG("%s", "WORKING = BUSY");
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
 }
