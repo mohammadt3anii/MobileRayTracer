@@ -26,11 +26,27 @@ public class DrawView extends SurfaceView
     private int numThreads_;
     private String text_;
     private ScheduledExecutorService scheduler_;
+    private int frame = 0;
+    private float timebase = 0.0f;
+    private float FPS = 0.0f;
 
     public DrawView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         setWillNotDraw(false);
+    }
+
+    String FPS() {
+        frame++;
+        float time = SystemClock.elapsedRealtime();
+        if (time - timebase > 1000) {
+            final float fps = frame * 1000.0f / (time - timebase);
+            System.out.println();
+            timebase = time;
+            frame = 0;
+            FPS = fps;
+        }
+        return "FPS: " + FPS;
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
@@ -127,7 +143,7 @@ public class DrawView extends SurfaceView
             double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
             double available = Debug.getNativeHeapSize() / 1048576;
             double free = Debug.getNativeHeapFreeSize() / 1048576;
-            textView_.setText(stage + this.text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms \nMemory -> alloc:"
+            textView_.setText(FPS() + ", " + stage + this.text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms \nMemory -> alloc:"
                     + allocated + "MB, [available:" + available + "MB, free:" + free + "MB], " +
                     "HAc:" + canvas.isHardwareAccelerated());
         }
