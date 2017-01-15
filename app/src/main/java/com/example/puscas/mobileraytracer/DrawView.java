@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.os.Debug;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,13 +22,10 @@ public class DrawView extends SurfaceView
     private long start_;
     private TextView textView_;
     private Bitmap bitmapW_;
-    private Bitmap bitmapR_;
     private Button buttonRender_;
     private int numThreads_;
     private String text_;
     private ScheduledExecutorService scheduler_;
-    private SurfaceView surfaceView_;
-    private SurfaceHolder surfaceHolder_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -66,9 +62,7 @@ public class DrawView extends SurfaceView
         drawIntoBitmap(this.bitmapW_, this.numThreads_);
         final Runnable timer = new Runnable() {
             public void run() {
-                //bitmapR_ = bitmapW_.copy(Bitmap.Config.ARGB_8888, true);
                 postInvalidate();
-                bitmapR_ = createBitmap(bitmapW_);
             }
         };
         scheduler_ = Executors.newScheduledThreadPool(1);
@@ -84,7 +78,8 @@ public class DrawView extends SurfaceView
         bitmapW_ = createBitmap(width, height, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, false);
         initialize(scene, shader, width, height, sampler, samples);
         numThreads_ = numThreads;
-        text_ = "R:" + width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
+
+        text_ = "HAv:" + this.isHardwareAccelerated() + ", R:" + width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
         //mSurfaceView = (SurfaceView) this.findViewById(R.id.Surface);
         //mSurfaceHolder = mSurfaceView.getHolder();
     }
@@ -133,7 +128,8 @@ public class DrawView extends SurfaceView
             double available = Debug.getNativeHeapSize() / 1048576;
             double free = Debug.getNativeHeapFreeSize() / 1048576;
             textView_.setText(stage + this.text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms \nMemory -> alloc:"
-                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB]");
+                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB], " +
+                    "HAc:" + canvas.isHardwareAccelerated());
         }
     }
 }
