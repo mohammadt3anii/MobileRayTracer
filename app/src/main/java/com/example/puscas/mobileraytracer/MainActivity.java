@@ -120,7 +120,7 @@ public class MainActivity extends Activity
                         )
                 );
                 drawView_.setVisibility(View.VISIBLE);
-                drawView_.startRender(67);
+                drawView_.startRender(42);
                 break;
 
             case 1://if ray-tracer is busy

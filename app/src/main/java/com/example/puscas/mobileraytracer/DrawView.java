@@ -45,11 +45,15 @@ class DrawView extends LinearLayout
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
+
     private native void drawIntoBitmap(Bitmap image, int numThreads);
+
     private native void finish();
 
     private native int redraw(Bitmap bitmap);
+
     native void stopRender();
+
     native int isWorking();
 
     void setButton(Button button) {
@@ -76,6 +80,19 @@ class DrawView extends LinearLayout
         numThreads_ = numThreads;
 
         text_ = "HAl:" + this.isHardwareAccelerated() + ", R:" + width_ + "x" + height_ + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
+    }
+
+    private enum Stage {
+        IDLE(0), BUSY(1), END(2), STOP(3);
+        private final int id;
+
+        Stage(int id) {
+            this.id = id;
+        }
+
+        public int getValue() {
+            return id;
+        }
     }
 
     private class RaytraceTask extends AsyncTask<Void, Void, Void> {
@@ -118,7 +135,7 @@ class DrawView extends LinearLayout
             final float sec = (millisec - start_) / 1000.0f;
             final String time = String.format(java.util.Locale.US, "%.2f", sec);
             FPS();
-            textView_.setText("FPS: " + String.format(java.util.Locale.US, "%.2f", FPS) + ", " + stage_ + ", " + text_ + time + "s \nMemory -> alloc:"
+            textView_.setText("FPS: " + String.format(java.util.Locale.US, "%.2f", FPS) + ", " + Stage.values()[stage_] + ", " + text_ + time + "s \nMemory -> alloc:"
                     + allocated + "MB, [a:" + available + "MB, f:" + free + "MB]");
         }
 
@@ -128,57 +145,3 @@ class DrawView extends LinearLayout
         }
     }
 }
-
-/*
-    public void onDraw(Canvas canvas)
-    {
-        this.setWillNotDraw(false);
-        if (!isInEditMode())
-        {
-            String stage;
-            switch (isWorking()) {
-                case 0:
-                {
-                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
-                }
-                return;
-
-                case 1://While ray-tracer is busy
-                {
-                    redraw(bitmap_);
-                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
-                    stage = "Running -> ";
-                }
-                    break;
-
-                case 2://When ray-tracer is finished
-                {
-                    redraw(bitmap_);
-                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
-                    stopTimer();
-                    stage = "Finished -> ";
-                }
-                break;
-
-                case 3://When ray-tracer is stopped
-                {
-                    redraw(bitmap_);
-                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
-                    stopTimer();
-                    stage = "Stopped -> ";
-                }
-                    break;
-
-                default:
-                    stage = "Unknown -> ";
-                    break;
-            }
-            double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
-            double available = Debug.getNativeHeapSize() / 1048576;
-            double free = Debug.getNativeHeapFreeSize() / 1048576;
-            textView_.setText(FPS() + ", " + stage + this.text_ + (SystemClock.elapsedRealtime() - this.start_) + "ms \nMemory -> alloc:"
-                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB], " +
-                    "HAc:" + canvas.isHardwareAccelerated());
-        }
-    }
-*/
