@@ -6,8 +6,11 @@
 #define MOBILERAYTRACER_VECTOR3D_H
 
 #include "Point3D.h"
+#include <cmath>
 
 namespace MobileRT {
+    class Point3D;
+
     class Vector3D {
     private:
 

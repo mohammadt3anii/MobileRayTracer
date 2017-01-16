@@ -6,6 +6,7 @@
 #define MOBILERAYTRACER_SCENE_H
 
 #include "Lights/PointLight.h"
+#include "Utils.h"
 #include "Primitive.h"
 #include <vector>
 

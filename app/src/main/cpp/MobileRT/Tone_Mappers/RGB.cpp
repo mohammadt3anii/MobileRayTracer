@@ -75,3 +75,14 @@ void RGB::reset(const float r, const float g, const float b) {
     this->G_ = g;
     this->B_ = b;
 }
+
+unsigned int RGB::RGB2Color() {
+    const float r((this->R_ > 1.0f) ? 1.0f : ((this->R_ < 0.0f) ? 0.0f : this->R_));
+    const float g((this->G_ > 1.0f) ? 1.0f : ((this->G_ < 0.0f) ? 0.0f : this->G_));
+    const float b((this->B_ > 1.0f) ? 1.0f : ((this->B_ < 0.0f) ? 0.0f : this->B_));
+
+    const unsigned char cr(static_cast<unsigned char> (r * 255));
+    const unsigned char cg(static_cast<unsigned char> (g * 255));
+    const unsigned char cb(static_cast<unsigned char> (b * 255));
+    return (0xFF000000 | (cb << 16) | (cg << 8) | cr);
+}

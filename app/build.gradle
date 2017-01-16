@@ -6,8 +6,7 @@ android {
             keyAlias 'Puscas'
             storeFile file(
                     //'/media/puscas/' +
-                    'D:/Dropbox/Universidade/' +
-                            'Dissertação em Engenharia Informática/Android Studio/MobileRayTracer.jks')
+                    'D:/Dropbox/Universidade/Dissertação em Engenharia Informática/Android Studio APKs/MobileRayTracer.jks')
             keyPassword '@puscas99'
             storePassword '@puscas99'
         }

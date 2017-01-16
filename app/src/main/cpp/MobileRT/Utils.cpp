@@ -3,8 +3,6 @@
 //
 
 #include "Utils.h"
-#include "Constants.h"
-#include <cmath>
 
 //http://nghiaho.com/?p=997
 float fastArcTan(const float value) {

@@ -3,9 +3,6 @@
 //
 
 #include "Stratified.h"
-#include "../Utils.h"
-#include "../Color_Models/ToneMapper.h"
-#include <cmath>
 
 using namespace MobileRT;
 
@@ -16,8 +13,8 @@ Stratified::Stratified(const unsigned int width, const unsigned int height,
 }
 
 void Stratified::renderScene(unsigned int *canvas,
-                             const unsigned int threadId,
-                             const unsigned int numThreads) {
+                             const unsigned int /*threadId*/,
+                             const unsigned int /*numThreads*/) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     RGB rayRGB;
@@ -38,7 +35,7 @@ void Stratified::renderScene(unsigned int *canvas,
                 this->camera_->getRay(ray, u_alpha, v_alpha);
                 //ray trace and puts the color in rayRGB variable
                 this->rayTracer_->rayTrace(rayRGB, ray, intersection, vector);
-                canvas[x + yWidth] = ToneMapper::RGB2Color(rayRGB);
+                canvas[x + yWidth] = rayRGB.RGB2Color();
             }
         }
     }
@@ -74,7 +71,7 @@ void Stratified::renderScene(unsigned int *canvas,
                         this->accumulate_[x + yWidth].addSample(average, rayRGB);
                         average.average();
                         // toneMap and convert to Paint
-                        canvas[x + yWidth] = ToneMapper::RGB2Color(average);
+                        canvas[x + yWidth] = average.RGB2Color();
                     }
                 }
             }

@@ -5,6 +5,8 @@
 #ifndef MOBILERAYTRACER_POINT3D_H
 #define MOBILERAYTRACER_POINT3D_H
 
+#include "Vector3D.h"
+
 namespace MobileRT {
     class Vector3D;
 

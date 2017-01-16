@@ -6,7 +6,7 @@
 #define MOBILERAYTRACER_PERSPECTIVE_H
 
 #include "Camera.h"
-#include "../Point3D.h"
+#include "../Utils.h"
 
 namespace MobileRT {
     class Perspective : Camera {

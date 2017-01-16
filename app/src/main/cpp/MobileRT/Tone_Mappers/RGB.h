@@ -5,11 +5,12 @@
 #ifndef MOBILERAYTRACER_RGB_H
 #define MOBILERAYTRACER_RGB_H
 
+#include "ToneMapper.h"
 #include <mutex>
 
 namespace MobileRT
 {
-    class RGB
+    class RGB : public ToneMapper
     {
         private:
 
@@ -36,6 +37,8 @@ namespace MobileRT
         void reset();
 
         void reset(const float r, const float g, const float b);
+
+        unsigned int RGB2Color();
     };
 }
 

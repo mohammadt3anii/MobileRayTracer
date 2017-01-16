@@ -1,9 +1,6 @@
 //
 // Created by Tiago on 14-10-2016.
 //
-#include "MobileRT/Cameras/Perspective.h"
-#include "MobileRT/Lights/PointLight.h"
-#include "MobileRT/Scene.h"
 #include "MobileRT/Renderer.h"
 #include "MobileRT/Shaders/NoShadows.h"
 #include "MobileRT/Shaders/Whitted.h"
@@ -12,7 +9,6 @@
 #include "MobileRT/Shapes/Plane.h"
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
-#include <jni.h>
 #include <android/bitmap.h>
 #include <android/log.h>
 

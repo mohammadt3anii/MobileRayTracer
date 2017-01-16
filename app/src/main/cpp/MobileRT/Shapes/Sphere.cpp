@@ -3,8 +3,6 @@
 //
 
 #include "Sphere.h"
-#include "../Constants.h"
-#include <cmath>
 
 using namespace MobileRT;
 

@@ -6,7 +6,7 @@
 #define MOBILERAYTRACER_POINTLIGHT_H
 
 #include "Light.h"
-#include "../Color_Models/RGB.h"
+#include "../Tone_Mappers/RGB.h"
 #include "../Point3D.h"
 
 namespace MobileRT {

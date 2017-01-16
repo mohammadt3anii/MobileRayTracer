@@ -5,8 +5,8 @@
 #ifndef MOBILERAYTRACER_RAY_H
 #define MOBILERAYTRACER_RAY_H
 
-#include "Point3D.h"
 #include "Vector3D.h"
+#include "Utils.h"
 
 namespace MobileRT {
     class Ray {

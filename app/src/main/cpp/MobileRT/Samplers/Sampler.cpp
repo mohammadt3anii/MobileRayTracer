@@ -3,7 +3,6 @@
 //
 
 #include "Sampler.h"
-#include "../Utils.h"
 
 using namespace MobileRT;
 

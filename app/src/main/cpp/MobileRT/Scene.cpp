@@ -3,7 +3,6 @@
 //
 
 #include "Scene.h"
-#include "Constants.h"
 
 using namespace MobileRT;
 

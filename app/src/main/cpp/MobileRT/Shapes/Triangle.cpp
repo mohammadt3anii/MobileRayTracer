@@ -4,7 +4,6 @@
 //
 
 #include "Triangle.h"
-#include "../Constants.h"
 
 using namespace MobileRT;
 

@@ -6,6 +6,7 @@
 #define MOBILERAYTRACER_JITTERED_H
 
 #include "Sampler.h"
+#include <cstdlib>
 
 namespace MobileRT {
     class Jittered : public Sampler {

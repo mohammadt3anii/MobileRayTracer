@@ -3,7 +3,6 @@
 //
 
 #include "Ray.h"
-#include "Constants.h"
 
 using namespace MobileRT;
 

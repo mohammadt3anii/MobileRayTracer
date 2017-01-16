@@ -5,9 +5,6 @@
 #ifndef MOBILERAYTRACER_RENDERER_H
 #define MOBILERAYTRACER_RENDERER_H
 
-#include "Scene.h"
-#include "RayTracer.h"
-#include "Cameras/Perspective.h"
 #include "Samplers/Sampler.h"
 #include <thread>
 

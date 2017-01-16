@@ -6,8 +6,6 @@
 #define MOBILERAYTRACER_TRIANGLE_H
 
 #include "Shape.h"
-#include "../Vector3D.h"
-#include "../Point3D.h"
 
 namespace MobileRT {
     class Triangle : public Shape {

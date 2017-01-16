@@ -3,7 +3,6 @@
 //
 
 #include "Perspective.h"
-#include "../Constants.h"
 
 using namespace MobileRT;
 

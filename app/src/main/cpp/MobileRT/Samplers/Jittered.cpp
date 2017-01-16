@@ -3,11 +3,6 @@
 //
 
 #include "Jittered.h"
-#include "../Utils.h"
-#include "../Color_Models/ToneMapper.h"
-#include <cstdlib>
-#include <cmath>
-//#include <random>
 
 using namespace MobileRT;
 
@@ -72,7 +67,7 @@ void Jittered::renderScene(unsigned int *canvas,
             accumulate.addSample(average, rayRGB);
             average.average();
             // toneMap and convert to Paint
-            canvas[ii] = ToneMapper::RGB2Color(average);
+            canvas[ii] = average.RGB2Color();
         }
     }
 }

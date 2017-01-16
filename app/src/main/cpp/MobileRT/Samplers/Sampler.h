@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_SAMPLER_H
 #define MOBILERAYTRACER_SAMPLER_H
 
-#include "../Scene.h"
+#include "../Utils.h"
 #include "../RayTracer.h"
 #include "../Cameras/Perspective.h"
 #include <atomic>
