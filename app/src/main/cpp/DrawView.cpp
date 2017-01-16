@@ -10,10 +10,9 @@
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
 #include <android/bitmap.h>
-#include <android/log.h>
 
 #define LOG(msg, ...)\
-__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
+//__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
 using namespace MobileRT;
 
@@ -181,12 +180,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
-
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    long time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    LOG ("TEMPO = %ld ms", time);
+    LOG ("TEMPO = %ld ms",
+         std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     if (working_ != STOPPED) {
         working_ = FINISHED;
         LOG("%s", "WORKING = FINISHED");

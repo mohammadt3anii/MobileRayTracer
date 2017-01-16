@@ -27,6 +27,8 @@ class DrawView extends LinearLayout
     private float timebase = 0.0f;
     private float FPS = 0.0f;
     private LinearLayout mLinearLayout = this;
+    private RenderTask renderTask_;
+    private ScheduledExecutorService scheduler_;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -61,11 +63,11 @@ class DrawView extends LinearLayout
     }
 
     void startRender(int period) {
-        RaytraceTask raytraceThread = new RaytraceTask(bitmap_, period);
-        raytraceThread.execute();
+        renderTask_ = new RenderTask(bitmap_, period);
         buttonRender_.setText(R.string.stop);
         this.start_ = SystemClock.elapsedRealtime();
         drawIntoBitmap(this.bitmap_, this.numThreads_);
+        renderTask_.execute();
     }
 
     void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
@@ -95,53 +97,72 @@ class DrawView extends LinearLayout
         }
     }
 
-    private class RaytraceTask extends AsyncTask<Void, Void, Void> {
+    private class RenderTask extends AsyncTask<Void, Void, Void> {
         private Bitmap bitmap_;
         private int stage_;
+        //private int count1 = 0;
+        final Runnable timer = new Runnable() {
+            public void run() {
+                stage_ = redraw(bitmap_);
+                publishProgress();
+                //System.out.println (count1++ + " -> " + Thread.currentThread().getId() + " mandou atualizar ecra");
+                if (stage_ == 2 || stage_ == 3) {
+                    scheduler_.shutdown();
+                }
+            }
+        };
         private int period_;
 
-        RaytraceTask(Bitmap b, int period) {
+        RenderTask(Bitmap b, int period) {
             bitmap_ = b;
             period_ = period;
         }
 
         protected Void doInBackground(Void... params) {
-            final Runnable timer = new Runnable() {
-                public void run() {
-                    stage_ = redraw(bitmap_);
-                    publishProgress();
-                }
-            };
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(timer, 0, period_, TimeUnit.MILLISECONDS);
+            scheduler_ = Executors.newSingleThreadScheduledExecutor();
+            scheduler_.scheduleAtFixedRate(timer, 0, period_, TimeUnit.MILLISECONDS);
+            boolean finished = false;
             do {
                 Thread.yield();
                 try {
-                    Thread.sleep(500);
+                    //System.out.println (Thread.currentThread().getId() + " vai esperar");
+                    finished = scheduler_.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+                    //System.out.println (Thread.currentThread().getId() + " acordou");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            } while (stage_ != 2 && stage_ != 3);
-            scheduler.shutdown();
+            } while (!finished);
+            scheduler_.shutdownNow();
             return null;
         }
 
+        //private int count2 = 0;
         protected void onProgressUpdate(Void... progress) {
-            mLinearLayout.setBackground(new BitmapDrawable(mLinearLayout.getResources(), bitmap_));
+            mLinearLayout.setBackground(new BitmapDrawable(getResources(), bitmap_));
+            FPS();
+            printText();
+        }
+
+        protected void onPostExecute(Void result) {
+            finish();
+            printText();
+            renderTask_.cancel(true);
+            buttonRender_.setText(R.string.render);
+            System.gc();
+            System.runFinalization();
+            //System.out.println (Thread.currentThread().getId() + " diz que terminou tudo");
+        }
+
+        private void printText() {
             final double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
             final double available = Debug.getNativeHeapSize() / 1048576;
             final double free = Debug.getNativeHeapFreeSize() / 1048576;
             final long millisec = SystemClock.elapsedRealtime();
             final float sec = (millisec - start_) / 1000.0f;
             final String time = String.format(java.util.Locale.US, "%.2f", sec);
-            FPS();
             textView_.setText("FPS: " + String.format(java.util.Locale.US, "%.2f", FPS) + ", " + Stage.values()[stage_] + ", " + text_ + time + "s \nMemory -> alloc:"
                     + allocated + "MB, [a:" + available + "MB, f:" + free + "MB]");
-        }
-
-        protected void onPostExecute(Void result) {
-            finish();
-            buttonRender_.setText(R.string.render);
+            //System.out.println (count2++ + " -> " + Thread.currentThread().getId() + " atualizou ecra");
         }
     }
 }
