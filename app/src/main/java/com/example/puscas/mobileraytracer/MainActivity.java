@@ -55,9 +55,10 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         textView_ = (TextView) findViewById(R.id.timeText);
-        drawView_ = (DrawView) findViewById(R.id.viewDraw);
+        drawView_ = (DrawView) findViewById(R.id.drawLayout);
         drawView_.setVisibility(View.INVISIBLE);
-        drawView_.setButton((Button) findViewById(R.id.renderButton));
+        Button button = ((Button) findViewById(R.id.renderButton));
+        drawView_.setButton(button);
 
         final String[] scenes = {"Cornell", "Spheres"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);

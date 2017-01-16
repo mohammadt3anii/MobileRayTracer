@@ -16,9 +16,6 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 
-#define printf(msg, ...)\
-printf("%s:%d (%s): " msg, __FILE__, __LINE__, __func__, __VA_ARGS__);
-
 #define LOG(msg, ...)\
 __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
@@ -143,7 +140,6 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
         jint samples
 ) {
     working_ = IDLE;
-    LOG("%s", " ");
     LOG("%s", "WORKING = IDLE");
     const float ratio = static_cast<float>(height) / static_cast<float>(width);
     switch (scene) {
@@ -194,7 +190,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     long time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    LOG ("TEMPO = %d ms", time);
+    LOG ("TEMPO = %ld ms", time);
     if (working_ != STOPPED) {
         working_ = FINISHED;
         LOG("%s", "WORKING = FINISHED");
@@ -213,10 +209,23 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads) {
     void *dstPixels;
-    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
+    if (AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels) < 0) {
+        LOG("%s", "AndroidBitmap_lockPixels FAILED");
+    }
     AndroidBitmap_unlockPixels(env, dstBitmap);
 
     working_ = BUSY;
     LOG("%s", "WORKING = BUSY");
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
+}
+
+extern "C"
+int Java_com_example_puscas_mobileraytracer_DrawView_redraw(
+        JNIEnv *env,
+        jobject,//this,
+        jobject dstBitmap) {
+    void *dstPixels;
+    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
+    AndroidBitmap_unlockPixels(env, dstBitmap);
+    return working_;
 }

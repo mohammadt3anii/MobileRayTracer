@@ -35,20 +35,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
 
-    <view
-        android:id="@+id/viewDraw"
-        class="com.example.puscas.mobileraytracer.DrawView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/timeText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/pickerSamples"
-        android:layout_toEndOf="@+id/pickerShader"
-        android:layout_toRightOf="@+id/pickerShader"
-        android:elevation="0dp"
-        tools:targetApi="lollipop"/>
-
     <TextView
         android:id="@+id/timeText"
         android:layout_width="wrap_content"
@@ -87,5 +73,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
+    <com.example.puscas.mobileraytracer.DrawView
+        android:id="@+id/drawLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/timeText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pickerSamples"
+        android:orientation="vertical">
+    </com.example.puscas.mobileraytracer.DrawView>
 
 </RelativeLayout>

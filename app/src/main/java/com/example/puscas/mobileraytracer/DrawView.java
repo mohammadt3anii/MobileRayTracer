@@ -2,33 +2,31 @@ package com.example.puscas.mobileraytracer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Debug;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.view.SurfaceView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import static android.graphics.Bitmap.createBitmap;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
-public class DrawView extends SurfaceView
+class DrawView extends LinearLayout
 {
     private long start_;
     private TextView textView_;
-    private Bitmap bitmapW_;
+    private Bitmap bitmap_;
     private Button buttonRender_;
     private int numThreads_;
     private String text_;
-    private ScheduledExecutorService scheduler_;
     private int frame = 0;
     private float timebase = 0.0f;
     private float FPS = 0.0f;
+    private LinearLayout mLinearLayout = this;
 
     public DrawView(Context context, AttributeSet attrs)
     {
@@ -38,7 +36,7 @@ public class DrawView extends SurfaceView
 
     String FPS() {
         frame++;
-        float time = SystemClock.elapsedRealtime();
+        final float time = SystemClock.elapsedRealtime();
         if (time - timebase > 1000) {
             final float fps = frame * 1000.0f / (time - timebase);
             System.out.println();
@@ -46,60 +44,95 @@ public class DrawView extends SurfaceView
             frame = 0;
             FPS = fps;
         }
-        return "FPS: " + FPS;
+        return "FPS: " + String.format(java.util.Locale.US, "%.2f", FPS);
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
     private native void finish();
+
+    private native int redraw(Bitmap bitmap);
     native void stopRender();
     native int isWorking();
-
-    void stopTimer() {
-        scheduler_.shutdown();
-        scheduler_.shutdownNow();
-        try {
-            while (!scheduler_.awaitTermination(10, SECONDS)) {
-                System.out.println("À ESPERA ...");
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        finish();
-        this.buttonRender_.setText(R.string.render);
-    }
 
     void setButton(Button button) {
         buttonRender_ = button;
     }
 
     void startRender(int period) {
+        RaytraceTask raytraceThread = new RaytraceTask(bitmap_, period);
+        raytraceThread.execute();
+        buttonRender_.setText(R.string.stop);
         this.start_ = SystemClock.elapsedRealtime();
-        drawIntoBitmap(this.bitmapW_, this.numThreads_);
-        final Runnable timer = new Runnable() {
-            public void run() {
-                postInvalidate();
-            }
-        };
-        scheduler_ = Executors.newScheduledThreadPool(1);
-        scheduler_.scheduleWithFixedDelay(timer, 0, period, MILLISECONDS);
-        this.buttonRender_.setText(R.string.stop);
+        drawIntoBitmap(this.bitmap_, this.numThreads_);
     }
 
     void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
     {
-        int width = getWidth();
-        int height = getHeight();
+        int width_ = getWidth();
+        int height_ = getHeight();
         textView_ = textView;
-        bitmapW_ = createBitmap(width, height, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, false);
-        initialize(scene, shader, width, height, sampler, samples);
+        bitmap_ = Bitmap.createBitmap(width_, height_, Bitmap.Config.ARGB_8888).copy(Bitmap.Config.ARGB_8888, false);
+        setBackground(new BitmapDrawable(mLinearLayout.getResources(), bitmap_));
+        bitmap_.setHasAlpha(false);
+        initialize(scene, shader, width_, height_, sampler, samples);
         numThreads_ = numThreads;
 
-        text_ = "HAv:" + this.isHardwareAccelerated() + ", R:" + width + "x" + height + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
-        //mSurfaceView = (SurfaceView) this.findViewById(R.id.Surface);
-        //mSurfaceHolder = mSurfaceView.getHolder();
+        text_ = "HAl:" + this.isHardwareAccelerated() + ", R:" + width_ + "x" + height_ + ", T:" + this.numThreads_ + ", S:" + samples + ", t:";
     }
 
+    private class RaytraceTask extends AsyncTask<Void, Void, Void> {
+        private Bitmap bitmap_;
+        private int stage_;
+        private int period_;
+
+        RaytraceTask(Bitmap b, int period) {
+            bitmap_ = b;
+            period_ = period;
+        }
+
+        protected Void doInBackground(Void... params) {
+            final Runnable timer = new Runnable() {
+                public void run() {
+                    stage_ = redraw(bitmap_);
+                    publishProgress();
+                }
+            };
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.scheduleAtFixedRate(timer, 0, period_, TimeUnit.MILLISECONDS);
+            do {
+                Thread.yield();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (stage_ != 2 && stage_ != 3);
+            scheduler.shutdown();
+            return null;
+        }
+
+        protected void onProgressUpdate(Void... progress) {
+            mLinearLayout.setBackground(new BitmapDrawable(mLinearLayout.getResources(), bitmap_));
+            FPS();
+            final double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
+            final double available = Debug.getNativeHeapSize() / 1048576;
+            final double free = Debug.getNativeHeapFreeSize() / 1048576;
+            final long millisec = SystemClock.elapsedRealtime();
+            final float sec = (millisec - start_) / 1000.0f;
+            final String time = String.format(java.util.Locale.US, "%.2f", sec);
+            textView_.setText(FPS() + ", " + stage_ + ", " + text_ + time + "s \nMemory -> alloc:"
+                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB]");
+        }
+
+        protected void onPostExecute(Void result) {
+            finish();
+            buttonRender_.setText(R.string.render);
+        }
+    }
+}
+
+/*
     public void onDraw(Canvas canvas)
     {
         this.setWillNotDraw(false);
@@ -109,20 +142,22 @@ public class DrawView extends SurfaceView
             switch (isWorking()) {
                 case 0:
                 {
-                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
+                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
                 }
                 return;
 
                 case 1://While ray-tracer is busy
                 {
-                    canvas.drawBitmap(bitmapW_.copy(Bitmap.Config.ARGB_8888, false), 0.0f, 0.0f, null);
+                    redraw(bitmap_);
+                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
                     stage = "Running -> ";
                 }
                     break;
 
                 case 2://When ray-tracer is finished
                 {
-                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
+                    redraw(bitmap_);
+                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
                     stopTimer();
                     stage = "Finished -> ";
                 }
@@ -130,7 +165,8 @@ public class DrawView extends SurfaceView
 
                 case 3://When ray-tracer is stopped
                 {
-                    canvas.drawBitmap(bitmapW_, 0.0f, 0.0f, null);
+                    redraw(bitmap_);
+                    canvas.drawBitmap(bitmap_, 0.0f, 0.0f, null);
                     stopTimer();
                     stage = "Stopped -> ";
                 }
@@ -148,4 +184,4 @@ public class DrawView extends SurfaceView
                     "HAc:" + canvas.isHardwareAccelerated());
         }
     }
-}
+*/
