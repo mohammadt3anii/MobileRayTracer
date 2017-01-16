@@ -37,6 +37,7 @@ public class MainActivity extends Activity
             final File[] files = dir.listFiles(new CpuFilter());
             return files.length;
         } catch (Exception e) {
+            e.printStackTrace();
             return 1;
         }
     }

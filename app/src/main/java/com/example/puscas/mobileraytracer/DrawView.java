@@ -34,17 +34,14 @@ class DrawView extends LinearLayout
         setWillNotDraw(false);
     }
 
-    String FPS() {
+    void FPS() {
         frame++;
         final float time = SystemClock.elapsedRealtime();
         if (time - timebase > 1000) {
-            final float fps = frame * 1000.0f / (time - timebase);
-            System.out.println();
+            FPS = frame * 1000.0f / (time - timebase);
             timebase = time;
             frame = 0;
-            FPS = fps;
         }
-        return "FPS: " + String.format(java.util.Locale.US, "%.2f", FPS);
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
@@ -114,15 +111,15 @@ class DrawView extends LinearLayout
 
         protected void onProgressUpdate(Void... progress) {
             mLinearLayout.setBackground(new BitmapDrawable(mLinearLayout.getResources(), bitmap_));
-            FPS();
             final double allocated = Debug.getNativeHeapAllocatedSize() / 1048576;
             final double available = Debug.getNativeHeapSize() / 1048576;
             final double free = Debug.getNativeHeapFreeSize() / 1048576;
             final long millisec = SystemClock.elapsedRealtime();
             final float sec = (millisec - start_) / 1000.0f;
             final String time = String.format(java.util.Locale.US, "%.2f", sec);
-            textView_.setText(FPS() + ", " + stage_ + ", " + text_ + time + "s \nMemory -> alloc:"
-                    + allocated + "MB, [available:" + available + "MB, free:" + free + "MB]");
+            FPS();
+            textView_.setText("FPS: " + String.format(java.util.Locale.US, "%.2f", FPS) + ", " + stage_ + ", " + text_ + time + "s \nMemory -> alloc:"
+                    + allocated + "MB, [a:" + available + "MB, f:" + free + "MB]");
         }
 
         protected void onPostExecute(Void result) {
