@@ -221,6 +221,7 @@ class DrawView extends LinearLayout
 
     class TouchHandler implements LinearLayout.OnTouchListener {
         public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (stopped_ || stage_ != Stage.BUSY.getValue()) return false;
             final int actionIndex = motionEvent.getActionIndex();
             final float x = motionEvent.getX(actionIndex);
             final float y = motionEvent.getY(actionIndex);

@@ -262,8 +262,6 @@ void JNICALL Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
     if (working_ != BUSY) return;
     const float x = (float) jx / width_;
     const float y = (float) jy / height_;
-    Ray ray;
-    Intersection intersection;
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     scene_->primitives[primitiveIndex]->shape_->moveTo(u_alpha, v_alpha);
