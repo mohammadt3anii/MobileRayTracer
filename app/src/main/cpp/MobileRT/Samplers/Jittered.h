@@ -14,8 +14,8 @@ namespace MobileRT {
 
     public:
         Jittered(const unsigned int width, const unsigned int height,
-                 const Shader &shader, const unsigned int samples,
-                 const Perspective &camera, const Scene &scene);
+                 const RayTracer &rayTracer, const unsigned int samples,
+                 const Perspective &camera);
 
         void renderScene(unsigned int *canvas,
                          const unsigned int threadId,

@@ -23,6 +23,8 @@ namespace MobileRT {
         ~RayTracer();
 
         void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const;
+
+        int traceTouch(Ray &ray, Intersection &intersection) const;
     };
 }
 

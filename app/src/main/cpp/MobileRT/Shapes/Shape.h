@@ -18,6 +18,8 @@ namespace MobileRT
         public:
             virtual ~Shape() = default;
             virtual bool intersect(Intersection&, const Ray&, const Material&) const = 0;
+
+        virtual void moveTo(float x, float y);
     };
 }
 

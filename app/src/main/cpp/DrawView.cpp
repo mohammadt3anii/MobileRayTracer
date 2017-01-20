@@ -10,26 +10,30 @@
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
 #include <android/bitmap.h>
+#include <android/log.h>
 
 #define LOG(msg, ...)\
-//__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
+__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
 using namespace MobileRT;
 
 enum State {
-    IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
+    IDLE = 0, BUSY = 1, FINISH = 2, FINISHED = 3, STOPPED = 4
 };
 
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Shader *shader_(nullptr);
-static MobileRT::Sampler *sampler_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
+static const MobileRT::RayTracer *rayTracer_(nullptr);
+static MobileRT::Sampler *sampler_(nullptr);
 static std::thread thread_;
+static unsigned int width_(0);
+static unsigned int height_(0);
 
-Scene *cornellBoxScene() {
-    Scene *scene = new Scene();
+Scene *const cornellBoxScene() {
+    Scene *const scene = new Scene();
     // point light - white
     scene->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f),
                                            Point3D(0.0f, 0.50f, 0.0f)));
@@ -71,17 +75,17 @@ Scene *cornellBoxScene() {
     return scene;
 }
 
-Scene *spheresScene() {
-    Scene *scene = new Scene();
+const Scene *const spheresScene() {
+    Scene *const scene = new Scene();
     // create one light source
     scene->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f),
                                            Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
-    Material sandMat(RGB(0.914f, 0.723f, 0.531f));
-    Material redMat(RGB(0.9f, 0.0f, 0.0f));
-    Material mirrorMat(RGB(0.0f, 0.0f, 0.0f), RGB(0.8f, 0.8f, 0.8f));
-    Material greenMat(RGB(0.0f, 0.9f, 0.0f));
+    const Material sandMat(RGB(0.914f, 0.723f, 0.531f));
+    const Material redMat(RGB(0.9f, 0.0f, 0.0f));
+    const Material mirrorMat(RGB(0.0f, 0.0f, 0.0f), RGB(0.8f, 0.8f, 0.8f));
+    const Material greenMat(RGB(0.0f, 0.9f, 0.0f));
     // create one sphere
     scene->primitives.push_back(
             new Primitive(new Sphere(Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
@@ -93,6 +97,15 @@ Scene *spheresScene() {
     scene->primitives.push_back(
             new Primitive(new Sphere(Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
     return scene;
+}
+
+extern "C"
+void Java_com_example_puscas_mobileraytracer_DrawView_clearStage(
+        JNIEnv *,// env,
+        jobject//this
+) {
+    working_ = FINISHED;
+    LOG("%s", "WORKING = FINISHED");
 }
 
 extern "C"
@@ -136,7 +149,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
 ) {
     working_ = IDLE;
     LOG("%s", "WORKING = IDLE");
-    const float ratio = static_cast<float>(height) / static_cast<float>(width);
+    const float ratio(static_cast<float>(height) / static_cast<float>(width));
+    width_ = static_cast<unsigned int>(width);
+    height_ = static_cast<unsigned int>(height);
+
+    const unsigned int samples_(static_cast<unsigned int>(samples));
     switch (scene) {
         case 1:
             camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.5f, 1.0f), 60.0f, 60.0f * ratio);
@@ -157,43 +174,37 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             shader_ = new NoShadows(*scene_);
             break;
     }
-    const unsigned int width_(static_cast<unsigned int>(width));
-    const unsigned int height_(static_cast<unsigned int>(height));
-    const unsigned int samples_(static_cast<unsigned int>(samples));
+    rayTracer_ = new RayTracer(*scene_, *shader_);
     switch (sampler) {
         case 1 :
-            sampler_ = new Jittered(width_, height_, *shader_, samples_, *camera_, *scene_);
+            sampler_ = new Jittered(width_, height_, *rayTracer_, samples_, *camera_);
             break;
 
         default:
-            sampler_ = new Stratified(width_, height_, *shader_, samples_, *camera_, *scene_);
+            sampler_ = new Stratified(width_, height_, *rayTracer_, samples_, *camera_);
             break;
     }
-
-    renderer_ = new MobileRT::Renderer(
-            *shader_,
-            *sampler_,
-            *camera_,
-            *scene_,
-            static_cast<unsigned int>(samples)
-    );
+    renderer_ = new MobileRT::Renderer(*sampler_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-    renderer_->render(static_cast<unsigned int *>(dstPixels), numThreads);
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    do {
+        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+    } while (working_ != STOPPED);
+    const std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     LOG ("TEMPO = %ld ms",
          std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     if (working_ != STOPPED) {
-        working_ = FINISHED;
-        LOG("%s", "WORKING = FINISHED");
+        working_ = FINISH;
+        LOG("%s", "WORKING = FINISH");
     }
     delete camera_;
     delete scene_;
     delete renderer_;
     delete shader_;
     delete sampler_;
+    delete rayTracer_;
 }
 
 extern "C"
@@ -203,11 +214,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
         jobject dstBitmap,
         jint nThreads) {
     void *dstPixels;
-    if (AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels) < 0) {
-        LOG("%s", "AndroidBitmap_lockPixels FAILED");
-    }
+    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
-
     working_ = BUSY;
     LOG("%s", "WORKING = BUSY");
     thread_ = std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
@@ -222,4 +230,41 @@ int Java_com_example_puscas_mobileraytracer_DrawView_redraw(
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
     return working_;
+}
+
+extern "C"
+int JNICALL Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
+        JNIEnv *,
+        jobject,
+        jfloat jx,
+        jfloat jy) {
+    if (working_ != BUSY) return -2;
+    const float x = (float) jx / width_;
+    const float y = (float) jy / height_;
+    Ray ray;
+    Intersection intersection;
+    const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
+    const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
+    camera_->getRay(ray, u_alpha, v_alpha);
+    int primitiveID = rayTracer_->traceTouch(ray, intersection);
+    LOG("id do objeto encontrado = %d", primitiveID);
+    return primitiveID;
+}
+
+extern "C"
+void JNICALL Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
+        JNIEnv *,
+        jobject,
+        jfloat jx,
+        jfloat jy,
+        jint primitiveIndex
+) {
+    if (working_ != BUSY) return;
+    const float x = (float) jx / width_;
+    const float y = (float) jy / height_;
+    Ray ray;
+    Intersection intersection;
+    const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
+    const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
+    scene_->primitives[primitiveIndex]->shape_->moveTo(u_alpha, v_alpha);
 }

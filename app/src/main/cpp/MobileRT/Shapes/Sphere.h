@@ -12,7 +12,7 @@ namespace MobileRT
 	class Sphere : public Shape
 	{
 		private:
-			const Point3D center_;
+		Point3D center_;
 			const float sq_radius_;
 
 		public:
@@ -20,6 +20,8 @@ namespace MobileRT
 
 		bool intersect(Intersection &intersection, const Ray &ray,
 					   const Material &material) const override;
+
+		void moveTo(float x, float y) override;
 	};
 }
 

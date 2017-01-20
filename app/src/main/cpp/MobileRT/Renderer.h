@@ -14,12 +14,11 @@ namespace MobileRT {
         Sampler *const sampler_;
 
     public:
-        Renderer(const Shader &shader, Sampler &sampler,
-                 const Perspective &camera, const Scene &scene, const unsigned int samples = 1);
+        Renderer(Sampler &sampler);
 
         ~Renderer();
 
-        void render(unsigned int *canvas, const unsigned int numThreads) const;
+        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads) const;
 
         void stopRender() const;
     };

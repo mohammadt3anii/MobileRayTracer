@@ -6,8 +6,7 @@
 
 using namespace MobileRT;
 
-Renderer::Renderer(const Shader &shader, Sampler &sampler,
-                   const Perspective &camera, const Scene &scene, const unsigned int samples) :
+Renderer::Renderer(Sampler &sampler) :
         sampler_(&sampler)
 {
 }
@@ -15,16 +14,16 @@ Renderer::Renderer(const Shader &shader, Sampler &sampler,
 Renderer::~Renderer() {
 }
 
-void Renderer::render(unsigned int *canvas,
-                      const unsigned int numThreads) const
+void Renderer::renderFrame(unsigned int *const bitmap,
+                           const unsigned int numThreads) const
 {
     this->sampler_->resetTask();
-    std::thread *threads = new std::thread[numThreads - 1];
+    std::thread *const threads(new std::thread[numThreads - 1]);
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
-        threads[i] = std::thread(&Sampler::renderScene, this->sampler_, canvas, i, numThreads);
+        threads[i] = std::thread(&Sampler::renderScene, this->sampler_, bitmap, i, numThreads);
     }
-    this->sampler_->renderScene(canvas, numThreads - 1, numThreads);
+    this->sampler_->renderScene(bitmap, numThreads - 1, numThreads);
     for (unsigned int i (0); i < numThreads - 1; i++)
     {
         threads[i].join();

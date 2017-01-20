@@ -10,11 +10,12 @@
 namespace MobileRT {
     class Primitive {
     private:
-        const Shape *shape_;
         const Material material_;
 
     public:
-        Primitive(const Shape *shape, const Material &material);
+        Shape *const shape_;
+
+        Primitive(Shape *shape, const Material &material);
 
         ~Primitive();
 

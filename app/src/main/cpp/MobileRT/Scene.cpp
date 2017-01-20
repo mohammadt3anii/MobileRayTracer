@@ -20,15 +20,15 @@ Scene::~Scene() {
     }
 }
 
-bool Scene::trace(Intersection &intersection, Ray &ray) const {
-    bool value(false);
+int Scene::trace(Intersection &intersection, Ray &ray) const {
+    int value(-1);
     ray.maxDistance_ = RAY_LENGTH_MAX;
     const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives.size()));
 
     for (unsigned int i(0); i < sizePrimitives; i++) {
         if (this->primitives[i]->intersect(intersection, ray)) {
             ray.maxDistance_ = intersection.length_;
-            value = true;
+            value = i;
         }
     }
     return value;

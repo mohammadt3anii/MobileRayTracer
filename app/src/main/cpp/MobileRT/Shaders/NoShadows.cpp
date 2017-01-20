@@ -11,7 +11,7 @@ NoShadows::NoShadows(const Scene &scene) : Shader(scene) {
 
 void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
                       Vector3D &vectorIntersectCamera,
-                      RayTraceCall rayTraceCall) const {
+                      RayTraceCall) const {
     const RGB &kD(intersection.material_->Kd_);
     rgb.reset();
 

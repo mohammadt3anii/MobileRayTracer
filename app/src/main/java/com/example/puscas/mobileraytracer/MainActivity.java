@@ -58,8 +58,7 @@ public class MainActivity extends Activity
         textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
         drawView_.setVisibility(View.INVISIBLE);
-        Button button = ((Button) findViewById(R.id.renderButton));
-        drawView_.setButton(button);
+        drawView_.setButton((Button) findViewById(R.id.renderButton));
 
         final String[] scenes = {"Cornell", "Spheres"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
@@ -123,11 +122,8 @@ public class MainActivity extends Activity
                 drawView_.startRender(42);
                 break;
 
-            case 1://if ray-tracer is busy
-                drawView_.stopRender();
-                break;
-
             default:
+                drawView_.stopDrawing();//if ray-tracer is busy
                 break;
         }
     }

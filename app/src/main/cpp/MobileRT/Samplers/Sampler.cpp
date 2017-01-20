@@ -8,8 +8,8 @@ using namespace MobileRT;
 
 Sampler::Sampler(
         const unsigned int width, const unsigned int height,
-        const Shader &shader, const unsigned int samples,
-        const Perspective &camera, const Scene &scene) :
+        const RayTracer &rayTracer, const unsigned int samples,
+        const Perspective &camera) :
         width_(width),
         height_(height),
         samples_(samples),
@@ -17,15 +17,14 @@ Sampler::Sampler(
         taskLine_(1),
         accumulate_(new RGB[this->width_ * this->height_]),
         tasks_(this->width_ * this->height_ * this->samples_),
+        rayTracer_(rayTracer),
         maxHalton_(roundToPower2(this->tasks_)),
-        rayTracer_(new RayTracer(scene, shader)),
         camera_(&camera)
 {
 }
 
 Sampler::~Sampler ()
 {
-    delete this->rayTracer_;
     delete[] this->accumulate_;
 }
 
