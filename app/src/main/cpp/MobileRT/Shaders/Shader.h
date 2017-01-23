@@ -15,6 +15,7 @@ namespace MobileRT {
     class Shader {
     protected:
         typedef std::function<void(RGB &, Ray &, Intersection &, Vector3D &)> RayTraceCall;
+        RayTraceCall rayTraceCall_;
         const Scene &scene_;
 
     public:
@@ -22,7 +23,9 @@ namespace MobileRT {
 
         virtual ~Shader();
 
-        virtual void shade(RGB &, Intersection &, const Ray &, Vector3D &, RayTraceCall) const;
+        virtual void shade(RGB &, Intersection &, const Ray &, Vector3D &) const;
+
+        void setRayTraceFunction(const RayTraceCall &rayTraceCall);
     };
 }
 

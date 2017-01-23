@@ -18,7 +18,7 @@ namespace MobileRT
         NoShadows(const Scene &scene);
 
         void shade(RGB &rgb, Intersection &intersection, const Ray &,
-                   Vector3D &vectIntersectCamera, RayTraceCall rayTraceCall) const override;
+                   Vector3D &vectIntersectCamera) const override;
     };
 }
 

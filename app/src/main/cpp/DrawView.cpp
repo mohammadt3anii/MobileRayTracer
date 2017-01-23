@@ -25,11 +25,11 @@ enum State {
 
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
-static const MobileRT::Shader *shader_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Renderer *renderer_(nullptr);
 static const MobileRT::RayTracer *rayTracer_(nullptr);
 static MobileRT::Sampler *sampler_(nullptr);
+static MobileRT::Shader *shader_(nullptr);
 static std::thread thread_;
 static unsigned int width_(0);
 static unsigned int height_(0);
@@ -248,7 +248,7 @@ int JNICALL Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     camera_->getRay(ray, u_alpha, v_alpha);
-    int primitiveID = rayTracer_->traceTouch(ray, intersection);
+    const int primitiveID(rayTracer_->traceTouch(intersection, ray));
     LOG("id do objeto encontrado = %d", primitiveID);
     return primitiveID;
 }

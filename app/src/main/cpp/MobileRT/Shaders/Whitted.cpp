@@ -12,8 +12,7 @@ Whitted::Whitted(const Scene &scene) : Shader(scene) {
 void Whitted::shade(RGB &rgb,
                     Intersection &intersection,
                     const Ray &ray,
-                    Vector3D &vectorIntersectCamera,
-                    RayTraceCall rayTraceCall) const {
+                    Vector3D &vectorIntersectCamera) const {
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
@@ -69,7 +68,7 @@ void Whitted::shade(RGB &rgb,
         Ray specRay(intersection.point_, shadingNormal, RAY_LENGTH_MAX, ray.depth_ + 1);
         RGB specRad;
         Intersection aux;
-        rayTraceCall(specRad, specRay, aux, vectorIntersectCamera);
+        this->rayTraceCall_(specRad, specRay, aux, vectorIntersectCamera);
         specRad.mult(intersection.material_->Ks_);
         rgb.add(specRad);
     }

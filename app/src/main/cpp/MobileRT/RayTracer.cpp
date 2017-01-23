@@ -6,12 +6,13 @@
 
 using namespace MobileRT;
 
-RayTracer::RayTracer(const Scene &scene, const Shader &shader) :
+RayTracer::RayTracer(const Scene &scene, Shader &shader) :
         scene_(scene),
         shader_(shader),
         rayTraceCall_([this](RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) {
             this->rayTrace(rgb, ray, intersection, vector);
         }) {
+    this->shader_.setRayTraceFunction(rayTraceCall_);
 }
 
 RayTracer::~RayTracer() {
@@ -22,15 +23,14 @@ void RayTracer::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3
     // compute radiance
     if (this->scene_.trace(intersection, ray) >= 0)
     {
-        this->shader_.shade(rgb, intersection, ray, vector, this->rayTraceCall_);
+        this->shader_.shade(rgb, intersection, ray, vector);
     }
     else {
         rgb.reset(0.0f, 0.0f, 0.0f);//pixel color without intersection
     }
 }
 
-int RayTracer::traceTouch(Ray &ray, Intersection &intersection) const {
+int RayTracer::traceTouch(Intersection &intersection, Ray &ray) const {
     // compute radiance
-    const int primitiveID = this->scene_.trace(intersection, ray);
-    return primitiveID;
+    return this->scene_.trace(intersection, ray);
 }

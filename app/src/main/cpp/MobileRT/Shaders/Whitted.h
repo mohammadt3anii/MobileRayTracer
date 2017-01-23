@@ -20,8 +20,7 @@ namespace MobileRT {
         void shade(RGB &rgb,
                    Intersection &intersection,
                    const Ray &ray,
-                   Vector3D &vectorIntersectCamera,
-                   RayTraceCall rayTraceCall) const override;
+                   Vector3D &vectorIntersectCamera) const override;
     };
 }
 
