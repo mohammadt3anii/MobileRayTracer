@@ -6,6 +6,7 @@
 #define MOBILERAYTRACER_SPHERE_H
 
 #include "Shape.h"
+#include "../Point3D.h"
 
 namespace MobileRT
 {

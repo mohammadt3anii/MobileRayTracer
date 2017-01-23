@@ -5,6 +5,7 @@
 #ifndef MOBILERAYTRACER_CAMERA_H
 #define MOBILERAYTRACER_CAMERA_H
 
+#include "../Point3D.h"
 #include "../Ray.h"
 
 namespace MobileRT {

@@ -6,6 +6,9 @@
 #define MOBILERAYTRACER_PRIMITIVE_H
 
 #include "Shapes/Shape.h"
+#include "Material.h"
+#include "Intersection.h"
+#include "Ray.h"
 
 namespace MobileRT {
     class Primitive {

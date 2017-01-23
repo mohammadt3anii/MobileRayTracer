@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_LIGHT_H
 #define MOBILERAYTRACER_LIGHT_H
 
-#include "../Tone_Mappers/RGB.h"
+#include "../RGB.h"
 #include "../Point3D.h"
 
 namespace MobileRT {

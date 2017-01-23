@@ -5,9 +5,11 @@
 #ifndef MOBILERAYTRACER_SCENE_H
 #define MOBILERAYTRACER_SCENE_H
 
-#include "Lights/PointLight.h"
-#include "Utils.h"
+#include "Lights/Light.h"
 #include "Primitive.h"
+#include "Intersection.h"
+#include "Ray.h"
+#include "Utils.h"
 #include <vector>
 
 namespace MobileRT {

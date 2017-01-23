@@ -9,6 +9,8 @@
 #include "MobileRT/Shapes/Plane.h"
 #include "MobileRT/Shapes/Sphere.h"
 #include "MobileRT/Shapes/Triangle.h"
+#include "MobileRT/Cameras/Perspective.h"
+#include "MobileRT/Lights/PointLight.h"
 #include <android/bitmap.h>
 #include <android/log.h>
 

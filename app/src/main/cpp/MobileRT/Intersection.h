@@ -5,6 +5,7 @@
 #ifndef MOBILERAYTRACER_INTERSECTION_H
 #define MOBILERAYTRACER_INTERSECTION_H
 
+#include "Point3D.h"
 #include "Vector3D.h"
 #include "Material.h"
 #include "Utils.h"

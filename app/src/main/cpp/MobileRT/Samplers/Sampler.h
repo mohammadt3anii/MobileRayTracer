@@ -7,7 +7,8 @@
 
 #include "../Utils.h"
 #include "../RayTracer.h"
-#include "../Cameras/Perspective.h"
+#include "../Cameras/Camera.h"
+#include "../RGB.h"
 #include <atomic>
 
 namespace MobileRT {

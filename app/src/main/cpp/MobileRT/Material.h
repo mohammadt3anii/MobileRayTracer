@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_MATERIAL_H
 #define MOBILERAYTRACER_MATERIAL_H
 
-#include "Tone_Mappers/RGB.h"
+#include "RGB.h"
 
 namespace MobileRT {
     class Material {

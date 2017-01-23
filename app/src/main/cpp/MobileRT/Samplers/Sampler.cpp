@@ -16,10 +16,10 @@ Sampler::Sampler(
         deviationIncrement_(1.0f / this->samples_),
         taskLine_(1),
         accumulate_(new RGB[this->width_ * this->height_]),
-        tasks_(this->width_ * this->height_ * this->samples_),
         rayTracer_(rayTracer),
-        maxHalton_(roundToPower2(this->tasks_)),
-        camera_(&camera)
+        tasks_(this->width_ * this->height_ * this->samples_),
+        camera_(&camera),
+        maxHalton_(roundToPower2(this->tasks_))
 {
 }
 

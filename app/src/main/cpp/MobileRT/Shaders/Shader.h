@@ -6,6 +6,10 @@
 #define MOBILERAYTRACER_SHADER_H
 
 #include "../Scene.h"
+#include "../RGB.h"
+#include "../Intersection.h"
+#include "../Ray.h"
+#include "../Vector3D.h"
 
 namespace MobileRT {
     class Shader {
