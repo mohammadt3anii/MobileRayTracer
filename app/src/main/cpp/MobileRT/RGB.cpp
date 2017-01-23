@@ -68,6 +68,7 @@ void RGB::reset() {
     this->R_ = 0.0f;
     this->G_ = 0.0f;
     this->B_ = 0.0f;
+    this->samples_ = 0;
 }
 
 void RGB::reset(const float r, const float g, const float b) {

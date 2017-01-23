@@ -40,6 +40,9 @@ const unsigned int Sampler::getTasks(const unsigned int tasks, const int sample)
 
 void Sampler::resetTask() {
     this->taskLine_ = 1;
+    for (int i(0); i < this->tasks_; i++) {
+        this->accumulate_[i].reset();
+    }
 }
 
 void Sampler::stopSampling() {

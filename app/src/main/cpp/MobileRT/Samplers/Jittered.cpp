@@ -29,7 +29,6 @@ void Jittered::renderScene(unsigned int *canvas,
     Vector3D vector;
     Ray ray;
 
-    unsigned int missed(0);
     const unsigned int requestTasks(1);
     for (
             unsigned int taskId(getTasks(requestTasks, 0));
@@ -47,7 +46,6 @@ void Jittered::renderScene(unsigned int *canvas,
 
             RGB &accumulate(this->accumulate_[ii]);
             if (accumulate.samples_ == this->samples_) {
-                missed++;
                 continue;
             }
             const unsigned int x(ii % this->width_);
