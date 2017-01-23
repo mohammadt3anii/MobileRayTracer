@@ -58,15 +58,13 @@ class DrawView extends LinearLayout
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
     private native void drawIntoBitmap(Bitmap image, int numThreads);
     private native void finish();
-
     private native void clearStage();
     private native int redraw(Bitmap bitmap);
-
     private native void stopRender();
-
     private native int traceTouch(float x, float y);
-
     private native void moveTouch(float x, float y, int primitiveId);
+
+    private native float getFPS();
     native int isWorking();
 
     void stopDrawing() {
@@ -206,7 +204,7 @@ class DrawView extends LinearLayout
             final double available = Debug.getNativeHeapSize() / 1024;
             final double free = Debug.getNativeHeapFreeSize() / 1024;
             textView_.setText(
-                    "FPS: " + String.format(java.util.Locale.US, "%.2f", fps_) + ", " +
+                    "FPS:" + String.format(java.util.Locale.US, "%.2f", getFPS()) + " [" + String.format(java.util.Locale.US, "%.2f", fps_) + "], " +
                             Stage.values()[stage_] + ", " + text_ + time + "s \nMemory -> alloc:" +
                             allocated + "KB, [a:" + available + "KB, f:" + free + "KB]");
         }
@@ -230,7 +228,7 @@ class DrawView extends LinearLayout
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {
-                    int primitiveID = traceTouch(x, y);
+                    final int primitiveID = traceTouch(x, y);
                     final int pointerID = motionEvent.getPointerId(actionIndex);
                     RenderTask.TouchTracker thisTouch = renderTask_.new TouchTracker();
                     thisTouch.pointerID = pointerID;

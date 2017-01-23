@@ -33,6 +33,20 @@ static MobileRT::Shader *shader_(nullptr);
 static std::thread thread_;
 static unsigned int width_(0);
 static unsigned int height_(0);
+static std::chrono::steady_clock::time_point timebase_;
+static float fps_(0);
+
+void FPS() {
+    static int frame(0);
+    frame++;
+    const std::chrono::steady_clock::time_point time(std::chrono::steady_clock::now());
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
+        fps_ = (frame * 1000.0f) /
+               (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count());
+        timebase_ = time;
+        frame = 0;
+    }
+}
 
 Scene *const cornellBoxScene() {
     Scene *const scene = new Scene();
@@ -169,11 +183,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
     }
     switch (shader) {
         case 1:
-            shader_ = new Whitted(*scene_);
+            shader_ = new MobileRT::Whitted(*scene_);
             break;
 
         default:
-            shader_ = new NoShadows(*scene_);
+            shader_ = new MobileRT::NoShadows(*scene_);
             break;
     }
     rayTracer_ = new RayTracer(*scene_, *shader_);
@@ -190,11 +204,12 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
-    const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
     do {
         renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+        FPS();
     } while (working_ != STOPPED);
-    const std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    const std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
     LOG ("TEMPO = %ld ms",
          std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     if (working_ != STOPPED) {
@@ -235,14 +250,14 @@ int Java_com_example_puscas_mobileraytracer_DrawView_redraw(
 }
 
 extern "C"
-int JNICALL Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
+int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
         jfloat jy) {
     if (working_ != BUSY) return -2;
-    const float x = (float) jx / width_;
-    const float y = (float) jy / height_;
+    const float x((float) jx / width_);
+    const float y((float) jy / height_);
     Ray ray;
     Intersection intersection;
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
@@ -254,7 +269,7 @@ int JNICALL Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
 }
 
 extern "C"
-void JNICALL Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
+void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
@@ -262,9 +277,17 @@ void JNICALL Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
         jint primitiveIndex
 ) {
     if (working_ != BUSY) return;
-    const float x = (float) jx / width_;
-    const float y = (float) jy / height_;
+    const float x((float) jx / width_);
+    const float y((float) jy / height_);
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     scene_->primitives[primitiveIndex]->shape_->moveTo(u_alpha, v_alpha);
+}
+
+extern "C"
+float Java_com_example_puscas_mobileraytracer_DrawView_getFPS(
+        JNIEnv *,
+        jobject
+) {
+    return fps_;
 }
