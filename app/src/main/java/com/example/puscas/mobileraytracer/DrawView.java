@@ -203,10 +203,12 @@ class DrawView extends LinearLayout
             final double allocated = Debug.getNativeHeapAllocatedSize() / 1024;
             final double available = Debug.getNativeHeapSize() / 1024;
             final double free = Debug.getNativeHeapFreeSize() / 1024;
-            textView_.setText(
-                    "FPS:" + String.format(java.util.Locale.US, "%.2f", getFPS()) + " [" + String.format(java.util.Locale.US, "%.2f", fps_) + "], " +
-                            Stage.values()[stage_] + ", " + text_ + time + "s \nMemory -> alloc:" +
-                            allocated + "KB, [a:" + available + "KB, f:" + free + "KB]");
+            textView_.setText("FPS:" + String.format(java.util.Locale.US, "%.2f", getFPS()) +
+                    " [" + String.format(java.util.Locale.US, "%.2f", fps_) + "], " +
+                    Stage.values()[stage_] + ", " + text_ + time + "s \nMemory -> alloc:" +
+                    allocated + "KB, [a:" + available + "KB, f:" + free + "KB]" +
+                    "\n" + renderTask_.touches.size()
+            );
         }
 
         class TouchTracker {
