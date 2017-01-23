@@ -10,7 +10,7 @@ RayTracer::RayTracer(const Scene &scene, const Shader &shader) :
         scene_(scene),
         shader_(shader),
         rayTraceCall_([this](RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) {
-        this->rayTrace(rgb, ray, intersection, vector);
+            this->rayTrace(rgb, ray, intersection, vector);
         }) {
 }
 

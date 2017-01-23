@@ -12,13 +12,13 @@ Sampler::Sampler(
         const Camera &camera) :
         width_(width),
         height_(height),
+        rayTracer_(rayTracer),
+        camera_(&camera),
         samples_(samples),
         deviationIncrement_(1.0f / this->samples_),
         taskLine_(1),
         accumulate_(new RGB[this->width_ * this->height_]),
-        rayTracer_(rayTracer),
         tasks_(this->width_ * this->height_ * this->samples_),
-        camera_(&camera),
         maxHalton_(roundToPower2(this->tasks_))
 {
 }
