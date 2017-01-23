@@ -7,6 +7,5 @@
 using namespace MobileRT;
 
 PointLight::PointLight(const RGB &radiance, const Point3D &position) :
-        radiance_(radiance),
-        position_(position) {
+        Light(radiance, position) {
 }

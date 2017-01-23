@@ -15,7 +15,7 @@ namespace MobileRT {
     public:
         Stratified(const unsigned int width, const unsigned int height,
                    const RayTracer &rayTracer, const unsigned int samples,
-                   const Perspective &camera);
+                   const Camera &camera);
 
         void renderScene(unsigned int *canvas,
                          const unsigned int threadId,

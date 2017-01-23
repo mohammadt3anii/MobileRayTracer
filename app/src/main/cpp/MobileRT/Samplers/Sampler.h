@@ -16,7 +16,7 @@ namespace MobileRT {
         unsigned int width_;
         unsigned int height_;
         const RayTracer &rayTracer_;
-        const Perspective *camera_;
+        const Camera *camera_;
         const unsigned int samples_;
         const float deviationIncrement_;
         std::atomic<unsigned int> taskLine_;
@@ -27,7 +27,7 @@ namespace MobileRT {
     public:
         Sampler(const unsigned int width, const unsigned int height,
                 const RayTracer &rayTracer, const unsigned int samples,
-                const Perspective &camera);
+                const Camera &camera);
         virtual ~Sampler();
 
         virtual void renderScene(unsigned int *canvas,

@@ -30,7 +30,7 @@ void Whitted::shade(RGB &rgb,
 
         for (unsigned int i(0); i < sizeLights; i++)//for each light
         {
-            const PointLight *light(scene_.lights[i]);
+            const Light *light(scene_.lights[i]);
 
             //calculates vector starting in intersection to the light
             vectorIntersectCamera.reset(light->position_, intersection.point_);

@@ -9,14 +9,10 @@
 #include "../Utils.h"
 
 namespace MobileRT {
-    class Perspective : Camera {
+    class Perspective : public Camera {
     private:
-        const Point3D position_;//looking at Z+
 
     public:
-        const float hFov_;
-        const float vFov_;
-
         Perspective(const Point3D &position, const float hFov, const float vFov);
 
         ~Perspective();

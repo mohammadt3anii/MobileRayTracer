@@ -9,7 +9,7 @@ using namespace MobileRT;
 Sampler::Sampler(
         const unsigned int width, const unsigned int height,
         const RayTracer &rayTracer, const unsigned int samples,
-        const Perspective &camera) :
+        const Camera &camera) :
         width_(width),
         height_(height),
         samples_(samples),

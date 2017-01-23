@@ -5,12 +5,18 @@
 #ifndef MOBILERAYTRACER_LIGHT_H
 #define MOBILERAYTRACER_LIGHT_H
 
+#include "../Tone_Mappers/RGB.h"
+#include "../Point3D.h"
+
 namespace MobileRT {
     class Light {
     private:
 
     public:
-        Light() = default;
+        const RGB radiance_;
+        const Point3D position_;
+
+        Light(const RGB &radiance, const Point3D &position);
     };
 }
 

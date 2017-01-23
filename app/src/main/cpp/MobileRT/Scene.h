@@ -16,7 +16,7 @@ namespace MobileRT {
 
 
     public:
-        std::vector<PointLight *> lights;
+        std::vector<Light *> lights;
         std::vector<Primitive *> primitives;
 
         Scene();

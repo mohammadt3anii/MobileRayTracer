@@ -20,7 +20,7 @@ void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
         const unsigned int Nl(static_cast<unsigned int> (scene_.lights.size()));
 
         for (unsigned int l(0); l < Nl; l++) {
-            const PointLight *light(scene_.lights[l]);
+            const Light *light(scene_.lights[l]);
 
             vectorIntersectCamera.reset(light->position_, intersection.point_);
             vectorIntersectCamera.normalize();

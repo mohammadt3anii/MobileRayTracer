@@ -6,8 +6,6 @@
 #define MOBILERAYTRACER_POINTLIGHT_H
 
 #include "Light.h"
-#include "../Tone_Mappers/RGB.h"
-#include "../Point3D.h"
 
 namespace MobileRT {
     class PointLight : public Light {
@@ -15,9 +13,6 @@ namespace MobileRT {
 
 
     public:
-        const RGB radiance_;
-        const Point3D position_;
-
         PointLight(const RGB &radiance, const Point3D &position);
     };
 }

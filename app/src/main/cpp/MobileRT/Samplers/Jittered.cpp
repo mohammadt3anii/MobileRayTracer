@@ -9,7 +9,7 @@ using namespace MobileRT;
 Jittered::Jittered(
         const unsigned int width, const unsigned int height,
         const RayTracer &rayTracer, const unsigned int samples,
-        const Perspective &camera) :
+        const Camera &camera) :
         Sampler(width, height, rayTracer, samples, camera)
 {
 }

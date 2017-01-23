@@ -11,7 +11,7 @@ namespace MobileRT {
     class Whitted : public Shader {
     private:
         enum {
-            MAX_DEPTH = 5
+            MAX_DEPTH = 4
         };
 
     public:
