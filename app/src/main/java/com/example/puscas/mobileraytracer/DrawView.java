@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 class DrawView extends LinearLayout
 {
     private long start_;
-    private long finished_;
     private int numThreads_;
     private int frame_;
     private int period_;
@@ -31,7 +30,6 @@ class DrawView extends LinearLayout
     private float timebase_;
     private float fps_;
     private Button buttonRender_;
-    private String text_;
     private TextView textView_;
     private Bitmap bitmap_;
     private LinearLayout layout_;
@@ -57,9 +55,9 @@ class DrawView extends LinearLayout
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
-    private native void drawIntoBitmap(Bitmap image, int numThreads);
+
+    private native void renderIntoBitmap(Bitmap image, int numThreads);
     private native void finish();
-    private native void clearStage();
     private native void stopRender();
     private native void moveTouch(float x, float y, int primitiveId);
     private native int redraw(Bitmap bitmap);
@@ -83,11 +81,10 @@ class DrawView extends LinearLayout
         //System.out.println("[startRender," + Thread.currentThread().getId() + "]");
         period_ = period;
         renderTask_ = new RenderTask();
-        finished_ = 0;
         stopped_ = false;
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
-        drawIntoBitmap(this.bitmap_, this.numThreads_);
+        renderIntoBitmap(this.bitmap_, this.numThreads_);
         renderTask_.execute();
     }
 
@@ -141,10 +138,6 @@ class DrawView extends LinearLayout
                 }
                 stage_ = redraw(bitmap_);
                 publishProgress();
-                if (stage_ == Stage.ENDING.getValue()) {
-                    finished_ = SystemClock.elapsedRealtime();
-                    clearStage();
-                }
                 if (stopped_) {
                     scheduler_.shutdown();
                 }
@@ -184,7 +177,6 @@ class DrawView extends LinearLayout
             finish();
             buttonRender_.setText(R.string.render);
 
-            text_ = null;
             textView_ = null;
             layout_ = null;
             renderTask_ = null;
@@ -200,19 +192,23 @@ class DrawView extends LinearLayout
         }
 
         private void printText() {
-            final long millisec = finished_ > 0 ? finished_ : SystemClock.elapsedRealtime();
-            final float sec = (millisec - start_) / 1000.0f;
-            final String timeTotal = String.format(java.util.Locale.US, "%.2f", sec);
-            final String timeFrame = String.format(java.util.Locale.US, "%.2f", getTimeFrame() / 1000.0f);
-            final double allocated = Debug.getNativeHeapAllocatedSize() / 1024;
-            final double available = Debug.getNativeHeapSize() / 1024;
-            final double free = Debug.getNativeHeapFreeSize() / 1024;
-            text_ = "R:" + getWidth() + "x" + getHeight() + ", T:" + numThreads_ + ", S:" + samples_ + ", t:";
-            textView_.setText("FPS:" + String.format(java.util.Locale.US, "%.2f", getFPS()) +
-                    " [" + String.format(java.util.Locale.US, "%.2f", fps_) + "], " +
-                    Stage.values()[stage_] + ", " + text_ + timeFrame + "s [" + timeTotal + "s]" +
-                    " \nMalloc:" + allocated + "KB, [Ma:" + available + "KB, Mf:" + free + "KB]"
-            );
+            final String fpsRayTracer = String.format(java.util.Locale.US, "FPS:%.2f ", getFPS());
+            final String fpsRender = String.format(java.util.Locale.US, "[%.2f], ", fps_);
+            final String resolution = "R:" + getWidth() + "x" + getHeight() + ", ";
+            final String threads = "T:" + numThreads_ + ", ";
+            final String samples = "S:" + samples_ + ", ";
+            final String timeFrame = String.format(java.util.Locale.US, "t:%.2fs ",
+                    getTimeFrame() / 1000.0f);
+            final String timeTotal = String.format(java.util.Locale.US, "[%.2fs]\n",
+                    (SystemClock.elapsedRealtime() - start_) / 1000.0f);
+            final String stage = Stage.values()[stage_] + ", ";
+            final String allocated = "Malloc:" + Debug.getNativeHeapAllocatedSize() / 1024 + "KB ";
+            final String available = "[Ma:" + Debug.getNativeHeapSize() / 1024 + "KB, ";
+            final String free = "Mf:" + Debug.getNativeHeapFreeSize() / 1024 + "KB]";
+            textView_.setText(fpsRayTracer + fpsRender +
+                    resolution + threads + samples +
+                    timeFrame + timeTotal +
+                    stage + allocated + available + free);
         }
 
         class TouchTracker {
@@ -232,7 +228,7 @@ class DrawView extends LinearLayout
                     final int actionIndex = motionEvent.getActionIndex();
                     final float x = motionEvent.getX(actionIndex);
                     final float y = motionEvent.getY(actionIndex);
-                    System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_DOWN (" + x + "," + y + ")");
+                    //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_DOWN (" + x + "," + y + ")");
                     final int primitiveID = traceTouch(x, y);
                     if (primitiveID < 0) return false;
                     final int pointerID = motionEvent.getPointerId(actionIndex);
@@ -253,7 +249,7 @@ class DrawView extends LinearLayout
                         RenderTask.TouchTracker touch = renderTask_.touches.get(touchListIndex);
                         touch.x = motionEvent.getX(i);
                         touch.y = motionEvent.getY(i);
-                        System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_MOVE (" + touch.x + "," + touch.y + ")");
+                        //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_MOVE (" + touch.x + "," + touch.y + ")");
                     }
                 }
                 return true;

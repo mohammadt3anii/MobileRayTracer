@@ -16,10 +16,8 @@
 #define LOG(msg, ...)\
 __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
-using namespace MobileRT;
-
 enum State {
-    IDLE = 0, BUSY = 1, FINISH = 2, FINISHED = 3, STOPPED = 4
+    IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
 };
 
 static int working_(IDLE);
@@ -27,11 +25,13 @@ static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
 static MobileRT::Sampler *sampler_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
+static MobileRT::Intersection intersection_;
+static MobileRT::Ray ray_;
 static std::thread thread_;
 static unsigned int width_(0);
 static unsigned int height_(0);
 static float fps_(0);
-static long timeFrame_;
+static long timeFrame_(0);
 
 void FPS() {
     static int frame(0);
@@ -46,80 +46,81 @@ void FPS() {
     }
 }
 
-Scene *const cornellBoxScene() {
-    Scene *const scene = new Scene();
+MobileRT::Scene *const cornellBoxScene() {
+    MobileRT::Scene *const scene = new MobileRT::Scene();
     // point light - white
-    scene->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f),
-                                           Point3D(0.0f, 0.50f, 0.0f)));
+    scene->lights.push_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                     MobileRT::Point3D(0.0f, 0.50f, 0.0f)));
 
     // back wall - white
-    const Material lightGrayMat(RGB(0.9f, 0.9f, 0.9f));
-    scene->primitives.push_back(new Primitive(new Plane(
-            Point3D(0.0f, 0.0f, 1.0f), Vector3D(0.0f, 0.0f, -1.0f)), lightGrayMat));
+    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
+                                                        lightGrayMat));
     // floor - white
-    scene->primitives.push_back(new Primitive(new Plane(
-            Point3D(0.0f, -1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f)), lightGrayMat));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, -1.0f, 0.0f), MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
+                                                        lightGrayMat));
     // ceiling - white
-    scene->primitives.push_back(new Primitive(new Plane(
-            Point3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, -1.0f, 0.0f)), lightGrayMat));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 1.0f, 0.0f), MobileRT::Vector3D(0.0f, -1.0f, 0.0f)),
+                                                        lightGrayMat));
     // left wall - red
-    const Material redMat(RGB(0.9f, 0.0f, 0.0f));
-    scene->primitives.push_back(new Primitive(new Plane(
-            Point3D(-1.0f, 0.0f, 0.0f), Vector3D(1.0f, 0.0f, 0.0f)), redMat));
+    const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(-1.0f, 0.0f, 0.0f), MobileRT::Vector3D(1.0f, 0.0f, 0.0f)), redMat));
     // right wall - blue
-    const Material blueMat(RGB(0.0f, 0.0f, 0.9f));
-    scene->primitives.push_back(new Primitive(new Plane(
-            Point3D(1.0f, 0.0f, 0.0f), Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
+    const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
 
     // sphere - mirror
-    const Material MirrorMat(RGB(0.0f, 0.0f, 0.0f), RGB(0.8f, 0.8f, 0.8f));
-    scene->primitives.push_back(new Primitive(new Sphere(
-            Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
+    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Sphere(
+            MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
 
     // sphere - green
-    const Material GreenMat(RGB(0.0f, 0.9f, 0.0f), RGB(0.0f, 0.2f, 0.0f));
-    scene->primitives.push_back(new Primitive(new Sphere(
-            Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
+    const MobileRT::Material GreenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.2f, 0.0f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Sphere(
+            MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
 
     // triangle - yellow
-    const Material yellowMat(RGB(1.0f, 1.0f, 0.0f));
-    scene->primitives.push_back(new Primitive(new Triangle(
-            Point3D(0.5f, -0.5f, 0.99f), Point3D(-0.5f, -0.5f, 0.99f),
-            Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
+    const MobileRT::Material yellowMat(MobileRT::RGB(1.0f, 1.0f, 0.0f));
+    scene->primitives.push_back(new MobileRT::Primitive(new MobileRT::Triangle(
+            MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
+            MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
     return scene;
 }
 
-const Scene *const spheresScene() {
-    Scene *const scene = new Scene();
+const MobileRT::Scene *const spheresScene() {
+    MobileRT::Scene *const scene = new MobileRT::Scene();
     // create one light source
-    scene->lights.push_back(new PointLight(RGB(1.0f, 1.0f, 1.0f),
-                                           Point3D(0.0f, 15.0f, 4.0f)));
+    scene->lights.push_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                     MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
-    const Material sandMat(RGB(0.914f, 0.723f, 0.531f));
-    const Material redMat(RGB(0.9f, 0.0f, 0.0f));
-    const Material mirrorMat(RGB(0.0f, 0.0f, 0.0f), RGB(0.8f, 0.8f, 0.8f));
-    const Material greenMat(RGB(0.0f, 0.9f, 0.0f));
+    const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
+    const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
+    const MobileRT::Material mirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
     // create one sphere
     scene->primitives.push_back(
-            new Primitive(new Sphere(Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
     scene->primitives.push_back(
-            new Primitive(new Sphere(Point3D(1.5f, 2.0f, 7.0f), 1.0f), mirrorMat));
+            new MobileRT::Primitive(new MobileRT::Sphere(MobileRT::Point3D(1.5f, 2.0f, 7.0f), 1.0f),
+                                    mirrorMat));
     scene->primitives.push_back(
-            new Primitive(new Plane(Point3D(0.0f, 0.0f, 0.0f),
-                                    Vector3D(0.0f, 1.0f, 0.0f)), sandMat));
+            new MobileRT::Primitive(new MobileRT::Plane(MobileRT::Point3D(0.0f, 0.0f, 0.0f),
+                                                        MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
+                                    sandMat));
     scene->primitives.push_back(
-            new Primitive(new Sphere(Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
+            new MobileRT::Primitive(new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
+                                    greenMat));
     return scene;
-}
-
-extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_clearStage(
-        JNIEnv *,// env,
-        jobject//this
-) {
-    working_ = FINISHED;
-    LOG("%s", "WORKING = FINISHED");
 }
 
 extern "C"
@@ -170,12 +171,14 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
     const unsigned int samples_(static_cast<unsigned int>(samples));
     switch (scene) {
         case 1:
-            camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.5f, 1.0f), 60.0f, 60.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
+                                                60.0f * ratio);
             scene_ = spheresScene();
             break;
 
         default:
-            camera_ = new MobileRT::Perspective(Point3D(0.0f, 0.0f, -3.4f), 45.0f, 45.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f), 45.0f,
+                                                45.0f * ratio);
             scene_ = cornellBoxScene();
             break;
     }
@@ -190,11 +193,11 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
     }
     switch (sampler) {
         case 1 :
-            sampler_ = new Jittered(width_, height_, *shader_, samples_, *camera_);
+            sampler_ = new MobileRT::Jittered(width_, height_, *shader_, samples_, *camera_);
             break;
 
         default:
-            sampler_ = new Stratified(width_, height_, *shader_, samples_, *camera_);
+            sampler_ = new MobileRT::Stratified(width_, height_, *shader_, samples_, *camera_);
             break;
     }
 }
@@ -203,13 +206,13 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     do {
         const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
         sampler_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
-        const std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
-        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::steady_clock::now() - start).count();
         FPS();
     } while (working_ != STOPPED);
     if (working_ != STOPPED) {
-        working_ = FINISH;
-        LOG("%s", "WORKING = FINISH");
+        working_ = FINISHED;
+        LOG("%s", "WORKING = FINISHED");
     }
     delete camera_;
     delete scene_;
@@ -218,7 +221,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_drawIntoBitmap(
+void Java_com_example_puscas_mobileraytracer_DrawView_renderIntoBitmap(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap,
@@ -250,10 +253,10 @@ int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
         jfloat jy) {
     const float x((float) jx / width_);
     const float y((float) jy / height_);
-    Ray ray;
-    Intersection intersection;
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
+    MobileRT::Ray ray;
+    MobileRT::Intersection intersection;
     camera_->getRay(ray, u_alpha, v_alpha);
     const int primitiveID(shader_->traceTouch(intersection, ray));
     return primitiveID;
@@ -271,16 +274,15 @@ void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
     const float y((float) jy / height_);
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
-    const Material material;
-    const Plane plane(Plane(Point3D(0.0f, 0.0f, scene_->primitives[primitiveIndex]->shape_->getZ()),
-                            Vector3D(0.0f, 0.0f, -1.0f)));
-    Intersection intersection;
-    Ray ray;
-    camera_->getRay(ray, u_alpha, v_alpha);
-    plane.intersect(intersection, ray, material);
-    scene_->primitives[primitiveIndex]->shape_->moveTo(intersection.point_.x_,
-                                                       intersection.point_.y_);
-    LOG("moveTouch (x,y)=(%f,%f)=(%f,%f)=(%f,%f)", jx, jy, x, y, u_alpha, v_alpha);
+    const MobileRT::Material material;
+    const MobileRT::Plane plane(MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 0.0f, scene_->primitives[primitiveIndex]->shape_->getZ()),
+            MobileRT::Vector3D(0.0f, 0.0f, -1.0f)));
+    camera_->getRay(ray_, u_alpha, v_alpha);
+    plane.intersect(intersection_, ray_, material);
+    scene_->primitives[primitiveIndex]->shape_->moveTo(intersection_.point_.x_,
+                                                       intersection_.point_.y_);
+    //LOG("moveTouch (x,y)=(%f,%f)=(%f,%f)=(%f,%f)", jx, jy, x, y, u_alpha, v_alpha);
 }
 
 extern "C"
@@ -296,6 +298,5 @@ long Java_com_example_puscas_mobileraytracer_DrawView_getTimeFrame(
         JNIEnv *,
         jobject
 ) {
-    LOG("timeFRAME = %ld", timeFrame_);
     return timeFrame_;
 }

@@ -20,13 +20,9 @@ namespace MobileRT {
     public:
         std::vector<Light *> lights;
         std::vector<Primitive *> primitives;
-
         Scene();
-
         ~Scene();
-
         int trace(Intersection &intersection, Ray &ray) const;
-
         bool shadowTrace(Intersection &intersection, const Ray &ray) const;
     };
 }
