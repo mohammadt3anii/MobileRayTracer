@@ -10,4 +10,5 @@ void Shape::moveTo(float, float) {
 }
 
 float Shape::getZ() const {
+    return 0.0f;
 }
