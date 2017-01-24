@@ -7,9 +7,9 @@
 using namespace MobileRT;
 
 Stratified::Stratified(const unsigned int width, const unsigned int height,
-                       const RayTracer &rayTracer, const unsigned int samples,
+                       const Shader &shader, const unsigned int samples,
                        const Camera &camera) :
-        Sampler(width, height, rayTracer, std::sqrt(samples), camera) {
+        Sampler(width, height, shader, std::sqrt(samples), camera) {
 }
 
 void Stratified::renderScene(unsigned int *canvas,
@@ -34,7 +34,7 @@ void Stratified::renderScene(unsigned int *canvas,
                 //builds ray and puts it in ray variable
                 this->camera_.getRay(ray, u_alpha, v_alpha);
                 //ray trace and puts the color in rayRGB variable
-                this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
+                this->shader_.rayTrace(rayRGB, ray, intersection, vector);
                 canvas[x + yWidth] = rayRGB.RGB2Color();
             }
         }
@@ -67,7 +67,7 @@ void Stratified::renderScene(unsigned int *canvas,
                         //builds ray and puts it in ray variable
                         this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
                         //ray trace and puts the color in rayRGB variable
-                        this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
+                        this->shader_.rayTrace(rayRGB, ray, intersection, vector);
                         this->accumulate_[x + yWidth].addSample(average, rayRGB);
                         average.average();
                         // toneMap and convert to Paint

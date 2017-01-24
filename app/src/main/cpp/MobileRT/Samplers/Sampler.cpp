@@ -8,11 +8,11 @@ using namespace MobileRT;
 
 Sampler::Sampler(
         const unsigned int width, const unsigned int height,
-        const RayTracer &rayTracer, const unsigned int samples,
+        const Shader &shader, const unsigned int samples,
         const Camera &camera) :
         width_(width),
         height_(height),
-        rayTracer_(rayTracer),
+        shader_(shader),
         camera_(camera),
         samples_(samples),
         deviationIncrement_(1.0f / this->samples_),

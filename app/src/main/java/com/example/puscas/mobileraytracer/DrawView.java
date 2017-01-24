@@ -65,6 +65,8 @@ class DrawView extends LinearLayout
     private native int redraw(Bitmap bitmap);
     private native int traceTouch(float x, float y);
     private native float getFPS();
+
+    private native long getTimeFrame();
     native int isWorking();
 
     void stopDrawing() {
@@ -200,15 +202,16 @@ class DrawView extends LinearLayout
         private void printText() {
             final long millisec = finished_ > 0 ? finished_ : SystemClock.elapsedRealtime();
             final float sec = (millisec - start_) / 1000.0f;
-            final String time = String.format(java.util.Locale.US, "%.2f", sec);
+            final String timeTotal = String.format(java.util.Locale.US, "%.2f", sec);
+            final String timeFrame = String.format(java.util.Locale.US, "%.2f", getTimeFrame() / 1000.0f);
             final double allocated = Debug.getNativeHeapAllocatedSize() / 1024;
             final double available = Debug.getNativeHeapSize() / 1024;
             final double free = Debug.getNativeHeapFreeSize() / 1024;
             text_ = "R:" + getWidth() + "x" + getHeight() + ", T:" + numThreads_ + ", S:" + samples_ + ", t:";
             textView_.setText("FPS:" + String.format(java.util.Locale.US, "%.2f", getFPS()) +
                     " [" + String.format(java.util.Locale.US, "%.2f", fps_) + "], " +
-                    Stage.values()[stage_] + ", " + text_ + time + "s \nMalloc:" +
-                    allocated + "KB, [Ma:" + available + "KB, Mf:" + free + "KB]"
+                    Stage.values()[stage_] + ", " + text_ + timeFrame + "s [" + timeTotal + "s]" +
+                    " \nMalloc:" + allocated + "KB, [Ma:" + available + "KB, Mf:" + free + "KB]"
             );
         }
 

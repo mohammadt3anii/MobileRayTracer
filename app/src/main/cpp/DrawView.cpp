@@ -25,17 +25,17 @@ enum State {
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
-static const MobileRT::RayTracer *rayTracer_(nullptr);
 static MobileRT::Sampler *sampler_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static std::thread thread_;
 static unsigned int width_(0);
 static unsigned int height_(0);
-static std::chrono::steady_clock::time_point timebase_;
 static float fps_(0);
+static long timeFrame_;
 
 void FPS() {
     static int frame(0);
+    static std::chrono::steady_clock::time_point timebase_;
     frame++;
     const std::chrono::steady_clock::time_point time(std::chrono::steady_clock::now());
     if (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
@@ -188,27 +188,25 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             shader_ = new MobileRT::NoShadows(*scene_);
             break;
     }
-    rayTracer_ = new RayTracer(*scene_, *shader_);
     switch (sampler) {
         case 1 :
-            sampler_ = new Jittered(width_, height_, *rayTracer_, samples_, *camera_);
+            sampler_ = new Jittered(width_, height_, *shader_, samples_, *camera_);
             break;
 
         default:
-            sampler_ = new Stratified(width_, height_, *rayTracer_, samples_, *camera_);
+            sampler_ = new Stratified(width_, height_, *shader_, samples_, *camera_);
             break;
     }
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
-    const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
     do {
+        const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
         sampler_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+        const std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
+        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         FPS();
     } while (working_ != STOPPED);
-    const std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
-    LOG ("TEMPO = %l ms",
-         std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     if (working_ != STOPPED) {
         working_ = FINISH;
         LOG("%s", "WORKING = FINISH");
@@ -217,7 +215,6 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     delete scene_;
     delete shader_;
     delete sampler_;
-    delete rayTracer_;
 }
 
 extern "C"
@@ -258,7 +255,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     camera_->getRay(ray, u_alpha, v_alpha);
-    const int primitiveID(rayTracer_->traceTouch(intersection, ray));
+    const int primitiveID(shader_->traceTouch(intersection, ray));
     return primitiveID;
 }
 
@@ -292,4 +289,13 @@ float Java_com_example_puscas_mobileraytracer_DrawView_getFPS(
         jobject
 ) {
     return fps_;
+}
+
+extern "C"
+long Java_com_example_puscas_mobileraytracer_DrawView_getTimeFrame(
+        JNIEnv *,
+        jobject
+) {
+    LOG("timeFRAME = %ld", timeFrame_);
+    return timeFrame_;
 }

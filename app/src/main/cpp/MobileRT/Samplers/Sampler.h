@@ -6,7 +6,7 @@
 #define MOBILERAYTRACER_SAMPLER_H
 
 #include "../Utils.h"
-#include "../RayTracer.h"
+#include "../Shaders/Shader.h"
 #include "../Cameras/Camera.h"
 #include "../RGB.h"
 #include <atomic>
@@ -17,7 +17,7 @@ namespace MobileRT {
     protected:
         unsigned int width_;
         unsigned int height_;
-        const RayTracer &rayTracer_;
+        const Shader &shader_;
         const Camera &camera_;
         const unsigned int samples_;
         const float deviationIncrement_;
@@ -28,7 +28,7 @@ namespace MobileRT {
 
     public:
         Sampler(const unsigned int width, const unsigned int height,
-                const RayTracer &rayTracer, const unsigned int samples,
+                const Shader &shader, const unsigned int samples,
                 const Camera &camera);
         virtual ~Sampler();
 

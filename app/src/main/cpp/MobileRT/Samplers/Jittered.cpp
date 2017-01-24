@@ -8,9 +8,9 @@ using namespace MobileRT;
 
 Jittered::Jittered(
         const unsigned int width, const unsigned int height,
-        const RayTracer &rayTracer, const unsigned int samples,
+        const Shader &shader, const unsigned int samples,
         const Camera &camera) :
-        Sampler(width, height, rayTracer, samples, camera)
+        Sampler(width, height, shader, samples, camera)
 {
 }
 
@@ -61,7 +61,7 @@ void Jittered::renderScene(unsigned int *canvas,
             //builds ray and puts it in ray variable
             this->camera_.getRay(ray, u_alpha_jittered, v_alpha_jittered);
             //ray trace and puts the color in rayRGB variable
-            this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
+            this->shader_.rayTrace(rayRGB, ray, intersection, vector);
             accumulate.addSample(average, rayRGB);
             average.average();
             // toneMap and convert to Paint
