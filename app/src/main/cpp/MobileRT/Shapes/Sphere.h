@@ -23,6 +23,8 @@ namespace MobileRT
 					   const Material &material) const override;
 
 		void moveTo(float x, float y) override;
+
+		float getZ() const override;
 	};
 }
 

@@ -6,6 +6,9 @@
 
 using namespace MobileRT;
 
+Material::Material() {
+}
+
 // diffuse only material
 Material::Material(const RGB& Kd) :
         Kd_(Kd)

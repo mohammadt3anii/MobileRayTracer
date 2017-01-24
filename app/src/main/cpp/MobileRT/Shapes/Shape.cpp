@@ -8,3 +8,6 @@ using namespace MobileRT;
 
 void Shape::moveTo(float, float) {
 }
+
+float Shape::getZ() const {
+}

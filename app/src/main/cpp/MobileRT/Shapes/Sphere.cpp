@@ -48,7 +48,11 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     return true;
 }
 
-void Sphere::moveTo(float x, float y) {
+void Sphere::moveTo(const float x, const float y) {
     this->center_.x_ = x;
     this->center_.y_ = y;
+}
+
+float Sphere::getZ() const {
+    return this->center_.z_;
 }

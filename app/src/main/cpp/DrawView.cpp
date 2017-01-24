@@ -255,7 +255,6 @@ int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
         jobject,
         jfloat jx,
         jfloat jy) {
-    if (working_ != BUSY) return -2;
     const float x((float) jx / width_);
     const float y((float) jy / height_);
     Ray ray;
@@ -264,7 +263,6 @@ int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     camera_->getRay(ray, u_alpha, v_alpha);
     const int primitiveID(rayTracer_->traceTouch(intersection, ray));
-    LOG("id do objeto encontrado = %d", primitiveID);
     return primitiveID;
 }
 
@@ -276,12 +274,20 @@ void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
         jfloat jy,
         jint primitiveIndex
 ) {
-    if (working_ != BUSY) return;
     const float x((float) jx / width_);
     const float y((float) jy / height_);
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
-    scene_->primitives[primitiveIndex]->shape_->moveTo(u_alpha, v_alpha);
+    const Material material;
+    Plane plane(Plane(Point3D(0.0f, 0.0f, scene_->primitives[primitiveIndex]->shape_->getZ()),
+                      Vector3D(0.0f, 0.0f, -1.0f)));
+    Intersection intersection;
+    Ray ray;
+    camera_->getRay(ray, u_alpha, v_alpha);
+    plane.intersect(intersection, ray, material);
+    scene_->primitives[primitiveIndex]->shape_->moveTo(intersection.point_.x_,
+                                                       intersection.point_.y_);
+    LOG("moveTouch (x,y)=(%f,%f)=(%f,%f)=(%f,%f)", jx, jy, x, y, u_alpha, v_alpha);
 }
 
 extern "C"
