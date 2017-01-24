@@ -62,9 +62,7 @@ class DrawView extends LinearLayout
     private native void clearStage();
     private native void stopRender();
     private native void moveTouch(float x, float y, int primitiveId);
-
     private native int redraw(Bitmap bitmap);
-
     private native int traceTouch(float x, float y);
     private native float getFPS();
     native int isWorking();

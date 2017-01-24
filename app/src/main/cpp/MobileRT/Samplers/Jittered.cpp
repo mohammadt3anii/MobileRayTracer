@@ -52,14 +52,14 @@ void Jittered::renderScene(unsigned int *canvas,
             const unsigned int y(ii / this->width_);
 
             // generate the ray
-            const float u_alpha(fastArcTan(this->camera_->hFov_ * ((x * INV_IMG_WIDTH) - 0.5f)));
-            const float v_alpha(fastArcTan(this->camera_->vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
+            const float u_alpha(fastArcTan(this->camera_.hFov_ * ((x * INV_IMG_WIDTH) - 0.5f)));
+            const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
             const float randU(std::rand() / half_rand_max - 1.0f);
             const float randV(std::rand() / half_rand_max - 1.0f);
             const float u_alpha_jittered(u_alpha + (randU * pixelWidth));
             const float v_alpha_jittered(v_alpha + (randV * pixelHeight));
             //builds ray and puts it in ray variable
-            this->camera_->getRay(ray, u_alpha_jittered, v_alpha_jittered);
+            this->camera_.getRay(ray, u_alpha_jittered, v_alpha_jittered);
             //ray trace and puts the color in rayRGB variable
             this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
             accumulate.addSample(average, rayRGB);

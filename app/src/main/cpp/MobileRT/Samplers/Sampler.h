@@ -10,6 +10,7 @@
 #include "../Cameras/Camera.h"
 #include "../RGB.h"
 #include <atomic>
+#include <thread>
 
 namespace MobileRT {
     class Sampler {
@@ -17,7 +18,7 @@ namespace MobileRT {
         unsigned int width_;
         unsigned int height_;
         const RayTracer &rayTracer_;
-        const Camera *camera_;
+        const Camera &camera_;
         const unsigned int samples_;
         const float deviationIncrement_;
         std::atomic<unsigned int> taskLine_;
@@ -41,7 +42,9 @@ namespace MobileRT {
 
         const unsigned int getTasks(const unsigned int tasks, const int sample);
 
-        void stopSampling();
+        void stopRender();
+
+        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
     };
 }
 

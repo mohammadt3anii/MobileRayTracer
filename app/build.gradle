@@ -23,7 +23,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11 -frtti -fexceptions -ljnigraphics -Wpedantic -Wall -Wextra" +
-                        "-Winline -Wfatal-errors -MMD -MP -Ofast -ftree-vectorize"
+                        "-Winline -Wfatal-errors -MMD -MP -Ofast -ftree-vectorize -ffast-math"
             }
         }
         jackOptions {

@@ -13,7 +13,7 @@ Sampler::Sampler(
         width_(width),
         height_(height),
         rayTracer_(rayTracer),
-        camera_(&camera),
+        camera_(camera),
         samples_(samples),
         deviationIncrement_(1.0f / this->samples_),
         taskLine_(1),
@@ -46,8 +46,21 @@ void Sampler::resetTask() {
     }
 }
 
-void Sampler::stopSampling() {
+void Sampler::stopRender() {
     this->height_ = 0;
     this->tasks_ = 0;
     this->maxHalton_ = 0;
+}
+
+void Sampler::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
+    resetTask();
+    std::thread *const threads(new std::thread[numThreads - 1]);
+    for (unsigned int i(0); i < numThreads - 1; i++) {
+        threads[i] = std::thread(&Sampler::renderScene, this, bitmap, i, numThreads);
+    }
+    renderScene(bitmap, numThreads - 1, numThreads);
+    for (unsigned int i(0); i < numThreads - 1; i++) {
+        threads[i].join();
+    }
+    delete[] threads;
 }

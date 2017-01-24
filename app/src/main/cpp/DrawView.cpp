@@ -1,7 +1,6 @@
 //
 // Created by Tiago on 14-10-2016.
 //
-#include "MobileRT/Renderer.h"
 #include "MobileRT/Shaders/NoShadows.h"
 #include "MobileRT/Shaders/Whitted.h"
 #include "MobileRT/Samplers/Stratified.h"
@@ -26,7 +25,6 @@ enum State {
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
-static const MobileRT::Renderer *renderer_(nullptr);
 static const MobileRT::RayTracer *rayTracer_(nullptr);
 static MobileRT::Sampler *sampler_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
@@ -149,7 +147,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
 ) {
     working_ = STOPPED;
     LOG("%s", "WORKING = STOPPED");
-    renderer_->stopRender();
+    sampler_->stopRender();
 }
 
 extern "C"
@@ -200,17 +198,16 @@ void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
             sampler_ = new Stratified(width_, height_, *rayTracer_, samples_, *camera_);
             break;
     }
-    renderer_ = new MobileRT::Renderer(*sampler_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
     do {
-        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+        sampler_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
         FPS();
     } while (working_ != STOPPED);
     const std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
-    LOG ("TEMPO = %ld ms",
+    LOG ("TEMPO = %l ms",
          std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     if (working_ != STOPPED) {
         working_ = FINISH;
@@ -218,7 +215,6 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     }
     delete camera_;
     delete scene_;
-    delete renderer_;
     delete shader_;
     delete sampler_;
     delete rayTracer_;
@@ -279,8 +275,8 @@ void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
     const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     const Material material;
-    Plane plane(Plane(Point3D(0.0f, 0.0f, scene_->primitives[primitiveIndex]->shape_->getZ()),
-                      Vector3D(0.0f, 0.0f, -1.0f)));
+    const Plane plane(Plane(Point3D(0.0f, 0.0f, scene_->primitives[primitiveIndex]->shape_->getZ()),
+                            Vector3D(0.0f, 0.0f, -1.0f)));
     Intersection intersection;
     Ray ray;
     camera_->getRay(ray, u_alpha, v_alpha);

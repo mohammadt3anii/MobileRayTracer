@@ -20,10 +20,9 @@ RayTracer::~RayTracer() {
 
 //ray trace and verifies if intersects primitives
 void RayTracer::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const {
-    // compute radiance
     if (this->scene_.trace(intersection, ray) >= 0)
     {
-        this->shader_.shade(rgb, intersection, ray, vector);
+        this->shader_.shade(rgb, intersection, ray, vector);// compute radiance
     }
     else {
         rgb.reset(0.0f, 0.0f, 0.0f);//pixel color without intersection
@@ -31,6 +30,5 @@ void RayTracer::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3
 }
 
 int RayTracer::traceTouch(Intersection &intersection, Ray &ray) const {
-    // compute radiance
     return this->scene_.trace(intersection, ray);
 }

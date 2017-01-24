@@ -26,13 +26,13 @@ void Stratified::renderScene(unsigned int *canvas,
         for (unsigned int y(getTasks(1, 0)); y < this->height_; y = getTasks(1, 0))
         {
             const unsigned int yWidth(y * this->width_);
-            const float v_alpha(fastArcTan(this->camera_->vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
+            const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
             for (unsigned int x(0); x < this->width_; x++)
             {
                 const float u_alpha(
-                        fastArcTan(this->camera_->hFov_ * ((x * INV_IMG_WIDTH) - 0.5f)));
+                        fastArcTan(this->camera_.hFov_ * ((x * INV_IMG_WIDTH) - 0.5f)));
                 //builds ray and puts it in ray variable
-                this->camera_->getRay(ray, u_alpha, v_alpha);
+                this->camera_.getRay(ray, u_alpha, v_alpha);
                 //ray trace and puts the color in rayRGB variable
                 this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
                 canvas[x + yWidth] = rayRGB.RGB2Color();
@@ -56,16 +56,16 @@ void Stratified::renderScene(unsigned int *canvas,
                 {
                     const unsigned int yWidth(y * this->width_);
                     const float v(y * INV_IMG_HEIGHT);
-                    const float v_alpha(fastArcTan(this->camera_->vFov_ * (0.5f - v)));
+                    const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - v)));
                     for (unsigned int x(0); x < this->width_; x++)
                     {
                         const float u(x * INV_IMG_WIDTH);
-                        const float u_alpha(fastArcTan(this->camera_->hFov_ * (u - 0.5f)));
+                        const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
                         const float deviationU(deviation(j + 1));
                         const float u_alpha_deviation(u_alpha + (deviationU * pixelWidth));
                         const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
                         //builds ray and puts it in ray variable
-                        this->camera_->getRay(ray, u_alpha_deviation, v_alpha_deviation);
+                        this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
                         //ray trace and puts the color in rayRGB variable
                         this->rayTracer_.rayTrace(rayRGB, ray, intersection, vector);
                         this->accumulate_[x + yWidth].addSample(average, rayRGB);
