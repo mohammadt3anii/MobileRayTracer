@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-Primitive::Primitive(Shape *shape, const Material &material) :
+Primitive::Primitive(Shape *const shape, const Material &material) :
         material_(material),
         shape_(shape) {
 }

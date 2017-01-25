@@ -11,15 +11,14 @@
 namespace MobileRT {
     class Jittered : public Sampler {
     private:
+        void renderScene(unsigned int *const bitmap,
+                         const unsigned int threadId,
+                         const unsigned int numThreads) override;
 
     public:
         Jittered(const unsigned int width, const unsigned int height,
                  const Shader &shader, const unsigned int samples,
                  const Camera &camera);
-
-        void renderScene(unsigned int *canvas,
-                         const unsigned int threadId,
-                         const unsigned int numThreads) override;
     };
 }
 

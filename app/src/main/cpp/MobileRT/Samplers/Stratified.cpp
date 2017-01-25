@@ -12,7 +12,7 @@ Stratified::Stratified(const unsigned int width, const unsigned int height,
         Sampler(width, height, shader, std::sqrt(samples), camera) {
 }
 
-void Stratified::renderScene(unsigned int *canvas,
+void Stratified::renderScene(unsigned int *const bitmap,
                              const unsigned int /*threadId*/,
                              const unsigned int /*numThreads*/) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
@@ -35,7 +35,7 @@ void Stratified::renderScene(unsigned int *canvas,
                 this->camera_.getRay(ray, u_alpha, v_alpha);
                 //ray trace and puts the color in rayRGB variable
                 this->shader_.rayTrace(rayRGB, ray, intersection, vector);
-                canvas[x + yWidth] = rayRGB.RGB2Color();
+                bitmap[x + yWidth] = rayRGB.RGB2Color();
             }
         }
     }
@@ -71,7 +71,7 @@ void Stratified::renderScene(unsigned int *canvas,
                         this->accumulate_[x + yWidth].addSample(average, rayRGB);
                         average.average();
                         // toneMap and convert to Paint
-                        canvas[x + yWidth] = average.RGB2Color();
+                        bitmap[x + yWidth] = average.RGB2Color();
                     }
                 }
             }

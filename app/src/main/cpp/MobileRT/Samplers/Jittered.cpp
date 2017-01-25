@@ -14,7 +14,7 @@ Jittered::Jittered(
 {
 }
 
-void Jittered::renderScene(unsigned int *canvas,
+void Jittered::renderScene(unsigned int *const bitmap,
                            const unsigned int,
                            const unsigned int) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
@@ -65,7 +65,7 @@ void Jittered::renderScene(unsigned int *canvas,
             accumulate.addSample(average, rayRGB);
             average.average();
             // toneMap and convert to Paint
-            canvas[ii] = average.RGB2Color();
+            bitmap[ii] = average.RGB2Color();
         }
     }
 }

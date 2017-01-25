@@ -16,10 +16,10 @@ void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &,
 
     // direct lighting - only for diffuse materials
     if (!kD.isZero()) {
-        const unsigned long Nl(scene_.lights.size());
+        const unsigned long Nl(scene_.lights_.size());
 
         for (unsigned int l(0); l < Nl; l++) {
-            const Light *const light(scene_.lights[l]);
+            const Light *const light(scene_.lights_[l]);
 
             vectorIntersectCamera.reset(light->position_, intersection.point_);
             vectorIntersectCamera.normalize();

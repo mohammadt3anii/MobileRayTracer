@@ -47,7 +47,7 @@ void RGB::mult(const float f) {
 }
 
 void RGB::addSample(RGB &average, const RGB &sample) {
-    this->mutex.lock();
+    this->mutex_.lock();
     average.samples_ = ++this->samples_;
     this->R_ += sample.R_;
     this->G_ += sample.G_;
@@ -55,7 +55,7 @@ void RGB::addSample(RGB &average, const RGB &sample) {
     average.R_ = this->R_;
     average.G_ = this->G_;
     average.B_ = this->B_;
-    this->mutex.unlock();
+    this->mutex_.unlock();
 }
 
 void RGB::average() {

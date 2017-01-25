@@ -24,12 +24,12 @@ void Whitted::shade(RGB &rgb,
     rgb.reset();
     // shadowed direct lighting - only for diffuse materials
     if (!intersection.material_->Kd_.isZero()) {
-        const unsigned long sizeLights(scene_.lights.size());
+        const unsigned long sizeLights(scene_.lights_.size());
         Intersection intersectLight;
 
         for (unsigned int i(0); i < sizeLights; i++)//for each light
         {
-            const Light *const light(scene_.lights[i]);
+            const Light *const light(scene_.lights_[i]);
 
             //calculates vector starting in intersection to the light
             vectorIntersectCamera.reset(light->position_, intersection.point_);

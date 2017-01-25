@@ -10,23 +10,23 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-    const unsigned int sizeLights(static_cast<unsigned int> (this->lights.size()));
+    const unsigned int sizeLights(static_cast<unsigned int> (this->lights_.size()));
     for (unsigned int i(0); i < sizeLights; i++) {
-        delete this->lights[i];
+        delete this->lights_[i];
     }
-    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives.size()));
+    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives_.size()));
     for (unsigned int i(0); i < sizePrimitives; i++) {
-        delete this->primitives[i];
+        delete this->primitives_[i];
     }
 }
 
 int Scene::trace(Intersection &intersection, Ray &ray) const {
     int value(-1);
     ray.maxDistance_ = RAY_LENGTH_MAX;
-    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives.size()));
+    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives_.size()));
 
     for (unsigned int i(0); i < sizePrimitives; i++) {
-        if (this->primitives[i]->intersect(intersection, ray)) {
+        if (this->primitives_[i]->intersect(intersection, ray)) {
             ray.maxDistance_ = intersection.length_;
             value = i;
         }
@@ -35,10 +35,10 @@ int Scene::trace(Intersection &intersection, Ray &ray) const {
 }
 
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
-    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives.size()));
+    const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives_.size()));
     for (unsigned int i(0); i < sizePrimitives; i++)//trace shadow ray
     {
-        if (this->primitives[i]->intersect(intersection, ray)) {
+        if (this->primitives_[i]->intersect(intersection, ray)) {
             return true;
         }
     }

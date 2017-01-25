@@ -14,6 +14,11 @@
 
 namespace MobileRT {
     class Sampler {
+    private:
+        virtual void renderScene(unsigned int *const bitmap,
+                                 const unsigned int threadId,
+                                 const unsigned int numThreads) = 0;
+
     protected:
         unsigned int width_;
         unsigned int height_;
@@ -31,10 +36,6 @@ namespace MobileRT {
                 const Shader &shader, const unsigned int samples,
                 const Camera &camera);
         virtual ~Sampler();
-
-        virtual void renderScene(unsigned int *canvas,
-                                 const unsigned int threadId,
-                                 const unsigned int numThreads) = 0;
 
         const float deviation(const int index) const;
 

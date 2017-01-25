@@ -16,7 +16,7 @@ namespace MobileRT {
         float G_;
         float B_;
         unsigned int samples_;
-        std::mutex mutex;
+        std::mutex mutex_;
 
         RGB();
 

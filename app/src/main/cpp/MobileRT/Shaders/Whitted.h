@@ -13,14 +13,13 @@ namespace MobileRT {
         enum {
             MAX_DEPTH = 4
         };
-
-    public:
-        Whitted(const Scene &scene);
-
         void shade(RGB &rgb,
                    Intersection &intersection,
                    const Ray &ray,
                    Vector3D &vectorIntersectCamera) const override;
+
+    public:
+        Whitted(const Scene &scene);
     };
 }
 

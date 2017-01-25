@@ -12,13 +12,11 @@ namespace MobileRT
     class NoShadows : public Shader
     {
     private:
-
+        void shade(RGB &rgb, Intersection &intersection, const Ray &,
+                   Vector3D &vectIntersectCamera) const override;
 
     public:
         NoShadows(const Scene &scene);
-
-        void shade(RGB &rgb, Intersection &intersection, const Ray &,
-                   Vector3D &vectIntersectCamera) const override;
     };
 }
 
