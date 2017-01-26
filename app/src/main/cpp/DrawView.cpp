@@ -54,41 +54,41 @@ MobileRT::Scene *const cornellBoxScene() {
 
     // back wall - white
     const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
                                                          lightGrayMat));
     // floor - white
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Plane(
             MobileRT::Point3D(0.0f, -1.0f, 0.0f), MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
                                                          lightGrayMat));
     // ceiling - white
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 1.0f, 0.0f), MobileRT::Vector3D(0.0f, -1.0f, 0.0f)),
                                                          lightGrayMat));
     // left wall - red
     const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Plane(
             MobileRT::Point3D(-1.0f, 0.0f, 0.0f), MobileRT::Vector3D(1.0f, 0.0f, 0.0f)), redMat));
     // right wall - blue
     const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Plane(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Plane(
             MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
 
     // sphere - mirror
     const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                        MobileRT::RGB(0.8f, 0.8f, 0.8f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Sphere(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Sphere(
             MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
 
     // sphere - green
     const MobileRT::Material GreenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.2f, 0.0f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Sphere(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Sphere(
             MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
 
     // triangle - yellow
     const MobileRT::Material yellowMat(MobileRT::RGB(1.0f, 1.0f, 0.0f));
-    scene->primitives_.push_back(new MobileRT::Primitive(new MobileRT::Triangle(
+    scene->primitives_.push_back(new MobileRT::Primitive(*new MobileRT::Triangle(
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
     return scene;
@@ -109,17 +109,19 @@ const MobileRT::Scene *const spheresScene() {
     // create one sphere
     scene->primitives_.push_back(
             new MobileRT::Primitive(
-                    new MobileRT::Sphere(MobileRT::Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
+                    *new MobileRT::Sphere(MobileRT::Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
     scene->primitives_.push_back(
-            new MobileRT::Primitive(new MobileRT::Sphere(MobileRT::Point3D(1.5f, 2.0f, 7.0f), 1.0f),
-                                    mirrorMat));
+            new MobileRT::Primitive(
+                    *new MobileRT::Sphere(MobileRT::Point3D(1.5f, 2.0f, 7.0f), 1.0f),
+                    mirrorMat));
     scene->primitives_.push_back(
-            new MobileRT::Primitive(new MobileRT::Plane(MobileRT::Point3D(0.0f, 0.0f, 0.0f),
-                                                        MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
+            new MobileRT::Primitive(*new MobileRT::Plane(MobileRT::Point3D(0.0f, 0.0f, 0.0f),
+                                                         MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
                                     sandMat));
     scene->primitives_.push_back(
-            new MobileRT::Primitive(new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
-                                    greenMat));
+            new MobileRT::Primitive(
+                    *new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
+                    greenMat));
     return scene;
 }
 

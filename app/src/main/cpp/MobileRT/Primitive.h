@@ -18,7 +18,7 @@ namespace MobileRT {
     public:
         Shape *const shape_;
 
-        Primitive(Shape *const shape, const Material &material);
+        Primitive(Shape &shape, const Material &material);
 
         ~Primitive();
 
