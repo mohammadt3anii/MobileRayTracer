@@ -3,5 +3,5 @@
 **/build
 **/.externalNativeBuild
 **/.idea
-**/gradle
+**/.gradle
 **/.vscode
