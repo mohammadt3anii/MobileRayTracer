@@ -10,8 +10,7 @@ Jittered::Jittered(
         const unsigned int width, const unsigned int height,
         const Shader &shader, const unsigned int samples,
         const Camera &camera) :
-        Sampler(width, height, shader, samples, camera)
-{
+        Sampler(width, height, shader, samples, camera) {
 }
 
 void Jittered::renderScene(unsigned int *const bitmap,

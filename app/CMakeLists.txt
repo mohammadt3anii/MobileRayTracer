@@ -1,50 +1,21 @@
-# Sets the minimum version of CMake required to build the native
-# library. You should either keep the default value or only pass a
-# value of 3.4.0 or lower.
-
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds it for you.
-# Gradle automatically packages shared libraries with your APK.
+set(ANDROID_ARM_NEON TRUE)
+set(ANDROID_TOOLCHAIN clang)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
 
-file(GLOB_RECURSE MOBILE_RT_SOURCES
-    "src/main/cpp/MobileRT/*.cpp"
-    "src/main/cpp/DrawView.cpp"
-)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -frtti -fexceptions -Wpedantic -Wall -Wextra -ljnigraphics")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winline -Wfatal-errors -Ofast -ftree-vectorize -ffast-math")
 
-add_library( # Sets the name of the library.
-             DrawView
+file(GLOB_RECURSE MOBILE_APP_SOURCES "src/main/cpp/DrawView.cpp")
 
-             # Sets the library as a shared library.
-             SHARED
+add_library(DrawView_objects OBJECT ${MOBILE_APP_SOURCES})
+set_property(TARGET ${DrawView_objects} PROPERTY POSITION_INDEPENDENT_CODE 1)
+add_library(DrawView SHARED $<TARGET_OBJECTS:DrawView_objects>)
 
-             # Provides a relative path to your source file(s).
-             # Associated headers in the same location as their source
-             # file are automatically included.
-             ${MOBILE_RT_SOURCES})
+add_library(MobileRT STATIC IMPORTED)
+string(TOLOWER ${CMAKE_BUILD_TYPE} FOLDER_TYPE)
+set(LIB_PATH ${CMAKE_SOURCE_DIR}/../jniLibs/MobileRT/build/intermediates/cmake/${FOLDER_TYPE}/obj)
+set_target_properties(MobileRT PROPERTIES IMPORTED_LOCATION ${LIB_PATH}/${ANDROID_ABI}/libMobileRT.so)
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because system libraries are included in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-find_library( # Sets the name of the path variable.
-              log-lib
-
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
-
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in the
-# build script, prebuilt third-party libraries, or system libraries.
-
-target_link_libraries( # Specifies the target library.
-                       DrawView
-
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )
+target_link_libraries(DrawView MobileRT log)

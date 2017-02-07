@@ -14,7 +14,9 @@
 #define VECT_PROJ_MIN   1.0e-8f // kEpsilon
 
 float fastArcTan(const float value);
+
 double haltonSequence(const int index, const int base);
+
 unsigned int roundToPower2(unsigned int v);
 
 #endif //MOBILERAYTRACER_UTILS

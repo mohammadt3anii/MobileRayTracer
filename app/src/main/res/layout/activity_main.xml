@@ -8,9 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.puscas.mobileraytracer.MainActivity">
+    tools:context="com.example.puscas.mobileraytracerApp.MainActivity">
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
+    <com.example.puscas.mobileraytracerApp.CustomNumberPicker
         android:id="@+id/pickerScene"
         android:layout_width="80dp"
         android:layout_height="60dp"
@@ -19,14 +19,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
+    <com.example.puscas.mobileraytracerApp.CustomNumberPicker
         android:id="@+id/pickerShader"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
+    <com.example.puscas.mobileraytracerApp.CustomNumberPicker
         android:id="@+id/pickerThreads"
         android:layout_width="80dp"
         android:layout_height="60dp"
@@ -56,7 +56,7 @@
         android:textAllCaps="false"
         tools:ignore="UnknownId"/>
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
+    <com.example.puscas.mobileraytracerApp.CustomNumberPicker
         android:id="@+id/pickerSamples"
         android:layout_width="30dp"
         android:layout_height="60dp"
@@ -65,7 +65,7 @@
         android:layout_toEndOf="@+id/pickerScene"
         android:layout_toRightOf="@+id/pickerScene"/>
 
-    <com.example.puscas.mobileraytracer.CustomNumberPicker
+    <com.example.puscas.mobileraytracerApp.CustomNumberPicker
         android:id="@+id/pickerSampler"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -73,7 +73,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
-    <com.example.puscas.mobileraytracer.DrawView
+    <com.example.puscas.mobileraytracerApp.DrawView
         android:id="@+id/drawLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -81,7 +81,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/pickerSamples"
-        android:orientation="vertical">
-    </com.example.puscas.mobileraytracer.DrawView>
+        android:orientation="vertical"></com.example.puscas.mobileraytracerApp.DrawView>
 
 </RelativeLayout>

@@ -23,12 +23,10 @@ void Stratified::renderScene(unsigned int *const bitmap,
     Ray ray;
     if (this->samples_ < 2)//1 sample per pixel
     {
-        for (unsigned int y(getTasks(1, 0)); y < this->height_; y = getTasks(1, 0))
-        {
+        for (unsigned int y(getTasks(1, 0)); y < this->height_; y = getTasks(1, 0)) {
             const unsigned int yWidth(y * this->width_);
             const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - (y * INV_IMG_HEIGHT))));
-            for (unsigned int x(0); x < this->width_; x++)
-            {
+            for (unsigned int x(0); x < this->width_; x++) {
                 const float u_alpha(
                         fastArcTan(this->camera_.hFov_ * ((x * INV_IMG_WIDTH) - 0.5f)));
                 //builds ray and puts it in ray variable
@@ -44,21 +42,17 @@ void Stratified::renderScene(unsigned int *const bitmap,
         RGB average;
         const float pixelHeight(0.5f / this->height_);
         const float pixelWidth(0.5f / this->width_);
-        for (unsigned int i(0); i < this->samples_; i++)
-        {
+        for (unsigned int i(0); i < this->samples_; i++) {
             const float deviationV(deviation(i + 1));
-            for (unsigned int j(0); j < this->samples_; j++)
-            {
+            for (unsigned int j(0); j < this->samples_; j++) {
                 for (
                         unsigned int y(getTasks(1, i * this->samples_ + j));
                         y < this->height_;
-                        y = getTasks(1, i * this->samples_ + j))
-                {
+                        y = getTasks(1, i * this->samples_ + j)) {
                     const unsigned int yWidth(y * this->width_);
                     const float v(y * INV_IMG_HEIGHT);
                     const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - v)));
-                    for (unsigned int x(0); x < this->width_; x++)
-                    {
+                    for (unsigned int x(0); x < this->width_; x++) {
                         const float u(x * INV_IMG_WIDTH);
                         const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
                         const float deviationU(deviation(j + 1));

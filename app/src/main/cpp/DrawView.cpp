@@ -1,17 +1,20 @@
 //
 // Created by Tiago on 14-10-2016.
 //
-#include "MobileRT/Shaders/NoShadows.h"
-#include "MobileRT/Shaders/Whitted.h"
-#include "MobileRT/Samplers/Stratified.h"
-#include "MobileRT/Samplers/Jittered.h"
-#include "MobileRT/Shapes/Plane.h"
-#include "MobileRT/Shapes/Sphere.h"
-#include "MobileRT/Shapes/Triangle.h"
-#include "MobileRT/Cameras/Perspective.h"
-#include "MobileRT/Lights/PointLight.h"
+
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <thread>
+
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shaders/NoShadows.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shaders/Whitted.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Samplers/Stratified.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Samplers/Jittered.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Cameras/Perspective.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Lights/PointLight.h"
 
 #define LOG(msg, ...)\
 __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
@@ -46,7 +49,7 @@ void FPS() {
     }
 }
 
-MobileRT::Scene *const cornellBoxScene() {
+MobileRT::Scene *cornellBoxScene() {
     MobileRT::Scene *const scene = new MobileRT::Scene();
     // point light - white
     scene->lights_.push_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
@@ -94,7 +97,7 @@ MobileRT::Scene *const cornellBoxScene() {
     return scene;
 }
 
-const MobileRT::Scene *const spheresScene() {
+const MobileRT::Scene *spheresScene() {
     MobileRT::Scene *const scene = new MobileRT::Scene();
     // create one light source
     scene->lights_.push_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
@@ -126,7 +129,7 @@ const MobileRT::Scene *const spheresScene() {
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_finish(
+void Java_com_example_puscas_mobileraytracerApp_DrawView_finish(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -136,7 +139,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_finish(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
+int Java_com_example_puscas_mobileraytracerApp_DrawView_isWorking(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -144,7 +147,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_isWorking(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
+void Java_com_example_puscas_mobileraytracerApp_DrawView_stopRender(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -154,7 +157,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_stopRender(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_initialize(
+void Java_com_example_puscas_mobileraytracerApp_DrawView_initialize(
         JNIEnv *,// env,
         jobject,//this,
         jint scene,
@@ -223,7 +226,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_renderIntoBitmap(
+void Java_com_example_puscas_mobileraytracerApp_DrawView_renderIntoBitmap(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap,
@@ -237,7 +240,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_renderIntoBitmap(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracer_DrawView_redraw(
+int Java_com_example_puscas_mobileraytracerApp_DrawView_redraw(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap) {
@@ -248,7 +251,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_redraw(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
+int Java_com_example_puscas_mobileraytracerApp_DrawView_traceTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
@@ -265,7 +268,7 @@ int Java_com_example_puscas_mobileraytracer_DrawView_traceTouch(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
+void Java_com_example_puscas_mobileraytracerApp_DrawView_moveTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
@@ -288,7 +291,7 @@ void Java_com_example_puscas_mobileraytracer_DrawView_moveTouch(
 }
 
 extern "C"
-float Java_com_example_puscas_mobileraytracer_DrawView_getFPS(
+float Java_com_example_puscas_mobileraytracerApp_DrawView_getFPS(
         JNIEnv *,
         jobject
 ) {
@@ -296,7 +299,7 @@ float Java_com_example_puscas_mobileraytracer_DrawView_getFPS(
 }
 
 extern "C"
-long Java_com_example_puscas_mobileraytracer_DrawView_getTimeFrame(
+long Java_com_example_puscas_mobileraytracerApp_DrawView_getTimeFrame(
         JNIEnv *,
         jobject
 ) {

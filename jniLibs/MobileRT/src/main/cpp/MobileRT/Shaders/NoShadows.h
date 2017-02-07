@@ -7,10 +7,8 @@
 
 #include "Shader.h"
 
-namespace MobileRT
-{
-    class NoShadows : public Shader
-    {
+namespace MobileRT {
+    class NoShadows : public Shader {
     private:
         void shade(RGB &rgb, Intersection &intersection, const Ray &,
                    Vector3D &vectIntersectCamera) const override;

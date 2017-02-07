@@ -19,21 +19,18 @@ Sampler::Sampler(
         taskLine_(1),
         accumulate_(new RGB[this->width_ * this->height_]),
         tasks_(this->width_ * this->height_ * this->samples_),
-        maxHalton_(roundToPower2(this->tasks_))
-{
+        maxHalton_(roundToPower2(this->tasks_)) {
 }
 
-Sampler::~Sampler ()
-{
+Sampler::~Sampler() {
     delete[] this->accumulate_;
 }
 
-const float Sampler::deviation(const int index) const
-{
+float Sampler::deviation(const int index) const {
     return (-0.5f + (index * this->deviationIncrement_) - (this->deviationIncrement_ * 0.5f));
 }
 
-const unsigned int Sampler::getTasks(const unsigned int tasks, const int sample) {
+unsigned int Sampler::getTasks(const unsigned int tasks, const int sample) {
     const unsigned int task(this->taskLine_.fetch_add(tasks, std::memory_order_relaxed));
     return task - sample * this->height_;
 }

@@ -13,6 +13,7 @@ namespace MobileRT {
         enum {
             MAX_DEPTH = 4
         };
+
         void shade(RGB &rgb,
                    Intersection &intersection,
                    const Ray &ray,

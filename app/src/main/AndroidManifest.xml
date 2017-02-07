@@ -1,6 +1,6 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.puscas.mobileraytracer">
+    package="com.example.puscas.mobileraytracerApp">
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
@@ -9,7 +9,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.puscas.mobileraytracer.MainActivity"
+            android:name="com.example.puscas.mobileraytracerApp.MainActivity"
             android:hardwareAccelerated="true">
             <intent-filter>
                 <action

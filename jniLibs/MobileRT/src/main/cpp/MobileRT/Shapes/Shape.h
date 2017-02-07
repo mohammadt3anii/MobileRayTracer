@@ -9,16 +9,15 @@
 #include "../Ray.h"
 #include "../Material.h"
 
-namespace MobileRT
-{
-    class Shape
-    {
+namespace MobileRT {
+    class Shape {
     private:
-            
 
-        public:
-            virtual ~Shape() = default;
-            virtual bool intersect(Intersection&, const Ray&, const Material&) const = 0;
+
+    public:
+        virtual ~Shape() = default;
+
+        virtual bool intersect(Intersection &, const Ray &, const Material &) const = 0;
 
         virtual float getZ() const;
 

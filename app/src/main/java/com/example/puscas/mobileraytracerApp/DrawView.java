@@ -1,4 +1,4 @@
-package com.example.puscas.mobileraytracer;
+package com.example.puscas.mobileraytracerApp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,7 +55,6 @@ class DrawView extends LinearLayout
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
-
     private native void renderIntoBitmap(Bitmap image, int numThreads);
     private native void finish();
     private native void stopRender();
@@ -63,7 +62,6 @@ class DrawView extends LinearLayout
     private native int redraw(Bitmap bitmap);
     private native int traceTouch(float x, float y);
     private native float getFPS();
-
     private native long getTimeFrame();
     native int isWorking();
 

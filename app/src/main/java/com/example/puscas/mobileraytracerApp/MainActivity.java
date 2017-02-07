@@ -1,4 +1,4 @@
-package com.example.puscas.mobileraytracer;
+package com.example.puscas.mobileraytracerApp;
 
 import android.app.Activity;
 import android.os.Build;
@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity
 {
     static {
+        System.loadLibrary("MobileRT");
         System.loadLibrary("DrawView");
     }
 

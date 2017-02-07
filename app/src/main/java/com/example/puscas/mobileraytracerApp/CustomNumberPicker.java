@@ -1,4 +1,4 @@
-package com.example.puscas.mobileraytracer;
+package com.example.puscas.mobileraytracerApp;
 
 import android.content.Context;
 import android.graphics.Color;

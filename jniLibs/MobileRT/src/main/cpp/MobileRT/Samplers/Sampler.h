@@ -35,13 +35,14 @@ namespace MobileRT {
         Sampler(const unsigned int width, const unsigned int height,
                 const Shader &shader, const unsigned int samples,
                 const Camera &camera);
+
         virtual ~Sampler();
 
-        const float deviation(const int index) const;
+        float deviation(const int index) const;
 
         void resetTask();
 
-        const unsigned int getTasks(const unsigned int tasks, const int sample);
+        unsigned int getTasks(const unsigned int tasks, const int sample);
 
         void stopRender();
 

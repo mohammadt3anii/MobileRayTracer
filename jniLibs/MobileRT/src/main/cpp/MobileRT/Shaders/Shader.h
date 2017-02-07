@@ -20,8 +20,11 @@ namespace MobileRT {
 
     public:
         Shader(const Scene &scene);
+
         virtual ~Shader();
+
         void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const;
+
         int traceTouch(Intersection &intersection, Ray &ray) const;
     };
 }
