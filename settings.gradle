@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':MobileRT'
+project(':MobileRT').projectDir = new File('jniLibs/MobileRT')
