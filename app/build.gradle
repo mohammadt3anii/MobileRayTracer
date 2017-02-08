@@ -1,51 +1,13 @@
-apply plugin: 'com.android.application'
-
+apply plugin: "com.android.application"
 android {
-    signingConfigs {
-        Puscas {
-            keyAlias 'Puscas'
-            storeFile file('D:/Dropbox/Universidade/Dissertação em Engenharia Informática/Android Studio APKs/MobileRayTracer.jks')
-            keyPassword '@puscas99'
-            storePassword '@puscas99'
-        }
-    }
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.example.puscas.mobileraytracer"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-        }
-        signingConfig signingConfigs.Puscas
-        ndk {
-            abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'mips64'
-        }
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
-            jniDebuggable false
-            signingConfig signingConfigs.Puscas
-            renderscriptDebuggable false
-            pseudoLocalesEnabled false
-            zipAlignEnabled false
-        }
-        debug {
-            debuggable true
-            jniDebuggable true
-            signingConfig signingConfigs.Puscas
-            renderscriptDebuggable true
-            minifyEnabled false
-            pseudoLocalesEnabled true
-            zipAlignEnabled true
-        }
+        ndk { abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64" }
+        jackOptions { enabled true }
     }
     externalNativeBuild {
         cmake {
@@ -56,20 +18,28 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-}
-
-dependencies {
-    compile project(':MobileRT')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    compile 'com.android.support:recyclerview-v7:25.1.1'
-    compile 'com.android.support:gridlayout-v7:25.1.1'
-    compile 'com.android.support:cardview-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:support-v4:25.1.1'
-    testCompile 'junit:junit:4.12'
+    signingConfigs {
+        Puscas {
+            keyAlias "Puscas"
+            storeFile file("D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            keyPassword "@puscas99"
+            storePassword "@puscas99"
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.Puscas
+            dependencies {
+                debugCompile 'com.android.support:design:25.1.1'
+                debugCompile project(path: ':MobileRT')
+            }
+        }
+        release {
+            signingConfig signingConfigs.Puscas
+            dependencies {
+                releaseCompile('com.android.support:design:25.1.1')
+                releaseCompile project(path: ':MobileRT')
+            }
+        }
+    }
 }

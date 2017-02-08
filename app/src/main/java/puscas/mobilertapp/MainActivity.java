@@ -1,4 +1,4 @@
-package com.example.puscas.mobileraytracerApp;
+package puscas.mobilertapp;
 
 import android.app.Activity;
 import android.os.Build;
@@ -12,8 +12,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
-public class MainActivity extends Activity
-{
+public class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("DrawView");
@@ -29,7 +28,8 @@ public class MainActivity extends Activity
 
     private int getNumCoresOldPhones() {
         final class CpuFilter implements FileFilter {
-            public boolean accept(File pathname) {
+            @Override
+            public boolean accept(final File pathname) {
                 return Pattern.matches("cpu[0-9]+", pathname.getName());
             }
         }
@@ -37,7 +37,7 @@ public class MainActivity extends Activity
             final File dir = new File("/sys/devices/system/cpu/");
             final File[] files = dir.listFiles(new CpuFilter());
             return files.length;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return 1;
         }
@@ -51,8 +51,8 @@ public class MainActivity extends Activity
         }
     }
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -78,7 +78,7 @@ public class MainActivity extends Activity
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
         final int maxSamples = 12;
-        final String[] samples = new String[maxSamples];
+        String[] samples = new String[maxSamples];
         for (int i = 0; i < maxSamples; i++) {
             samples[i] = Integer.toString((i + 1) * (i + 1));
         }
@@ -104,8 +104,7 @@ public class MainActivity extends Activity
         pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    final public void startRender(View view)
-    {
+    public final void startRender(final View view) {
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 drawView_.createScene(
@@ -124,7 +123,7 @@ public class MainActivity extends Activity
                 break;
 
             default:
-                drawView_.stopDrawing();//if ray-tracer is busy
+                this.drawView_.stopDrawing();//if ray-tracer is busy
                 break;
         }
     }

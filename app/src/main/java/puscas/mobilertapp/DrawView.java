@@ -1,4 +1,4 @@
-package com.example.puscas.mobileraytracerApp;
+package puscas.mobilertapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-class DrawView extends LinearLayout
-{
+import puscas.mobilertapp.DrawView.RenderTask.TouchTracker;
+
+class DrawView extends LinearLayout {
     private long start_;
     private int numThreads_;
     private int frame_;
@@ -37,8 +40,7 @@ class DrawView extends LinearLayout
     private ScheduledExecutorService scheduler_;
     private BitmapDrawable bitmapDrawable_;
 
-    public DrawView(Context context, AttributeSet attrs)
-    {
+    public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         this.setOnTouchListener(new TouchHandler());
@@ -46,7 +48,7 @@ class DrawView extends LinearLayout
 
     void FPS() {
         frame_++;
-        final float time = SystemClock.elapsedRealtime();
+        float time = SystemClock.elapsedRealtime();
         if (time - timebase_ > 1000) {
             fps_ = frame_ * 1000.0f / (time - timebase_);
             timebase_ = time;
@@ -55,14 +57,23 @@ class DrawView extends LinearLayout
     }
 
     private native void initialize(int scene, int shader, int width, int height, int sampler, int samples);
+
     private native void renderIntoBitmap(Bitmap image, int numThreads);
+
     private native void finish();
+
     private native void stopRender();
+
     private native void moveTouch(float x, float y, int primitiveId);
+
     private native int redraw(Bitmap bitmap);
+
     private native int traceTouch(float x, float y);
+
     private native float getFPS();
+
     private native long getTimeFrame();
+
     native int isWorking();
 
     void stopDrawing() {
@@ -86,8 +97,7 @@ class DrawView extends LinearLayout
         renderTask_.execute();
     }
 
-    void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples)
-    {
+    void createScene(int scene, int shader, int numThreads, TextView textView, int sampler, int samples) {
         //System.out.println("[createScene," + Thread.currentThread().getId() + "]");
         textView_ = textView;
         bitmap_ = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
@@ -104,9 +114,10 @@ class DrawView extends LinearLayout
 
     private int getTouchListIndex(int pointerID) {
         for (int i = 0; i < renderTask_.touches.size(); i++) {
-            RenderTask.TouchTracker thisTouch = renderTask_.touches.get(i);
-            if (pointerID == thisTouch.pointerID)
+            TouchTracker thisTouch = renderTask_.touches.get(i);
+            if (pointerID == thisTouch.pointerID) {
                 return i;
+            }
         }
         return -1;
     }
@@ -120,13 +131,14 @@ class DrawView extends LinearLayout
         }
 
         public int getValue() {
-            return id;
+            return this.id;
         }
     }
 
-    private class RenderTask extends AsyncTask<Void, Void, Void> {
-        ArrayList<TouchTracker> touches = new ArrayList<>();
+    class RenderTask extends AsyncTask<Void, Void, Void> {
+        List<TouchTracker> touches = new ArrayList<>();
         final Runnable timer = new Runnable() {
+            @Override
             public void run() {
                 //System.out.println("[RenderTask," + Thread.currentThread().getId() + "]");
                 for (int i = 0; i < touches.size(); i++) {
@@ -142,6 +154,7 @@ class DrawView extends LinearLayout
             }
         };
 
+        @Override
         protected Void doInBackground(Void... params) {
             //System.out.println("[doInBackground," + Thread.currentThread().getId() + "]");
             scheduler_ = Executors.newSingleThreadScheduledExecutor();
@@ -158,6 +171,7 @@ class DrawView extends LinearLayout
             return null;
         }
 
+        @Override
         protected void onProgressUpdate(Void... progress) {
             //System.out.println ("[onProgressUpdate," + Thread.currentThread().getId() + "]");
             layout_.setBackground(bitmapDrawable_);
@@ -165,6 +179,7 @@ class DrawView extends LinearLayout
             printText();
         }
 
+        @Override
         protected void onPostExecute(Void result) {
             //System.out.println ("[onPostExecute," + Thread.currentThread().getId() + "]");
             redraw(bitmap_);
@@ -190,14 +205,14 @@ class DrawView extends LinearLayout
         }
 
         private void printText() {
-            final String fpsRayTracer = String.format(java.util.Locale.US, "FPS:%.2f ", getFPS());
-            final String fpsRender = String.format(java.util.Locale.US, "[%.2f], ", fps_);
+            final String fpsRayTracer = String.format(Locale.US, "FPS:%.2f ", getFPS());
+            final String fpsRender = String.format(Locale.US, "[%.2f], ", fps_);
             final String resolution = "R:" + getWidth() + "x" + getHeight() + ", ";
             final String threads = "T:" + numThreads_ + ", ";
             final String samples = "S:" + samples_ + ", ";
-            final String timeFrame = String.format(java.util.Locale.US, "t:%.2fs ",
+            final String timeFrame = String.format(Locale.US, "t:%.2fs ",
                     getTimeFrame() / 1000.0f);
-            final String timeTotal = String.format(java.util.Locale.US, "[%.2fs]\n",
+            final String timeTotal = String.format(Locale.US, "[%.2fs]\n",
                     (SystemClock.elapsedRealtime() - start_) / 1000.0f);
             final String stage = Stage.values()[stage_] + ", ";
             final String allocated = "Malloc:" + Debug.getNativeHeapAllocatedSize() / 1024 + "KB ";
@@ -214,60 +229,63 @@ class DrawView extends LinearLayout
             int primitiveID;
             float x;
             float y;
+
+            TouchTracker(final int pointerID, final int primitiveID, final float x, final float y) {
+                super();
+                this.pointerID = pointerID;
+                this.primitiveID = primitiveID;
+                this.x = x;
+                this.y = y;
+            }
         }
     }
 
     class TouchHandler implements LinearLayout.OnTouchListener {
+        @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (stopped_ || stage_ != Stage.BUSY.getValue()) return false;
+            if (stopped_ || stage_ != Stage.BUSY.getValue())
+                return false;
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {
-                    final int actionIndex = motionEvent.getActionIndex();
-                    final float x = motionEvent.getX(actionIndex);
-                    final float y = motionEvent.getY(actionIndex);
+                    int actionIndex = motionEvent.getActionIndex();
+                    float x = motionEvent.getX(actionIndex);
+                    float y = motionEvent.getY(actionIndex);
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_DOWN (" + x + "," + y + ")");
-                    final int primitiveID = traceTouch(x, y);
+                    int primitiveID = traceTouch(x, y);
                     if (primitiveID < 0) return false;
                     final int pointerID = motionEvent.getPointerId(actionIndex);
-                    RenderTask.TouchTracker thisTouch = renderTask_.new TouchTracker();
-                    thisTouch.pointerID = pointerID;
-                    thisTouch.primitiveID = primitiveID;
-                    thisTouch.x = x;
-                    thisTouch.y = y;
+                    final TouchTracker thisTouch = renderTask_.new TouchTracker(pointerID, primitiveID, x, y);
                     renderTask_.touches.add(thisTouch);
                 }
                 return true;
 
-                case MotionEvent.ACTION_MOVE: {
+                case MotionEvent.ACTION_MOVE:
                     for (int i = 0; i < motionEvent.getPointerCount(); i++) {
-                        final int pointerID = motionEvent.getPointerId(i);
-                        final int touchListIndex = getTouchListIndex(pointerID);
+                        int pointerID = motionEvent.getPointerId(i);
+                        int touchListIndex = getTouchListIndex(pointerID);
                         if (touchListIndex < 0) continue;
-                        RenderTask.TouchTracker touch = renderTask_.touches.get(touchListIndex);
+                        TouchTracker touch = renderTask_.touches.get(touchListIndex);
                         touch.x = motionEvent.getX(i);
                         touch.y = motionEvent.getY(i);
                         //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_MOVE (" + touch.x + "," + touch.y + ")");
                     }
-                }
-                return true;
+                    return true;
 
-                case MotionEvent.ACTION_POINTER_UP: {
+                case MotionEvent.ACTION_POINTER_UP:
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_POINTER_UP");
-                    final int actionIndex = motionEvent.getActionIndex();
-                    final int pointerID = motionEvent.getPointerId(actionIndex);
-                    final int touchListIndex = getTouchListIndex(pointerID);
+                    int actionIndex = motionEvent.getActionIndex();
+                    int pointerID = motionEvent.getPointerId(actionIndex);
+                    int touchListIndex = getTouchListIndex(pointerID);
                     if (touchListIndex < 0) return false;
                     renderTask_.touches.remove(touchListIndex);
-                }
-                return true;
+                    return true;
 
                 case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL: {
+                case MotionEvent.ACTION_CANCEL:
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_CANCEL");
                     renderTask_.touches.clear();
-                }
-                return true;
+                    return true;
 
                 default:
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "default");

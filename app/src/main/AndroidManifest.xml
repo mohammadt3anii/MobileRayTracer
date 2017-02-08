@@ -1,6 +1,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.puscas.mobileraytracerApp">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="puscas.mobilertapp">
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
@@ -9,9 +10,9 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.puscas.mobileraytracerApp.MainActivity"
+            android:name="puscas.mobilertapp.MainActivity"
             android:hardwareAccelerated="true">
-            <intent-filter>
+            <intent-filter tools:ignore="GoogleAppIndexingWarning">
                 <action
                     android:name="android.intent.action.MAIN"
                     android:hardwareAccelerated="true"
@@ -20,7 +21,6 @@
                     android:name="android.intent.action.VIEW"
                     android:hardwareAccelerated="true"
                     android:largeHeap="true"/>
-
                 <category
                     android:name="android.intent.category.LAUNCHER"
                     android:hardwareAccelerated="true"

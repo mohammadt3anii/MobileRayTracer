@@ -3,15 +3,4 @@
     <string name="time">Time</string>
     <string name="render">Render</string>
     <string name="stop">Stop</string>
-    <string name="radioButton">RadioButton</string>
-    <string name="cornell">Cornell</string>
-    <string name="spheres">Spheres</string>
-    <string name="noShadows">NoShadows</string>
-    <string name="whitted">Whitted</string>
-    <string name="scene">Scene</string>
-    <string name="shader">Shader</string>
-    <string name="sampler">Sampler</string>
-    <string name="numThreads">#Threads</string>
-    <string name="numSamples">#Samples</string>
-    <string name="textView">TextView</string>
 </resources>

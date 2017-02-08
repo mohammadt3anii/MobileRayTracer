@@ -129,7 +129,7 @@ const MobileRT::Scene *spheresScene() {
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracerApp_DrawView_finish(
+void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -139,7 +139,7 @@ void Java_com_example_puscas_mobileraytracerApp_DrawView_finish(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracerApp_DrawView_isWorking(
+int Java_puscas_mobilertapp_DrawView_isWorking(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -147,7 +147,7 @@ int Java_com_example_puscas_mobileraytracerApp_DrawView_isWorking(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracerApp_DrawView_stopRender(
+void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv *,// env,
         jobject//this
 ) {
@@ -157,7 +157,7 @@ void Java_com_example_puscas_mobileraytracerApp_DrawView_stopRender(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracerApp_DrawView_initialize(
+void Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *,// env,
         jobject,//this,
         jint scene,
@@ -226,7 +226,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracerApp_DrawView_renderIntoBitmap(
+void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap,
@@ -240,7 +240,7 @@ void Java_com_example_puscas_mobileraytracerApp_DrawView_renderIntoBitmap(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracerApp_DrawView_redraw(
+int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap) {
@@ -251,7 +251,7 @@ int Java_com_example_puscas_mobileraytracerApp_DrawView_redraw(
 }
 
 extern "C"
-int Java_com_example_puscas_mobileraytracerApp_DrawView_traceTouch(
+int Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
@@ -268,7 +268,7 @@ int Java_com_example_puscas_mobileraytracerApp_DrawView_traceTouch(
 }
 
 extern "C"
-void Java_com_example_puscas_mobileraytracerApp_DrawView_moveTouch(
+void Java_puscas_mobilertapp_DrawView_moveTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
@@ -291,7 +291,7 @@ void Java_com_example_puscas_mobileraytracerApp_DrawView_moveTouch(
 }
 
 extern "C"
-float Java_com_example_puscas_mobileraytracerApp_DrawView_getFPS(
+float Java_puscas_mobilertapp_DrawView_getFPS(
         JNIEnv *,
         jobject
 ) {
@@ -299,7 +299,7 @@ float Java_com_example_puscas_mobileraytracerApp_DrawView_getFPS(
 }
 
 extern "C"
-long Java_com_example_puscas_mobileraytracerApp_DrawView_getTimeFrame(
+long Java_puscas_mobilertapp_DrawView_getTimeFrame(
         JNIEnv *,
         jobject
 ) {
