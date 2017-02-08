@@ -40,7 +40,7 @@ class DrawView extends LinearLayout {
     private ScheduledExecutorService scheduler_;
     private BitmapDrawable bitmapDrawable_;
 
-    DrawView(Context context, AttributeSet attrs) {
+    public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         this.setOnTouchListener(new TouchHandler());
