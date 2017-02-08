@@ -26,11 +26,13 @@ android {
     }
     buildTypes {
         debug {
+            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
         }
         release {
+            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
         }
     }
-    return void
+    void
 }

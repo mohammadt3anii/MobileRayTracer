@@ -40,7 +40,7 @@ class DrawView extends LinearLayout {
     private ScheduledExecutorService scheduler_;
     private BitmapDrawable bitmapDrawable_;
 
-    public DrawView(Context context, AttributeSet attrs) {
+    DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         this.setOnTouchListener(new TouchHandler());
@@ -115,7 +115,7 @@ class DrawView extends LinearLayout {
     private int getTouchListIndex(final int pointerID) {
         for (int i = 0; i < renderTask_.touches.size(); i++) {
             final TouchTracker thisTouch = renderTask_.touches.get(i);
-            if (pointerID == thisTouch.pointerID) {
+            if (pointerID == thisTouch.pointerID_) {
                 return i;
             }
         }
@@ -124,14 +124,14 @@ class DrawView extends LinearLayout {
 
     private enum Stage {
         IDLE(0), BUSY(1), ENDING(2), END(3), STOP(4);
-        private final int id;
+        private final int id_;
 
         Stage(int id) {
-            this.id = id;
+            this.id_ = id;
         }
 
         public int getValue() {
-            return this.id;
+            return this.id_;
         }
     }
 
@@ -143,7 +143,7 @@ class DrawView extends LinearLayout {
                 //System.out.println("[RenderTask," + Thread.currentThread().getId() + "]");
                 for (int i = 0; i < touches.size(); i++) {
                     final TouchTracker touch = touches.get(i);
-                    moveTouch(touch.x, touch.y, touch.primitiveID);
+                    moveTouch(touch.x_, touch.y_, touch.primitiveID_);
                     //System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch (" + touch.x + "," + touch.y + ")");
                 }
                 stage_ = redraw(bitmap_);
@@ -161,7 +161,6 @@ class DrawView extends LinearLayout {
             scheduler_.scheduleAtFixedRate(timer, 0, period_, TimeUnit.MILLISECONDS);
             boolean finished = false;
             do {
-                Thread.yield();
                 try {
                     finished = scheduler_.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
                 } catch (InterruptedException e) {
@@ -197,11 +196,10 @@ class DrawView extends LinearLayout {
             bitmapDrawable_ = null;
             bitmap_ = null;
 
-            int i = 0;
-            do {
+            for (int i = 0; i < 4; i++) {
                 System.gc();
                 System.runFinalization();
-            } while (++i < 4);
+            }
         }
 
         private void printText() {
@@ -225,17 +223,17 @@ class DrawView extends LinearLayout {
         }
 
         class TouchTracker {
-            final int pointerID;
-            final int primitiveID;
-            float x;
-            float y;
+            final int pointerID_;
+            final int primitiveID_;
+            float x_;
+            float y_;
 
             TouchTracker(final int pointerID, final int primitiveID, final float x, final float y) {
                 super();
-                this.pointerID = pointerID;
-                this.primitiveID = primitiveID;
-                this.x = x;
-                this.y = y;
+                this.pointerID_ = pointerID;
+                this.primitiveID_ = primitiveID;
+                this.x_ = x;
+                this.y_ = y;
             }
         }
     }
@@ -265,8 +263,8 @@ class DrawView extends LinearLayout {
                         final int touchListIndex = getTouchListIndex(pointerID);
                         if (touchListIndex < 0) continue;
                         TouchTracker touch = renderTask_.touches.get(touchListIndex);
-                        touch.x = motionEvent.getX(i);
-                        touch.y = motionEvent.getY(i);
+                        touch.x_ = motionEvent.getX(i);
+                        touch.y_ = motionEvent.getY(i);
                         //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_MOVE (" + touch.x + "," + touch.y + ")");
                     }
                     return true;

@@ -1,5 +1,6 @@
 package puscas.mobilertapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
+@SuppressLint("GoogleAppIndexingApiWarning")
 public class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
@@ -27,12 +29,6 @@ public class MainActivity extends Activity {
     private NumberPicker pickerSamples_;
 
     private int getNumCoresOldPhones() {
-        final class CpuFilter implements FileFilter {
-            @Override
-            public boolean accept(final File pathname) {
-                return Pattern.matches("cpu[0-9]+", pathname.getName());
-            }
-        }
         try {
             final File dir = new File("/sys/devices/system/cpu/");
             final File[] files = dir.listFiles(new CpuFilter());
@@ -104,7 +100,8 @@ public class MainActivity extends Activity {
         pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    public final void startRender(@SuppressWarnings("UnusedParameters") final View view) {
+    @SuppressWarnings("UnusedParameters")
+    public void startRender(final View view) {
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 drawView_.createScene(
@@ -125,6 +122,13 @@ public class MainActivity extends Activity {
             default:
                 this.drawView_.stopDrawing();//if ray-tracer is busy
                 break;
+        }
+    }
+
+    private class CpuFilter implements FileFilter {
+        @Override
+        public boolean accept(final File pathname) {
+            return Pattern.matches("cpu[0-9]+", pathname.getName());
         }
     }
 }
