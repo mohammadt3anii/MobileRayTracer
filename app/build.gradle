@@ -10,9 +10,7 @@ android {
         jackOptions { enabled true }
     }
     externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
+        cmake { path "CMakeLists.txt" }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -33,6 +31,7 @@ android {
                 debugCompile 'com.android.support:design:25.1.1'
                 debugCompile project(path: ':MobileRT')
             }
+            return void
         }
         release {
             signingConfig signingConfigs.Puscas
@@ -40,6 +39,8 @@ android {
                 releaseCompile('com.android.support:design:25.1.1')
                 releaseCompile project(path: ':MobileRT')
             }
+            return void
         }
     }
+    return void
 }

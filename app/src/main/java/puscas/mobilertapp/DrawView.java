@@ -112,9 +112,9 @@ class DrawView extends LinearLayout {
         setBackground(bitmapDrawable_);
     }
 
-    private int getTouchListIndex(int pointerID) {
+    private int getTouchListIndex(final int pointerID) {
         for (int i = 0; i < renderTask_.touches.size(); i++) {
-            TouchTracker thisTouch = renderTask_.touches.get(i);
+            final TouchTracker thisTouch = renderTask_.touches.get(i);
             if (pointerID == thisTouch.pointerID) {
                 return i;
             }
@@ -142,7 +142,7 @@ class DrawView extends LinearLayout {
             public void run() {
                 //System.out.println("[RenderTask," + Thread.currentThread().getId() + "]");
                 for (int i = 0; i < touches.size(); i++) {
-                    TouchTracker touch = touches.get(i);
+                    final TouchTracker touch = touches.get(i);
                     moveTouch(touch.x, touch.y, touch.primitiveID);
                     //System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch (" + touch.x + "," + touch.y + ")");
                 }
@@ -197,11 +197,11 @@ class DrawView extends LinearLayout {
             bitmapDrawable_ = null;
             bitmap_ = null;
 
-            int i = 1;
+            int i = 0;
             do {
                 System.gc();
                 System.runFinalization();
-            } while (i++ < 4);
+            } while (++i < 4);
         }
 
         private void printText() {
@@ -243,16 +243,15 @@ class DrawView extends LinearLayout {
     class TouchHandler implements LinearLayout.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (stopped_ || stage_ != Stage.BUSY.getValue())
-                return false;
+            if (stopped_ || stage_ != Stage.BUSY.getValue()) return false;
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {
-                    int actionIndex = motionEvent.getActionIndex();
-                    float x = motionEvent.getX(actionIndex);
-                    float y = motionEvent.getY(actionIndex);
+                    final int actionIndex = motionEvent.getActionIndex();
+                    final float x = motionEvent.getX(actionIndex);
+                    final float y = motionEvent.getY(actionIndex);
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_DOWN (" + x + "," + y + ")");
-                    int primitiveID = traceTouch(x, y);
+                    final int primitiveID = traceTouch(x, y);
                     if (primitiveID < 0) return false;
                     final int pointerID = motionEvent.getPointerId(actionIndex);
                     final TouchTracker thisTouch = renderTask_.new TouchTracker(pointerID, primitiveID, x, y);
@@ -262,8 +261,8 @@ class DrawView extends LinearLayout {
 
                 case MotionEvent.ACTION_MOVE:
                     for (int i = 0; i < motionEvent.getPointerCount(); i++) {
-                        int pointerID = motionEvent.getPointerId(i);
-                        int touchListIndex = getTouchListIndex(pointerID);
+                        final int pointerID = motionEvent.getPointerId(i);
+                        final int touchListIndex = getTouchListIndex(pointerID);
                         if (touchListIndex < 0) continue;
                         TouchTracker touch = renderTask_.touches.get(touchListIndex);
                         touch.x = motionEvent.getX(i);
@@ -274,9 +273,9 @@ class DrawView extends LinearLayout {
 
                 case MotionEvent.ACTION_POINTER_UP:
                     //System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" + "ACTION_POINTER_UP");
-                    int actionIndex = motionEvent.getActionIndex();
-                    int pointerID = motionEvent.getPointerId(actionIndex);
-                    int touchListIndex = getTouchListIndex(pointerID);
+                    final int actionIndex = motionEvent.getActionIndex();
+                    final int pointerID = motionEvent.getPointerId(actionIndex);
+                    final int touchListIndex = getTouchListIndex(pointerID);
                     if (touchListIndex < 0) return false;
                     renderTask_.touches.remove(touchListIndex);
                     return true;

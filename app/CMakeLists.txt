@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -ljnigraphics")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wall -Wextra -Winline -Wfatal-errors")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ftree-vectorize -ffast-math")
 
-file(GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_SOURCE_DIR}/src/main/cpp/DrawView.cpp")
+file(GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_SOURCE_DIR}/src/main/cpp/**.cpp")
 
 add_library(DrawView SHARED ${MOBILE_APP_SOURCES})
 
