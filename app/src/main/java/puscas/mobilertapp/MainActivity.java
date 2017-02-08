@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
         pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    public final void startRender(final View view) {
+    public final void startRender(@SuppressWarnings("UnusedParameters") final View view) {
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 drawView_.createScene(
@@ -119,7 +119,7 @@ public class MainActivity extends Activity {
                         )
                 );
                 drawView_.setVisibility(View.VISIBLE);
-                drawView_.startRender(42);
+                drawView_.startRender();
                 break;
 
             default:

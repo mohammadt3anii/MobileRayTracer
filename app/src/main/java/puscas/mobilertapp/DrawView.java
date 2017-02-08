@@ -46,7 +46,7 @@ class DrawView extends LinearLayout {
         this.setOnTouchListener(new TouchHandler());
     }
 
-    void FPS() {
+    private void FPS() {
         frame_++;
         float time = SystemClock.elapsedRealtime();
         if (time - timebase_ > 1000) {
@@ -86,9 +86,9 @@ class DrawView extends LinearLayout {
         buttonRender_ = button;
     }
 
-    void startRender(int period) {
+    void startRender() {
         //System.out.println("[startRender," + Thread.currentThread().getId() + "]");
-        period_ = period;
+        period_ = 42;
         renderTask_ = new RenderTask();
         stopped_ = false;
         buttonRender_.setText(R.string.stop);
@@ -136,7 +136,7 @@ class DrawView extends LinearLayout {
     }
 
     class RenderTask extends AsyncTask<Void, Void, Void> {
-        List<TouchTracker> touches = new ArrayList<>();
+        final List<TouchTracker> touches = new ArrayList<>();
         final Runnable timer = new Runnable() {
             @Override
             public void run() {
@@ -225,8 +225,8 @@ class DrawView extends LinearLayout {
         }
 
         class TouchTracker {
-            int pointerID;
-            int primitiveID;
+            final int pointerID;
+            final int primitiveID;
             float x;
             float y;
 
@@ -240,7 +240,7 @@ class DrawView extends LinearLayout {
         }
     }
 
-    class TouchHandler implements LinearLayout.OnTouchListener {
+    private class TouchHandler implements LinearLayout.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (stopped_ || stage_ != Stage.BUSY.getValue()) return false;
