@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_POINTLIGHT_H
 #define MOBILERAYTRACER_POINTLIGHT_H
 
-#include "Light.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Lights/Light.h"
 
 namespace MobileRT {
     class PointLight : public Light {

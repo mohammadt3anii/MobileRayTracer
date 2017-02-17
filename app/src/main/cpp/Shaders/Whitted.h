@@ -5,15 +5,11 @@
 #ifndef MOBILERAYTRACER_WHITTED_H
 #define MOBILERAYTRACER_WHITTED_H
 
-#include "Shader.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
 
 namespace MobileRT {
     class Whitted : public Shader {
     private:
-        enum {
-            MAX_DEPTH = 4
-        };
-
         void shade(RGB &rgb,
                    Intersection &intersection,
                    const Ray &ray,

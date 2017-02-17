@@ -6,15 +6,22 @@
 
 using namespace MobileRT;
 
-Stratified::Stratified(const unsigned int width, const unsigned int height,
-                       const Shader &shader, const unsigned int samples,
-                       const Camera &camera) :
-        Sampler(width, height, shader, std::sqrt(samples), camera) {
+Stratified::Stratified(const unsigned int domainSize, const unsigned int samples) :
+        Sampler(domainSize, samples) {
 }
 
-void Stratified::renderScene(unsigned int *const bitmap,
-                             const unsigned int /*threadId*/,
-                             const unsigned int /*numThreads*/) {
+float Stratified::getDeviation(const unsigned int num) {
+    return this->deviation(num + 1);
+}
+
+float Stratified::getTask(const unsigned int tasks, const unsigned int sample) {
+    unsigned int task(this->task_.fetch_add(tasks, std::memory_order_relaxed));
+    return static_cast<float> (task - (sample * domainSize_)) / domainSize_;
+}
+
+/*void Stratified::renderScene(unsigned int *const bitmap,
+                             const unsigned int,
+                             const unsigned int) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     RGB rayRGB;
@@ -71,4 +78,4 @@ void Stratified::renderScene(unsigned int *const bitmap,
             }
         }
     }
-}
+}*/

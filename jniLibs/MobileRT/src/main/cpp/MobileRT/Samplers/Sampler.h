@@ -11,42 +11,29 @@
 #include "../RGB.h"
 #include <atomic>
 #include <thread>
+#include <cstdlib>
 
 namespace MobileRT {
     class Sampler {
-    private:
-        virtual void renderScene(unsigned int *const bitmap,
-                                 const unsigned int threadId,
-                                 const unsigned int numThreads) = 0;
-
-    protected:
-        unsigned int width_;
-        unsigned int height_;
-        const Shader &shader_;
-        const Camera &camera_;
-        const unsigned int samples_;
-        const float deviationIncrement_;
-        std::atomic<unsigned int> taskLine_;
-        RGB *const accumulate_;
-        unsigned int tasks_;
+    public:
+        const unsigned int domainSize_;
+        unsigned int samples_;
         unsigned int maxHalton_;
+        const float deviationIncrement_;
+        std::atomic<unsigned int> task_;
+        char padding[4] __attribute__((unused));
 
     public:
-        Sampler(const unsigned int width, const unsigned int height,
-                const Shader &shader, const unsigned int samples,
-                const Camera &camera);
-
+        Sampler(const unsigned int domainSize, const unsigned int samples);
         virtual ~Sampler();
 
-        float deviation(const int index) const;
-
+        float deviation(const unsigned int index) const;
         void resetTask();
-
-        unsigned int getTasks(const unsigned int tasks, const int sample);
-
         void stopRender();
 
-        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
+        virtual float getDeviation(const unsigned int num) = 0;
+
+        virtual float getTask(const unsigned int tasks, const unsigned int sample) = 0;
     };
 }
 

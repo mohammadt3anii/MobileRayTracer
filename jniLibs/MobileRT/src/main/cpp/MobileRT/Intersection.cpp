@@ -7,8 +7,8 @@
 using namespace MobileRT;
 
 Intersection::Intersection() :
-        length_(RAY_LENGTH_MAX),
-        material_(nullptr) {
+        material_(nullptr),
+        length_(RAY_LENGTH_MAX) {
 }
 
 void Intersection::reset(const Point3D &point, const Vector3D &normal, const float length,

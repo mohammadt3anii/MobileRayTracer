@@ -6,6 +6,8 @@
 
 using namespace MobileRT;
 
+#define MAX_DEPTH 4
+
 Whitted::Whitted(const Scene &scene) : Shader(scene) {
 }
 
@@ -57,7 +59,7 @@ void Whitted::shade(RGB &rgb,
         rgb.B_ += intersection.material_->Kd_.B_ * 0.1f;
     } // end direct + ambient
     // specular reflection
-    if (!intersection.material_->Ks_.isZero() && (ray.depth_ < this->MAX_DEPTH)) {
+    if (!intersection.material_->Ks_.isZero() && (ray.depth_ < MAX_DEPTH)) {
         // compute specular reflection
         //reflection ray
         const float RN_dot(2.0f * shadingNormal.dotProduct(ray.symDirection_));

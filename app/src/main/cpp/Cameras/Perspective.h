@@ -5,19 +5,18 @@
 #ifndef MOBILERAYTRACER_PERSPECTIVE_H
 #define MOBILERAYTRACER_PERSPECTIVE_H
 
-#include "Camera.h"
-#include "../Utils.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Cameras/Camera.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Utils.h"
 
 namespace MobileRT {
     class Perspective : public Camera {
-    private:
 
     public:
         Perspective(const Point3D &position, const float hFov, const float vFov);
 
         ~Perspective();
 
-        void getRay(Ray &ray, const float u_alpha, const float v_alpha) const;
+        virtual void getRay(Ray &ray, const float u_alpha, const float v_alpha) const override;
     };
 }
 

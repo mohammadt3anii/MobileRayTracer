@@ -17,11 +17,11 @@ namespace MobileRT {
         const float hFov_;
         const float vFov_;
 
+    public:
         Camera(const Point3D &position, const float hFov, const float vFov);
-
-        virtual ~Camera() = default;
-
         virtual void getRay(Ray &ray, const float u_alpha, const float v_alpha) const = 0;
+
+        virtual ~Camera();
     };
 }
 

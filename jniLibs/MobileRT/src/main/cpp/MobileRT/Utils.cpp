@@ -11,25 +11,31 @@ float fastArcTan(const float value) {
 }
 
 //https://en.wikipedia.org/wiki/Halton_sequence
-double haltonSequence(const int index, const int base) {
-    double f = 1.0;
-    double result = 0.0;
-    double i = index;
-    while (i > 0.0) {
+float haltonSequence(const unsigned int index, const unsigned int base) {
+    float f(1.0f);
+    float result(0.0f);
+    float i(index);
+    while (i > 0.0f) {
         f = f / base;
-        result = result + f * (static_cast<int> (i) % base);
+        result = result + f * (static_cast<unsigned int> (i) % base);
         i = std::floor(i / base);
     }
     return result;
 }
 
-unsigned int roundToPower2(unsigned int v) {
-    v--;
-    v |= v >> 1;
-    v |= v >> 2;
-    v |= v >> 4;
-    v |= v >> 8;
-    v |= v >> 16;
-    v++;
-    return v;
+unsigned int roundToPower2(unsigned int number) {
+    number--;
+    number |= number >> 1;
+    number |= number >> 2;
+    number |= number >> 4;
+    number |= number >> 8;
+    number |= number >> 16;
+    number++;
+    return number;
+}
+
+unsigned int roundToEvenNumber(unsigned int number) {
+    return number & static_cast<unsigned int> (~1);
+    //return number - (number & 1);;
+    //return (number % 2 == 0) ? number : (number + 1);
 }

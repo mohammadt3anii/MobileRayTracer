@@ -10,12 +10,11 @@
 
 namespace MobileRT {
     class Light {
-    private:
-
     public:
         const RGB radiance_;
         const Point3D position_;
 
+    public:
         Light(const RGB &radiance, const Point3D &position);
     };
 }

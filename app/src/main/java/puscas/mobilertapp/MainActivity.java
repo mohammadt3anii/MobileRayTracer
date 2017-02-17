@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
         System.loadLibrary("DrawView");
     }
 
-    private TextView textView_;
     private DrawView drawView_;
     private NumberPicker pickerScene_;
     private NumberPicker pickerShader_;
@@ -52,9 +51,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView_ = (TextView) findViewById(R.id.timeText);
+        final TextView textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
         drawView_.setVisibility(View.INVISIBLE);
+        drawView_.setView(textView_);
         drawView_.setButton((Button) findViewById(R.id.renderButton));
 
         final String[] scenes = {"Cornell", "Spheres"};
@@ -108,11 +108,9 @@ public class MainActivity extends Activity {
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
                         pickerThreads_.getValue(),
-                        textView_,
                         pickerSampler_.getValue(),
                         Integer.parseInt(
-                                pickerSamples_.getDisplayedValues()
-                                        [pickerSamples_.getValue() - 1]
+                                pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
                         )
                 );
                 drawView_.setVisibility(View.VISIBLE);

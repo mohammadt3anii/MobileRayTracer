@@ -1,0 +1,38 @@
+apply plugin: "com.android.library"
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        ndk { abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64" }
+        jackOptions { enabled false }
+    }
+    externalNativeBuild {
+        cmake { path "CMakeLists.txt" }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        Puscas {
+            keyAlias "Puscas"
+            storeFile file("D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            keyPassword "@puscas99"
+            storePassword "@puscas99"
+        }
+    }
+    buildTypes {
+        debug {
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.Puscas
+        }
+        release {
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.Puscas
+        }
+    }
+    void
+}

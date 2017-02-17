@@ -18,10 +18,9 @@ namespace MobileRT {
     public:
         Shape *const shape_;
 
+    public:
         Primitive(Shape &shape, const Material &material);
-
         ~Primitive();
-
         bool intersect(Intersection &intersection, const Ray &ray) const;
     };
 }

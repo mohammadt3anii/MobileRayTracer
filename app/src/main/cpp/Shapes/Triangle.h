@@ -5,9 +5,9 @@
 #ifndef MOBILERAYTRACER_TRIANGLE_H
 #define MOBILERAYTRACER_TRIANGLE_H
 
-#include "Shape.h"
-#include "../Point3D.h"
-#include "../Vector3D.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Vector3D.h"
 
 namespace MobileRT {
     class Triangle : public Shape {

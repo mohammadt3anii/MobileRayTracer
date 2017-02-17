@@ -85,5 +85,6 @@ unsigned int RGB::RGB2Color() {
     const unsigned char cr(static_cast<unsigned char> (r * 255));
     const unsigned char cg(static_cast<unsigned char> (g * 255));
     const unsigned char cb(static_cast<unsigned char> (b * 255));
-    return (0xFF000000 | (cb << 16) | (cg << 8) | cr);
+    return (0xFF000000 | static_cast<unsigned int> ((cb << 16)) |
+            static_cast<unsigned int> ((cg << 8)) | cr);
 }

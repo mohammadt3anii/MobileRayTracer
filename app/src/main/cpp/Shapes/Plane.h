@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_PLANE_H
 #define MOBILERAYTRACER_PLANE_H
 
-#include "Shape.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
 
 namespace MobileRT {
     class Plane : public Shape {

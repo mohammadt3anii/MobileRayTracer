@@ -11,22 +11,19 @@ namespace MobileRT {
     class Vector3D;
 
     class Point3D {
-    private:
-
-
     public:
         float x_;
         float y_;
         float z_;
+        char padding[4] __attribute__((unused));
 
+    public:
         Point3D();
-
         Point3D(const float x, const float y, const float z);
-
         Point3D(const Point3D &point);
 
+        Point3D &operator=(const Point3D &point3D);
         Point3D operator+(const Vector3D &vector) const;
-
         Vector3D operator-(const Point3D &point) const;
     };
 }

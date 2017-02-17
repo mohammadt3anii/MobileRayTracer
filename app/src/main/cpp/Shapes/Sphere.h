@@ -5,14 +5,15 @@
 #ifndef MOBILERAYTRACER_SPHERE_H
 #define MOBILERAYTRACER_SPHERE_H
 
-#include "Shape.h"
-#include "../Point3D.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
+#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.h"
 
 namespace MobileRT {
     class Sphere : public Shape {
     private:
-        Point3D center_;
         const float sq_radius_;
+        Point3D center_;
+        char padding[4] __attribute__((unused));
 
     public:
         Sphere(const Point3D &center, const float radius);

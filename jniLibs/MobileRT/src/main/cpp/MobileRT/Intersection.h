@@ -12,21 +12,18 @@
 
 namespace MobileRT {
     class Intersection {
-    private:
-
-
     public:
         Point3D point_;   // intersection point
         Vector3D normal_;    // intersection normal
-        float length_;     // ray length parameter
-        const Material *material_;  // material of the intersected primitive
         Vector3D symNormal_;
+        const Material *material_;  // material of the intersected primitive
+        float length_;     // ray length parameter
+        char padding[4] __attribute__((unused));
 
+    public:
         Intersection();
-
         void reset(const Point3D &point, const Vector3D &normal, const float length,
                    const Material &material);
-
         Vector3D &getSymNormal();
     };
 }

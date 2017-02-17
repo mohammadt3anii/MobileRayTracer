@@ -6,6 +6,10 @@
 #define MOBILERAYTRACER_UTILS
 
 #include <cmath>
+#include <android/log.h>
+
+#define LOG(msg, ...)\
+__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
 
 #define RAY_LENGTH_MIN  1.0e-5f
 #define RAY_LENGTH_MAX  1.0e+10f
@@ -15,8 +19,9 @@
 
 float fastArcTan(const float value);
 
-double haltonSequence(const int index, const int base);
-
+float haltonSequence(const unsigned int index, const unsigned int base);
 unsigned int roundToPower2(unsigned int v);
+
+unsigned int roundToEvenNumber(unsigned int number);
 
 #endif //MOBILERAYTRACER_UTILS

@@ -6,14 +6,21 @@
 
 using namespace MobileRT;
 
-Jittered::Jittered(
-        const unsigned int width, const unsigned int height,
-        const Shader &shader, const unsigned int samples,
-        const Camera &camera) :
-        Sampler(width, height, shader, samples, camera) {
+Jittered::Jittered(const unsigned int domainSize, const unsigned int samples) :
+        Sampler(domainSize, samples),
+        half_rand_max_(RAND_MAX * 0.5f) {
 }
 
-void Jittered::renderScene(unsigned int *const bitmap,
+float Jittered::getDeviation(const unsigned) {
+    return std::rand() / half_rand_max_ - 1.0f;
+}
+
+float Jittered::getTask(const unsigned int tasks, const unsigned int) {
+    unsigned int task = this->task_.fetch_add(tasks, std::memory_order_relaxed);
+    return haltonSequence(task, 2);
+}
+
+/*void Jittered::renderScene(unsigned int *const bitmap,
                            const unsigned int,
                            const unsigned int) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
@@ -21,7 +28,6 @@ void Jittered::renderScene(unsigned int *const bitmap,
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
     const float half_rand_max(RAND_MAX * 0.5f);
-    //const float half_rand_max((std::pow(2,96)-1) * 0.5f);
     RGB rayRGB;
     RGB average;
     Intersection intersection;
@@ -67,4 +73,4 @@ void Jittered::renderScene(unsigned int *const bitmap,
             bitmap[ii] = average.RGB2Color();
         }
     }
-}
+}*/

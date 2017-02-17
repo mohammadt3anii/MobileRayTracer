@@ -7,8 +7,8 @@
 using namespace MobileRT;
 
 Sphere::Sphere(const Point3D &center, const float radius) :
-        center_(center),
-        sq_radius_(radius * radius) {
+        sq_radius_(radius * radius),
+        center_(center) {
 }
 
 bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {

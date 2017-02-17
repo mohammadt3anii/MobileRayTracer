@@ -77,6 +77,13 @@ Vector3D Vector3D::operator*(const float value) const {
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
+Vector3D &Vector3D::operator=(const Vector3D &vector) {
+    this->x_ = vector.x_;
+    this->y_ = vector.y_;
+    this->z_ = vector.z_;
+    return *this;
+}
+
 void Vector3D::reset(const float x, const float y, const float z) {
     this->x_ = x;
     this->y_ = y;
