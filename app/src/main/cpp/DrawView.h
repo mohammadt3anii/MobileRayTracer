@@ -9,26 +9,23 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 
-#define LOG(msg, ...)\
-__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "line:%d: " msg, __LINE__, __VA_ARGS__);
-
-#include "Shaders/NoShadows.h"
-#include "Shaders/Whitted.h"
-#include "Samplers/Stratified.h"
-#include "Samplers/Jittered.h"
-#include "Cameras/Perspective.h"
-#include "Lights/PointLight.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/NoShadows.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/Whitted.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Stratified.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Jittered.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/PointLight.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
-#include "Shapes/Plane.h"
-#include "Shapes/Sphere.h"
-#include "Shapes/Triangle.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
 
-void FPS();
+void FPS(void);
 
-MobileRT::Scene *cornellBoxScene();
+const MobileRT::Scene *cornellBoxScene(void);
 
-const MobileRT::Scene *spheresScene();
+const MobileRT::Scene *spheresScene(void);
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(

@@ -5,25 +5,26 @@
 #ifndef MOBILERAYTRACER_SPHERE_H
 #define MOBILERAYTRACER_SPHERE_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.h"
+#include "Shape.h"
+#include "../Point3D.h"
 
 namespace MobileRT {
     class Sphere : public Shape {
     private:
         const float sq_radius_;
         Point3D center_;
+        Vector3D normal_;
         char padding[4] __attribute__((unused));
 
     public:
-        Sphere(const Point3D &center, const float radius);
+        explicit Sphere(const Point3D &center, const float radius);
 
         bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const override;
+                       const Material &material) override;
 
         void moveTo(float x, float y) override;
 
-        float getZ() const override;
+        float getZ(void) const override;
     };
 }
 

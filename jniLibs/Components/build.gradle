@@ -19,7 +19,7 @@ android {
     signingConfigs {
         Puscas {
             keyAlias "Puscas"
-            storeFile file("D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            storeFile file("/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
             keyPassword "@puscas99"
             storePassword "@puscas99"
         }
@@ -28,10 +28,18 @@ android {
         debug {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
+            dependencies {
+                debugCompile project(':MobileRT')
+            }
+            void
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
+            dependencies {
+                releaseCompile project(':MobileRT')
+            }
+            void
         }
     }
     void

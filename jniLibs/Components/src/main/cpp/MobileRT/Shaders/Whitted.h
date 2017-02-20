@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_WHITTED_H
 #define MOBILERAYTRACER_WHITTED_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
+#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
 
 namespace MobileRT {
     class Whitted : public Shader {
@@ -16,7 +16,7 @@ namespace MobileRT {
                    Vector3D &vectorIntersectCamera) const override;
 
     public:
-        Whitted(const Scene &scene);
+        explicit Whitted(const Scene &scene);
     };
 }
 

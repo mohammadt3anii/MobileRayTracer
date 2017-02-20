@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_PLANE_H
 #define MOBILERAYTRACER_PLANE_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
+#include "Shape.h"
 
 namespace MobileRT {
     class Plane : public Shape {
@@ -14,10 +14,10 @@ namespace MobileRT {
         const Vector3D normal_;    // normal to the plane
 
     public:
-        Plane(const Point3D &point, const Vector3D &normal);
+        explicit Plane(const Point3D &point, const Vector3D &normal);
 
         bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const override;
+                       const Material &material) override;
     };
 }
 

@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_NOSHADOWS_H
 #define MOBILERAYTRACER_NOSHADOWS_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
+#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
 
 namespace MobileRT {
     class NoShadows : public Shader {
@@ -14,7 +14,7 @@ namespace MobileRT {
                    Vector3D &vectIntersectCamera) const override;
 
     public:
-        NoShadows(const Scene &scene);
+        explicit NoShadows(const Scene &scene);
     };
 }
 

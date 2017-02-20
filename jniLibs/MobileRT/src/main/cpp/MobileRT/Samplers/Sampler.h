@@ -24,12 +24,17 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        Sampler(const unsigned int domainSize, const unsigned int samples);
-        virtual ~Sampler();
+        explicit Sampler(const unsigned int domainSize, const unsigned int samples);
+
+        virtual ~Sampler(void);
 
         float deviation(const unsigned int index) const;
-        void resetTask();
-        void stopRender();
+
+        void resetTask(const unsigned int value);
+
+        void stopRender(void);
+
+        bool notFinished(void);
 
         virtual float getDeviation(const unsigned int num) = 0;
 

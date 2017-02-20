@@ -15,19 +15,21 @@ Renderer::Renderer(Sampler &sampler, const Shader &shader, const Camera &camera,
         height_(roundToEvenNumber(height)),
         accumulate_(new RGB[roundToEvenNumber(width) * roundToEvenNumber(height)]),
         domainSize_(roundToEvenNumber(width) * roundToEvenNumber(height)),
-        blockSize_(1) {
+        blockSize_(this->width_),
+        resolution_(roundToEvenNumber(width) * roundToEvenNumber(height)) {
 }
 
-Renderer::~Renderer() {
+Renderer::~Renderer(void) {
     delete[] this->accumulate_;
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
     const unsigned int size(this->width_ * this->height_);
+    this->sampler_.resetTask(size);
     for (unsigned int i(0); i < size; i++) {
         this->accumulate_[i].reset();
     }
-    this->sampler_.resetTask();
+    this->sampler_.resetTask(0);
     std::thread *const threads(new std::thread[numThreads - 1]);
     for (unsigned int i(0); i < numThreads - 1; i++) {
         threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i, numThreads);
@@ -37,9 +39,19 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
         threads[i].join();
     }
     delete[] threads;
+
+    LOG("%s%u", "START - resolution=", resolution_);
+    LOG("point3D = %u", Point3D::getInstances());
+    LOG("vector3D = %u", Vector3D::getInstances());
+    LOG("RGB = %u", RGB::getInstances());
+    LOG("scene = %u", Scene::getInstances());
+    LOG("ray = %u", Ray::getInstances());
+    LOG("material = %u", Material::getInstances());
+    LOG("intersection = %u", Intersection::getInstances());
+    LOG("%s", "FINISH");
 }
 
-void Renderer::stopRender() {
+void Renderer::stopRender(void) {
     this->height_ = 0;
     this->width_ = 1;
     this->domainSize_ = 0;
@@ -54,12 +66,12 @@ void Renderer::renderScene(unsigned int *const bitmap,
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
-    blockSize_ = 1;
     RGB rayRGB;
     RGB average;
     Intersection intersection;
     Vector3D vector;
     Ray ray;
+    float block(0.0f);
 
     for (unsigned int i(0); i < this->sampler_.samples_; i++)//change u
     {
@@ -67,9 +79,8 @@ void Renderer::renderScene(unsigned int *const bitmap,
         for (unsigned int j(0); j < this->sampler_.samples_; j++)//change v
         {
             const float deviationU(this->sampler_.getDeviation(j + 1));
-            for (unsigned int task(0); task < this->domainSize_; task++) {//change y
-                float block(
-                        this->sampler_.getTask(this->blockSize_, i * this->sampler_.samples_ + j));
+            for (unsigned int task(0); this->sampler_.notFinished(); task++) {//change y
+                block = this->sampler_.getTask(this->blockSize_, i * this->sampler_.samples_ + j);
                 const unsigned int pixel(
                         static_cast<unsigned int> (block * this->domainSize_ + 0.5f));
                 const unsigned line(pixel / width_);

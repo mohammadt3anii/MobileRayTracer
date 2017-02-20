@@ -13,44 +13,43 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         pointC_(pointC),
         AB_(pointB - pointA),
         AC_(pointC - pointA),
-        normal_(AB_.crossProduct(AC_)) {
+        normal_(AB_.crossProduct(AC_)),
+        vertexToCamera_() {
     this->normal_.normalize();
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray,
-                         const Material &material) const {
-    const Vector3D perpendicularVector(ray.direction_.crossProduct(AC_));
-    float normalizedProjection(AB_.dotProduct(perpendicularVector));
+                         const Material &material) {
+    const Vector3D perpendicularVector(ray.direction_, this->AC_);
+    const float normalizedProjection(AB_.dotProduct(perpendicularVector));
+    const float abs(normalizedProjection * (1 + (normalizedProjection < 0) * -2));
+    if (abs < VECT_PROJ_MIN) return false;
 
-    if (normalizedProjection < VECT_PROJ_MIN &&
-        normalizedProjection > -VECT_PROJ_MIN)
-        return false;  // zero
+    const float normalizedProjectionInv(1.0f / normalizedProjection);
 
-    float normalizedProjectionInv(1 / normalizedProjection);
+    this->vertexToCamera_.reset(ray.origin_, pointA_);
 
-    const Vector3D vertexToCamera(ray.origin_ - pointA_);
-
-    float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
+    const float u(normalizedProjectionInv * this->vertexToCamera_.dotProduct(perpendicularVector));
 
     if (u < 0.0f || u > 1.0f)
         return false;
 
-    const Vector3D upPerpendicularVector(vertexToCamera.crossProduct(AB_));
+    const Vector3D upPerpendicularVector(this->vertexToCamera_, this->AB_);
     const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
-    if (v < 0.0f || u + v > 1.0f)
+    if (v < 0.0f || (u + v) > 1.0f)
         return false;
 
     // at this stage we can compute t to find out where
     // the intersection point is on the line
     const float distanceToIntersection(
-            normalizedProjectionInv * AC_.dotProduct(upPerpendicularVector));
+            normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector));
 
     if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
         return false;
 
     intersection.reset(
-            ray.origin_ + (ray.direction_ * distanceToIntersection),
+            ray.origin_, ray.direction_, distanceToIntersection,
             this->normal_,
             distanceToIntersection,
             material);

@@ -10,7 +10,7 @@ Perspective::Perspective(const Point3D &position, const float hFov, const float 
         Camera(position, hFov, vFov) {
 }
 
-Perspective::~Perspective() {
+Perspective::~Perspective(void) {
 }
 
 void Perspective::getRay(Ray &ray, const float u_alpha, const float v_alpha) const {

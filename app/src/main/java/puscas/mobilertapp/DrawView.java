@@ -43,7 +43,7 @@ class DrawView extends LinearLayout {
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
-        //this.setOnTouchListener(new TouchHandler());
+        //this.setOnTouchListener(new TouchHandler(this));
     }
 
     void setView(TextView textView) {
@@ -243,8 +243,15 @@ class DrawView extends LinearLayout {
     }
 
     private class TouchHandler implements LinearLayout.OnTouchListener {
+        private DrawView drawView_ = null;
+
+        TouchHandler(DrawView drawView) {
+            drawView_ = drawView;
+        }
+
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
+            drawView_.printText();
             if (stopped_ || stage_ != Stage.BUSY.getValue()) return false;
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:

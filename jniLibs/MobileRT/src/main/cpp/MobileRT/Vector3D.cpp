@@ -6,30 +6,43 @@
 
 using namespace MobileRT;
 
-Vector3D::Vector3D() :
+static unsigned int counter = 0;
+
+Vector3D::Vector3D(void) :
         x_(0.0f),
         y_(0.0f),
         z_(0.0f) {
+    counter++;
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z) :
         x_(x),
         y_(y),
         z_(z) {
+    counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector) :
         x_(vector.x_),
         y_(vector.y_),
         z_(vector.z_) {
+    counter++;
 }
 
-float Vector3D::length() const {
-    return std::sqrt(squareLength());
+Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) :
+        x_(dest.x_ - orig.x_),
+        y_(dest.y_ - orig.y_),
+        z_(dest.z_ - orig.z_) {
 }
 
-float Vector3D::normalize() {
-    const float len(length());
+Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) ://cross product
+        x_(vector1.y_ * vector2.z_ - vector1.z_ * vector2.y_),
+        y_(vector1.z_ * vector2.x_ - vector1.x_ * vector2.z_),
+        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_) {
+}
+
+float Vector3D::normalize(void) {
+    const float len(std::sqrt(squareLength()));
     if (len == 0.0f) return 0.0f;
 
     const float inv_length(1.0f / len);
@@ -39,7 +52,7 @@ float Vector3D::normalize() {
     return len;
 }
 
-Vector3D Vector3D::returnNormalized() const {
+const Vector3D Vector3D::returnNormalized(void) const {
     Vector3D normalized(*this);
     normalized.normalize();
     return normalized;
@@ -51,7 +64,13 @@ float Vector3D::dotProduct(const Vector3D &vector) const {
 }
 
 // dot product Algebraic
-float Vector3D::squareLength() const {
+float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
+    return (this->x_ * (dest.x_ - orig.x_) + this->y_ * (dest.y_ - orig.y_) +
+            this->z_ * (dest.z_ - orig.z_));
+}
+
+// dot product Algebraic
+float Vector3D::squareLength(void) const {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
@@ -73,11 +92,11 @@ void Vector3D::sub(const Vector3D &vector) {
     this->z_ -= vector.z_;
 }
 
-Vector3D Vector3D::operator*(const float value) const {
+const Vector3D Vector3D::operator*(const float value) const {
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
-Vector3D &Vector3D::operator=(const Vector3D &vector) {
+const Vector3D &Vector3D::operator=(const Vector3D &vector) {
     this->x_ = vector.x_;
     this->y_ = vector.y_;
     this->z_ = vector.z_;
@@ -95,4 +114,23 @@ void Vector3D::reset(const Point3D &dest, const Point3D &orig) {
     this->x_ = dest.x_ - orig.x_;
     this->y_ = dest.y_ - orig.y_;
     this->z_ = dest.z_ - orig.z_;
+}
+
+void Vector3D::resetAndNormalize(const Point3D &dest, const Point3D &orig) {
+    this->x_ = dest.x_ - orig.x_;
+    this->y_ = dest.y_ - orig.y_;
+    this->z_ = dest.z_ - orig.z_;
+    const float len(std::sqrt(squareLength()));
+    if (len == 0.0f) return;
+
+    const float inv_length(1.0f / len);
+    this->x_ *= inv_length;
+    this->y_ *= inv_length;
+    this->z_ *= inv_length;
+}
+
+unsigned int Vector3D::getInstances() {
+    unsigned int res(counter);
+    counter = 0;
+    return res;
 }

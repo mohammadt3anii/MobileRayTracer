@@ -21,10 +21,16 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        Intersection();
+        explicit Intersection(void);
         void reset(const Point3D &point, const Vector3D &normal, const float length,
                    const Material &material);
-        Vector3D &getSymNormal();
+
+        void reset(const Point3D &orig, const Vector3D &dir, const float dist,
+                   const Vector3D &normal, const float length, const Material &material);
+
+        Vector3D &getSymNormal(void);
+
+        static unsigned int getInstances();
     };
 }
 

@@ -18,13 +18,22 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        Point3D();
-        Point3D(const float x, const float y, const float z);
-        Point3D(const Point3D &point);
+        explicit Point3D(void);
 
-        Point3D &operator=(const Point3D &point3D);
-        Point3D operator+(const Vector3D &vector) const;
-        Vector3D operator-(const Point3D &point) const;
+        explicit Point3D(const float x, const float y, const float z);
+
+        explicit Point3D(const Point3D &point);
+
+        explicit Point3D(const Point3D &point, const Vector3D &vector, const float value);
+
+        void operator=(const Point3D &point3D);
+
+        //const Point3D operator+(const Vector3D &vector) const;
+        const Vector3D operator-(const Point3D &point) const;
+
+        void reset(const Point3D &point, const Vector3D &vector, const float value);
+
+        static unsigned int getInstances();
     };
 }
 

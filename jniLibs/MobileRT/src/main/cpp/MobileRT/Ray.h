@@ -19,11 +19,15 @@ namespace MobileRT {
         const unsigned int depth_;
 
     public:
-        Ray();
-        Ray(const float x, const float y, const float z, Point3D position);
-        Ray(const Point3D &orig, const Vector3D &dir, const float maxDist,
+        explicit Ray(void);
+
+        explicit Ray(const float x, const float y, const float z, Point3D &position);
+
+        explicit Ray(Point3D &orig, const Vector3D &dir, const float maxDist,
             const unsigned int depth);
         void reset(const float x, const float y, const float z, const Point3D &origin);
+
+        static unsigned int getInstances();
     };
 }
 

@@ -14,9 +14,13 @@ namespace MobileRT {
         const RGB Ks_;   // specular reflection
 
     public:
-        Material();
-        Material(const RGB &Kd);
-        Material(const RGB &Kd, const RGB &Ks);
+        explicit Material(void);
+
+        explicit Material(const RGB &Kd);
+
+        explicit Material(const RGB &Kd, const RGB &Ks);
+
+        static unsigned int getInstances();
     };
 }
 

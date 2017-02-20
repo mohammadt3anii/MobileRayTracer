@@ -6,25 +6,30 @@
 
 using namespace MobileRT;
 
-Ray::Ray() :
+static unsigned int counter = 0;
+
+Ray::Ray(void) :
         maxDistance_(RAY_LENGTH_MAX),
         depth_(0) {
+    counter++;
 }
 
-Ray::Ray(const float x, const float y, const float z, Point3D origin) :
+Ray::Ray(const float x, const float y, const float z, Point3D &origin) :
         origin_(origin),
         direction_(x, y, z),
         symDirection_(-x, -y, -z),
         maxDistance_(RAY_LENGTH_MAX),
         depth_(0) {
+    counter++;
     this->direction_.normalize();
 }
 
-Ray::Ray(const Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth) :
+Ray::Ray(Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth) :
         origin_(orig),
         direction_(dir),
         maxDistance_(maxDist),
         depth_(depth) {
+    counter++;
     this->direction_.normalize();
 }
 
@@ -32,4 +37,10 @@ void Ray::reset(const float x, const float y, const float z, const Point3D &orig
     this->direction_.reset(x, y, z);
     this->symDirection_.reset(-x, -y, -z);
     this->origin_ = origin;
+}
+
+unsigned int Ray::getInstances() {
+    unsigned int res(counter);
+    counter = 0;
+    return res;
 }

@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.6.0)
 set(ANDROID_ARM_NEON TRUE)
 set(LOCAL_ARM_NEON TRUE)
 
+set(CMAKE_C_FLAGS "")
+set(CMAKE_CXX_FLAGS "")
+set(CMAKE_CXX_FLAGS_DEBUG "")
+set(CMAKE_CXX_FLAGS_RELEASE "")
 add_compile_options(-std=c++11)
 add_compile_options(-Weverything -Werror -Wfatal-errors -Wno-c++98-compat-pedantic)
 add_compile_options(-Ofast)
@@ -20,4 +24,4 @@ set(COMP_PATH ${CMAKE_SOURCE_DIR}/../jniLibs/Components/build/intermediates/cmak
 add_library(Components STATIC IMPORTED)
 set_property(TARGET Components PROPERTY IMPORTED_LOCATION ${COMP_PATH}/${ANDROID_ABI}/libComponents.so)
 
-target_link_libraries(DrawView jnigraphics MobileRT log)
+target_link_libraries(DrawView jnigraphics MobileRT Components log)

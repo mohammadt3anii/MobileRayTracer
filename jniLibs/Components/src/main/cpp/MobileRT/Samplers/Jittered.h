@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_JITTERED_H
 #define MOBILERAYTRACER_JITTERED_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
+#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
     class Jittered : public Sampler {
@@ -14,7 +14,7 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        Jittered(const unsigned int domainSize, const unsigned int samples);
+        explicit Jittered(const unsigned int domainSize, const unsigned int samples);
 
         virtual float getDeviation(const unsigned num) override;
 

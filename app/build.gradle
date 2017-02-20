@@ -19,7 +19,7 @@ android {
     signingConfigs {
         Puscas {
             keyAlias "Puscas"
-            storeFile file("D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            storeFile file("/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
             keyPassword "@puscas99"
             storePassword "@puscas99"
         }
@@ -31,6 +31,7 @@ android {
             dependencies {
                 debugCompile 'com.android.support:design:25.1.1'
                 debugCompile project(':MobileRT')
+                debugCompile project(':Components')
             }
             void
         }
@@ -40,6 +41,7 @@ android {
             dependencies {
                 releaseCompile('com.android.support:design:25.1.1')
                 releaseCompile project(':MobileRT')
+                releaseCompile project(':Components')
             }
             void
         }

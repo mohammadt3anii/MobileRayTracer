@@ -8,16 +8,17 @@ using namespace MobileRT;
 
 Sphere::Sphere(const Point3D &center, const float radius) :
         sq_radius_(radius * radius),
-        center_(center) {
+        center_(center),
+        normal_() {
 }
 
-bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
+bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) {
 //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const Vector3D centerToOrigin(ray.origin_ - this->center_);
+    const Vector3D centerToOrigin_(ray.origin_, this->center_);
 
     //A = 1.0 - normalized vectors
-    const float B(2.0f * centerToOrigin.dotProduct(ray.direction_));
-    const float C(centerToOrigin.squareLength() - this->sq_radius_);
+    const float B(2.0f * centerToOrigin_.dotProduct(ray.direction_));
+    const float C(centerToOrigin_.squareLength() - this->sq_radius_);
 
     const float discriminant(B * B - 4.0f * C);
     //don't intersect (ignores tangent point of the sphere)
@@ -28,20 +29,21 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     const float distanceToIntersection1((-B + rootDiscriminant) * 0.5f);
     const float distanceToIntersection2((-B - rootDiscriminant) * 0.5f);
     //distance between intersection and camera = smaller root = closer intersection
-    const float distanceToIntersection((distanceToIntersection1 < distanceToIntersection2) ?
-                                       distanceToIntersection1 : distanceToIntersection2);
+    const float distanceToIntersection((distanceToIntersection1 < distanceToIntersection2) *
+                                       distanceToIntersection1 +
+                                       (distanceToIntersection2 < distanceToIntersection1) *
+                                       distanceToIntersection2);
 
     if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
         return false;
 
-    const Point3D intersectionPoint(ray.origin_ + (ray.direction_ * distanceToIntersection));
-    Vector3D normal(intersectionPoint - this->center_);
-    normal.normalize();
+    const Point3D intersectionPoint(ray.origin_, ray.direction_, distanceToIntersection);
+    this->normal_.resetAndNormalize(intersectionPoint, this->center_);
 
     // if so, then we have an intersection
     intersection.reset(
             intersectionPoint,
-            normal,
+            this->normal_,
             distanceToIntersection,
             material);
 
@@ -53,6 +55,6 @@ void Sphere::moveTo(const float x, const float y) {
     this->center_.y_ = y;
 }
 
-float Sphere::getZ() const {
+float Sphere::getZ(void) const {
     return this->center_.z_;
 }

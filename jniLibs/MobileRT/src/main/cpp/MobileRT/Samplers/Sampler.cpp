@@ -14,18 +14,22 @@ Sampler::Sampler(const unsigned int domainSize, const unsigned int samples) :
         task_(0) {
 }
 
-Sampler::~Sampler() {
+Sampler::~Sampler(void) {
+}
+
+bool Sampler::notFinished(void) {
+    return task_ < domainSize_;
 }
 
 float Sampler::deviation(const unsigned int index) const {
     return (-0.5f + (index * this->deviationIncrement_) - (this->deviationIncrement_ * 0.5f));
 }
 
-void Sampler::resetTask() {
-    this->task_ = 0;
+void Sampler::resetTask(const unsigned int value) {
+    this->task_ = value;
 }
 
-void Sampler::stopRender() {
+void Sampler::stopRender(void) {
     this->task_ = this->domainSize_;
     this->samples_ = 0;
     this->maxHalton_ = 0;

@@ -5,12 +5,12 @@
 #ifndef MOBILERAYTRACER_STRATIFIED_H
 #define MOBILERAYTRACER_STRATIFIED_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
+#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
     class Stratified : public Sampler {
     public:
-        Stratified(const unsigned int domainSize, const unsigned int samples);
+        explicit Stratified(const unsigned int domainSize, const unsigned int samples);
 
         float getDeviation(const unsigned int num) override;
 

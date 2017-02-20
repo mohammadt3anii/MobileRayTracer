@@ -19,22 +19,36 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        Vector3D();
-        Vector3D(const float x, const float y, const float z);
+        explicit Vector3D(void);
+
+        explicit Vector3D(const float x, const float y, const float z);
         Vector3D(const Vector3D &vector);
 
-        Vector3D &operator=(const Vector3D &vector);
+        explicit Vector3D(const Point3D &dest, const Point3D &orig);
+
+        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2);
+
+        const Vector3D &operator=(const Vector3D &vector);
         float dotProduct(const Vector3D &vector) const;
-        float squareLength() const;
+
+        float dotProduct(const Point3D &dest, const Point3D &orig) const;
+
+        float squareLength(void) const;
         Vector3D crossProduct(const Vector3D &vector) const;
         void mult(const float value);
         void sub(const Vector3D &vector);
-        float length() const;
-        float normalize();
-        Vector3D returnNormalized() const;
-        Vector3D operator*(const float value) const;
+
+        float normalize(void);
+
+        const Vector3D returnNormalized(void) const;
+
+        const Vector3D operator*(const float value) const;
         void reset(const float x, const float y, const float z);
         void reset(const Point3D &dest, const Point3D &orig);
+
+        void resetAndNormalize(const Point3D &dest, const Point3D &orig);
+
+        static unsigned int getInstances();
     };
 }
 

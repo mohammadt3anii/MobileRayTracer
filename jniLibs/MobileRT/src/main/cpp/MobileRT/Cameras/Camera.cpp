@@ -13,5 +13,5 @@ Camera::Camera(const Point3D &position, const float hFov, const float vFov) :
         vFov_((vFov * PI) / 180.0f) {
 }
 
-Camera::~Camera() {
+Camera::~Camera(void) {
 }

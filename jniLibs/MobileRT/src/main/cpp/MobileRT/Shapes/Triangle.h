@@ -5,15 +5,12 @@
 #ifndef MOBILERAYTRACER_TRIANGLE_H
 #define MOBILERAYTRACER_TRIANGLE_H
 
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Shape.h"
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.h"
-#include "../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Vector3D.h"
+#include "Shape.h"
+#include "../Point3D.h"
+#include "../Vector3D.h"
 
 namespace MobileRT {
     class Triangle : public Shape {
-    private:
-
-
     public:
         const Point3D pointA_;
         const Point3D pointB_;
@@ -21,11 +18,13 @@ namespace MobileRT {
         const Vector3D AB_;
         const Vector3D AC_;
         Vector3D normal_;
+        Vector3D vertexToCamera_;
 
-        Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
+    public:
+        explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
 
         bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const;
+                       const Material &material);
     };
 }
 

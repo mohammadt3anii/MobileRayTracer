@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 
         final TextView textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
-        drawView_.setVisibility(View.INVISIBLE);
+        drawView_.setVisibility(View.VISIBLE);
         drawView_.setView(textView_);
         drawView_.setButton((Button) findViewById(R.id.renderButton));
 
@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
                                 pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
                         )
                 );
-                drawView_.setVisibility(View.VISIBLE);
+                //drawView_.setVisibility(View.VISIBLE);
                 drawView_.startRender();
                 break;
 

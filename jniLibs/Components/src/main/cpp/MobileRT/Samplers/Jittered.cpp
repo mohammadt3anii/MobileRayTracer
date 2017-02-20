@@ -37,10 +37,8 @@ float Jittered::getTask(const unsigned int tasks, const unsigned int) {
     const unsigned int requestTasks(1);
     for (
             unsigned int taskId(getTasks(requestTasks, 0));
-        //unsigned int taskId(threadId);
             taskId < this->maxHalton_;
             taskId = getTasks(requestTasks, 0))
-        //taskId += numThreads)
     {
         const unsigned taskMax(taskId + requestTasks);
         for (unsigned int j(taskId); j < taskMax && j < this->maxHalton_; j++) {

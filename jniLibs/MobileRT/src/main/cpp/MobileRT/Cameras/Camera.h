@@ -18,10 +18,10 @@ namespace MobileRT {
         const float vFov_;
 
     public:
-        Camera(const Point3D &position, const float hFov, const float vFov);
+        explicit Camera(const Point3D &position, const float hFov, const float vFov);
         virtual void getRay(Ray &ray, const float u_alpha, const float v_alpha) const = 0;
 
-        virtual ~Camera();
+        virtual ~Camera(void);
     };
 }
 

@@ -14,15 +14,13 @@ static const MobileRT::Perspective *camera_(nullptr);
 static const MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *sampler_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
-static MobileRT::Intersection *intersection_(nullptr);
-static MobileRT::Ray *ray_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int width_(0);
 static unsigned int height_(0);
-static float fps_(0);
+static float fps_(0.0f);
 static long long timeFrame_(0);
 
-void FPS() {
+void FPS(void) {
     static int frame(0);
     static std::chrono::steady_clock::time_point timebase_;
     frame++;
@@ -35,7 +33,7 @@ void FPS() {
     }
 }
 
-MobileRT::Scene *cornellBoxScene() {
+const MobileRT::Scene *cornellBoxScene(void) {
     MobileRT::Scene *const scene = new MobileRT::Scene();
     // point light - white
     scene->lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
@@ -80,10 +78,11 @@ MobileRT::Scene *cornellBoxScene() {
     scene->primitives_.emplace_back(new MobileRT::Primitive(*new MobileRT::Triangle(
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
+    scene->cache();
     return scene;
 }
 
-const MobileRT::Scene *spheresScene() {
+const MobileRT::Scene *spheresScene(void) {
     MobileRT::Scene *const scene = new MobileRT::Scene();
     // create one light source
     scene->lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
@@ -194,8 +193,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             sampler_ = new MobileRT::Stratified(width_ * height_, samples_);
             break;
     }
-    intersection_ = new MobileRT::Intersection();
-    ray_ = new MobileRT::Ray();
     renderer_ = new MobileRT::Renderer(*sampler_, *shader_, *camera_, width_, height_);
 }
 
@@ -215,8 +212,6 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     delete scene_;
     delete shader_;
     delete sampler_;
-    delete ray_;
-    delete intersection_;
     delete renderer_;
 }
 
@@ -276,13 +271,15 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
     const unsigned long index(static_cast<unsigned long>(primitiveIndex));
     const MobileRT::Material material;
-    const MobileRT::Plane plane(
+    MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
-    camera_->getRay(*ray_, u_alpha, v_alpha);
-    plane.intersect(*intersection_, *ray_, material);
-    scene_->primitives_[index]->shape_->moveTo(intersection_->point_.x_,
-                                               intersection_->point_.y_);
+    MobileRT::Ray ray_;
+    camera_->getRay(ray_, u_alpha, v_alpha);
+    MobileRT::Intersection intersection;
+    plane.intersect(intersection, ray_, material);
+    scene_->primitives_[index]->shape_->moveTo(intersection.point_.x_,
+                                               intersection.point_.y_);
     //LOG("moveTouch (x,y)=(%f,%f)=(%f,%f)=(%f,%f)", jx, jy, x, y, u_alpha, v_alpha);
 }
 
