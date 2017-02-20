@@ -113,7 +113,6 @@ public class MainActivity extends Activity {
                                 pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
                         )
                 );
-                //drawView_.setVisibility(View.VISIBLE);
                 drawView_.startRender();
                 break;
 
