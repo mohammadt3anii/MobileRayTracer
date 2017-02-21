@@ -24,19 +24,19 @@ namespace MobileRT {
 
         explicit RGB(const RGB &rgb);
 
-        bool isZero(void) const;
+        bool isNotZero(void) const;
         void add(const RGB &rgb);
-        void mult(const RGB &rgb);
-        void mult(const float f);
+
+        void add(const RGB &rgb, const float value);
+
+        void add(const RGB &rgb1, const RGB &rgb2, const float value);
+
+        //void mult(const RGB &rgb);
+        void operator*=(const RGB &rgb);
         void addSample(RGB &average, const RGB &sample);
-
-        void average(void);
-
         void reset(void);
-
         void reset(const float color);
         void reset(const float r, const float g, const float b);
-
         unsigned int RGB2Color(void);
 
         static unsigned int getInstances();

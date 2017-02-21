@@ -19,9 +19,9 @@ namespace MobileRT {
         //Light* lights_;
         std::vector<Primitive *> primitives_;
         //Primitive* primitives_;
-        //unsigned int sizeLights_;
+        unsigned int sizeLights_;
         unsigned int sizePrimitives_;
-        char padding[4] __attribute__((unused));
+        //char padding[4] __attribute__((unused));
         std::function<bool(Intersection &, const Ray &)> *intersect_;
 
     public:

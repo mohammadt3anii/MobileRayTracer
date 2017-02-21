@@ -29,8 +29,8 @@ RGB::RGB(const RGB &rgb) :
     counter++;
 }
 
-bool RGB::isZero(void) const {
-    return ((this->R_ <= 0.0f) && (this->G_ <= 0.0f) && (this->B_ <= 0.0f));
+bool RGB::isNotZero(void) const {
+    return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
 void RGB::add(const RGB &rgb) {
@@ -39,34 +39,37 @@ void RGB::add(const RGB &rgb) {
     this->B_ += rgb.B_;
 }
 
-void RGB::mult(const RGB &rgb) {
+void RGB::add(const RGB &rgb1, const RGB &rgb2, const float value) {
+    this->R_ += rgb1.R_ * rgb2.R_ * value;
+    this->G_ += rgb1.G_ * rgb2.G_ * value;
+    this->B_ += rgb1.B_ * rgb2.B_ * value;
+}
+
+void RGB::add(const RGB &rgb, const float value) {
+    this->R_ += rgb.R_ * value;
+    this->G_ += rgb.G_ * value;
+    this->B_ += rgb.B_ * value;
+}
+
+void RGB::operator*=(const RGB &rgb) {
     this->R_ *= rgb.R_;
     this->G_ *= rgb.G_;
     this->B_ *= rgb.B_;
 }
 
-void RGB::mult(const float f) {
-    this->R_ *= f;
-    this->G_ *= f;
-    this->B_ *= f;
-}
-
 void RGB::addSample(RGB &average, const RGB &sample) {
     this->mutex_.lock();
-    average.samples_ = ++this->samples_;
     this->R_ += sample.R_;
     this->G_ += sample.G_;
     this->B_ += sample.B_;
     average.R_ = this->R_;
     average.G_ = this->G_;
     average.B_ = this->B_;
+    average.samples_ = ++this->samples_;
     this->mutex_.unlock();
-}
-
-void RGB::average(void) {
-    this->R_ /= this->samples_;
-    this->G_ /= this->samples_;
-    this->B_ /= this->samples_;
+    average.R_ /= average.samples_;
+    average.G_ /= average.samples_;
+    average.B_ /= average.samples_;
 }
 
 void RGB::reset(void) {

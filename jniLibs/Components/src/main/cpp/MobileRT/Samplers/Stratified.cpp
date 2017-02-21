@@ -14,9 +14,9 @@ float Stratified::getDeviation(const unsigned int num) {
     return this->deviation(num + 1);
 }
 
-float Stratified::getTask(const unsigned int tasks, const unsigned int sample) {
+float Stratified::getSample(const unsigned int tasks, const unsigned int sample) {
     unsigned int task(this->task_.fetch_add(tasks, std::memory_order_relaxed));
-    return static_cast<float> (task - (sample * domainSize_)) / domainSize_;
+    return static_cast<float> (task - (sample * this->domainSize_)) / this->domainSize_;
 }
 
 /*void Stratified::renderScene(unsigned int *const bitmap,

@@ -16,7 +16,7 @@
 namespace MobileRT {
     class Sampler {
     public:
-        const unsigned int domainSize_;
+        unsigned int domainSize_;
         unsigned int samples_;
         unsigned int maxHalton_;
         const float deviationIncrement_;
@@ -34,11 +34,11 @@ namespace MobileRT {
 
         void stopRender(void);
 
-        bool notFinished(void);
+        bool notFinished(const unsigned int sample);
 
         virtual float getDeviation(const unsigned int num) = 0;
 
-        virtual float getTask(const unsigned int tasks, const unsigned int sample) = 0;
+        virtual float getSample(const unsigned int tasks, const unsigned int sample) = 0;
     };
 }
 

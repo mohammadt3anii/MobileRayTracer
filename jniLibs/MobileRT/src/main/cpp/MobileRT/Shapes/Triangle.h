@@ -18,13 +18,13 @@ namespace MobileRT {
         const Vector3D AB_;
         const Vector3D AC_;
         Vector3D normal_;
-        Vector3D vertexToCamera_;
+        char padding[4] __attribute__((unused));
 
     public:
         explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
 
         bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material);
+                       const Material &material) const;
     };
 }
 

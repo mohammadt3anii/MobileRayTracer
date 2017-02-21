@@ -14,7 +14,7 @@ namespace MobileRT {
 
         float getDeviation(const unsigned int num) override;
 
-        float getTask(const unsigned int tasks, const unsigned int sample) override;
+        float getSample(const unsigned int tasks, const unsigned int sample) override;
     };
 }
 

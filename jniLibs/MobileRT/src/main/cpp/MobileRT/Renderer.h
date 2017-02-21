@@ -13,7 +13,7 @@ namespace MobileRT {
     class Renderer {
     private:
         Sampler &sampler_;
-        const Shader &shader_;
+        Shader &shader_;
         const Camera &camera_;
         unsigned int width_;
         unsigned int height_;
@@ -24,8 +24,9 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        explicit Renderer(Sampler &sampler, const Shader &shader, const Camera &camera,
-                          const unsigned int width, const unsigned int height);
+        explicit Renderer(Sampler &sampler, Shader &shader, const Camera &camera,
+                          const unsigned int width, const unsigned int height,
+                          const unsigned int blockSize);
 
         ~Renderer(void);
 

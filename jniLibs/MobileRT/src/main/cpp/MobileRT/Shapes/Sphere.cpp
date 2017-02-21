@@ -8,11 +8,10 @@ using namespace MobileRT;
 
 Sphere::Sphere(const Point3D &center, const float radius) :
         sq_radius_(radius * radius),
-        center_(center),
-        normal_() {
+        center_(center) {
 }
 
-bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) {
+bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
 //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vector3D centerToOrigin_(ray.origin_, this->center_);
 
@@ -38,12 +37,14 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
         return false;
 
     const Point3D intersectionPoint(ray.origin_, ray.direction_, distanceToIntersection);
-    this->normal_.resetAndNormalize(intersectionPoint, this->center_);
+    Vector3D normal(intersectionPoint, this->center_);
+    normal.normalize();
+    //normal.resetAndNormalize(intersectionPoint, this->center_);
 
     // if so, then we have an intersection
     intersection.reset(
             intersectionPoint,
-            this->normal_,
+            normal,
             distanceToIntersection,
             material);
 

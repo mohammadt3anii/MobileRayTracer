@@ -13,13 +13,12 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         pointC_(pointC),
         AB_(pointB - pointA),
         AC_(pointC - pointA),
-        normal_(AB_.crossProduct(AC_)),
-        vertexToCamera_() {
+        normal_(AB_.crossProduct(AC_)) {
     this->normal_.normalize();
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray,
-                         const Material &material) {
+                         const Material &material) const {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
     const float abs(normalizedProjection * (1 + (normalizedProjection < 0) * -2));
@@ -27,14 +26,14 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);
 
-    this->vertexToCamera_.reset(ray.origin_, pointA_);
+    Vector3D vertexToCamera(ray.origin_, pointA_);
 
-    const float u(normalizedProjectionInv * this->vertexToCamera_.dotProduct(perpendicularVector));
+    const float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
 
     if (u < 0.0f || u > 1.0f)
         return false;
 
-    const Vector3D upPerpendicularVector(this->vertexToCamera_, this->AB_);
+    const Vector3D upPerpendicularVector(vertexToCamera, this->AB_);//cross product
     const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
     if (v < 0.0f || (u + v) > 1.0f)

@@ -20,8 +20,6 @@ __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "file:%s:::line:%d: " msg, FIL
 
 float fastArcTan(const float value);
 
-float haltonSequence(const unsigned int index, const unsigned int base);
-
 unsigned int roundToPower2(unsigned int value);
 
 unsigned int roundToEvenNumber(const unsigned int value);

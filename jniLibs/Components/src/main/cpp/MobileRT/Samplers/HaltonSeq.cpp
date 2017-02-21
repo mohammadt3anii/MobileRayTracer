@@ -2,22 +2,35 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#include "Jittered.h"
+#include "HaltonSeq.h"
 
 using namespace MobileRT;
 
-Jittered::Jittered(const unsigned int domainSize, const unsigned int samples) :
+HaltonSeq::HaltonSeq(const unsigned int domainSize, const unsigned int samples) :
         Sampler(domainSize, samples),
         half_rand_max_(RAND_MAX * 0.5f) {
 }
 
-float Jittered::getDeviation(const unsigned) {
+float HaltonSeq::getDeviation(const unsigned) {
     return std::rand() / half_rand_max_ - 1.0f;
 }
 
-float Jittered::getTask(const unsigned int tasks, const unsigned int) {
+float HaltonSeq::getSample(const unsigned int tasks, const unsigned int) {
     unsigned int task = this->task_.fetch_add(tasks, std::memory_order_relaxed);
     return haltonSequence(task, 2);
+}
+
+//https://en.wikipedia.org/wiki/Halton_sequence
+float HaltonSeq::haltonSequence(const unsigned int index, const unsigned int base) {
+    float f(1.0f);
+    float result(0.0f);
+    float i(index);
+    while (i > 0.0f) {
+        f = f / base;
+        result = result + f * (static_cast<unsigned int> (i) % base);
+        i = std::floor(i / base);
+    }
+    return result;
 }
 
 /*void Jittered::renderScene(unsigned int *const bitmap,

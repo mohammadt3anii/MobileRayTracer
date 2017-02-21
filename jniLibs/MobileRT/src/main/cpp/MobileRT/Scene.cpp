@@ -20,6 +20,7 @@ Scene::Scene(void) {
 }*/
 
 void Scene::cache() {
+    this->sizeLights_ = static_cast<unsigned int> (this->lights_.size());
     this->sizePrimitives_ = static_cast<unsigned int> (this->primitives_.size());
     intersect_ = new std::function<bool(Intersection &, const Ray &)>[sizePrimitives_];
     for (unsigned int i(0); i < sizePrimitives_; i++) {
@@ -51,7 +52,6 @@ Scene::~Scene(void) {
 bool Scene::trace(Intersection &intersection, Ray &ray) const {
     bool res(false);
     ray.maxDistance_ = RAY_LENGTH_MAX;
-    //const int sizePrimitives(static_cast<int> (this->primitives_.size()));
 
     for (unsigned int i(0); i < sizePrimitives_; i++) {
         //if (this->primitives_[static_cast<unsigned long> (i)]->intersect(intersection, ray))
@@ -64,7 +64,6 @@ bool Scene::trace(Intersection &intersection, Ray &ray) const {
 }
 
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
-    //const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives_.size()));
     for (unsigned int i(0); i < sizePrimitives_; i++)//trace shadow ray
     {
         //if (this->primitives_[i]->intersect(intersection, ray))

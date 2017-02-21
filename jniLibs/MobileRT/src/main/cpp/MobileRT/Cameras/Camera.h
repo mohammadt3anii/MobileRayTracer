@@ -10,10 +10,9 @@
 
 namespace MobileRT {
     class Camera {
-    protected:
-        const Point3D position_;//looking at Z+
-
     public:
+        const Point3D position_;
+        //looking at Z+
         const float hFov_;
         const float vFov_;
 

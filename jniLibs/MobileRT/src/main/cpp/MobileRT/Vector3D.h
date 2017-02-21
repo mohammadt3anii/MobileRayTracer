@@ -16,7 +16,6 @@ namespace MobileRT {
         float x_;
         float y_;
         float z_;
-        char padding[4] __attribute__((unused));
 
     public:
         explicit Vector3D(void);
@@ -25,6 +24,8 @@ namespace MobileRT {
         Vector3D(const Vector3D &vector);
 
         explicit Vector3D(const Point3D &dest, const Point3D &orig);
+
+        explicit Vector3D(const Point3D &dest, const Point3D &orig, bool);
 
         explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2);
 
@@ -36,7 +37,8 @@ namespace MobileRT {
         float squareLength(void) const;
         Vector3D crossProduct(const Vector3D &vector) const;
         void mult(const float value);
-        void sub(const Vector3D &vector);
+
+        void subAndNormalize(const Vector3D &vector);
 
         float normalize(void);
 
@@ -45,8 +47,6 @@ namespace MobileRT {
         const Vector3D operator*(const float value) const;
         void reset(const float x, const float y, const float z);
         void reset(const Point3D &dest, const Point3D &orig);
-
-        void resetAndNormalize(const Point3D &dest, const Point3D &orig);
 
         static unsigned int getInstances();
     };

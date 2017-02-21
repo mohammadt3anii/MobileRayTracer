@@ -15,14 +15,26 @@ namespace MobileRT {
     class Shader {
     protected:
         const Scene &scene_;
-        virtual void shade(RGB &, Intersection &, const Ray &, Vector3D &) const;
+
+        virtual void shade(RGB &, Intersection &, const Ray &) const;
+
+        RGB *accumulate_;
+        unsigned int *bitmap_;
+        float hfov_;
+        float vfov_;
+        unsigned int width_;
+        unsigned int height_;
 
     public:
         explicit Shader(const Scene &scene);
 
         virtual ~Shader(void);
-        void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection, Vector3D &vector) const;
+
+        void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const;
         int traceTouch(Intersection &intersection, Ray &ray) const;
+
+        void setBitmap(unsigned int *bitmap, RGB *accumulate, const float hfov, const float vfov,
+                       const unsigned int width, const unsigned int height);
     };
 }
 

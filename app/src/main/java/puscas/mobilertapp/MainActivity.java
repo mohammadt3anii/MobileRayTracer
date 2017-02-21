@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] shaders = {"NoShadows", "Whitted"};
+        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", ""};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
         pickerShader_.setMinValue(0);
         pickerShader_.setMaxValue(shaders.length - 1);
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         pickerSamples_.setWrapSelectorWheel(true);
         pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] samplers = {"Stratified", "Jittered"};
+        final String[] samplers = {"Stratified", "HaltonSeq"};
         pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
         pickerSampler_.setMinValue(0);
         pickerSampler_.setMaxValue(samplers.length - 1);

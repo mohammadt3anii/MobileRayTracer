@@ -11,7 +11,7 @@ Plane::Plane(const Point3D &point, const Vector3D &normal) :
         normal_(normal.returnNormalized()) {
 }
 
-bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) {
+bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));

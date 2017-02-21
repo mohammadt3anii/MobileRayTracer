@@ -8,17 +8,20 @@
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
-    class Jittered : public Sampler {
+    class HaltonSeq : public Sampler {
     private:
         float half_rand_max_;
         char padding[4] __attribute__((unused));
 
+    private:
+        float haltonSequence(const unsigned int index, const unsigned int base);
+
     public:
-        explicit Jittered(const unsigned int domainSize, const unsigned int samples);
+        explicit HaltonSeq(const unsigned int domainSize, const unsigned int samples);
 
         virtual float getDeviation(const unsigned num) override;
 
-        float getTask(const unsigned int tasks, const unsigned int sample) override;
+        float getSample(const unsigned int tasks, const unsigned int sample) override;
     };
 }
 

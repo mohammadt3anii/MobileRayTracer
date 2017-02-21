@@ -13,14 +13,13 @@ namespace MobileRT {
     private:
         const float sq_radius_;
         Point3D center_;
-        Vector3D normal_;
         char padding[4] __attribute__((unused));
 
     public:
         explicit Sphere(const Point3D &center, const float radius);
 
         bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) override;
+                       const Material &material) const override;
 
         void moveTo(float x, float y) override;
 

@@ -14,7 +14,7 @@ Ray::Ray(void) :
     counter++;
 }
 
-Ray::Ray(const float x, const float y, const float z, Point3D &origin) :
+Ray::Ray(const float x, const float y, const float z, const Point3D &origin) :
         origin_(origin),
         direction_(x, y, z),
         symDirection_(-x, -y, -z),

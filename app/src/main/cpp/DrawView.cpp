@@ -11,12 +11,14 @@ enum State {
 static int working_(IDLE);
 static const MobileRT::Scene *scene_(nullptr);
 static const MobileRT::Perspective *camera_(nullptr);
-static const MobileRT::Shader *shader_(nullptr);
-static MobileRT::Sampler *sampler_(nullptr);
+static MobileRT::Shader *shader_(nullptr);
+static MobileRT::Sampler *samplerCamera_(nullptr);
+static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int width_(0);
 static unsigned int height_(0);
+static unsigned int blockSize_(1);
 static float fps_(0.0f);
 static long long timeFrame_(0);
 
@@ -110,6 +112,7 @@ const MobileRT::Scene *spheresScene(void) {
             new MobileRT::Primitive(
                     *new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
                     greenMat));
+    scene->cache();
     return scene;
 }
 
@@ -175,25 +178,34 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             scene_ = cornellBoxScene();
             break;
     }
+    blockSize_ = 8;
+    switch (sampler) {
+        case 1:
+            samplerCamera_ = new MobileRT::HaltonSeq((width_ / blockSize_) * (height_ / blockSize_),
+                                                     samples_);
+            break;
+
+        default:
+            samplerCamera_ = new MobileRT::Stratified(
+                    (width_ / blockSize_) * (height_ / blockSize_), samples_);
+            break;
+    }
     switch (shader) {
         case 1:
             shader_ = new MobileRT::Whitted(*scene_);
+            break;
+
+        case 2:
+            samplerRay_ = new MobileRT::Stratified(width_ * height_, samples_);
+            shader_ = new MobileRT::PathTracer(*scene_, *samplerRay_);
             break;
 
         default:
             shader_ = new MobileRT::NoShadows(*scene_);
             break;
     }
-    switch (sampler) {
-        case 1:
-            sampler_ = new MobileRT::Jittered(width_ * height_, samples_);
-            break;
-
-        default:
-            sampler_ = new MobileRT::Stratified(width_ * height_, samples_);
-            break;
-    }
-    renderer_ = new MobileRT::Renderer(*sampler_, *shader_, *camera_, width_, height_);
+    renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_, height_,
+                                       blockSize_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
@@ -211,7 +223,8 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
     delete camera_;
     delete scene_;
     delete shader_;
-    delete sampler_;
+    delete samplerCamera_;
+    delete samplerRay_;
     delete renderer_;
 }
 
