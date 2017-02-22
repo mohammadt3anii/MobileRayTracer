@@ -18,9 +18,11 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    Vector3D &shadingNormal((ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
-                            intersection.normal_// entering the object
-                                                                                     : intersection.getSymNormal());// We have to reverse the normal now
+    Vector3D &shadingNormal(
+            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+            intersection.normal_// entering the object
+            // We have to reverse the normal now
+                                                                     : intersection.getSymNormal());
     // shadowed direct lighting - only for diffuse materials
     if (kD.isNotZero() && (ray.depth_ < MAX_DEPTH)) {
         const unsigned long sizeLights(scene_.lights_.size());
@@ -53,7 +55,6 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
                              sampler_.getSample(1, 0));
     Ray specRay(intersection.point_, randomDirection, RAY_LENGTH_MAX, ray.depth_ + 1);
     RGB specRad;
-    RGB newRGB;
     Intersection aux;
     Ray ray2;
     RGB average;
@@ -65,10 +66,10 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
     //x = (tg (u_alpha) + 0.5) * width / hFov_
     //y = (tg (v_alpha) / vFov_ + 0.5) * height
     ray2.reset(x, y, 1.0f, intersection.point_);
-    rayTrace(newRGB, ray2, intersection);
+    rayTrace(average, ray2, intersection);
     LOG("x=%u[%u],y=%u[%u],u=%f,v=%f", x, width_, y, height_, static_cast<double>(randomU),
         static_cast<double>(randomV));
-    this->accumulate_[y * width_ + x].addSample(average, newRGB);
+    this->accumulate_[y * width_ + x].addSample(average);
     bitmap_[y * width_ + x] = average.RGB2Color();
 
     /*specRad *= kD;

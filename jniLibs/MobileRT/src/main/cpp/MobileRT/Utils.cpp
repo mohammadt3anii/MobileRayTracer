@@ -24,3 +24,18 @@ unsigned int roundToPower2(unsigned int value) {
 unsigned int roundToEvenNumber(const unsigned int value) {
     return value & ~1u;
 }
+
+unsigned int roundToMultipleOf(unsigned int numToRound, unsigned int multipleOf) {
+    if (numToRound >= multipleOf) {
+        return multipleOf;
+    }
+
+
+    if (multipleOf == 0) {
+        return numToRound;
+    }
+
+    unsigned int res(numToRound);
+    for (res = numToRound; multipleOf % res != 0; res--);
+    return res;
+}

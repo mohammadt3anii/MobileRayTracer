@@ -12,6 +12,10 @@ namespace MobileRT {
     public:
         explicit Stratified(const unsigned int domainSize, const unsigned int samples);
 
+        explicit Stratified(const unsigned int width, const unsigned int height,
+                            const unsigned int samples,
+                            const unsigned int blockSizeX, const unsigned int blockSizeY);
+
         float getDeviation(const unsigned int num) override;
 
         float getSample(const unsigned int tasks, const unsigned int sample) override;

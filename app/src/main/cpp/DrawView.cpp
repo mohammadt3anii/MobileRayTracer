@@ -18,7 +18,8 @@ static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int width_(0);
 static unsigned int height_(0);
-static unsigned int blockSize_(1);
+static unsigned int blockSizeX_(128);
+static unsigned int blockSizeY_(128);
 static float fps_(0.0f);
 static long long timeFrame_(0);
 
@@ -160,9 +161,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     LOG("%s", "WORKING = IDLE");
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
     width_ = static_cast<unsigned int>(width);
-    width_ = roundToEvenNumber(width_);
     height_ = static_cast<unsigned int>(height);
-    height_ = roundToEvenNumber(height_);
 
     const unsigned int samples_(static_cast<unsigned int>(samples));
     switch (scene) {
@@ -178,16 +177,15 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             scene_ = cornellBoxScene();
             break;
     }
-    blockSize_ = 8;
     switch (sampler) {
         case 1:
-            samplerCamera_ = new MobileRT::HaltonSeq((width_ / blockSize_) * (height_ / blockSize_),
-                                                     samples_);
+            samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samples_,
+                                                     blockSizeX_, blockSizeY_);
             break;
 
         default:
-            samplerCamera_ = new MobileRT::Stratified(
-                    (width_ / blockSize_) * (height_ / blockSize_), samples_);
+            samplerCamera_ = new MobileRT::Stratified(width_, height_, samples_,
+                                                      blockSizeX_, blockSizeY_);
             break;
     }
     switch (shader) {
@@ -205,7 +203,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_, height_,
-                                       blockSize_);
+                                       blockSizeX_, blockSizeY_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {

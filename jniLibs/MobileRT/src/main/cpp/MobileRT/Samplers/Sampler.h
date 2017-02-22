@@ -20,17 +20,20 @@ namespace MobileRT {
         unsigned int samples_;
         unsigned int maxHalton_;
         const float deviationIncrement_;
-        std::atomic<unsigned int> task_;
-        char padding[4] __attribute__((unused));
+        std::atomic<unsigned int> sample_;
+        std::atomic<unsigned int> overSample_;
+        //char padding[4] __attribute__((unused));
 
     public:
         explicit Sampler(const unsigned int domainSize, const unsigned int samples);
 
+        explicit Sampler(const unsigned int width, const unsigned height,
+                         const unsigned int samples,
+                         const unsigned int blockSizeX, const unsigned int blockSizeY);
+
         virtual ~Sampler(void);
 
-        float deviation(const unsigned int index) const;
-
-        void resetTask(const unsigned int value);
+        void resetSampling(void);
 
         void stopRender(void);
 

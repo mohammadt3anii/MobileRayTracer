@@ -11,26 +11,44 @@ Sampler::Sampler(const unsigned int domainSize, const unsigned int samples) :
         samples_(static_cast<const unsigned int> (std::sqrt(samples))),
         maxHalton_(roundToPower2(domainSize * samples)),
         deviationIncrement_(1.0f / samples),
-        task_(0) {
+        sample_(0),
+        overSample_(0) {
+}
+
+Sampler::Sampler(const unsigned int width, const unsigned height, const unsigned int samples,
+                 const unsigned int blockSizeX, const unsigned int blockSizeY) :
+        domainSize_(
+                roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
+                roundToEvenNumber(height) /
+                roundToMultipleOf(blockSizeY, roundToEvenNumber(height))),
+        samples_(static_cast<const unsigned int> (std::sqrt(samples))),
+        maxHalton_(roundToPower2(
+                roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
+                roundToEvenNumber(height) /
+                roundToMultipleOf(blockSizeY, roundToEvenNumber(height)) * samples)),
+        deviationIncrement_(1.0f / samples),
+        sample_(0),
+        overSample_(0) {
 }
 
 Sampler::~Sampler(void) {
 }
 
 bool Sampler::notFinished(const unsigned int sample) {
-    return this->task_ < this->domainSize_ * (sample + 1);
+    //LOG("task_=%u[%u]", unsigned(task_), this->domainSize_ * (sample + 1));
+    //LOG("sample_=%u[%u,%u],overSample_=%u",
+    //    unsigned(sample_), this->domainSize_ * (sample + 1), maxHalton_, unsigned(overSample_));
+    return (((this->sample_ - 1) - this->overSample_) < this->domainSize_ * (sample + 1));
 }
 
-float Sampler::deviation(const unsigned int index) const {
-    return (-0.5f + (index * this->deviationIncrement_) - (this->deviationIncrement_ * 0.5f));
-}
-
-void Sampler::resetTask(const unsigned int value) {
-    this->task_ = value;
+void Sampler::resetSampling() {
+    this->sample_ = 0;
+    this->overSample_ = 0;
 }
 
 void Sampler::stopRender(void) {
-    this->task_ = this->domainSize_ * this->samples_;
+    this->sample_ = this->domainSize_ * this->samples_;
+    this->overSample_ = 0;
     this->domainSize_ = 0;
     this->samples_ = 0;
     this->maxHalton_ = 0;

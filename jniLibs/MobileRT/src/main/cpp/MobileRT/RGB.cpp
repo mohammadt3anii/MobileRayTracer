@@ -57,19 +57,19 @@ void RGB::operator*=(const RGB &rgb) {
     this->B_ *= rgb.B_;
 }
 
-void RGB::addSample(RGB &average, const RGB &sample) {
+void RGB::addSample(RGB &sample) {
     this->mutex_.lock();
     this->R_ += sample.R_;
     this->G_ += sample.G_;
     this->B_ += sample.B_;
-    average.R_ = this->R_;
-    average.G_ = this->G_;
-    average.B_ = this->B_;
-    average.samples_ = ++this->samples_;
+    sample.R_ = this->R_;
+    sample.G_ = this->G_;
+    sample.B_ = this->B_;
+    sample.samples_ = ++this->samples_;
     this->mutex_.unlock();
-    average.R_ /= average.samples_;
-    average.G_ /= average.samples_;
-    average.B_ /= average.samples_;
+    sample.R_ /= sample.samples_;
+    sample.G_ /= sample.samples_;
+    sample.B_ /= sample.samples_;
 }
 
 void RGB::reset(void) {

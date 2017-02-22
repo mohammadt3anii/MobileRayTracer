@@ -19,14 +19,15 @@ namespace MobileRT {
         unsigned int height_;
         RGB *const accumulate_;
         unsigned int domainSize_;
-        unsigned int blockSize_;
+        unsigned int blockSizeX_;
+        unsigned int blockSizeY_;
         const unsigned int resolution_;
-        char padding[4] __attribute__((unused));
+        //char padding[4] __attribute__((unused));
 
     public:
         explicit Renderer(Sampler &sampler, Shader &shader, const Camera &camera,
                           const unsigned int width, const unsigned int height,
-                          const unsigned int blockSize);
+                          const unsigned int blockSizeX, const unsigned int blockSizeY);
 
         ~Renderer(void);
 
