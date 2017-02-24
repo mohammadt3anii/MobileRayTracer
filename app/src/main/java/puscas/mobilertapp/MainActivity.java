@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
         final int maxSamples = 12;
-        String[] samples = new String[maxSamples];
+        final String[] samples = new String[maxSamples];
         for (int i = 0; i < maxSamples; i++) {
             samples[i] = Integer.toString((i + 1) * (i + 1));
         }

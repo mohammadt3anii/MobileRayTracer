@@ -47,9 +47,7 @@ void Sampler::resetSampling() {
 }
 
 void Sampler::stopRender(void) {
-    this->sample_ = this->domainSize_ * this->samples_;
     this->overSample_ = 0;
-    this->domainSize_ = 0;
     this->samples_ = 0;
     this->maxHalton_ = 0;
 }

@@ -10,7 +10,7 @@ static unsigned int counter = 0;
 
 Primitive::Primitive(Plane &plane, const Material &material) :
         material_(material),
-        shape_(nullptr),
+        shape_(&plane),
         plane_(&plane),
         sphere_(nullptr),
         triangle_(nullptr),
@@ -22,7 +22,7 @@ Primitive::Primitive(Plane &plane, const Material &material) :
 
 Primitive::Primitive(Sphere &sphere, const Material &material) :
         material_(material),
-        shape_(nullptr),
+        shape_(&sphere),
         plane_(nullptr),
         sphere_(&sphere),
         triangle_(nullptr),
@@ -34,7 +34,7 @@ Primitive::Primitive(Sphere &sphere, const Material &material) :
 
 Primitive::Primitive(Triangle &triangle, const Material &material) :
         material_(material),
-        shape_(nullptr),
+        shape_(&triangle),
         plane_(nullptr),
         sphere_(nullptr),
         triangle_(&triangle),
@@ -54,10 +54,10 @@ Primitive::Primitive(Shape &shape, const Material &material) :
 }
 
 Primitive::~Primitive(void) {
-    if (this->shape_) delete this->shape_;
-    if (this->plane_) delete this->plane_;
-    if (this->sphere_) delete this->sphere_;
-    if (this->triangle_) delete this->triangle_;
+    delete this->shape_;
+    delete this->plane_;
+    delete this->sphere_;
+    delete this->triangle_;
 }
 
 /*bool Primitive::intersect(Intersection &intersection, const Ray &ray) const {

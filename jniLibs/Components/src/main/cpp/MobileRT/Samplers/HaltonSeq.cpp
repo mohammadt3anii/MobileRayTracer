@@ -23,9 +23,10 @@ float HaltonSeq::getDeviation(const unsigned) {
     return std::rand() / half_rand_max_ - 1.0f;
 }
 
-float HaltonSeq::getSample(const unsigned int tasks, const unsigned int) {
-    unsigned int sample(this->sample_.fetch_add(tasks, std::memory_order_relaxed));
-    float res(haltonSequence(sample, 2));
+float HaltonSeq::getSample(const unsigned int tasks, const unsigned int sample) {
+    const unsigned int task(this->sample_.fetch_add(tasks, std::memory_order_relaxed) -
+                            (sample * this->domainSize_));
+    const float res(haltonSequence(task, 2));
     if (res >= this->maxSampler_) {
         //sample = this->sample_.fetch_add(tasks, std::memory_order_relaxed);
         //res = haltonSequence(sample, 2);

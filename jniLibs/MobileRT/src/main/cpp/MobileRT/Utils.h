@@ -10,7 +10,7 @@
 
 #define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #define LOG(msg, ...)\
-__android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", "file:%s:::line:%d: " msg,\
+__android_log_print(ANDROID_LOG_DEBUG, "LOG", "file:%s::line:%d: " msg,\
 FILENAME, __LINE__, __VA_ARGS__);
 
 #define RAY_LENGTH_MIN  1.0e-5f

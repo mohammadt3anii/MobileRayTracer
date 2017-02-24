@@ -24,9 +24,9 @@
 
 void FPS(void);
 
-const MobileRT::Scene *cornellBoxScene(void);
+MobileRT::Scene *cornellBoxScene(void);
 
-const MobileRT::Scene *spheresScene(void);
+MobileRT::Scene *spheresScene(void);
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(

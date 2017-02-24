@@ -57,7 +57,7 @@ void RGB::operator*=(const RGB &rgb) {
     this->B_ *= rgb.B_;
 }
 
-void RGB::addSample(RGB &sample) {
+void RGB::addSampleAndCalcAvg(RGB &sample) {
     this->mutex_.lock();
     this->R_ += sample.R_;
     this->G_ += sample.G_;

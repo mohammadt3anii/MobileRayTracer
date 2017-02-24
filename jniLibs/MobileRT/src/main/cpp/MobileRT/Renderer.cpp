@@ -30,8 +30,6 @@ Renderer::~Renderer(void) {
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
-    this->shader_.setBitmap(bitmap, this->accumulate_, this->camera_.hFov_, this->camera_.vFov_,
-                            width_, height_);
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0); i < size; i++) {
         this->accumulate_[i].reset();
@@ -59,9 +57,6 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 }
 
 void Renderer::stopRender(void) {
-    this->height_ = 0;
-    this->width_ = 1;
-    this->domainSize_ = 0;
     this->blockSizeX_ = 0;
     this->blockSizeY_ = 0;
     this->sampler_.stopRender();
@@ -78,43 +73,42 @@ void Renderer::renderScene(unsigned int *const bitmap,
     RGB rgb;
     Intersection intersection;
     Ray ray;
-    float block(0.0f);
 
-    for (unsigned int i(0); i < samples; i++)//change u
+    for (unsigned int i(0); i < samples; i++)
     {
-        for (unsigned int j(0); j < samples; j++)//change v
+        for (unsigned int j(0); j < samples; j++)
         {
             const unsigned int sample(i * samples + j);
-            //LOG("i=%u, j=%u, sample=%u", i, j, sample);
-            block = this->sampler_.getSample(1, sample);
-            for (; this->sampler_.notFinished(sample); block = this->sampler_.getSample(1,
-                                                                                        sample)) {
-                unsigned int pixel(
+            for (float block(this->sampler_.getSample(1, sample));
+                 this->sampler_.notFinished(sample); block = this->sampler_.getSample(1, sample)) {
+                const unsigned int pixel(
                         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
-                        this->blockSizeX_);
-                unsigned int startY(pixel / width_);
-                //LOG("p=%u[%u]", pixel, domainSize_);
-                for (unsigned int y(startY * blockSizeY_);
-                     y < startY * blockSizeY_ + this->blockSizeY_; y++) {
-                    //LOG("line=%u[%u,%u]", y, startY*blockSizeY_, startY*blockSizeY_+blockSizeY_);
+                        this->blockSizeX_ % resolution_);
+                const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
+                for (unsigned int y(startY); y < startY + this->blockSizeY_; y++) {
+                    const unsigned int yWidth(y * width_);
                     const float v(y * INV_IMG_HEIGHT);
                     const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - v)));
-                    const unsigned int startX((pixel + y * width_) % width_);
+                    const unsigned int startX((pixel + yWidth) % width_);
                     for (unsigned int x(startX); x < startX + this->blockSizeX_; x++) {
-                        const unsigned column(x);
-                        const float u(column * INV_IMG_WIDTH);
-                        const float deviationV(this->sampler_.getDeviation(i + 1));
+                        const float u(x * INV_IMG_WIDTH);
                         const float deviationU(this->sampler_.getDeviation(j + 1));
+                        const float deviationV(this->sampler_.getDeviation(i + 1));
                         const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
                         const float u_alpha_deviation(u_alpha + (deviationU * pixelWidth));
                         const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
                         this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
                         //Ray ray(u_alpha_deviation, v_alpha_deviation, 1.0f, camera_.position_);
                         this->shader_.rayTrace(rgb, ray, intersection);
-                        //LOG("x=%u[%u,%u],pixel=%u[%u]", x, startX, startX+blockSizeX_,
-                        // y*width_ + x, domainSize_);
-                        this->accumulate_[y * width_ + x].addSample(rgb);
-                        bitmap[y * width_ + x] = rgb.RGB2Color();
+                        /*if (yWidth + x >= resolution_) {
+                            LOG("x=%u[%u,%u],y=%u[%u,%u],pixel=%u[%u,%u],block=%f,p=%u,i=%u,j=%u",
+                                x, startX, startX + blockSizeX_,
+                                y, startY, startY + blockSizeY_,
+                                yWidth + x, resolution_, domainSize_,
+                                double(block), pixel, i, j);
+                        }*/
+                        this->accumulate_[yWidth + x].addSampleAndCalcAvg(rgb);
+                        bitmap[yWidth + x] = rgb.RGB2Color();
                     }
                 }
             }

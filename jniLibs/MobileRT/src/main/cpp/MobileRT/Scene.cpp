@@ -9,6 +9,7 @@ using namespace MobileRT;
 static unsigned int counter = 0;
 
 Scene::Scene(void) {
+    intersect_ = nullptr;
     counter++;
 }
 
@@ -22,10 +23,10 @@ Scene::Scene(void) {
 void Scene::cache() {
     this->sizeLights_ = static_cast<unsigned int> (this->lights_.size());
     this->sizePrimitives_ = static_cast<unsigned int> (this->primitives_.size());
-    intersect_ = new std::function<bool(Intersection &, const Ray &)>[sizePrimitives_];
+    /*intersect_ = new std::function<bool(Intersection &, const Ray &)>[sizePrimitives_];
     for (unsigned int i(0); i < sizePrimitives_; i++) {
         intersect_[i] = this->primitives_[static_cast<unsigned long> (i)]->intersect;
-    }
+    }*/
 }
 
 Scene::~Scene(void) {
@@ -35,8 +36,9 @@ Scene::~Scene(void) {
     }*/
     for (Light *light : this->lights_) {
         delete light;
+        light = nullptr;
     }
-    this->lights_.clear();
+    //this->lights_.clear();
 
     /*const unsigned int sizePrimitives(static_cast<unsigned int> (this->primitives_.size()));
     for (unsigned int i(0); i < sizePrimitives; i++) {
@@ -44,9 +46,11 @@ Scene::~Scene(void) {
     }*/
     for (Primitive *primitive : this->primitives_) {
         delete primitive;
+        primitive = nullptr;
     }
-    this->primitives_.clear();
-    delete[] intersect_;
+    //this->primitives_.clear();
+    if (intersect_) delete[] intersect_;
+    intersect_ = nullptr;
 }
 
 int Scene::trace(Intersection &intersection, Ray &ray) const {
@@ -54,8 +58,9 @@ int Scene::trace(Intersection &intersection, Ray &ray) const {
     ray.maxDistance_ = RAY_LENGTH_MAX;
 
     for (unsigned int i(0); i < sizePrimitives_; i++) {
-        //if (this->primitives_[static_cast<unsigned long> (i)]->intersect(intersection, ray))
-        if (intersect_[i](intersection, ray)) {
+        if (this->primitives_[static_cast<unsigned long> (i)]->intersect(intersection, ray))
+            //if (intersect_[i](intersection, ray))
+        {
             ray.maxDistance_ = intersection.length_;
             res = static_cast<int> (i);
         }
@@ -66,8 +71,9 @@ int Scene::trace(Intersection &intersection, Ray &ray) const {
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
     for (unsigned int i(0); i < sizePrimitives_; i++)//trace shadow ray
     {
-        //if (this->primitives_[i]->intersect(intersection, ray))
-        if (intersect_[i](intersection, ray)) {
+        if (this->primitives_[i]->intersect(intersection, ray))
+            //if (intersect_[i](intersection, ray))
+        {
             return true;
         }
     }

@@ -29,13 +29,3 @@ void Shader::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const {
 int Shader::traceTouch(Intersection &intersection, Ray &ray) const {
     return this->scene_.trace(intersection, ray);
 }
-
-void Shader::setBitmap(unsigned int *bitmap, RGB *accumulate, const float hfov, const float vfov,
-                       const unsigned int width, const unsigned int height) {
-    this->bitmap_ = bitmap;
-    this->accumulate_ = accumulate;
-    this->hfov_ = hfov;
-    this->vfov_ = vfov;
-    this->width_ = width;
-    this->height_ = height;
-}

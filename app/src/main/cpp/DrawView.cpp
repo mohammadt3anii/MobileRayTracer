@@ -9,8 +9,8 @@ enum State {
 };
 
 static int working_(IDLE);
-static const MobileRT::Scene *scene_(nullptr);
-static const MobileRT::Perspective *camera_(nullptr);
+static MobileRT::Scene *scene_(nullptr);
+static MobileRT::Perspective *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
@@ -36,8 +36,8 @@ void FPS(void) {
     }
 }
 
-const MobileRT::Scene *cornellBoxScene(void) {
-    MobileRT::Scene *const scene = new MobileRT::Scene();
+MobileRT::Scene *cornellBoxScene(void) {
+    MobileRT::Scene *scene = new MobileRT::Scene();
     // point light - white
     scene->lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
                                                          MobileRT::Point3D(0.0f, 0.50f, 0.0f)));
@@ -85,8 +85,8 @@ const MobileRT::Scene *cornellBoxScene(void) {
     return scene;
 }
 
-const MobileRT::Scene *spheresScene(void) {
-    MobileRT::Scene *const scene = new MobileRT::Scene();
+MobileRT::Scene *spheresScene(void) {
+    MobileRT::Scene *scene = new MobileRT::Scene();
     // create one light source
     scene->lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
                                                          MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
@@ -219,7 +219,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
         LOG("%s", "WORKING = FINISHED");
     }
     delete camera_;
-    delete scene_;
+    //delete scene_;
     delete shader_;
     delete samplerCamera_;
     delete samplerRay_;
@@ -285,13 +285,11 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
-    MobileRT::Ray ray_;
-    camera_->getRay(ray_, u_alpha, v_alpha);
+    MobileRT::Ray ray;
+    camera_->getRay(ray, u_alpha, v_alpha);
     MobileRT::Intersection intersection;
-    plane.intersect(intersection, ray_, material);
-    scene_->primitives_[index]->shape_->moveTo(intersection.point_.x_,
-                                               intersection.point_.y_);
-    //LOG("moveTouch (x,y)=(%f,%f)=(%f,%f)=(%f,%f)", jx, jy, x, y, u_alpha, v_alpha);
+    plane.intersect(intersection, ray, material);
+    scene_->primitives_[index]->shape_->moveTo(intersection.point_.x_, intersection.point_.y_);
 }
 
 extern "C"

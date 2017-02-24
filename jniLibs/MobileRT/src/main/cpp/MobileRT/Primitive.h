@@ -9,9 +9,9 @@
 #include "Material.h"
 #include "Intersection.h"
 #include "Ray.h"
-#include "../../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
-#include "../../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
-#include "../../../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
+#include "Shapes/Triangle.h"
+#include "Shapes/Sphere.h"
+#include "Shapes/Plane.h"
 
 namespace MobileRT {
     class Primitive {
