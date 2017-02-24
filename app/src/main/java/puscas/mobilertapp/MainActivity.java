@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
+        System.loadLibrary("Components");
         System.loadLibrary("DrawView");
     }
 
