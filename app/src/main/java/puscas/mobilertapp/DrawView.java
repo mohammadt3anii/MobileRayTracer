@@ -28,7 +28,6 @@ class DrawView extends LinearLayout {
     private int frame_ = 0;
     private int period_ = 0;
     private int stage_ = 0;
-    private boolean stopped_ = false;
     private float timebase_ = 0.0f;
     private float fps_ = 0.0f;
     private Button buttonRender_ = null;
@@ -36,7 +35,6 @@ class DrawView extends LinearLayout {
     private Bitmap bitmap_ = null;
     private RenderTask renderTask_ = null;
     private ScheduledExecutorService scheduler_ = null;
-    private BitmapDrawable bitmapDrawable_ = null;
     private String resolutionT_ = null;
     private String threadsT_ = null;
     private String samplesT_ = null;
@@ -102,7 +100,6 @@ class DrawView extends LinearLayout {
     native int isWorking();
 
     void stopDrawing() {
-        stopped_ = true;
         this.setOnTouchListener(null);
         stopRender();
     }
@@ -114,7 +111,6 @@ class DrawView extends LinearLayout {
     void startRender() {
         period_ = 42;
         renderTask_ = new RenderTask();
-        stopped_ = false;
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
         renderIntoBitmap(this.bitmap_, this.numThreads_);
@@ -126,13 +122,13 @@ class DrawView extends LinearLayout {
                      final int samples) {
         final int width = getWidth();
         final int height = getHeight();
-        bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         initialize(scene, shader, width, height, sampler, samples);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
-        bitmapDrawable_ = new BitmapDrawable(getResources(), bitmap_);
-        setBackground(bitmapDrawable_);
+
+        bitmap_ = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        setBackground(new BitmapDrawable(getResources(), bitmap_));
 
         fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
         fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);

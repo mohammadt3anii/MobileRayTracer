@@ -110,7 +110,7 @@ unsigned int RGB::RGB2Color(void) {
     //unsigned int hiB (255u - cb);
     //cb = cb + (hiB & (hiB <= 255u) - 1);
 
-    return (0xFF000000 | ((cb << 16)) | ((cg << 8)) | cr);
+    return (0xFF000000 | (cb << 16) | (cg << 8) | cr);
 }
 
 unsigned int RGB::getInstances() {

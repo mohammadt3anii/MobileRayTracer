@@ -202,6 +202,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_, height_,
                                        blockSizeX_, blockSizeY_);
+    LOG("x = %d %d", roundToMultipleOf(blockSizeX_, roundToEvenNumber(432)),
+        roundToEvenNumber(432));
+    LOG("y = %d %d", roundToMultipleOf(blockSizeY_, roundToEvenNumber(466)),
+        roundToEvenNumber(466));
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {

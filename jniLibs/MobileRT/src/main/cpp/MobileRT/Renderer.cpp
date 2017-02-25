@@ -85,12 +85,14 @@ void Renderer::renderScene(unsigned int *const bitmap,
                         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
                         this->blockSizeX_ % resolution_);
                 const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
-                for (unsigned int y(startY); y < startY + this->blockSizeY_; y++) {
+                const unsigned int endY(startY + this->blockSizeY_);
+                for (unsigned int y(startY); y < endY; y++) {
                     const unsigned int yWidth(y * width_);
                     const float v(y * INV_IMG_HEIGHT);
                     const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - v)));
                     const unsigned int startX((pixel + yWidth) % width_);
-                    for (unsigned int x(startX); x < startX + this->blockSizeX_; x++) {
+                    const unsigned int endX(startX + this->blockSizeX_);
+                    for (unsigned int x(startX); x < endX; x++) {
                         const float u(x * INV_IMG_WIDTH);
                         const float deviationU(this->sampler_.getDeviation(j + 1));
                         const float deviationV(this->sampler_.getDeviation(i + 1));
