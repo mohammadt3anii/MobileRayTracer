@@ -28,7 +28,6 @@ namespace MobileRT {
 
         void operator=(const Point3D &point3D);
 
-        //const Point3D operator+(const Vector3D &vector) const;
         const Vector3D operator-(const Point3D &point) const;
 
         void reset(const Point3D &point, const Vector3D &vector, const float value);

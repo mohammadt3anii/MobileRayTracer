@@ -28,11 +28,8 @@ float HaltonSeq::getSample(const unsigned int tasks, const unsigned int sample) 
                             (sample * this->domainSize_));
     const float res(haltonSequence(task, 2));
     if (res >= this->maxSampler_) {
-        //sample = this->sample_.fetch_add(tasks, std::memory_order_relaxed);
-        //res = haltonSequence(sample, 2);
         this->overSample_.fetch_add(1, std::memory_order_relaxed);
     }
-    //LOG("overSample_=%u, maxSampler_=%f", unsigned(overSample_), double(maxSampler_));
     return res;
 }
 

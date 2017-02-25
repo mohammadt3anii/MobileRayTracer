@@ -16,25 +16,15 @@ namespace MobileRT {
     class Scene {
     public:
         std::vector<Light *> lights_;
-        //Light* lights_;
         std::vector<Primitive *> primitives_;
-        //Primitive* primitives_;
-        unsigned int sizeLights_;
-        unsigned int sizePrimitives_;
-        //char padding[4] __attribute__((unused));
-        std::function<bool(Intersection &, const Ray &)> *intersect_;
 
     public:
         explicit Scene(void);
 
-        /*explicit Scene(const unsigned int sizeLights, Light* lights,
-                       const unsigned int sizePrimitives, Primitive* primitives);*/
         ~Scene(void);
 
         int trace(Intersection &intersection, Ray &ray) const;
         bool shadowTrace(Intersection &intersection, const Ray &ray) const;
-
-        void cache();
 
         static unsigned int getInstances();
     };

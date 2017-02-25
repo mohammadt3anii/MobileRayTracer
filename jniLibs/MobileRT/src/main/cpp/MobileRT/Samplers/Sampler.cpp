@@ -35,9 +35,6 @@ Sampler::~Sampler(void) {
 }
 
 bool Sampler::notFinished(const unsigned int sample) {
-    //LOG("task_=%u[%u]", unsigned(task_), this->domainSize_ * (sample + 1));
-    //LOG("sample_=%u[%u,%u],overSample_=%u",
-    //    unsigned(sample_), this->domainSize_ * (sample + 1), maxHalton_, unsigned(overSample_));
     return (((this->sample_ - 1) - this->overSample_) < this->domainSize_ * (sample + 1));
 }
 

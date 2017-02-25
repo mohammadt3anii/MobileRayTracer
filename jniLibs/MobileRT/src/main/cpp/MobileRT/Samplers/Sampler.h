@@ -22,7 +22,6 @@ namespace MobileRT {
         const float deviationIncrement_;
         std::atomic<unsigned int> sample_;
         std::atomic<unsigned int> overSample_;
-        //char padding[4] __attribute__((unused));
 
     public:
         explicit Sampler(const unsigned int domainSize, const unsigned int samples);

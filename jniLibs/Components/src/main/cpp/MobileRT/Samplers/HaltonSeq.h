@@ -12,7 +12,6 @@ namespace MobileRT {
     private:
         float half_rand_max_;
         float maxSampler_;
-        //char padding[4] __attribute__((unused));
 
     private:
         float haltonSequence(const unsigned int index, const unsigned int base);

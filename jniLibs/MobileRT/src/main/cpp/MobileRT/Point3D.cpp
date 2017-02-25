@@ -35,13 +35,6 @@ Point3D::Point3D(const Point3D &point, const Vector3D &vector, const float value
         z_(vector.z_ * value + point.z_) {
 }
 
-/*const Point3D Point3D::operator+(const Vector3D &vector) const {
-    const float x (this->x_ + vector.x_);
-    const float y (this->y_ + vector.y_);
-    const float z (this->z_ + vector.z_);
-    return Point3D (x, y, z);
-}*/
-
 const Vector3D Point3D::operator-(const Point3D &point) const {
     const float x(this->x_ - point.x_);
     const float y(this->y_ - point.y_);

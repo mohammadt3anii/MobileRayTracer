@@ -20,22 +20,13 @@ namespace MobileRT {
 
     public:
         Shape *const shape_;
-        Plane *const plane_;
-        Sphere *const sphere_;
-        Triangle *const triangle_;
-        std::function<bool(Intersection &, const Ray &)> const intersect;
 
     public:
-        explicit Primitive(Shape &shape, const Material &material);
-
-        explicit Primitive(Plane &plane, const Material &material);
-
-        explicit Primitive(Sphere &sphere, const Material &material);
-
-        explicit Primitive(Triangle &triangle, const Material &material);
+        explicit Primitive(Shape *shape, const Material &material);
 
         ~Primitive();
-        //bool intersect(Intersection &intersection, const Ray &ray) const;
+
+        bool intersect(Intersection &intersection, const Ray &ray) const;
 
         static unsigned int getInstances();
     };

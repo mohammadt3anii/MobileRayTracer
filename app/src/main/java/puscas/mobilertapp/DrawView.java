@@ -37,7 +37,6 @@ class DrawView extends LinearLayout {
     private RenderTask renderTask_ = null;
     private ScheduledExecutorService scheduler_ = null;
     private BitmapDrawable bitmapDrawable_ = null;
-    private LinearLayout linearLayout_ = null;
     private String resolutionT_ = null;
     private String threadsT_ = null;
     private String samplesT_ = null;
@@ -46,21 +45,24 @@ class DrawView extends LinearLayout {
     private String timeFrameT_ = null;
     private String timeT_ = null;
     private String fpsRenderT_ = null;
-    private String allocatedT_;
-    private String availableT_;
-    private String freeT_;
+    private String allocatedT_ = null;
+    private String availableT_ = null;
+    private String freeT_ = null;
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
-        fpsRenderT_ = String.format(Locale.US, "[%.2f] ", 0.0f);
-        timeFrameT_ = String.format(Locale.US, "[%.2f]", 0.0f);
+        fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);
+        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
         timeT_ = String.format(Locale.US, "[%.2fs]\n", 0.0f);
         stageT_ = "" + Stage.values()[Stage.IDLE.getValue()];
-        resolutionT_ = " ,R:" + getWidth() + "x" + getHeight();
-        threadsT_ = " , T:" + 0;
-        samplesT_ = " ,S:" + 0;
+        resolutionT_ = ", R:" + getWidth() + "x" + getHeight();
+        threadsT_ = ", T:" + 0;
+        samplesT_ = ", S:" + 0;
+        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
+        availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
+        freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
     }
 
     void setView(TextView textView) {
@@ -130,11 +132,19 @@ class DrawView extends LinearLayout {
         frame_ = 0;
         timebase_ = 0.0f;
         bitmapDrawable_ = new BitmapDrawable(getResources(), bitmap_);
-        linearLayout_ = this;
         setBackground(bitmapDrawable_);
-        resolutionT_ = " ,R:" + width + "x" + height;
-        threadsT_ = " , T:" + numThreads_;
-        samplesT_ = " ,S:" + samples;
+
+        fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
+        fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);
+        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
+        timeT_ = String.format(Locale.US, "[%.2fs]\n", 0.0f);
+        stageT_ = "" + Stage.values()[Stage.IDLE.getValue()];
+        resolutionT_ = ", R:" + width + "x" + height;
+        threadsT_ = ", T:" + numThreads_;
+        samplesT_ = ", S:" + samples;
+        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
+        availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
+        freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
     }
 
     private int getTouchListIndex(final int pointerID) {
@@ -178,11 +188,10 @@ class DrawView extends LinearLayout {
                  + touch.x_ + "," + touch.y_ + ")");System.out.flush();*/
             }
             stage_ = redraw(bitmap_);
-            linearLayout_.setBackground(bitmapDrawable_);
             FPS();
             fpsT_ = String.format(Locale.US, "FPS:%.2f ", getFPS());
-            fpsRenderT_ = String.format(Locale.US, "[%.2f] ", fps_);
-            timeFrameT_ = String.format(Locale.US, "[%.2f]", getTimeFrame() / 1000.0f);
+            fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
+            timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
             timeT_ = String.format(Locale.US, "[%.2fs]\n", (SystemClock.elapsedRealtime() - start_)
                     / 1000.0f);
             stageT_ = "" + Stage.values()[stage_];
@@ -190,7 +199,7 @@ class DrawView extends LinearLayout {
             availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
             freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
             publishProgress();
-            if (stopped_) {
+            if (stage_ != 1) {
                 scheduler_.shutdown();
             }
         };
