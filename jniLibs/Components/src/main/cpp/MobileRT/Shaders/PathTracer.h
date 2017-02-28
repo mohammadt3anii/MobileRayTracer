@@ -8,7 +8,6 @@
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
 
-
 namespace MobileRT {
     class PathTracer : public Shader {
     private:
@@ -21,7 +20,6 @@ namespace MobileRT {
     public:
         explicit PathTracer(const Scene &scene, Sampler &sampler);
     };
-};
-
+}
 
 #endif //MOBILERAYTRACER_PATHTRACER_H
