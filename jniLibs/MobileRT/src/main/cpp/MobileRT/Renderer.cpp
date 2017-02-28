@@ -79,8 +79,8 @@ void Renderer::renderScene(unsigned int *const bitmap,
         for (unsigned int j(0); j < samples; j++)
         {
             const unsigned int sample(i * samples + j);
-            for (float block(this->sampler_.getSample(1, sample));
-                 this->sampler_.notFinished(sample); block = this->sampler_.getSample(1, sample)) {
+            for (float block(this->sampler_.getSample(sample));
+                 this->sampler_.notFinished(sample); block = this->sampler_.getSample(sample)) {
                 const unsigned int pixel(
                         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
                         this->blockSizeX_ % resolution_);

@@ -6,8 +6,6 @@
 
 using namespace MobileRT;
 
-#define MAX_DEPTH 4
-
 Whitted::Whitted(const Scene &scene) : Shader(scene) {
 }
 
@@ -18,9 +16,11 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const 
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    Vector3D &shadingNormal((ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
-                            intersection.normal_// entering the object
-                                                                                     : intersection.getSymNormal());// We have to reverse the normal now
+    Vector3D &shadingNormal(
+            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+            intersection.normal_// entering the object
+            // We have to reverse the normal now
+                                                                     : intersection.getSymNormal());
     // shadowed direct lighting - only for diffuse materials
     if (kD.isNotZero()) {
         const unsigned long sizeLights(scene_.lights_.size());
@@ -49,7 +49,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const 
         rgb.add(kD, 0.1f);//rgb += kD *  0.1f
     } // end direct + ambient
     // specular reflection
-    if (kS.isNotZero() && (ray.depth_ < MAX_DEPTH)) {
+    if (kS.isNotZero() && (ray.depth_ < RAY_DEPTH_MAX)) {
         // compute specular reflection
         //reflection ray
         const float RN_dot(2.0f * shadingNormal.dotProduct(ray.symDirection_));

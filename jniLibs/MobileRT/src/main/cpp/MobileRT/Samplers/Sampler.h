@@ -40,7 +40,7 @@ namespace MobileRT {
 
         virtual float getDeviation(const unsigned int num) = 0;
 
-        virtual float getSample(const unsigned int tasks, const unsigned int sample) = 0;
+        virtual float getSample(const unsigned int sample) = 0;
     };
 }
 

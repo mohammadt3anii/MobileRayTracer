@@ -12,7 +12,7 @@
 namespace MobileRT {
     class PathTracer : public Shader {
     private:
-        Sampler &sampler_;
+        Sampler &sampler_;// __attribute__((unused));
 
         void shade(RGB &rgb,
                    Intersection &intersection,

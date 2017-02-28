@@ -6,10 +6,9 @@
 
 using namespace MobileRT;
 
-#define MAX_DEPTH 4
-
 PathTracer::PathTracer(const Scene &scene, Sampler &sampler) :
-        Shader(scene), sampler_(sampler) {
+        Shader(scene),
+        sampler_(sampler) {
 }
 
 void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const {
@@ -24,7 +23,7 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
             // We have to reverse the normal now
                                                                      : intersection.getSymNormal());
     // shadowed direct lighting - only for diffuse materials
-    if (kD.isNotZero() && (ray.depth_ < MAX_DEPTH)) {
+    if (kD.isNotZero() && (ray.depth_ < RAY_DEPTH_MAX)) {
         const unsigned long sizeLights(scene_.lights_.size());
         Intersection intersectLight;
 
@@ -48,21 +47,26 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
             }
         }
         // ambient light
-        rgb.add(kD, 0.1f);//rgb += kD *  0.1f
+        rgb.add(kD, 0.1f);//rgb += kD *  0.1
+
+        const float fi(/*sampler_.getSample(0) * */2 * PI);
+        const float teta(sampler_.getSample(0) * PI_2);
+        //LOG("fi=%f, teta=%f", double(fi), double(teta));
+        const float x(std::cos(fi) * std::sin(teta));
+        const float y(std::sin(fi) * std::sin(teta));
+        const float z(std::cos(teta));
+        Ray newRay(x, y, z, intersection.point_);
+        RGB newRGB;
+        Intersection newIntersection;
+        rayTrace(newRGB, newRay, newIntersection);
+        newRGB *= kD;
+        rgb.add(newRGB, 0.1f);
+
     } // end direct + ambient
 
-    Vector3D randomDirection(sampler_.getSample(1, 0), sampler_.getSample(1, 0),
-                             sampler_.getSample(1, 0));
-    Ray specRay(intersection.point_, randomDirection, RAY_LENGTH_MAX, ray.depth_ + 1);
-    RGB specRad;
-    Intersection aux;
-
-    /*specRad *= kD;
-    rgb.add(specRad);*/
-
     // specular reflection
-    /*const RGB &kS(intersection.material_->Ks_);
-    if (kS.isNotZero() && (ray.depth_ < MAX_DEPTH)) {
+    const RGB &kS(intersection.material_->Ks_);
+    if (kS.isNotZero() && (ray.depth_ < RAY_DEPTH_MAX)) {
         // compute specular reflection
         //reflection ray
         const float RN_dot(2.0f * shadingNormal.dotProduct(ray.symDirection_));
@@ -75,5 +79,5 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
         rayTrace(specRad, specRay, aux);
         specRad *= kS;
         rgb.add(specRad);
-    }*/
+    }
 }

@@ -20,8 +20,8 @@ float Stratified::getDeviation(const unsigned int index) {
     return (-0.5f + (index * this->deviationIncrement_) - (this->deviationIncrement_ * 0.5f));
 }
 
-float Stratified::getSample(const unsigned int tasks, const unsigned int sample) {
-    const unsigned int task(this->sample_.fetch_add(tasks, std::memory_order_relaxed) -
+float Stratified::getSample(const unsigned int sample) {
+    const unsigned int task(this->sample_.fetch_add(1, std::memory_order_relaxed) -
                             (sample * this->domainSize_));
     return static_cast<float> (task) / this->domainSize_;
 }

@@ -10,7 +10,7 @@ enum State {
 
 static int working_(IDLE);
 static MobileRT::Scene *scene_(nullptr);
-static MobileRT::Perspective *camera_(nullptr);
+static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
@@ -186,13 +186,14 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                       blockSizeX_, blockSizeY_);
             break;
     }
+    samplerRay_ = nullptr;
     switch (shader) {
         case 1:
             shader_ = new MobileRT::Whitted(*scene_);
             break;
 
         case 2:
-            samplerRay_ = new MobileRT::Stratified(width_ * height_, samples_);
+            samplerRay_ = new MobileRT::HaltonSeq(width_ * height_, samples_ * RAY_DEPTH_MAX);
             shader_ = new MobileRT::PathTracer(*scene_, *samplerRay_);
             break;
 
