@@ -9,9 +9,6 @@
 
 namespace MobileRT {
     class PointLight : public Light {
-    private:
-
-
     public:
         explicit PointLight(const RGB &radiance, const Point3D &position);
     };

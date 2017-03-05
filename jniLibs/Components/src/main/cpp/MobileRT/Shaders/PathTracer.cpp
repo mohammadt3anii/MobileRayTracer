@@ -49,13 +49,37 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
         // ambient light
         rgb.add(kD, 0.1f);//rgb += kD *  0.1
 
-        const float fi(/*sampler_.getSample(0) * */2 * PI);
+        const float fi(sampler_.getSample(0) * 2 * PI);
         const float teta(sampler_.getSample(0) * PI_2);
         //LOG("fi=%f, teta=%f", double(fi), double(teta));
         const float x(std::cos(fi) * std::sin(teta));
         const float y(std::sin(fi) * std::sin(teta));
         const float z(std::cos(teta));
-        Ray newRay(x, y, z, intersection.point_);
+        //angleX = orientation relative to the x axis
+        //cos α = 	a · b / |a| · |b|
+        //a·b = x1 · x2 + y1 · y2 + z1 · z2
+        //|a| = √(x + y + z)
+        const float vectorX1(0);
+        const float vectorY1(1);
+        const float vectorZ1(0);
+        const float a(std::sqrt(intersection.normal_.x_ + intersection.normal_.y_ +
+                                intersection.normal_.z_));
+        const float b1(std::sqrt(vectorX1 + vectorY1 + vectorZ1));
+        const float ab1(intersection.normal_.x_ * vectorX1 + intersection.normal_.y_ * vectorY1 +
+                        intersection.normal_.z_ * vectorZ1);
+        const float angleX(std::acos(ab1 / (a * b1)));
+        const float vectorX2(1);
+        const float vectorY2(0);
+        const float vectorZ2(0);
+        const float b2(std::sqrt(vectorX2 + vectorY2 + vectorZ2));
+        const float ab2(intersection.normal_.x_ * vectorX2 + intersection.normal_.y_ * vectorY2 +
+                        intersection.normal_.z_ * vectorZ2);
+        const float angleY(std::acos(ab2 / (a * b2)));
+        const float globalX(x * std::cos(angleX) - y * std::sin(angleX) + intersection.point_.x_);
+        const float globalY(x * std::sin(angleX) + y * std::cos(angleX) + intersection.point_.y_);
+        const float globalZ(
+                z * std::cos(angleY) - globalY * std::sin(angleY) + intersection.point_.z_);
+        Ray newRay(globalX, globalY, globalZ, intersection.point_, ray.depth_ + 1);
         RGB newRGB;
         Intersection newIntersection;
         rayTrace(newRGB, newRay, newIntersection);

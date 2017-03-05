@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         drawView_.setView(textView_);
         drawView_.setButton((Button) findViewById(R.id.renderButton));
 
-        final String[] scenes = {"Cornell", "Spheres"};
+        final String[] scenes = {"Cornell", "Spheres", "Spheres2", "Cornell2"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
         pickerScene_.setMinValue(0);
         pickerScene_.setMaxValue(scenes.length - 1);

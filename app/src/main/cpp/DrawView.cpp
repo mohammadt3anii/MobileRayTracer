@@ -84,6 +84,92 @@ MobileRT::Scene *cornellBoxScene(void) {
     return &scene;
 }
 
+MobileRT::Scene *cornell2BoxScene(void) {
+    MobileRT::Scene &scene = *new MobileRT::Scene();
+    // point light - white
+    scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                       MobileRT::Point3D(0.0f, 0.50f, 0.0f)));
+
+    // back wall - white
+    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
+                                                           lightGrayMat));
+    // floor - white
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, -1.0f, 0.0f), MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
+                                                           lightGrayMat));
+    // ceiling - white
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 1.0f, 0.0f), MobileRT::Vector3D(0.0f, -1.0f, 0.0f)),
+                                                           lightGrayMat));
+    // left wall - red
+    const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(-1.0f, 0.0f, 0.0f), MobileRT::Vector3D(1.0f, 0.0f, 0.0f)), redMat));
+    // right wall - blue
+    const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
+
+    // sphere - mirror
+    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
+            MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
+
+    // sphere - green
+    const MobileRT::Material GreenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.2f, 0.0f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
+            MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
+
+    // triangle - yellow
+    const MobileRT::Material yellowMat(MobileRT::RGB(1.0f, 1.0f, 0.0f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
+            MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
+            MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
+    return &scene;
+}
+
+MobileRT::Scene *spheres2Scene(void) {
+    MobileRT::Scene &scene = *new MobileRT::Scene();
+    // create one light source
+    scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                        MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
+
+    // create diffuse Materials
+    const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
+    const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
+    const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
+    const MobileRT::Material yellowMat(MobileRT::RGB(0.9f, 0.9f, 0.0f),
+                                       MobileRT::RGB(0.5f, 0.5f, 0.5f));
+    const MobileRT::Material mirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
+    // create one sphere
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(-1.0f, 1.0f, 6.0f), 1.0f), redMat));
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(-1.0f, 2.0f, 5.0f), 0.3f), blueMat));
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(1.5f, 2.0f, 7.0f), 1.0f), mirrorMat));
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(1.5f, 0.5f, 5.0f), 0.2f), yellowMat));
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(new MobileRT::Plane(MobileRT::Point3D(0.0f, 0.0f, 0.0f),
+                                                        MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
+                                    sandMat));
+    scene.primitives_.emplace_back(
+            new MobileRT::Primitive(
+                    new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
+    return &scene;
+}
+
 MobileRT::Scene *spheresScene(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
@@ -167,6 +253,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
                                                 60.0f * ratio);
             scene_ = spheresScene();
+            break;
+
+        case 2:
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
+                                                60.0f * ratio);
+            scene_ = spheres2Scene();
             break;
 
         default:

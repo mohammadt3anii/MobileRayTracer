@@ -20,8 +20,10 @@ set(LIB_PATH ${CMAKE_SOURCE_DIR}/../jniLibs/MobileRT/build/intermediates/cmake/$
 add_library(MobileRT STATIC IMPORTED)
 set_property(TARGET MobileRT PROPERTY IMPORTED_LOCATION ${LIB_PATH}/${ANDROID_ABI}/libMobileRT.so)
 
-set(COMP_PATH ${CMAKE_SOURCE_DIR}/../jniLibs/Components/build/intermediates/cmake/${FOLDER_TYPE}/obj)
+set(COMP_PATH
+${CMAKE_SOURCE_DIR}/../jniLibs/Components/build/intermediates/cmake/${FOLDER_TYPE}/obj)
 add_library(Components STATIC IMPORTED)
-set_property(TARGET Components PROPERTY IMPORTED_LOCATION ${COMP_PATH}/${ANDROID_ABI}/libComponents.so)
+set_property(TARGET Components PROPERTY
+IMPORTED_LOCATION ${COMP_PATH}/${ANDROID_ABI}/libComponents.so)
 
 target_link_libraries(DrawView jnigraphics MobileRT Components log)

@@ -16,6 +16,7 @@
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/HaltonSeq.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/PointLight.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/AreaLight.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
@@ -26,7 +27,11 @@ void FPS(void);
 
 MobileRT::Scene *cornellBoxScene(void);
 
+MobileRT::Scene *cornell2BoxScene(void);
+
 MobileRT::Scene *spheresScene(void);
+
+MobileRT::Scene *spheres2Scene(void);
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(

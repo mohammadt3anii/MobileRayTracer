@@ -21,7 +21,8 @@ namespace MobileRT {
     public:
         explicit Ray(void);
 
-        explicit Ray(const float x, const float y, const float z, const Point3D &position);
+        explicit Ray(const float x, const float y, const float z, const Point3D &position,
+                     const unsigned int depth);
 
         explicit Ray(Point3D &orig, const Vector3D &dir, const float maxDist,
             const unsigned int depth);

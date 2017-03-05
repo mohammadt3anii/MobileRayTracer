@@ -14,12 +14,13 @@ Ray::Ray(void) :
     counter++;
 }
 
-Ray::Ray(const float x, const float y, const float z, const Point3D &origin) :
+Ray::Ray(const float x, const float y, const float z, const Point3D &origin,
+         const unsigned int depth) :
         origin_(origin),
         direction_(x, y, z),
         symDirection_(-x, -y, -z),
         maxDistance_(RAY_LENGTH_MAX),
-        depth_(0) {
+        depth_(depth) {
     counter++;
     this->direction_.normalize();
 }
