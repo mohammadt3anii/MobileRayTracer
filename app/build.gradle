@@ -48,3 +48,8 @@ android {
     }
     void
 }
+
+dependencies {
+    compile project(':MobileRT')
+    compile project(':Components')
+}
