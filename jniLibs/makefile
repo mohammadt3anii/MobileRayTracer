@@ -7,7 +7,7 @@ LD := $(CXX)
 MAKEFLAGS := -j5
 
 CXXFLAGS := -Wpedantic -Wall -Wextra -Winline -Wfatal-errors -MMD -MP -std=c++11
-CXXFLAGS += -Ofast -march=native -ftree-vectorize
+CXXFLAGS += -march=native -ftree-vectorize -O2
 CXXFLAGS += -g3
 CXXFLAGS += -DNO_ANDROID
 CXXFLAGS += -I./Components/src/main/cpp

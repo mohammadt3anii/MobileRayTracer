@@ -122,7 +122,7 @@ static bool check_escape(GtkWidget *, GdkEventKey *event, gpointer) {
 
 int main(int argc, char **argv) {
     const int scene(0);
-    const int shader(1);
+    const int shader(2);
     const int threads(4);
     const int sampler(1);
     const int samples(1);
