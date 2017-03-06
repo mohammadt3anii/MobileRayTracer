@@ -14,17 +14,26 @@ Intersection::Intersection(void) :
     counter++;
 }
 
-void Intersection::reset(const Point3D &point, const Vector3D &normal, const float length,
-                         const Material &material) {
+void Intersection::reset(const Point3D &point,
+                         const Vector3D &normal, const float length, const Material &material) {
     this->point_ = point;
     this->normal_ = normal;
     this->length_ = length;
     this->material_ = &material;
 }
 
+void Intersection::reset(const float x, const float y, const float z,
+                         const Vector3D &normal, const float length, const Material &material) {
+    this->point_.x_ = x;
+    this->point_.y_ = y;
+    this->point_.z_ = z;
+    this->normal_ = normal;
+    this->length_ = length;
+    this->material_ = &material;
+}
+
 void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
-                         const Vector3D &normal, const float length,
-                         const Material &material) {
+                         const Vector3D &normal, const float length, const Material &material) {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;

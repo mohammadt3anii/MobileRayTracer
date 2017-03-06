@@ -19,6 +19,8 @@ namespace MobileRT {
 
         bool intersect(Intersection &intersection, const Ray &ray,
                        const Material &material) const override;
+
+        //virtual float getMaxDistance(Point3D point) const;
     };
 }
 

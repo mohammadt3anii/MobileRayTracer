@@ -261,6 +261,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             scene_ = spheres2Scene();
             break;
 
+        case 3:
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f), 45.0f,
+                                                45.0f * ratio);
+            scene_ = cornell2BoxScene();
+            break;
+
         default:
             camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f), 45.0f,
                                                 45.0f * ratio);

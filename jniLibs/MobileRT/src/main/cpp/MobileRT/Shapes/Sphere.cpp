@@ -39,7 +39,6 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     const Point3D intersectionPoint(ray.origin_, ray.direction_, distanceToIntersection);
     Vector3D normal(intersectionPoint, this->center_);
     normal.normalize();
-    //normal.resetAndNormalize(intersectionPoint, this->center_);
 
     // if so, then we have an intersection
     intersection.reset(

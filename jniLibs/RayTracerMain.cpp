@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
     const int scene(0);
     const int shader(2);
     const int threads(4);
-    const int sampler(1);
+    const int sampler(0);
     const int samples(1);
 
     const float ratio = static_cast<float>(height_) / static_cast<float>(width_);

@@ -26,7 +26,7 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);
 
-    Vector3D vertexToCamera(ray.origin_, pointA_);
+    const Vector3D vertexToCamera(ray.origin_, pointA_);
 
     const float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
 

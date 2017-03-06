@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
         pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    @SuppressWarnings("UnusedParameters")
     public void startRender(final View view) {
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle

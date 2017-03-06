@@ -51,10 +51,11 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
 
         const float fi(sampler_.getSample(0) * 2 * PI);
         const float teta(sampler_.getSample(0) * PI_2);
-        //LOG("fi=%f, teta=%f", double(fi), double(teta));
-        const float x(std::cos(fi) * std::sin(teta));
-        const float y(std::sin(fi) * std::sin(teta));
-        const float z(std::cos(teta));
+        LOG("fi=%f, teta=%f", double(fi), double(teta));
+        const float r(1.0f);
+        const float localX(r * std::cos(fi) * std::sin(teta));
+        const float localY(r * std::sin(fi) * std::sin(teta));
+        const float localZ(r * std::cos(teta));
         //angleX = orientation relative to the x axis
         //cos α = 	a · b / |a| · |b|
         //a·b = x1 · x2 + y1 · y2 + z1 · z2
@@ -75,17 +76,18 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
         const float ab2(intersection.normal_.x_ * vectorX2 + intersection.normal_.y_ * vectorY2 +
                         intersection.normal_.z_ * vectorZ2);
         const float angleY(std::acos(ab2 / (a * b2)));
-        const float globalX(x * std::cos(angleX) - y * std::sin(angleX) + intersection.point_.x_);
-        const float globalY(x * std::sin(angleX) + y * std::cos(angleX) + intersection.point_.y_);
-        const float globalZ(
-                z * std::cos(angleY) - globalY * std::sin(angleY) + intersection.point_.z_);
+        const float globalX(localX * std::cos(angleX) - localY * std::sin(angleX) +
+                                    intersection.point_.x_);
+        const float globalY(localX * std::sin(angleX) + localY * std::cos(angleX) +
+                                    intersection.point_.y_);
+        const float globalZ(localZ * std::cos(angleY) - globalY * std::sin(angleY) +
+                                    intersection.point_.z_);
         Ray newRay(globalX, globalY, globalZ, intersection.point_, ray.depth_ + 1);
         RGB newRGB;
         Intersection newIntersection;
         rayTrace(newRGB, newRay, newIntersection);
         newRGB *= kD;
         rgb.add(newRGB, 0.1f);
-
     } // end direct + ambient
 
     // specular reflection

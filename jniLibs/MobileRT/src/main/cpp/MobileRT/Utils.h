@@ -6,19 +6,26 @@
 #define MOBILERAYTRACER_UTILS
 
 #include <cmath>
+#include <math.h>
+#include <cstring>
+
+#define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #ifndef NO_ANDROID
 
 #include <android/log.h>
 
-#endif
-
-#include <math.h>
-
-#define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #define LOG(msg, ...)\
-__android_log_print(ANDROID_LOG_DEBUG, "LOG", "file:%s::line:%d: " msg,\
+__android_log_print(ANDROID_LOG_DEBUG, "LOG", "file:%s::line:%d: " msg "\n",\
 FILENAME, __LINE__, __VA_ARGS__);
+
+#else
+
+#define LOG(msg, ...)\
+printf("file:%s::line:%d: " msg "\n",\
+FILENAME, __LINE__, __VA_ARGS__);
+
+#endif
 
 #define RAY_LENGTH_MIN  1.0e-5f
 #define RAY_LENGTH_MAX  1.0e+10f

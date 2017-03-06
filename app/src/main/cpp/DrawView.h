@@ -9,6 +9,11 @@
 #include <android/bitmap.h>
 #include <android/log.h>
 
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
+#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/NoShadows.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/Whitted.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/PathTracer.h"
@@ -17,11 +22,6 @@
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/PointLight.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/AreaLight.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
 
 void FPS(void);
 

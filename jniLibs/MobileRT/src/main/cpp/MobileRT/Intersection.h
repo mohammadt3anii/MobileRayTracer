@@ -22,8 +22,11 @@ namespace MobileRT {
 
     public:
         explicit Intersection(void);
-        void reset(const Point3D &point, const Vector3D &normal, const float length,
-                   const Material &material);
+        void reset(const Point3D &point,
+                   const Vector3D &normal, const float length, const Material &material);
+
+        void reset(const float x, const float y, const float z,
+                   const Vector3D &normal, const float length, const Material &material);
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
                    const Vector3D &normal, const float length, const Material &material);

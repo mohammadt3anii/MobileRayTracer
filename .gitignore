@@ -7,3 +7,5 @@
 **/.fuse*
 **/.gradle
 **/raytracer
+**/.d
+**/.o
