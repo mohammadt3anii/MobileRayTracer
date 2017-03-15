@@ -25,8 +25,8 @@ static MobileRT::Renderer *renderer_(nullptr);
 
 static const unsigned int width_(932);
 static const unsigned int height_(932);
-static unsigned int blockSizeX_(128);
-static unsigned int blockSizeY_(128);
+static unsigned int blockSizeX_(1);
+static unsigned int blockSizeY_(1);
 static unsigned int canvas[width_ * height_];
 
 MobileRT::Scene *cornellBoxScene(void) {
@@ -123,7 +123,7 @@ static bool check_escape(GtkWidget *, GdkEventKey *event, gpointer) {
 int main(int argc, char **argv) {
     const int scene(0);
     const int shader(2);
-    const int threads(4);
+    const int threads(1);
     const int sampler(0);
     const int samples(1);
 

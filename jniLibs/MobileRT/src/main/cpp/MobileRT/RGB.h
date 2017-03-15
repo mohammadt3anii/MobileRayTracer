@@ -33,6 +33,8 @@ namespace MobileRT {
 
         //void mult(const RGB &rgb);
         void operator*=(const RGB &rgb);
+        void operator*=(const float value);
+        void operator/=(const float value);
 
         void addSampleAndCalcAvg(RGB &sample);
         void reset(void);

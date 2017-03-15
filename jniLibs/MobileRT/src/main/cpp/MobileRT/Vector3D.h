@@ -31,6 +31,7 @@ namespace MobileRT {
 
         const Vector3D &operator=(const Vector3D &vector);
         float dotProduct(const Vector3D &vector) const;
+        float dotProduct(const float x, const float y, const float z) const;
 
         float dotProduct(const Point3D &dest, const Point3D &orig) const;
 

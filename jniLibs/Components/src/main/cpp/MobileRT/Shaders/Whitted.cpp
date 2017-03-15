@@ -9,7 +9,7 @@ using namespace MobileRT;
 Whitted::Whitted(const Scene &scene) : Shader(scene) {
 }
 
-void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const {
+void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
     const RGB &kD(intersection.material_->Kd_);
     const RGB &kS(intersection.material_->Ks_);
     // the normal always points to outside objects (e.g., spheres)
@@ -28,9 +28,10 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const 
 
         for (unsigned int i(0); i < sizeLights; i++)//for each light
         {
-            const Light &light(*scene_.lights_[i]);
+            Light &light(*scene_.lights_[i]);
+            Point3D lightPosition (light.getPosition());
             //calculates vector starting in intersection to the light
-            Vector3D vectorIntersectCamera(light.position_, intersection.point_);
+            Vector3D vectorIntersectCamera(lightPosition, intersection.point_);
             //distance from intersection to the light (and normalize it)
             const float distanceToLight(vectorIntersectCamera.normalize());
             const float cos_N_L(vectorIntersectCamera.dotProduct(shadingNormal));//x*x + y*y + z*z

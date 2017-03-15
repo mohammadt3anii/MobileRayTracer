@@ -29,6 +29,13 @@ Point3D::Point3D(const Point3D &p) :
     counter++;
 }
 
+Point3D::Point3D(Point3D &p) :
+        x_(p.x_),
+        y_(p.y_),
+        z_(p.z_) {
+    counter++;
+}
+
 Point3D::Point3D(const Point3D &point, const Vector3D &vector, const float value) :
         x_(vector.x_ * value + point.x_),
         y_(vector.y_ * value + point.y_),

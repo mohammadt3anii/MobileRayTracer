@@ -74,6 +74,10 @@ float Vector3D::dotProduct(const Vector3D &vector) const {
     return (this->x_ * vector.x_ + this->y_ * vector.y_ + this->z_ * vector.z_);
 }
 
+float Vector3D::dotProduct(const float x, const float y, const float z) const {
+    return (this->x_ * x + this->y_ * y + this->z_ * z);
+}
+
 // dot product Algebraic
 float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
     return (this->x_ * (dest.x_ - orig.x_) + this->y_ * (dest.y_ - orig.y_) +

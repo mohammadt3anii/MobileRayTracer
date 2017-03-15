@@ -21,7 +21,8 @@ namespace MobileRT {
         char padding[4] __attribute__((unused));
 
     public:
-        explicit Intersection(void);
+        Intersection(void);
+        Intersection(Intersection &intersection);
         void reset(const Point3D &point,
                    const Vector3D &normal, const float length, const Material &material);
 
@@ -30,6 +31,7 @@ namespace MobileRT {
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
                    const Vector3D &normal, const float length, const Material &material);
+        void reset(Intersection &intersection);
 
         Vector3D &getSymNormal(void);
 

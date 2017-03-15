@@ -10,7 +10,7 @@ static unsigned int counter = 0;
 
 Ray::Ray(void) :
         maxDistance_(RAY_LENGTH_MAX),
-        depth_(0) {
+        depth_(1) {
     counter++;
 }
 

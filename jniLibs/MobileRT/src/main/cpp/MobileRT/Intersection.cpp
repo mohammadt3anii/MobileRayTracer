@@ -14,6 +14,16 @@ Intersection::Intersection(void) :
     counter++;
 }
 
+Intersection::Intersection(Intersection &intersection) :
+        point_(intersection.point_),
+        normal_(intersection.normal_),
+        symNormal_(intersection.symNormal_),
+        material_(intersection.material_),
+        length_(intersection.length_)
+{
+    counter++;
+}
+
 void Intersection::reset(const Point3D &point,
                          const Vector3D &normal, const float length, const Material &material) {
     this->point_ = point;
@@ -40,6 +50,13 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->normal_ = normal;
     this->length_ = length;
     this->material_ = &material;
+}
+
+void Intersection::reset(Intersection &intersection) {
+    this->point_ = intersection.point_;
+    this->normal_ = intersection.normal_;
+    this->length_ = intersection.length_;
+    this->material_ = intersection.material_;
 }
 
 Vector3D &Intersection::getSymNormal(void) {

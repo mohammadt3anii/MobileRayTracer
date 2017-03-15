@@ -7,6 +7,8 @@
 
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
+#include <random>
+#include <iostream>
 
 namespace MobileRT {
     class PathTracer : public Shader {
@@ -15,7 +17,7 @@ namespace MobileRT {
 
         void shade(RGB &rgb,
                    Intersection &intersection,
-                   const Ray &ray) const override;
+                   Ray &ray) const override;
 
     public:
         explicit PathTracer(const Scene &scene, Sampler &sampler);

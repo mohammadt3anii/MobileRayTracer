@@ -10,3 +10,7 @@ Light::Light(const RGB &radiance, const Point3D &position) :
         radiance_(radiance),
         position_(position) {
 }
+
+Light::~Light (void)
+{
+}

@@ -12,7 +12,7 @@ namespace MobileRT {
     private:
         void shade(RGB &rgb,
                    Intersection &intersection,
-                   const Ray &ray) const override;
+                   Ray &ray) const override;
 
     public:
         explicit Whitted(const Scene &scene);

@@ -11,6 +11,7 @@ namespace MobileRT {
     class PointLight : public Light {
     public:
         explicit PointLight(const RGB &radiance, const Point3D &position);
+        virtual Point3D getPosition (void) override;
     };
 }
 

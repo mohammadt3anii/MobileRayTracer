@@ -14,6 +14,7 @@ static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
+static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int width_(0);
@@ -87,8 +88,10 @@ MobileRT::Scene *cornellBoxScene(void) {
 MobileRT::Scene *cornell2BoxScene(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
+    samplerLight_ = new MobileRT::HaltonSeq(4096, 1);
     scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
-                                                       MobileRT::Point3D(0.0f, 0.50f, 0.0f)));
+                                                       MobileRT::Point3D(0.0f, 0.50f, 0.0f),
+    0.5f, 0.5f, *samplerLight_));
 
     // back wall - white
     const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));

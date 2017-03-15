@@ -16,7 +16,7 @@ namespace MobileRT {
         Vector3D direction_;
         Vector3D symDirection_;
         float maxDistance_;
-        const unsigned int depth_;
+        unsigned int depth_;
 
     public:
         explicit Ray(void);

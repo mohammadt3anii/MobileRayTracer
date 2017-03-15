@@ -10,7 +10,7 @@
 namespace MobileRT {
     class NoShadows : public Shader {
     private:
-        void shade(RGB &rgb, Intersection &intersection, const Ray &) const override;
+        void shade(RGB &rgb, Intersection &intersection, Ray &) const override;
 
     public:
         explicit NoShadows(const Scene &scene);
