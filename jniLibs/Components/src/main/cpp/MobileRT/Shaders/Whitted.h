@@ -15,7 +15,7 @@ namespace MobileRT {
                    Ray &ray) const override;
 
     public:
-        explicit Whitted(const Scene &scene);
+        explicit Whitted(Scene &scene, const unsigned int samplesLight);
     };
 }
 

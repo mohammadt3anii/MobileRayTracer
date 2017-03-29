@@ -15,7 +15,6 @@ namespace MobileRT {
         float B_;
         std::mutex mutex_;
         unsigned int samples_;
-        char padding[4] __attribute__((unused));
 
     public:
         explicit RGB(void);

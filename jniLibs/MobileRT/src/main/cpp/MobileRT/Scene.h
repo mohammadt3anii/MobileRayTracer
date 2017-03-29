@@ -26,7 +26,9 @@ namespace MobileRT {
         int trace(Intersection &intersection, Ray &ray) const;
         bool shadowTrace(Intersection &intersection, const Ray &ray) const;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances(void);
+
+        void resetSampling(void);
     };
 }
 

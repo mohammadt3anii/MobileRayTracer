@@ -15,7 +15,6 @@ namespace MobileRT {
         float x_;
         float y_;
         float z_;
-        char padding[4] __attribute__((unused));
 
     public:
         explicit Point3D(void);

@@ -10,7 +10,10 @@ PointLight::PointLight(const RGB &radiance, const Point3D &position) :
         Light(radiance, position) {
 }
 
-Point3D PointLight::getPosition (void)
+Point3D PointLight::getPosition(const unsigned int, const unsigned int)
 {
         return this->position_;
+}
+
+void PointLight::resetSampling(void) {
 }

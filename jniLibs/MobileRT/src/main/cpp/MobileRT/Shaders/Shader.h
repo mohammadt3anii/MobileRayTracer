@@ -13,14 +13,17 @@
 
 namespace MobileRT {
     class Shader {
+    public:
+        Scene &scene_;
+
     protected:
-        const Scene &scene_;
+        const unsigned int samplesLight_;
 
     protected:
         virtual void shade(RGB &, Intersection &, Ray &) const;
 
     public:
-        explicit Shader(const Scene &scene);
+        explicit Shader(Scene &scene, const unsigned int samplesLight);
 
         virtual ~Shader(void);
 

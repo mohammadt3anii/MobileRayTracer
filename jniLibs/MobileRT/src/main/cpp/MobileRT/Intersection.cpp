@@ -65,7 +65,7 @@ Vector3D &Intersection::getSymNormal(void) {
 }
 
 unsigned int Intersection::getInstances() {
-    unsigned int res(counter);
+    const unsigned int res(counter);
     counter = 0;
     return res;
 }

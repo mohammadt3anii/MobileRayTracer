@@ -20,6 +20,11 @@ Primitive::~Primitive(void) {
 
 bool Primitive::intersect(Intersection &intersection, const Ray &ray) const {
     return this->shape_->intersect(intersection, ray, this->material_);
+    /*if (this->shape_->intersect(intersection, ray, this->material_))
+    {
+        return true;
+    }
+    return false;*/
 }
 
 unsigned int Primitive::getInstances() {

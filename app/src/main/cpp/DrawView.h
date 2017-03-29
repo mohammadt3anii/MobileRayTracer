@@ -8,6 +8,7 @@
 #include <thread>
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <limits>
 
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
 #include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
@@ -27,11 +28,11 @@ void FPS(void);
 
 MobileRT::Scene *cornellBoxScene(void);
 
-MobileRT::Scene *cornell2BoxScene(void);
+MobileRT::Scene *cornellBoxScene2(void);
 
 MobileRT::Scene *spheresScene(void);
 
-MobileRT::Scene *spheres2Scene(void);
+MobileRT::Scene *spheresScene2(void);
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
@@ -60,7 +61,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint width,
         jint height,
         jint sampler,
-        jint samples
+        jint samplesPixel,
+        jint samplesLight
 );
 
 void thread_work(void *dstPixels, unsigned int numThreads);

@@ -6,29 +6,29 @@
 
 using namespace MobileRT;
 
-Sampler::Sampler(const unsigned int domainSize, const unsigned int samples) :
+Sampler::Sampler(const unsigned long long int domainSize, const unsigned int samples) :
+        sample_(0),
+        overSample_(0),
         domainSize_(domainSize),
         samples_(static_cast<const unsigned int> (std::sqrt(samples))),
-        maxHalton_(roundToPower2(domainSize * samples)),
-        deviationIncrement_(1.0f / samples),
-        sample_(0),
-        overSample_(0) {
+        maxHalton_(roundToUpperPower2(domainSize * samples)),
+        deviationIncrement_(1.0f / samples) {
 }
 
-Sampler::Sampler(const unsigned int width, const unsigned height, const unsigned int samples,
+Sampler::Sampler(const unsigned int width, const unsigned int height, const unsigned int samples,
                  const unsigned int blockSizeX, const unsigned int blockSizeY) :
+        sample_(0),
+        overSample_(0),
         domainSize_(
                 roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
                 roundToEvenNumber(height) /
                 roundToMultipleOf(blockSizeY, roundToEvenNumber(height))),
         samples_(static_cast<const unsigned int> (std::sqrt(samples))),
-        maxHalton_(roundToPower2(
+        maxHalton_(roundToUpperPower2(
                 roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
                 roundToEvenNumber(height) /
                 roundToMultipleOf(blockSizeY, roundToEvenNumber(height)) * samples)),
-        deviationIncrement_(1.0f / samples),
-        sample_(0),
-        overSample_(0) {
+        deviationIncrement_(1.0f / samples) {
 }
 
 Sampler::~Sampler(void) {

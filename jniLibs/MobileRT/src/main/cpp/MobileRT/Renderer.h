@@ -22,6 +22,7 @@ namespace MobileRT {
         unsigned int blockSizeX_;
         unsigned int blockSizeY_;
         const unsigned int resolution_;
+        RGB *const imagePlane_;
         //char padding[4] __attribute__((unused));
 
     public:
@@ -35,9 +36,7 @@ namespace MobileRT {
 
         void stopRender(void);
 
-        void renderScene(unsigned int *const bitmap,
-                         const unsigned int threadId,
-                         const unsigned int numThreads);
+        void renderScene(unsigned int *const bitmap);
     };
 }
 

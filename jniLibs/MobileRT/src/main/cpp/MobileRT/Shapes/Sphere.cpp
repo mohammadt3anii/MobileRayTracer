@@ -17,7 +17,7 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
 
     //A = 1.0 - normalized vectors
     const float B(2.0f * centerToOrigin_.dotProduct(ray.direction_));
-    const float C(centerToOrigin_.squareLength() - this->sq_radius_);
+    const float C(centerToOrigin_.squareMagnitude() - this->sq_radius_);
 
     const float discriminant(B * B - 4.0f * C);
     //don't intersect (ignores tangent point of the sphere)

@@ -26,7 +26,8 @@ public class MainActivity extends Activity {
     private NumberPicker pickerShader_;
     private NumberPicker pickerThreads_;
     private NumberPicker pickerSampler_;
-    private NumberPicker pickerSamples_;
+    private NumberPicker pickerSamplesPixel_;
+    private NumberPicker pickerSamplesLight_;
 
     private int getNumCoresOldPhones() {
         try {
@@ -74,17 +75,29 @@ public class MainActivity extends Activity {
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final int maxSamples = 12;
-        final String[] samples = new String[maxSamples];
-        for (int i = 0; i < maxSamples; i++) {
-            samples[i] = Integer.toString((i + 1) * (i + 1));
+        final int maxSamplesPixel = 12;
+        final String[] samplesPixel = new String[maxSamplesPixel];
+        for (int i = 0; i < maxSamplesPixel; i++) {
+            samplesPixel[i] = Integer.toString((i + 1) * (i + 1));
         }
-        pickerSamples_ = (NumberPicker) findViewById(R.id.pickerSamples);
-        pickerSamples_.setMinValue(1);
-        pickerSamples_.setMaxValue(maxSamples);
-        pickerSamples_.setDisplayedValues(samples);
-        pickerSamples_.setWrapSelectorWheel(true);
-        pickerSamples_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerSamplesPixel_ = (NumberPicker) findViewById(R.id.pickerSamplesPixel);
+        pickerSamplesPixel_.setMinValue(1);
+        pickerSamplesPixel_.setMaxValue(maxSamplesPixel);
+        pickerSamplesPixel_.setDisplayedValues(samplesPixel);
+        pickerSamplesPixel_.setWrapSelectorWheel(true);
+        pickerSamplesPixel_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        final int maxSamplesLight = 12;
+        final String[] samplesLight = new String[maxSamplesLight];
+        for (int i = 0; i < maxSamplesLight; i++) {
+            samplesLight[i] = Integer.toString((i + 1) * (i + 1));
+        }
+        pickerSamplesLight_ = (NumberPicker) findViewById(R.id.pickerSamplesLight);
+        pickerSamplesLight_.setMinValue(1);
+        pickerSamplesLight_.setMaxValue(maxSamplesLight);
+        pickerSamplesLight_.setDisplayedValues(samplesLight);
+        pickerSamplesLight_.setWrapSelectorWheel(true);
+        pickerSamplesLight_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
         final String[] samplers = {"Stratified", "HaltonSeq"};
         pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
@@ -110,7 +123,10 @@ public class MainActivity extends Activity {
                         pickerThreads_.getValue(),
                         pickerSampler_.getValue(),
                         Integer.parseInt(
-                                pickerSamples_.getDisplayedValues()[pickerSamples_.getValue() - 1]
+                                pickerSamplesPixel_.getDisplayedValues()[pickerSamplesPixel_.getValue() - 1]
+                        ),
+                        Integer.parseInt(
+                                pickerSamplesLight_.getDisplayedValues()[pickerSamplesLight_.getValue() - 1]
                         )
                 );
                 drawView_.startRender();

@@ -37,7 +37,8 @@ class DrawView extends LinearLayout {
     private ScheduledExecutorService scheduler_ = null;
     private String resolutionT_ = null;
     private String threadsT_ = null;
-    private String samplesT_ = null;
+    private String samplesPixelT_ = null;
+    private String samplesLightT_ = null;
     private String stageT_ = null;
     private String fpsT_ = null;
     private String timeFrameT_ = null;
@@ -50,17 +51,25 @@ class DrawView extends LinearLayout {
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
+        resetPrint(getWidth(), getHeight(), 0, 0);
+    }
+
+    private void resetPrint(final int width, final int height,
+                            final int samplesPixel, final int samplesLight) {
         fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
-        fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);
+        fps_ = 0.0f;
+        fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
         timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
-        timeT_ = String.format(Locale.US, "[%.2fs]\n", 0.0f);
-        stageT_ = "" + Stage.values()[Stage.IDLE.getValue()];
-        resolutionT_ = ", R:" + getWidth() + "x" + getHeight();
-        threadsT_ = ", T:" + 0;
-        samplesT_ = ", S:" + 0;
+        timeT_ = String.format(Locale.US, "[%.2fs] ", 0.0f);
+        stageT_ = "" + Stage.values()[stage_];
         allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
         availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
         freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
+
+        resolutionT_ = ", R:" + width + "x" + height;
+        threadsT_ = ", T:" + numThreads_;
+        samplesPixelT_ = ", spp:" + samplesPixel;
+        samplesLightT_ = ", spl:" + samplesLight;
     }
 
     void setView(TextView textView) {
@@ -79,7 +88,8 @@ class DrawView extends LinearLayout {
     }
 
     private native void initialize(final int scene, final int shader, final int width,
-                                   final int height, final int sampler, final int samples);
+                                   final int height, final int sampler, final int samplesPixel,
+                                   final int samplesLight);
 
     private native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -119,28 +129,18 @@ class DrawView extends LinearLayout {
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,
-                     final int samples) {
+                     final int samplesPixel, final int samplesLight) {
         final int width = getWidth();
         final int height = getHeight();
-        initialize(scene, shader, width, height, sampler, samples);
+        initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
 
-        bitmap_ = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         setBackground(new BitmapDrawable(getResources(), bitmap_));
 
-        fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
-        fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);
-        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
-        timeT_ = String.format(Locale.US, "[%.2fs]\n", 0.0f);
-        stageT_ = "" + Stage.values()[Stage.IDLE.getValue()];
-        resolutionT_ = ", R:" + width + "x" + height;
-        threadsT_ = ", T:" + numThreads_;
-        samplesT_ = ", S:" + samples;
-        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
-        availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
-        freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
+        resetPrint(width, height, samplesPixel, samplesLight);
     }
 
     private int getTouchListIndex(final int pointerID) {
@@ -154,10 +154,10 @@ class DrawView extends LinearLayout {
     }
 
     private void printText() {
-        textView_.setText(fpsT_ + fpsRenderT_
-                + resolutionT_ + threadsT_ + samplesT_
-                + timeFrameT_ + timeT_ + stageT_
-                + allocatedT_ + availableT_ + freeT_
+        textView_.setText(
+                fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_
+                        + "\n"
+                        + stageT_ + allocatedT_ + availableT_ + freeT_ + timeFrameT_ + timeT_
         );
     }
 
@@ -188,14 +188,14 @@ class DrawView extends LinearLayout {
             fpsT_ = String.format(Locale.US, "FPS:%.2f ", getFPS());
             fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
             timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
-            timeT_ = String.format(Locale.US, "[%.2fs]\n", (SystemClock.elapsedRealtime() - start_)
+            timeT_ = String.format(Locale.US, "[%.2fs] ", (SystemClock.elapsedRealtime() - start_)
                     / 1000.0f);
             stageT_ = "" + Stage.values()[stage_];
             allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
             availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
             freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
             publishProgress();
-            if (stage_ != 1) {
+            if (stage_ != Stage.BUSY.getValue()) {
                 scheduler_.shutdown();
             }
         };
@@ -250,6 +250,7 @@ class DrawView extends LinearLayout {
     private class TouchHandler implements LinearLayout.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (isWorking() != Stage.BUSY.getValue()) return false;
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {

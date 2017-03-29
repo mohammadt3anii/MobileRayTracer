@@ -26,30 +26,43 @@ Scene::~Scene(void) {
 int Scene::trace(Intersection &intersection, Ray &ray) const {
     int res(-1);
     ray.maxDistance_ = RAY_LENGTH_MAX;
+    const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
-    for (unsigned int i(0); i < primitives_.size(); i++) {
-        if (this->primitives_[static_cast<unsigned long> (i)]->intersect(intersection, ray))
+    for (unsigned int i(0); i < primitivesSize; i++) {
+        const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
+        if (primitive.intersect(intersection, ray))
         {
             ray.maxDistance_ = intersection.length_;
             res = static_cast<int> (i);
         }
     }
+
     return res;
 }
 
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
-    for (unsigned int i(0); i < primitives_.size(); i++)//trace shadow ray
+    const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
+
+    for (unsigned int i(0); i < primitivesSize; i++)//trace shadow ray
     {
-        if (this->primitives_[i]->intersect(intersection, ray))
+        const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
+        if (primitive.intersect(intersection, ray))
         {
             return true;
         }
     }
+
     return false;
 }
 
-unsigned int Scene::getInstances() {
-    unsigned int res(counter);
+unsigned int Scene::getInstances(void) {
+    const unsigned int res(counter);
     counter = 0;
     return res;
+}
+
+void Scene::resetSampling(void) {
+    for (Light *light : this->lights_) {
+        light->resetSampling();
+    }
 }

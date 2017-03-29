@@ -13,7 +13,6 @@ namespace MobileRT {
     private:
         const float sq_radius_;
         Point3D center_;
-        char padding[4] __attribute__((unused));
 
     public:
         explicit Sphere(const Point3D &center, const float radius);

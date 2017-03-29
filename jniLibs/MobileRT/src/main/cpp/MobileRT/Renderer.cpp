@@ -22,11 +22,13 @@ Renderer::Renderer(Sampler &sampler, Shader &shader, const Camera &camera,
                  roundToMultipleOf(blockSizeY, roundToEvenNumber(height)))),
         blockSizeX_(roundToMultipleOf(blockSizeX, roundToEvenNumber(width))),
         blockSizeY_(roundToMultipleOf(blockSizeY, roundToEvenNumber(height))),
-        resolution_(roundToEvenNumber(width) * roundToEvenNumber(height)) {
+        resolution_(roundToEvenNumber(width) * roundToEvenNumber(height)),
+        imagePlane_(new RGB[roundToEvenNumber(width) * roundToEvenNumber(height)]) {
 }
 
 Renderer::~Renderer(void) {
     delete[] this->accumulate_;
+    delete[] this->imagePlane_;
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
@@ -35,11 +37,12 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
         this->accumulate_[i].reset();
     }
     this->sampler_.resetSampling();
+    this->shader_.scene_.resetSampling();
     std::thread *const threads(new std::thread[numThreads - 1]);
     for (unsigned int i(0); i < numThreads - 1; i++) {
-        threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i, numThreads);
+        threads[i] = std::thread(&Renderer::renderScene, this, bitmap);
     }
-    this->renderScene(bitmap, numThreads - 1, numThreads);
+    renderScene(bitmap);
     for (unsigned int i(0); i < numThreads - 1; i++) {
         threads[i].join();
     }
@@ -62,15 +65,12 @@ void Renderer::stopRender(void) {
     this->sampler_.stopRender();
 }
 
-void Renderer::renderScene(unsigned int *const bitmap,
-                           const unsigned int,
-                           const unsigned int) {
+void Renderer::renderScene(unsigned int *const bitmap) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
-    const unsigned int samples(this->sampler_.samples_);
-    RGB rgb;
+    const unsigned int samples(static_cast<unsigned int> (this->sampler_.samples_));
     Intersection intersection;
     Ray ray;
 
@@ -78,6 +78,7 @@ void Renderer::renderScene(unsigned int *const bitmap,
     {
         for (unsigned int j(0); j < samples; j++)
         {
+            //LOG("i = %u, j = %u, samples = %u", i, j, samples);
             const unsigned int sample(i * samples + j);
             for (float block(this->sampler_.getSample(sample));
                  this->sampler_.notFinished(sample); block = this->sampler_.getSample(sample)) {
@@ -101,7 +102,8 @@ void Renderer::renderScene(unsigned int *const bitmap,
                         const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
                         this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
                         //Ray ray(u_alpha_deviation, v_alpha_deviation, 1.0f, camera_.position_);
-                        this->shader_.rayTrace(rgb, ray, intersection);
+                        RGB &aux = this->imagePlane_[yWidth + x];
+                        this->shader_.rayTrace(aux, ray, intersection);
                         /*if (yWidth + x >= resolution_) {
                             LOG("x=%u[%u,%u],y=%u[%u,%u],pixel=%u[%u,%u],block=%f,p=%u,i=%u,j=%u",
                                 x, startX, startX + blockSizeX_,
@@ -109,11 +111,37 @@ void Renderer::renderScene(unsigned int *const bitmap,
                                 yWidth + x, resolution_, domainSize_,
                                 double(block), pixel, i, j);
                         }*/
-                        this->accumulate_[yWidth + x].addSampleAndCalcAvg(rgb);
-                        bitmap[yWidth + x] = rgb.RGB2Color();
+                        this->accumulate_[yWidth + x].addSampleAndCalcAvg(aux);
+                        //LOG("aux R = %f, G = %f, B = %f", aux.R_, aux.G_, aux.B_);
+                        //rgbs[yWidth + x] = rgb;
+                        bitmap[yWidth + x] = aux.RGB2Color();
                     }
                 }
             }
         }
     }
+
+    /*float max = -1.0f;
+    for (unsigned int i (0); i < height_; i++)
+    {
+        for (unsigned int j (0); j < width_; j++)
+        {
+            if (this->imagePlane_[i*width_ + j].R_ > max) max = this->imagePlane_[i*width_ + j].R_;
+            if (this->imagePlane_[i*width_ + j].G_ > max) max = this->imagePlane_[i*width_ + j].G_;
+            if (this->imagePlane_[i*width_ + j].B_ > max) max = this->imagePlane_[i*width_ + j].B_;
+        }
+    }
+    LOG("max = %f", double(max));
+
+    for (unsigned int i (0); i < height_; i++)
+    {
+        for (unsigned int j (0); j < width_; j++)
+        {
+            RGB& aux = this->imagePlane_[i*width_ + j];
+            aux.R_ /= max;
+            aux.G_ /= max;
+            aux.B_ /= max;
+            bitmap[i*width_ + j] = aux.RGB2Color();
+        }
+    }*/
 }

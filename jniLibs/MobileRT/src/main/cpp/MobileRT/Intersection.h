@@ -18,7 +18,6 @@ namespace MobileRT {
         Vector3D symNormal_;
         const Material *material_;  // material of the intersected primitive
         float length_;     // ray length parameter
-        char padding[4] __attribute__((unused));
 
     public:
         Intersection(void);

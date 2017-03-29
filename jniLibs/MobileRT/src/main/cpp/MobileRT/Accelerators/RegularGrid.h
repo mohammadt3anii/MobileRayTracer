@@ -11,10 +11,10 @@
 namespace MobileRT {
     class RegularGrid {
     private:
-        std::vector<Primitive *> *primitives_;// __attribute__((unused));
+        //std::vector<Primitive *> *primitives_;// __attribute__((unused));
 
     public:
-        explicit RegularGrid(std::vector<Primitive *> primitives);
+        //explicit RegularGrid(std::vector<Primitive *> primitives);
         ~RegularGrid(void);
         void build(void);
         bool intersect(Intersection &intersection, Ray &ray);

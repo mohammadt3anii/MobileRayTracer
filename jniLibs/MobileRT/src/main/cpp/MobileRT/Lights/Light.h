@@ -15,12 +15,14 @@ namespace MobileRT {
 
     protected:
         Point3D position_;
-        char padding[4] __attribute__((unused));
 
     public:
         explicit Light(const RGB &radiance, const Point3D &position);
-        virtual Point3D getPosition (void) = 0;
+
+        virtual Point3D getPosition(const unsigned int i, const unsigned int j) = 0;
         virtual ~Light (void);
+
+        virtual void resetSampling(void) = 0;
     };
 }
 

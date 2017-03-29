@@ -16,17 +16,17 @@
 namespace MobileRT {
     class Sampler {
     public:
-        unsigned int domainSize_;
-        unsigned int samples_;
-        unsigned int maxHalton_;
+        std::atomic<unsigned long long int> sample_;
+        std::atomic<unsigned long long int> overSample_;
+        unsigned long long int domainSize_;
+        unsigned long long int samples_;
+        unsigned long long int maxHalton_;
         const float deviationIncrement_;
-        std::atomic<unsigned int> sample_;
-        std::atomic<unsigned int> overSample_;
 
     public:
-        explicit Sampler(const unsigned int domainSize, const unsigned int samples);
+        explicit Sampler(const unsigned long long int domainSize, const unsigned int samples);
 
-        explicit Sampler(const unsigned int width, const unsigned height,
+        explicit Sampler(const unsigned int width, const unsigned int height,
                          const unsigned int samples,
                          const unsigned int blockSizeX, const unsigned int blockSizeY);
 

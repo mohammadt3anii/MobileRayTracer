@@ -40,8 +40,14 @@ void Ray::reset(const float x, const float y, const float z, const Point3D &orig
     this->origin_ = origin;
 }
 
+void Ray::calcSymDirection(void) {
+    this->symDirection_.x_ = -this->direction_.x_;
+    this->symDirection_.y_ = -this->direction_.y_;
+    this->symDirection_.z_ = -this->direction_.z_;
+}
+
 unsigned int Ray::getInstances() {
-    unsigned int res(counter);
+    const unsigned int res(counter);
     counter = 0;
     return res;
 }

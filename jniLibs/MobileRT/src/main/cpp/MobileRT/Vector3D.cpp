@@ -39,7 +39,7 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
         z_(dest.z_ - orig.z_) {
-    const float len(std::sqrt(squareLength()));
+    const float len(magnitude());
     if (len == 0.0f) return;
     const float inv_length(1.0f / len);
     this->x_ *= inv_length;
@@ -54,7 +54,7 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) ://cross pr
 }
 
 float Vector3D::normalize(void) {
-    const float len(std::sqrt(squareLength()));
+    const float len(magnitude());
     if (len == 0.0f) return 0.0f;
     const float inv_length(1.0f / len);
     this->x_ *= inv_length;
@@ -69,7 +69,6 @@ const Vector3D Vector3D::returnNormalized(void) const {
     return normalized;
 }
 
-// dot product Algebraic
 float Vector3D::dotProduct(const Vector3D &vector) const {
     return (this->x_ * vector.x_ + this->y_ * vector.y_ + this->z_ * vector.z_);
 }
@@ -78,15 +77,17 @@ float Vector3D::dotProduct(const float x, const float y, const float z) const {
     return (this->x_ * x + this->y_ * y + this->z_ * z);
 }
 
-// dot product Algebraic
 float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
     return (this->x_ * (dest.x_ - orig.x_) + this->y_ * (dest.y_ - orig.y_) +
             this->z_ * (dest.z_ - orig.z_));
 }
 
-// dot product Algebraic
-float Vector3D::squareLength(void) const {
+float Vector3D::squareMagnitude(void) const {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
+}
+
+float Vector3D::magnitude(void) const {
+    return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
 Vector3D Vector3D::crossProduct(const Vector3D &vector) const {
@@ -105,7 +106,7 @@ void Vector3D::subAndNormalize(const Vector3D &vector) {
     this->x_ -= vector.x_;
     this->y_ -= vector.y_;
     this->z_ -= vector.z_;
-    const float len(std::sqrt(squareLength()));
+    const float len(magnitude());
     if (len == 0.0f) return;
     const float inv_length(1.0f / len);
     this->x_ *= inv_length;
@@ -124,6 +125,10 @@ const Vector3D &Vector3D::operator=(const Vector3D &vector) {
     return *this;
 }
 
+const Vector3D Vector3D::operator+(const Vector3D vector) const {
+    return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
+}
+
 void Vector3D::reset(const float x, const float y, const float z) {
     this->x_ = x;
     this->y_ = y;
@@ -138,7 +143,13 @@ void Vector3D::reset(const Point3D &dest, const Point3D &orig) {
 }
 
 unsigned int Vector3D::getInstances() {
-    unsigned int res(counter);
+    const unsigned int res(counter);
     counter = 0;
     return res;
+}
+
+void Vector3D::reverseVector(void) {
+    this->x_ = -this->x_;
+    this->y_ = -this->y_;
+    this->z_ = -this->z_;
 }

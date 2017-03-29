@@ -20,7 +20,7 @@ namespace MobileRT {
                    Ray &ray) const override;
 
     public:
-        explicit PathTracer(const Scene &scene, Sampler &sampler);
+        explicit PathTracer(Scene &scene, Sampler &sampler, const unsigned int samplesLight);
     };
 }
 

@@ -13,7 +13,7 @@ namespace MobileRT {
         void shade(RGB &rgb, Intersection &intersection, Ray &) const override;
 
     public:
-        explicit NoShadows(const Scene &scene);
+        explicit NoShadows(Scene &scene, const unsigned int samplesLight);
     };
 }
 

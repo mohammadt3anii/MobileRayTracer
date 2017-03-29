@@ -12,7 +12,6 @@ namespace MobileRT {
     private:
         const Point3D point_;   // point in the plane
         const Vector3D normal_;    // normal to the plane
-        char padding[4] __attribute__((unused));
 
     public:
         explicit Plane(const Point3D &point, const Vector3D &normal);

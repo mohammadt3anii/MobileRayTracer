@@ -10,7 +10,7 @@
 namespace MobileRT {
     class Stratified : public Sampler {
     public:
-        explicit Stratified(const unsigned int domainSize, const unsigned int samples);
+        explicit Stratified(const unsigned long long int domainSize, const unsigned int samples);
 
         explicit Stratified(const unsigned int width, const unsigned int height,
                             const unsigned int samples,

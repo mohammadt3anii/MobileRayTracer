@@ -56,13 +56,22 @@
         android:textAllCaps="false" />
 
     <puscas.mobilertapp.CustomNumberPicker
-        android:id="@+id/pickerSamples"
+        android:id="@+id/pickerSamplesPixel"
         android:layout_width="30dp"
         android:layout_height="60dp"
         android:layout_alignBaseline="@+id/pickerSampler"
         android:layout_alignBottom="@+id/pickerSampler"
         android:layout_toEndOf="@+id/pickerScene"
         android:layout_toRightOf="@+id/pickerScene"/>
+
+    <puscas.mobilertapp.CustomNumberPicker
+        android:id="@+id/pickerSamplesLight"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_alignBaseline="@+id/pickerSampler"
+        android:layout_alignBottom="@+id/pickerSampler"
+        android:layout_toEndOf="@+id/pickerSamplesPixel"
+        android:layout_toRightOf="@+id/pickerSamplesPixel"/>
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerSampler"
@@ -73,8 +82,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/pickerSamples"
-        android:layout_toStartOf="@+id/pickerSamples"/>
+        android:layout_toLeftOf="@+id/pickerSamplesPixel"
+        android:layout_toStartOf="@+id/pickerSamplesPixel"/>
 
     <puscas.mobilertapp.DrawView
         android:id="@+id/drawLayout"
@@ -83,7 +92,7 @@
         android:layout_above="@+id/timeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/pickerSamples"
+        android:layout_below="@+id/pickerSamplesPixel"
         android:orientation="vertical" />
 
 </RelativeLayout>

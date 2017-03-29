@@ -6,19 +6,37 @@
 
 //http://nghiaho.com/?p=997
 float fastArcTan(const float value) {
-    const float abs(value * (1 + (value < 0) * -2));
+    const float abs(value * (1.0f + (value < 0.0f) * -2.0f));
     return PI_4 * value - (value * (abs - 1.0f)) * (0.2447f + (0.0663f * abs));
 }
 
-unsigned int roundToPower2(unsigned int value) {
+unsigned int roundToUpperPower2(unsigned int value) {
     value--;
     value |= value >> 1;
     value |= value >> 2;
     value |= value >> 4;
     value |= value >> 8;
     value |= value >> 16;
-    value++;
-    return value;
+    return value + 1;
+}
+
+unsigned long long int roundToUpperPower2(unsigned long long int value) {
+    value--;
+    value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    return value + 1;
+}
+
+unsigned int roundToLowerPower2(unsigned int value) {
+    value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    return value - (value >> 1);
 }
 
 unsigned int roundToEvenNumber(const unsigned int value) {
