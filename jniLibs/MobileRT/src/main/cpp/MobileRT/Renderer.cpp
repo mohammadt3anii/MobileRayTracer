@@ -6,24 +6,26 @@
 
 using namespace MobileRT;
 
-Renderer::Renderer(Sampler &sampler, Shader &shader, const Camera &camera,
+Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
                    const unsigned int width, const unsigned int height,
                    const unsigned int blockSizeX, const unsigned int blockSizeY) :
-        sampler_(sampler),
+        samplerCamera_(samplerCamera),
         shader_(shader),
         camera_(camera),
-        width_(roundToEvenNumber(width)),
-        height_(roundToEvenNumber(height)),
-        accumulate_(new RGB[roundToEvenNumber(width) * roundToEvenNumber(height)]),
+        width_(roundDownEvenNumber(width)),
+        height_(roundDownEvenNumber(height)),
+        accumulate_(new RGB[roundDownEvenNumber(width) * roundDownEvenNumber(height)]),
         domainSize_(
-                (roundToEvenNumber(width) /
-                 roundToMultipleOf(blockSizeX, roundToEvenNumber(width))) *
-                (roundToEvenNumber(height) /
-                 roundToMultipleOf(blockSizeY, roundToEvenNumber(height)))),
-        blockSizeX_(roundToMultipleOf(blockSizeX, roundToEvenNumber(width))),
-        blockSizeY_(roundToMultipleOf(blockSizeY, roundToEvenNumber(height))),
-        resolution_(roundToEvenNumber(width) * roundToEvenNumber(height)),
-        imagePlane_(new RGB[roundToEvenNumber(width) * roundToEvenNumber(height)]) {
+                (roundDownEvenNumber(width) /
+                    roundDownMultipleOf(blockSizeX, roundDownEvenNumber(width))) *
+                (roundDownEvenNumber(height) /
+                        roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height)))),
+        blockSizeX_(roundDownMultipleOf(blockSizeX, roundDownEvenNumber(width))),
+        blockSizeY_(roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height))),
+        resolution_(roundDownEvenNumber(width) * roundDownEvenNumber(height)),
+        imagePlane_(new RGB[roundDownEvenNumber(width) * roundDownEvenNumber(height)]),
+        max_(1.0f)
+{
 }
 
 Renderer::~Renderer(void) {
@@ -31,22 +33,49 @@ Renderer::~Renderer(void) {
     delete[] this->imagePlane_;
 }
 
-void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
+void Renderer::renderFrame(unsigned int *const bitmap,
+const unsigned int numThreads) {
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0); i < size; i++) {
         this->accumulate_[i].reset();
     }
-    this->sampler_.resetSampling();
+    this->samplerCamera_.resetSampling();
     this->shader_.scene_.resetSampling();
     std::thread *const threads(new std::thread[numThreads - 1]);
     for (unsigned int i(0); i < numThreads - 1; i++) {
-        threads[i] = std::thread(&Renderer::renderScene, this, bitmap);
+        threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i);
     }
-    renderScene(bitmap);
+    renderScene(bitmap, numThreads - 1);
     for (unsigned int i(0); i < numThreads - 1; i++) {
         threads[i].join();
     }
     delete[] threads;
+
+    float max(-1.0f);
+    for (unsigned int i (0); i < this->height_; i++)
+    {
+        for (unsigned int j (0); j < this->width_; j++)
+        {
+            const unsigned int pixel (i*this->width_ + j);
+            const float pixelMax (this->imagePlane_[pixel].getMax());
+            max = pixelMax > this->max_? pixelMax : this->max_;
+        }
+    }
+    LOG("max = %f", double(max));
+    this->max_ = max;
+    if (max > 0.0f && max != 1.0f && std::fabs(max - this->max_) > 0.0001f)
+    {
+        for (unsigned int i (0); i < this->height_; i++)
+        {
+            for (unsigned int j (0); j < this->width_; j++)
+            {
+                const unsigned int pixel (i*this->width_ + j);
+                RGB& aux = this->imagePlane_[pixel];
+                aux /= this->max_;
+                bitmap[pixel] = aux.RGB2Color();
+            }
+        }
+    }
 
     /*LOG("%s%u", "START - resolution=", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
@@ -62,15 +91,15 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 void Renderer::stopRender(void) {
     this->blockSizeX_ = 0;
     this->blockSizeY_ = 0;
-    this->sampler_.stopRender();
+    this->samplerCamera_.stopRender();
 }
 
-void Renderer::renderScene(unsigned int *const bitmap) {
+void Renderer::renderScene(unsigned int *const bitmap, const unsigned int) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
-    const unsigned int samples(static_cast<unsigned int> (this->sampler_.samples_));
+    const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
     Ray ray;
 
@@ -78,10 +107,15 @@ void Renderer::renderScene(unsigned int *const bitmap) {
     {
         for (unsigned int j(0); j < samples; j++)
         {
-            //LOG("i = %u, j = %u, samples = %u", i, j, samples);
+            //if (tid == 0) LOG("i = %u, j = %u, samples = %u, max = %f",i,j,samples,double(max_));
             const unsigned int sample(i * samples + j);
-            for (float block(this->sampler_.getSample(sample));
-                 this->sampler_.notFinished(sample); block = this->sampler_.getSample(sample)) {
+            for (float block(this->samplerCamera_.getSample(sample));;
+                 //this->samplerCamera_.notFinished(sample);
+                 //block < 1.0f;
+                 block = this->samplerCamera_.getSample(sample))
+            {
+                //LOG("tid = %u, block = %f", tid, double(block));
+                if (block >= 1.0f) break;
                 const unsigned int pixel(
                         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
                         this->blockSizeX_ % resolution_);
@@ -95,8 +129,8 @@ void Renderer::renderScene(unsigned int *const bitmap) {
                     const unsigned int endX(startX + this->blockSizeX_);
                     for (unsigned int x(startX); x < endX; x++) {
                         const float u(x * INV_IMG_WIDTH);
-                        const float deviationU(this->sampler_.getDeviation(j + 1));
-                        const float deviationV(this->sampler_.getDeviation(i + 1));
+                        const float deviationU(this->samplerCamera_.getDeviation(j + 1));
+                        const float deviationV(this->samplerCamera_.getDeviation(i + 1));
                         const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
                         const float u_alpha_deviation(u_alpha + (deviationU * pixelWidth));
                         const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
@@ -114,34 +148,11 @@ void Renderer::renderScene(unsigned int *const bitmap) {
                         this->accumulate_[yWidth + x].addSampleAndCalcAvg(aux);
                         //LOG("aux R = %f, G = %f, B = %f", aux.R_, aux.G_, aux.B_);
                         //rgbs[yWidth + x] = rgb;
+                        aux /= this->max_;
                         bitmap[yWidth + x] = aux.RGB2Color();
                     }
                 }
             }
         }
     }
-
-    /*float max = -1.0f;
-    for (unsigned int i (0); i < height_; i++)
-    {
-        for (unsigned int j (0); j < width_; j++)
-        {
-            if (this->imagePlane_[i*width_ + j].R_ > max) max = this->imagePlane_[i*width_ + j].R_;
-            if (this->imagePlane_[i*width_ + j].G_ > max) max = this->imagePlane_[i*width_ + j].G_;
-            if (this->imagePlane_[i*width_ + j].B_ > max) max = this->imagePlane_[i*width_ + j].B_;
-        }
-    }
-    LOG("max = %f", double(max));
-
-    for (unsigned int i (0); i < height_; i++)
-    {
-        for (unsigned int j (0); j < width_; j++)
-        {
-            RGB& aux = this->imagePlane_[i*width_ + j];
-            aux.R_ /= max;
-            aux.G_ /= max;
-            aux.B_ /= max;
-            bitmap[i*width_ + j] = aux.RGB2Color();
-        }
-    }*/
 }

@@ -7,19 +7,18 @@
 
 #include "../RGB.h"
 #include "../Point3D.h"
+//#include "../Primitive.h"
 
 namespace MobileRT {
-    class Light {
+    class Light /*: public Primitive*/ {
     public:
         RGB radiance_;
 
-    protected:
-        Point3D position_;
-
     public:
-        explicit Light(const RGB &radiance, const Point3D &position);
+        explicit Light(const RGB &radiance);
+        //explicit Light(const RGB &radiance, Shape *shape);
 
-        virtual Point3D getPosition(const unsigned int i, const unsigned int j) = 0;
+        virtual const Point3D getPosition(const unsigned int i, const unsigned int j) = 0;
         virtual ~Light (void);
 
         virtual void resetSampling(void) = 0;

@@ -12,16 +12,15 @@ namespace MobileRT {
     private:
         float half_rand_max_;
         float maxSampler_;
-        bool jitter_;
+        bool boolean_;
 
     private:
         float haltonSequence(const unsigned int index, const unsigned int base);
 
     public:
-        explicit HaltonSeq(const unsigned long long int domainSize, const unsigned int samples);
-
         explicit HaltonSeq(const unsigned long long int domainSize, const unsigned int samples,
-                           const bool jitter);
+                            const bool boolean);
+        explicit HaltonSeq(const unsigned long long int domainSize, const unsigned int samples);
 
         explicit HaltonSeq(const unsigned int width, const unsigned int height,
                            const unsigned int samples,

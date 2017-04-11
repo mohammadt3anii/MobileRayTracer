@@ -45,7 +45,8 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
             intersectionPoint,
             normal,
             distanceToIntersection,
-            material);
+            material,
+            ray.origin_);
 
     return true;
 }

@@ -12,7 +12,7 @@
 namespace MobileRT {
     class Renderer {
     private:
-        Sampler &sampler_;
+        Sampler &samplerCamera_;
         Shader &shader_;
         const Camera &camera_;
         unsigned int width_;
@@ -23,6 +23,7 @@ namespace MobileRT {
         unsigned int blockSizeY_;
         const unsigned int resolution_;
         RGB *const imagePlane_;
+        float max_;
         //char padding[4] __attribute__((unused));
 
     public:
@@ -36,7 +37,7 @@ namespace MobileRT {
 
         void stopRender(void);
 
-        void renderScene(unsigned int *const bitmap);
+        void renderScene(unsigned int *const bitmap, const unsigned int tid);
     };
 }
 

@@ -6,10 +6,16 @@
 
 using namespace MobileRT;
 
-Light::Light(const RGB &radiance, const Point3D &position) :
-        radiance_(radiance),
-        position_(position) {
+Light::Light(const RGB &radiance) :
+        radiance_(radiance)
+{
 }
+
+/*Light::Light(const RGB &radiance, Shape *shape, const Material &material) :
+        Primitive(shape, material),
+        radiance_(radiance)
+{
+}*/
 
 Light::~Light (void)
 {

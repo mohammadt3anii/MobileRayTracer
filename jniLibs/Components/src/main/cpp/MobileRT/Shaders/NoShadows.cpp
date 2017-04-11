@@ -24,9 +24,9 @@ void NoShadows::shade(RGB &rgb, Intersection &intersection, Ray &) const {
                     Light &light(*scene_.lights_[i]);
                     Point3D lightPosition(light.getPosition(j, k));
                     //vectorIntersectCameraNormalized = light.position_ - intersection.point_
-                    Vector3D vectorIntersectCameraNormalized(
+                    Vector3D vectorToLightNormalized(
                             lightPosition, intersection.point_, true);
-                    const float cos_N_L(vectorIntersectCameraNormalized.dotProduct(
+                    const float cos_N_L(vectorToLightNormalized.dotProduct(
                             intersection.normal_));
                     if (cos_N_L > 0.0f) {
                         rgb.add(kD, light.radiance_, cos_N_L);//rgb += kD * radLight * cos_N_L;

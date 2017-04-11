@@ -43,8 +43,8 @@
 
 #define RAY_LENGTH_MIN  1.0e-5f
 #define RAY_LENGTH_MAX  1.0e+10f
-#define RAY_DEPTH_MIN   5
-#define RAY_DEPTH_MAX   64
+#define RAY_DEPTH_MIN   4
+#define RAY_DEPTH_MAX   16
 #define PI              3.14159265358979323846f
 #define PI_2            1.57079632679489661923f
 #define PI_4            0.78539816339744830962f
@@ -52,14 +52,14 @@
 
 float fastArcTan(const float value);
 
-unsigned int roundToUpperPower2(unsigned int value);
+unsigned int roundUpPower2(unsigned int value);
 
-unsigned long long int roundToUpperPower2(unsigned long long int value);
+unsigned long long int roundUpPower2(unsigned long long int value);
 
-unsigned int roundToLowerPower2(unsigned int value);
+unsigned int roundDownPower2(unsigned int value);
 
-unsigned int roundToEvenNumber(const unsigned int value);
+unsigned int roundDownEvenNumber(const unsigned int value);
 
-unsigned int roundToMultipleOf(unsigned int numToRound, unsigned int multipleOf);
+unsigned int roundDownMultipleOf(unsigned int numToRound, unsigned int multipleOf);
 
 #endif //MOBILERAYTRACER_UTILS

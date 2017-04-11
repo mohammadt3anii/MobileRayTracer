@@ -21,13 +21,10 @@ float Stratified::getDeviation(const unsigned int index) {
 }
 
 float Stratified::getSample(const unsigned int sample) {
-    if (this->domainSize_ <= 1) return 0;
-    const unsigned int task(static_cast<unsigned int> (
-                                    this->sample_.fetch_add(1, std::memory_order_relaxed) -
-                                    (sample * this->domainSize_)));
+    if (!notFinished(sample)) return 1.0f;
+    const unsigned int aux(static_cast<unsigned int> (
+                                   this->sample_.fetch_add(1, std::memory_order_relaxed)));
+    const unsigned int task(static_cast<unsigned int> (aux - (sample * this->domainSize_)));
     const float res(static_cast<float> (task) / this->domainSize_);
-    /*ASSERT(res, >=, 0);
-    ASSERT(res, <=, 1.0f);
-    if (task > this->domainSize_) raise(SIGTRAP);*/
     return res;
 }

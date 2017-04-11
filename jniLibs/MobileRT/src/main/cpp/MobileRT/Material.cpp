@@ -33,11 +33,11 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt) :
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Ke) :
+Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le) :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
-        Ke_(Ke),
+        Le_(Le),
         refractiveIndice_(1.0f) {
     counter++;
 }
@@ -63,12 +63,12 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const float refr
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Ke,
+Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
                    const float refractiveIndice) :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
-        Ke_(Ke),
+        Le_(Le),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }

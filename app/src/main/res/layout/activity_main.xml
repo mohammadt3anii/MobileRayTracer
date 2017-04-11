@@ -68,10 +68,10 @@
         android:id="@+id/pickerSamplesLight"
         android:layout_width="30dp"
         android:layout_height="60dp"
-        android:layout_alignBaseline="@+id/pickerSampler"
-        android:layout_alignBottom="@+id/pickerSampler"
-        android:layout_toEndOf="@+id/pickerSamplesPixel"
-        android:layout_toRightOf="@+id/pickerSamplesPixel"/>
+        android:layout_alignBaseline="@+id/pickerSamplesPixel"
+        android:layout_alignBottom="@+id/pickerSamplesPixel"
+        android:layout_toLeftOf="@+id/pickerThreads"
+        android:layout_toStartOf="@+id/pickerThreads"/>
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerSampler"

@@ -32,6 +32,9 @@ Ray::Ray(Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned
         depth_(depth) {
     counter++;
     this->direction_.normalize();
+    this->symDirection_.x_ = -this->direction_.x_;
+    this->symDirection_.y_ = -this->direction_.y_;
+    this->symDirection_.z_ = -this->direction_.z_;
 }
 
 void Ray::reset(const float x, const float y, const float z, const Point3D &origin) {

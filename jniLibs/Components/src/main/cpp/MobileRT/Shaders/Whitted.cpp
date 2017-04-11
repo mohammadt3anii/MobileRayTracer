@@ -43,13 +43,13 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
                 for (unsigned int k(0); k < samplesLight; k++) {
                     Point3D lightPosition(light.getPosition(j, k));
                     //calculates vector starting in intersection to the light
-                    Vector3D vectorIntersectCamera(lightPosition, intersection.point_);
+                    Vector3D vectorToLight(lightPosition, intersection.point_);
                     //distance from intersection to the light (and normalize it)
-                    const float distanceToLight(vectorIntersectCamera.normalize());
-                    const float cos_N_L(vectorIntersectCamera.dotProduct(shadingNormal));
+                    const float distanceToLight(vectorToLight.normalize());
+                    const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
                     if (cos_N_L > 0.0f) {
                         //shadow ray - orig=intersection, dir=light
-                        const Ray shadowRay(intersection.point_, vectorIntersectCamera,
+                        const Ray shadowRay(intersection.point_, vectorToLight,
                                             distanceToLight, ray.depth_ + 1);
                         //intersection between shadow ray and the closest primitive
                         //if there are no primitives between intersection and the light

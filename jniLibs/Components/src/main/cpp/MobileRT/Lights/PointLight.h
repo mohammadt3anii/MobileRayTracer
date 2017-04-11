@@ -6,13 +6,17 @@
 #define MOBILERAYTRACER_POINTLIGHT_H
 
 #include "../../../../../../MobileRT/src/main/cpp/MobileRT/Lights/Light.h"
+//#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
     class PointLight : public Light {
+    private:
+        Point3D position_;
+
     public:
         explicit PointLight(const RGB &radiance, const Point3D &position);
 
-        virtual Point3D getPosition(const unsigned int i, const unsigned int j) override;
+        virtual const Point3D getPosition(const unsigned int i, const unsigned int j) override;
 
         virtual void resetSampling(void) override;
     };

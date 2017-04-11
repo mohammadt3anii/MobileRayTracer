@@ -22,6 +22,7 @@ namespace MobileRT {
 
         explicit Vector3D(const float x, const float y, const float z);
         Vector3D(const Vector3D &vector);
+        explicit Vector3D(const Vector3D &vector, const float value);
 
         explicit Vector3D(const Point3D &dest, const Point3D &orig);
 

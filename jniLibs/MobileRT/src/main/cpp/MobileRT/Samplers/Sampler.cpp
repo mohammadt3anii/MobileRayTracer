@@ -11,23 +11,28 @@ Sampler::Sampler(const unsigned long long int domainSize, const unsigned int sam
         overSample_(0),
         domainSize_(domainSize),
         samples_(static_cast<const unsigned int> (std::sqrt(samples))),
-        maxHalton_(roundToUpperPower2(domainSize * samples)),
-        deviationIncrement_(1.0f / samples) {
+        maxHalton_(roundUpPower2(domainSize * samples)),
+        deviationIncrement_(1.0f / samples)
+{
+        //LOG("domainSize = %llu, maxHalton = %llu", domainSize_, maxHalton_);
 }
 
 Sampler::Sampler(const unsigned int width, const unsigned int height, const unsigned int samples,
                  const unsigned int blockSizeX, const unsigned int blockSizeY) :
         sample_(0),
         overSample_(0),
-        domainSize_(
-                roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
-                roundToEvenNumber(height) /
-                roundToMultipleOf(blockSizeY, roundToEvenNumber(height))),
+        domainSize_(roundDownEvenNumber(width) / roundDownMultipleOf(blockSizeX,
+                                                                     roundDownEvenNumber(width))
+                *
+                        roundDownEvenNumber(height) /
+                roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height))),
         samples_(static_cast<const unsigned int> (std::sqrt(samples))),
-        maxHalton_(roundToUpperPower2(
-                roundToEvenNumber(width) / roundToMultipleOf(blockSizeX, roundToEvenNumber(width)) *
-                roundToEvenNumber(height) /
-                roundToMultipleOf(blockSizeY, roundToEvenNumber(height)) * samples)),
+        maxHalton_(roundUpPower2(
+                roundDownEvenNumber(width) / roundDownMultipleOf(blockSizeX,
+                                                                 roundDownEvenNumber(width))
+                *
+                        roundDownEvenNumber(height) /
+                        roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height)) * samples)),
         deviationIncrement_(1.0f / samples) {
 }
 
@@ -35,7 +40,8 @@ Sampler::~Sampler(void) {
 }
 
 bool Sampler::notFinished(const unsigned int sample) {
-    return (((this->sample_ - 1) - this->overSample_) < this->domainSize_ * (sample + 1));
+    const bool res (((this->sample_)/* - this->overSample_*/) < this->domainSize_ * (sample + 1));
+    return res;
 }
 
 void Sampler::resetSampling() {

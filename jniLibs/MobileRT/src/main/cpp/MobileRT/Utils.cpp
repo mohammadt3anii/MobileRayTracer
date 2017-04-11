@@ -10,7 +10,7 @@ float fastArcTan(const float value) {
     return PI_4 * value - (value * (abs - 1.0f)) * (0.2447f + (0.0663f * abs));
 }
 
-unsigned int roundToUpperPower2(unsigned int value) {
+unsigned int roundUpPower2(unsigned int value) {
     value--;
     value |= value >> 1;
     value |= value >> 2;
@@ -20,7 +20,7 @@ unsigned int roundToUpperPower2(unsigned int value) {
     return value + 1;
 }
 
-unsigned long long int roundToUpperPower2(unsigned long long int value) {
+unsigned long long int roundUpPower2(unsigned long long int value) {
     value--;
     value |= value >> 1;
     value |= value >> 2;
@@ -30,7 +30,7 @@ unsigned long long int roundToUpperPower2(unsigned long long int value) {
     return value + 1;
 }
 
-unsigned int roundToLowerPower2(unsigned int value) {
+unsigned int roundDownPower2(unsigned int value) {
     value |= value >> 1;
     value |= value >> 2;
     value |= value >> 4;
@@ -39,11 +39,11 @@ unsigned int roundToLowerPower2(unsigned int value) {
     return value - (value >> 1);
 }
 
-unsigned int roundToEvenNumber(const unsigned int value) {
+unsigned int roundDownEvenNumber(const unsigned int value) {
     return value & ~1u;
 }
 
-unsigned int roundToMultipleOf(unsigned int numToRound, unsigned int multipleOf) {
+unsigned int roundDownMultipleOf(unsigned int numToRound, unsigned int multipleOf) {
     if (numToRound >= multipleOf) {
         return multipleOf;
     }
@@ -54,6 +54,6 @@ unsigned int roundToMultipleOf(unsigned int numToRound, unsigned int multipleOf)
     }
 
     unsigned int res(numToRound);
-    for (res = numToRound; multipleOf % res != 0; res--);
+    for (; multipleOf % res != 0; res--);
     return res;
 }

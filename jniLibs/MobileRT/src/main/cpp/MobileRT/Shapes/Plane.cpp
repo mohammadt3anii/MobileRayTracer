@@ -8,7 +8,8 @@ using namespace MobileRT;
 
 Plane::Plane(const Point3D &point, const Vector3D &normal) :
         point_(point),
-        normal_(normal.returnNormalized()) {
+        normal_(normal.returnNormalized())
+{
 }
 
 bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
@@ -32,7 +33,8 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
     intersection.reset(ray.origin_, ray.direction_, distance,
                        this->normal_,
                        distance,
-                       material);
+                       material,
+                       ray.origin_);
 
     return true;
 }

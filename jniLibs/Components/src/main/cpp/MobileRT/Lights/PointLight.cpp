@@ -7,10 +7,12 @@
 using namespace MobileRT;
 
 PointLight::PointLight(const RGB &radiance, const Point3D &position) :
-        Light(radiance, position) {
+        Light(radiance),
+        position_(position)
+{
 }
 
-Point3D PointLight::getPosition(const unsigned int, const unsigned int)
+const Point3D PointLight::getPosition(const unsigned int, const unsigned int)
 {
         return this->position_;
 }

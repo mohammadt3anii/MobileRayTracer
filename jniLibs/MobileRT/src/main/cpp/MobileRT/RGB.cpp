@@ -130,3 +130,9 @@ unsigned int RGB::getInstances() {
     counter = 0;
     return res;
 }
+
+float RGB::getMax(void) {
+    if (this->R_ >= this->G_ && this->R_ >= this->B_) return this->R_;
+    if (this->G_ >= this->R_ && this->G_ >= this->B_) return this->G_;
+    return this->B_;
+}

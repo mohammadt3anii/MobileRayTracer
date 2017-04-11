@@ -40,6 +40,7 @@ namespace MobileRT {
         void reset(const float color);
         void reset(const float r, const float g, const float b);
         unsigned int RGB2Color(void);
+        float getMax(void);
 
         static unsigned int getInstances();
     };

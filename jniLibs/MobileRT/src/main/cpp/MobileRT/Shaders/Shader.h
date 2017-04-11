@@ -27,7 +27,7 @@ namespace MobileRT {
 
         virtual ~Shader(void);
 
-        void rayTrace(RGB &rgb, Ray &ray, Intersection intersection) const;
+        void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const;
         int traceTouch(Intersection &intersection, Ray &ray) const;
     };
 }

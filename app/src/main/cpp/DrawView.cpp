@@ -9,12 +9,13 @@ enum State {
 };
 
 static int working_(IDLE);
-static MobileRT::Sampler *samplerCamera_(nullptr);
-static MobileRT::Sampler *samplerLight_(nullptr);
-static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
+static MobileRT::Sampler *samplerCamera_(nullptr);
+static MobileRT::Sampler *samplerRay_(nullptr);
+static MobileRT::Sampler *samplerPointLight_(nullptr);
+static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int width_(0);
@@ -96,30 +97,42 @@ MobileRT::Scene *cornellBoxScene2(void) {
 
     const unsigned int max(static_cast<unsigned int> (-1));
     LOG("samplesLight = %u, max = %u", samplesLight_, max);
-    samplerLight_ = new MobileRT::HaltonSeq(samplesLight_, 1);
+    const unsigned int domainPointLight (width_ * height_ * 2 * 2 * samplesLight_ * RAY_DEPTH_MAX);
+    LOG("domainPointLight = %u", domainPointLight);
+    samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
 
     /*scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
                                                        MobileRT::Point3D(0.0f, 0.99f, 0.0f)));*/
 
-    /*scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
-                                                   MobileRT::Point3D(0.0f, 0.99f, 0.0f),
-                                                   *samplerLight_,
-                                                   MobileRT::Point3D(0.5f, 0.9f, -0.5f),
-                                                   MobileRT::Point3D(-0.5f, 0.9f, -0.5f),
-                                                   MobileRT::Point3D(0.5f, 0.9f, 0.5f)));*/
+    /*MobileRT::Triangle(
+            MobileRT::Point3D(0.5f, -0.5f, 0.99f),
+            MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
+            MobileRT::Point3D(0.5f, 0.5f, 0.99f));*/
 
-    const MobileRT::Material whiteMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+    scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                       *samplerPointLight_,
+                                                       MobileRT::Point3D(0.25f, 0.98f, -0.25f),
+                                                       MobileRT::Point3D(-0.25f, 0.98f, -0.25f),
+                                                       MobileRT::Point3D(0.25f, 0.98f, 0.25f)));
+
+    scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+                                                       *samplerPointLight_,
+                                                       MobileRT::Point3D(-0.25f, 0.98f, 0.25f),
+                                                       MobileRT::Point3D(0.25f, 0.98f, 0.25f),
+                                                       MobileRT::Point3D(-0.25f, 0.98f, -0.25f)));
+
+    /*const MobileRT::Material lightWhiteMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(1.0f, 1.0f, 1.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(-1.0f, 0.9f, -1.0f),
-            MobileRT::Point3D(1.0f, 0.9f, -1.0f),
-            MobileRT::Point3D(1.0f, 0.9f, 1.0f)), whiteMat));
+            MobileRT::Point3D(0.25f, 0.99f, -0.25f),
+            MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
+            MobileRT::Point3D(0.25f, 0.99f, 0.25f)), lightWhiteMat));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(-1.0f, 0.9f, 1.0f),
-            MobileRT::Point3D(1.0f, 0.9f, 1.0f),
-            MobileRT::Point3D(-1.0f, 0.9f, -1.0f)), whiteMat));
+            MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
+            MobileRT::Point3D(0.25f, 0.99f, 0.25f),
+            MobileRT::Point3D(-0.25f, 0.99f, -0.25f)), lightWhiteMat));*/
 
     // back wall - white
     const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
@@ -271,7 +284,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
     delete thread_;
 
     delete samplerCamera_;
-    delete samplerLight_;
+    delete samplerPointLight_;
     delete samplerRay_;
     delete camera_;
     delete scene_;
@@ -324,7 +337,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
-    samplerLight_ = nullptr;
     switch (scene) {
         case 1:
             camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
@@ -362,14 +374,20 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
     }
     samplerRay_ = nullptr;
+    samplerPointLight_ = nullptr;
+    const unsigned int domainRay (width_ * height_ * samplesPixel_ * RAY_DEPTH_MAX * 2);
+    const unsigned int domainLight (
+            width_ * height_ * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
             shader_ = new MobileRT::Whitted(*scene_, samplesLight_);
             break;
 
         case 2:
-            samplerRay_ = new MobileRT::HaltonSeq(width_ * height_, samplesPixel_ * RAY_DEPTH_MAX);
-            shader_ = new MobileRT::PathTracer(*scene_, *samplerRay_, samplesLight_);
+            LOG("domainRay = %u, domainLight = %u", domainRay, domainLight);
+            samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
+            samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
+            shader_ = new MobileRT::PathTracer(*scene_, *samplerRay_, *samplerLight_,samplesLight_);
             break;
 
         default:
@@ -378,23 +396,24 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_, height_,
                                        blockSizeX_, blockSizeY_);
-    LOG("x = %d %d", roundToMultipleOf(blockSizeX_, roundToEvenNumber(432)),
-        roundToEvenNumber(432));
-    LOG("y = %d %d", roundToMultipleOf(blockSizeY_, roundToEvenNumber(466)),
-        roundToEvenNumber(466));
+
+    LOG("x = %d %d [%d]", roundDownMultipleOf(blockSizeX_, roundDownEvenNumber(width_)),
+        roundDownEvenNumber(width_), width_);
+    LOG("y = %d %d [%d]", roundDownMultipleOf(blockSizeY_, roundDownEvenNumber(height_)),
+        roundDownEvenNumber(height_), height_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     try {
         //unsigned int i = 1;
-        //do {
-        const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
-        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::steady_clock::now() - start).count();
-        FPS();
-        //LOG("i = %u", i++);
-        //} while (working_ != STOPPED);
+        do {
+            const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
+            renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+            timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::steady_clock::now() - start).count();
+            FPS();
+            //LOG("i = %u", i++);
+        } while (working_ != STOPPED);
         if (working_ != STOPPED) {
             working_ = FINISHED;
             LOG("%s", "WORKING = FINISHED");

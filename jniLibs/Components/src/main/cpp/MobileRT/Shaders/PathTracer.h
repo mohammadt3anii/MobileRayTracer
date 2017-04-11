@@ -13,14 +13,16 @@
 namespace MobileRT {
     class PathTracer : public Shader {
     private:
-        Sampler &sampler_;// __attribute__((unused));
+        Sampler &samplerRay_;
+        Sampler &samplerLight_;
 
         void shade(RGB &rgb,
                    Intersection &intersection,
                    Ray &ray) const override;
 
     public:
-        explicit PathTracer(Scene &scene, Sampler &sampler, const unsigned int samplesLight);
+        explicit PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerPointLight,
+                        const unsigned int samplesLight);
     };
 }
 

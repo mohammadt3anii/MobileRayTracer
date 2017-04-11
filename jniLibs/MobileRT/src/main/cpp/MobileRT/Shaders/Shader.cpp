@@ -18,7 +18,7 @@ void Shader::shade(RGB &, Intersection &, Ray &) const {
 }
 
 //ray trace and verifies if intersects primitives
-void Shader::rayTrace(RGB &rgb, Ray &ray, Intersection intersection) const {
+void Shader::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const {
     if (this->scene_.trace(intersection, ray) >= 0) {
         rgb.reset();
         shade(rgb, intersection, ray);// compute radiance

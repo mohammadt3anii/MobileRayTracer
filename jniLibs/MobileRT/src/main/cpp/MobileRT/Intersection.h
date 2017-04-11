@@ -18,18 +18,23 @@ namespace MobileRT {
         Vector3D symNormal_;
         const Material *material_;  // material of the intersected primitive
         float length_;     // ray length parameter
+        Point3D origin_;
 
     public:
         Intersection(void);
         Intersection(Intersection &intersection);
         void reset(const Point3D &point,
-                   const Vector3D &normal, const float length, const Material &material);
+                   const Vector3D &normal, const float length, const Material &material,
+                   const Point3D &origin);
 
         void reset(const float x, const float y, const float z,
-                   const Vector3D &normal, const float length, const Material &material);
+                   const Vector3D &normal, const float length, const Material &material,
+                   const Point3D &origin);
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
-                   const Vector3D &normal, const float length, const Material &material);
+                   const Vector3D &normal, const float length, const Material &material,
+                   const Point3D &origin);
+                   
         void reset(Intersection &intersection);
 
         Vector3D &getSymNormal(void);

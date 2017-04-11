@@ -11,34 +11,48 @@ static unsigned int counter = 0;
 Vector3D::Vector3D(void) :
         x_(0.0f),
         y_(0.0f),
-        z_(0.0f) {
+        z_(0.0f)
+{
     counter++;
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z) :
         x_(x),
         y_(y),
-        z_(z) {
+        z_(z)
+{
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector) :
         x_(vector.x_),
         y_(vector.y_),
-        z_(vector.z_) {
+        z_(vector.z_)
+{
+    counter++;
+}
+
+Vector3D::Vector3D(const Vector3D &vector, const float value) :
+        x_(vector.x_ * value),
+        y_(vector.y_ * value),
+        z_(vector.z_ * value)
+{
     counter++;
 }
 
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) :
-        x_(dest.x_ - orig.x_),
-        y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_) {
+        x_(dest.x_ - orig.x_ + 0.0f),
+        y_(dest.y_ - orig.y_ + 0.0f),
+        z_(dest.z_ - orig.z_ + 0.0f)
+{
+    counter++;
 }
 
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
-        x_(dest.x_ - orig.x_),
-        y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_) {
+        x_(dest.x_ - orig.x_ + 0.0f),
+        y_(dest.y_ - orig.y_ + 0.0f),
+        z_(dest.z_ - orig.z_ + 0.0f)
+{
     const float len(magnitude());
     if (len == 0.0f) return;
     const float inv_length(1.0f / len);
@@ -47,10 +61,12 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
     this->z_ *= inv_length;
 }
 
-Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) ://cross product
-        x_(vector1.y_ * vector2.z_ - vector1.z_ * vector2.y_),
-        y_(vector1.z_ * vector2.x_ - vector1.x_ * vector2.z_),
-        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_) {
+//cross product
+Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) :
+        x_(vector1.y_ * vector2.z_ - vector1.z_ * vector2.y_ + 0.0f),
+        y_(vector1.z_ * vector2.x_ - vector1.x_ * vector2.z_ + 0.0f),
+        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_ + 0.0f)
+{
 }
 
 float Vector3D::normalize(void) {
@@ -79,7 +95,7 @@ float Vector3D::dotProduct(const float x, const float y, const float z) const {
 
 float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
     return (this->x_ * (dest.x_ - orig.x_) + this->y_ * (dest.y_ - orig.y_) +
-            this->z_ * (dest.z_ - orig.z_));
+            this->z_ * (dest.z_ - orig.z_) + 0.0f);
 }
 
 float Vector3D::squareMagnitude(void) const {
@@ -91,9 +107,10 @@ float Vector3D::magnitude(void) const {
 }
 
 Vector3D Vector3D::crossProduct(const Vector3D &vector) const {
-    return Vector3D((this->y_ * vector.z_ - this->z_ * vector.y_),
-                    (this->z_ * vector.x_ - this->x_ * vector.z_),
-                    (this->x_ * vector.y_ - this->y_ * vector.x_));
+    const float x (this->y_ * vector.z_ - this->z_ * vector.y_ + 0.0f);
+    const float y (this->z_ * vector.x_ - this->x_ * vector.z_ + 0.0f);
+    const float z (this->x_ * vector.y_ - this->y_ * vector.x_ + 0.0f);
+    return Vector3D(x, y, z);
 }
 
 void Vector3D::mult(const float value) {
@@ -137,9 +154,9 @@ void Vector3D::reset(const float x, const float y, const float z) {
 }
 
 void Vector3D::reset(const Point3D &dest, const Point3D &orig) {
-    this->x_ = dest.x_ - orig.x_;
-    this->y_ = dest.y_ - orig.y_;
-    this->z_ = dest.z_ - orig.z_;
+    this->x_ = dest.x_ - orig.x_ + 0.0f;
+    this->y_ = dest.y_ - orig.y_ + 0.0f;
+    this->z_ = dest.z_ - orig.z_ + 0.0f;
 }
 
 unsigned int Vector3D::getInstances() {
@@ -149,7 +166,7 @@ unsigned int Vector3D::getInstances() {
 }
 
 void Vector3D::reverseVector(void) {
-    this->x_ = -this->x_;
-    this->y_ = -this->y_;
-    this->z_ = -this->z_;
+    this->x_ = -this->x_ + 0.0f;
+    this->y_ = -this->y_ + 0.0f;
+    this->z_ = -this->z_ + 0.0f;
 }

@@ -13,7 +13,7 @@ namespace MobileRT {
         const RGB Kd_;   // diffuse reflection
         const RGB Ks_;   // specular reflection
         const RGB Kt_;   // specular transmission
-        const RGB Ke_;   // emission
+        const RGB Le_;   // auto emission
         const float refractiveIndice_;
 
     public:
@@ -23,7 +23,7 @@ namespace MobileRT {
 
         explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt);
 
-        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Ke);
+        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le);
 
         explicit Material(const RGB &Kd, const float refractiveIndice);
 
@@ -32,7 +32,7 @@ namespace MobileRT {
         explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
                           const float refractiveIndice);
 
-        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Ke,
+        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
                           const float refractiveIndice);
 
         static unsigned int getInstances();

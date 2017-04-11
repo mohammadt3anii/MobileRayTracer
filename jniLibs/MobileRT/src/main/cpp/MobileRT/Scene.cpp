@@ -23,6 +23,22 @@ Scene::~Scene(void) {
     this->primitives_.clear();
 }
 
+/*int Scene::traceLights(Intersection &intersection, Ray &ray) const {
+    int res(-1);
+    const unsigned int lightsSize(static_cast<unsigned int> (lights_.size()));
+
+    for (unsigned int i(0); i < lightsSize; i++) {
+        const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
+        if (light.intersect(intersection, ray))
+        {
+            ray.maxDistance_ = intersection.length_;
+            res = static_cast<int> (i);
+        }
+    }
+
+    return res;
+}*/
+
 int Scene::trace(Intersection &intersection, Ray &ray) const {
     int res(-1);
     ray.maxDistance_ = RAY_LENGTH_MAX;
