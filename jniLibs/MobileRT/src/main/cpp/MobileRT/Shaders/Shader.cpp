@@ -31,3 +31,7 @@ void Shader::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const {
 int Shader::traceTouch(Intersection &intersection, Ray &ray) const {
     return this->scene_.trace(intersection, ray);
 }
+
+void Shader::resetSampling(void) {
+    this->scene_.resetSampling();
+}

@@ -1,12 +1,17 @@
 apply plugin: "com.android.library"
 android {
+    defaultPublishConfig 'debug'
+    publishNonDefault true
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        ndk { abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64" }
+        ndk {
+            moduleName "native"
+            abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64"
+        }
         jackOptions { enabled false }
     }
     externalNativeBuild {
@@ -28,11 +33,23 @@ android {
         debug {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
+            versionNameSuffix '-debug'
+
+            debuggable true
+            jniDebuggable true
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
+            versionNameSuffix '-release'
+
+            debuggable false
+            jniDebuggable false
         }
     }
-    void
+}
+
+configurations {
+    debug
+    release
 }

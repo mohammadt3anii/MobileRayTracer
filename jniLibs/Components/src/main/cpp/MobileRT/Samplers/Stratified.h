@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_STRATIFIED_H
 #define MOBILERAYTRACER_STRATIFIED_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
+#include "MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
     class Stratified : public Sampler {

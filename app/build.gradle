@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 android {
+    defaultPublishConfig 'debug'
     publishNonDefault true
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -34,29 +35,35 @@ android {
             signingConfig signingConfigs.Puscas
             dependencies {
                 debugCompile('com.android.support:design:25.2.0')
-                debugCompile project(':MobileRT')
-                debugCompile project(':Components')
             }
-            ndk {
-                jniDebuggable true
-            }
-            void
+            versionNameSuffix '-debug'
+
+            debuggable true
+            jniDebuggable true
         }
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
             dependencies {
                 releaseCompile('com.android.support:design:25.2.0')
-                releaseCompile project(':MobileRT')
-                releaseCompile project(':Components')
             }
-            void
+            versionNameSuffix '-release'
+
+            debuggable false
+            jniDebuggable false
         }
     }
-    void
+}
+
+configurations {
+    debug
+    release
 }
 
 dependencies {
-    compile project(':MobileRT')
-    compile project(':Components')
+    debugCompile project(path: ':MobileRT', configuration: "debug")
+    releaseCompile project(path: ':MobileRT', configuration: "release")
+
+    debugCompile project(path: ':Components', configuration: "debug")
+    releaseCompile project(path: ':Components', configuration: "release")
 }

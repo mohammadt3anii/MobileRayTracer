@@ -5,12 +5,11 @@
 #ifndef MOBILERAYTRACER_JITTERED_H
 #define MOBILERAYTRACER_JITTERED_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
+#include "MobileRT/Samplers/Sampler.h"
 
 namespace MobileRT {
     class HaltonSeq : public Sampler {
     private:
-        float half_rand_max_;
         float maxSampler_;
 
     private:

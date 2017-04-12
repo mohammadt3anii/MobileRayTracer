@@ -138,8 +138,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
             //ray.d = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
             transmissionRay.direction_ = ((ray.direction_ * refractiveIndice) +
                                           (intersection.normal_ * (refractiveIndice * cost1 -
-                                                                   static_cast<float> (std::sqrt(
-                                                                           cost2)))));
+                                                                   std::sqrt(cost2))));
         } else {// reflection direction
             //ray.d = (ray.d + N*(cost1 * 2)).norm();
             transmissionRay.direction_ = (ray.direction_ + intersection.normal_ * (cost1 * 2));

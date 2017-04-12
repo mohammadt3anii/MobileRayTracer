@@ -29,6 +29,8 @@ namespace MobileRT {
 
         void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const;
         int traceTouch(Intersection &intersection, Ray &ray) const;
+
+        virtual void resetSampling(void);
     };
 }
 

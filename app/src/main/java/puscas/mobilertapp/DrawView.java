@@ -118,8 +118,8 @@ class DrawView extends LinearLayout {
         buttonRender_ = button;
     }
 
-    void startRender(int period) {
-        period_ = period;
+    void startRender() {
+        period_ = 100;
         renderTask_ = new RenderTask();
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();

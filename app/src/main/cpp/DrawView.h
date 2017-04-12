@@ -10,20 +10,20 @@
 #include <android/log.h>
 #include <limits>
 
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
-#include "../../../../jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/NoShadows.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/Whitted.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/PathTracer.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Constant.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Stratified.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/HaltonSeq.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/PointLight.h"
-#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Lights/AreaLight.h"
+#include "MobileRT/Renderer.h"
+#include "MobileRT/Scene.h"
+#include "MobileRT/Shapes/Plane.h"
+#include "MobileRT/Shapes/Sphere.h"
+#include "MobileRT/Shapes/Triangle.h"
+#include "MobileRT/Shaders/NoShadows.h"
+#include "MobileRT/Shaders/Whitted.h"
+#include "MobileRT/Shaders/PathTracer.h"
+#include "MobileRT/Samplers/Constant.h"
+#include "MobileRT/Samplers/Stratified.h"
+#include "MobileRT/Samplers/HaltonSeq.h"
+#include "MobileRT/Cameras/Perspective.h"
+#include "MobileRT/Lights/PointLight.h"
+#include "MobileRT/Lights/AreaLight.h"
 
 void FPS(void);
 

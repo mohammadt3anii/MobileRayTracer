@@ -5,10 +5,10 @@
 #ifndef MOBILERAYTRACER_AREALIGHT_H
 #define MOBILERAYTRACER_AREALIGHT_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Lights/Light.h"
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Samplers/Sampler.h"
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Utils.h"
+#include "MobileRT/Lights/Light.h"
+#include "MobileRT/Shapes/Triangle.h"
+#include "MobileRT/Samplers/Sampler.h"
+#include "MobileRT/Utils.h"
 
 namespace MobileRT {
     class AreaLight : public Light, public Triangle {

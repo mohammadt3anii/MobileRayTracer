@@ -115,6 +115,7 @@ public class MainActivity extends Activity {
     }
 
     public void startRender(final View view) {
+        if (view == null) return;
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 drawView_.createScene(
@@ -130,7 +131,7 @@ public class MainActivity extends Activity {
                                         [pickerSamplesLight_.getValue() - 1]
                         )
                 );
-                drawView_.startRender(100);
+                drawView_.startRender();
                 break;
 
             default:

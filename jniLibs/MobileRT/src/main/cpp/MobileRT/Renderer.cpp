@@ -43,7 +43,7 @@ const unsigned int numThreads) {
     }
     this->samplerCamera_.resetSampling();
     this->samplerPixel_.resetSampling();
-    this->shader_.scene_.resetSampling();
+    this->shader_.resetSampling();
     std::thread *const threads(new std::thread[numThreads - 1]);
     for (unsigned int i(0); i < numThreads - 1; i++) {
         threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i);
@@ -98,7 +98,7 @@ void Renderer::stopRender(void) {
     this->samplerPixel_.stopRender();
 }
 
-void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
+void Renderer::renderScene(unsigned int *const bitmap, const unsigned int) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
@@ -118,8 +118,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                 this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
             const unsigned int endY(startY + this->blockSizeY_);
-            LOG("tid = %u, block = %f, sample = %u, Y = [%u, %u]",
-                tid, double(block), sample, startY, endY);
+            //LOG("tid = %u, block = %f, sample = %u, Y = [%u, %u]",
+            //    tid, double(block), sample, startY, endY);
             for (unsigned int y(startY); y < endY; y++) {
                 const unsigned int yWidth(y * width_);
                 const float v(y * INV_IMG_HEIGHT);

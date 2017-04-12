@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_NOSHADOWS_H
 #define MOBILERAYTRACER_NOSHADOWS_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
+#include "MobileRT/Shaders/Shader.h"
 
 namespace MobileRT {
     class NoShadows : public Shader {

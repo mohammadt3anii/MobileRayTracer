@@ -5,8 +5,8 @@
 #ifndef MOBILERAYTRACER_PERSPECTIVE_H
 #define MOBILERAYTRACER_PERSPECTIVE_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Cameras/Camera.h"
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Utils.h"
+#include "MobileRT/Cameras/Camera.h"
+#include "MobileRT/Utils.h"
 
 namespace MobileRT {
     class Perspective : public Camera {

@@ -14,7 +14,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 {
             /*uniform_dist = std::uniform_real_distribution<float> (0.0f, 1.0f);
             gen = std::mt19937 (rd());*/
-    LOG("sizeLights = %lu, samplesLight = %u", scene_.lights_.size() - 1, this->samplesLight_);
+    LOG("sizeLights = %lu, samplesLight = %u", scene_.lights_.size() - 1ul, this->samplesLight_);
 }
 
 //pag 28 slides Monte Carlo
@@ -34,8 +34,6 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
     const RGB &kD(intersection.material_->Kd_);
     const RGB &kS(intersection.material_->Ks_);
     const RGB &kT(intersection.material_->Kt_);
-
-    static unsigned int chosenLightAnt(100);
 
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
@@ -78,7 +76,6 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
                     Ld.add(light.radiance_, cosNormalLight);
                 }
             }
-            chosenLightAnt = chosenLight;
         }
 
         //indirect light
@@ -294,4 +291,10 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
     rgb.add(Le);
     rgb.add(Ls);
     rgb.add(Lt);
+}
+
+void PathTracer::resetSampling(void) {
+    this->scene_.resetSampling();
+    this->samplerRay_.resetSampling();
+    this->samplerLight_.resetSampling();
 }

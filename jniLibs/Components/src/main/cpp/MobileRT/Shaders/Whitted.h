@@ -5,7 +5,7 @@
 #ifndef MOBILERAYTRACER_WHITTED_H
 #define MOBILERAYTRACER_WHITTED_H
 
-#include "../../../../../../MobileRT/src/main/cpp/MobileRT/Shaders/Shader.h"
+#include "MobileRT/Shaders/Shader.h"
 
 namespace MobileRT {
     class Whitted : public Shader {

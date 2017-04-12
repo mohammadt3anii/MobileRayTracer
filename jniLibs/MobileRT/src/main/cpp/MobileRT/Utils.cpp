@@ -30,14 +30,14 @@ unsigned long long int roundUpPower2(unsigned long long int value) {
     return value + 1;
 }
 
-unsigned int roundDownPower2(unsigned int value) {
+/*unsigned int roundDownPower2(unsigned int value) {
     value |= value >> 1;
     value |= value >> 2;
     value |= value >> 4;
     value |= value >> 8;
     value |= value >> 16;
     return value - (value >> 1);
-}
+}*/
 
 unsigned int roundDownEvenNumber(const unsigned int value) {
     return value & ~1u;
