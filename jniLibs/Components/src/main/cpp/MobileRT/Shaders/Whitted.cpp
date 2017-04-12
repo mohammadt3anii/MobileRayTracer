@@ -41,7 +41,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
             light.resetSampling();
             for (unsigned int j(0); j < samplesLight; j++) {
                 for (unsigned int k(0); k < samplesLight; k++) {
-                    Point3D lightPosition(light.getPosition(j, k));
+                    Point3D lightPosition(light.getPosition());
                     //calculates vector starting in intersection to the light
                     Vector3D vectorToLight(lightPosition, intersection.point_);
                     //distance from intersection to the light (and normalize it)

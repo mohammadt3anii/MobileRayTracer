@@ -16,8 +16,6 @@ namespace MobileRT {
     public:
         explicit Constant(const float value);
 
-        float getDeviation(const unsigned int num) override;
-
         float getSample(const unsigned int sample) override;
     };
 }

@@ -6,35 +6,18 @@
 
 using namespace MobileRT;
 
-HaltonSeq::HaltonSeq(const unsigned long long int domainSize, const unsigned int samples,
-                    const bool boolean) :
-        Sampler(domainSize, samples),
-        half_rand_max_(RAND_MAX * 0.5f)
-{
-        this->maxSampler_ = 1.0f;
-        boolean_ = boolean;
-}
-
 HaltonSeq::HaltonSeq(const unsigned long long int domainSize, const unsigned int samples) :
         Sampler(domainSize, samples),
-        half_rand_max_(RAND_MAX * 0.5f)
+        maxSampler_(1.0f)
 {
-        this->maxSampler_ = 1.0f;
-        boolean_ = false;
 }
 
 HaltonSeq::HaltonSeq(const unsigned int width, const unsigned int height,
                      const unsigned int samples,
                      const unsigned int blockSizeX, const unsigned int blockSizeY) :
-        Sampler(width, height, samples, blockSizeX, blockSizeY),
-        half_rand_max_(RAND_MAX * 0.5f)
+        Sampler(width, height, samples, blockSizeX, blockSizeY)
 {
     this->maxSampler_ = (static_cast<float> ((domainSize_ * samples_)) / maxHalton_);
-    boolean_ = false;
-}
-
-float HaltonSeq::getDeviation(const unsigned) {
-    return std::rand() / half_rand_max_ - 1.0f;
 }
 
 float HaltonSeq::getSample(const unsigned int sample) {

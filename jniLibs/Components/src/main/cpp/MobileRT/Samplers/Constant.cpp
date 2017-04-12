@@ -12,11 +12,6 @@ Constant::Constant(const float value) :
 {
 }
 
-float Constant::getDeviation(const unsigned int)
-{
-    return value_;
-}
-
 float Constant::getSample(const unsigned int)
 {
     return value_;

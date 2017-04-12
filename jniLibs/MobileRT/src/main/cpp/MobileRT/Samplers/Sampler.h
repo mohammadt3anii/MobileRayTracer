@@ -38,8 +38,6 @@ namespace MobileRT {
 
         bool notFinished(const unsigned int sample);
 
-        virtual float getDeviation(const unsigned int num) = 0;
-
         virtual float getSample(const unsigned int sample) = 0;
     };
 }

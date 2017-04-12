@@ -13,16 +13,13 @@
 namespace MobileRT {
     class AreaLight : public Light, public Triangle {
     private:
-        Sampler& sampler_;
+        Sampler& samplerPointLight_;
 
     public:
-        explicit AreaLight(const RGB &radiance, Sampler &sampler,
+        explicit AreaLight(const RGB &radiance, Sampler &samplerPointLight,
                            const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
 
-        /*AreaLight(const RGB &radiance, Sampler &sampler,
-                     Shape *shape, const Material &material);*/
-
-        virtual const Point3D getPosition(const unsigned int i, const unsigned int j) override;
+        virtual const Point3D getPosition(void) override;
 
         virtual void resetSampling(void) override;
     };

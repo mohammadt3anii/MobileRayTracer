@@ -12,7 +12,7 @@ PointLight::PointLight(const RGB &radiance, const Point3D &position) :
 {
 }
 
-const Point3D PointLight::getPosition(const unsigned int, const unsigned int)
+const Point3D PointLight::getPosition(void)
 {
         return this->position_;
 }

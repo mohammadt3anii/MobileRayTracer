@@ -14,6 +14,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 {
             /*uniform_dist = std::uniform_real_distribution<float> (0.0f, 1.0f);
             gen = std::mt19937 (rd());*/
+    LOG("sizeLights = %lu, samplesLight = %u", scene_.lights_.size() - 1, this->samplesLight_);
 }
 
 //pag 28 slides Monte Carlo
@@ -34,6 +35,8 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
     const RGB &kS(intersection.material_->Ks_);
     const RGB &kT(intersection.material_->Kt_);
 
+    static unsigned int chosenLightAnt(100);
+
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
@@ -48,40 +51,34 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
     //Ld = Ld (p -> Wr)
     if (kD.isNotZero()) {
         const unsigned long sizeLights(scene_.lights_.size() - 1);
-        const unsigned int samplesLight(static_cast<unsigned int> (std::sqrt(this->samplesLight_)));
+        const unsigned int samplesLight(this->samplesLight_);
         Intersection intersectLight;
         //direct light
-        //for (unsigned int i(0); i < sizeLights; i++)
+        for (unsigned int i(0); i < samplesLight; i++)
         {
-            for (unsigned int j(0); j < samplesLight; j++)
-            {
-                for (unsigned int k(0); k < samplesLight; k++)
-                {
-                    //const float qrn (samplerLight_.getSample(0));
-                    const float qrn (static_cast<float>(rand()) / (RAND_MAX));
-                    const unsigned int chosenLight (static_cast<unsigned int> (qrn * sizeLights));
-                    //LOG("light = %u", chosenLight);
-                    Light &light(*scene_.lights_[chosenLight]);
-                    //calculates vector starting in intersection to the light
-                    const Point3D lightPosition (light.getPosition(j, k));
-                    Vector3D vectorToLight(lightPosition, intersection.point_);
-                    //distance from intersection to the light (and normalize it)
-                    const float distanceToLight(vectorToLight.normalize());
-                    //x*x + y*y + z*z
-                    const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
-                    if (cosNormalLight > 0.0f) {
-                        //shadow ray - orig=intersection, dir=light
-                        const Ray shadowRay(intersection.point_, vectorToLight,
-                                            distanceToLight, ray.depth_ + 1);
-                        //intersection between shadow ray and the closest primitive
-                        //if there are no primitives between intersection and the light
-                        if (!scene_.shadowTrace(intersectLight, shadowRay)) {
-                            //Ld += kD * radLight * cosNormalLight;
-                            Ld.add(light.radiance_, cosNormalLight);
-                        }
-                    }
+            //const float qrn (static_cast<float>(rand()) / (RAND_MAX));
+            const float qrn (samplerLight_.getSample(0));
+            const unsigned int chosenLight (static_cast<unsigned int> ((qrn+0.5f) * sizeLights));
+            Light &light(*scene_.lights_[chosenLight]);
+            //calculates vector starting in intersection to the light
+            const Point3D lightPosition (light.getPosition());
+            Vector3D vectorToLight(lightPosition, intersection.point_);
+            //distance from intersection to the light (and normalize it)
+            const float distanceToLight(vectorToLight.normalize());
+            //x*x + y*y + z*z
+            const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
+            if (cosNormalLight > 0.0f) {
+                //shadow ray - orig=intersection, dir=light
+                const Ray shadowRay(intersection.point_, vectorToLight,
+                                    distanceToLight, ray.depth_ + 1);
+                //intersection between shadow ray and the closest primitive
+                //if there are no primitives between intersection and the light
+                if (!scene_.shadowTrace(intersectLight, shadowRay)) {
+                    //Ld += kD * radLight * cosNormalLight;
+                    Ld.add(light.radiance_, cosNormalLight);
                 }
             }
+            chosenLightAnt = chosenLight;
         }
 
         //indirect light
@@ -89,8 +86,8 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         {
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //const float r1 (samplerRay_.getSample(0));
-            const float r1 (static_cast<float>(rand()) / (RAND_MAX));
             //const float r2 (samplerRay_.getSample(0));
+            const float r1 (static_cast<float>(rand()) / (RAND_MAX));
             const float r2 (static_cast<float>(rand()) / (RAND_MAX));
             float localX(std::cos(2 * PI * r1) * std::sqrt(1 - r2));
             float localZ(std::sin(2 * PI * r1) * std::sqrt(1 - r2));

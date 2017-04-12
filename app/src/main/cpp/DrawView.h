@@ -18,6 +18,7 @@
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/NoShadows.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/Whitted.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Shaders/PathTracer.h"
+#include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Constant.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/Stratified.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Samplers/HaltonSeq.h"
 #include "../../../../jniLibs/Components/src/main/cpp/MobileRT/Cameras/Perspective.h"

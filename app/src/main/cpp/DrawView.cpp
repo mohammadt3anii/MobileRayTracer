@@ -13,6 +13,7 @@ static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
+static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
@@ -333,42 +334,44 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     LOG("%s", "WORKING = IDLE");
     width_ = static_cast<unsigned int>(width);
     height_ = static_cast<unsigned int>(height);
-
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
+
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
     switch (scene) {
         case 1:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
-                                                60.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                60.0f, 60.0f * ratio);
             scene_ = spheresScene();
             break;
 
         case 2:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f), 60.0f,
-                                                60.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                60.0f, 60.0f * ratio);
             scene_ = spheresScene2();
             break;
 
         case 3:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f), 45.0f,
-                                                45.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene2();
             break;
 
         default:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f), 45.0f,
-                                                45.0f * ratio);
+            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene();
             break;
     }
     switch (sampler) {
         case 1:
+            samplerPixel_ = new MobileRT::HaltonSeq(width_ * height_ * 2, samplesPixel_);
             samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samplesPixel_,
                                                      blockSizeX_, blockSizeY_);
             break;
 
         default:
+            samplerPixel_ = new MobileRT::Constant(0.5f);
             samplerCamera_ = new MobileRT::Stratified(width_, height_, samplesPixel_,
                                                       blockSizeX_, blockSizeY_);
             break;
@@ -384,18 +387,19 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         case 2:
-            LOG("domainRay = %u, domainLight = %u", domainRay, domainLight);
+        LOG("domainRay = %u, domainLight = %u", domainRay, domainLight);
             samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
             samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
-            shader_ = new MobileRT::PathTracer(*scene_, *samplerRay_, *samplerLight_,samplesLight_);
+            shader_ = new MobileRT::PathTracer(
+                    *scene_, *samplerRay_, *samplerLight_, samplesLight_);
             break;
 
         default:
             shader_ = new MobileRT::NoShadows(*scene_, samplesLight_);
             break;
     }
-    renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_, height_,
-                                       blockSizeX_, blockSizeY_);
+    renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
+                                       height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
     LOG("x = %d %d [%d]", roundDownMultipleOf(blockSizeX_, roundDownEvenNumber(width_)),
         roundDownEvenNumber(width_), width_);

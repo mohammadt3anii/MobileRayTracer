@@ -10,11 +10,10 @@ Sampler::Sampler(const unsigned long long int domainSize, const unsigned int sam
         sample_(0),
         overSample_(0),
         domainSize_(domainSize),
-        samples_(static_cast<const unsigned int> (std::sqrt(samples))),
+        samples_(samples),
         maxHalton_(roundUpPower2(domainSize * samples)),
         deviationIncrement_(1.0f / samples)
 {
-        //LOG("domainSize = %llu, maxHalton = %llu", domainSize_, maxHalton_);
 }
 
 Sampler::Sampler(const unsigned int width, const unsigned int height, const unsigned int samples,
@@ -22,11 +21,11 @@ Sampler::Sampler(const unsigned int width, const unsigned int height, const unsi
         sample_(0),
         overSample_(0),
         domainSize_(roundDownEvenNumber(width) / roundDownMultipleOf(blockSizeX,
-                                                                     roundDownEvenNumber(width))
+                roundDownEvenNumber(width))
                 *
-                        roundDownEvenNumber(height) /
+                roundDownEvenNumber(height) /
                 roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height))),
-        samples_(static_cast<const unsigned int> (std::sqrt(samples))),
+        samples_(samples),
         maxHalton_(roundUpPower2(
                 roundDownEvenNumber(width) / roundDownMultipleOf(blockSizeX,
                                                                  roundDownEvenNumber(width))

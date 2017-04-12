@@ -16,7 +16,7 @@ namespace MobileRT {
     public:
         explicit PointLight(const RGB &radiance, const Point3D &position);
 
-        virtual const Point3D getPosition(const unsigned int i, const unsigned int j) override;
+        virtual const Point3D getPosition(void) override;
 
         virtual void resetSampling(void) override;
     };

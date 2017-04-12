@@ -122,14 +122,15 @@ public class MainActivity extends Activity {
                         pickerShader_.getValue(),
                         pickerThreads_.getValue(),
                         pickerSampler_.getValue(),
-                        Integer.parseInt(
-                                pickerSamplesPixel_.getDisplayedValues()[pickerSamplesPixel_.getValue() - 1]
+                        Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
+                                [pickerSamplesPixel_.getValue() - 1]
                         ),
                         Integer.parseInt(
-                                pickerSamplesLight_.getDisplayedValues()[pickerSamplesLight_.getValue() - 1]
+                                pickerSamplesLight_.getDisplayedValues()
+                                        [pickerSamplesLight_.getValue() - 1]
                         )
                 );
-                drawView_.startRender();
+                drawView_.startRender(100);
                 break;
 
             default:

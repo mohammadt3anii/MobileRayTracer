@@ -16,8 +16,6 @@ namespace MobileRT {
                             const unsigned int samples,
                             const unsigned int blockSizeX, const unsigned int blockSizeY);
 
-        float getDeviation(const unsigned int num) override;
-
         float getSample(const unsigned int sample) override;
     };
 }

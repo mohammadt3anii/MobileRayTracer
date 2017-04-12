@@ -13,6 +13,7 @@
 #include "Components/src/main/cpp/MobileRT/Shaders/PathTracer.h"
 #include "Components/src/main/cpp/MobileRT/Samplers/Stratified.h"
 #include "Components/src/main/cpp/MobileRT/Samplers/HaltonSeq.h"
+#include "Components/src/main/cpp/MobileRT/Samplers/Constant.h"
 #include "Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
 #include "Components/src/main/cpp/MobileRT/Lights/PointLight.h"
 #include "Components/src/main/cpp/MobileRT/Lights/AreaLight.h"
@@ -21,6 +22,7 @@ static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
+static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
@@ -93,7 +95,7 @@ MobileRT::Scene *cornellBoxScene2(void) {
     LOG("samplesLight = %u, max = %u", samplesLight_, max);
     const unsigned int domainPointLight (width_ * height_ * 2 * 2 * samplesLight_ * RAY_DEPTH_MAX);
     LOG("domainPointLight = %u", domainPointLight);
-    samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1, true);
+    samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
 
     /*scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
                                                        MobileRT::Point3D(0.0f, 0.99f, 0.0f)));*/
@@ -284,10 +286,10 @@ int main(int argc, char **argv) {
     unsigned int repeats(1);
     const int scene(3);
     const int shader(2);
-    const int threads(4);
-    const int sampler(1);
-    const int samplesPixel(16);
-    const int samplesLight(16);
+    const int threads(1);
+    const int sampler(0);
+    const int samplesPixel(25);
+    const int samplesLight(1);
     const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
@@ -319,11 +321,13 @@ int main(int argc, char **argv) {
     }
     switch (sampler) {
         case 1:
+            samplerPixel_ = new MobileRT::HaltonSeq(width_ * height_ * 2, samplesPixel_);
             samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samplesPixel_,
                                                      blockSizeX_, blockSizeY_);
             break;
 
         default:
+            samplerPixel_ = new MobileRT::Constant(0.5f);
             samplerCamera_ = new MobileRT::Stratified(width_, height_, samplesPixel_,
                                                       blockSizeX_, blockSizeY_);
             break;
@@ -351,7 +355,7 @@ int main(int argc, char **argv) {
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
-                                        height_, blockSizeX_, blockSizeY_);
+                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
     LOG("x = %d %d [%d]", roundDownMultipleOf(blockSizeX_, roundDownEvenNumber(width_)),
         roundDownEvenNumber(width_), width_);

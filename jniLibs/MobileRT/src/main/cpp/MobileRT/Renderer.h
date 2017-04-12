@@ -24,12 +24,14 @@ namespace MobileRT {
         const unsigned int resolution_;
         RGB *const imagePlane_;
         float max_;
+        Sampler &samplerPixel_;
         //char padding[4] __attribute__((unused));
 
     public:
-        explicit Renderer(Sampler &sampler, Shader &shader, const Camera &camera,
+        explicit Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
                           const unsigned int width, const unsigned int height,
-                          const unsigned int blockSizeX, const unsigned int blockSizeY);
+                          const unsigned int blockSizeX, const unsigned int blockSizeY,
+                          Sampler &samplerPixel);
 
         ~Renderer(void);
 
