@@ -23,13 +23,13 @@ Scene::~Scene(void) {
     this->primitives_.clear();
 }
 
-/*int Scene::traceLights(Intersection &intersection, Ray &ray) const {
+int Scene::traceLights(Intersection &intersection, Ray &ray) const {
     int res(-1);
     const unsigned int lightsSize(static_cast<unsigned int> (lights_.size()));
 
     for (unsigned int i(0); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
-        if (light.intersect(intersection, ray))
+        if (light.intersect(intersection, ray, light.radiance_))
         {
             ray.maxDistance_ = intersection.length_;
             res = static_cast<int> (i);
@@ -37,7 +37,7 @@ Scene::~Scene(void) {
     }
 
     return res;
-}*/
+}
 
 int Scene::trace(Intersection &intersection, Ray &ray) const {
     int res(-1);
@@ -52,6 +52,8 @@ int Scene::trace(Intersection &intersection, Ray &ray) const {
             res = static_cast<int> (i);
         }
     }
+
+    traceLights(intersection, ray);
 
     return res;
 }

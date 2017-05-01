@@ -20,7 +20,8 @@ Ray::Ray(const float x, const float y, const float z, const Point3D &origin,
         direction_(x, y, z),
         symDirection_(-x, -y, -z),
         maxDistance_(RAY_LENGTH_MAX),
-        depth_(depth) {
+        depth_(depth)
+{
     counter++;
     this->direction_.normalize();
 }

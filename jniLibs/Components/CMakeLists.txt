@@ -10,8 +10,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
 
 add_compile_options(-std=c++11)
 add_compile_options(-Weverything -Werror -Wfatal-errors)
-add_compile_options(-Wno-c++98-compat-pedantic -Wno-padded -Wno-unused-variable)
-add_compile_options(-Wno-unused-private-field)
+add_compile_options(-Wno-c++98-compat-pedantic -Wno-padded -Wno-over-aligned -Wno-unused-variable)
+add_compile_options(-Wno-unused-private-field -Wno-float-equal)
 add_compile_options(-funwind-tables -fexceptions -frtti)
 
 include_directories(./src/main/cpp)

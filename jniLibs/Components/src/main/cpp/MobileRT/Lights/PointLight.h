@@ -14,11 +14,13 @@ namespace MobileRT {
         Point3D position_;
 
     public:
-        explicit PointLight(const RGB &radiance, const Point3D &position);
+        explicit PointLight(const Material &radiance, const Point3D &position);
 
         virtual const Point3D getPosition(void) override;
 
         virtual void resetSampling(void) override;
+
+        virtual bool intersect(Intersection &intersection, const Ray &ray, const Material &material) const override;
     };
 }
 

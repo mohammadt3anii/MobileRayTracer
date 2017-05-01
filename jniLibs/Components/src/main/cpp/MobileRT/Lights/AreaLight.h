@@ -16,12 +16,14 @@ namespace MobileRT {
         Sampler& samplerPointLight_;
 
     public:
-        explicit AreaLight(const RGB &radiance, Sampler &samplerPointLight,
+        explicit AreaLight(const Material &radiance, Sampler &samplerPointLight,
                            const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
 
         virtual const Point3D getPosition(void) override;
 
         virtual void resetSampling(void) override;
+
+        virtual bool intersect(Intersection &intersection, const Ray &ray, const Material &material) const override;
     };
 }
 

@@ -10,6 +10,8 @@ Plane::Plane(const Point3D &point, const Vector3D &normal) :
         point_(point),
         normal_(normal.returnNormalized())
 {
+    LOG ("plane point = [%f, %f, %f]", double(point_.x_), double(point_.y_), double(point_.z_));
+    LOG ("plane normal = [%f, %f, %f]", double(normal_.x_), double(normal_.y_), double(normal_.z_));
 }
 
 bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {

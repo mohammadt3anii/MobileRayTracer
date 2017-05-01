@@ -17,11 +17,8 @@ namespace MobileRT {
     class Sampler {
     public:
         std::atomic<unsigned long long int> sample_;
-        std::atomic<unsigned long long int> overSample_;
         unsigned long long int domainSize_;
         unsigned long long int samples_;
-        unsigned long long int maxHalton_;
-        const float deviationIncrement_;
 
     public:
         explicit Sampler(const unsigned long long int domainSize, const unsigned int samples);
@@ -34,9 +31,9 @@ namespace MobileRT {
 
         void resetSampling(void);
 
-        void stopRender(void);
+        void stopSampling(void);
 
-        bool notFinished(const unsigned int sample);
+        bool isFinished(const unsigned int sample, const unsigned long long int current);
 
         virtual float getSample(const unsigned int sample) = 0;
     };

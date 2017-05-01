@@ -21,6 +21,7 @@
 #include "MobileRT/Samplers/Constant.h"
 #include "MobileRT/Samplers/Stratified.h"
 #include "MobileRT/Samplers/HaltonSeq.h"
+#include "MobileRT/Samplers/Random.h"
 #include "MobileRT/Cameras/Perspective.h"
 #include "MobileRT/Lights/PointLight.h"
 #include "MobileRT/Lights/AreaLight.h"
@@ -107,6 +108,19 @@ extern "C"
 long long Java_puscas_mobilertapp_DrawView_getTimeFrame(
         JNIEnv *,
         jobject
+);
+
+extern "C"
+unsigned int Java_puscas_mobilertapp_DrawView_getSample(
+        JNIEnv *,
+        jobject
+);
+
+extern "C"
+unsigned int Java_puscas_mobilertapp_DrawView_resize(
+        JNIEnv *,
+        jobject,
+        jint size
 );
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

@@ -22,7 +22,7 @@ Intersection::Intersection(Intersection &intersection) :
         length_(intersection.length_),
         origin_(intersection.origin_)
 {
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     counter++;
 }
 
@@ -33,7 +33,7 @@ void Intersection::reset(const Point3D &point,
     this->normal_ = normal;
     this->length_ = length;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = origin;
 }
 
@@ -46,7 +46,7 @@ void Intersection::reset(const float x, const float y, const float z,
     this->normal_ = normal;
     this->length_ = length;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = origin;
 }
 
@@ -59,7 +59,7 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->normal_ = normal;
     this->length_ = length;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = origin;
 }
 
@@ -68,12 +68,12 @@ void Intersection::reset(Intersection &intersection) {
     this->normal_ = intersection.normal_;
     this->length_ = intersection.length_;
     this->material_ = intersection.material_;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = intersection.origin_;
 }
 
 Vector3D &Intersection::getSymNormal(void) {
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     return this->symNormal_;
 }
 

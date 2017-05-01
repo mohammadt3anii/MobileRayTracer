@@ -1,6 +1,5 @@
 package puscas.mobilertapp;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
-@SuppressLint("GoogleAppIndexingApiWarning")
 public class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
@@ -51,7 +49,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        try {
+            setContentView(R.layout.activity_main);
+        } catch (Exception e) {e.printStackTrace();}
 
         final TextView textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final int maxSamplesPixel = 12;
+        final int maxSamplesPixel = 10;
         final String[] samplesPixel = new String[maxSamplesPixel];
         for (int i = 0; i < maxSamplesPixel; i++) {
             samplesPixel[i] = Integer.toString((i + 1) * (i + 1));
@@ -87,10 +87,10 @@ public class MainActivity extends Activity {
         pickerSamplesPixel_.setWrapSelectorWheel(true);
         pickerSamplesPixel_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        final int maxSamplesLight = 12;
+        final int maxSamplesLight = 100;
         final String[] samplesLight = new String[maxSamplesLight];
         for (int i = 0; i < maxSamplesLight; i++) {
-            samplesLight[i] = Integer.toString((i + 1) * (i + 1));
+            samplesLight[i] = Integer.toString(i + 1);
         }
         pickerSamplesLight_ = (NumberPicker) findViewById(R.id.pickerSamplesLight);
         pickerSamplesLight_.setMinValue(1);

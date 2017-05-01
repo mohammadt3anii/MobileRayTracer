@@ -9,6 +9,7 @@ enum State {
 };
 
 static int working_(IDLE);
+
 static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
@@ -19,12 +20,14 @@ static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
-static unsigned int width_(0);
-static unsigned int height_(0);
 static unsigned int samplesPixel_(0);
 static unsigned int samplesLight_(0);
-static unsigned int blockSizeX_(128);
-static unsigned int blockSizeY_(128);
+static unsigned int blockSize_(4);
+static unsigned int blockSizeX_(0);
+static unsigned int blockSizeY_(0);
+
+static unsigned int width_(0);
+static unsigned int height_(0);
 static float fps_(0.0f);
 static long long timeFrame_(0);
 
@@ -44,14 +47,24 @@ void FPS(void) {
 MobileRT::Scene *cornellBoxScene(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
-    scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+    const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
                                                         MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
 
     // back wall - white
-    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.7f, 0.7f, 0.7f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
                                                            lightGrayMat));
+
+    // front wall - light blue
+    const MobileRT::Material lightBlueMat(MobileRT::RGB(0.0f, 0.9f, 0.9f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
+            MobileRT::Point3D(0.0f, 0.0f, -3.5f), MobileRT::Vector3D(0.0f, 0.0f, 1.0f)),
+                                                           lightBlueMat));
     // floor - white
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(0.0f, -1.0f, 0.0f), MobileRT::Vector3D(0.0f, 1.0f, 0.0f)),
@@ -64,6 +77,7 @@ MobileRT::Scene *cornellBoxScene(void) {
     const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(-1.0f, 0.0f, 0.0f), MobileRT::Vector3D(1.0f, 0.0f, 0.0f)), redMat));
+
     // right wall - blue
     const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
@@ -71,7 +85,7 @@ MobileRT::Scene *cornellBoxScene(void) {
 
     // sphere - mirror
     const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
             MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
 
@@ -82,75 +96,70 @@ MobileRT::Scene *cornellBoxScene(void) {
             MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));
 
     // triangle - yellow
-    const MobileRT::Material yellowMat(MobileRT::RGB(1.0f, 1.0f, 0.0f));
+    const MobileRT::Material yellowMat(MobileRT::RGB(0.9f, 0.9f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
+
     return &scene;
 }
 
 MobileRT::Scene *cornellBoxScene2(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
-    // point light - white
-    /*const unsigned long long int samples1 (static_cast<unsigned long long int>(
-            width_ * height_ * samplesPixel_ * (samplesLight_ * RAY_DEPTH_MAX) *
-            (samplesLight_ * RAY_DEPTH_MAX)));*/
 
-    const unsigned int max(static_cast<unsigned int> (-1));
-    LOG("samplesLight = %u, max = %u", samplesLight_, max);
-    const unsigned int domainPointLight (width_ * height_ * 2 * 2 * samplesLight_ * RAY_DEPTH_MAX);
-    LOG("domainPointLight = %u", domainPointLight);
-    samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
+    const unsigned long long int max(static_cast<unsigned long long int> (-1));
+    LOG("samplesLight = %u, max = %llu", samplesLight_, max);
+    const unsigned long long int domainPointLight (/*roundUpPower2*/(
+            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    LOG("domainPointLight = %llu", domainPointLight);
+    LOG("width_ = %u", width_);
+    LOG("height_ = %u", height_);
+    LOG("samplesLight_ = %u", samplesLight_);
+    LOG("samplesPixel_ = %u", samplesPixel_);
+    LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
+    //samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
+    samplerPointLight_ = new MobileRT::Random(domainPointLight, 1);
 
-    /*scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
-                                                       MobileRT::Point3D(0.0f, 0.99f, 0.0f)));*/
-
-    /*MobileRT::Triangle(
-            MobileRT::Point3D(0.5f, -0.5f, 0.99f),
-            MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
-            MobileRT::Point3D(0.5f, 0.5f, 0.99f));*/
-
-    scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(0.25f, 0.98f, -0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.98f, -0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.98f, 0.25f)));
-
-    scene.lights_.emplace_back(new MobileRT::AreaLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(-0.25f, 0.98f, 0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.98f, 0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.98f, -0.25f)));
-
-    /*const MobileRT::Material lightWhiteMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+    const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                      MobileRT::RGB(1.0f, 1.0f, 1.0f));
+                                      MobileRT::RGB(0.9f, 0.9f, 0.9f));
+
+    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
+                                                       *samplerPointLight_,
+                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
+                                                       MobileRT::Point3D(0.25f, 0.99f, -0.25f),
+                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
+
+    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
+                                                       *samplerPointLight_,
+                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f),
+                                                       MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
+                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
+
+    // block light - black
+    /*const MobileRT::Material blockMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(0.25f, 0.99f, -0.25f),
-            MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
-            MobileRT::Point3D(0.25f, 0.99f, 0.25f)), lightWhiteMat));
+            MobileRT::Point3D(0.3f, 0.98f, -0.3f),
+            MobileRT::Point3D(-0.3f, 0.98f, -0.3f),
+            MobileRT::Point3D(0.3f, 0.98f, 0.3f)), blockMat));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
-            MobileRT::Point3D(0.25f, 0.99f, 0.25f),
-            MobileRT::Point3D(-0.25f, 0.99f, -0.25f)), lightWhiteMat));*/
+            MobileRT::Point3D(-0.3f, 0.98f, 0.3f),
+            MobileRT::Point3D(0.3f, 0.98f, 0.3f),
+            MobileRT::Point3D(-0.3f, 0.98f, -0.3f)), blockMat));*/
 
     // back wall - white
-    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    const MobileRT::Material lightGrayMat(MobileRT::RGB(0.7f, 0.7f, 0.7f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
                                                            lightGrayMat));
 
-    // back wall - mirror
-    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
-    /*scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
-        MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)), MirrorMat));*/
-
     // front wall - light blue
-    const MobileRT::Material lightBlueMat(MobileRT::RGB(0.0f, 1.0f, 1.0f));
+    const MobileRT::Material lightBlueMat(MobileRT::RGB(0.0f, 0.9f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
-            MobileRT::Point3D(0.0f, 0.0f, -3.5f), MobileRT::Vector3D(0.0f, 0.0f, 1.0f)),
+            MobileRT::Point3D(0.0f, 0.0f, -4.0f), MobileRT::Vector3D(0.0f, 0.0f, 1.0f)),
                                                            lightBlueMat));
 
     // floor - white
@@ -171,37 +180,29 @@ MobileRT::Scene *cornellBoxScene2(void) {
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
 
-    // right wall - mirror
-    /*scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
-        MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), MirrorMat));*/
-
     // sphere - mirror
+    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
             MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
-
-    // sphere - green
-    /*const MobileRT::Material GreenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f),
-                                      MobileRT::RGB(0.0f, 0.2f, 0.0f));
-    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
-            MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), GreenMat));*/
 
     // sphere - transmission
     const MobileRT::Material TransmissionMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                              MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                             MobileRT::RGB(0.8f, 0.8f, 0.8f), 1.5f);
+                                             MobileRT::RGB(0.9f, 0.9f, 0.9f), 1.1f);
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
-            MobileRT::Point3D(-0.45f, -0.1f, 0.0f), 0.35f), TransmissionMat));
+            MobileRT::Point3D(-0.4f, -0.3f, 0.0f), 0.35f), TransmissionMat));
 
     // triangle - yellow
-    const MobileRT::Material yellowMat(MobileRT::RGB(1.0f, 1.0f, 0.0f));
+    const MobileRT::Material yellowMat(MobileRT::RGB(0.9f, 0.9f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 0.99f)), yellowMat));
 
     // triangle - green
-    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 1.0f, 0.0f));
+    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(0.5f, 0.5f, 0.99f), MobileRT::Point3D(-0.5f, 0.5f, 0.99f),
+            MobileRT::Point3D(-0.5f, 0.5f, 0.99f), MobileRT::Point3D(0.5f, 0.5f, 0.99f),
             MobileRT::Point3D(-0.5f, -0.5f, 0.99f)), greenMat));
 
     return &scene;
@@ -210,14 +211,18 @@ MobileRT::Scene *cornellBoxScene2(void) {
 MobileRT::Scene *spheresScene(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
-    scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+    const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
                                                         MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
     const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
     const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
     const MobileRT::Material mirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
     // create one sphere
     scene.primitives_.emplace_back(
@@ -241,7 +246,11 @@ MobileRT::Scene *spheresScene(void) {
 MobileRT::Scene *spheresScene2(void) {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
-    scene.lights_.emplace_back(new MobileRT::PointLight(MobileRT::RGB(1.0f, 1.0f, 1.0f),
+    const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      MobileRT::RGB(0.9f, 0.9f, 0.9f));
+    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
                                                         MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
@@ -249,9 +258,9 @@ MobileRT::Scene *spheresScene2(void) {
     const MobileRT::Material redMat(MobileRT::RGB(0.9f, 0.0f, 0.0f));
     const MobileRT::Material blueMat(MobileRT::RGB(0.0f, 0.0f, 0.9f));
     const MobileRT::Material yellowMat(MobileRT::RGB(0.9f, 0.9f, 0.0f),
-                                       MobileRT::RGB(0.5f, 0.5f, 0.5f));
+                                       MobileRT::RGB(0.8f, 0.8f, 0.4f));
     const MobileRT::Material mirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
-                                       MobileRT::RGB(0.8f, 0.8f, 0.8f));
+                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
     // create one sphere
     scene.primitives_.emplace_back(
@@ -314,8 +323,8 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
     working_ = STOPPED;
     LOG("%s", "WORKING = STOPPED");
     renderer_->stopRender();
-    timeFrame_ = 0;
-    fps_ = 0.0f;
+    //timeFrame_ = 0;
+    //fps_ = 0.0f;
 }
 
 extern "C"
@@ -336,8 +345,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     height_ = static_cast<unsigned int>(height);
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
 
+    blockSizeX_ = width_ / blockSize_;
+    blockSizeY_ = height_ / blockSize_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
+    LOG("samplesPixel_ = %u", samplesPixel_);
+    LOG("samplesLight_ = %u", samplesLight_);
     switch (scene) {
         case 1:
             camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
@@ -365,31 +378,47 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     switch (sampler) {
         case 1:
-            samplerPixel_ = new MobileRT::HaltonSeq(width_ * height_ * 2, samplesPixel_);
+            if (samplesPixel_ > 1)
+            {
+                samplerPixel_ = new MobileRT::HaltonSeq(width_*height_*2llu*samplesPixel_, 1u);
+            }
+            else
+            {
+                samplerPixel_ = new MobileRT::Constant(0.5f);
+            }
             samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samplesPixel_,
                                                      blockSizeX_, blockSizeY_);
             break;
 
         default:
-            samplerPixel_ = new MobileRT::Constant(0.5f);
+            if (samplesPixel_ > 1)
+            {
+                samplerPixel_ = new MobileRT::Stratified(width_*height_*2llu*samplesPixel_, 1u);
+            }
+            else
+            {
+                samplerPixel_ = new MobileRT::Constant(0.5f);
+            }
             samplerCamera_ = new MobileRT::Stratified(width_, height_, samplesPixel_,
                                                       blockSizeX_, blockSizeY_);
             break;
     }
     samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
-    const unsigned int domainRay (width_ * height_ * samplesPixel_ * RAY_DEPTH_MAX * 2);
-    const unsigned int domainLight (
-            width_ * height_ * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
+    const unsigned long long int domainRay ((width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX);
+    const unsigned long long int domainLight (
+            (width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
             shader_ = new MobileRT::Whitted(*scene_, samplesLight_);
             break;
 
         case 2:
-        LOG("domainRay = %u, domainLight = %u", domainRay, domainLight);
-            samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
-            samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
+        LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
+            //samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
+            samplerRay_ = new MobileRT::Random(domainRay, 1);
+            //samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
+            samplerLight_ = new MobileRT::Random(domainLight, 1);
             shader_ = new MobileRT::PathTracer(
                     *scene_, *samplerRay_, *samplerLight_, samplesLight_);
             break;
@@ -401,23 +430,20 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    LOG("x = %d %d [%d]", roundDownMultipleOf(blockSizeX_, roundDownEvenNumber(width_)),
-        roundDownEvenNumber(width_), width_);
-    LOG("y = %d %d [%d]", roundDownMultipleOf(blockSizeY_, roundDownEvenNumber(height_)),
-        roundDownEvenNumber(height_), height_);
+    LOG("x = %d [%d]", blockSizeX_, width_);
+    LOG("y = %d [%d]", blockSizeY_, height_);
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     try {
         //unsigned int i = 1;
-        do {
+        //do {
             const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
             renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
             timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::steady_clock::now() - start).count();
             FPS();
-            //LOG("i = %u", i++);
-        } while (working_ != STOPPED);
+        //} while (working_ != STOPPED);
         if (working_ != STOPPED) {
             working_ = FINISHED;
             LOG("%s", "WORKING = FINISHED");
@@ -508,4 +534,21 @@ long long Java_puscas_mobilertapp_DrawView_getTimeFrame(
         jobject
 ) {
     return timeFrame_;
+}
+
+extern "C"
+unsigned int Java_puscas_mobilertapp_DrawView_getSample(
+        JNIEnv *,
+        jobject
+) {
+    return renderer_->getSample();
+}
+
+extern "C"
+unsigned int Java_puscas_mobilertapp_DrawView_resize(
+        JNIEnv *,
+        jobject,
+        jint size
+) {
+    return roundDownToMultipleOf(static_cast<unsigned int> (size), blockSize_);
 }

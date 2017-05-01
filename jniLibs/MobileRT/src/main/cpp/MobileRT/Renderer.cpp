@@ -13,20 +13,18 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
         samplerCamera_(samplerCamera),
         shader_(shader),
         camera_(camera),
-        width_(roundDownEvenNumber(width)),
-        height_(roundDownEvenNumber(height)),
-        accumulate_(new RGB[roundDownEvenNumber(width) * roundDownEvenNumber(height)]),
-        domainSize_(
-                (roundDownEvenNumber(width) /
-                    roundDownMultipleOf(blockSizeX, roundDownEvenNumber(width))) *
-                (roundDownEvenNumber(height) /
-                        roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height)))),
-        blockSizeX_(roundDownMultipleOf(blockSizeX, roundDownEvenNumber(width))),
-        blockSizeY_(roundDownMultipleOf(blockSizeY, roundDownEvenNumber(height))),
-        resolution_(roundDownEvenNumber(width) * roundDownEvenNumber(height)),
-        imagePlane_(new RGB[roundDownEvenNumber(width) * roundDownEvenNumber(height)]),
+        width_(width),
+        height_(height),
+        accumulate_(new RGB[width * height]),
+        domainSize_((width / blockSizeX) * (height / blockSizeY)),
+        blockSizeX_(blockSizeX),
+        blockSizeY_(blockSizeY),
+        resolution_(width * height),
+        imagePlane_(new RGB[width * height]),
         max_(1.0f),
-        samplerPixel_(samplerPixel)
+        samplerPixel_(samplerPixel),
+        sample_(0u),
+        toneMapper_([&](const float value){return value;})
 {
 }
 
@@ -35,8 +33,8 @@ Renderer::~Renderer(void) {
     delete[] this->imagePlane_;
 }
 
-void Renderer::renderFrame(unsigned int *const bitmap,
-const unsigned int numThreads) {
+void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
+    this->sample_ = 0;
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0); i < size; i++) {
         this->accumulate_[i].reset();
@@ -55,30 +53,43 @@ const unsigned int numThreads) {
     delete[] threads;
 
     float max(-1.0f);
+    unsigned int ii(0u);
+    unsigned int jj(0u);
     for (unsigned int i (0); i < this->height_; i++)
     {
         for (unsigned int j (0); j < this->width_; j++)
         {
             const unsigned int pixel (i*this->width_ + j);
             const float pixelMax (this->imagePlane_[pixel].getMax());
-            max = pixelMax > this->max_? pixelMax : this->max_;
-        }
-    }
-    LOG("max = %f", double(max));
-    this->max_ = max;
-    if (max > 0.0f && max != 1.0f && std::fabs(max - this->max_) > 0.0001f)
-    {
-        for (unsigned int i (0); i < this->height_; i++)
-        {
-            for (unsigned int j (0); j < this->width_; j++)
-            {
-                const unsigned int pixel (i*this->width_ + j);
-                RGB& aux = this->imagePlane_[pixel];
-                aux /= this->max_;
-                bitmap[pixel] = aux.RGB2Color();
+            if (pixelMax > max) {
+                max = pixelMax;
+                ii = i;
+                jj = j;
             }
         }
     }
+    const unsigned int pixel2 (ii*this->width_ + jj);
+    RGB& pixelRGB2 (this->imagePlane_[pixel2]);
+    LOG("max = %f, i = %u, j = %u", double(max), ii, jj);
+    LOG("rgb = %f %f %f", double(pixelRGB2.R_), double(pixelRGB2.G_), double(pixelRGB2.B_));
+
+    this->max_ = max;
+    ////if (max > 0.0f && max != 1.0f && std::fabs(max - this->max_) > 0.0001f)
+    //{
+    //    for (unsigned int i (0); i < this->height_; i++)
+    //    {
+    //        for (unsigned int j (0); j < this->width_; j++)
+    //        {
+    //            const unsigned int pixel (i*this->width_ + j);
+    //            RGB& pixelRGB (this->imagePlane_[pixel]);
+    //            //pixelRGB /= this->max_;
+    //            pixelRGB.R_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.R_)));
+    //            pixelRGB.G_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.G_)));
+    //            pixelRGB.B_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.B_)));
+    //            bitmap[pixel] = pixelRGB.RGB2Color();
+    //        }
+    //    }
+    //}
 
     /*LOG("%s%u", "START - resolution=", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
@@ -91,14 +102,25 @@ const unsigned int numThreads) {
     LOG("%s", "FINISH");*/
 }
 
+void Renderer::registerToneMapper(std::function<float(const float)> toneMapper)
+{
+    toneMapper_ = toneMapper;
+}
+
 void Renderer::stopRender(void) {
     this->blockSizeX_ = 0;
     this->blockSizeY_ = 0;
-    this->samplerCamera_.stopRender();
-    this->samplerPixel_.stopRender();
+    this->samplerCamera_.stopSampling();
+    this->samplerPixel_.stopSampling();
 }
 
-void Renderer::renderScene(unsigned int *const bitmap, const unsigned int) {
+void Renderer::toneMapper(RGB& pixel) {
+    pixel.R_ = toneMapper_(pixel.R_);
+    pixel.G_ = toneMapper_(pixel.G_);
+    pixel.B_ = toneMapper_(pixel.B_);
+}
+
+void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
@@ -118,8 +140,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int) {
                 this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
             const unsigned int endY(startY + this->blockSizeY_);
-            //LOG("tid = %u, block = %f, sample = %u, Y = [%u, %u]",
-            //    tid, double(block), sample, startY, endY);
+            //LOG("tid=%u, block=%f, s=%u, Y=[%u, %u[", tid, double(block), sample, startY, endY);
             for (unsigned int y(startY); y < endY; y++) {
                 const unsigned int yWidth(y * width_);
                 const float v(y * INV_IMG_HEIGHT);
@@ -128,19 +149,28 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int) {
                 const unsigned int endX(startX + this->blockSizeX_);
                 for (unsigned int x(startX); x < endX; x++) {
                     const float u(x * INV_IMG_WIDTH);
-                    const float deviationU((this->samplerPixel_.getSample(sample) - 0.5f) * 2.0f);
-                    const float deviationV((this->samplerPixel_.getSample(sample) - 0.5f) * 2.0f);
+                    const float r1 (this->samplerPixel_.getSample(0));
+                    const float r2 (this->samplerPixel_.getSample(0));
+                    const float deviationU((r1 - 0.5f) * 2.0f);
+                    const float deviationV((r2 - 0.5f) * 2.0f);
+                    //if (r1 >= 1.0f || r2 >= 1.0f) LOG("r1 = %f, r2 = %f", double(r1), double(r2));
                     const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
                     const float u_alpha_deviation(u_alpha + (deviationU * pixelWidth));
                     const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
                     this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
-                    RGB &aux = this->imagePlane_[yWidth + x];
-                    this->shader_.rayTrace(aux, ray, intersection);
-                    this->accumulate_[yWidth + x].addSampleAndCalcAvg(aux);
-                    aux /= this->max_;
-                    bitmap[yWidth + x] = aux.RGB2Color();
+                    RGB &pixelRGB (this->imagePlane_[yWidth + x]);
+                    this->shader_.rayTrace(pixelRGB, ray, intersection);
+                    this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
+                    //pixel /= this->max_;
+                    toneMapper(pixelRGB);
+                    bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }
             }
         }
+        if (tid == 0) this->sample_ = sample + 1;
     }
+}
+
+unsigned int Renderer::getSample(void) {
+    return this->sample_;
 }

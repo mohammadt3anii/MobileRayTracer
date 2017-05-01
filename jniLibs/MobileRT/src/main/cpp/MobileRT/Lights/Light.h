@@ -7,21 +7,24 @@
 
 #include "../RGB.h"
 #include "../Point3D.h"
-//#include "../Primitive.h"
+#include "../Intersection.h"
+#include "../Ray.h"
 
 namespace MobileRT {
-    class Light /*: public Primitive*/ {
+    class Light {
     public:
-        RGB radiance_;
+        Material radiance_;
 
     public:
-        explicit Light(const RGB &radiance);
+        explicit Light(const Material &radiance);
         //explicit Light(const RGB &radiance, Shape *shape);
 
         virtual const Point3D getPosition(void) = 0;
         virtual ~Light (void);
 
         virtual void resetSampling(void) = 0;
+
+        virtual bool intersect(Intersection &intersection, const Ray &ray, const Material &material) const = 0;
     };
 }
 

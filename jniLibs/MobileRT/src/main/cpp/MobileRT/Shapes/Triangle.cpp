@@ -13,15 +13,24 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         pointC_(pointC),
         AB_(pointB - pointA),
         AC_(pointC - pointA),
-        normal_(AB_.crossProduct(AC_)) {
+        normal_(AB_.crossProduct(AC_))
+{
+    /*this->AB_.normalize();
+    this->AC_.normalize();*/
     this->normal_.normalize();
+    normal_.x_ = normal_.x_ == 0.0f? 0.0f : normal_.x_;
+    normal_.y_ = normal_.y_ == 0.0f? 0.0f : normal_.y_;
+    normal_.z_ = normal_.z_ == 0.0f? 0.0f : normal_.z_;
+    LOG ("triangleAB=[%f, %f, %f]", double(AB_.x_),double(AB_.y_),double(AB_.z_));
+    LOG ("triangleAC=[%f, %f, %f]", double(AC_.x_),double(AC_.y_),double(AC_.z_));
+    LOG ("triangleNormal=[%f, %f, %f]", double(normal_.x_),double(normal_.y_),double(normal_.z_));
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray,
                          const Material &material) const {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
-    const float abs(normalizedProjection * (1 + (normalizedProjection < 0) * -2));
+    const float abs(normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f));
     if (abs < VECT_PROJ_MIN) return false;
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);

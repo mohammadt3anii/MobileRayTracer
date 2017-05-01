@@ -45,6 +45,7 @@ class DrawView extends LinearLayout {
     private String timeT_ = null;
     private String fpsRenderT_ = null;
     private String allocatedT_ = null;
+    private String sampleT_ = null;
     //private String availableT_ = null;
     //private String freeT_ = null;
 
@@ -62,7 +63,7 @@ class DrawView extends LinearLayout {
         timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
         timeT_ = String.format(Locale.US, "[%.2fs] ", 0.0f);
         stageT_ = "" + Stage.values()[stage_];
-        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
+        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB";
         //availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
         //freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
 
@@ -70,6 +71,7 @@ class DrawView extends LinearLayout {
         threadsT_ = ",T:" + numThreads_;
         samplesPixelT_ = ",spp:" + samplesPixel;
         samplesLightT_ = ",spl:" + samplesLight;
+        sampleT_ = ", 0";
     }
 
     void setView(TextView textView) {
@@ -107,6 +109,10 @@ class DrawView extends LinearLayout {
 
     private native long getTimeFrame();
 
+    private native int getSample();
+
+    private native int resize(int size);
+
     native int isWorking();
 
     void stopDrawing() {
@@ -119,7 +125,7 @@ class DrawView extends LinearLayout {
     }
 
     void startRender() {
-        period_ = 100;
+        period_ = 200;
         renderTask_ = new RenderTask();
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
@@ -130,8 +136,8 @@ class DrawView extends LinearLayout {
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,
                      final int samplesPixel, final int samplesLight) {
-        final int width = getWidth();
-        final int height = getHeight();
+        final int width = resize(getWidth());
+        final int height = resize(getHeight());
         initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
         numThreads_ = numThreads;
         frame_ = 0;
@@ -159,7 +165,7 @@ class DrawView extends LinearLayout {
                         + "\n"
                         + stageT_ + allocatedT_
                         //+ availableT_ + freeT_
-                        + timeFrameT_ + timeT_
+                        + timeFrameT_ + timeT_ + sampleT_
         );
     }
 
@@ -186,19 +192,23 @@ class DrawView extends LinearLayout {
                  + touch.x_ + "," + touch.y_ + ")");System.out.flush();*/
             }
             stage_ = redraw(bitmap_);
-            FPS();
-            fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
-            fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
-            timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
-            timeT_ = String.format(Locale.US, "[%.2fs] ", (SystemClock.elapsedRealtime() - start_)
-                    / 1000.0f);
-            stageT_ = "" + Stage.values()[stage_];
-            allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB ";
-            //availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
-            //freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
-            publishProgress();
             if (stage_ != Stage.BUSY.getValue()) {
                 scheduler_.shutdown();
+            }
+            //else
+            {
+                FPS();
+                fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
+                fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
+                timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
+                timeT_ = String.format(Locale.US, "[%.2fs] ",
+                        (SystemClock.elapsedRealtime() - start_) / 1000.0f);
+                stageT_ = "" + Stage.values()[stage_];
+                allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB";
+                sampleT_ =  ", " + getSample();
+                //availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
+                //freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
+                publishProgress();
             }
         };
 

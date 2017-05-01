@@ -6,14 +6,15 @@
 #define MOBILERAYTRACER_JITTERED_H
 
 #include "MobileRT/Samplers/Sampler.h"
+#include "halton.hpp"
+#include <cfenv>
 
 namespace MobileRT {
     class HaltonSeq : public Sampler {
     private:
-        float maxSampler_;
 
     private:
-        float haltonSequence(const unsigned int index, const unsigned int base);
+        float haltonSequence(unsigned long long int index, const unsigned int base);
 
     public:
         explicit HaltonSeq(const unsigned long long int domainSize, const unsigned int samples);

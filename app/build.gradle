@@ -3,7 +3,7 @@ android {
     defaultPublishConfig 'debug'
     publishNonDefault true
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
@@ -33,9 +33,9 @@ android {
         debug {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
-            dependencies {
-                debugCompile('com.android.support:design:25.2.0')
-            }
+            /*dependencies {
+                debugCompile('com.android.support:design:25.3.1')
+            }*/
             versionNameSuffix '-debug'
 
             debuggable true
@@ -44,9 +44,9 @@ android {
         release {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
-            dependencies {
-                releaseCompile('com.android.support:design:25.2.0')
-            }
+            /*dependencies {
+                releaseCompile('com.android.support:design:25.3.1')
+            }*/
             versionNameSuffix '-release'
 
             debuggable false
@@ -61,6 +61,10 @@ configurations {
 }
 
 dependencies {
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    //testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
     debugCompile project(path: ':MobileRT', configuration: "debug")
     releaseCompile project(path: ':MobileRT', configuration: "release")
 

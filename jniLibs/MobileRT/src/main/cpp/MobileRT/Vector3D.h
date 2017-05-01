@@ -6,6 +6,7 @@
 #define MOBILERAYTRACER_VECTOR3D_H
 
 #include "Point3D.h"
+#include "Utils.h"
 #include <cmath>
 
 namespace MobileRT {

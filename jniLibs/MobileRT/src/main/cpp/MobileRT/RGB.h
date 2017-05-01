@@ -21,16 +21,17 @@ namespace MobileRT {
 
         explicit RGB(const float r, const float g, const float b);
 
-        explicit RGB(const RGB &rgb);
+        RGB(const RGB &rgb);
 
         bool isNotZero(void) const;
         void add(const RGB &rgb);
 
-        void add(const RGB &rgb, const float value);
+        void addMult(const RGB &rgb, const float value);
 
-        void add(const RGB &rgb1, const RGB &rgb2, const float value);
+        void addMult(const RGB &rgb1, const RGB &rgb2, const float value);
+        void addMult(const RGB &rgb1, const RGB &rgb2);
+        RGB operator*(const float value) const;
 
-        //void mult(const RGB &rgb);
         void operator*=(const RGB &rgb);
         void operator*=(const float value);
         void operator/=(const float value);

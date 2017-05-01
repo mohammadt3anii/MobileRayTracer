@@ -17,25 +17,25 @@ Vector3D::Vector3D(void) :
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z) :
-        x_(x),
-        y_(y),
-        z_(z)
+        x_(x + 0.0f),
+        y_(y + 0.0f),
+        z_(z + 0.0f)
 {
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector) :
-        x_(vector.x_),
-        y_(vector.y_),
-        z_(vector.z_)
+        x_(vector.x_ + 0.0f),
+        y_(vector.y_ + 0.0f),
+        z_(vector.z_ + 0.0f)
 {
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector, const float value) :
-        x_(vector.x_ * value),
-        y_(vector.y_ * value),
-        z_(vector.z_ * value)
+        x_(vector.x_ * value + 0.0f),
+        y_(vector.y_ * value + 0.0f),
+        z_(vector.z_ * value + 0.0f)
 {
     counter++;
 }
@@ -56,9 +56,9 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
     const float len(magnitude());
     if (len == 0.0f) return;
     const float inv_length(1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ *= inv_length + 0.0f;
+    this->y_ *= inv_length + 0.0f;
+    this->z_ *= inv_length + 0.0f;
 }
 
 //cross product
@@ -73,9 +73,9 @@ float Vector3D::normalize(void) {
     const float len(magnitude());
     if (len == 0.0f) return 0.0f;
     const float inv_length(1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ *= inv_length + 0.0f;
+    this->y_ *= inv_length + 0.0f;
+    this->z_ *= inv_length + 0.0f;
     return len;
 }
 
@@ -99,57 +99,57 @@ float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
 }
 
 float Vector3D::squareMagnitude(void) const {
-    return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
+    return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_ + 0.0f);
 }
 
 float Vector3D::magnitude(void) const {
-    return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
+    return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_ + 0.0f);
 }
 
 Vector3D Vector3D::crossProduct(const Vector3D &vector) const {
-    const float x (this->y_ * vector.z_ - this->z_ * vector.y_ + 0.0f);
-    const float y (this->z_ * vector.x_ - this->x_ * vector.z_ + 0.0f);
-    const float z (this->x_ * vector.y_ - this->y_ * vector.x_ + 0.0f);
+    const float x ((this->y_ * vector.z_ - this->z_ * vector.y_) + 0.0f);
+    const float y ((this->z_ * vector.x_ - this->x_ * vector.z_) + 0.0f);
+    const float z ((this->x_ * vector.y_ - this->y_ * vector.x_) + 0.0f);
     return Vector3D(x, y, z);
 }
 
 void Vector3D::mult(const float value) {
-    this->x_ *= value;
-    this->y_ *= value;
-    this->z_ *= value;
+    this->x_ *= value + 0.0f;
+    this->y_ *= value + 0.0f;
+    this->z_ *= value + 0.0f;
 }
 
 void Vector3D::subAndNormalize(const Vector3D &vector) {
-    this->x_ -= vector.x_;
-    this->y_ -= vector.y_;
-    this->z_ -= vector.z_;
+    this->x_ -= vector.x_ + 0.0f;
+    this->y_ -= vector.y_ + 0.0f;
+    this->z_ -= vector.z_ + 0.0f;
     const float len(magnitude());
     if (len == 0.0f) return;
     const float inv_length(1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ *= inv_length + 0.0f;
+    this->y_ *= inv_length + 0.0f;
+    this->z_ *= inv_length + 0.0f;
 }
 
 const Vector3D Vector3D::operator*(const float value) const {
-    return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
+    return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value + 0.0f);
 }
 
 const Vector3D &Vector3D::operator=(const Vector3D &vector) {
-    this->x_ = vector.x_;
-    this->y_ = vector.y_;
-    this->z_ = vector.z_;
+    this->x_ = vector.x_ + 0.0f;
+    this->y_ = vector.y_ + 0.0f;
+    this->z_ = vector.z_ + 0.0f;
     return *this;
 }
 
 const Vector3D Vector3D::operator+(const Vector3D vector) const {
-    return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
+    return Vector3D(this->x_ + vector.x_ + 0.0f, this->y_ + vector.y_ + 0.0f, this->z_ + vector.z_ + 0.0f);
 }
 
 void Vector3D::reset(const float x, const float y, const float z) {
-    this->x_ = x;
-    this->y_ = y;
-    this->z_ = z;
+    this->x_ = x + 0.0f;
+    this->y_ = y + 0.0f;
+    this->z_ = z + 0.0f;
     normalize();
 }
 

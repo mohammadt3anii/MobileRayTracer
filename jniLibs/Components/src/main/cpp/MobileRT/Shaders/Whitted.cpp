@@ -11,8 +11,9 @@ Whitted::Whitted(Scene &scene, const unsigned int samplesLight) :
 }
 
 void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
-    if (!intersection.material_ || ray.depth_ > RAY_DEPTH_MAX) return;
+    if (ray.depth_ > RAY_DEPTH_MAX) return;
 
+    const RGB &Le(intersection.material_->Le_ * scene_.lights_.size());
     const RGB &kD(intersection.material_->Kd_);
     const RGB &kS(intersection.material_->Ks_);
     const RGB &kT(intersection.material_->Kt_);
@@ -28,44 +29,40 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
                                                                      : intersection.getSymNormal());
 
     // shadowed direct lighting - only for diffuse materials
-    if (kD.isNotZero()) {
+    if (kD.isNotZero())
+    {
         const unsigned long sizeLights(scene_.lights_.size());
         Intersection lightIntersection;
-        //LOG("samplesLight_ = %u", this->samplesLight_);
-        const unsigned int samplesLight(static_cast<unsigned int> (std::sqrt(this->samplesLight_)));
-
-        for (unsigned int i(0); i < sizeLights; i++)//for each light
+        const unsigned int samplesLight(this->samplesLight_);
+        for (unsigned int i(0); i < sizeLights; i++)
         {
             Light &light(*scene_.lights_[i]);
             RGB lightRGB;
-            light.resetSampling();
-            for (unsigned int j(0); j < samplesLight; j++) {
-                for (unsigned int k(0); k < samplesLight; k++) {
-                    Point3D lightPosition(light.getPosition());
-                    //calculates vector starting in intersection to the light
-                    Vector3D vectorToLight(lightPosition, intersection.point_);
-                    //distance from intersection to the light (and normalize it)
-                    const float distanceToLight(vectorToLight.normalize());
-                    const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
-                    if (cos_N_L > 0.0f) {
-                        //shadow ray - orig=intersection, dir=light
-                        const Ray shadowRay(intersection.point_, vectorToLight,
-                                            distanceToLight, ray.depth_ + 1);
-                        //intersection between shadow ray and the closest primitive
-                        //if there are no primitives between intersection and the light
-                        if (!scene_.shadowTrace(lightIntersection, shadowRay)) {
-                            //rgb += kD * radLight * cos_N_L;
-                            lightRGB.add(kD, light.radiance_, cos_N_L);
-                        }
+            for (unsigned int j(0); j < samplesLight; j++)
+            {
+                const Point3D lightPosition(light.getPosition());
+                //calculates vector starting in intersection to the light
+                Vector3D vectorToLight(lightPosition, intersection.point_);
+                //distance from intersection to the light (and normalize it)
+                const float distanceToLight(vectorToLight.normalize());
+                const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
+                if (cos_N_L > 0.0f) {
+                    //shadow ray - orig=intersection, dir=light
+                    const Ray shadowRay(intersection.point_, vectorToLight,
+                                        distanceToLight, ray.depth_ + 1);
+                    //intersection between shadow ray and the closest primitive
+                    //if there are no primitives between intersection and the light
+                    if (!scene_.shadowTrace(lightIntersection, shadowRay)) {
+                        //rgb += kD * radLight * cos_N_L;
+                        lightRGB.addMult(light.radiance_.Le_, cos_N_L);
                     }
                 }
             }
+            lightRGB *= kD;
             lightRGB /= this->samplesLight_;
             rgb.add(lightRGB);
         }
-        rgb /= sizeLights;
         // ambient light
-        rgb.add(kD, 0.1f);//rgb += kD *  0.1f
     } // end direct + ambient
 
     // specular reflection
@@ -98,7 +95,6 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         //fresnel equation -> n1 * sin(theta1) = n2 * sin(theta2)
         const float sinTheta2 = sinTheta1 / intersection.refractiveIndice_;
         const float angle (std::asin (sinTheta2));*/
-        //LOG("angle = %f", double(angle));
 
         /*shadingNormalT.mult(RN_dot);
         shadingNormalT.subAndNormalize(ray.symDirection_);
@@ -153,4 +149,6 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         transmissionRad *= kT;
         rgb.add(transmissionRad);
     }
+    rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
+    rgb.add(Le);
 }

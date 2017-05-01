@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-Light::Light(const RGB &radiance) :
+Light::Light(const Material &radiance) :
         radiance_(radiance)
 {
 }

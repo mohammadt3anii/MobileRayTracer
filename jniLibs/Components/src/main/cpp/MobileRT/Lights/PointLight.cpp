@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-PointLight::PointLight(const RGB &radiance, const Point3D &position) :
+PointLight::PointLight(const Material &radiance, const Point3D &position) :
         Light(radiance),
         position_(position)
 {
@@ -18,4 +18,8 @@ const Point3D PointLight::getPosition(void)
 }
 
 void PointLight::resetSampling(void) {
+}
+
+bool PointLight::intersect(Intersection &, const Ray &, const Material&) const {
+        return false;
 }
