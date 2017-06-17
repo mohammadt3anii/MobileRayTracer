@@ -11,7 +11,6 @@
 #include "../RGB.h"
 #include <atomic>
 #include <thread>
-//#include <cstdlib>
 
 namespace MobileRT {
     class Sampler {

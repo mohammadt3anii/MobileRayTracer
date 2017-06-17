@@ -1,9 +1,16 @@
 apply plugin: "com.android.library"
 android {
+    signingConfigs {
+        Puscas {
+            keyAlias 'Puscas'
+            keyPassword '@puscas99'
+            storeFile file('D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
+            storePassword '@puscas99'
+        }
+    }
     defaultPublishConfig 'debug'
-    publishNonDefault true
     compileSdkVersion 26
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.0'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 26
@@ -15,46 +22,27 @@ android {
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static',
-                        '-DANDROID_PLATFORM=android-21'
+                        '-DANDROID_PLATFORM=android-26'
             }
         }
+        signingConfig signingConfigs.Puscas
     }
     externalNativeBuild {
         cmake {
             path 'CMakeLists.txt'
         }
     }
-    android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
-    android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    signingConfigs {
-        Puscas {
-            keyAlias "Puscas"
-            storeFile file("/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
-            keyPassword "@puscas99"
-            storePassword "@puscas99"
-        }
-    }
     buildTypes {
         debug {
-            //noinspection GroovyAssignabilityCheck
-            signingConfig signingConfigs.Puscas
-            versionNameSuffix '-debug'
-
             debuggable true
             jniDebuggable true
         }
         release {
-            //noinspection GroovyAssignabilityCheck
-            signingConfig signingConfigs.Puscas
-            versionNameSuffix '-release'
-
             debuggable false
             jniDebuggable false
         }
+    }
+    productFlavors {
     }
 }
 
@@ -64,6 +52,5 @@ configurations {
 }
 
 dependencies {
-    debugImplementation project(path: ':MobileRT', configuration: "debug")
-    releaseImplementation project(path: ':MobileRT', configuration: "release")
+    implementation project(path: ':MobileRT')
 }

@@ -4,7 +4,6 @@ set(ANDROID_ARM_NEON TRUE)
 set(LOCAL_ARM_NEON TRUE)
 
 set(CMAKE_C_FLAGS "")
-set(CMAKE_CXX_FLAGS "")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
 
@@ -12,7 +11,7 @@ add_compile_options(-std=gnu++11)
 add_compile_options(-Weverything -Werror -Wfatal-errors -D_GNU_SOURCE -H)
 add_compile_options(-Wno-c++98-compat-pedantic -Wno-padded -Wno-unused-variable)
 add_compile_options(-Wno-unused-private-field -Wno-reserved-id-macro)
-add_compile_options(-funwind-tables -fno-exceptions -fno-rtti)
+add_compile_options(-funwind-tables -fexceptions -frtti)
 
 include_directories(./src/main/cpp)
 

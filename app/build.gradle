@@ -1,9 +1,16 @@
 apply plugin: "com.android.application"
 android {
+    signingConfigs {
+        Puscas {
+            keyAlias 'Puscas'
+            keyPassword '@puscas99'
+            storeFile file('D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
+            storePassword '@puscas99'
+        }
+    }
     defaultPublishConfig 'debug'
-    publishNonDefault true
     compileSdkVersion 26
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.0'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 26
@@ -15,9 +22,10 @@ android {
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static',
-                        '-DANDROID_PLATFORM=android-21'
+                        '-DANDROID_PLATFORM=android-26'
             }
         }
+        signingConfig signingConfigs.Puscas
     }
     externalNativeBuild {
         cmake {
@@ -26,41 +34,17 @@ android {
     }
     android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    signingConfigs {
-        Puscas {
-            keyAlias "Puscas"
-            storeFile file("/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
-            keyPassword "@puscas99"
-            storePassword "@puscas99"
-        }
-    }
     buildTypes {
         debug {
-            //noinspection GroovyAssignabilityCheck
-            signingConfig signingConfigs.Puscas
-            /*dependencies {
-                debugCompile('com.android.support:design:25.3.1')
-            }*/
-            versionNameSuffix '-debug'
-
             debuggable true
             jniDebuggable true
         }
         release {
-            //noinspection GroovyAssignabilityCheck
-            signingConfig signingConfigs.Puscas
-            /*dependencies {
-                releaseCompile('com.android.support:design:25.3.1')
-            }*/
-            versionNameSuffix '-release'
-
             debuggable false
             jniDebuggable false
         }
+    }
+    productFlavors {
     }
 }
 
@@ -70,13 +54,7 @@ configurations {
 }
 
 dependencies {
-    //compile fileTree(dir: 'libs', include: ['*.jar'])
-    //testCompile 'junit:junit:4.12'
-	compile 'com.android.support:appcompat-v7:26.0.0-beta2'
-
-    debugCompile project(path: ':MobileRT', configuration: "debug")
-    releaseCompile project(path: ':MobileRT', configuration: "release")
-
-    debugCompile project(path: ':Components', configuration: "debug")
-    releaseCompile project(path: ':Components', configuration: "release")
+    implementation 'com.android.support:appcompat-v7:26.0.0-beta2'
+    implementation project(path: ':MobileRT')
+    implementation project(path: ':Components')
 }

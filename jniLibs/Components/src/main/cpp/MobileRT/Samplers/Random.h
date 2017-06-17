@@ -6,6 +6,7 @@
 #define MOBILERAYTRACER_RANDOM_H
 
 #include "MobileRT/Samplers/Sampler.h"
+#include <cstdlib>
 
 namespace MobileRT {
     class Random : public Sampler {

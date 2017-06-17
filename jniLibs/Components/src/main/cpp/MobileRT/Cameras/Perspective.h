@@ -14,7 +14,7 @@ namespace MobileRT {
     public:
         explicit Perspective(const Point3D &position, const float hFov, const float vFov);
 
-        ~Perspective(void);
+        ~Perspective(void) override;
 
         virtual void getRay(Ray &ray, const float u_alpha, const float v_alpha) const override;
     };

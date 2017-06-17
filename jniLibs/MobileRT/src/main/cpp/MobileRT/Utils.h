@@ -6,7 +6,7 @@
 #define MOBILERAYTRACER_UTILS
 
 //#include <cstdlib>
-//#include <cmath>
+#include <cmath>
 //#include <cstring>
 #include <iostream>
 //#include <csignal>
@@ -51,10 +51,6 @@
 #define VECT_PROJ_MIN   1.0e-8f // kEpsilon
 
 float fastArcTan(const float value);
-
-unsigned int roundUpPower2(unsigned int value);
-
-unsigned long long int roundUpPower2(unsigned long long int value);
 
 unsigned int roundDownToMultipleOf(unsigned int value, unsigned int multiple);
 
