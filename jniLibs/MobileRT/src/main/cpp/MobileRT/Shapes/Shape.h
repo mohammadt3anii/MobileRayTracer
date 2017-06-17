@@ -5,6 +5,7 @@
 #ifndef MOBILERAYTRACER_SHAPE_H
 #define MOBILERAYTRACER_SHAPE_H
 
+#include "../Utils.h"
 #include "../Intersection.h"
 #include "../Ray.h"
 #include "../Material.h"

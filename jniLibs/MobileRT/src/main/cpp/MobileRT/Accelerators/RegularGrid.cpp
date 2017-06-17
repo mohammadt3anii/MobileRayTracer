@@ -6,24 +6,54 @@
 
 using namespace MobileRT;
 
-/*RegularGrid::RegularGrid(std::vector<Primitive *> primitives)
+RegularGrid::RegularGrid(const float minX, const float maxX,
+                         const float minY, const float maxY,
+                         const float minZ, const float maxZ,
+                         const unsigned int numberOfBlocks,
+                        std::vector<Primitive *> )
 {
-    float distMax (0.0f);
-    for (Primitive *primitive1 : primitives)
+    /*  loop boundingBoxes
+     *      descobrir ponto min e max
+     *      criar boundingBox
+     *
+     *  loop primitivas
+     *      descobrir min e max dos eixos
+     *      adicionar primitiva à boundingBox certa
+     */
+
+    Point3D *mins = new Point3D[3 * numberOfBlocks];
+    Point3D *maxs = new Point3D[3 * numberOfBlocks];
+    const float deviationX ((maxX - minX) / numberOfBlocks);
+    const float deviationY ((maxY - minY) / numberOfBlocks);
+    const float deviationZ ((maxZ - minZ) / numberOfBlocks);
+
+    for (unsigned int i (0); i < numberOfBlocks; i++)
     {
-        for (Primitive *primitive2 : primitives)
+        for (unsigned int j (0); j < 2; j++)
         {
-            if distance between point and other point > max
-            max = distance between point and other point
+            if (j == 0)
+            {
+                float x (deviationX * i);
+                float y (deviationY * i);
+                float z (deviationZ * i);
+                mins[i] = Point3D(x, y, z);
+            } else {
+                float x (deviationX * i);
+                float y (deviationY * i);
+                float z (deviationZ * i);
+                maxs[i] = Point3D(x, y, z);
+            }
         }
     }
-}*/
 
-RegularGrid::~RegularGrid(void)
-{
+    //for (Point3D *point : mins)
+    {
+
+    }
+
 }
 
-void RegularGrid::build(void)
+RegularGrid::~RegularGrid(void)
 {
 }
 

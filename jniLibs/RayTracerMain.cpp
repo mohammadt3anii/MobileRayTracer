@@ -299,8 +299,8 @@ int main(int argc, char **argv) {
     const int shader(2);
     const int threads(5);
     const int sampler(0);
-    const int samplesPixel(16);
-    const int samplesLight(16);
+    const int samplesPixel(1);
+    const int samplesLight(1);
     const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
     blockSizeX_ = width_ / blockSize_;
@@ -388,11 +388,13 @@ int main(int argc, char **argv) {
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-
+    if (shader == 2)
+    {
         renderer_->registerToneMapper([&](const float value)
         {
-                return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
+            return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
+    }
 
 
     LOG("x = %d [%d]", blockSizeX_, width_);

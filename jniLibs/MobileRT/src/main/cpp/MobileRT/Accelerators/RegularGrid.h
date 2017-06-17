@@ -5,19 +5,23 @@
 #ifndef MOBILERAYTRACER_REGULARGRID_H
 #define MOBILERAYTRACER_REGULARGRID_H
 
-#include "../Primitive.h"
 #include <vector>
+#include "../Primitive.h"
+#include "AxisAlignedBoundingBox.h"
 
 namespace MobileRT {
     class RegularGrid {
-    private:
-        //std::vector<Primitive *> *primitives_;// __attribute__((unused));
+        private:
+            std::vector<AxisAlignedBoundingBox *> *boxes_;
 
-    public:
-        //explicit RegularGrid(std::vector<Primitive *> primitives);
-        ~RegularGrid(void);
-        void build(void);
-        bool intersect(Intersection &intersection, Ray &ray);
+        public:
+            explicit RegularGrid(const float minX, const float maxX,
+                                 const float minY, const float maxY,
+                                 const float minZ, const float maxZ,
+                                 const unsigned int numberOfBlocks,
+                                 std::vector<Primitive *> primitives);
+            ~RegularGrid(void);
+            bool intersect(Intersection &intersection, Ray &ray);
     };
 }
 

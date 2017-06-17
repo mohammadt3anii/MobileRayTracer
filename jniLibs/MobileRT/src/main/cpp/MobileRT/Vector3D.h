@@ -7,7 +7,6 @@
 
 #include "Point3D.h"
 #include "Utils.h"
-#include <cmath>
 
 namespace MobileRT {
     class Point3D;

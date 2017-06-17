@@ -22,7 +22,7 @@ static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int samplesPixel_(0);
 static unsigned int samplesLight_(0);
-static unsigned int blockSize_(4);
+static unsigned int numberOfBlocks_(4);
 static unsigned int blockSizeX_(0);
 static unsigned int blockSizeY_(0);
 
@@ -110,7 +110,7 @@ MobileRT::Scene *cornellBoxScene2(void) {
     const unsigned long long int max(static_cast<unsigned long long int> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
     const unsigned long long int domainPointLight (/*roundUpPower2*/(
-            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+                                                                            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
     LOG("domainPointLight = %llu", domainPointLight);
     LOG("width_ = %u", width_);
     LOG("height_ = %u", height_);
@@ -196,14 +196,15 @@ MobileRT::Scene *cornellBoxScene2(void) {
     // triangle - yellow
     const MobileRT::Material yellowMat(MobileRT::RGB(0.9f, 0.9f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
-            MobileRT::Point3D(0.5f, 0.5f, 0.99f)), yellowMat));
+            MobileRT::Point3D(0.5f, -0.5f, 1.0f), MobileRT::Point3D(-0.5f, -0.5f, 1.0f),
+            MobileRT::Point3D(0.5f, 0.5f, 1.0f)), yellowMat));
 
     // triangle - green
     const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(-0.5f, 0.5f, 0.99f), MobileRT::Point3D(0.5f, 0.5f, 0.99f),
-            MobileRT::Point3D(-0.5f, -0.5f, 0.99f)), greenMat));
+            MobileRT::Point3D(-0.5f, 0.5f, 1.0f),
+            MobileRT::Point3D(0.5f, 0.5f, 1.0f),
+            MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
 
     return &scene;
 }
@@ -345,8 +346,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     height_ = static_cast<unsigned int>(height);
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
 
-    blockSizeX_ = width_ / blockSize_;
-    blockSizeY_ = height_ / blockSize_;
+    blockSizeX_ = width_ / numberOfBlocks_;
+    blockSizeY_ = height_ / numberOfBlocks_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
     LOG("samplesPixel_ = %u", samplesPixel_);
@@ -429,6 +430,15 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
+
+    if (shader == 2)
+    {
+        renderer_->registerToneMapper([&](const float value)
+        {
+            return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
+        });
+    }
+
 
     LOG("x = %d [%d]", blockSizeX_, width_);
     LOG("y = %d [%d]", blockSizeY_, height_);
@@ -550,5 +560,5 @@ unsigned int Java_puscas_mobilertapp_DrawView_resize(
         jobject,
         jint size
 ) {
-    return roundDownToMultipleOf(static_cast<unsigned int> (size), blockSize_);
+    return roundDownToMultipleOf(static_cast<unsigned int> (size), numberOfBlocks_);
 }

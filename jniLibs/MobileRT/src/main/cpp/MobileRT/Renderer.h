@@ -7,7 +7,7 @@
 
 #include <thread>
 #include "Samplers/Sampler.h"
-#include <cstdlib>
+//#include <cstdlib>
 
 namespace MobileRT {
     class Renderer {
