@@ -4,27 +4,21 @@ android {
         Puscas {
             keyAlias 'Puscas'
             keyPassword '@puscas99'
-            storeFile file('D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
+            storeFile file('/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
+            //storeFile file('D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
             storePassword '@puscas99'
         }
     }
-    defaultPublishConfig 'debug'
+    publishNonDefault true
     compileSdkVersion 26
     buildToolsVersion '26.0.0'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
         ndk {
-            moduleName "native"
             abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64"
         }
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static',
-                        '-DANDROID_PLATFORM=android-26'
-            }
-        }
+        jackOptions { enabled true }
         signingConfig signingConfigs.Puscas
     }
     externalNativeBuild {
@@ -44,8 +38,6 @@ android {
             jniDebuggable false
         }
     }
-    productFlavors {
-    }
 }
 
 configurations {
@@ -54,7 +46,12 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.0.0-beta2'
-    implementation project(path: ':MobileRT')
-    implementation project(path: ':Components')
+    compile 'com.android.support:appcompat-v7:26.0.0-beta2'
+    //implementation project(path: ':MobileRT')
+    //implementation project(path: ':Components')
+
+    debugCompile project(path: ':MobileRT', configuration: 'debug')
+    debugCompile project(path: ':Components', configuration: 'debug')
+    releaseCompile project(path: ':MobileRT', configuration: 'release')
+    releaseCompile project(path: ':Components', configuration: 'release')
 }
