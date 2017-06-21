@@ -19,7 +19,6 @@ android {
             abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64"
         }
         jackOptions { enabled true }
-        signingConfig signingConfigs.Puscas
     }
     externalNativeBuild {
         cmake {
@@ -32,21 +31,20 @@ android {
         debug {
             debuggable true
             jniDebuggable true
+            signingConfig signingConfigs.Puscas
+            dependencies {
+                debugCompile 'com.android.support:appcompat-v7:26.0.0-beta2'
+                debugCompile project(path: ':Components', configuration: 'debug')
+            }
         }
         release {
             debuggable false
             jniDebuggable false
+            signingConfig signingConfigs.Puscas
+            dependencies {
+                releaseCompile 'com.android.support:appcompat-v7:26.0.0-beta2'
+                releaseCompile project(path: ':Components', configuration: 'release')
+            }
         }
     }
-}
-
-configurations {
-    debug
-    release
-}
-
-dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.0-beta2'
-    debugCompile project(path: ':Components', configuration: 'debug')
-    releaseCompile project(path: ':Components', configuration: 'release')
 }
