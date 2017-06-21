@@ -4,8 +4,7 @@ android {
         Puscas {
             keyAlias 'Puscas'
             keyPassword '@puscas99'
-            storeFile file('/mnt/D/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
-            //storeFile file('D:/Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
+            storeFile file('../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
             storePassword '@puscas99'
         }
     }
