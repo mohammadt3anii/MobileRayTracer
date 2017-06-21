@@ -26,6 +26,17 @@ Ray::Ray(const float x, const float y, const float z, const Point3D &origin,
     this->direction_.normalize();
 }
 
+Ray::Ray(const Vector3D &dir, const Point3D &origin,
+         const unsigned int depth) :
+        origin_(origin),
+        direction_(dir),
+        symDirection_(dir.symmetric()),
+        maxDistance_(RAY_LENGTH_MAX),
+        depth_(depth) {
+    counter++;
+    this->direction_.normalize();
+}
+
 Ray::Ray(Point3D &orig, const Vector3D &dir, const float maxDist, const unsigned int depth) :
         origin_(orig),
         direction_(dir),

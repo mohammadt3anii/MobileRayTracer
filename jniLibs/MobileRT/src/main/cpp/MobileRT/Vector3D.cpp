@@ -89,12 +89,9 @@ float Vector3D::dotProduct(const Vector3D &vector) const {
     return (this->x_ * vector.x_ + this->y_ * vector.y_ + this->z_ * vector.z_);
 }
 
-float Vector3D::dotProduct(const float x, const float y, const float z) const {
-    return (this->x_ * x + this->y_ * y + this->z_ * z);
-}
-
 float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const {
-    return (this->x_ * (dest.x_ - orig.x_) + this->y_ * (dest.y_ - orig.y_) +
+    return (this->x_ * (dest.x_ - orig.x_) +
+            this->y_ * (dest.y_ - orig.y_) +
             this->z_ * (dest.z_ - orig.z_) + 0.0f);
 }
 
@@ -142,6 +139,12 @@ const Vector3D &Vector3D::operator=(const Vector3D &vector) {
     return *this;
 }
 
+const Vector3D Vector3D::operator*(const float value) {
+    return Vector3D(this->x_ * value + 0.0f,
+                    this->y_ * value + 0.0f,
+                    this->z_ * value + 0.0f);
+}
+
 const Vector3D Vector3D::operator+(const Vector3D vector) const {
     return Vector3D(this->x_ + vector.x_ + 0.0f, this->y_ + vector.y_ + 0.0f, this->z_ + vector.z_ + 0.0f);
 }
@@ -165,8 +168,6 @@ unsigned int Vector3D::getInstances() {
     return res;
 }
 
-void Vector3D::reverseVector(void) {
-    this->x_ = -this->x_ + 0.0f;
-    this->y_ = -this->y_ + 0.0f;
-    this->z_ = -this->z_ + 0.0f;
+Vector3D Vector3D::symmetric(void) const {
+    return Vector3D(-this->x_ + 0.0f, -this->y_ + 0.0f, -this->z_ + 0.0f);
 }

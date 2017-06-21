@@ -5,11 +5,9 @@
 #ifndef MOBILERAYTRACER_UTILS
 #define MOBILERAYTRACER_UTILS
 
-//#include <cstdlib>
 #include <cmath>
-//#include <cstring>
+#include <cstring>
 #include <iostream>
-//#include <csignal>
 #include <iomanip>
 
 #define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)

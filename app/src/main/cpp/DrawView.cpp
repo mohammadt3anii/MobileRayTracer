@@ -51,8 +51,8 @@ MobileRT::Scene *cornellBoxScene(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
 
     // back wall - white
     const MobileRT::Material lightGrayMat(MobileRT::RGB(0.7f, 0.7f, 0.7f));
@@ -118,24 +118,24 @@ MobileRT::Scene *cornellBoxScene2(void) {
     LOG("samplesPixel_ = %u", samplesPixel_);
     LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
     //samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
-    samplerPointLight_ = new MobileRT::Random(domainPointLight, 1);
+    samplerPointLight_ = new Components::Random(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
 
-    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.99f, -0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
+    scene.lights_.emplace_back(new Components::AreaLight(lightMat,
+                                                         *samplerPointLight_,
+                                                         MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
+                                                         MobileRT::Point3D(0.25f, 0.99f, -0.25f),
+                                                         MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
 
-    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
+    scene.lights_.emplace_back(new Components::AreaLight(lightMat,
+                                                         *samplerPointLight_,
+                                                         MobileRT::Point3D(0.25f, 0.99f, 0.25f),
+                                                         MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
+                                                         MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
 
     // block light - black
     /*const MobileRT::Material blockMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -216,8 +216,8 @@ MobileRT::Scene *spheresScene(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
     const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
@@ -251,8 +251,8 @@ MobileRT::Scene *spheresScene2(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
     const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
@@ -354,26 +354,34 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     LOG("samplesLight_ = %u", samplesLight_);
     switch (scene) {
         case 1:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                60.0f, 60.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  60.0f, 60.0f * ratio);
             scene_ = spheresScene();
             break;
 
         case 2:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                60.0f, 60.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  60.0f, 60.0f * ratio);
             scene_ = spheresScene2();
             break;
 
         case 3:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                45.0f, 45.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene2();
             break;
 
         default:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                45.0f, 45.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene();
             break;
     }
@@ -381,27 +389,29 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         case 1:
             if (samplesPixel_ > 1)
             {
-                samplerPixel_ = new MobileRT::HaltonSeq(width_*height_*2llu*samplesPixel_, 1u);
+                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
+                                                          1u);
             }
             else
             {
-                samplerPixel_ = new MobileRT::Constant(0.5f);
+                samplerPixel_ = new Components::Constant(0.5f);
             }
-            samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samplesPixel_,
-                                                     blockSizeX_, blockSizeY_);
+            samplerCamera_ = new Components::HaltonSeq(width_, height_, samplesPixel_,
+                                                       blockSizeX_, blockSizeY_);
             break;
 
         default:
             if (samplesPixel_ > 1)
             {
-                samplerPixel_ = new MobileRT::Stratified(width_*height_*2llu*samplesPixel_, 1u);
+                samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
+                                                           1u);
             }
             else
             {
-                samplerPixel_ = new MobileRT::Constant(0.5f);
+                samplerPixel_ = new Components::Constant(0.5f);
             }
-            samplerCamera_ = new MobileRT::Stratified(width_, height_, samplesPixel_,
-                                                      blockSizeX_, blockSizeY_);
+            samplerCamera_ = new Components::Stratified(width_, height_, samplesPixel_,
+                                                        blockSizeX_, blockSizeY_);
             break;
     }
     samplerRay_ = nullptr;
@@ -411,21 +421,21 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             (width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
-            shader_ = new MobileRT::Whitted(*scene_, samplesLight_);
+            shader_ = new Components::Whitted(*scene_, samplesLight_);
             break;
 
         case 2:
         LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
             //samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
-            samplerRay_ = new MobileRT::Random(domainRay, 1);
+            samplerRay_ = new Components::Random(domainRay, 1);
             //samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
-            samplerLight_ = new MobileRT::Random(domainLight, 1);
-            shader_ = new MobileRT::PathTracer(
+            samplerLight_ = new Components::Random(domainLight, 1);
+            shader_ = new Components::PathTracer(
                     *scene_, *samplerRay_, *samplerLight_, samplesLight_);
             break;
 
         default:
-            shader_ = new MobileRT::NoShadows(*scene_, samplesLight_);
+            shader_ = new Components::NoShadows(*scene_, samplesLight_);
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
@@ -446,14 +456,20 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     try {
-        //unsigned int i = 1;
-        //do {
+        unsigned int rep(2);
+        do {
             const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
             renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
             timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::steady_clock::now() - start).count();
             FPS();
-        //} while (working_ != STOPPED);
+
+            const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
+            camera_->reset(MobileRT::Point3D(0.0f, 0.0f, -2.4f),
+                           MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                           MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                           45.0f, 45.0f * ratio);
+        } while (working_ != STOPPED && rep-- > 1);
         if (working_ != STOPPED) {
             working_ = FINISHED;
             LOG("%s", "WORKING = FINISHED");
@@ -495,13 +511,10 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
         jobject,
         jfloat jx,
         jfloat jy) {
-    const float x(static_cast<float> (jx) / width_);
-    const float y(static_cast<float> (jy) / height_);
-    const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
-    const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
-    MobileRT::Ray ray;
+    const float u(static_cast<float> (jx) / width_);
+    const float v(static_cast<float> (jy) / height_);
+    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     MobileRT::Intersection intersection;
-    camera_->getRay(ray, u_alpha, v_alpha);
     const int primitiveID(shader_->traceTouch(intersection, ray));
     return primitiveID;
 }
@@ -514,17 +527,14 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
         jfloat jy,
         jint primitiveIndex
 ) {
-    const float x(static_cast<float> (jx) / width_);
-    const float y(static_cast<float> (jy) / height_);
-    const float u_alpha(fastArcTan(camera_->hFov_ * (x - 0.5f)));
-    const float v_alpha(fastArcTan(camera_->vFov_ * (0.5f - y)));
+    const float u(static_cast<float> (jx) / width_);
+    const float v(static_cast<float> (jy) / height_);
+    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     const unsigned long index(static_cast<unsigned long>(primitiveIndex));
     const MobileRT::Material material;
     MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
-    MobileRT::Ray ray;
-    camera_->getRay(ray, u_alpha, v_alpha);
     MobileRT::Intersection intersection;
     plane.intersect(intersection, ray, material);
     scene_->primitives_[index]->shape_->moveTo(intersection.point_.x_, intersection.point_.y_);

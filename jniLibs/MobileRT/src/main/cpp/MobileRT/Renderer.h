@@ -6,8 +6,7 @@
 #define MOBILERAYTRACER_RENDERER_H
 
 #include <thread>
-#include "Samplers/Sampler.h"
-//#include <cstdlib>
+#include "Sampler.h"
 
 namespace MobileRT {
     class Renderer {

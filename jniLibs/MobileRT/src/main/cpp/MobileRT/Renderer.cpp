@@ -127,7 +127,6 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
     const float pixelHeight(0.5f / this->height_);
     const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
-    Ray ray;
 
     for (unsigned int sample(0); sample < samples; sample++)
     {
@@ -144,24 +143,18 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
             for (unsigned int y(startY); y < endY; y++) {
                 const unsigned int yWidth(y * width_);
                 const float v(y * INV_IMG_HEIGHT);
-                const float v_alpha(fastArcTan(this->camera_.vFov_ * (0.5f - v)));
                 const unsigned int startX((pixel + yWidth) % width_);
                 const unsigned int endX(startX + this->blockSizeX_);
                 for (unsigned int x(startX); x < endX; x++) {
                     const float u(x * INV_IMG_WIDTH);
                     const float r1 (this->samplerPixel_.getSample(0));
                     const float r2 (this->samplerPixel_.getSample(0));
-                    const float deviationU((r1 - 0.5f) * 2.0f);
-                    const float deviationV((r2 - 0.5f) * 2.0f);
-                    //if (r1 >= 1.0f || r2 >= 1.0f) LOG("r1 = %f, r2 = %f", double(r1), double(r2));
-                    const float u_alpha(fastArcTan(this->camera_.hFov_ * (u - 0.5f)));
-                    const float u_alpha_deviation(u_alpha + (deviationU * pixelWidth));
-                    const float v_alpha_deviation(v_alpha + (deviationV * pixelHeight));
-                    this->camera_.getRay(ray, u_alpha_deviation, v_alpha_deviation);
+                    const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
+                    const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
+                    Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
                     RGB &pixelRGB (this->imagePlane_[yWidth + x]);
                     this->shader_.rayTrace(pixelRGB, ray, intersection);
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
-                    //pixel /= this->max_;
                     toneMapper(pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }

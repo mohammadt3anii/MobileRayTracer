@@ -47,11 +47,6 @@ configurations {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:26.0.0-beta2'
-    //implementation project(path: ':MobileRT')
-    //implementation project(path: ':Components')
-
-    debugCompile project(path: ':MobileRT', configuration: 'debug')
     debugCompile project(path: ':Components', configuration: 'debug')
-    releaseCompile project(path: ':MobileRT', configuration: 'release')
     releaseCompile project(path: ':Components', configuration: 'release')
 }

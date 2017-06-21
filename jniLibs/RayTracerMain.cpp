@@ -8,16 +8,16 @@
 #include "MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
 #include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
 #include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
-#include "Components/src/main/cpp/MobileRT/Shaders/NoShadows.h"
-#include "Components/src/main/cpp/MobileRT/Shaders/Whitted.h"
-#include "Components/src/main/cpp/MobileRT/Shaders/PathTracer.h"
-#include "Components/src/main/cpp/MobileRT/Samplers/Stratified.h"
-#include "Components/src/main/cpp/MobileRT/Samplers/HaltonSeq.h"
-#include "Components/src/main/cpp/MobileRT/Samplers/Random.h"
-#include "Components/src/main/cpp/MobileRT/Samplers/Constant.h"
-#include "Components/src/main/cpp/MobileRT/Cameras/Perspective.h"
-#include "Components/src/main/cpp/MobileRT/Lights/PointLight.h"
-#include "Components/src/main/cpp/MobileRT/Lights/AreaLight.h"
+#include "Components/src/main/cpp/Components/Shaders/NoShadows.h"
+#include "Components/src/main/cpp/Components/Shaders/Whitted.h"
+#include "Components/src/main/cpp/Components/Shaders/PathTracer.h"
+#include "Components/src/main/cpp/Components/Samplers/Stratified.h"
+#include "Components/src/main/cpp/Components/Samplers/HaltonSeq.h"
+#include "Components/src/main/cpp/Components/Samplers/Random.h"
+#include "Components/src/main/cpp/Components/Samplers/Constant.h"
+#include "Components/src/main/cpp/Components/Cameras/Perspective.h"
+#include "Components/src/main/cpp/Components/Lights/PointLight.h"
+#include "Components/src/main/cpp/Components/Lights/AreaLight.h"
 
 static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
@@ -46,8 +46,8 @@ MobileRT::Scene *cornellBoxScene(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
 
     // back wall - white
     const MobileRT::Material lightGrayMat(MobileRT::RGB(0.7f, 0.7f, 0.7f));
@@ -113,24 +113,24 @@ MobileRT::Scene *cornellBoxScene2(void) {
     LOG("samplesPixel_ = %u", samplesPixel_);
     LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
     //samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
-    samplerPointLight_ = new MobileRT::Random(domainPointLight, 1);
+    samplerPointLight_ = new Components::Random(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
 
-    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.99f, -0.25f),
-                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
+    scene.lights_.emplace_back(new Components::AreaLight(lightMat,
+                                                         *samplerPointLight_,
+                                                         MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
+                                                         MobileRT::Point3D(0.25f, 0.99f, -0.25f),
+                                                         MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
 
-    scene.lights_.emplace_back(new MobileRT::AreaLight(lightMat,
-                                                       *samplerPointLight_,
-                                                       MobileRT::Point3D(0.25f, 0.99f, 0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
-                                                       MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
+    scene.lights_.emplace_back(new Components::AreaLight(lightMat,
+                                                         *samplerPointLight_,
+                                                         MobileRT::Point3D(0.25f, 0.99f, 0.25f),
+                                                         MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
+                                                         MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
 
     // block light - black
     /*const MobileRT::Material blockMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -211,8 +211,8 @@ MobileRT::Scene *spheresScene(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
     const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
@@ -246,8 +246,8 @@ MobileRT::Scene *spheresScene2(void) {
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
-    scene.lights_.emplace_back(new MobileRT::PointLight(lightMat,
-                                                        MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
+    scene.lights_.emplace_back(new Components::PointLight(lightMat,
+                                                          MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
 
     // create diffuse Materials
     const MobileRT::Material sandMat(MobileRT::RGB(0.914f, 0.723f, 0.531f));
@@ -311,26 +311,34 @@ int main(int argc, char **argv) {
     LOG("samplesLight_ = %u", samplesLight_);
     switch (scene) {
         case 1:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                60.0f, 60.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  60.0f, 60.0f * ratio);
             scene_ = spheresScene();
             break;
 
         case 2:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                60.0f, 60.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  60.0f, 60.0f * ratio);
             scene_ = spheresScene2();
             break;
 
         case 3:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                45.0f, 45.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene2();
             break;
 
         default:
-            camera_ = new MobileRT::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                45.0f, 45.0f * ratio);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene();
             break;
     }
@@ -338,27 +346,29 @@ int main(int argc, char **argv) {
         case 1:
             if (samplesPixel_ > 1)
             {
-                samplerPixel_ = new MobileRT::HaltonSeq(width_*height_*2llu*samplesPixel_, 1u);
+                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
+                                                          1u);
             }
             else
             {
-                samplerPixel_ = new MobileRT::Constant(0.5f);
+                samplerPixel_ = new Components::Constant(0.5f);
             }
-            samplerCamera_ = new MobileRT::HaltonSeq(width_, height_, samplesPixel_,
-                                                     blockSizeX_, blockSizeY_);
+            samplerCamera_ = new Components::HaltonSeq(width_, height_, samplesPixel_,
+                                                       blockSizeX_, blockSizeY_);
             break;
 
         default:
             if (samplesPixel_ > 1)
             {
-                samplerPixel_ = new MobileRT::Stratified(width_*height_*2llu*samplesPixel_, 1u);
+                samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
+                                                           1u);
             }
             else
             {
-                samplerPixel_ = new MobileRT::Constant(0.5f);
+                samplerPixel_ = new Components::Constant(0.5f);
             }
-            samplerCamera_ = new MobileRT::Stratified(width_, height_, samplesPixel_,
-                                                      blockSizeX_, blockSizeY_);
+            samplerCamera_ = new Components::Stratified(width_, height_, samplesPixel_,
+                                                        blockSizeX_, blockSizeY_);
             break;
     }
     samplerRay_ = nullptr;
@@ -368,27 +378,27 @@ int main(int argc, char **argv) {
             (width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
-            shader_ = new MobileRT::Whitted(*scene_, samplesLight_);
+            shader_ = new Components::Whitted(*scene_, samplesLight_);
             break;
 
         case 2:
         LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
             //samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
-            samplerRay_ = new MobileRT::Random(domainRay, 1);
+            samplerRay_ = new Components::Random(domainRay, 1);
             //samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
-            samplerLight_ = new MobileRT::Random(domainLight, 1);
-            shader_ = new MobileRT::PathTracer(
+            samplerLight_ = new Components::Random(domainLight, 1);
+            shader_ = new Components::PathTracer(
                     *scene_, *samplerRay_, *samplerLight_, samplesLight_);
             break;
 
         default:
-            shader_ = new MobileRT::NoShadows(*scene_, samplesLight_);
+            shader_ = new Components::NoShadows(*scene_, samplesLight_);
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (shader == 2)
+    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL)
     {
         renderer_->registerToneMapper([&](const float value)
         {

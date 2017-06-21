@@ -54,6 +54,14 @@ const Vector3D Point3D::operator-(const Point3D &point) const {
     return Vector3D(x + 0.0f, y + 0.0f, z + 0.0f);
 }
 
+const Point3D Point3D::operator+(const Vector3D &vector) const {
+    const float x(this->x_ + vector.x_);
+    const float y(this->y_ + vector.y_);
+    const float z(this->z_ + vector.z_);
+    Point3D res(x + 0.0f, y + 0.0f, z + 0.0f);
+    return res;
+}
+
 void Point3D::operator=(const Point3D &point3D) {
     this->x_ = point3D.x_ + 0.0f;
     this->y_ = point3D.y_ + 0.0f;

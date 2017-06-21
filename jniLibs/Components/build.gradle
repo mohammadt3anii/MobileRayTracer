@@ -33,8 +33,6 @@ configurations {
 }
 
 dependencies {
-    //implementation project(path: ':MobileRT')
-
     debugCompile project(path: ':MobileRT', configuration: 'debug')
     releaseCompile project(path: ':MobileRT', configuration: 'release')
 }

@@ -32,9 +32,10 @@ namespace MobileRT {
 
         const Vector3D &operator=(const Vector3D &vector);
 
+        const Vector3D operator*(const float value);
+
         const Vector3D operator+(const Vector3D vector) const;
         float dotProduct(const Vector3D &vector) const;
-        float dotProduct(const float x, const float y, const float z) const;
 
         float dotProduct(const Point3D &dest, const Point3D &orig) const;
 
@@ -54,7 +55,7 @@ namespace MobileRT {
         void reset(const float x, const float y, const float z);
         void reset(const Point3D &dest, const Point3D &orig);
 
-        void reverseVector(void);
+        Vector3D symmetric(void) const;
 
         static unsigned int getInstances();
     };
