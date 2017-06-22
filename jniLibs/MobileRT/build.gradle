@@ -8,6 +8,13 @@ android {
             path 'CMakeLists.txt'
         }
     }
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-26'
+            }
+        }
+    }
     buildTypes {
         debug {
             debuggable true

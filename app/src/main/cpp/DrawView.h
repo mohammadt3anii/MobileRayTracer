@@ -22,6 +22,7 @@
 #include "Components/Samplers/Stratified.h"
 #include "Components/Samplers/HaltonSeq.h"
 #include "Components/Samplers/Random.h"
+#include "Components/Cameras/Orthographic.h"
 #include "Components/Cameras/Perspective.h"
 #include "Components/Lights/PointLight.h"
 #include "Components/Lights/AreaLight.h"

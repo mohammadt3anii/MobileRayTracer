@@ -101,6 +101,13 @@ MobileRT::Scene *cornellBoxScene(void) {
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
 
+    // triangle - green
+    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
+    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
+            MobileRT::Point3D(-0.5f, 0.5f, 1.0f),
+            MobileRT::Point3D(0.5f, 0.5f, 1.0f),
+            MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
+
     return &scene;
 }
 
@@ -354,10 +361,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     LOG("samplesLight_ = %u", samplesLight_);
     switch (scene) {
         case 1:
-            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                  60.0f, 60.0f * ratio);
+            camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                   4.5f, 3.5f);
             scene_ = spheresScene();
             break;
 
@@ -378,10 +385,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         default:
-            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                  45.0f, 45.0f * ratio);
+            camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                   MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                   1.5f, 1.5f);
             scene_ = cornellBoxScene();
             break;
     }
@@ -441,7 +448,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (shader == 2)
+    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL)
     {
         renderer_->registerToneMapper([&](const float value)
         {
@@ -464,11 +471,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
                     std::chrono::steady_clock::now() - start).count();
             FPS();
 
-            const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
-            camera_->reset(MobileRT::Point3D(0.0f, 0.0f, -2.4f),
-                           MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-                           MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                           45.0f, 45.0f * ratio);
+            camera_->position_.x_ += 1.0f;
         } while (working_ != STOPPED && rep-- > 1);
         if (working_ != STOPPED) {
             working_ = FINISHED;

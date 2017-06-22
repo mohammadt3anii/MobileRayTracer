@@ -9,7 +9,6 @@ using namespace MobileRT;
 //Left hand rule
 Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &up) :
         position_(position),
-        lookAt_(lookAt),
         direction_((lookAt - position).returnNormalized()),
         right_((up.crossProduct(direction_)).returnNormalized()),
         up_((direction_.crossProduct(right_)).returnNormalized()) {

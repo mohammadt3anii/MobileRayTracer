@@ -29,14 +29,3 @@ Ray Perspective::generateRay(const float u, const float v,
 
     return Ray(rayDirection.returnNormalized(), this->position_, 1);
 }
-
-void Perspective::reset(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
-                        const float hFov, const float vFov) {
-    position_ = position;
-    lookAt_ = lookAt;
-    direction_ = (lookAt - position).returnNormalized();
-    right_ = (up.crossProduct(direction_)).returnNormalized();
-    up_ = (direction_.crossProduct(right_)).returnNormalized();
-    hFov_ = (hFov * PI) / 180.0f;
-    vFov_ = (vFov * PI) / 180.0f;
-}
