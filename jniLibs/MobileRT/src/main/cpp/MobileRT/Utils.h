@@ -18,8 +18,7 @@
 
 #define LOG(msg, ...)\
     __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
-        FILENAME, __LINE__, __VA_ARGS__);\
-    ::fflush(stdout);
+        FILENAME, __LINE__, __VA_ARGS__);
 
 #else
 
