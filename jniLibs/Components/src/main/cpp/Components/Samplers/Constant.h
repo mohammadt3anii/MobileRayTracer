@@ -11,14 +11,14 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Constant : public Sampler {
+    class Constant final : public Sampler {
     private:
         const float value_;
 
     public:
         explicit Constant(const float value);
 
-        float getSample(const unsigned int sample) override;
+        virtual float getSample(const unsigned int sample) override final;
     };
 }
 

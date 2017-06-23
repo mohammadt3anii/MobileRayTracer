@@ -10,7 +10,7 @@
 #include "Utils.h"
 
 namespace MobileRT {
-    class Ray {
+    class Ray final {
     public:
         Point3D origin_;
         Vector3D direction_;

@@ -9,7 +9,7 @@
 #include "Sampler.h"
 
 namespace MobileRT {
-    class Renderer {
+    class Renderer final {
     private:
         Sampler &samplerCamera_;
         Shader &shader_;

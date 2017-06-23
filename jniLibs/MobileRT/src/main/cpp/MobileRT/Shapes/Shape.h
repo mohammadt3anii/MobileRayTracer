@@ -19,7 +19,6 @@ namespace MobileRT {
 
         virtual float getZ(void) const;
         virtual void moveTo(float x, float y);
-        virtual float getMaxDistance(Point3D point) const;
     };
 }
 

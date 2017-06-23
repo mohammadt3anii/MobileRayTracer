@@ -10,7 +10,7 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Stratified : public Sampler {
+    class Stratified final : public Sampler {
     public:
         explicit Stratified(const unsigned long long int domainSize, const unsigned int samples);
 
@@ -18,7 +18,7 @@ namespace Components {
                             const unsigned int samples,
                             const unsigned int blockSizeX, const unsigned int blockSizeY);
 
-        float getSample(const unsigned int sample) override;
+        virtual float getSample(const unsigned int sample) override final;
     };
 }
 

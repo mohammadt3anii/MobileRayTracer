@@ -10,7 +10,7 @@
 namespace MobileRT {
     class Vector3D;
 
-    class Point3D {
+    class Point3D final {
     public:
         float x_;
         float y_;

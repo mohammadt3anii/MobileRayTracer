@@ -10,9 +10,9 @@
 namespace Components {
     using namespace MobileRT;
 
-    class NoShadows : public Shader {
+    class NoShadows final : public Shader {
     private:
-        void shade(RGB &rgb, Intersection &intersection, Ray &) const override;
+        virtual void shade(RGB &rgb, Intersection &intersection, Ray &) const override final;
 
     public:
         explicit NoShadows(Scene &scene, const unsigned int samplesLight);

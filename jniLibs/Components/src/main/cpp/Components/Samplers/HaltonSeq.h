@@ -10,7 +10,7 @@
 namespace Components {
     using namespace MobileRT;
 
-    class HaltonSeq : public Sampler {
+    class HaltonSeq final : public Sampler {
     private:
         float haltonSequence(unsigned long long int index, const unsigned int base);
 
@@ -21,7 +21,7 @@ namespace Components {
                            const unsigned int samples,
                            const unsigned int blockSizeX, const unsigned int blockSizeY);
 
-        virtual float getSample(const unsigned int sample) override;
+        virtual float getSample(const unsigned int sample) override final;
     };
 }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-class CustomNumberPicker extends NumberPicker {
+final class CustomNumberPicker extends NumberPicker {
     public CustomNumberPicker(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }

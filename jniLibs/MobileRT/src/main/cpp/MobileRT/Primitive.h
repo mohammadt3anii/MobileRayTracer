@@ -14,9 +14,11 @@
 #include "Shapes/Plane.h"
 
 namespace MobileRT {
-    class Primitive {
+    class Primitive final {
     private:
         const Material material_;
+
+        friend class Scene;
 
     public:
         Shape *const shape_;

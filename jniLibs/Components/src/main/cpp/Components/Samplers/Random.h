@@ -11,11 +11,11 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Random : public Sampler {
+    class Random final : public Sampler {
     public:
         explicit Random(const unsigned long long int domainSize, const unsigned int samples);
 
-        virtual float getSample(const unsigned int sample) override;
+        virtual float getSample(const unsigned int sample) override final;
     };
 }
 

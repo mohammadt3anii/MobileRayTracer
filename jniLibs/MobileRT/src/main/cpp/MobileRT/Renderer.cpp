@@ -91,7 +91,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     //    }
     //}
 
-    /*LOG("%s%u", "START - resolution=", resolution_);
+    LOG("%s%u", "START - resolution=", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
     LOG("vector3D = %u", Vector3D::getInstances());
     LOG("RGB = %u", RGB::getInstances());
@@ -99,7 +99,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("ray = %u", Ray::getInstances());
     LOG("material = %u", Material::getInstances());
     LOG("intersection = %u", Intersection::getInstances());
-    LOG("%s", "FINISH");*/
+    LOG("%s", "FINISH");
 }
 
 void Renderer::registerToneMapper(std::function<float(const float)> toneMapper)

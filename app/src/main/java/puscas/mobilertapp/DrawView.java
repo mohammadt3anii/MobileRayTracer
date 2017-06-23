@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import puscas.mobilertapp.DrawView.RenderTask.TouchTracker;
 
-class DrawView extends LinearLayout {
+final class DrawView extends LinearLayout {
     private long start_ = 0;
     private int numThreads_ = 0;
     private int frame_ = 0;

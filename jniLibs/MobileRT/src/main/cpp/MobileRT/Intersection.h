@@ -11,7 +11,7 @@
 #include "Utils.h"
 
 namespace MobileRT {
-    class Intersection {
+    class Intersection final {
     public:
         Point3D point_;   // intersection point
         Vector3D normal_;    // intersection normal

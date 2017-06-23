@@ -8,7 +8,7 @@
 #include "Shape.h"
 
 namespace MobileRT {
-    class Plane : public Shape {
+    class Plane final : public Shape {
     private:
         const Point3D point_;   // point in the plane
         const Vector3D normal_;    // normal to the plane
@@ -16,10 +16,8 @@ namespace MobileRT {
     public:
         explicit Plane(const Point3D &point, const Vector3D &normal);
 
-        bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const override;
-
-        //virtual float getMaxDistance(Point3D point) const;
+        virtual bool intersect(Intersection &intersection, const Ray &ray,
+                               const Material &material) const override final;
     };
 }
 

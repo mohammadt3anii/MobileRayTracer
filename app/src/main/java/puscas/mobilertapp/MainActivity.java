@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
-public class MainActivity extends Activity {
+final public class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("Components");

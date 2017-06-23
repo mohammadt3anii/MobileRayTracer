@@ -8,7 +8,7 @@
 #include <mutex>
 
 namespace MobileRT {
-    class RGB {
+    class RGB final {
     public:
         float R_;
         float G_;

@@ -46,6 +46,7 @@ int Scene::trace(Intersection &intersection, Ray &ray) const {
 
     for (unsigned int i(0); i < primitivesSize; i++) {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
+        //const Shape &shape((*this->primitives_[static_cast<unsigned long> (i)])->shape_);
         if (primitive.intersect(intersection, ray))
         {
             ray.maxDistance_ = intersection.length_;

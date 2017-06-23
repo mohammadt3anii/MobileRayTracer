@@ -8,7 +8,7 @@
 #include "RGB.h"
 
 namespace MobileRT {
-    class Material {
+    class Material final {
     public:
         const RGB Kd_;   // diffuse reflection
         const RGB Ks_;   // specular reflection

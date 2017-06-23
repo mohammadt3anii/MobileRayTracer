@@ -10,11 +10,11 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Whitted : public Shader {
+    class Whitted final : public Shader {
     private:
-        void shade(RGB &rgb,
-                   Intersection &intersection,
-                   Ray &ray) const override;
+        virtual void shade(RGB &rgb,
+                           Intersection &intersection,
+                           Ray &ray) const override final;
 
     public:
         explicit Whitted(Scene &scene, const unsigned int samplesLight);

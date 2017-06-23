@@ -11,7 +11,7 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Perspective : public Camera {
+    class Perspective final : public Camera {
     private:
         float hFov_;
         float vFov_;
@@ -20,10 +20,11 @@ namespace Components {
         explicit Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                              const float hFov, const float vFov);
 
-        ~Perspective(void) override;
+        virtual ~Perspective(void) override final;
 
         virtual Ray generateRay(const float x, const float y,
-                                const float deviationU, const float deviationV) const override;
+                                const float deviationU,
+                                const float deviationV) const override final;
     };
 }
 

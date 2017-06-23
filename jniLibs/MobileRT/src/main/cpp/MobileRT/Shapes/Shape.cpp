@@ -12,7 +12,3 @@ void Shape::moveTo(float, float) {
 float Shape::getZ(void) const {
     return 0.0f;
 }
-
-float Shape::getMaxDistance(Point3D) const {
-    return 0.0f;
-}

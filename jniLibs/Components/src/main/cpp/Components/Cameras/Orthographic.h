@@ -10,7 +10,7 @@
 namespace Components {
     using namespace MobileRT;
 
-    class Orthographic : public Camera {
+    class Orthographic final : public Camera {
     private:
         const float sizeH_;
         const float sizeV_;
@@ -19,10 +19,11 @@ namespace Components {
         explicit Orthographic(const Point3D &position, const Point3D &lookAt,
                               const Vector3D &up, const float sizeH, const float sizeV);
 
-        ~Orthographic(void) override;
+        virtual ~Orthographic(void) override final;
 
         virtual Ray generateRay(const float x, const float y,
-                                const float deviationU, const float deviationV) const override;
+                                const float deviationU,
+                                const float deviationV) const override final;
     };
 }
 

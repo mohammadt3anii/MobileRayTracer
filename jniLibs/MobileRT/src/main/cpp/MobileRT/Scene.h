@@ -13,7 +13,7 @@
 #include <vector>
 
 namespace MobileRT {
-    class Scene {
+    class Scene final {
     public:
         std::vector<Light *> lights_;
         std::vector<Primitive *> primitives_;

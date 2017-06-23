@@ -13,20 +13,20 @@
 namespace Components {
     using namespace MobileRT;
 
-    class PathTracer : public Shader {
+    class PathTracer final : public Shader {
     private:
         Sampler &samplerRay_;
         Sampler &samplerLight_;
 
-        void shade(RGB &rgb,
-                   Intersection &intersection,
-                   Ray &ray) const override;
+        virtual void shade(RGB &rgb,
+                           Intersection &intersection,
+                           Ray &ray) const override final;
 
     public:
         explicit PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerPointLight,
                             const unsigned int samplesLight);
 
-        virtual void resetSampling(void) override;
+        virtual void resetSampling(void) override final;
     };
 }
 

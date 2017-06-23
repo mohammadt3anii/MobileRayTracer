@@ -9,8 +9,8 @@ using namespace Components;
 Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                            const float sizeH, const float sizeV) :
         Camera(position, lookAt, up),
-        sizeH_(sizeH),
-        sizeV_(sizeV) {
+        sizeH_(sizeH / 2.0f),
+        sizeV_(sizeV / 2.0f) {
 }
 
 Orthographic::~Orthographic(void) {

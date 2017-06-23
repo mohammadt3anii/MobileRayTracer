@@ -364,7 +364,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
                                                    MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                   4.5f, 3.5f);
+                                                   6.5f, 4.5f);
             scene_ = spheresScene();
             break;
 
@@ -388,7 +388,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
                                                    MobileRT::Point3D(0.0f, 0.0f, 1.0f),
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                   1.5f, 1.5f);
+                                                   2.0f, 2.0f);
             scene_ = cornellBoxScene();
             break;
     }

@@ -9,7 +9,7 @@
 #include "../Point3D.h"
 
 namespace MobileRT {
-    class Sphere : public Shape {
+    class Sphere final : public Shape {
     private:
         const float sq_radius_;
         Point3D center_;
@@ -17,12 +17,12 @@ namespace MobileRT {
     public:
         explicit Sphere(const Point3D &center, const float radius);
 
-        bool intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const override;
+        virtual bool intersect(Intersection &intersection, const Ray &ray,
+                               const Material &material) const override final;
 
-        void moveTo(float x, float y) override;
+        virtual void moveTo(float x, float y) override final;
 
-        float getZ(void) const override;
+        virtual float getZ(void) const override final;
     };
 }
 

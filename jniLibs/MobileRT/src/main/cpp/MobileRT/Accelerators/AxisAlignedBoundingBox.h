@@ -13,13 +13,13 @@
 #include "../Primitive.h"
 
 namespace MobileRT {
-    class AxisAlignedBoundingBox {
+    class AxisAlignedBoundingBox final {
         private:
             const Point3D pointMin_;
             const Point3D pointMax_;
 
     public:
-        std::vector<Primitive *> *primitives_;
+        //std::vector<Primitive *> *primitives_;
 
         public:
             explicit AxisAlignedBoundingBox(const Point3D &pointA, const Point3D &pointH);
