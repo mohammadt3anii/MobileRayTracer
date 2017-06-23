@@ -14,7 +14,7 @@ namespace Components {
     private:
         virtual void shade(RGB &rgb,
                            Intersection &intersection,
-                           Ray &ray) const override final;
+                           const Ray &ray) const override final;
 
     public:
         explicit Whitted(Scene &scene, const unsigned int samplesLight);

@@ -151,8 +151,9 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                     const float r2 (this->samplerPixel_.getSample(0));
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
-                    Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
+                    const Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
                     RGB &pixelRGB (this->imagePlane_[yWidth + x]);
+                    intersection.length_ = RAY_LENGTH_MAX;
                     this->shader_.rayTrace(pixelRGB, ray, intersection);
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
                     toneMapper(pixelRGB);

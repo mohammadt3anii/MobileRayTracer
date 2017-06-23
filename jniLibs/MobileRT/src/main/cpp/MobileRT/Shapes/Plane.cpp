@@ -27,7 +27,7 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (distance < RAY_LENGTH_MIN || distance > ray.maxDistance_) {
+    if (distance < RAY_LENGTH_MIN || distance > intersection.length_) {
         return false;
     }
 

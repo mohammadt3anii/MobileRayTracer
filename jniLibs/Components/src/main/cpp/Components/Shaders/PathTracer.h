@@ -20,7 +20,7 @@ namespace Components {
 
         virtual void shade(RGB &rgb,
                            Intersection &intersection,
-                           Ray &ray) const override final;
+                           const Ray &ray) const override final;
 
     public:
         explicit PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerPointLight,

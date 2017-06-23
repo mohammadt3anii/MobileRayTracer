@@ -15,7 +15,6 @@ namespace MobileRT {
         Point3D origin_;
         Vector3D direction_;
         Vector3D symDirection_;
-        float maxDistance_;
         unsigned int depth_;
 
     public:
@@ -27,12 +26,7 @@ namespace MobileRT {
         explicit Ray(const Vector3D &dir, const Point3D &origin,
                      const unsigned int depth);
 
-        explicit Ray(Point3D &orig, const Vector3D &dir, const float maxDist,
-            const unsigned int depth);
-
         void reset(const float x, const float y, const float z, const Point3D &origin);
-
-        void calcSymDirection(void);
 
         static unsigned int getInstances();
     };

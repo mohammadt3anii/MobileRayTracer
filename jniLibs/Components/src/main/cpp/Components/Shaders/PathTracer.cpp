@@ -16,7 +16,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
+void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const {
     const unsigned int rayDepth(ray.depth_);
     if (rayDepth > RAY_DEPTH_MAX) return;
 
@@ -80,10 +80,10 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
                 const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
                 if (cosNormalLight > 0.0f) {
                     //shadow ray -> orig=intersection, dir=light
-                    const Ray shadowRay(intersection.point_, vectorToLight,
-                                        distanceToLight, rayDepth);
+                    const Ray shadowRay(vectorToLight, intersection.point_, rayDepth);
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
+                    intersectLight.length_ = distanceToLight;
                     if (!scene_.shadowTrace(intersectLight, shadowRay)) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                         Ld.addMult(light.radiance_.Le_, cosNormalLight);
@@ -252,7 +252,7 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         //reflectionDir.mult(RN_dot);
         reflectionDir.subAndNormalize(ray.symDirection_);
 
-        Ray specularRay(intersection.point_, reflectionDir, RAY_LENGTH_MAX, rayDepth + 1);
+        const Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1);
         Intersection specularInt;
         RGB LiS_RGB;
         rayTrace(LiS_RGB, specularRay, specularInt);
@@ -275,13 +275,19 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         const float cosTheta1(-shadingNormalT.dotProduct(ray.direction_));
         const float cosTheta2(
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
-        Ray transmissionRay;
-        if (cosTheta2 > 0.0f) {
+        const Ray transmissionRay(cosTheta2 > 0.0f ? (ray.direction_ * refractiveIndice) +
+                                                     (shadingNormalT *
+                                                      (refractiveIndice * cosTheta1 -
+                                                       (std::sqrt(cosTheta2)))) :
+                                  ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+                                  intersection.point_,
+                                  rayDepth + 1u);
+        /*if (cosTheta2 > 0.0f) {
             //refraction direction
             //ray.d = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
-            transmissionRay.direction_ = ((ray.direction_ * refractiveIndice) +
+            transmissionRay.direction_ = (ray.direction_ * refractiveIndice) +
                                           (shadingNormalT * (refractiveIndice * cosTheta1 -
-                                                             (std::sqrt(cosTheta2)))));
+                                                             (std::sqrt(cosTheta2))));
         } else {
             //reflection direction
             //ray.d = (ray.d + N*(cost1 * 2)).norm();
@@ -290,7 +296,7 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         transmissionRay.direction_.normalize();
         transmissionRay.depth_ = rayDepth + 1u;
         transmissionRay.origin_ = intersection.point_;
-        transmissionRay.calcSymDirection();
+        transmissionRay.calcSymDirection();*/
         Intersection transmissionInt;
         RGB LiT_RGB;
         rayTrace(LiT_RGB, transmissionRay, transmissionInt);

@@ -20,14 +20,14 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB &, Intersection &, Ray &) const;
+        virtual void shade(RGB &, Intersection &, const Ray &) const;
 
     public:
         explicit Shader(Scene &scene, const unsigned int samplesLight);
 
         virtual ~Shader(void);
 
-        void rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const;
+        void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const;
 
         int traceTouch(Intersection &intersection, Ray &ray) const;
 

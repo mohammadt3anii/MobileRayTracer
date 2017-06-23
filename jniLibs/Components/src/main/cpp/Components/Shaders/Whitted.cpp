@@ -10,7 +10,7 @@ Whitted::Whitted(Scene &scene, const unsigned int samplesLight) :
         Shader(scene, samplesLight) {
 }
 
-void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
+void Whitted::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const {
     if (ray.depth_ > RAY_DEPTH_MAX) return;
 
     const RGB &Le(intersection.material_->Le_ * scene_.lights_.size());
@@ -45,8 +45,8 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
                 const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
                 if (cos_N_L > 0.0f) {
                     //shadow ray - orig=intersection, dir=light
-                    const Ray shadowRay(intersection.point_, vectorToLight,
-                                        distanceToLight, ray.depth_ + 1);
+                    const Ray shadowRay(vectorToLight, intersection.point_, ray.depth_ + 1);
+                    lightIntersection.length_ = distanceToLight;
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
                     if (!scene_.shadowTrace(lightIntersection, shadowRay)) {
@@ -71,7 +71,7 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         shadingNormalR.mult(RN_dot);
         shadingNormalR.subAndNormalize(ray.symDirection_);//incident + 2 * cosI * normal
 
-        Ray specularRay(intersection.point_, shadingNormalR, RAY_LENGTH_MAX, ray.depth_ + 1);
+        Ray specularRay(shadingNormalR, intersection.point_, ray.depth_ + 1);
         RGB specularRad;
         Intersection specularInt;
         rayTrace(specularRad, specularRay, specularInt);
@@ -121,25 +121,32 @@ void Whitted::shade(RGB &rgb, Intersection &intersection, Ray &ray) const {
         //double cost1 = (N.dot(ray.d))*-1; // cosine of theta_1
         //double cost2 = 1.0 - n*n*(1.0 - cost1*cost1); // cosine of theta_2
         //double Rprob = R0 + (1.0 - R0) * pow(1.0 - cost1, 5.0); // Schlick-approximation
-        const float cost1((intersection.normal_.dotProduct(ray.direction_)) * -1);
-        const float cost2(1.0f - refractiveIndice * refractiveIndice * (1.0f - cost1 * cost1));
+        const float cosTheta1((intersection.normal_.dotProduct(ray.direction_)) * -1);
+        const float cosTheta2(
+                1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
         //const float Rprob (R0 + (1.0f - R0) * std::pow(1.0f - cost1, 5.0f));
-        Ray transmissionRay;
+        const Ray transmissionRay(cosTheta2 > 0.0f ? (ray.direction_ * refractiveIndice) +
+                                                     (shadingNormal *
+                                                      (refractiveIndice * cosTheta1 -
+                                                       (std::sqrt(cosTheta2)))) :
+                                  ray.direction_ + shadingNormal * (cosTheta1 * 2.0f),
+                                  intersection.point_,
+                                  ray.depth_ + 1u);
         RGB transmissionRad;
         Intersection transmissionInt;
-        if (cost2 > 0 /*&& RND2 > Rprob*/) { // refraction direction
+        /*if (cosTheta2 > 0) { // refraction direction
             //ray.d = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
             transmissionRay.direction_ = ((ray.direction_ * refractiveIndice) +
-                                          (intersection.normal_ * (refractiveIndice * cost1 -
-                                                                   std::sqrt(cost2))));
+                                          (intersection.normal_ * (refractiveIndice * cosTheta1 -
+                                                                   std::sqrt(cosTheta2))));
         } else {// reflection direction
             //ray.d = (ray.d + N*(cost1 * 2)).norm();
-            transmissionRay.direction_ = (ray.direction_ + intersection.normal_ * (cost1 * 2));
+            transmissionRay.direction_ = (ray.direction_ + intersection.normal_ * (cosTheta1 * 2));
         }
         transmissionRay.direction_.normalize();
         transmissionRay.depth_ = ray.depth_ + 1;
         transmissionRay.origin_ = intersection.point_;
-        transmissionRay.calcSymDirection();
+        transmissionRay.calcSymDirection();*/
         rayTrace(transmissionRad, transmissionRay, transmissionInt);
         //trace(ray, scene, depth + 1, tmp, params, hal, hal2);
         //clr = clr + tmp * 1.15 * rrFactor;

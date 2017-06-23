@@ -53,7 +53,7 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
     const float distanceToIntersection(
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector));
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
         return false;
 
     intersection.reset(

@@ -33,7 +33,7 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
                                        (distanceToIntersection2 < distanceToIntersection1) *
                                        distanceToIntersection2);
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > ray.maxDistance_)
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
         return false;
 
     const Point3D intersectionPoint(ray.origin_, ray.direction_, distanceToIntersection);

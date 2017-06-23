@@ -3,7 +3,6 @@
 //
 
 #include "Shader.h"
-//#include <cassert>
 
 using namespace MobileRT;
 
@@ -14,11 +13,11 @@ Shader::Shader(Scene &scene, const unsigned int samplesLight) :
 Shader::~Shader(void) {
 }
 
-void Shader::shade(RGB &, Intersection &, Ray &) const {
+void Shader::shade(RGB &, Intersection &, const Ray &) const {
 }
 
 //ray trace and verifies if intersects primitives
-void Shader::rayTrace(RGB &rgb, Ray &ray, Intersection &intersection) const {
+void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const {
     if (this->scene_.trace(intersection, ray) >= 0) {
         rgb.reset(0.0f);
         shade(rgb, intersection, ray);// compute radiance
