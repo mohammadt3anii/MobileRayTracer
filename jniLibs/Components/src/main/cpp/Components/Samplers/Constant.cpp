@@ -7,7 +7,7 @@
 using namespace Components;
 
 Constant::Constant(const float value) :
-        Sampler(0, 0),
+        Sampler(0ull, 0u),
         value_(value) {
 }
 

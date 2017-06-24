@@ -30,8 +30,8 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
                          const Material &material) const {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
-    const float abs(normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f));
-    if (abs < VECT_PROJ_MIN) return false;
+    if (normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f) < VECT_PROJ_MIN)
+        return false;
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);
 

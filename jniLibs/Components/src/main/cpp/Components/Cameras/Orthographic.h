@@ -21,9 +21,9 @@ namespace Components {
 
         virtual ~Orthographic(void) override final;
 
-        virtual Ray generateRay(const float x, const float y,
-                                const float deviationU,
-                                const float deviationV) const override final;
+        virtual const Ray generateRay(const float x, const float y,
+                                      const float deviationU,
+                                      const float deviationV) const override final;
     };
 }
 

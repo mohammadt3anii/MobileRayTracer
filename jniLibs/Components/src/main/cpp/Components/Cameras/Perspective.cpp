@@ -17,15 +17,15 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
 Perspective::~Perspective(void) {
 }
 
-Ray Perspective::generateRay(const float u, const float v,
-                             const float deviationU, const float deviationV) const {
+const Ray Perspective::generateRay(const float u, const float v,
+                                   const float deviationU, const float deviationV) const {
     const float u_alpha(fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU);
     const float v_alpha(fastArcTan(this->vFov_ * (0.5f - v)) + deviationV);
 
     const Point3D imagePoint(this->position_ + this->direction_ +
                              (this->right_ * u_alpha) + (this->up_ * v_alpha));
 
-    const Vector3D rayDirection(imagePoint - this->position_);
+    const Vector3D rayDirection(imagePoint, this->position_, true);
 
-    return Ray(rayDirection.returnNormalized(), this->position_, 1);
+    return Ray(rayDirection, this->position_, 1u);
 }

@@ -16,6 +16,7 @@ namespace MobileRT {
         float x_;
         float y_;
         float z_;
+        float magnitude_;
 
     public:
         explicit Vector3D(void);

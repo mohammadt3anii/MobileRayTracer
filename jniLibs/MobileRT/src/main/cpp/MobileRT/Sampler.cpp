@@ -23,14 +23,13 @@ Sampler::~Sampler(void) {
 }
 
 bool Sampler::isFinished(const unsigned int sample, const unsigned long long int current) {
-    const bool res(current >= (this->domainSize_ * (sample + 1)));
-    return res;
+    return (current >= (this->domainSize_ * (sample + 1u)));
 }
 
 void Sampler::resetSampling() {
-    this->sample_ = 0;
+    this->sample_ = 0ull;
 }
 
 void Sampler::stopSampling(void) {
-    this->samples_ = 0;
+    this->samples_ = 0ull;
 }

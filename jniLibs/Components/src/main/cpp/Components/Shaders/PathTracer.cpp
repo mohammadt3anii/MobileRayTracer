@@ -61,9 +61,9 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
             Light &light(*scene_.lights_[chosenLight]);
             //calculates vector starting in intersection to the light
             const Point3D lightPosition(light.getPosition());
-            Vector3D vectorToLight(lightPosition, intersection.point_);
+            const Vector3D vectorToLight(lightPosition, intersection.point_, true);
             //distance from intersection to the light (and normalize it)
-            const float distanceToLight(vectorToLight.normalize());
+            const float distanceToLight(vectorToLight.magnitude_);
             //x*x + y*y + z*z
             const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
             if (cosNormalLight > 0.0f) {
@@ -150,7 +150,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
             globalZ /= globalMagnitude;
 
             //secundaryRay -> origin =  intersection.point_, direction = global, depth = rayDepth+1
-            Ray normalizedSecundaryRay(globalX, globalY, globalZ, intersection.point_,
+            const Ray normalizedSecundaryRay(globalX, globalY, globalZ, intersection.point_,
                                        rayDepth + 1u);
             //secundaryIntersection = intersection
             Intersection secundaryIntersection;

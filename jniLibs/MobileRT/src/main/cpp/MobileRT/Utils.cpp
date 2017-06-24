@@ -10,7 +10,7 @@ float fastArcTan(const float value) {
     return PI_4 * value - (value * (abs - 1.0f)) * (0.2447f + (0.0663f * abs));
 }
 
-unsigned int roundDownToMultipleOf(unsigned int value, unsigned int multiple) {
-    if (value % multiple) value = value - (value % multiple);
+unsigned int roundDownToMultipleOf(const unsigned int value, const unsigned int multiple) {
+    if (value % multiple) return value - (value % multiple);
     return value;
 }

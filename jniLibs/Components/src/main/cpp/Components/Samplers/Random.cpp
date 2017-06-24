@@ -11,6 +11,5 @@ Random::Random(const unsigned long long int domainSize, const unsigned int sampl
 }
 
 float Random::getSample(const unsigned int) {
-    const float res(static_cast<float>(rand()) / (RAND_MAX));
-    return res;
+    return static_cast<float> (rand()) / RAND_MAX;
 }

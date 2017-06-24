@@ -49,6 +49,6 @@
 
 float fastArcTan(const float value);
 
-unsigned int roundDownToMultipleOf(unsigned int value, unsigned int multiple);
+unsigned int roundDownToMultipleOf(const unsigned int value, const unsigned int multiple);
 
 #endif //MOBILERAYTRACER_UTILS

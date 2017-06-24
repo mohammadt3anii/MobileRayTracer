@@ -22,18 +22,16 @@ float HaltonSeq::getSample(const unsigned int sample) {
         this->sample_.fetch_sub(1, std::memory_order_relaxed);
         return 1.0f;
     }
-    const unsigned long long int task(current - (sample * this->domainSize_));
-    const float res(haltonSequence(task, 2));
-    return res;
+    return haltonSequence(current - (sample * this->domainSize_), 2u);
 }
 
 //https://en.wikipedia.org/wiki/Halton_sequence
 float HaltonSeq::haltonSequence(unsigned long long int index, const unsigned int base) {
     float f(1.0f);
     float result(0.0f);
-    while (index > 0) {
-        f = f / base;
-        result = result + f * (index % base);
+    while (index > 0u) {
+        f /= base;
+        result += f * (index % base);
         index = static_cast<unsigned long long int> (std::floor(index / base));
     }
     return result;

@@ -44,6 +44,12 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float
         x_(vector1.x_ - vector2.x_ * value),
         y_(vector1.y_ - vector2.y_ * value),
         z_(vector1.z_ - vector2.z_ * value) {
+    const float len(magnitude());
+    if (len == 0.0f) return;
+    const float inv_length(1.0f / len);
+    this->x_ *= inv_length;
+    this->y_ *= inv_length;
+    this->z_ *= inv_length;
     counter++;
 }
 
@@ -61,12 +67,13 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
         y_(dest.y_ - orig.y_),
         z_(dest.z_ - orig.z_)
 {
-    const float len(magnitude());
-    if (len == 0.0f) return;
-    const float inv_length(1.0f / len);
+    magnitude_ = magnitude();
+    if (magnitude_ == 0.0f) return;
+    const float inv_length(1.0f / magnitude_);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
     this->z_ *= inv_length;
+    counter++;
 }
 
 //cross product

@@ -19,8 +19,8 @@ namespace MobileRT {
     public:
         explicit Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &up);
 
-        virtual Ray generateRay(const float u, const float v,
-                                const float deviationU, const float deviationV) const = 0;
+        virtual const Ray generateRay(const float u, const float v,
+                                      const float deviationU, const float deviationV) const = 0;
 
         virtual ~Camera(void);
     };

@@ -16,14 +16,11 @@ Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const
 Orthographic::~Orthographic(void) {
 }
 
-Ray Orthographic::generateRay(const float u, const float v,
-                              const float deviationU, const float deviationV) const {
-    const float u_alpha((u - 0.5f) * 2.0f + deviationU);
-    const float v_alpha((0.5f - v) * 2.0f + deviationV);
-
+const Ray Orthographic::generateRay(const float u, const float v,
+                                    const float deviationU, const float deviationV) const {
     const Point3D position(this->position_ +
-                           (this->right_ * (u_alpha * this->sizeH_)) +
-                           (this->up_ * (v_alpha * this->sizeV_)));
+                           (this->right_ * ((u - 0.5f) * 2.0f + deviationU * this->sizeH_)) +
+                           (this->up_ * ((0.5f - v) * 2.0f + deviationV * this->sizeV_)));
 
-    return Ray(this->direction_, position, 1);
+    return Ray(this->direction_, position, 1u);
 }

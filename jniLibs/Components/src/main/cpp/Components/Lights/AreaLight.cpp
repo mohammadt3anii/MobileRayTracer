@@ -16,16 +16,13 @@ AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
 const Point3D AreaLight::getPosition(void) {
     float R(samplerPointLight_.getSample(0));
     float S(samplerPointLight_.getSample(0));
-    samplerPointLight_.getSample(0);
-    //LOG("R = %f, S = %f", double(R), double(S));
     if (R + S >= 1.0f) {
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    const float x(pointA_.x_ + R * AB_.x_ + S * AC_.x_);
-    const float y(pointA_.y_ + R * AB_.y_ + S * AC_.y_);
-    const float z(pointA_.z_ + R * AB_.z_ + S * AC_.z_);
-    Point3D position(x, y, z);
+    Point3D position(pointA_.x_ + R * AB_.x_ + S * AC_.x_,
+                     pointA_.y_ + R * AB_.y_ + S * AC_.y_,
+                     pointA_.z_ + R * AB_.z_ + S * AC_.z_);
     return position;
 }
 

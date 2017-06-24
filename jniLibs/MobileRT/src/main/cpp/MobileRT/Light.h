@@ -17,7 +17,6 @@ namespace MobileRT {
 
     public:
         explicit Light(const Material &radiance);
-        //explicit Light(const RGB &radiance, Shape *shape);
 
         virtual const Point3D getPosition(void) = 0;
 

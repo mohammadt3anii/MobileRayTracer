@@ -36,18 +36,17 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
 
     // shadowed direct lighting - only for diffuse materials
     if (kD.isNotZero()) {
-        const unsigned long sizeLights(scene_.lights_.size());
         Intersection lightIntersection;
+        const unsigned long sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
         for (unsigned int i(0); i < sizeLights; i++) {
             Light &light(*scene_.lights_[i]);
-            RGB lightRGB;
             for (unsigned int j(0); j < samplesLight; j++) {
                 const Point3D lightPosition(light.getPosition());
                 //calculates vector starting in intersection to the light
-                Vector3D vectorToLight(lightPosition, intersection.point_);
+                const Vector3D vectorToLight(lightPosition, intersection.point_, true);
                 //distance from intersection to the light (and normalize it)
-                const float distanceToLight(vectorToLight.normalize());
+                const float distanceToLight(vectorToLight.magnitude_);
                 const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
                 if (cos_N_L > 0.0f) {
                     //shadow ray - orig=intersection, dir=light
@@ -57,13 +56,12 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
                     //if there are no primitives between intersection and the light
                     if (!scene_.shadowTrace(lightIntersection, shadowRay)) {
                         //rgb += kD * radLight * cos_N_L;
-                        lightRGB.addMult(light.radiance_.Le_, cos_N_L);
+                        rgb.addMult(light.radiance_.Le_, cos_N_L);
                     }
                 }
             }
-            lightRGB *= kD;
-            lightRGB /= this->samplesLight_;
-            rgb.add(lightRGB);
+            rgb *= kD;
+            rgb /= this->samplesLight_;
         }
         // ambient light
     } // end direct + ambient
