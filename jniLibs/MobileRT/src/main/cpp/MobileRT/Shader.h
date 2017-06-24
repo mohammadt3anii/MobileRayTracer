@@ -20,7 +20,7 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB &, Intersection &, const Ray &) const;
+        virtual void shade(RGB &, const Intersection &, const Ray &) const;
 
     public:
         explicit Shader(Scene &scene, const unsigned int samplesLight);

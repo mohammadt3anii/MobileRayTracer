@@ -13,7 +13,7 @@ Shader::Shader(Scene &scene, const unsigned int samplesLight) :
 Shader::~Shader(void) {
 }
 
-void Shader::shade(RGB &, Intersection &, const Ray &) const {
+void Shader::shade(RGB &, const Intersection &, const Ray &) const {
 }
 
 //ray trace and verifies if intersects primitives

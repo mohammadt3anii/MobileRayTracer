@@ -19,7 +19,7 @@ namespace Components {
         Sampler &samplerLight_;
 
         virtual void shade(RGB &rgb,
-                           Intersection &intersection,
+                           const Intersection &intersection,
                            const Ray &ray) const override final;
 
     public:

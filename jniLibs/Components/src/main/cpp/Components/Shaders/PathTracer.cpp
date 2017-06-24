@@ -16,7 +16,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) const {
+void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const {
     const unsigned int rayDepth(ray.depth_);
     if (rayDepth > RAY_DEPTH_MAX) return;
 
@@ -41,10 +41,10 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    Vector3D &shadingNormal(
+    const Vector3D &shadingNormal(
             (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
-            intersection.normal_// entering the object
-                                                                     : intersection.symNormal_);// We have to reverse the normal now
+            intersection.normal_ :// entering the object
+            intersection.symNormal_);// We have to reverse the normal now
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p -> Wr)
@@ -193,23 +193,24 @@ void PathTracer::shade(RGB &rgb, Intersection &intersection, const Ray &ray) con
     if (kT.isNotZero()) {
         //PDF = 1 / 2 PI
 
+        Vector3D shadingNormalT(shadingNormal);
         float refractiveIndice(intersection.material_->refractiveIndice_);
-        if (shadingNormal.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
-            shadingNormal.mult(-1.0f);//N = N*-1;
+        if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
+            shadingNormalT.mult(-1.0f);//N = N*-1;
             refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
         }
         refractiveIndice = 1.0f / refractiveIndice;
 
-        const float cosTheta1((shadingNormal.dotProduct(ray.direction_)) * -1.0f);
+        const float cosTheta1((shadingNormalT.dotProduct(ray.direction_)) * -1.0f);
         const float cosTheta2(
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
         const Ray transmissionRay(cosTheta2 > 0.0f ? // refraction direction
                                   //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                                   (ray.direction_ * refractiveIndice) +
-                                  (shadingNormal * (refractiveIndice * cosTheta1 -
-                                                    (std::sqrt(cosTheta2)))) :
+                                  (shadingNormalT * (refractiveIndice * cosTheta1 -
+                                                     (std::sqrt(cosTheta2)))) :
                                   //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                                  ray.direction_ + shadingNormal * (cosTheta1 * 2.0f),
+                                  ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
                                   intersection.point_,
                                   rayDepth + 1u);
         RGB LiT_RGB;

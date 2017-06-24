@@ -10,7 +10,7 @@ NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) :
         Shader(scene, samplesLight) {
 }
 
-void NoShadows::shade(RGB &rgb, Intersection &intersection, const Ray &) const {
+void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) const {
     const RGB &Le(intersection.material_->Le_);
     const RGB &kD(intersection.material_->Kd_);
 

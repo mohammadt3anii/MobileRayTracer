@@ -13,7 +13,7 @@ namespace Components {
     class Whitted final : public Shader {
     private:
         virtual void shade(RGB &rgb,
-                           Intersection &intersection,
+                           const Intersection &intersection,
                            const Ray &ray) const override final;
 
     public:
