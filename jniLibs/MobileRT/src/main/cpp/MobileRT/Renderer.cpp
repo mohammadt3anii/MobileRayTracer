@@ -34,20 +34,20 @@ Renderer::~Renderer(void) {
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
-    this->sample_ = 0;
+    this->sample_ = 0u;
     const unsigned int size(this->width_ * this->height_);
-    for (unsigned int i(0); i < size; i++) {
+    for (unsigned int i(0u); i < size; i++) {
         this->accumulate_[i].reset();
     }
     this->samplerCamera_.resetSampling();
     this->samplerPixel_.resetSampling();
     this->shader_.resetSampling();
-    std::thread *const threads(new std::thread[numThreads - 1]);
-    for (unsigned int i(0); i < numThreads - 1; i++) {
+    std::thread *const threads(new std::thread[numThreads - 1u]);
+    for (unsigned int i(0u); i < numThreads - 1u; i++) {
         threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i);
     }
-    renderScene(bitmap, numThreads - 1);
-    for (unsigned int i(0); i < numThreads - 1; i++) {
+    renderScene(bitmap, numThreads - 1u);
+    for (unsigned int i(0u); i < numThreads - 1u; i++) {
         threads[i].join();
     }
     delete[] threads;
@@ -55,9 +55,9 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     float max(-1.0f);
     unsigned int ii(0u);
     unsigned int jj(0u);
-    for (unsigned int i (0); i < this->height_; i++)
+    for (unsigned int i(0u); i < this->height_; i++)
     {
-        for (unsigned int j (0); j < this->width_; j++)
+        for (unsigned int j(0u); j < this->width_; j++)
         {
             const unsigned int pixel (i*this->width_ + j);
             const float pixelMax (this->imagePlane_[pixel].getMax());
@@ -108,8 +108,8 @@ void Renderer::registerToneMapper(std::function<float(const float)> toneMapper)
 }
 
 void Renderer::stopRender(void) {
-    this->blockSizeX_ = 0;
-    this->blockSizeY_ = 0;
+    this->blockSizeX_ = 0u;
+    this->blockSizeY_ = 0u;
     this->samplerCamera_.stopSampling();
     this->samplerPixel_.stopSampling();
 }
@@ -160,7 +160,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                 }
             }
         }
-        if (tid == 0) this->sample_ = sample + 1u;
+        if (tid == 0u) this->sample_ = sample + 1u;
     }
 }
 

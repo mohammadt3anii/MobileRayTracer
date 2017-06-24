@@ -7,14 +7,14 @@
 using namespace MobileRT;
 
 Sampler::Sampler(const unsigned long long int domainSize, const unsigned int samples) :
-        sample_(0),
+        sample_(0ull),
         domainSize_(domainSize),
         samples_(samples) {
 }
 
 Sampler::Sampler(const unsigned int width, const unsigned int height, const unsigned int samples,
                  const unsigned int blockSizeX, const unsigned int blockSizeY) :
-        sample_(0),
+        sample_(0ull),
         domainSize_((width / blockSizeX) * (height / blockSizeY)),
         samples_(samples) {
 }

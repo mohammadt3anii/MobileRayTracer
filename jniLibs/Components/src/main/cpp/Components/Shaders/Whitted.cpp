@@ -39,9 +39,9 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
         Intersection lightIntersection;
         const unsigned long sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
-        for (unsigned int i(0); i < sizeLights; i++) {
+        for (unsigned int i(0u); i < sizeLights; i++) {
             Light &light(*scene_.lights_[i]);
-            for (unsigned int j(0); j < samplesLight; j++) {
+            for (unsigned int j(0u); j < samplesLight; j++) {
                 const Point3D lightPosition(light.getPosition());
                 //calculates vector starting in intersection to the light
                 const Vector3D vectorToLight(lightPosition, intersection.point_, true);

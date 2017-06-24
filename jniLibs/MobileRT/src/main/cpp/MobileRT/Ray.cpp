@@ -9,7 +9,7 @@ using namespace MobileRT;
 static unsigned int counter(0u);
 
 Ray::Ray(void) :
-        depth_(1) {
+        depth_(1u) {
     counter++;
 }
 
@@ -21,7 +21,6 @@ Ray::Ray(const float x, const float y, const float z, const Point3D &origin,
         depth_(depth)
 {
     counter++;
-    this->direction_.normalize();
 }
 
 Ray::Ray(const Vector3D &dir, const Point3D &origin,
@@ -31,7 +30,6 @@ Ray::Ray(const Vector3D &dir, const Point3D &origin,
         symDirection_(dir.symmetric()),
         depth_(depth) {
     counter++;
-    this->direction_.normalize();
 }
 
 unsigned int Ray::getInstances() {

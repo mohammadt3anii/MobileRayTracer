@@ -20,16 +20,16 @@ static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
-static unsigned int samplesPixel_(0);
-static unsigned int samplesLight_(0);
-static unsigned int numberOfBlocks_(4);
-static unsigned int blockSizeX_(0);
-static unsigned int blockSizeY_(0);
+static unsigned int samplesPixel_(0u);
+static unsigned int samplesLight_(0u);
+static unsigned int numberOfBlocks_(4u);
+static unsigned int blockSizeX_(0u);
+static unsigned int blockSizeY_(0u);
 
-static unsigned int width_(0);
-static unsigned int height_(0);
+static unsigned int width_(0u);
+static unsigned int height_(0u);
 static float fps_(0.0f);
-static long long timeFrame_(0);
+static long long timeFrame_(0ll);
 
 void FPS(void) {
     static int frame(0);
@@ -311,7 +311,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
 
     working_ = IDLE;
     LOG("%s", "WORKING = IDLE");
-    timeFrame_ = 0;
+    timeFrame_ = 0ll;
     fps_ = 0.0f;
 }
 
@@ -463,7 +463,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
 void thread_work(void *dstPixels, unsigned int numThreads) {
     try {
-        unsigned int rep(2);
+        unsigned int rep(2u);
         do {
             const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
             renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
@@ -472,7 +472,7 @@ void thread_work(void *dstPixels, unsigned int numThreads) {
             FPS();
 
             camera_->position_.x_ += 1.0f;
-        } while (working_ != STOPPED && rep-- > 1);
+        } while (working_ != STOPPED && rep-- > 1u);
         if (working_ != STOPPED) {
             working_ = FINISHED;
             LOG("%s", "WORKING = FINISHED");

@@ -14,10 +14,10 @@ namespace MobileRT {
         Sampler &samplerCamera_;
         Shader &shader_;
         const Camera &camera_;
-        unsigned int width_;
-        unsigned int height_;
+        const unsigned int width_;
+        const unsigned int height_;
         RGB *const accumulate_;
-        unsigned int domainSize_;
+        const unsigned int domainSize_;
         unsigned int blockSizeX_;
         unsigned int blockSizeY_;
         const unsigned int resolution_;

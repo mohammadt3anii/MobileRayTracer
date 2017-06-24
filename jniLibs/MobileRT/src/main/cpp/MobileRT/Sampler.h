@@ -16,7 +16,7 @@ namespace MobileRT {
     class Sampler {
     public:
         std::atomic<unsigned long long int> sample_;
-        unsigned long long int domainSize_;
+        const unsigned long long int domainSize_;
         unsigned long long int samples_;
 
     protected:

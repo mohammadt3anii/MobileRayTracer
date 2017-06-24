@@ -27,11 +27,11 @@ RegularGrid::RegularGrid(const float minX, const float maxX,
     const float deviationY ((maxY - minY) / numberOfBlocks);
     const float deviationZ ((maxZ - minZ) / numberOfBlocks);
 
-    for (unsigned int i (0); i < numberOfBlocks; i++)
+    for (unsigned int i(0u); i < numberOfBlocks; i++)
     {
-        for (unsigned int j (0); j < 2; j++)
+        for (unsigned int j(0u); j < 2u; j++)
         {
-            if (j == 0)
+            if (j == 0u)
             {
                 float x (deviationX * i);
                 float y (deviationY * i);

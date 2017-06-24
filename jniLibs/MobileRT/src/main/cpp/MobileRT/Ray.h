@@ -12,10 +12,10 @@
 namespace MobileRT {
     class Ray final {
     public:
-        Point3D origin_;
-        Vector3D direction_;
-        Vector3D symDirection_;
-        unsigned int depth_;
+        const Point3D origin_;
+        const Vector3D direction_;
+        const Vector3D symDirection_;
+        const unsigned int depth_;
 
     public:
         explicit Ray(void);
