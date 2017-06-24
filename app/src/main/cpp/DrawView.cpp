@@ -124,8 +124,8 @@ MobileRT::Scene *cornellBoxScene2(void) {
     LOG("samplesLight_ = %u", samplesLight_);
     LOG("samplesPixel_ = %u", samplesPixel_);
     LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
-    //samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
-    samplerPointLight_ = new Components::Random(domainPointLight, 1);
+    //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1u);
+    samplerPointLight_ = new Components::Random(domainPointLight, 1u);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -433,10 +433,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
         case 2:
         LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
-            //samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
-            samplerRay_ = new Components::Random(domainRay, 1);
-            //samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
-            samplerLight_ = new Components::Random(domainLight, 1);
+            //samplerRay_ = new Components::HaltonSeq(domainRay, 1u);
+            samplerRay_ = new Components::Random(domainRay, 1u);
+            //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
+            samplerLight_ = new Components::Random(domainLight, 1u);
             shader_ = new Components::PathTracer(
                     *scene_, *samplerRay_, *samplerLight_, samplesLight_);
             break;
