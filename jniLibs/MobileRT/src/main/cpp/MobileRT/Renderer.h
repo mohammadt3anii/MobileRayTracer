@@ -25,11 +25,12 @@ namespace MobileRT {
         float max_;
         Sampler &samplerPixel_;
         unsigned int sample_;
-        //char padding[4] __attribute__((unused));
         std::function<float(const float)> toneMapper_;
+        //char padding[4] __attribute__((unused));
 
     private:
         void renderScene(unsigned int *const bitmap, const unsigned int tid);
+
         void toneMapper(RGB& pixel);
 
     public:

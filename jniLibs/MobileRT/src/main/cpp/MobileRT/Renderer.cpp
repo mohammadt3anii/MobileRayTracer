@@ -128,7 +128,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
     const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
 
-    for (unsigned int sample(0); sample < samples; sample++)
+    for (unsigned int sample(0u); sample < samples; sample++)
     {
         for (float block(this->samplerCamera_.getSample(sample));;
                 block = this->samplerCamera_.getSample(sample))
@@ -139,7 +139,6 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                 this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
             const unsigned int endY(startY + this->blockSizeY_);
-            //LOG("tid=%u, block=%f, s=%u, Y=[%u, %u[", tid, double(block), sample, startY, endY);
             for (unsigned int y(startY); y < endY; y++) {
                 const unsigned int yWidth(y * width_);
                 const float v(y * INV_IMG_HEIGHT);
@@ -161,7 +160,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                 }
             }
         }
-        if (tid == 0) this->sample_ = sample + 1;
+        if (tid == 0) this->sample_ = sample + 1u;
     }
 }
 
