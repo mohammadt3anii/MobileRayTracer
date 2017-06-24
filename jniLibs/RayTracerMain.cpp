@@ -29,14 +29,14 @@ static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 
-static unsigned int samplesPixel_(0);
-static unsigned int samplesLight_(0);
-static unsigned int blockSize_(4);
-static unsigned int blockSizeX_(0);
-static unsigned int blockSizeY_(0);
+static unsigned int samplesPixel_(0u);
+static unsigned int samplesLight_(0u);
+static unsigned int blockSize_(4u);
+static unsigned int blockSizeX_(0u);
+static unsigned int blockSizeY_(0u);
 
-static const unsigned int width_(512);
-static const unsigned int height_(512);
+static const unsigned int width_(512u);
+static const unsigned int height_(512u);
 static unsigned int canvas[width_ * height_];
 
 MobileRT::Scene *cornellBoxScene(void) {
@@ -112,7 +112,7 @@ MobileRT::Scene *cornellBoxScene2(void) {
     LOG("samplesLight_ = %u", samplesLight_);
     LOG("samplesPixel_ = %u", samplesPixel_);
     LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
-    //samplerPointLight_ = new MobileRT::HaltonSeq(domainPointLight, 1);
+    //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1);
     samplerPointLight_ = new Components::Random(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -344,7 +344,7 @@ int main(int argc, char **argv) {
     }
     switch (sampler) {
         case 1:
-            if (samplesPixel_ > 1)
+            if (samplesPixel_ > 1u)
             {
                 samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
                                                           1u);
@@ -358,7 +358,7 @@ int main(int argc, char **argv) {
             break;
 
         default:
-            if (samplesPixel_ > 1)
+            if (samplesPixel_ > 1u)
             {
                 samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
                                                            1u);
@@ -373,9 +373,10 @@ int main(int argc, char **argv) {
     }
     samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
-    const unsigned long long int domainRay ((width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX);
+    const unsigned long long int domainRay(
+            (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
     const unsigned long long int domainLight (
-            (width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
+            (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
             shader_ = new Components::Whitted(*scene_, samplesLight_);
@@ -383,9 +384,9 @@ int main(int argc, char **argv) {
 
         case 2:
         LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
-            //samplerRay_ = new MobileRT::HaltonSeq(domainRay, 1);
+            //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
             samplerRay_ = new Components::Random(domainRay, 1);
-            //samplerLight_ = new MobileRT::HaltonSeq(domainLight, 1);
+            //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::Random(domainLight, 1);
             shader_ = new Components::PathTracer(
                     *scene_, *samplerRay_, *samplerLight_, samplesLight_);
@@ -417,7 +418,7 @@ int main(int argc, char **argv) {
         do {
             renderer_->renderFrame(canvas, threads);
             repeats--;
-        } while (repeats > 0);
+        } while (repeats > 0u);
     } catch (...) {
         LOG("%s", "EXCEPTION");
         raise(SIGTRAP);
@@ -426,9 +427,9 @@ int main(int argc, char **argv) {
     std::cout << "\nTime in secs::" << end << std::endl;
 
     //RGBA
-    unsigned char *buffer = new unsigned char[width_ * height_ * 4];
+    unsigned char *buffer(new unsigned char[width_ * height_ * 4u]);
 
-    for (unsigned int i(0), j(0); i < width_ * height_ * 4; i += 4, j += 1)
+    for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u)
     {
         const unsigned int color(canvas[j]);
         buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);

@@ -394,7 +394,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     switch (sampler) {
         case 1:
-            if (samplesPixel_ > 1)
+            if (samplesPixel_ > 1u)
             {
                 samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
                                                           1u);
@@ -408,7 +408,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         default:
-            if (samplesPixel_ > 1)
+            if (samplesPixel_ > 1u)
             {
                 samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
                                                            1u);
@@ -423,9 +423,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
-    const unsigned long long int domainRay ((width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX);
+    const unsigned long long int domainRay(
+            (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
     const unsigned long long int domainLight (
-            (width_ * height_ * 2llu) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
+            (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
             shader_ = new Components::Whitted(*scene_, samplesLight_);
