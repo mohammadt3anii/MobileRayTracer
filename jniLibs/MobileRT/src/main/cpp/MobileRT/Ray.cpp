@@ -8,11 +8,6 @@ using namespace MobileRT;
 
 static unsigned int counter(0u);
 
-Ray::Ray(void) :
-        depth_(1u) {
-    counter++;
-}
-
 Ray::Ray(const float x, const float y, const float z, const Point3D &origin,
          const unsigned int depth) :
         origin_(origin),

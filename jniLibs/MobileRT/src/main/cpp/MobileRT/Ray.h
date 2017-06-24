@@ -18,9 +18,7 @@ namespace MobileRT {
         const unsigned int depth_;
 
     public:
-        explicit Ray(void);
-
-        explicit Ray(const float x, const float y, const float z, const Point3D &position,
+        explicit Ray(const float x, const float y, const float z, const Point3D &origin,
                      const unsigned int depth);
 
         explicit Ray(const Vector3D &dir, const Point3D &origin,
