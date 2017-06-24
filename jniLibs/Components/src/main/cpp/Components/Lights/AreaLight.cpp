@@ -25,7 +25,7 @@ const Point3D AreaLight::getPosition(void) {
     const float x(pointA_.x_ + R * AB_.x_ + S * AC_.x_);
     const float y(pointA_.y_ + R * AB_.y_ + S * AC_.y_);
     const float z(pointA_.z_ + R * AB_.z_ + S * AC_.z_);
-    Point3D position(x + 0.0f, y + 0.0f, z + 0.0f);
+    Point3D position(x, y, z);
     return position;
 }
 
