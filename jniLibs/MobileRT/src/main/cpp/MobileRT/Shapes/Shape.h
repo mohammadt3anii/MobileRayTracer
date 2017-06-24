@@ -18,7 +18,8 @@ namespace MobileRT {
         virtual bool intersect(Intersection &, const Ray &, const Material &) const = 0;
 
         virtual float getZ(void) const;
-        virtual void moveTo(float x, float y);
+
+        virtual void moveTo(const float x, const float y);
     };
 }
 

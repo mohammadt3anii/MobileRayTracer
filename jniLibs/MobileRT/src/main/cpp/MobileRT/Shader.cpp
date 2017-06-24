@@ -13,9 +13,6 @@ Shader::Shader(Scene &scene, const unsigned int samplesLight) :
 Shader::~Shader(void) {
 }
 
-void Shader::shade(RGB &, const Intersection &, const Ray &) const {
-}
-
 //ray trace and verifies if intersects primitives
 void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const {
     if (this->scene_.trace(intersection, ray) >= 0) {
@@ -26,7 +23,7 @@ void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) cons
     }
 }
 
-int Shader::traceTouch(Intersection &intersection, Ray &ray) const {
+int Shader::traceTouch(Intersection &intersection, const Ray &ray) const {
     return this->scene_.trace(intersection, ray);
 }
 

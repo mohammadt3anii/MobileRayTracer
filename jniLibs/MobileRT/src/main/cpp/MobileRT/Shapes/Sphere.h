@@ -20,7 +20,7 @@ namespace MobileRT {
         virtual bool intersect(Intersection &intersection, const Ray &ray,
                                const Material &material) const override final;
 
-        virtual void moveTo(float x, float y) override final;
+        virtual void moveTo(const float x, const float y) override final;
 
         virtual float getZ(void) const override final;
     };

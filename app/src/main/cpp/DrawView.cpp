@@ -516,7 +516,7 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
         jfloat jy) {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
-    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
+    const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     MobileRT::Intersection intersection;
     const int primitiveID(shader_->traceTouch(intersection, ray));
     return primitiveID;
@@ -532,10 +532,10 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 ) {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
-    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
+    const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     const unsigned long index(static_cast<unsigned long>(primitiveIndex));
     const MobileRT::Material material;
-    MobileRT::Plane plane(
+    const MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
