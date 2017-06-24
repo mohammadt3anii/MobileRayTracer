@@ -40,6 +40,14 @@ Vector3D::Vector3D(const Vector3D &vector, const float value) :
     counter++;
 }
 
+Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float value) :
+        x_(vector1.x_ - vector2.x_ * value + 0.0f),
+        y_(vector1.y_ - vector2.y_ * value + 0.0f),
+        z_(vector1.z_ - vector2.z_ * value + 0.0f) {
+    counter++;
+}
+
+
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) :
         x_(dest.x_ - orig.x_ + 0.0f),
         y_(dest.y_ - orig.y_ + 0.0f),
@@ -114,18 +122,6 @@ void Vector3D::mult(const float value) {
     this->x_ *= value + 0.0f;
     this->y_ *= value + 0.0f;
     this->z_ *= value + 0.0f;
-}
-
-void Vector3D::subAndNormalize(const Vector3D &vector) {
-    this->x_ -= vector.x_ + 0.0f;
-    this->y_ -= vector.y_ + 0.0f;
-    this->z_ -= vector.z_ + 0.0f;
-    const float len(magnitude());
-    if (len == 0.0f) return;
-    const float inv_length(1.0f / len);
-    this->x_ *= inv_length + 0.0f;
-    this->y_ *= inv_length + 0.0f;
-    this->z_ *= inv_length + 0.0f;
 }
 
 const Vector3D Vector3D::operator*(const float value) const {

@@ -18,23 +18,21 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));
-    const float abs(normalized_projection * (1 + (normalized_projection < 0) * -2));
+    const float abs(normalized_projection * (1.0f + (normalized_projection < 0.0f) * -2.0f));
     if (abs < VECT_PROJ_MIN) return false;
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    const float distance(
+    const float distanceToIntersection(
             this->normal_.dotProduct(this->point_, ray.origin_) / normalized_projection);
 
     // is it in front of the eye?
     //* is it farther than the ray length ??
-    if (distance < RAY_LENGTH_MIN || distance > intersection.length_) {
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
         return false;
-    }
 
     // if so, then we have an intersection
-    intersection.reset(ray.origin_, ray.direction_, distance,
+    intersection.reset(ray.origin_, ray.direction_, distanceToIntersection,
                        this->normal_,
-                       distance,
                        material,
                        ray.origin_);
 

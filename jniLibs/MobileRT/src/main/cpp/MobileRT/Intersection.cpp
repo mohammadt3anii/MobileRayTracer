@@ -51,13 +51,13 @@ void Intersection::reset(const float x, const float y, const float z,
 }
 
 void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
-                         const Vector3D &normal, const float length, const Material &material,
+                         const Vector3D &normal, const Material &material,
                          const Point3D &origin) {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
     this->normal_ = normal;
-    this->length_ = length;
+    this->length_ = dist;
     this->material_ = &material;
     this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = origin;
@@ -70,11 +70,6 @@ void Intersection::reset(Intersection &intersection) {
     this->material_ = intersection.material_;
     this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
     this->origin_ = intersection.origin_;
-}
-
-Vector3D &Intersection::getSymNormal(void) {
-    this->symNormal_.reset(-this->normal_.x_ + 0.0f, -this->normal_.y_ + 0.0f, -this->normal_.z_ + 0.0f);
-    return this->symNormal_;
 }
 
 unsigned int Intersection::getInstances() {

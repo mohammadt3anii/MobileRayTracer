@@ -21,8 +21,12 @@ namespace MobileRT {
         explicit Vector3D(void);
 
         explicit Vector3D(const float x, const float y, const float z);
+
         Vector3D(const Vector3D &vector);
+
         explicit Vector3D(const Vector3D &vector, const float value);
+
+        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float value);
 
         explicit Vector3D(const Point3D &dest, const Point3D &orig);
 
@@ -35,6 +39,7 @@ namespace MobileRT {
         const Vector3D operator*(const float value);
 
         const Vector3D operator+(const Vector3D vector) const;
+
         float dotProduct(const Vector3D &vector) const;
 
         float dotProduct(const Point3D &dest, const Point3D &orig) const;
@@ -42,17 +47,19 @@ namespace MobileRT {
         float squareMagnitude(void) const;
 
         float magnitude(void) const;
-        Vector3D crossProduct(const Vector3D &vector) const;
-        void mult(const float value);
 
-        void subAndNormalize(const Vector3D &vector);
+        Vector3D crossProduct(const Vector3D &vector) const;
+
+        void mult(const float value);
 
         float normalize(void);
 
         const Vector3D returnNormalized(void) const;
 
         const Vector3D operator*(const float value) const;
+
         void reset(const float x, const float y, const float z);
+
         void reset(const Point3D &dest, const Point3D &orig);
 
         Vector3D symmetric(void) const;

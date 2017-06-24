@@ -32,12 +32,9 @@ namespace MobileRT {
                    const Point3D &origin);
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
-                   const Vector3D &normal, const float length, const Material &material,
-                   const Point3D &origin);
+                   const Vector3D &normal, const Material &material, const Point3D &origin);
                    
         void reset(Intersection &intersection);
-
-        Vector3D &getSymNormal(void);
 
         static unsigned int getInstances();
     };

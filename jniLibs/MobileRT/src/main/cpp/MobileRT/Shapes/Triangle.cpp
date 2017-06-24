@@ -59,8 +59,8 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
     intersection.reset(
             ray.origin_, ray.direction_, distanceToIntersection,
             this->normal_,
-            distanceToIntersection,
             material,
             ray.origin_);
+
     return true;
 }
