@@ -31,7 +31,7 @@ namespace MobileRT {
 
         int traceTouch(Intersection &intersection, const Ray &ray) const;
 
-        virtual void resetSampling(void);
+        virtual void resetSampling(void) = 0;
     };
 }
 

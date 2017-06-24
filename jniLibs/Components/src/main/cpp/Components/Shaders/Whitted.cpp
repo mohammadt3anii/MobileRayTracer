@@ -113,3 +113,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
 
     rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
 }
+
+void Whitted::resetSampling(void) {
+    this->scene_.resetSampling();
+}

@@ -15,9 +15,9 @@ namespace MobileRT {
         const Point3D pointA_;
         const Point3D pointB_;
         const Point3D pointC_;
-        Vector3D AB_;
-        Vector3D AC_;
-        Vector3D normal_;
+        const Vector3D AB_;
+        const Vector3D AC_;
+        const Vector3D normal_;
 
     public:
         explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);

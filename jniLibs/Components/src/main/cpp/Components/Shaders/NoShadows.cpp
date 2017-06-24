@@ -40,3 +40,7 @@ void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) c
 
     rgb.add(Le);
 }
+
+void NoShadows::resetSampling(void) {
+    this->scene_.resetSampling();
+}

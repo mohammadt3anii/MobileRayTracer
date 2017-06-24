@@ -18,6 +18,8 @@ namespace Components {
 
     public:
         explicit NoShadows(Scene &scene, const unsigned int samplesLight);
+
+        virtual void resetSampling(void) override final;
     };
 }
 

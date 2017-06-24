@@ -10,8 +10,8 @@ using namespace MobileRT;
 Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &up) :
         position_(position),
         direction_(Vector3D(lookAt, position, true)),
-        right_((up.crossProduct(direction_)).returnNormalized()),
-        up_((direction_.crossProduct(right_)).returnNormalized()) {
+        right_(up.crossProduct(direction_)),
+        up_(direction_.crossProduct(right_)) {
 }
 
 Camera::~Camera(void) {
