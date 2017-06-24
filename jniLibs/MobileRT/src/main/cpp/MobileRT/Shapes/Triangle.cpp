@@ -56,3 +56,10 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
 
     return true;
 }
+
+void Triangle::moveTo(float, float) {
+}
+
+float Triangle::getZ(void) const {
+    return 0.0f;
+}

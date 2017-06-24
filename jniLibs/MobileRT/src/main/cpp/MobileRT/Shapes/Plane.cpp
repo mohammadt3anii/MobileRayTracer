@@ -36,3 +36,10 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
 
     return true;
 }
+
+void Plane::moveTo(float, float) {
+}
+
+float Plane::getZ(void) const {
+    return 0.0f;
+}
