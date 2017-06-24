@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 Ray::Ray(void) :
         depth_(1) {
@@ -36,6 +36,6 @@ Ray::Ray(const Vector3D &dir, const Point3D &origin,
 
 unsigned int Ray::getInstances() {
     const unsigned int res(counter);
-    counter = 0;
+    counter = 0u;
     return res;
 }

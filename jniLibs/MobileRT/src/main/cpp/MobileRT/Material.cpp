@@ -5,7 +5,7 @@
 #include "Material.h"
 
 using namespace MobileRT;
-static unsigned int counter(0);
+static unsigned int counter(0u);
 
 Material::Material(void) : refractiveIndice_(1.0f) {
     counter++;
@@ -75,6 +75,6 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
 
 unsigned int Material::getInstances() {
     const unsigned int res(counter);
-    counter = 0;
+    counter = 0u;
     return res;
 }

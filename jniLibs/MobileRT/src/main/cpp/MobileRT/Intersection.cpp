@@ -79,6 +79,6 @@ void Intersection::reset(Intersection &intersection) {
 
 unsigned int Intersection::getInstances() {
     const unsigned int res(counter);
-    counter = 0;
+    counter = 0u;
     return res;
 }

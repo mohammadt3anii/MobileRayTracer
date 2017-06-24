@@ -157,7 +157,7 @@ const Vector3D Vector3D::operator+(const Vector3D vector) const {
 
 unsigned int Vector3D::getInstances() {
     const unsigned int res(counter);
-    counter = 0;
+    counter = 0u;
     return res;
 }
 

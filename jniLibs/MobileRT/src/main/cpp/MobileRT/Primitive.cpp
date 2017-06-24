@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 Primitive::Primitive(Shape *shape, const Material &material) :
         material_(material),
@@ -23,7 +23,7 @@ bool Primitive::intersect(Intersection &intersection, const Ray &ray) const {
 }
 
 unsigned int Primitive::getInstances() {
-    unsigned int res(counter);
-    counter = 0;
+    const unsigned int res(counter);
+    counter = 0u;
     return res;
 }

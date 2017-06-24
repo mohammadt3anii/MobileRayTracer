@@ -67,8 +67,8 @@ void Point3D::operator=(const Point3D &point3D) {
 }
 
 unsigned int Point3D::getInstances() {
-    unsigned int res(counter);
-    counter = 0;
+    const unsigned int res(counter);
+    counter = 0u;
     return res;
 }
 

@@ -33,7 +33,7 @@ namespace MobileRT {
 
         void addMult(const RGB &rgb1, const RGB &rgb2);
 
-        RGB operator*(const float value) const;
+        const RGB operator*(const float value) const;
 
         void operator*=(const RGB &rgb);
 

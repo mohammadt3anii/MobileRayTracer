@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter(0);
+static unsigned int counter(0u);
 
 Scene::Scene(void) {
     counter++;
@@ -73,7 +73,7 @@ bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
 
 unsigned int Scene::getInstances(void) {
     const unsigned int res(counter);
-    counter = 0;
+    counter = 0u;
     return res;
 }
 

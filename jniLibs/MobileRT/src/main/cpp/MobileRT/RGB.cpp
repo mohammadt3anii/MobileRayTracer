@@ -5,13 +5,13 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 RGB::RGB(void) :
         R_(0.0f),
         G_(0.0f),
         B_(0.0f),
-        samples_(0) {
+        samples_(0u) {
     counter++;
 }
 
@@ -63,10 +63,9 @@ void RGB::operator*=(const RGB &rgb) {
     this->B_ *= rgb.B_;
 }
 
-RGB RGB::operator*(const float value) const
+const RGB RGB::operator*(const float value) const
 {
-    RGB newRGB(this->R_ * value, this->G_ * value, this->B_ * value);
-    return newRGB;
+    return RGB(this->R_ * value, this->G_ * value, this->B_ * value);
 }
 
 void RGB::operator*=(const float value) {
@@ -135,8 +134,8 @@ unsigned int RGB::RGB2Color(void) {
 }
 
 unsigned int RGB::getInstances() {
-    unsigned int res(counter);
-    counter = 0;
+    const unsigned int res(counter);
+    counter = 0u;
     return res;
 }
 
