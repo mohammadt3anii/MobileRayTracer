@@ -8,10 +8,10 @@ using namespace MobileRT;
 static unsigned int counter(0u);
 
 RGB::RGB(void) :
+        samples_(0u),
         R_(0.0f),
         G_(0.0f),
-        B_(0.0f),
-        samples_(0u) {
+        B_(0.0f) {
     counter++;
 }
 
