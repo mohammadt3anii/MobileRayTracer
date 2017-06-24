@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 Vector3D::Vector3D(void) :
         x_(0.0f),
@@ -29,6 +29,12 @@ Vector3D::Vector3D(const Vector3D &vector) :
         y_(vector.y_),
         z_(vector.z_)
 {
+    const float len(magnitude());
+    if (len == 0.0f) return;
+    const float inv_length(1.0f / len);
+    this->x_ *= inv_length;
+    this->y_ *= inv_length;
+    this->z_ *= inv_length;
     counter++;
 }
 
@@ -95,9 +101,7 @@ float Vector3D::normalize(void) {
 }
 
 const Vector3D Vector3D::returnNormalized(void) const {
-    Vector3D normalized(*this);
-    normalized.normalize();
-    return normalized;
+    return Vector3D(*this);
 }
 
 float Vector3D::dotProduct(const Vector3D &vector) const {
@@ -118,11 +122,10 @@ float Vector3D::magnitude(void) const {
     return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
-Vector3D Vector3D::crossProduct(const Vector3D &vector) const {
-    const float x(this->y_ * vector.z_ - this->z_ * vector.y_);
-    const float y(this->z_ * vector.x_ - this->x_ * vector.z_);
-    const float z(this->x_ * vector.y_ - this->y_ * vector.x_);
-    return Vector3D(x, y, z);
+const Vector3D Vector3D::crossProduct(const Vector3D &vector) const {
+    return Vector3D(this->y_ * vector.z_ - this->z_ * vector.y_,
+                    this->z_ * vector.x_ - this->x_ * vector.z_,
+                    this->x_ * vector.y_ - this->y_ * vector.x_);
 }
 
 void Vector3D::mult(const float value) {
@@ -152,25 +155,12 @@ const Vector3D Vector3D::operator+(const Vector3D vector) const {
     return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 
-void Vector3D::reset(const float x, const float y, const float z) {
-    this->x_ = x;
-    this->y_ = y;
-    this->z_ = z;
-    normalize();
-}
-
-void Vector3D::reset(const Point3D &dest, const Point3D &orig) {
-    this->x_ = dest.x_ - orig.x_;
-    this->y_ = dest.y_ - orig.y_;
-    this->z_ = dest.z_ - orig.z_;
-}
-
 unsigned int Vector3D::getInstances() {
     const unsigned int res(counter);
     counter = 0;
     return res;
 }
 
-Vector3D Vector3D::symmetric(void) const {
+const Vector3D Vector3D::symmetric(void) const {
     return Vector3D(-this->x_, -this->y_, -this->z_);
 }

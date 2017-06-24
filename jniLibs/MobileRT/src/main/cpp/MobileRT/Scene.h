@@ -27,6 +27,7 @@ namespace MobileRT {
         ~Scene(void);
 
         int trace(Intersection &intersection, const Ray &ray) const;
+
         bool shadowTrace(Intersection &intersection, const Ray &ray) const;
 
         static unsigned int getInstances(void);

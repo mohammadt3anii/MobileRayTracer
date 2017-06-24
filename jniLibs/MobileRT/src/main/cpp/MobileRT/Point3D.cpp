@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 Point3D::Point3D(void) :
         x_(0.0f),
@@ -48,17 +48,15 @@ Point3D::Point3D(const Point3D &point, const Vector3D &vector, const float value
 }
 
 const Vector3D Point3D::operator-(const Point3D &point) const {
-    const float x(this->x_ - point.x_);
-    const float y(this->y_ - point.y_);
-    const float z(this->z_ - point.z_);
-    return Vector3D(x, y, z);
+    return Vector3D(this->x_ - point.x_,
+                    this->y_ - point.y_,
+                    this->z_ - point.z_);
 }
 
 const Point3D Point3D::operator+(const Vector3D &vector) const {
-    const float x(this->x_ + vector.x_);
-    const float y(this->y_ + vector.y_);
-    const float z(this->z_ + vector.z_);
-    Point3D res(x, y, z);
+    Point3D res(this->x_ + vector.x_,
+                this->y_ + vector.y_,
+                this->z_ + vector.z_);
     return res;
 }
 

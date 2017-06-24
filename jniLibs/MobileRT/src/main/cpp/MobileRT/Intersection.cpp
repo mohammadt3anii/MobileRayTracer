@@ -6,7 +6,7 @@
 
 using namespace MobileRT;
 
-static unsigned int counter = 0;
+static unsigned int counter(0u);
 
 Intersection::Intersection(void) :
         material_(nullptr),
@@ -22,31 +22,34 @@ Intersection::Intersection(Intersection &intersection) :
         length_(intersection.length_),
         origin_(intersection.origin_)
 {
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
     counter++;
 }
 
 void Intersection::reset(const Point3D &point,
-                         const Vector3D &normal, const float length, const Material &material,
+                         const Vector3D &normal, const float dist, const Material &material,
                          const Point3D &origin) {
     this->point_ = point;
     this->normal_ = normal;
-    this->length_ = length;
+    this->length_ = dist;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.x_ = -this->normal_.x_;
+    this->symNormal_.y_ = -this->normal_.y_;
+    this->symNormal_.z_ = -this->normal_.z_;
     this->origin_ = origin;
 }
 
 void Intersection::reset(const float x, const float y, const float z,
-                         const Vector3D &normal, const float length, const Material &material,
+                         const Vector3D &normal, const float dist, const Material &material,
                          const Point3D &origin) {
     this->point_.x_ = x;
     this->point_.y_ = y;
     this->point_.z_ = z;
     this->normal_ = normal;
-    this->length_ = length;
+    this->length_ = dist;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.x_ = -this->normal_.x_;
+    this->symNormal_.y_ = -this->normal_.y_;
+    this->symNormal_.z_ = -this->normal_.z_;
     this->origin_ = origin;
 }
 
@@ -59,7 +62,9 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->normal_ = normal;
     this->length_ = dist;
     this->material_ = &material;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_.x_ = -this->normal_.x_;
+    this->symNormal_.y_ = -this->normal_.y_;
+    this->symNormal_.z_ = -this->normal_.z_;
     this->origin_ = origin;
 }
 
@@ -68,7 +73,7 @@ void Intersection::reset(Intersection &intersection) {
     this->normal_ = intersection.normal_;
     this->length_ = intersection.length_;
     this->material_ = intersection.material_;
-    this->symNormal_.reset(-this->normal_.x_, -this->normal_.y_, -this->normal_.z_);
+    this->symNormal_ = intersection.symNormal_;
     this->origin_ = intersection.origin_;
 }
 

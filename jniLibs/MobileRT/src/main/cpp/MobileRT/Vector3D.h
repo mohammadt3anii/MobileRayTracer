@@ -49,7 +49,7 @@ namespace MobileRT {
 
         float magnitude(void) const;
 
-        Vector3D crossProduct(const Vector3D &vector) const;
+        const Vector3D crossProduct(const Vector3D &vector) const;
 
         void mult(const float value);
 
@@ -59,11 +59,7 @@ namespace MobileRT {
 
         const Vector3D operator*(const float value) const;
 
-        void reset(const float x, const float y, const float z);
-
-        void reset(const Point3D &dest, const Point3D &orig);
-
-        Vector3D symmetric(void) const;
+        const Vector3D symmetric(void) const;
 
         static unsigned int getInstances();
     };

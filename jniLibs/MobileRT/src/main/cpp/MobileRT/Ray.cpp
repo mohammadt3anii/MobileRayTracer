@@ -34,12 +34,6 @@ Ray::Ray(const Vector3D &dir, const Point3D &origin,
     this->direction_.normalize();
 }
 
-void Ray::reset(const float x, const float y, const float z, const Point3D &origin) {
-    this->direction_.reset(x, y, z);
-    this->symDirection_.reset(-x, -y, -z);
-    this->origin_ = origin;
-}
-
 unsigned int Ray::getInstances() {
     const unsigned int res(counter);
     counter = 0;
