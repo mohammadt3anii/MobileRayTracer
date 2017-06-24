@@ -27,7 +27,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const {
     int res(-1);
     const unsigned int lightsSize(static_cast<unsigned int> (lights_.size()));
 
-    for (unsigned int i(0); i < lightsSize; i++) {
+    for (unsigned int i(0u); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
         if (light.intersect(intersection, ray, light.radiance_))
         {
@@ -42,7 +42,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const {
     int res(-1);
     const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
-    for (unsigned int i(0); i < primitivesSize; i++) {
+    for (unsigned int i(0u); i < primitivesSize; i++) {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
         //const Shape &shape((*this->primitives_[static_cast<unsigned long> (i)])->shape_);
         if (primitive.intersect(intersection, ray))
@@ -59,7 +59,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const {
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
     const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
-    for (unsigned int i(0); i < primitivesSize; i++)//trace shadow ray
+    for (unsigned int i(0u); i < primitivesSize; i++)//trace shadow ray
     {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
         if (primitive.intersect(intersection, ray))
