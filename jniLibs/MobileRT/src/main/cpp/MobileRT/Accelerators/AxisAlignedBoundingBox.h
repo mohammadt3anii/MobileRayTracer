@@ -14,9 +14,9 @@
 
 namespace MobileRT {
     class AxisAlignedBoundingBox final {
-        private:
-            const Point3D pointMin_;
-            const Point3D pointMax_;
+    public:
+        const Point3D pointMin_;
+        const Point3D pointMax_;
 
     public:
         //std::vector<Primitive *> *primitives_;

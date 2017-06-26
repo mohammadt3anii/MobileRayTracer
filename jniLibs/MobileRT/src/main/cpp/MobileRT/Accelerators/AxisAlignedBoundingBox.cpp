@@ -14,41 +14,32 @@ AxisAlignedBoundingBox::AxisAlignedBoundingBox(const Point3D &pointMin, const Po
 bool AxisAlignedBoundingBox::intersect(Intersection &, const Ray &ray,
                const Material &) const
 {
-    float tmin ((pointMin_.x_ - ray.origin_.x_) / ray.direction_.x_);
-    float tmax ((pointMax_.x_ - ray.origin_.x_) / ray.direction_.x_);
+    float txmin((pointMin_.x_ - ray.origin_.x_) / ray.direction_.x_);
+    float txmax((pointMax_.x_ - ray.origin_.x_) / ray.direction_.x_);
 
-    if (tmin > tmax)
-        std::swap(tmin, tmax);
+    if (txmin > txmax) std::swap(txmin, txmax);
 
     float tymin ((pointMin_.y_ - ray.origin_.y_) / ray.direction_.y_);
     float tymax ((pointMax_.y_ - ray.origin_.y_) / ray.direction_.y_);
 
-    if (tymin > tymax)
-        std::swap(tymin, tymax);
+    if (tymin > tymax) std::swap(tymin, tymax);
 
-    if ((tmin > tymax) || (tymin > tmax))
-        return false;
+    if ((txmin > tymax) || (tymin > txmax)) return false;
 
-    if (tymin > tmin)
-        tmin = tymin;
+    if (tymin > txmin) txmin = tymin;
 
-    if (tymax < tmax)
-        tmax = tymax;
+    if (tymax < txmax) txmax = tymax;
 
     float tzmin ((pointMin_.z_ - ray.origin_.z_) / ray.direction_.z_);
     float tzmax ((pointMax_.z_ - ray.origin_.z_) / ray.direction_.z_);
 
-    if (tzmin > tzmax)
-        std::swap(tzmin, tzmax);
+    if (tzmin > tzmax) std::swap(tzmin, tzmax);
 
-    if ((tmin > tzmax) || (tzmin > tmax))
-        return false;
+    if ((txmin > tzmax) || (tzmin > txmax)) return false;
 
-    if (tzmin > tmin)
-        tmin = tzmin;
+    if (tzmin > txmin) txmin = tzmin;
 
-    if (tzmax < tmax)
-        tmax = tzmax;
+    if (tzmax < txmax) txmax = tzmax;
 
     return true;
 }

@@ -89,15 +89,6 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) :
 {
 }
 
-float Vector3D::normalize(void) {
-    const float len(magnitude());
-    const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
-    return len;
-}
-
 const Vector3D Vector3D::returnNormalized(void) const {
     return Vector3D(*this);
 }
@@ -151,6 +142,14 @@ const Vector3D Vector3D::operator*(const float value) {
     return Vector3D(this->x_ * value,
                     this->y_ * value,
                     this->z_ * value);
+}
+
+const Point3D Vector3D::operator/(const float value) const {
+    Point3D res(
+            this->x_ / value,
+            this->y_ / value,
+            this->z_ / value);
+    return res;
 }
 
 const Vector3D Vector3D::operator+(const Vector3D vector) const {

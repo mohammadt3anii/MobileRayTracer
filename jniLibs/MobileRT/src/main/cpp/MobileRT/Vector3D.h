@@ -39,6 +39,8 @@ namespace MobileRT {
 
         const Vector3D operator*(const float value);
 
+        const Point3D operator/(const float value) const;
+
         const Vector3D operator+(const Vector3D vector) const;
 
         float dotProduct(const Vector3D &vector) const;
@@ -52,8 +54,6 @@ namespace MobileRT {
         const Vector3D crossProduct(const Vector3D &vector) const;
 
         void mult(const float value);
-
-        float normalize(void);
 
         const Vector3D returnNormalized(void) const;
 
