@@ -17,9 +17,10 @@ HaltonSeq::HaltonSeq(const unsigned int width, const unsigned int height,
 }
 
 float HaltonSeq::getSample(const unsigned int sample) {
-    const unsigned long long int current(this->sample_.fetch_add(1, std::memory_order_relaxed));
-    if (isFinished(sample, current)) {
-        this->sample_.fetch_sub(1, std::memory_order_relaxed);
+    const unsigned long long int current(this->sample_.fetch_add(1ull, std::memory_order_acq_rel));
+	if (current >= (this->domainSize_ * (sample + 1u)))
+	{
+        this->sample_.fetch_sub(1ull, std::memory_order_acq_rel);
         return 1.0f;
     }
     return haltonSequence(current - (sample * this->domainSize_), 2u);
@@ -29,7 +30,7 @@ float HaltonSeq::getSample(const unsigned int sample) {
 float HaltonSeq::haltonSequence(unsigned long long int index, const unsigned int base) {
     float f(1.0f);
     float result(0.0f);
-    while (index > 0u) {
+    while (index > 0ull) {
         f /= base;
         result += f * (index % base);
         index = static_cast<unsigned long long int> (std::floor(index / base));

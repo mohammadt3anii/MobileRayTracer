@@ -22,10 +22,6 @@ Sampler::Sampler(const unsigned int width, const unsigned int height, const unsi
 Sampler::~Sampler(void) {
 }
 
-bool Sampler::isFinished(const unsigned int sample, const unsigned long long int current) {
-    return (current >= (this->domainSize_ * (sample + 1u)));
-}
-
 void Sampler::resetSampling() {
     this->sample_ = 0ull;
 }

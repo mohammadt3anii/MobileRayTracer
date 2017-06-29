@@ -17,9 +17,10 @@ Stratified::Stratified(const unsigned int width, const unsigned int height,
 }
 
 float Stratified::getSample(const unsigned int sample) {
-    const unsigned long long int current(this->sample_.fetch_add(1, std::memory_order_relaxed));
-    if (isFinished(sample, current)) {
-        this->sample_.fetch_sub(1, std::memory_order_relaxed);
+    const unsigned long long int current(this->sample_.fetch_add(1ull, std::memory_order_acq_rel));
+    if (current >= (this->domainSize_ * (sample + 1u)))
+	{
+        this->sample_.fetch_sub(1ull, std::memory_order_acq_rel);
         return 1.0f;
     }
     return static_cast<float> (current - (sample * this->domainSize_)) / this->domainSize_;

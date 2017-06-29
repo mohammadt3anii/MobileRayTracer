@@ -19,9 +19,6 @@ namespace MobileRT {
         const unsigned long long int domainSize_;
         unsigned long long int samples_;
 
-    protected:
-        bool isFinished(const unsigned int sample, const unsigned long long int current);
-
     public:
         explicit Sampler(const unsigned long long int domainSize, const unsigned int samples);
 

@@ -35,8 +35,8 @@ static unsigned int blockSize_(4u);
 static unsigned int blockSizeX_(0u);
 static unsigned int blockSizeY_(0u);
 
-static const unsigned int width_(512u);
-static const unsigned int height_(512u);
+static const unsigned int width_(1000u);
+static const unsigned int height_(1000u);
 static unsigned int canvas[width_ * height_];
 
 MobileRT::Scene *cornellBoxScene(void) {
@@ -299,8 +299,8 @@ int main(int argc, char **argv) {
     const int shader(2);
     const int threads(5);
     const int sampler(0);
-    const int samplesPixel(1);
-    const int samplesLight(1);
+    const int samplesPixel(2);
+    const int samplesLight(2);
     const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
     blockSizeX_ = width_ / blockSize_;
