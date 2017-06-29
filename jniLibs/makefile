@@ -27,7 +27,7 @@ GARB := $(shell find . -regextype gnu-awk -iname "*.fuse*" -print)
 
 %.o: %.s
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-	objdump -d -M intel -S $@ > $(basename $<).s
+	objdump --disassemble --disassembler-options=intel --line-numbers --source $@ > $(basename $<).s
 
 %.s: %.cpp
 	$(CXX) $(CXXFLAGS) -S -Wa,-ahl=$@ $< -o $@
