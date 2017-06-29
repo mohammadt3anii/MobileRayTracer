@@ -4,7 +4,6 @@
 **/.externalNativeBuild
 **/.idea
 **/.vscode
-**/.fuse*
 **/.gradle
 **/raytracer
 **/.d
