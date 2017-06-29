@@ -8,7 +8,7 @@ LD := $(CXX)
 MAKEFLAGS := -j5
 
 CXXFLAGS := -Wpedantic -Wall -Wextra -Winline -Wfatal-errors -MMD -MP -std=c++11 -g3
-#CXXFLAGS += -march=native -ftree-vectorize -Ofast
+CXXFLAGS += -march=native -ftree-vectorize -Ofast
 CXXFLAGS += -masm=intel -fverbose-asm
 CXXFLAGS += -DNO_ANDROID
 CXXFLAGS += -I./MobileRT/src/main/cpp
@@ -34,7 +34,7 @@ GARB := $(shell find . -regextype gnu-awk -iname "*.fuse*" -print)
 
 $(EXE): $(OBJS)
 	$(LD) $(OBJS) -o $@ $(LDFLAGS)
-	@rm -f $(DEPS) $(GARB)
+	@rm -f $(OBJS) $(DEPS) $(GARB)
 	@echo "Compilation done"
 
 clean:

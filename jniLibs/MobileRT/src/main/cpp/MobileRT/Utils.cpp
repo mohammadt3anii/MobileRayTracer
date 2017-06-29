@@ -11,5 +11,6 @@ float fastArcTan(const float value) {
 }
 
 unsigned int roundDownToMultipleOf(const unsigned int value, const unsigned int multiple) {
-	return value % multiple? value - (value % multiple) : value;
+	const unsigned int rest (value % multiple);
+	return rest? value - rest : value;
 }
