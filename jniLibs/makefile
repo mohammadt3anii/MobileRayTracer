@@ -1,5 +1,5 @@
 .SUFFIXES:
-.PRECIOUS: %.o %.s
+.PRECIOUS: %.s
 .PHONY: all
 
 EXE := raytracer
@@ -9,7 +9,7 @@ MAKEFLAGS := -j5
 
 CXXFLAGS := -Wpedantic -Wall -Wextra -Winline -Wfatal-errors -MMD -MP -std=c++11 -g3
 #CXXFLAGS += -march=native -ftree-vectorize -Ofast
-#CXXFLAGS += -masm=intel -fverbose-asm
+CXXFLAGS += -masm=intel -fverbose-asm
 CXXFLAGS += -DNO_ANDROID
 CXXFLAGS += -I./MobileRT/src/main/cpp
 CXXFLAGS += -I./Components/src/main/cpp
@@ -22,22 +22,23 @@ LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pthread -fopenmp
 SOURCES := $(shell find . ! -name "DrawView.cpp" -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
 DEPS := $(addsuffix .d,$(basename $(SOURCES)))
-ASM := $(addsuffix .s,$(basename $(SOURCES)))
-GARBAGE := $(shell find . -regextype gnu-awk -iname "*.fuse*" -print)
+ASSM := $(addsuffix .s,$(basename $(SOURCES)))
+GARB := $(shell find . -regextype gnu-awk -iname "*.fuse*" -print)
 
 %.o: %.s
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+	objdump -d -M intel -S $@ > $(basename $<).s
 
 %.s: %.cpp
 	$(CXX) $(CXXFLAGS) -S -Wa,-ahl=$@ $< -o $@
 
 $(EXE): $(OBJS)
 	$(LD) $(OBJS) -o $@ $(LDFLAGS)
-	@rm -f $(DEPS) $(GARBAGE)
+	@rm -f $(DEPS) $(GARB)
 	@echo "Compilation done"
 
 clean:
-	@rm -f $(OBJS) $(DEPS) $(ASM) $(EXE) $(GARBAGE)
+	@rm -f $(OBJS) $(DEPS) $(ASSM) $(EXE) $(GARB)
 	@echo "Clean done"
 
 all: $(EXE)

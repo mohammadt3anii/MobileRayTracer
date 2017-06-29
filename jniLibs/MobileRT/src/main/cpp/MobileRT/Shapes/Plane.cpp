@@ -24,7 +24,7 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
             this->normal_.dotProduct(this->point_, ray.origin_) / normalized_projection);
 
     // is it in front of the eye?
-    //* is it farther than the ray length ??
+    // is it farther than the ray length ??
     if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
         return false;
 
