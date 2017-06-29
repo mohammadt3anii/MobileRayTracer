@@ -117,20 +117,19 @@ void RGB::reset(const float r, const float g, const float b) {
 }
 
 unsigned int RGB::RGB2Color(void) {
-    unsigned int red(static_cast<unsigned int> (this->R_ * 255u));
+    const unsigned int red(static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int maskR(0u - (red > 255u));
-    red = (255u & maskR) | (red & ~maskR);
+    const unsigned int r((255u & maskR) | (red & ~maskR));
 
-    unsigned int green(static_cast<unsigned int> (this->G_ * 255u));
+    const unsigned int green(static_cast<unsigned int> (this->G_ * 255u));
     const unsigned int maskG(0u - (green > 255u));
-    green = (255u & maskG) | (green & ~maskG);
+    const unsigned int g((255u & maskG) | (green & ~maskG));
 
-
-    unsigned int blue(static_cast<unsigned int> (this->B_ * 255u));
+    const unsigned int blue(static_cast<unsigned int> (this->B_ * 255u));
     const unsigned int maskB(0u - (blue > 255u));
-    blue = (255u & maskB) | (blue & ~maskB);
+    const unsigned int b((255u & maskB) | (blue & ~maskB));
 
-    return (0xFF000000 | (blue << 16) | (green << 8) | red);
+    return (0xFF000000u | (b << 16u) | (g << 8u) | r);
 }
 
 unsigned int RGB::getInstances() {

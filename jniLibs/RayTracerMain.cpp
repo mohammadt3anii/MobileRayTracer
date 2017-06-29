@@ -299,7 +299,7 @@ int main(int argc, char **argv) {
     const int shader(2);
     const int threads(5);
     const int sampler(0);
-    const int samplesPixel(2);
+    const int samplesPixel(16);
     const int samplesLight(2);
     const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
