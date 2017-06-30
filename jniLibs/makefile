@@ -16,7 +16,7 @@ CXXFLAGS += $(shell pkg-config --cflags gtk+-2.0)
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 
-################################################################################
+###############################################################################
 
 SOURCES := $(shell find . ! -name "DrawView.cpp" -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
