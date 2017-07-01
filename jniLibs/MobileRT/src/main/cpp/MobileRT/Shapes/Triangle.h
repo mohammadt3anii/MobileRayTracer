@@ -11,23 +11,23 @@
 
 namespace MobileRT {
     class Triangle : public Shape {
-    public:
-        const Point3D pointA_;
-        const Point3D pointB_;
-        const Point3D pointC_;
-        const Vector3D AB_;
-        const Vector3D AC_;
-        const Vector3D normal_;
+		public:
+			const Point3D pointA_;
+			const Point3D pointB_;
+			const Point3D pointC_;
+			const Vector3D AB_;
+			const Vector3D AC_;
+			const Vector3D normal_;
 
-    public:
-        explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
+		public:
+			explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
 
-        virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const override;
+			virtual bool intersect(Intersection &intersection, const Ray &ray,
+								const Material &material) const override;
 
-        virtual void moveTo(const float x, const float y) override final;
+			virtual void moveTo(const float x, const float y) override final;
 
-        virtual float getZ(void) const override final;
+			virtual float getZ(void) const override final;
     };
 }
 

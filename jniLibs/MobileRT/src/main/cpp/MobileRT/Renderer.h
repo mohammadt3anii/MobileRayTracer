@@ -10,44 +10,44 @@
 
 namespace MobileRT {
     class Renderer final {
-    private:
-        Sampler &samplerCamera_;
-        Shader &shader_;
-        const Camera &camera_;
-        const unsigned int width_;
-        const unsigned int height_;
-        RGB *const accumulate_;
-        const unsigned int domainSize_;
-        unsigned int blockSizeX_;
-        unsigned int blockSizeY_;
-        const unsigned int resolution_;
-        RGB *const imagePlane_;
-        float max_;
-        Sampler &samplerPixel_;
-        unsigned int sample_;
-        std::function<float(const float)> toneMapper_;
-        //char padding[4] __attribute__((unused));
+		private:
+			Sampler &samplerCamera_;
+			Shader &shader_;
+			const Camera &camera_;
+			const unsigned int width_;
+			const unsigned int height_;
+			RGB *const accumulate_;
+			const unsigned int domainSize_;
+			unsigned int blockSizeX_;
+			unsigned int blockSizeY_;
+			const unsigned int resolution_;
+			RGB *const imagePlane_;
+			float max_;
+			Sampler &samplerPixel_;
+			unsigned int sample_;
+			std::function<float(const float)> toneMapper_;
+			//char padding[4] __attribute__((unused));
 
-    private:
-        void renderScene(unsigned int *const bitmap, const unsigned int tid);
+		private:
+			void renderScene(unsigned int *const bitmap, const unsigned int tid);
 
-        void toneMapper(RGB& pixel);
+			void toneMapper(RGB& pixel);
 
-    public:
-        explicit Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
-                          const unsigned int width, const unsigned int height,
-                          const unsigned int blockSizeX, const unsigned int blockSizeY,
-                          Sampler &samplerPixel);
+		public:
+			explicit Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
+							const unsigned int width, const unsigned int height,
+							const unsigned int blockSizeX, const unsigned int blockSizeY,
+							Sampler &samplerPixel);
 
-        ~Renderer(void);
+			~Renderer(void);
 
-        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
+			void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
 
-        void registerToneMapper(std::function<float(const float value)> toneMapper);
+			void registerToneMapper(std::function<float(const float value)> toneMapper);
 
-        void stopRender(void);
+			void stopRender(void);
 
-        unsigned int getSample(void);
+			unsigned int getSample(void);
     };
 }
 

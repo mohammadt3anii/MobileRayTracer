@@ -13,25 +13,25 @@
 
 namespace MobileRT {
     class Shader {
-    public:
-        Scene &scene_;
+		public:
+			Scene &scene_;
 
-    protected:
-        const unsigned int samplesLight_;
+		protected:
+			const unsigned int samplesLight_;
 
-    protected:
-        virtual void shade(RGB &, const Intersection &, const Ray &) const = 0;
+		protected:
+			virtual void shade(RGB &, const Intersection &, const Ray &) const = 0;
 
-    public:
-        explicit Shader(Scene &scene, const unsigned int samplesLight);
+		public:
+			explicit Shader(Scene &scene, const unsigned int samplesLight);
 
-        virtual ~Shader(void);
+			virtual ~Shader(void);
 
-        void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const;
+			void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const;
 
-        int traceTouch(Intersection &intersection, const Ray &ray) const;
+			int traceTouch(Intersection &intersection, const Ray &ray) const;
 
-        virtual void resetSampling(void) = 0;
+			virtual void resetSampling(void) = 0;
     };
 }
 

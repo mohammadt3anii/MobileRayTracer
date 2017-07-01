@@ -11,31 +11,31 @@ namespace MobileRT {
     class Vector3D;
 
     class Point3D final {
-    public:
-        float x_;
-        float y_;
-        float z_;
+		public:
+			float x_;
+			float y_;
+			float z_;
 
-    public:
-        explicit Point3D(void);
+		public:
+			explicit Point3D(void);
 
-        explicit Point3D(const float x, const float y, const float z);
+			explicit Point3D(const float x, const float y, const float z);
 
-        explicit Point3D(const Point3D &point);
+			explicit Point3D(const Point3D &point);
 
-        Point3D(Point3D &point);
+			Point3D(Point3D &point);
 
-        explicit Point3D(const Point3D &point, const Vector3D &vector, const float value);
+			explicit Point3D(const Point3D &point, const Vector3D &vector, const float value);
 
-        void operator=(const Point3D &point3D);
+			void operator=(const Point3D &point3D);
 
-        const Vector3D operator-(const Point3D &point) const;
+			const Vector3D operator-(const Point3D &point) const;
 
-        const Point3D operator+(const Vector3D &vector) const;
+			const Point3D operator+(const Vector3D &vector) const;
 
-        void reset(const Point3D &point, const Vector3D &vector, const float value);
+			void reset(const Point3D &point, const Vector3D &vector, const float value);
 
-        static unsigned int getInstances();
+			static unsigned int getInstances();
     };
 }
 
