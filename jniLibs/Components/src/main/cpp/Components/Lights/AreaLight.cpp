@@ -20,10 +20,9 @@ const Point3D AreaLight::getPosition(void) {
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    Point3D position(pointA_.x_ + R * AB_.x_ + S * AC_.x_,
-                     pointA_.y_ + R * AB_.y_ + S * AC_.y_,
-                     pointA_.z_ + R * AB_.z_ + S * AC_.z_);
-    return position;
+    return Point3D (pointA_.x_ + R * AB_.x_ + S * AC_.x_,
+                    pointA_.y_ + R * AB_.y_ + S * AC_.y_,
+                    pointA_.z_ + R * AB_.z_ + S * AC_.z_);
 }
 
 void AreaLight::resetSampling(void) {

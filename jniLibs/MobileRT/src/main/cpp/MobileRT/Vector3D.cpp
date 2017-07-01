@@ -145,11 +145,10 @@ const Vector3D Vector3D::operator*(const float value) {
 }
 
 const Point3D Vector3D::operator/(const float value) const {
-    Point3D res(
+    return Point3D (
             this->x_ / value,
             this->y_ / value,
             this->z_ / value);
-    return res;
 }
 
 const Vector3D Vector3D::operator+(const Vector3D &vector) const {

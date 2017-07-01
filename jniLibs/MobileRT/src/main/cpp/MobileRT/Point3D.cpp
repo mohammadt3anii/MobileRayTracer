@@ -46,10 +46,9 @@ const Vector3D Point3D::operator-(const Point3D &point) const {
 }
 
 const Point3D Point3D::operator+(const Vector3D &vector) const {
-    Point3D res(this->x_ + vector.x_,
+    return Point3D (this->x_ + vector.x_,
                 this->y_ + vector.y_,
                 this->z_ + vector.z_);
-    return res;
 }
 
 void Point3D::operator=(const Point3D &point3D) {
