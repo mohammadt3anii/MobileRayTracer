@@ -34,8 +34,6 @@ namespace MobileRT {
 
 			const Point3D operator+(const Vector3D &vector) const;
 
-			void reset(const Point3D &point, const Vector3D &vector, const float value);
-
 			static unsigned int getInstances();
     };
 }

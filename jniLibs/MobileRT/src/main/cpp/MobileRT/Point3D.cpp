@@ -71,9 +71,3 @@ unsigned int Point3D::getInstances() {
     counter = 0u;
     return res;
 }
-
-void Point3D::reset(const Point3D &point, const Vector3D &vector, const float value) {
-    this->x_ = vector.x_ * value + point.x_;
-    this->y_ = vector.y_ * value + point.y_;
-    this->z_ = vector.z_ * value + point.z_;
-}

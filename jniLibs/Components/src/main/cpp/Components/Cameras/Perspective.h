@@ -13,8 +13,8 @@ namespace Components {
 
     class Perspective final : public Camera {
 		private:
-			float hFov_;
-			float vFov_;
+			const float hFov_;
+			const float vFov_;
 
 		public:
 			explicit Perspective(const Point3D &position,
