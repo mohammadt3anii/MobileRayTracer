@@ -20,11 +20,13 @@ namespace MobileRT {
 			unsigned long long int samples_;
 
 		public:
-			explicit Sampler(const unsigned long long int domainSize, const unsigned int samples);
+			explicit Sampler(const unsigned long long int domainSize,
+							 const unsigned int samples);
 
 			explicit Sampler(const unsigned int width, const unsigned int height,
-							const unsigned int samples,
-							const unsigned int blockSizeX, const unsigned int blockSizeY);
+							 const unsigned int samples,
+							 const unsigned int blockSizeX,
+							 const unsigned int blockSizeY);
 
 			virtual ~Sampler(void);
 

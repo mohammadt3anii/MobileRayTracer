@@ -22,7 +22,7 @@ namespace Components {
 			virtual void resetSampling(void) override final;
 
 			virtual bool intersect(Intersection &intersection, const Ray &ray,
-								const Material &material) const override final;
+								   const Material &material) const override final;
     };
 }
 

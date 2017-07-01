@@ -152,7 +152,7 @@ const Point3D Vector3D::operator/(const float value) const {
     return res;
 }
 
-const Vector3D Vector3D::operator+(const Vector3D vector) const {
+const Vector3D Vector3D::operator+(const Vector3D &vector) const {
     return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 

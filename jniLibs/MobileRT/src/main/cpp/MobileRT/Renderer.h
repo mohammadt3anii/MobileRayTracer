@@ -34,10 +34,12 @@ namespace MobileRT {
 			void toneMapper(RGB& pixel);
 
 		public:
-			explicit Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
-							const unsigned int width, const unsigned int height,
-							const unsigned int blockSizeX, const unsigned int blockSizeY,
-							Sampler &samplerPixel);
+			explicit Renderer(Sampler &samplerCamera, Shader &shader,
+							  const Camera &camera,
+							  const unsigned int width, const unsigned int height,
+							  const unsigned int blockSizeX,
+							  const unsigned int blockSizeY,
+							  Sampler &samplerPixel);
 
 			~Renderer(void);
 

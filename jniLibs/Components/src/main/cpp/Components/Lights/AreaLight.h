@@ -18,15 +18,18 @@ namespace Components {
 			Sampler &samplerPointLight_;
 
 		public:
-			explicit AreaLight(const Material &radiance, Sampler &samplerPointLight,
-							const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
+			explicit AreaLight(const Material &radiance,
+							   Sampler &samplerPointLight,
+							   const Point3D &pointA,
+							   const Point3D &pointB,
+							   const Point3D &pointC);
 
 			virtual const Point3D getPosition(void) override final;
 
 			virtual void resetSampling(void) override final;
 
 			virtual bool intersect(Intersection &intersection, const Ray &ray,
-								const Material &material) const override final;
+								   const Material &material) const override final;
 	};
 }
 

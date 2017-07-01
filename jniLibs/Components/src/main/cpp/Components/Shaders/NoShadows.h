@@ -13,8 +13,8 @@ namespace Components {
     class NoShadows final : public Shader {
 		private:
 			virtual void shade(RGB &rgb,
-							const Intersection &intersection,
-							const Ray &) const override final;
+							   const Intersection &intersection,
+							   const Ray &) const override final;
 
 		public:
 			explicit NoShadows(Scene &scene, const unsigned int samplesLight);

@@ -18,7 +18,7 @@ namespace MobileRT {
 			explicit Sphere(const Point3D &center, const float radius);
 
 			virtual bool intersect(Intersection &intersection, const Ray &ray,
-								const Material &material) const override final;
+								   const Material &material) const override final;
 
 			virtual void moveTo(const float x, const float y) override final;
 

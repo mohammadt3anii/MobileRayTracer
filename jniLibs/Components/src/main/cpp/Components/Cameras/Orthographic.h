@@ -16,14 +16,15 @@ namespace Components {
 			const float sizeV_;
 
 		public:
-			explicit Orthographic(const Point3D &position, const Point3D &lookAt,
-								const Vector3D &up, const float sizeH, const float sizeV);
+			explicit Orthographic(const Point3D &position,
+								  const Point3D &lookAt, const Vector3D &up,
+								  const float sizeH, const float sizeV);
 
 			virtual ~Orthographic(void) override final;
 
 			virtual const Ray generateRay(const float x, const float y,
-										const float deviationU,
-										const float deviationV) const override final;
+										  const float deviationU,
+										  const float deviationV) const override final;
     };
 }
 

@@ -26,17 +26,23 @@ namespace MobileRT {
 			explicit Intersection(const Intersection &intersection);
 			
 			void reset(const Point3D &point,
-					const Vector3D &normal, const float dist, const Material &material,
-					const Point3D &origin);
+					   const Vector3D &normal,
+					   const float dist,
+					   const Material &material,
+					   const Point3D &origin);
 
 			void reset(const float x, const float y, const float z,
-					const Vector3D &normal, const float dist, const Material &material,
-					const Point3D &origin);
+					   const Vector3D &normal,
+					   const float dist,
+					   const Material &material,
+					   const Point3D &origin);
 
-			void reset(const Point3D &orig, const Vector3D &dir, const float dist,
-					const Vector3D &normal, const Material &material, const Point3D &origin);
-					
-			void reset(Intersection &intersection);
+			void reset(const Point3D &orig,
+					   const Vector3D &dir,
+					   const float dist,
+					   const Vector3D &normal,
+					   const Material &material,
+					   const Point3D &origin);
 
 			static unsigned int getInstances();
     };

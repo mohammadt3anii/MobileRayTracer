@@ -68,15 +68,6 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->origin_ = origin;
 }
 
-void Intersection::reset(Intersection &intersection) {
-    this->point_ = intersection.point_;
-    this->normal_ = intersection.normal_;
-    this->length_ = intersection.length_;
-    this->material_ = intersection.material_;
-    this->symNormal_ = intersection.symNormal_;
-    this->origin_ = intersection.origin_;
-}
-
 unsigned int Intersection::getInstances() {
     const unsigned int res(counter);
     counter = 0u;

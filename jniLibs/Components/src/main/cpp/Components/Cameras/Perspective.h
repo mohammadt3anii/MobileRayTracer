@@ -17,14 +17,15 @@ namespace Components {
 			float vFov_;
 
 		public:
-			explicit Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
-								const float hFov, const float vFov);
+			explicit Perspective(const Point3D &position,
+								 const Point3D &lookAt, const Vector3D &up,
+								 const float hFov, const float vFov);
 
 			virtual ~Perspective(void) override final;
 
 			virtual const Ray generateRay(const float x, const float y,
-										const float deviationU,
-										const float deviationV) const override final;
+										  const float deviationU,
+										  const float deviationV) const override final;
     };
 }
 

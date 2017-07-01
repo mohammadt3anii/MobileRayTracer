@@ -13,7 +13,8 @@ namespace Components {
 
     class Random final : public Sampler {
 		public:
-			explicit Random(const unsigned long long int domainSize, const unsigned int samples);
+			explicit Random(const unsigned long long int domainSize,
+							const unsigned int samples);
 
 			virtual float getSample(const unsigned int sample) override final;
     };

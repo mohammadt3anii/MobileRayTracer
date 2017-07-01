@@ -27,7 +27,8 @@ namespace MobileRT {
 
 			explicit Vector3D(const Vector3D &vector, const float value);
 
-			explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float value);
+			explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,
+							  const float value);
 
 			explicit Vector3D(const Point3D &dest, const Point3D &orig);
 
@@ -41,7 +42,7 @@ namespace MobileRT {
 
 			const Point3D operator/(const float value) const;
 
-			const Vector3D operator+(const Vector3D vector) const;
+			const Vector3D operator+(const Vector3D &vector) const;
 
 			float dotProduct(const Vector3D &vector) const;
 
