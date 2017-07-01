@@ -21,9 +21,7 @@ namespace MobileRT {
 
 			explicit Point3D(const float x, const float y, const float z);
 
-			explicit Point3D(const Point3D &point);
-
-			Point3D(Point3D &point);
+			Point3D(const Point3D &point);
 
 			explicit Point3D(const Point3D &point, const Vector3D &vector,
 							 const float value);
