@@ -14,8 +14,8 @@ namespace MobileRT {
         private:
             std::vector<AxisAlignedBoundingBox *> *boxes_;
 
-    private:
-        void divideBoundingBox(AxisAlignedBoundingBox &bb);
+    	private:
+        	void divideBoundingBox(AxisAlignedBoundingBox &bb);
 
         public:
             explicit RegularGrid(const float minX, const float maxX,
@@ -24,9 +24,9 @@ namespace MobileRT {
                                  const unsigned int numberOfBlocks,
                                  std::vector<Primitive *> primitives);
 
-        ~RegularGrid(void);
+			~RegularGrid(void);
 
-        bool intersect(Intersection &intersection, Ray &ray);
+			bool intersect(Intersection &intersection, Ray &ray);
     };
 }
 

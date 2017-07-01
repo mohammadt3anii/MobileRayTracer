@@ -14,7 +14,7 @@ Intersection::Intersection(void) :
     counter++;
 }
 
-Intersection::Intersection(Intersection &intersection) :
+Intersection::Intersection(const Intersection &intersection) :
         point_(intersection.point_),
         normal_(intersection.normal_),
         symNormal_(intersection.symNormal_),
