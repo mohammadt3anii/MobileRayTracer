@@ -42,9 +42,9 @@
 #define PI_4            0.78539816339744830962f
 #define VECT_PROJ_MIN   1.0e-8f // kEpsilon
 
-float fastArcTan(const float value);
+float fastArcTan(const float value) noexcept;
 
 unsigned int roundDownToMultipleOf(const unsigned int value,
-                                   const unsigned int multiple);
+                                   const unsigned int multiple) noexcept;
 
 #endif //MOBILERAYTRACER_UTILS

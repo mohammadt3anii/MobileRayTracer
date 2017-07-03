@@ -20,18 +20,18 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB &, const Intersection &, const Ray &) const = 0;
+        virtual void shade(RGB &, const Intersection &, const Ray &) const noexcept = 0;
 
     public:
-        explicit Shader(Scene &scene, const unsigned int samplesLight);
+        explicit Shader(Scene &scene, const unsigned int samplesLight) noexcept;
 
-        virtual ~Shader(void);
+        virtual ~Shader(void) noexcept;
 
-        void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const;
+        void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept;
 
-        int traceTouch(Intersection &intersection, const Ray &ray) const;
+        int traceTouch(Intersection &intersection, const Ray &ray) const noexcept;
 
-        virtual void resetSampling(void) = 0;
+        virtual void resetSampling(void) noexcept = 0;
     };
 }
 

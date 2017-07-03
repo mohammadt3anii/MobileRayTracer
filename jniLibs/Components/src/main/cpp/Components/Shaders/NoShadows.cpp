@@ -6,11 +6,11 @@
 
 using namespace Components;
 
-NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) :
+NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {
 }
 
-void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) const {
+void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) const noexcept {
     const RGB &Le(intersection.material_->Le_);
     const RGB &kD(intersection.material_->Kd_);
 
@@ -41,6 +41,6 @@ void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) c
     rgb.add(Le);
 }
 
-void NoShadows::resetSampling(void) {
+void NoShadows::resetSampling(void) noexcept {
     this->scene_.resetSampling();
 }

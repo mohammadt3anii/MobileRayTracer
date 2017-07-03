@@ -8,14 +8,14 @@ using namespace MobileRT;
 
 static unsigned int counter(0u);
 
-Intersection::Intersection(void) :
+Intersection::Intersection(void) noexcept :
         length_(RAY_LENGTH_MAX) {
     counter++;
 }
 
 void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
                          const Vector3D &normal,
-                         const Material &material) {
+                         const Material &material) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
@@ -29,7 +29,7 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
 
 void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
                          const Point3D &center,
-                         const Material &material) {
+                         const Material &material) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
@@ -41,7 +41,7 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->symNormal_.z_ = -this->normal_.z_;
 }
 
-unsigned int Intersection::getInstances() {
+unsigned int Intersection::getInstances() noexcept {
     const unsigned int res(counter);
     counter = 0u;
     return res;

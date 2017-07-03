@@ -18,13 +18,13 @@ namespace Components {
     public:
         explicit Orthographic(const Point3D &position,
                               const Point3D &lookAt, const Vector3D &up,
-                              const float sizeH, const float sizeV);
+                              const float sizeH, const float sizeV) noexcept;
 
-        virtual ~Orthographic(void) override final;
+        virtual ~Orthographic(void) noexcept override final;
 
         virtual const Ray generateRay(const float x, const float y,
                                       const float deviationU,
-                                      const float deviationV) const override final;
+                                      const float deviationV) const noexcept override final;
     };
 }
 

@@ -20,12 +20,12 @@ namespace MobileRT {
     public:
         explicit Ray(const float x, const float y, const float z,
                      const Point3D &origin,
-                     const unsigned int depth);
+                     const unsigned int depth) noexcept;
 
         explicit Ray(const Vector3D &dir, const Point3D &origin,
-                     const unsigned int depth);
+                     const unsigned int depth) noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

@@ -20,14 +20,15 @@ namespace MobileRT {
         const Vector3D normal_;
 
     public:
-        explicit Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC);
+        explicit Triangle(const Point3D &pointA, const Point3D &pointB,
+                          const Point3D &pointC) noexcept;
 
         virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const override;
+                               const Material &material) const noexcept override;
 
-        virtual void moveTo(const float x, const float y) override final;
+        virtual void moveTo(const float x, const float y) noexcept override final;
 
-        virtual float getZ(void) const override final;
+        virtual float getZ(void) const noexcept override final;
     };
 }
 

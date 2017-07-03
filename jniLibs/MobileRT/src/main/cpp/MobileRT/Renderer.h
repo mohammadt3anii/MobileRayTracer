@@ -32,9 +32,9 @@ namespace MobileRT {
         //char padding[4] __attribute__((unused));
 
     private:
-        void renderScene(unsigned int *const bitmap, const unsigned int tid);
+        void renderScene(unsigned int *const bitmap, const unsigned int tid) noexcept;
 
-        void toneMapper(RGB &pixel);
+        void toneMapper(RGB &pixel) noexcept;
 
     public:
         explicit Renderer(Sampler &samplerCamera, Shader &shader,
@@ -42,17 +42,17 @@ namespace MobileRT {
                           const unsigned int width, const unsigned int height,
                           const unsigned int blockSizeX,
                           const unsigned int blockSizeY,
-                          Sampler &samplerPixel);
+                          Sampler &samplerPixel) noexcept;
 
-        ~Renderer(void);
+        ~Renderer(void) noexcept;
 
-        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
+        void renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept;
 
-        void registerToneMapper(std::function<float(const float value)> toneMapper);
+        void registerToneMapper(std::function<float(const float value)> toneMapper) noexcept;
 
-        void stopRender(void);
+        void stopRender(void) noexcept;
 
-        unsigned int getSample(void);
+        unsigned int getSample(void) noexcept;
     };
 }
 

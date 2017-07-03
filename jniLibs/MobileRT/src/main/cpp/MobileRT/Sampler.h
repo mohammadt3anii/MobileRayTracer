@@ -16,20 +16,20 @@ namespace MobileRT {
 
     public:
         explicit Sampler(const unsigned long long int domainSize,
-                         const unsigned int samples);
+                         const unsigned int samples) noexcept;
 
         explicit Sampler(const unsigned int width, const unsigned int height,
                          const unsigned int samples,
                          const unsigned int blockSizeX,
-                         const unsigned int blockSizeY);
+                         const unsigned int blockSizeY) noexcept;
 
-        virtual ~Sampler(void);
+        virtual ~Sampler(void) noexcept;
 
-        void resetSampling(void);
+        void resetSampling(void) noexcept;
 
-        void stopSampling(void);
+        void stopSampling(void) noexcept;
 
-        virtual float getSample(const unsigned int sample) = 0;
+        virtual float getSample(const unsigned int sample) noexcept = 0;
     };
 }
 

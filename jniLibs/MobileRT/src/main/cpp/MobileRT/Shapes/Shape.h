@@ -12,14 +12,14 @@
 namespace MobileRT {
     class Shape {
     public:
-        virtual ~Shape(void);
+        virtual ~Shape(void) noexcept;
 
         virtual bool intersect(Intersection &,
-                               const Ray &, const Material &) const = 0;
+                               const Ray &, const Material &) const noexcept = 0;
 
-        virtual float getZ(void) const = 0;
+        virtual float getZ(void) const noexcept = 0;
 
-        virtual void moveTo(const float x, const float y) = 0;
+        virtual void moveTo(const float x, const float y) noexcept = 0;
     };
 }
 

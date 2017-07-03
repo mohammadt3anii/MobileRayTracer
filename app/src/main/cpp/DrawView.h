@@ -8,7 +8,6 @@
 #include <thread>
 #include <android/bitmap.h>
 #include <android/log.h>
-#include <limits>
 
 #include "MobileRT/Renderer.h"
 #include "MobileRT/Scene.h"
@@ -27,33 +26,33 @@
 #include "Components/Lights/PointLight.h"
 #include "Components/Lights/AreaLight.h"
 
-void FPS(void);
+void FPS(void) noexcept;
 
-MobileRT::Scene *cornellBoxScene(void);
+MobileRT::Scene *cornellBoxScene(void) noexcept;
 
-MobileRT::Scene *cornellBoxScene2(void);
+MobileRT::Scene *cornellBoxScene2(void) noexcept;
 
-MobileRT::Scene *spheresScene(void);
+MobileRT::Scene *spheresScene(void) noexcept;
 
-MobileRT::Scene *spheresScene2(void);
+MobileRT::Scene *spheresScene2(void) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv *,// env,
         jobject//this
-);
+) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_isWorking(
         JNIEnv *,// env,
         jobject//this
-);
+) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv *,// env,
         jobject//this
-);
+) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
@@ -66,29 +65,29 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint sampler,
         jint samplesPixel,
         jint samplesLight
-);
+) noexcept;
 
-void thread_work(void *dstPixels, unsigned int numThreads);
+void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
         jobject,//this,
         jobject dstBitmap,
-        jint nThreads);
+        jint nThreads) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
         jobject,//this,
-        jobject dstBitmap);
+        jobject dstBitmap) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *,
         jobject,
         jfloat jx,
-        jfloat jy);
+        jfloat jy) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
@@ -97,31 +96,31 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
         jfloat jx,
         jfloat jy,
         jint primitiveIndex
-);
+) noexcept;
 
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
         JNIEnv *,
         jobject
-);
+) noexcept;
 
 extern "C"
 long long Java_puscas_mobilertapp_DrawView_getTimeFrame(
         JNIEnv *,
         jobject
-);
+) noexcept;
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
         JNIEnv *,
         jobject
-);
+) noexcept;
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv *,
         jobject,
         jint size
-);
+) noexcept;
 
 #endif //MOBILERAYTRACER_DRAWVIEW_H

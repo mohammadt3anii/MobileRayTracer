@@ -14,14 +14,14 @@ namespace MobileRT {
         const Vector3D normal_;    // normal to the plane
 
     public:
-        explicit Plane(const Point3D &point, const Vector3D &normal);
+        explicit Plane(const Point3D &point, const Vector3D &normal) noexcept;
 
         virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const override final;
+                               const Material &material) const noexcept override final;
 
-        virtual void moveTo(const float x, const float y) override final;
+        virtual void moveTo(const float x, const float y) noexcept override final;
 
-        virtual float getZ(void) const override final;
+        virtual float getZ(void) const noexcept override final;
     };
 }
 

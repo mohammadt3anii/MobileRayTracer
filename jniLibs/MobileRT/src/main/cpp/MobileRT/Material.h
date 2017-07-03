@@ -17,29 +17,29 @@ namespace MobileRT {
         const float refractiveIndice_;
 
     public:
-        explicit Material(void);
+        explicit Material(void) noexcept;
 
-        explicit Material(const RGB &Kd);
+        explicit Material(const RGB &Kd) noexcept;
 
-        explicit Material(const RGB &Kd, const RGB &Ks);
+        explicit Material(const RGB &Kd, const RGB &Ks) noexcept;
 
-        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt);
+        explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt) noexcept;
 
         explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
-                          const RGB &Le);
+                          const RGB &Le) noexcept;
 
-        explicit Material(const RGB &Kd, const float refractiveIndice);
+        explicit Material(const RGB &Kd, const float refractiveIndice) noexcept;
 
         explicit Material(const RGB &Kd, const RGB &Ks,
-                          const float refractiveIndice);
+                          const float refractiveIndice) noexcept;
 
         explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
-                          const float refractiveIndice);
+                          const float refractiveIndice) noexcept;
 
         explicit Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
-                          const RGB &Le, const float refractiveIndice);
+                          const RGB &Le, const float refractiveIndice) noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

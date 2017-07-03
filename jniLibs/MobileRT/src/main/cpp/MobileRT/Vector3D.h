@@ -19,50 +19,50 @@ namespace MobileRT {
         float magnitude_;
 
     public:
-        explicit Vector3D(void);
+        explicit Vector3D(void) noexcept;
 
-        explicit Vector3D(const float x, const float y, const float z);
+        explicit Vector3D(const float x, const float y, const float z) noexcept;
 
-        Vector3D(const Vector3D &vector);
+        Vector3D(const Vector3D &vector) noexcept;
 
-        explicit Vector3D(const Vector3D &vector, const float value);
+        explicit Vector3D(const Vector3D &vector, const float value) noexcept;
 
         explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,
-                          const float value);
+                          const float value) noexcept;
 
-        explicit Vector3D(const Point3D &dest, const Point3D &orig);
+        explicit Vector3D(const Point3D &dest, const Point3D &orig) noexcept;
 
-        explicit Vector3D(const Point3D &dest, const Point3D &orig, bool);
+        explicit Vector3D(const Point3D &dest, const Point3D &orig, bool) noexcept;
 
-        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2);
+        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept;
 
-        const Vector3D &operator=(const Vector3D &vector);
+        const Vector3D &operator=(const Vector3D &vector) noexcept;
 
-        const Vector3D operator*(const float value);
+        const Vector3D operator*(const float value) noexcept;
 
-        const Point3D operator/(const float value) const;
+        const Point3D operator/(const float value) const noexcept;
 
-        const Vector3D operator+(const Vector3D &vector) const;
+        const Vector3D operator+(const Vector3D &vector) const noexcept;
 
-        float dotProduct(const Vector3D &vector) const;
+        float dotProduct(const Vector3D &vector) const noexcept;
 
-        float dotProduct(const Point3D &dest, const Point3D &orig) const;
+        float dotProduct(const Point3D &dest, const Point3D &orig) const noexcept;
 
-        float squareMagnitude(void) const;
+        float squareMagnitude(void) const noexcept;
 
-        float magnitude(void) const;
+        float magnitude(void) const noexcept;
 
-        const Vector3D crossProduct(const Vector3D &vector) const;
+        const Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
-        void mult(const float value);
+        void mult(const float value) noexcept;
 
-        const Vector3D returnNormalized(void) const;
+        const Vector3D returnNormalized(void) const noexcept;
 
-        const Vector3D operator*(const float value) const;
+        const Vector3D operator*(const float value) const noexcept;
 
-        const Vector3D symmetric(void) const;
+        const Vector3D symmetric(void) const noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

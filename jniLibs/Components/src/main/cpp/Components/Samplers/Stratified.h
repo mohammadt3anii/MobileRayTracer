@@ -13,13 +13,13 @@ namespace Components {
     class Stratified final : public Sampler {
     public:
         explicit Stratified(const unsigned long long int domainSize,
-                            const unsigned int samples);
+                            const unsigned int samples) noexcept;
 
         explicit Stratified(const unsigned int width, const unsigned int height,
                             const unsigned int samples,
-                            const unsigned int blockSizeX, const unsigned int blockSizeY);
+                            const unsigned int blockSizeX, const unsigned int blockSizeY) noexcept;
 
-        virtual float getSample(const unsigned int sample) override final;
+        virtual float getSample(const unsigned int sample) noexcept override final;
     };
 }
 

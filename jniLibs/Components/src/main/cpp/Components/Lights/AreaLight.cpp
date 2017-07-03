@@ -7,13 +7,13 @@
 using namespace Components;
 
 AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
-                     const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) :
+                     const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
         Light(radiance),
         Triangle(pointA, pointB, pointC),
         samplerPointLight_(samplerPointLight) {
 }
 
-const Point3D AreaLight::getPosition(void) {
+const Point3D AreaLight::getPosition(void) noexcept {
     float R(samplerPointLight_.getSample(0u));
     float S(samplerPointLight_.getSample(0u));
     if (R + S >= 1.0f) {
@@ -25,10 +25,11 @@ const Point3D AreaLight::getPosition(void) {
                    pointA_.z_ + R * AB_.z_ + S * AC_.z_);
 }
 
-void AreaLight::resetSampling(void) {
+void AreaLight::resetSampling(void) noexcept {
     samplerPointLight_.resetSampling();
 }
 
-bool AreaLight::intersect(Intersection &intersection, const Ray &ray, const Material &) const {
+bool
+AreaLight::intersect(Intersection &intersection, const Ray &ray, const Material &) const noexcept {
     return Triangle::intersect(intersection, ray, this->radiance_);
 }

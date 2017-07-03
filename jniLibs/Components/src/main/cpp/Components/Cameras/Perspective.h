@@ -19,13 +19,13 @@ namespace Components {
     public:
         explicit Perspective(const Point3D &position,
                              const Point3D &lookAt, const Vector3D &up,
-                             const float hFov, const float vFov);
+                             const float hFov, const float vFov) noexcept;
 
-        virtual ~Perspective(void) override final;
+        virtual ~Perspective(void) noexcept override final;
 
         virtual const Ray generateRay(const float x, const float y,
                                       const float deviationU,
-                                      const float deviationV) const override final;
+                                      const float deviationV) const noexcept override final;
     };
 }
 

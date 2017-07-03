@@ -6,5 +6,5 @@
 
 using namespace MobileRT;
 
-Shape::~Shape(void) {
+Shape::~Shape(void) noexcept {
 }

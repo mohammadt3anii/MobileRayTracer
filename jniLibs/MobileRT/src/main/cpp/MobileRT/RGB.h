@@ -19,41 +19,41 @@ namespace MobileRT {
         float B_;
 
     public:
-        explicit RGB(void);
+        explicit RGB(void) noexcept;
 
-        explicit RGB(const float r, const float g, const float b);
+        explicit RGB(const float r, const float g, const float b) noexcept;
 
-        RGB(const RGB &rgb);
+        RGB(const RGB &rgb) noexcept;
 
-        bool isNotZero(void) const;
+        bool isNotZero(void) const noexcept;
 
-        void add(const RGB &rgb);
+        void add(const RGB &rgb) noexcept;
 
-        void addMult(const RGB &rgb, const float value);
+        void addMult(const RGB &rgb, const float value) noexcept;
 
-        void addMult(const RGB &rgb1, const RGB &rgb2, const float value);
+        void addMult(const RGB &rgb1, const RGB &rgb2, const float value) noexcept;
 
-        void addMult(const RGB &rgb1, const RGB &rgb2);
+        void addMult(const RGB &rgb1, const RGB &rgb2) noexcept;
 
-        const RGB operator*(const float value) const;
+        const RGB operator*(const float value) const noexcept;
 
-        void operator*=(const RGB &rgb);
+        void operator*=(const RGB &rgb) noexcept;
 
-        void operator*=(const float value);
+        void operator*=(const float value) noexcept;
 
-        void operator/=(const float value);
+        void operator/=(const float value) noexcept;
 
-        void addSampleAndCalcAvg(RGB &sample);
+        void addSampleAndCalcAvg(RGB &sample) noexcept;
 
-        void reset(void);
+        void reset(void) noexcept;
 
-        void reset(const float color);
+        void reset(const float color) noexcept;
 
-        unsigned int RGB2Color(void);
+        unsigned int RGB2Color(void) noexcept;
 
-        float getMax(void);
+        float getMax(void) noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

@@ -6,9 +6,9 @@
 
 using namespace MobileRT;
 
-Light::Light(const Material &radiance) :
+Light::Light(const Material &radiance) noexcept :
         radiance_(radiance) {
 }
 
-Light::~Light(void) {
+Light::~Light(void) noexcept {
 }

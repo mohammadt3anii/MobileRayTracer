@@ -6,11 +6,11 @@
 
 using namespace Components;
 
-Whitted::Whitted(Scene &scene, const unsigned int samplesLight) :
+Whitted::Whitted(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {
 }
 
-void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const {
+void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int rayDepth(ray.depth_);
     if (rayDepth > RAY_DEPTH_MAX) return;
 
@@ -114,6 +114,6 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
 }
 
-void Whitted::resetSampling(void) {
+void Whitted::resetSampling(void) noexcept {
     this->scene_.resetSampling();
 }

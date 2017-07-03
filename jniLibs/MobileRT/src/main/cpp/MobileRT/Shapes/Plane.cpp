@@ -6,12 +6,13 @@
 
 using namespace MobileRT;
 
-Plane::Plane(const Point3D &point, const Vector3D &normal) :
+Plane::Plane(const Point3D &point, const Vector3D &normal) noexcept :
         point_(point),
         normal_(normal.returnNormalized()) {
 }
 
-bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
+bool Plane::intersect(Intersection &intersection, const Ray &ray,
+                      const Material &material) const noexcept {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));
@@ -35,9 +36,9 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray, const Material
     return true;
 }
 
-void Plane::moveTo(float, float) {
+void Plane::moveTo(float, float) noexcept {
 }
 
-float Plane::getZ(void) const {
+float Plane::getZ(void) const noexcept {
     return 0.0f;
 }

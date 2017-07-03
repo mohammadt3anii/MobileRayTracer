@@ -6,10 +6,10 @@
 
 using namespace Components;
 
-Random::Random(const unsigned long long int domainSize, const unsigned int samples) :
+Random::Random(const unsigned long long int domainSize, const unsigned int samples) noexcept :
         Sampler(domainSize, samples) {
 }
 
-float Random::getSample(const unsigned int) {
+float Random::getSample(const unsigned int) noexcept {
     return static_cast<float> (rand()) / RAND_MAX;
 }

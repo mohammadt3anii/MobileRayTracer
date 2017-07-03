@@ -22,14 +22,14 @@ namespace Components {
                            Sampler &samplerPointLight,
                            const Point3D &pointA,
                            const Point3D &pointB,
-                           const Point3D &pointC);
+                           const Point3D &pointC) noexcept;
 
-        virtual const Point3D getPosition(void) override final;
+        virtual const Point3D getPosition(void) noexcept override final;
 
-        virtual void resetSampling(void) override final;
+        virtual void resetSampling(void) noexcept override final;
 
         virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const override final;
+                               const Material &material) const noexcept override final;
     };
 }
 

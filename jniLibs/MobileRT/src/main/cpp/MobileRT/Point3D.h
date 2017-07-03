@@ -17,22 +17,22 @@ namespace MobileRT {
         float z_;
 
     public:
-        explicit Point3D(void);
+        explicit Point3D(void) noexcept;
 
-        explicit Point3D(const float x, const float y, const float z);
+        explicit Point3D(const float x, const float y, const float z) noexcept;
 
-        Point3D(const Point3D &point);
+        Point3D(const Point3D &point) noexcept;
 
         explicit Point3D(const Point3D &point, const Vector3D &vector,
-                         const float value);
+                         const float value) noexcept;
 
-        void operator=(const Point3D &point3D);
+        void operator=(const Point3D &point3D) noexcept;
 
-        const Vector3D operator-(const Point3D &point) const;
+        const Vector3D operator-(const Point3D &point) const noexcept;
 
-        const Point3D operator+(const Vector3D &vector) const;
+        const Point3D operator+(const Vector3D &vector) const noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

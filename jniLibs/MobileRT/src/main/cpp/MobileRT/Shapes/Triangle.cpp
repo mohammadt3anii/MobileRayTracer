@@ -7,7 +7,7 @@
 
 using namespace MobileRT;
 
-Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) :
+Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
         pointA_(pointA),
         pointB_(pointB),
         pointC_(pointC),
@@ -17,7 +17,7 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray,
-                         const Material &material) const {
+                         const Material &material) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
     if (normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f) < VECT_PROJ_MIN)
@@ -54,9 +54,9 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Triangle::moveTo(float, float) {
+void Triangle::moveTo(float, float) noexcept {
 }
 
-float Triangle::getZ(void) const {
+float Triangle::getZ(void) const noexcept {
     return 0.0f;
 }

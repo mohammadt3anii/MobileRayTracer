@@ -19,20 +19,20 @@ namespace MobileRT {
         std::vector<Primitive *> primitives_;
 
     private:
-        int traceLights(Intersection &intersection, const Ray &ray) const;
+        int traceLights(Intersection &intersection, const Ray &ray) const noexcept;
 
     public:
-        explicit Scene(void);
+        explicit Scene(void) noexcept;
 
-        ~Scene(void);
+        ~Scene(void) noexcept;
 
-        int trace(Intersection &intersection, const Ray &ray) const;
+        int trace(Intersection &intersection, const Ray &ray) const noexcept;
 
-        bool shadowTrace(Intersection &intersection, const Ray &ray) const;
+        bool shadowTrace(Intersection &intersection, const Ray &ray) const noexcept;
 
-        static unsigned int getInstances(void);
+        static unsigned int getInstances(void) noexcept;
 
-        void resetSampling(void);
+        void resetSampling(void) noexcept;
     };
 }
 

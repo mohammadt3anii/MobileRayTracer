@@ -7,7 +7,7 @@
 using namespace Components;
 
 PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
-                       const unsigned int samplesLight) :
+                       const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight),
         samplerRay_(samplerRay),
         samplerLight_(samplerLight) {
@@ -16,7 +16,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const {
+void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int rayDepth(ray.depth_);
     if (rayDepth > RAY_DEPTH_MAX) return;
 
@@ -220,7 +220,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     }
 }
 
-void PathTracer::resetSampling(void) {
+void PathTracer::resetSampling(void) noexcept {
     this->scene_.resetSampling();
     this->samplerRay_.resetSampling();
     this->samplerLight_.resetSampling();

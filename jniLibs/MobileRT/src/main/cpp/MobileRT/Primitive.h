@@ -24,13 +24,13 @@ namespace MobileRT {
         Shape *const shape_;
 
     public:
-        explicit Primitive(Shape *shape, const Material &material);
+        explicit Primitive(Shape *shape, const Material &material) noexcept;
 
-        ~Primitive();
+        ~Primitive() noexcept;
 
-        bool intersect(Intersection &intersection, const Ray &ray) const;
+        bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

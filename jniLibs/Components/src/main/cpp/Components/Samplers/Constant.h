@@ -15,9 +15,9 @@ namespace Components {
         const float value_;
 
     public:
-        explicit Constant(const float value);
+        explicit Constant(const float value) noexcept;
 
-        virtual float getSample(const unsigned int sample) override final;
+        virtual float getSample(const unsigned int sample) noexcept override final;
     };
 }
 

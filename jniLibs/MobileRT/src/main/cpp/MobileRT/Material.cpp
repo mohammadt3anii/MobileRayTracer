@@ -7,25 +7,25 @@
 using namespace MobileRT;
 static unsigned int counter(0u);
 
-Material::Material(void) : refractiveIndice_(1.0f) {
+Material::Material(void) noexcept : refractiveIndice_(1.0f) {
     counter++;
 }
 
 // diffuse only material
-Material::Material(const RGB &Kd) :
+Material::Material(const RGB &Kd) noexcept :
         Kd_(Kd),
         refractiveIndice_(1.0f) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks) :
+Material::Material(const RGB &Kd, const RGB &Ks) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         refractiveIndice_(1.0f) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt) :
+Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
@@ -33,7 +33,7 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt) :
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le) :
+Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
@@ -42,20 +42,21 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le) :
     counter++;
 }
 
-Material::Material(const RGB &Kd, const float refractiveIndice) :
+Material::Material(const RGB &Kd, const float refractiveIndice) noexcept :
         Kd_(Kd),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const float refractiveIndice) :
+Material::Material(const RGB &Kd, const RGB &Ks, const float refractiveIndice) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const float refractiveIndice) :
+Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
+                   const float refractiveIndice) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
@@ -64,7 +65,7 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const float refr
 }
 
 Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
-                   const float refractiveIndice) :
+                   const float refractiveIndice) noexcept :
         Kd_(Kd),
         Ks_(Ks),
         Kt_(Kt),
@@ -73,7 +74,7 @@ Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
     counter++;
 }
 
-unsigned int Material::getInstances() {
+unsigned int Material::getInstances() noexcept {
     const unsigned int res(counter);
     counter = 0u;
     return res;

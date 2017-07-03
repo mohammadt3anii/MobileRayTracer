@@ -6,15 +6,15 @@
 
 using namespace MobileRT;
 
-Shader::Shader(Scene &scene, const unsigned int samplesLight) :
+Shader::Shader(Scene &scene, const unsigned int samplesLight) noexcept :
         scene_(scene), samplesLight_(samplesLight) {
 }
 
-Shader::~Shader(void) {
+Shader::~Shader(void) noexcept {
 }
 
 //ray trace and verifies if intersects primitives
-void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const {
+void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept {
     if (this->scene_.trace(intersection, ray) >= 0) {
         rgb.reset(0.0f);
         shade(rgb, intersection, ray);// compute radiance
@@ -23,7 +23,7 @@ void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) cons
     }
 }
 
-int Shader::traceTouch(Intersection &intersection, const Ray &ray) const {
+int Shader::traceTouch(Intersection &intersection, const Ray &ray) const noexcept {
     return this->scene_.trace(intersection, ray);
 }
 

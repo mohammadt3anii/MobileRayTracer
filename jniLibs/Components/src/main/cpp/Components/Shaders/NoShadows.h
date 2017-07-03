@@ -14,12 +14,12 @@ namespace Components {
     private:
         virtual void shade(RGB &rgb,
                            const Intersection &intersection,
-                           const Ray &) const override final;
+                           const Ray &) const noexcept override final;
 
     public:
-        explicit NoShadows(Scene &scene, const unsigned int samplesLight);
+        explicit NoShadows(Scene &scene, const unsigned int samplesLight) noexcept;
 
-        virtual void resetSampling(void) override final;
+        virtual void resetSampling(void) noexcept override final;
     };
 }
 

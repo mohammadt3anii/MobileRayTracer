@@ -16,16 +16,17 @@ namespace MobileRT {
         Material radiance_;
 
     public:
-        explicit Light(const Material &radiance);
+        explicit Light(const Material &radiance) noexcept;
 
-        virtual const Point3D getPosition(void) = 0;
+        virtual const Point3D getPosition(void) noexcept = 0;
 
-        virtual ~Light(void);
+        virtual ~Light(void) noexcept;
 
-        virtual void resetSampling(void) = 0;
+        virtual void resetSampling(void) noexcept = 0;
 
         virtual bool
-        intersect(Intersection &intersection, const Ray &ray, const Material &material) const = 0;
+        intersect(Intersection &intersection, const Ray &ray,
+                  const Material &material) const noexcept = 0;
     };
 }
 

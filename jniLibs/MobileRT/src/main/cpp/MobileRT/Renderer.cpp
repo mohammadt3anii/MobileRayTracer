@@ -9,7 +9,7 @@ using namespace MobileRT;
 Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
                    const unsigned int width, const unsigned int height,
                    const unsigned int blockSizeX, const unsigned int blockSizeY,
-                   Sampler &samplerPixel) :
+                   Sampler &samplerPixel) noexcept :
         samplerCamera_(samplerCamera),
         shader_(shader),
         camera_(camera),
@@ -27,12 +27,12 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
         toneMapper_([&](const float value) { return value; }) {
 }
 
-Renderer::~Renderer(void) {
+Renderer::~Renderer(void) noexcept {
     delete[] this->accumulate_;
     delete[] this->imagePlane_;
 }
 
-void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) {
+void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
     this->sample_ = 0u;
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0u); i < size; i++) {
@@ -99,24 +99,24 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("%s", "FINISH");
 }
 
-void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) {
+void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) noexcept {
     toneMapper_ = toneMapper;
 }
 
-void Renderer::stopRender(void) {
+void Renderer::stopRender(void) noexcept {
     this->blockSizeX_ = 0u;
     this->blockSizeY_ = 0u;
     this->samplerCamera_.stopSampling();
     this->samplerPixel_.stopSampling();
 }
 
-void Renderer::toneMapper(RGB &pixel) {
+void Renderer::toneMapper(RGB &pixel) noexcept {
     pixel.R_ = toneMapper_(pixel.R_);
     pixel.G_ = toneMapper_(pixel.G_);
     pixel.B_ = toneMapper_(pixel.B_);
 }
 
-void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
+void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) noexcept {
     const float INV_IMG_WIDTH(1.0f / this->width_);
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
@@ -158,6 +158,6 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
     }
 }
 
-unsigned int Renderer::getSample(void) {
+unsigned int Renderer::getSample(void) noexcept {
     return this->sample_;
 }

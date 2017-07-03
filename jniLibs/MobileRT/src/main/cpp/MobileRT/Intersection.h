@@ -20,17 +20,17 @@ namespace MobileRT {
         float length_;     // ray length parameter
 
     public:
-        explicit Intersection(void);
+        explicit Intersection(void) noexcept;
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
                    const Vector3D &normal,
-                   const Material &material);
+                   const Material &material) noexcept;
 
         void reset(const Point3D &orig, const Vector3D &dir, const float dist,
                    const Point3D &center,
-                   const Material &material);
+                   const Material &material) noexcept;
 
-        static unsigned int getInstances();
+        static unsigned int getInstances() noexcept;
     };
 }
 

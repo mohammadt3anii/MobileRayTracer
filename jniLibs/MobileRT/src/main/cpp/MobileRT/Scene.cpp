@@ -8,11 +8,11 @@ using namespace MobileRT;
 
 static unsigned int counter(0u);
 
-Scene::Scene(void) {
+Scene::Scene(void) noexcept {
     counter++;
 }
 
-Scene::~Scene(void) {
+Scene::~Scene(void) noexcept {
     for (Light *light : this->lights_) {
         delete light;
     }
@@ -23,7 +23,7 @@ Scene::~Scene(void) {
     this->primitives_.clear();
 }
 
-int Scene::traceLights(Intersection &intersection, const Ray &ray) const {
+int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcept {
     int res(-1);
     const unsigned int lightsSize(static_cast<unsigned int> (lights_.size()));
 
@@ -37,7 +37,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const {
     return res;
 }
 
-int Scene::trace(Intersection &intersection, const Ray &ray) const {
+int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     int res(-1);
     const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
@@ -54,7 +54,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const {
     return res;
 }
 
-bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
+bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
     for (unsigned int i(0u); i < primitivesSize; i++)//trace shadow ray
@@ -68,13 +68,13 @@ bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
     return false;
 }
 
-unsigned int Scene::getInstances(void) {
+unsigned int Scene::getInstances(void) noexcept {
     const unsigned int res(counter);
     counter = 0u;
     return res;
 }
 
-void Scene::resetSampling(void) {
+void Scene::resetSampling(void) noexcept {
     for (Light *light : this->lights_) {
         light->resetSampling();
     }

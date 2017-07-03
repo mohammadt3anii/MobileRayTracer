@@ -7,18 +7,18 @@
 using namespace Components;
 
 Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
-                         const float hFov, const float vFov) :
+                         const float hFov, const float vFov) noexcept :
         Camera(position, lookAt, up),
         // convert to radians
         hFov_((hFov * PI) / 180.0f),
         vFov_((vFov * PI) / 180.0f) {
 }
 
-Perspective::~Perspective(void) {
+Perspective::~Perspective(void) noexcept {
 }
 
 const Ray Perspective::generateRay(const float u, const float v,
-                                   const float deviationU, const float deviationV) const {
+                                   const float deviationU, const float deviationV) const noexcept {
     const float u_alpha(fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU);
     const float v_alpha(fastArcTan(this->vFov_ * (0.5f - v)) + deviationV);
 

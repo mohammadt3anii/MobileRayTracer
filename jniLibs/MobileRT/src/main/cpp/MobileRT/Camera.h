@@ -18,13 +18,13 @@ namespace MobileRT {
 
     public:
         explicit Camera(const Point3D &position,
-                        const Point3D &lookAt, const Vector3D &up);
+                        const Point3D &lookAt, const Vector3D &up) noexcept;
 
         virtual const Ray generateRay(const float u, const float v,
                                       const float deviationU,
-                                      const float deviationV) const = 0;
+                                      const float deviationV) const noexcept = 0;
 
-        virtual ~Camera(void);
+        virtual ~Camera(void) noexcept;
     };
 }
 

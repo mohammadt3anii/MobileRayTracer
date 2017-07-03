@@ -14,14 +14,14 @@ namespace MobileRT {
         Point3D center_;
 
     public:
-        explicit Sphere(const Point3D &center, const float radius);
+        explicit Sphere(const Point3D &center, const float radius) noexcept;
 
         virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const override final;
+                               const Material &material) const noexcept override final;
 
-        virtual void moveTo(const float x, const float y) override final;
+        virtual void moveTo(const float x, const float y) noexcept override final;
 
-        virtual float getZ(void) const override final;
+        virtual float getZ(void) const noexcept override final;
     };
 }
 

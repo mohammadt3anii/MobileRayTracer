@@ -6,12 +6,13 @@
 
 using namespace MobileRT;
 
-Sphere::Sphere(const Point3D &center, const float radius) :
+Sphere::Sphere(const Point3D &center, const float radius) noexcept :
         sq_radius_(radius * radius),
         center_(center) {
 }
 
-bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Material &material) const {
+bool Sphere::intersect(Intersection &intersection, const Ray &ray,
+                       const Material &material) const noexcept {
 //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vector3D centerToOrigin(ray.origin_, this->center_);
 
@@ -44,11 +45,11 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     return true;
 }
 
-void Sphere::moveTo(const float x, const float y) {
+void Sphere::moveTo(const float x, const float y) noexcept {
     this->center_.x_ = x;
     this->center_.y_ = y;
 }
 
-float Sphere::getZ(void) const {
+float Sphere::getZ(void) const noexcept {
     return this->center_.z_;
 }
