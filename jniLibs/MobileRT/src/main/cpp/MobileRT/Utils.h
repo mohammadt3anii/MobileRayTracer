@@ -5,11 +5,6 @@
 #ifndef MOBILERAYTRACER_UTILS
 #define MOBILERAYTRACER_UTILS
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-#include <iomanip>
-
 #define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #ifndef NO_ANDROID
@@ -23,8 +18,8 @@
 #else
 
 #define LOG(msg, ...)\
-	printf("%s::line:%d: " msg "\n",\
-		FILENAME, __LINE__, __VA_ARGS__);
+    printf("%s::line:%d: " msg "\n",\
+        FILENAME, __LINE__, __VA_ARGS__);
 
 #endif
 
@@ -50,6 +45,6 @@
 float fastArcTan(const float value);
 
 unsigned int roundDownToMultipleOf(const unsigned int value,
-								   const unsigned int multiple);
+                                   const unsigned int multiple);
 
 #endif //MOBILERAYTRACER_UTILS

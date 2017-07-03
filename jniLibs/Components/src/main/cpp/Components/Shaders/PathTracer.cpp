@@ -104,11 +104,11 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
             const Vector3D up(0.0f, 1.0f, 0.0f);
             Vector3D u(intersection.normal_.crossProduct(up));
-			u.x_ = u.x_ == 0.0f && u.y_ == 0.0f && u.z_ == 0.0f? 1.0f : u.x_;
+            u.x_ = u.x_ == 0.0f && u.y_ == 0.0f && u.z_ == 0.0f ? 1.0f : u.x_;
             const float cosTheta(up.dotProduct(intersection.normal_));
             //const float cosTheta (1.0f);
             float sinThetaSq(1.0f - cosTheta * cosTheta);
-			sinThetaSq = sinThetaSq < 0.0f? sinThetaSq * -1.0f : sinThetaSq;
+            sinThetaSq = sinThetaSq < 0.0f ? sinThetaSq * -1.0f : sinThetaSq;
             const float sinTheta(std::sqrt(sinThetaSq));
             const float rotationMatrix[3][3]
                     {
@@ -151,7 +151,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
             //secundaryRay -> origin =  intersection.point_, direction = global, depth = rayDepth+1
             const Ray normalizedSecundaryRay(globalX, globalY, globalZ, intersection.point_,
-                                       rayDepth + 1u);
+                                             rayDepth + 1u);
             //secundaryIntersection = intersection
             Intersection secundaryIntersection;
 

@@ -116,8 +116,12 @@ MobileRT::Scene *cornellBoxScene2(void) {
 
     const unsigned long long int max(static_cast<unsigned long long int> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
-    const unsigned long long int domainPointLight (/*roundUpPower2*/(
-                                                                            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    const unsigned long long int domainPointLight(/*roundUpPower2*/(
+                                                                           (width_ * height_ *
+                                                                            2llu) * 2llu *
+                                                                           samplesLight_ *
+                                                                           samplesPixel_ *
+                                                                           RAY_DEPTH_MAX));
     LOG("domainPointLight = %llu", domainPointLight);
     LOG("width_ = %u", width_);
     LOG("height_ = %u", height_);
@@ -394,13 +398,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     switch (sampler) {
         case 1:
-            if (samplesPixel_ > 1u)
-            {
+            if (samplesPixel_ > 1u) {
                 samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
                                                           1u);
-            }
-            else
-            {
+            } else {
                 samplerPixel_ = new Components::Constant(0.5f);
             }
             samplerCamera_ = new Components::HaltonSeq(width_, height_, samplesPixel_,
@@ -408,13 +409,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         default:
-            if (samplesPixel_ > 1u)
-            {
+            if (samplesPixel_ > 1u) {
                 samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
                                                            1u);
-            }
-            else
-            {
+            } else {
                 samplerPixel_ = new Components::Constant(0.5f);
             }
             samplerCamera_ = new Components::Stratified(width_, height_, samplesPixel_,
@@ -425,7 +423,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     samplerPointLight_ = nullptr;
     const unsigned long long int domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
-    const unsigned long long int domainLight (
+    const unsigned long long int domainLight(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
@@ -433,7 +431,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         case 2:
-        LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
+            LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1u);
             samplerRay_ = new Components::Random(domainRay, 1u);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
@@ -449,10 +447,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL)
-    {
-        renderer_->registerToneMapper([&](const float value)
-        {
+    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL) {
+        renderer_->registerToneMapper([&](const float value) {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
     }

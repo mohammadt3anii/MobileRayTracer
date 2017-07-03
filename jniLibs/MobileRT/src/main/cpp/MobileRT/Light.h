@@ -12,20 +12,20 @@
 
 namespace MobileRT {
     class Light {
-		public:
-			Material radiance_;
+    public:
+        Material radiance_;
 
-		public:
-			explicit Light(const Material &radiance);
+    public:
+        explicit Light(const Material &radiance);
 
-			virtual const Point3D getPosition(void) = 0;
+        virtual const Point3D getPosition(void) = 0;
 
-			virtual ~Light(void);
+        virtual ~Light(void);
 
-			virtual void resetSampling(void) = 0;
+        virtual void resetSampling(void) = 0;
 
-			virtual bool
-			intersect(Intersection &intersection, const Ray &ray, const Material &material) const = 0;
+        virtual bool
+        intersect(Intersection &intersection, const Ray &ray, const Material &material) const = 0;
     };
 }
 

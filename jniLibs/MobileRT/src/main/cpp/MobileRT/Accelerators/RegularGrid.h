@@ -11,22 +11,22 @@
 
 namespace MobileRT {
     class RegularGrid {
-        private:
-            std::vector<AxisAlignedBoundingBox *> *boxes_;
+    private:
+        std::vector<AxisAlignedBoundingBox *> *boxes_;
 
-    	private:
-        	void divideBoundingBox(AxisAlignedBoundingBox &bb);
+    private:
+        void divideBoundingBox(AxisAlignedBoundingBox &bb);
 
-        public:
-            explicit RegularGrid(const float minX, const float maxX,
-                                 const float minY, const float maxY,
-                                 const float minZ, const float maxZ,
-                                 const unsigned int numberOfBlocks,
-                                 std::vector<Primitive *> primitives);
+    public:
+        explicit RegularGrid(const float minX, const float maxX,
+                             const float minY, const float maxY,
+                             const float minZ, const float maxZ,
+                             const unsigned int numberOfBlocks,
+                             std::vector<Primitive *> primitives);
 
-			~RegularGrid(void);
+        ~RegularGrid(void);
 
-			bool intersect(Intersection &intersection, Ray &ray);
+        bool intersect(Intersection &intersection, Ray &ray);
     };
 }
 

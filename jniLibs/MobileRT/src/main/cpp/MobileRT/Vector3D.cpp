@@ -11,24 +11,21 @@ static unsigned int counter(0u);
 Vector3D::Vector3D(void) :
         x_(0.0f),
         y_(0.0f),
-        z_(0.0f)
-{
+        z_(0.0f) {
     counter++;
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z) :
         x_(x),
         y_(y),
-        z_(z)
-{
+        z_(z) {
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector) :
         x_(vector.x_),
         y_(vector.y_),
-        z_(vector.z_)
-{
+        z_(vector.z_) {
     const float len(magnitude());
     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
     this->x_ *= inv_length;
@@ -40,8 +37,7 @@ Vector3D::Vector3D(const Vector3D &vector) :
 Vector3D::Vector3D(const Vector3D &vector, const float value) :
         x_(vector.x_ * value),
         y_(vector.y_ * value),
-        z_(vector.z_ * value)
-{
+        z_(vector.z_ * value) {
     counter++;
 }
 
@@ -61,16 +57,14 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_)
-{
+        z_(dest.z_ - orig.z_) {
     counter++;
 }
 
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_)
-{
+        z_(dest.z_ - orig.z_) {
     magnitude_ = magnitude();
 
     const float inv_length(magnitude_ == 0.0f ? 1.0f : 1.0f / magnitude_);
@@ -85,8 +79,7 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) :
 Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) :
         x_(vector1.y_ * vector2.z_ - vector1.z_ * vector2.y_),
         y_(vector1.z_ * vector2.x_ - vector1.x_ * vector2.z_),
-        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_)
-{
+        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_) {
 }
 
 const Vector3D Vector3D::returnNormalized(void) const {
@@ -145,7 +138,7 @@ const Vector3D Vector3D::operator*(const float value) {
 }
 
 const Point3D Vector3D::operator/(const float value) const {
-    return Point3D (
+    return Point3D(
             this->x_ / value,
             this->y_ / value,
             this->z_ / value);

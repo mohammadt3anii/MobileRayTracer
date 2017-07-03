@@ -24,8 +24,7 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
         max_(1.0f),
         samplerPixel_(samplerPixel),
         sample_(0u),
-        toneMapper_([&](const float value){return value;})
-{
+        toneMapper_([&](const float value) { return value; }) {
 }
 
 Renderer::~Renderer(void) {
@@ -55,12 +54,10 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     float max(-1.0f);
     unsigned int ii(0u);
     unsigned int jj(0u);
-    for (unsigned int i(0u); i < this->height_; i++)
-    {
-        for (unsigned int j(0u); j < this->width_; j++)
-        {
-            const unsigned int pixel (i*this->width_ + j);
-            const float pixelMax (this->imagePlane_[pixel].getMax());
+    for (unsigned int i(0u); i < this->height_; i++) {
+        for (unsigned int j(0u); j < this->width_; j++) {
+            const unsigned int pixel(i * this->width_ + j);
+            const float pixelMax(this->imagePlane_[pixel].getMax());
             if (pixelMax > max) {
                 max = pixelMax;
                 ii = i;
@@ -68,8 +65,8 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
             }
         }
     }
-    const unsigned int pixel2 (ii*this->width_ + jj);
-    RGB& pixelRGB2 (this->imagePlane_[pixel2]);
+    const unsigned int pixel2(ii * this->width_ + jj);
+    RGB &pixelRGB2(this->imagePlane_[pixel2]);
     LOG("max = %f, i = %u, j = %u", double(max), ii, jj);
     LOG("rgb = %f %f %f", double(pixelRGB2.R_), double(pixelRGB2.G_), double(pixelRGB2.B_));
 
@@ -102,8 +99,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("%s", "FINISH");
 }
 
-void Renderer::registerToneMapper(std::function<float(const float)> toneMapper)
-{
+void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) {
     toneMapper_ = toneMapper;
 }
 
@@ -114,7 +110,7 @@ void Renderer::stopRender(void) {
     this->samplerPixel_.stopSampling();
 }
 
-void Renderer::toneMapper(RGB& pixel) {
+void Renderer::toneMapper(RGB &pixel) {
     pixel.R_ = toneMapper_(pixel.R_);
     pixel.G_ = toneMapper_(pixel.G_);
     pixel.B_ = toneMapper_(pixel.B_);
@@ -128,15 +124,13 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
     const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
 
-    for (unsigned int sample(0u); sample < samples; sample++)
-    {
+    for (unsigned int sample(0u); sample < samples; sample++) {
         for (float block(this->samplerCamera_.getSample(sample));;
-                block = this->samplerCamera_.getSample(sample))
-        {
+             block = this->samplerCamera_.getSample(sample)) {
             if (block >= 1.0f) break;
             const unsigned int pixel(
-                static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
-                this->blockSizeX_ % resolution_);
+                    static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
+                    this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
             const unsigned int endY(startY + this->blockSizeY_);
             for (unsigned int y(startY); y < endY; y++) {
@@ -151,7 +145,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) {
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
                     const Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
-                    RGB &pixelRGB (this->imagePlane_[yWidth + x]);
+                    RGB &pixelRGB(this->imagePlane_[yWidth + x]);
                     intersection.length_ = RAY_LENGTH_MAX;
                     this->shader_.rayTrace(pixelRGB, ray, intersection);
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);

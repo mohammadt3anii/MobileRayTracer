@@ -13,8 +13,7 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
         pointC_(pointC),
         AB_(pointB - pointA),
         AC_(pointC - pointA),
-        normal_(AB_.crossProduct(AC_))
-{
+        normal_(AB_.crossProduct(AC_)) {
 }
 
 bool Triangle::intersect(Intersection &intersection, const Ray &ray,
@@ -50,8 +49,7 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
     intersection.reset(
             ray.origin_, ray.direction_, distanceToIntersection,
             this->normal_,
-            material,
-            ray.origin_);
+            material);
 
     return true;
 }

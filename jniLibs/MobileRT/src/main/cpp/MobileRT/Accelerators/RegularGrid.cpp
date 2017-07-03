@@ -10,8 +10,7 @@ RegularGrid::RegularGrid(const float minX, const float maxX,
                          const float minY, const float maxY,
                          const float minZ, const float maxZ,
                          const unsigned int numberOfBlocks,
-                        std::vector<Primitive *> )
-{
+                         std::vector<Primitive *>) {
     /*  loop boundingBoxes
      *      descobrir ponto min e max
      *      criar boundingBox
@@ -23,24 +22,21 @@ RegularGrid::RegularGrid(const float minX, const float maxX,
 
     Point3D *mins = new Point3D[3 * numberOfBlocks];
     Point3D *maxs = new Point3D[3 * numberOfBlocks];
-    const float deviationX ((maxX - minX) / numberOfBlocks);
-    const float deviationY ((maxY - minY) / numberOfBlocks);
-    const float deviationZ ((maxZ - minZ) / numberOfBlocks);
+    const float deviationX((maxX - minX) / numberOfBlocks);
+    const float deviationY((maxY - minY) / numberOfBlocks);
+    const float deviationZ((maxZ - minZ) / numberOfBlocks);
 
-    for (unsigned int i(0u); i < numberOfBlocks; i++)
-    {
-        for (unsigned int j(0u); j < 2u; j++)
-        {
-            if (j == 0u)
-            {
-                float x (deviationX * i);
-                float y (deviationY * i);
-                float z (deviationZ * i);
+    for (unsigned int i(0u); i < numberOfBlocks; i++) {
+        for (unsigned int j(0u); j < 2u; j++) {
+            if (j == 0u) {
+                float x(deviationX * i);
+                float y(deviationY * i);
+                float z(deviationZ * i);
                 mins[i] = Point3D(x, y, z);
             } else {
-                float x (deviationX * i);
-                float y (deviationY * i);
-                float z (deviationZ * i);
+                float x(deviationX * i);
+                float y(deviationY * i);
+                float z(deviationZ * i);
                 maxs[i] = Point3D(x, y, z);
             }
         }
@@ -53,12 +49,10 @@ RegularGrid::RegularGrid(const float minX, const float maxX,
 
 }
 
-RegularGrid::~RegularGrid(void)
-{
+RegularGrid::~RegularGrid(void) {
 }
 
-bool RegularGrid::intersect(Intersection &, Ray &)
-{
+bool RegularGrid::intersect(Intersection &, Ray &) {
     return false;
 }
 

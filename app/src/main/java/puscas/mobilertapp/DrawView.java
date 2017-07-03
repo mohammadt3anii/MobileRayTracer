@@ -205,7 +205,7 @@ final class DrawView extends LinearLayout {
                         (SystemClock.elapsedRealtime() - start_) / 1000.0f);
                 stageT_ = "" + Stage.values()[stage_];
                 allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / (1024 * 1024) + "MB";
-                sampleT_ =  ", " + getSample();
+                sampleT_ = ", " + getSample();
                 //availableT_ = "[Ma:" + Debug.getNativeHeapSize() / (1024 * 1024) + "MB";
                 //freeT_ = ", Mf:" + Debug.getNativeHeapFreeSize() / (1024 * 1024) + "MB]";
                 publishProgress();

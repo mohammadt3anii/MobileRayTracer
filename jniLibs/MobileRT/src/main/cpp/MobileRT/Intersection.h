@@ -12,39 +12,25 @@
 
 namespace MobileRT {
     class Intersection final {
-		public:
-			Point3D point_;   // intersection point
-			Vector3D normal_;    // intersection normal
-			Vector3D symNormal_;
-			const Material *material_;  // material of the intersected primitive
-			float length_;     // ray length parameter
-			Point3D origin_;
+    public:
+        Point3D point_;   // intersection point
+        Vector3D normal_;    // intersection normal
+        Vector3D symNormal_;
+        const Material *material_;  // material of the intersected primitive
+        float length_;     // ray length parameter
 
-		public:
-			explicit Intersection(void);
+    public:
+        explicit Intersection(void);
 
-			explicit Intersection(const Intersection &intersection);
-			
-			void reset(const Point3D &point,
-					   const Vector3D &normal,
-					   const float dist,
-					   const Material &material,
-					   const Point3D &origin);
+        void reset(const Point3D &orig, const Vector3D &dir, const float dist,
+                   const Vector3D &normal,
+                   const Material &material);
 
-			void reset(const float x, const float y, const float z,
-					   const Vector3D &normal,
-					   const float dist,
-					   const Material &material,
-					   const Point3D &origin);
+        void reset(const Point3D &orig, const Vector3D &dir, const float dist,
+                   const Point3D &center,
+                   const Material &material);
 
-			void reset(const Point3D &orig,
-					   const Vector3D &dir,
-					   const float dist,
-					   const Vector3D &normal,
-					   const Material &material,
-					   const Point3D &origin);
-
-			static unsigned int getInstances();
+        static unsigned int getInstances();
     };
 }
 

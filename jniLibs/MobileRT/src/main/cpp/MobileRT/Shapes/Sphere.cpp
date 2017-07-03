@@ -36,16 +36,10 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray, const Materia
     if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
         return false;
 
-    const Point3D intersectionPoint(ray.origin_, ray.direction_, distanceToIntersection);
-    const Vector3D normal(intersectionPoint, this->center_, true);
-
     // if so, then we have an intersection
-    intersection.reset(
-            intersectionPoint,
-            normal,
-            distanceToIntersection,
-            material,
-            ray.origin_);
+    intersection.reset(ray.origin_, ray.direction_, distanceToIntersection,
+                       this->center_,
+                       material);
 
     return true;
 }

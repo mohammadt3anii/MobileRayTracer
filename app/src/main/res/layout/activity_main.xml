@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -17,14 +16,14 @@
         android:layout_alignBaseline="@+id/pickerShader"
         android:layout_alignBottom="@+id/pickerShader"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true" />
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerShader"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerThreads"
@@ -33,7 +32,7 @@
         android:layout_alignBaseline="@+id/pickerShader"
         android:layout_alignBottom="@+id/pickerShader"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/timeText"
@@ -42,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:text="@string/time"
         android:textColor="@android:color/holo_green_dark"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/renderButton"
@@ -62,7 +61,7 @@
         android:layout_alignBaseline="@+id/pickerSampler"
         android:layout_alignBottom="@+id/pickerSampler"
         android:layout_toEndOf="@+id/pickerScene"
-        android:layout_toRightOf="@+id/pickerScene"/>
+        android:layout_toRightOf="@+id/pickerScene" />
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerSamplesLight"
@@ -71,7 +70,7 @@
         android:layout_alignBaseline="@+id/pickerSamplesPixel"
         android:layout_alignBottom="@+id/pickerSamplesPixel"
         android:layout_toLeftOf="@+id/pickerThreads"
-        android:layout_toStartOf="@+id/pickerThreads"/>
+        android:layout_toStartOf="@+id/pickerThreads" />
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerSampler"
@@ -83,7 +82,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/pickerSamplesPixel"
-        android:layout_toStartOf="@+id/pickerSamplesPixel"/>
+        android:layout_toStartOf="@+id/pickerSamplesPixel" />
 
     <puscas.mobilertapp.DrawView
         android:id="@+id/drawLayout"

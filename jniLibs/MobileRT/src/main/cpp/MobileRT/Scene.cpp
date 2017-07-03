@@ -29,8 +29,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const {
 
     for (unsigned int i(0u); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
-        if (light.intersect(intersection, ray, light.radiance_))
-        {
+        if (light.intersect(intersection, ray, light.radiance_)) {
             res = static_cast<int> (i);
         }
     }
@@ -45,8 +44,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const {
     for (unsigned int i(0u); i < primitivesSize; i++) {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
         //const Shape &shape((*this->primitives_[static_cast<unsigned long> (i)])->shape_);
-        if (primitive.intersect(intersection, ray))
-        {
+        if (primitive.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }
     }
@@ -62,8 +60,7 @@ bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const {
     for (unsigned int i(0u); i < primitivesSize; i++)//trace shadow ray
     {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
-        if (primitive.intersect(intersection, ray))
-        {
+        if (primitive.intersect(intersection, ray)) {
             return true;
         }
     }

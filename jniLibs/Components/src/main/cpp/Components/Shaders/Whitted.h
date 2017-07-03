@@ -11,15 +11,15 @@ namespace Components {
     using namespace MobileRT;
 
     class Whitted final : public Shader {
-		private:
-			virtual void shade(RGB &rgb,
-							   const Intersection &intersection,
-							   const Ray &ray) const override final;
+    private:
+        virtual void shade(RGB &rgb,
+                           const Intersection &intersection,
+                           const Ray &ray) const override final;
 
-		public:
-			explicit Whitted(Scene &scene, const unsigned int samplesLight);
+    public:
+        explicit Whitted(Scene &scene, const unsigned int samplesLight);
 
-			virtual void resetSampling(void) override final;
+        virtual void resetSampling(void) override final;
     };
 }
 

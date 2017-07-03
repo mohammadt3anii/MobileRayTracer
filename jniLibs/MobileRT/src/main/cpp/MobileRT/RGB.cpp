@@ -63,8 +63,7 @@ void RGB::operator*=(const RGB &rgb) {
     this->B_ *= rgb.B_;
 }
 
-const RGB RGB::operator*(const float value) const
-{
+const RGB RGB::operator*(const float value) const {
     return RGB(this->R_ * value, this->G_ * value, this->B_ * value);
 }
 
@@ -109,13 +108,6 @@ void RGB::reset(const float color) {
     this->samples_ = 0u;
 }
 
-void RGB::reset(const float r, const float g, const float b) {
-    this->R_ = r;
-    this->G_ = g;
-    this->B_ = b;
-    this->samples_ = 0u;
-}
-
 unsigned int RGB::RGB2Color(void) {
     const unsigned int red(static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int maskR(0u - (red > 255u));
@@ -139,7 +131,7 @@ unsigned int RGB::getInstances() {
 }
 
 float RGB::getMax(void) {
-	return	this->R_ >= this->G_ && this->R_ >= this->B_? this->R_ :
-			this->G_ >= this->R_ && this->G_ >= this->B_? this->G_ :
-			this->B_;
+    return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ :
+           this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ :
+           this->B_;
 }

@@ -15,22 +15,22 @@
 
 namespace MobileRT {
     class Primitive final {
-		private:
-			const Material material_;
+    private:
+        const Material material_;
 
-			friend class Scene;
+        friend class Scene;
 
-		public:
-			Shape *const shape_;
+    public:
+        Shape *const shape_;
 
-		public:
-			explicit Primitive(Shape *shape, const Material &material);
+    public:
+        explicit Primitive(Shape *shape, const Material &material);
 
-			~Primitive();
+        ~Primitive();
 
-			bool intersect(Intersection &intersection, const Ray &ray) const;
+        bool intersect(Intersection &intersection, const Ray &ray) const;
 
-			static unsigned int getInstances();
+        static unsigned int getInstances();
     };
 }
 

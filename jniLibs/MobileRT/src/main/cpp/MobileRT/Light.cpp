@@ -7,8 +7,7 @@
 using namespace MobileRT;
 
 Light::Light(const Material &radiance) :
-        radiance_(radiance)
-{
+        radiance_(radiance) {
 }
 
 Light::~Light(void) {

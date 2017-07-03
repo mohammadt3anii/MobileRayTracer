@@ -104,8 +104,12 @@ MobileRT::Scene *cornellBoxScene2(void) {
 
     const unsigned long long int max(static_cast<unsigned long long int> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
-    const unsigned long long int domainPointLight (/*roundUpPower2*/(
-            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    const unsigned long long int domainPointLight(/*roundUpPower2*/(
+                                                                           (width_ * height_ *
+                                                                            2llu) * 2llu *
+                                                                           samplesLight_ *
+                                                                           samplesPixel_ *
+                                                                           RAY_DEPTH_MAX));
     LOG("domainPointLight = %llu", domainPointLight);
     LOG("width_ = %u", width_);
     LOG("height_ = %u", height_);
@@ -344,13 +348,10 @@ int main(int argc, char **argv) {
     }
     switch (sampler) {
         case 1:
-            if (samplesPixel_ > 1u)
-            {
+            if (samplesPixel_ > 1u) {
                 samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
                                                           1u);
-            }
-            else
-            {
+            } else {
                 samplerPixel_ = new Components::Constant(0.5f);
             }
             samplerCamera_ = new Components::HaltonSeq(width_, height_, samplesPixel_,
@@ -358,13 +359,10 @@ int main(int argc, char **argv) {
             break;
 
         default:
-            if (samplesPixel_ > 1u)
-            {
+            if (samplesPixel_ > 1u) {
                 samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
                                                            1u);
-            }
-            else
-            {
+            } else {
                 samplerPixel_ = new Components::Constant(0.5f);
             }
             samplerCamera_ = new Components::Stratified(width_, height_, samplesPixel_,
@@ -375,7 +373,7 @@ int main(int argc, char **argv) {
     samplerPointLight_ = nullptr;
     const unsigned long long int domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
-    const unsigned long long int domainLight (
+    const unsigned long long int domainLight(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
@@ -383,7 +381,7 @@ int main(int argc, char **argv) {
             break;
 
         case 2:
-        LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
+            LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
             samplerRay_ = new Components::Random(domainRay, 1);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
@@ -399,10 +397,8 @@ int main(int argc, char **argv) {
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL)
-    {
-        renderer_->registerToneMapper([&](const float value)
-        {
+    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL) {
+        renderer_->registerToneMapper([&](const float value) {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
     }
@@ -429,8 +425,7 @@ int main(int argc, char **argv) {
     //RGBA
     unsigned char *buffer(new unsigned char[width_ * height_ * 4u]);
 
-    for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u)
-    {
+    for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(canvas[j]);
         buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
         buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
@@ -440,11 +435,11 @@ int main(int argc, char **argv) {
     gtk_init(&argc, &argv);
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GdkPixbuf *pixbuff = gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-                                                width_, height_, width_ * 4, NULL, NULL);
+                                                  width_, height_, width_ * 4, NULL, NULL);
     GtkWidget *image = gtk_image_new_from_pixbuf(pixbuff);
     gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(destroy), NULL);
     gtk_signal_connect(GTK_OBJECT(window), "key_press_event",
-        GTK_SIGNAL_FUNC(check_escape), NULL);
+                       GTK_SIGNAL_FUNC(check_escape), NULL);
     gtk_container_add(GTK_CONTAINER(window), image);
     gtk_widget_show_all(window);
     gtk_main();

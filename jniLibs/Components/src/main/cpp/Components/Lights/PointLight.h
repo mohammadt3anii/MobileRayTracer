@@ -11,18 +11,18 @@ namespace Components {
     using namespace MobileRT;
 
     class PointLight final : public Light {
-		private:
-			Point3D position_;
+    private:
+        Point3D position_;
 
-		public:
-			explicit PointLight(const Material &radiance, const Point3D &position);
+    public:
+        explicit PointLight(const Material &radiance, const Point3D &position);
 
-			virtual const Point3D getPosition(void) override final;
+        virtual const Point3D getPosition(void) override final;
 
-			virtual void resetSampling(void) override final;
+        virtual void resetSampling(void) override final;
 
-			virtual bool intersect(Intersection &intersection, const Ray &ray,
-								   const Material &material) const override final;
+        virtual bool intersect(Intersection &intersection, const Ray &ray,
+                               const Material &material) const override final;
     };
 }
 
