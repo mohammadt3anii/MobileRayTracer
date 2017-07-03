@@ -9,7 +9,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 final class CustomNumberPicker extends NumberPicker {
-    public CustomNumberPicker(final Context context, final AttributeSet attrs) {
+    CustomNumberPicker(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 

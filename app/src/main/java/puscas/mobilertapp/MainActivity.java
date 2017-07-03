@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Pattern;
 
-final public class MainActivity extends Activity {
+public final class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("Components");
@@ -27,39 +28,35 @@ final public class MainActivity extends Activity {
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
 
-    private int getNumCoresOldPhones() {
+    private static int getNumCoresOldPhones() {
         try {
             final File dir = new File("/sys/devices/system/cpu/");
             final File[] files = dir.listFiles(new CpuFilter());
             return files.length;
-        } catch (RuntimeException e) {
-            e.printStackTrace();
+        } catch (final RuntimeException ignored) {
             return 1;
         }
     }
 
-    private int getNumberOfCores() {
-        if (Build.VERSION.SDK_INT < 17) {
-            return getNumCoresOldPhones();
-        } else {
-            return Runtime.getRuntime().availableProcessors();
-        }
+    private static int getNumberOfCores() {
+        return (Build.VERSION.SDK_INT < 17) ? MainActivity.getNumCoresOldPhones() :
+                Runtime.getRuntime().availableProcessors();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_main);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final RuntimeException e) {
+            e.fillInStackTrace();
         }
 
         final TextView textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
         drawView_.setVisibility(View.VISIBLE);
         drawView_.setView(textView_);
-        drawView_.setButton((Button) findViewById(R.id.renderButton));
+        drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
 
         final String[] scenes = {"Cornell", "Spheres", "Spheres2", "Cornell2"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
@@ -67,7 +64,7 @@ final public class MainActivity extends Activity {
         pickerScene_.setMaxValue(scenes.length - 1);
         pickerScene_.setDisplayedValues(scenes);
         pickerScene_.setWrapSelectorWheel(true);
-        pickerScene_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         final String[] shaders = {"NoShadows", "Whitted", "PathTracer", ""};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
@@ -75,7 +72,7 @@ final public class MainActivity extends Activity {
         pickerShader_.setMaxValue(shaders.length - 1);
         pickerShader_.setDisplayedValues(shaders);
         pickerShader_.setWrapSelectorWheel(true);
-        pickerShader_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerShader_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         final int maxSamplesPixel = 10;
         final String[] samplesPixel = new String[maxSamplesPixel];
@@ -87,10 +84,16 @@ final public class MainActivity extends Activity {
         pickerSamplesPixel_.setMaxValue(maxSamplesPixel);
         pickerSamplesPixel_.setDisplayedValues(samplesPixel);
         pickerSamplesPixel_.setWrapSelectorWheel(true);
-        pickerSamplesPixel_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerSamplesPixel_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         final int maxSamplesLight = 100;
-        final String[] samplesLight = new String[maxSamplesLight];
+        final String[] samplesLight;
+        try {
+            samplesLight = new String[maxSamplesLight];
+        } catch (final OutOfMemoryError e) {
+            e.fillInStackTrace();
+            throw e;
+        }
         for (int i = 0; i < maxSamplesLight; i++) {
             samplesLight[i] = Integer.toString(i + 1);
         }
@@ -99,7 +102,7 @@ final public class MainActivity extends Activity {
         pickerSamplesLight_.setMaxValue(maxSamplesLight);
         pickerSamplesLight_.setDisplayedValues(samplesLight);
         pickerSamplesLight_.setWrapSelectorWheel(true);
-        pickerSamplesLight_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         final String[] samplers = {"Stratified", "HaltonSeq"};
         pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
@@ -107,17 +110,19 @@ final public class MainActivity extends Activity {
         pickerSampler_.setMaxValue(samplers.length - 1);
         pickerSampler_.setDisplayedValues(samplers);
         pickerSampler_.setWrapSelectorWheel(true);
-        pickerSampler_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerSampler_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
         pickerThreads_.setMinValue(1);
-        pickerThreads_.setMaxValue(getNumberOfCores() * 2);
+        pickerThreads_.setMaxValue(MainActivity.getNumberOfCores() << 1);
         pickerThreads_.setWrapSelectorWheel(true);
-        pickerThreads_.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
     public void startRender(final View view) {
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 drawView_.createScene(
@@ -142,10 +147,14 @@ final public class MainActivity extends Activity {
         }
     }
 
-    private class CpuFilter implements FileFilter {
+    private static final class CpuFilter implements FileFilter {
+        CpuFilter() {
+            super();
+        }
+
         @Override
-        public boolean accept(final File pathname) {
-            return Pattern.matches("cpu[0-9]+", pathname.getName());
+        public final boolean accept(final File file) {
+            return Pattern.matches("cpu[0-9]+", file.getName());
         }
     }
 }
