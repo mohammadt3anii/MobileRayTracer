@@ -214,7 +214,7 @@ final class DrawView extends LinearLayout {
             boolean running = true;
             do {
                 try {
-                    running = scheduler_.awaitTermination(2147483647L, TimeUnit.DAYS);
+                    running = !scheduler_.awaitTermination(2147483647L, TimeUnit.DAYS);
                 } catch (final InterruptedException e) {
                     e.fillInStackTrace();
                 }
@@ -225,14 +225,12 @@ final class DrawView extends LinearLayout {
         @Override
         protected final void onProgressUpdate(final Void... progress) {
             printText();
-            //textView_.setText(" ");
         }
 
         @Override
         protected final void onPostExecute(final Void result) {
             redraw(bitmap_);
             printText();
-            //textView_.setText(" ");
             renderTask_.cancel(true);
             finish();
             buttonRender_.setText(R.string.render);

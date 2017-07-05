@@ -1,13 +1,14 @@
 .SUFFIXES:
+.PHONY: all clean
 .PRECIOUS: %.s
-.PHONY: all
+default: all
 
 EXE := raytracer
 CXX := c++
 LD := $(CXX)
 MAKEFLAGS := -j5
 
-CXXFLAGS := -Wpedantic -Wall -Wextra -Werror -Wfatal-errors -MMD -std=c++11 -g
+CXXFLAGS := -Wpedantic -Wall -Wextra -Werror -Wfatal-errors -MMD -std=c++14 -g
 CXXFLAGS += -march=native -ftree-vectorize -Ofast
 CXXFLAGS += -DNO_ANDROID
 CXXFLAGS += -I./MobileRT/src/main/cpp

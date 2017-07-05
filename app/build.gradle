@@ -2,49 +2,60 @@ apply plugin: "com.android.application"
 android {
     signingConfigs {
         Puscas {
-            keyAlias 'Puscas'
-            keyPassword '@puscas99'
-            storeFile file('../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks')
-            storePassword '@puscas99'
+            keyAlias "Puscas"
+            storeFile file("../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            keyPassword "@puscas99"
+            storePassword "@puscas99"
         }
     }
     publishNonDefault true
     compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    buildToolsVersion "25.0.3"
     defaultConfig {
         minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 25
-        ndk {
-            abiFilters "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64"
-        }
+        versionCode 1
         jackOptions { enabled true }
+        signingConfig signingConfigs.Puscas
+        externalNativeBuild {
+            cmake {
+                arguments "-DPROJECT_PATH=" + project.rootDir
+            }
+        }
     }
     externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
-        }
+        cmake { path "CMakeLists.txt" }
     }
-    android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
-    android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         debug {
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.Puscas
             debuggable true
             jniDebuggable true
-            signingConfig signingConfigs.Puscas
-            dependencies {
-                debugCompile 'com.android.support:appcompat-v7:25.3.1'
-                debugCompile project(path: ':Components', configuration: 'debug')
-            }
         }
         release {
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.Puscas
             debuggable false
             jniDebuggable false
-            signingConfig signingConfigs.Puscas
-            dependencies {
-                releaseCompile 'com.android.support:appcompat-v7:25.3.1'
-                releaseCompile project(path: ':Components', configuration: 'release')
-            }
         }
     }
+}
+
+configurations {
+    debug
+    release
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    debugCompile project(path: ':MobileRT', configuration: 'debug')
+    debugCompile project(path: ':Components', configuration: 'debug')
+    releaseCompile project(path: ':MobileRT', configuration: 'release')
+    releaseCompile project(path: ':Components', configuration: 'release')
 }

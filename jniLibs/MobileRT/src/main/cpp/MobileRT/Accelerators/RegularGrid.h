@@ -12,10 +12,10 @@
 namespace MobileRT {
     class RegularGrid {
     private:
-        std::vector<AxisAlignedBoundingBox *> *boxes_;
+        //std::vector<AxisAlignedBoundingBox *> *boxes_;
 
     private:
-        void divideBoundingBox(AxisAlignedBoundingBox &bb);
+        //void divideBoundingBox(AxisAlignedBoundingBox &bb);
 
     public:
         explicit RegularGrid(const float minX, const float maxX,

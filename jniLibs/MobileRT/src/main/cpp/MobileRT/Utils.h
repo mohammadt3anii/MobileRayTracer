@@ -5,7 +5,9 @@
 #ifndef MOBILERAYTRACER_UTILS
 #define MOBILERAYTRACER_UTILS
 
-#define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#include <cstring>
+
+#define FILENAME (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #ifndef NO_ANDROID
 

@@ -56,7 +56,7 @@ bool RegularGrid::intersect(Intersection &, Ray &) {
     return false;
 }
 
-void RegularGrid::divideBoundingBox(AxisAlignedBoundingBox &bb) {
+/*void RegularGrid::divideBoundingBox(AxisAlignedBoundingBox &bb) {
     const Point3D pointMid((bb.pointMax_ - bb.pointMin_) / 2.0f);
 
     //4 cubes below
@@ -84,4 +84,4 @@ void RegularGrid::divideBoundingBox(AxisAlignedBoundingBox &bb) {
 
     const Point3D min8(pointMid.x_, pointMid.y_, pointMid.z_);
     const Point3D max8(bb.pointMax_.x_, bb.pointMax_.y_, bb.pointMax_.z_);
-}
+}*/

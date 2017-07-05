@@ -447,7 +447,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL) {
+    //Path Tracer needs tone mapper
+    if (shader == 2) {
         renderer_->registerToneMapper([&](const float value) {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
@@ -459,24 +460,19 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 }
 
 void thread_work(void *dstPixels, unsigned int numThreads) noexcept {
-    try {
-        unsigned int rep(2u);
-        do {
-            const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-            renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
-            timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::steady_clock::now() - start).count();
-            FPS();
+    unsigned int rep(2u);
+    do {
+        const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
+        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::steady_clock::now() - start).count();
+        FPS();
 
-            camera_->position_.x_ += 1.0f;
-        } while (working_ != STOPPED && rep-- > 1u);
-        if (working_ != STOPPED) {
-            working_ = FINISHED;
-            LOG("%s", "WORKING = FINISHED");
-        }
-    } catch (...) {
-        LOG("%s", "EXCEPTION");
-        raise(SIGTRAP);
+        camera_->position_.x_ += 1.0f;
+    } while (working_ != STOPPED && rep-- > 1u);
+    if (working_ != STOPPED) {
+        working_ = FINISHED;
+        LOG("%s", "WORKING = FINISHED");
     }
 }
 
