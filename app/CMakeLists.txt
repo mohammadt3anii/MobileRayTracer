@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.6.0)
 
+file(TO_CMAKE_PATH ${PROJECT_PATH} PROJECT_PATH)
 include(${PROJECT_PATH}/jniLibs/Components/CMakeLists.txt)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
@@ -14,7 +15,7 @@ set(ANDROID_DISABLE_NO_EXECUTE TRUE)
 set(ANDROID_DISABLE_FORMAT_STRING_CHECKS TRUE)
 set(ANDROID_PIE ON)
 
-file(TO_CMAKE_PATH ${PROJECT_PATH}/app/src/main/cpp/ MOBILE_APP_PATH)
+set(MOBILE_APP_PATH ${PROJECT_PATH}/app/src/main/cpp)
 file(GLOB_RECURSE MOBILE_APP_SOURCES "${MOBILE_APP_PATH}/**.cpp")
 add_library(DrawView SHARED ${MOBILE_APP_SOURCES})
 
