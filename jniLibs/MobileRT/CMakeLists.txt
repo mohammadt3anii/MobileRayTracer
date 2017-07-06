@@ -12,9 +12,10 @@ set(ANDROID_DISABLE_NO_EXECUTE TRUE)
 set(ANDROID_DISABLE_FORMAT_STRING_CHECKS TRUE)
 set(ANDROID_PIE ON)
 
-file(GLOB_RECURSE MOBILE_RT_SOURCES "${PROJECT_PATH}/jniLibs/MobileRT/src/main/cpp/**.cpp")
+file(TO_CMAKE_PATH ${PROJECT_PATH}/jniLibs/MobileRT/src/main/cpp/ MOBILE_RT_PATH)
+file(GLOB_RECURSE MOBILE_RT_SOURCES "${MOBILE_RT_PATH}/**.cpp")
 add_library(MobileRT SHARED ${MOBILE_RT_SOURCES})
-target_include_directories(MobileRT INTERFACE ${PROJECT_PATH}/jniLibs/MobileRT/src/main/cpp)
+target_include_directories(MobileRT INTERFACE ${MOBILE_RT_PATH})
 
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:DEBUG>:-g3 -O0>)
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)

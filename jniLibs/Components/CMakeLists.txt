@@ -14,9 +14,10 @@ set(ANDROID_DISABLE_NO_EXECUTE TRUE)
 set(ANDROID_DISABLE_FORMAT_STRING_CHECKS TRUE)
 set(ANDROID_PIE ON)
 
-file(GLOB_RECURSE MOBILE_RC_SOURCES "${PROJECT_PATH}/jniLibs/Components/src/main/cpp/**.cpp")
+file(TO_CMAKE_PATH ${PROJECT_PATH}/jniLibs/Components/src/main/cpp/ MOBILE_RC_PATH)
+file(GLOB_RECURSE MOBILE_RC_SOURCES "${MOBILE_RC_PATH}/**.cpp")
 add_library(Components SHARED ${MOBILE_RC_SOURCES})
-target_include_directories(Components INTERFACE ${PROJECT_PATH}/jniLibs/Components/src/main/cpp)
+target_include_directories(Components INTERFACE ${MOBILE_RC_PATH})
 
 target_compile_options(Components PRIVATE $<$<CONFIG:DEBUG>:-g3 -O0>)
 target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
