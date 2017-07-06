@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="puscas.mobilertapp">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="puscas.mobilertapp">
 
     <application
         android:allowBackup="false"
@@ -17,16 +17,16 @@
                 <action
                     android:name="android.intent.action.MAIN"
                     android:hardwareAccelerated="true"
-                    android:largeHeap="true" />
+                    android:largeHeap="true"/>
                 <action
                     android:name="android.intent.action.VIEW"
                     android:hardwareAccelerated="true"
-                    android:largeHeap="true" />
+                    android:largeHeap="true"/>
 
                 <category
                     android:name="android.intent.category.LAUNCHER"
                     android:hardwareAccelerated="true"
-                    android:largeHeap="true" />
+                    android:largeHeap="true"/>
             </intent-filter>
         </activity>
     </application>
