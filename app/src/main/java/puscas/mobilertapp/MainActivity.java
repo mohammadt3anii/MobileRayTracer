@@ -1,13 +1,15 @@
 package puscas.mobilertapp;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -21,6 +23,7 @@ public final class MainActivity extends Activity {
     }
 
     private DrawView drawView_;
+    private GLDrawView glDrawView_;
     private NumberPicker pickerScene_;
     private NumberPicker pickerShader_;
     private NumberPicker pickerThreads_;
@@ -52,11 +55,24 @@ public final class MainActivity extends Activity {
             e.fillInStackTrace();
         }
 
-        final TextView textView_ = (TextView) findViewById(R.id.timeText);
+        final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final ConfigurationInfo info = am.getDeviceConfigurationInfo();
+        final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
+        if (supportES2) {
+            final MainRenderer mainRenderer = new MainRenderer();
+            //glDrawView_ = new GLDrawView(this);
+            glDrawView_ = (GLDrawView) findViewById(R.id.drawLayout);
+            glDrawView_.setEGLContextClientVersion(2);
+            glDrawView_.setRenderer(mainRenderer);
+        } else {
+            Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
+        }
+
+        /*final TextView textView_ = (TextView) findViewById(R.id.timeText);
         drawView_ = (DrawView) findViewById(R.id.drawLayout);
         drawView_.setVisibility(View.VISIBLE);
         drawView_.setView(textView_);
-        drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+        drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);*/
 
         final String[] scenes = {"Cornell", "Spheres", "Spheres2", "Cornell2"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
