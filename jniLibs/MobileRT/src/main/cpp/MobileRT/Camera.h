@@ -20,11 +20,11 @@ namespace MobileRT {
         explicit Camera(const Point3D &position,
                         const Point3D &lookAt, const Vector3D &up) noexcept;
 
+        virtual ~Camera(void) noexcept;
+
         virtual const Ray generateRay(const float u, const float v,
                                       const float deviationU,
                                       const float deviationV) const noexcept = 0;
-
-        virtual ~Camera(void) noexcept;
     };
 }
 

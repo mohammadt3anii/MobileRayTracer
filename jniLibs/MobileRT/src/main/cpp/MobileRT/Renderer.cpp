@@ -20,8 +20,6 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
         blockSizeX_(blockSizeX),
         blockSizeY_(blockSizeY),
         resolution_(width * height),
-        imagePlane_(new RGB[width * height]),
-        max_(1.0f),
         samplerPixel_(samplerPixel),
         sample_(0u),
         toneMapper_([&](const float value) { return value; }) {
@@ -29,7 +27,6 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
 
 Renderer::~Renderer(void) noexcept {
     delete[] this->accumulate_;
-    delete[] this->imagePlane_;
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
@@ -50,43 +47,6 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
         threads[i].join();
     }
     delete[] threads;
-
-    float max(-1.0f);
-    unsigned int ii(0u);
-    unsigned int jj(0u);
-    for (unsigned int i(0u); i < this->height_; i++) {
-        for (unsigned int j(0u); j < this->width_; j++) {
-            const unsigned int pixel(i * this->width_ + j);
-            const float pixelMax(this->imagePlane_[pixel].getMax());
-            if (pixelMax > max) {
-                max = pixelMax;
-                ii = i;
-                jj = j;
-            }
-        }
-    }
-    const unsigned int pixel2(ii * this->width_ + jj);
-    RGB &pixelRGB2(this->imagePlane_[pixel2]);
-    LOG("max = %f, i = %u, j = %u", double(max), ii, jj);
-    LOG("rgb = %f %f %f", double(pixelRGB2.R_), double(pixelRGB2.G_), double(pixelRGB2.B_));
-
-    this->max_ = max;
-    ////if (max > 0.0f && max != 1.0f && std::fabs(max - this->max_) > 0.0001f)
-    //{
-    //    for (unsigned int i (0); i < this->height_; i++)
-    //    {
-    //        for (unsigned int j (0); j < this->width_; j++)
-    //        {
-    //            const unsigned int pixel (i*this->width_ + j);
-    //            RGB& pixelRGB (this->imagePlane_[pixel]);
-    //            //pixelRGB /= this->max_;
-    //            pixelRGB.R_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.R_)));
-    //            pixelRGB.G_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.G_)));
-    //            pixelRGB.B_ = 1.0f - std::cos(std::sqrt(std::sqrt(pixelRGB.B_)));
-    //            bitmap[pixel] = pixelRGB.RGB2Color();
-    //        }
-    //    }
-    //}
 
     LOG("%s%u", "START - resolution=", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
@@ -123,6 +83,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     const float pixelHeight(0.5f / this->height_);
     const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
+    RGB pixelRGB;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
         for (float block(this->samplerCamera_.getSample(sample));;
@@ -145,7 +106,6 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
                     const Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
-                    RGB &pixelRGB(this->imagePlane_[yWidth + x]);
                     intersection.length_ = RAY_LENGTH_MAX;
                     this->shader_.rayTrace(pixelRGB, ray, intersection);
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);

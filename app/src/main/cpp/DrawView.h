@@ -26,15 +26,17 @@
 #include "Components/Lights/PointLight.h"
 #include "Components/Lights/AreaLight.h"
 
-void FPS(void) noexcept;
+static void FPS(void) noexcept;
 
-MobileRT::Scene *cornellBoxScene(void) noexcept;
+static MobileRT::Scene *cornellBoxScene(void) noexcept;
 
-MobileRT::Scene *cornellBoxScene2(void) noexcept;
+static MobileRT::Scene *cornellBoxScene2(void) noexcept;
 
-MobileRT::Scene *spheresScene(void) noexcept;
+static MobileRT::Scene *spheresScene(void) noexcept;
 
-MobileRT::Scene *spheresScene2(void) noexcept;
+static MobileRT::Scene *spheresScene2(void) noexcept;
+
+static void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
@@ -66,8 +68,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint samplesPixel,
         jint samplesLight
 ) noexcept;
-
-void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(

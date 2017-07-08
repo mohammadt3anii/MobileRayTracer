@@ -101,13 +101,6 @@ void RGB::reset(void) noexcept {
     this->samples_ = 0u;
 }
 
-void RGB::reset(const float color) noexcept {
-    this->R_ = color;
-    this->G_ = color;
-    this->B_ = color;
-    this->samples_ = 0u;
-}
-
 unsigned int RGB::RGB2Color(void) noexcept {
     const unsigned int red(static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int maskR(0u - (red > 255u));

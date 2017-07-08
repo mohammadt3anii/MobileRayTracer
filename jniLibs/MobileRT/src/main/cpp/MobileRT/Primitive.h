@@ -18,8 +18,6 @@ namespace MobileRT {
     private:
         const Material material_;
 
-        friend class Scene;
-
     public:
         Shape *const shape_;
 

@@ -27,12 +27,19 @@ target_compile_options(Components PRIVATE -std=c++14 -Weverything -Werror -Wfata
 target_compile_options(Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded)
 target_compile_options(Components PRIVATE -fno-exceptions -fno-rtti)
 
-target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -ffunction-sections -fdata-sections -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-math-errno -fno-ident>)
+target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-math-errno -fno-ident>)
+target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-ffunction-sections -fdata-sections>)
 
 target_link_libraries(Components
 PUBLIC MobileRT PRIVATE --verbose
-optimized -Wl,--gc-sections
+optimized -Wl,-O3
+optimized -Wl,-discard-all
+optimized -Wl,-no-undefined
+optimized -Wl,-gc-sections
+optimized -Wl,-ffunction-sections
+optimized -Wl,-fdata-sections
 optimized -Wl,-z,norelro
-optimized -Wl,--hash-style=sysv
-optimized -Wl,--build-id=none
-optimized -s)
+optimized -Wl,-hash-style=sysv
+optimized -Wl,-build-id=none
+optimized -Wl,-s
+optimized -Wl,-flto)

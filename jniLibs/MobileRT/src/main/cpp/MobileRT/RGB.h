@@ -47,8 +47,6 @@ namespace MobileRT {
 
         void reset(void) noexcept;
 
-        void reset(const float color) noexcept;
-
         unsigned int RGB2Color(void) noexcept;
 
         float getMax(void) noexcept;

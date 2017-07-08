@@ -15,11 +15,9 @@ Shader::~Shader(void) noexcept {
 
 //ray trace and verifies if intersects primitives
 void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept {
+    rgb.reset();//pixel color without intersection
     if (this->scene_.trace(intersection, ray) >= 0) {
-        rgb.reset(0.0f);
         shade(rgb, intersection, ray);// compute radiance
-    } else {
-        rgb.reset(0.0f);//pixel color without intersection
     }
 }
 

@@ -24,12 +24,9 @@ namespace MobileRT {
         unsigned int blockSizeX_;
         unsigned int blockSizeY_;
         const unsigned int resolution_;
-        RGB *const imagePlane_;
-        float max_;
         Sampler &samplerPixel_;
         unsigned int sample_;
         std::function<float(const float)> toneMapper_;
-        //char padding[4] __attribute__((unused));
 
     private:
         void renderScene(unsigned int *const bitmap, const unsigned int tid) noexcept;

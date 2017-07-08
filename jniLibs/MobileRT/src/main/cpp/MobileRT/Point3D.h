@@ -16,15 +16,16 @@ namespace MobileRT {
         float y_;
         float z_;
 
+    private:
+        explicit Point3D(const Point3D &point, const Vector3D &vector,
+                         const float value) noexcept;
+
     public:
         explicit Point3D(void) noexcept;
 
         explicit Point3D(const float x, const float y, const float z) noexcept;
 
         Point3D(const Point3D &point) noexcept;
-
-        explicit Point3D(const Point3D &point, const Vector3D &vector,
-                         const float value) noexcept;
 
         void operator=(const Point3D &point3D) noexcept;
 

@@ -31,7 +31,7 @@ static unsigned int height_(0u);
 static float fps_(0.0f);
 static long long timeFrame_(0ll);
 
-void FPS(void) noexcept {
+static void FPS(void) noexcept {
     static int frame(0);
     static std::chrono::steady_clock::time_point timebase_;
     frame++;
@@ -44,7 +44,7 @@ void FPS(void) noexcept {
     }
 }
 
-MobileRT::Scene *cornellBoxScene(void) noexcept {
+static MobileRT::Scene *cornellBoxScene(void) noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -111,7 +111,7 @@ MobileRT::Scene *cornellBoxScene(void) noexcept {
     return &scene;
 }
 
-MobileRT::Scene *cornellBoxScene2(void) noexcept {
+static MobileRT::Scene *cornellBoxScene2(void) noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
 
     const unsigned long long int max(static_cast<unsigned long long int> (-1));
@@ -220,7 +220,7 @@ MobileRT::Scene *cornellBoxScene2(void) noexcept {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene(void) noexcept {
+static MobileRT::Scene *spheresScene(void) noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -255,7 +255,7 @@ MobileRT::Scene *spheresScene(void) noexcept {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene2(void) noexcept {
+static MobileRT::Scene *spheresScene2(void) noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -295,6 +295,23 @@ MobileRT::Scene *spheresScene2(void) noexcept {
             new MobileRT::Primitive(
                     new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
     return &scene;
+}
+
+void thread_work(void *dstPixels, unsigned int numThreads) noexcept {
+    unsigned int rep(2u);
+    do {
+        const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
+        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::steady_clock::now() - start).count();
+        FPS();
+
+        camera_->position_.x_ += 1.0f;
+    } while (working_ != STOPPED && rep-- > 1u);
+    if (working_ != STOPPED) {
+        working_ = FINISHED;
+        LOG("%s", "WORKING = FINISHED");
+    }
 }
 
 extern "C"
@@ -457,23 +474,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
     LOG("x = %d [%d]", blockSizeX_, width_);
     LOG("y = %d [%d]", blockSizeY_, height_);
-}
-
-void thread_work(void *dstPixels, unsigned int numThreads) noexcept {
-    unsigned int rep(2u);
-    do {
-        const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
-        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::steady_clock::now() - start).count();
-        FPS();
-
-        camera_->position_.x_ += 1.0f;
-    } while (working_ != STOPPED && rep-- > 1u);
-    if (working_ != STOPPED) {
-        working_ = FINISHED;
-        LOG("%s", "WORKING = FINISHED");
-    }
 }
 
 extern "C"
