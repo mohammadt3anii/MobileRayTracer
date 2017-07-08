@@ -466,7 +466,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
     //Path Tracer needs tone mapper
     if (shader == 2) {
-        renderer_->registerToneMapper([&](const float value) {
+        renderer_->registerToneMapper([&](const float value) noexcept -> float {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
     }

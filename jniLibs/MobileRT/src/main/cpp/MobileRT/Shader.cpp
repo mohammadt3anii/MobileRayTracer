@@ -24,4 +24,3 @@ void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) cons
 int Shader::traceTouch(Intersection &intersection, const Ray &ray) const noexcept {
     return this->scene_.trace(intersection, ray);
 }
-
