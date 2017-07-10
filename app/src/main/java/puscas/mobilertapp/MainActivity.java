@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,9 @@ import android.widget.NumberPicker;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
@@ -60,10 +64,14 @@ public final class MainActivity extends Activity {
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2) {
             final MainRenderer mainRenderer = new MainRenderer();
-            //glDrawView_ = new GLDrawView(this);
             glDrawView_ = (GLDrawView) findViewById(R.id.drawLayout);
+            mainRenderer.setGLDrawView(glDrawView_);
             glDrawView_.setEGLContextClientVersion(2);
             glDrawView_.setRenderer(mainRenderer);
+            glDrawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+            final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
+            scheduler_.scheduleAtFixedRate(() -> glDrawView_.requestRender(), 0L, 200, TimeUnit.MILLISECONDS);
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
         }

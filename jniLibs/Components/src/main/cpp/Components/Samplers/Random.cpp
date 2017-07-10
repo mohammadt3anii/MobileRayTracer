@@ -11,5 +11,9 @@ Random::Random(const unsigned long long int domainSize, const unsigned int sampl
 }
 
 float Random::getSample(const unsigned int) noexcept {
-    return static_cast<float> (rand()) / RAND_MAX;
+    thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
+    thread_local static std::mt19937 gen(std::random_device{}());
+    return uniform_dist(gen);
+
+    //return static_cast<float> (rand()) / RAND_MAX;
 }

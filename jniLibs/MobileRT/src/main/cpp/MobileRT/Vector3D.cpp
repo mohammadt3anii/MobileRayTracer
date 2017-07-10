@@ -82,6 +82,15 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept :
         z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_) {
 }
 
+float Vector3D::normalize(void) noexcept {
+    const float len(magnitude());
+    const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
+    this->x_ *= inv_length;
+    this->y_ *= inv_length;
+    this->z_ *= inv_length;
+    return len;
+}
+
 const Vector3D Vector3D::returnNormalized(void) const noexcept {
     return Vector3D(*this);
 }

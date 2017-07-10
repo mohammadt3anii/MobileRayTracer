@@ -15,7 +15,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     if (rayDepth > RAY_DEPTH_MAX) return;
 
     const RGB &Le(intersection.material_->Le_);
-    if (Le.isNotZero())//stop if it intersects a light source
+    if (Le.hasColor())//stop if it intersects a light source
     {
         rgb.add(Le);
         return;
@@ -35,7 +35,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
             intersection.symNormal_);// We have to reverse the normal now
 
     // shadowed direct lighting - only for diffuse materials
-    if (kD.isNotZero()) {
+    if (kD.hasColor()) {
         Intersection lightIntersection;
         const unsigned long sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
@@ -67,7 +67,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     } // end direct + ambient
 
     // specular reflection
-    if (kS.isNotZero()) {
+    if (kS.hasColor()) {
         //PDF = 1 / 2 PI
 
         //reflectionDir = rayDirection - (2 * rayDirection . normal) * normal
@@ -82,7 +82,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     }
 
     // specular transmission
-    if (kT.isNotZero()) {
+    if (kT.hasColor()) {
         //PDF = 1 / 2 PI
 
         Vector3D shadingNormalT(shadingNormal);

@@ -16,6 +16,7 @@ RGB::RGB(void) noexcept :
 }
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
+        samples_(0u),
         R_(r),
         G_(g),
         B_(b) {
@@ -23,13 +24,14 @@ RGB::RGB(const float r, const float g, const float b) noexcept :
 }
 
 RGB::RGB(const RGB &rgb) noexcept :
+        samples_(0u),
         R_(rgb.R_),
         G_(rgb.G_),
         B_(rgb.B_) {
     counter++;
 }
 
-bool RGB::isNotZero(void) const noexcept {
+bool RGB::hasColor(void) const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
@@ -102,18 +104,9 @@ void RGB::reset(void) noexcept {
 }
 
 unsigned int RGB::RGB2Color(void) noexcept {
-    const unsigned int red(static_cast<unsigned int> (this->R_ * 255u));
-    const unsigned int maskR(0u - (red > 255u));
-    const unsigned int r((255u & maskR) | (red & ~maskR));
-
-    const unsigned int green(static_cast<unsigned int> (this->G_ * 255u));
-    const unsigned int maskG(0u - (green > 255u));
-    const unsigned int g((255u & maskG) | (green & ~maskG));
-
-    const unsigned int blue(static_cast<unsigned int> (this->B_ * 255u));
-    const unsigned int maskB(0u - (blue > 255u));
-    const unsigned int b((255u & maskB) | (blue & ~maskB));
-
+    const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
+    const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
+    const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
     return (0xFF000000u | (b << 16u) | (g << 8u) | r);
 }
 

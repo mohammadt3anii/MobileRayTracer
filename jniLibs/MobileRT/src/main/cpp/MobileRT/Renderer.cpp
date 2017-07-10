@@ -48,7 +48,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     }
     delete[] threads;
 
-    LOG("%s%u", "START - resolution=", resolution_);
+    LOG("START - resolution = %u", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
     LOG("vector3D = %u", Vector3D::getInstances());
     LOG("RGB = %u", RGB::getInstances());

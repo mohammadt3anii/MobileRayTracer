@@ -26,8 +26,8 @@ target_compile_options(DrawView PRIVATE -std=c++14 -Weverything -Werror -Wfatal-
 target_compile_options(DrawView PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -Wno-over-aligned)
 target_compile_options(DrawView PRIVATE -fno-exceptions -fno-rtti)
 
-target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-math-errno -fno-ident>)
-target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-ffunction-sections -fdata-sections>)
+target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
+target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)
 
 target_link_libraries(DrawView
 PRIVATE jnigraphics Components --verbose

@@ -55,6 +55,14 @@ final class DrawView extends LinearLayout {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
+    static native void initialize(final int scene, final int shader, final int width,
+                                  final int height, final int sampler, final int samplesPixel,
+                                  final int samplesLight);
+
+    static native void renderIntoBitmap(final Bitmap image, final int numThreads);
+
+    static native int redraw(final Bitmap bitmap);
+
     private void resetPrint(final int width, final int height,
                             final int samplesPixel, final int samplesLight) {
         fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
@@ -89,19 +97,11 @@ final class DrawView extends LinearLayout {
         }
     }
 
-    private native void initialize(final int scene, final int shader, final int width,
-                                   final int height, final int sampler, final int samplesPixel,
-                                   final int samplesLight);
-
-    private native void renderIntoBitmap(final Bitmap image, final int numThreads);
-
     native void finish();
 
     private native void stopRender();
 
     native void moveTouch(final float x, final float y, final int primitiveId);
-
-    native int redraw(final Bitmap bitmap);
 
     native int traceTouch(final float x, final float y);
 
@@ -125,7 +125,7 @@ final class DrawView extends LinearLayout {
         renderTask_ = new RenderTask();
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
-        renderIntoBitmap(this.bitmap_, this.numThreads_);
+        DrawView.renderIntoBitmap(this.bitmap_, this.numThreads_);
         renderTask_.execute();
         this.setOnTouchListener(new TouchHandler());
     }
@@ -134,7 +134,7 @@ final class DrawView extends LinearLayout {
                      final int samplesPixel, final int samplesLight) {
         final int width = resize(getWidth());
         final int height = resize(getHeight());
-        initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
+        DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
@@ -185,7 +185,7 @@ final class DrawView extends LinearLayout {
                 /*System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch ("
                  + touch.x_ + "," + touch.y_ + ")");System.out.flush();*/
             }
-            stage_ = redraw(bitmap_);
+            stage_ = DrawView.redraw(bitmap_);
             if (stage_ != Stage.BUSY.id_) {
                 scheduler_.shutdown();
             }
@@ -229,7 +229,7 @@ final class DrawView extends LinearLayout {
 
         @Override
         protected final void onPostExecute(final Void result) {
-            redraw(bitmap_);
+            DrawView.redraw(bitmap_);
             printText();
             renderTask_.cancel(true);
             finish();

@@ -27,8 +27,8 @@ target_compile_options(Components PRIVATE -std=c++14 -Weverything -Werror -Wfata
 target_compile_options(Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded)
 target_compile_options(Components PRIVATE -fno-exceptions -fno-rtti)
 
-target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-math-errno -fno-ident>)
-target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-ffunction-sections -fdata-sections>)
+target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
+target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)
 
 target_link_libraries(Components
 PUBLIC MobileRT PRIVATE --verbose

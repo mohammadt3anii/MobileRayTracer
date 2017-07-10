@@ -112,7 +112,7 @@ static MobileRT::Scene *cornellBoxScene(void) noexcept {
 }
 
 static MobileRT::Scene *cornellBoxScene2(void) noexcept {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+    MobileRT::Scene &scene(*new MobileRT::Scene());
 
     const unsigned long long int max(static_cast<unsigned long long int> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
@@ -465,11 +465,11 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
     //Path Tracer needs tone mapper
-    if (shader == 2) {
+    /*if (shader == 2) {
         renderer_->registerToneMapper([&](const float value) noexcept -> float {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
-    }
+    }*/
 
 
     LOG("x = %d [%d]", blockSizeX_, width_);

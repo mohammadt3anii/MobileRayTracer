@@ -21,9 +21,11 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     if (rayDepth > RAY_DEPTH_MAX) return;
 
     const RGB &Le(intersection.material_->Le_);
-    if (Le.isNotZero())//stop if it intersects a light source
+    if (Le.hasColor())//stop if it intersects a light source
     {
-        rgb.add(Le * scene_.lights_.size() * RAY_DEPTH_MAX);
+        //rgb.add(Le * scene_.lights_.size() * RAY_DEPTH_MAX);
+        rgb.add(Le);
+        rgb /= rayDepth;
         return;
     }
 
@@ -31,11 +33,10 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     const RGB &kS(intersection.material_->Ks_);
     const RGB &kT(intersection.material_->Kt_);
 
-    static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
-    std::random_device rd;
-    static std::mt19937 gen(rd());
-    const float finish_probability(0.5f);
-    const float continue_probability(1.0f - finish_probability);
+    thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
+    thread_local static std::mt19937 gen(std::random_device{}());
+    static const float finish_probability(0.5f);
+    static const float continue_probability(1.0f - finish_probability);
 
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
@@ -48,7 +49,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p -> Wr)
-    if (kD.isNotZero()) {
+    if (kD.hasColor()) {
         const unsigned long sizeLights(scene_.lights_.size() - 1ul);
         const unsigned int samplesLight(this->samplesLight_);
         Intersection intersectLight;
@@ -77,22 +78,36 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                     rgb.addMult(light.radiance_.Le_, cosNormalLight);
                 }
             }
-            rgb *= kD;
-            rgb *= sizeLights + 1ul;
-            rgb /= this->samplesLight_;
         }
+        rgb *= kD;
+        rgb *= sizeLights + 1ul;
+        rgb /= samplesLight;
 
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
+
+            const float r1(2.0f * PI * samplerRay_.getSample(0));
+            const float r2(samplerRay_.getSample(0));
+            const float r2s(std::sqrt(r2));
+            Vector3D u;
+            if (std::fabs(intersection.normal_.x_) > 0.1f)
+                u = Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_);
+            else
+                u = Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_);
+
+            u.normalize();
+            Vector3D aux(intersection.normal_.crossProduct(u));
+            Vector3D direction((u * std::cos(r1) * r2s + aux * std::sin(r1) * r2s +
+                                intersection.normal_ * std::sqrt(1.0f - r2)));
+            direction.normalize();
+            const Ray normalizedSecundaryRay(direction, intersection.point_,
+                                             rayDepth + 1u);
+
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
 
-            /*float localX(1.0f);
-            float localY(2.0f);
-            float localZ(-3.0f);*/
-            const float r1(samplerRay_.getSample(0u));
+            /*const float r1(samplerRay_.getSample(0u));
             const float r2(samplerRay_.getSample(0u));
-            samplerRay_.getSample(0u);
             float localX(std::cos(2.0f * PI * r1) * std::sqrt(1.0f - r2));
             float localZ(std::sin(2.0f * PI * r1) * std::sqrt(1.0f - r2));
             float localY(std::sqrt(r2));
@@ -151,31 +166,35 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
             //secundaryRay -> origin =  intersection.point_, direction = global, depth = rayDepth+1
             const Ray normalizedSecundaryRay(globalX, globalY, globalZ, intersection.point_,
-                                             rayDepth + 1u);
+                                             rayDepth + 1u);*/
             //secundaryIntersection = intersection
             Intersection secundaryIntersection;
 
             RGB LiD_RGB;
             rayTrace(LiD_RGB, normalizedSecundaryRay, secundaryIntersection);
 
-            //PDF = cos(theta) / PI
-            //cos (theta) = cos(dir, normal)
-            //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
-            //LiD += kD * LiD_RGB * PI / continue_probability
-
-            rgb.addMult(kD, LiD_RGB, PI);
-            //LiD.addMult(kD, LiD_RGB);
-            if (rayDepth > RAY_DEPTH_MIN) rgb /= continue_probability;
-            //LiD /= (rayDepth + 1u);
             //if it intersects a light source then LiD = 0
             if (secundaryIntersection.material_ != nullptr &&
-                secundaryIntersection.material_->Le_.isNotZero())
-                rgb.reset();
+                !secundaryIntersection.material_->Le_.hasColor()) {
+                //PDF = cos(theta) / PI
+                //cos (theta) = cos(dir, normal)
+                //PDF = cos(dir, normal) / PI
+                //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
+                //LiD += kD * LiD_RGB * PI / continue_probability
+
+                RGB LiD;
+                //LiD.addMult(kD, LiD_RGB, PI);
+                LiD.addMult(kD, LiD_RGB);
+                if (rayDepth > RAY_DEPTH_MIN) LiD /= continue_probability;
+                LiD /= rayDepth;
+
+                rgb.add(LiD);
+            }
         }
     }
 
     // specular reflection
-    if (kS.isNotZero()) {
+    if (kS.hasColor()) {
         //PDF = 1 / 2 PI
 
         //reflectionDir = rayDirection - (2 * rayDirection . normal) * normal
@@ -190,7 +209,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     }
 
     // specular transmission
-    if (kT.isNotZero()) {
+    if (kT.hasColor()) {
         //PDF = 1 / 2 PI
 
         Vector3D shadingNormalT(shadingNormal);

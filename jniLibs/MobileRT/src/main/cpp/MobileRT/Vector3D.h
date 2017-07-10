@@ -63,6 +63,8 @@ namespace MobileRT {
 
         const Vector3D symmetric(void) const noexcept;
 
+        float normalize(void) noexcept;
+
         static unsigned int getInstances() noexcept;
     };
 }

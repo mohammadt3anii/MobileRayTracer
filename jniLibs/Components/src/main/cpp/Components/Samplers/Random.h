@@ -7,6 +7,7 @@
 
 #include "MobileRT/Sampler.h"
 #include <cstdlib>
+#include <random>
 
 namespace Components {
     using namespace MobileRT;
