@@ -60,3 +60,57 @@ void Triangle::moveTo(float, float) noexcept {
 float Triangle::getZ(void) const noexcept {
     return 0.0f;
 }
+
+const Point3D Triangle::getPositionMin(void) const noexcept {
+    float x, y, z;
+
+    if (pointA_.x_ < pointB_.x_ && pointA_.x_ < pointC_.x_)
+        x = pointA_.x_;
+    else if (pointB_.x_ < pointC_.x_)
+        x = pointB_.x_;
+    else
+        x = pointC_.x_;
+
+    if (pointA_.y_ < pointB_.y_ && pointA_.y_ < pointC_.y_)
+        y = pointA_.y_;
+    else if (pointB_.y_ < pointC_.y_)
+        y = pointB_.y_;
+    else
+        y = pointC_.y_;
+
+    if (pointA_.z_ < pointB_.z_ && pointA_.z_ < pointC_.z_)
+        z = pointA_.z_;
+    else if (pointB_.z_ < pointC_.z_)
+        z = pointB_.z_;
+    else
+        z = pointC_.z_;
+
+    return Point3D(x, y, z);
+}
+
+const Point3D Triangle::getPositionMax(void) const noexcept {
+    float x, y, z;
+
+    if (pointA_.x_ > pointB_.x_ && pointA_.x_ > pointC_.x_)
+        x = pointA_.x_;
+    else if (pointB_.x_ > pointC_.x_)
+        x = pointB_.x_;
+    else
+        x = pointC_.x_;
+
+    if (pointA_.y_ > pointB_.y_ && pointA_.y_ > pointC_.y_)
+        y = pointA_.y_;
+    else if (pointB_.y_ > pointC_.y_)
+        y = pointB_.y_;
+    else
+        y = pointC_.y_;
+
+    if (pointA_.z_ > pointB_.z_ && pointA_.z_ > pointC_.z_)
+        z = pointA_.z_;
+    else if (pointB_.z_ > pointC_.z_)
+        z = pointB_.z_;
+    else
+        z = pointC_.z_;
+
+    return Point3D(x, y, z);
+}

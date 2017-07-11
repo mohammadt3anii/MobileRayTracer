@@ -18,6 +18,6 @@ const Point3D PointLight::getPosition(void) noexcept {
 void PointLight::resetSampling(void) noexcept {
 }
 
-bool PointLight::intersect(Intersection &, const Ray &, const Material &) const noexcept {
+bool PointLight::intersectL(Intersection &, const Ray &) const noexcept {
     return false;
 }

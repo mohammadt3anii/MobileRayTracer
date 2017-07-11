@@ -21,8 +21,8 @@ namespace Components {
 
         virtual void resetSampling(void) noexcept override final;
 
-        virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const noexcept override final;
+        virtual bool
+        intersectL(Intersection &intersection, const Ray &ray) const noexcept override final;
     };
 }
 

@@ -51,6 +51,18 @@ public final class MainActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        glDrawView_.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        glDrawView_.onResume();
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
@@ -65,8 +77,8 @@ public final class MainActivity extends Activity {
         if (supportES2) {
             final MainRenderer mainRenderer = new MainRenderer();
             glDrawView_ = (GLDrawView) findViewById(R.id.drawLayout);
-            mainRenderer.setGLDrawView(glDrawView_);
             glDrawView_.setEGLContextClientVersion(2);
+            glDrawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
             glDrawView_.setRenderer(mainRenderer);
             glDrawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 

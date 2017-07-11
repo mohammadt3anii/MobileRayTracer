@@ -20,6 +20,10 @@ namespace MobileRT {
         virtual float getZ(void) const noexcept = 0;
 
         virtual void moveTo(const float x, const float y) noexcept = 0;
+
+        virtual const Point3D getPositionMin(void) const noexcept = 0;
+
+        virtual const Point3D getPositionMax(void) const noexcept = 0;
     };
 }
 

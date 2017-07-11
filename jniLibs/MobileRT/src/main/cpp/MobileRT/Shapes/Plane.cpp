@@ -42,3 +42,11 @@ void Plane::moveTo(float, float) noexcept {
 float Plane::getZ(void) const noexcept {
     return 0.0f;
 }
+
+const Point3D Plane::getPositionMin(void) const noexcept {
+    return this->point_;
+}
+
+const Point3D Plane::getPositionMax(void) const noexcept {
+    return this->point_;
+}

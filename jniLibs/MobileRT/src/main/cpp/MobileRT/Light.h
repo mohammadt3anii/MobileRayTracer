@@ -24,8 +24,7 @@ namespace MobileRT {
 
         virtual void resetSampling(void) noexcept = 0;
 
-        virtual bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const noexcept = 0;
+        virtual bool intersectL(Intersection &intersection, const Ray &ray) const noexcept = 0;
     };
 }
 

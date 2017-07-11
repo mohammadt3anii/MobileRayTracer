@@ -24,7 +24,7 @@ target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
 target_compile_options(MobileRT PRIVATE -std=c++14 -Weverything -Werror -Wfatal-errors --verbose)
 target_compile_options(MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded)
-target_compile_options(MobileRT PRIVATE -fno-exceptions -fno-rtti)
+target_compile_options(MobileRT PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable)
 
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)

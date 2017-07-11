@@ -29,7 +29,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
 
     for (unsigned int i(0u); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
-        if (light.intersect(intersection, ray, light.radiance_)) {
+        if (light.intersectL(intersection, ray)) {
             res = static_cast<int> (i);
         }
     }
@@ -43,7 +43,6 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
 
     for (unsigned int i(0u); i < primitivesSize; i++) {
         const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
-        //const Shape &shape((*this->primitives_[static_cast<unsigned long> (i)])->shape_);
         if (primitive.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }
@@ -55,12 +54,9 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
 }
 
 bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const noexcept {
-    const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
-
-    for (unsigned int i(0u); i < primitivesSize; i++)//trace shadow ray
+    for (const Primitive *primitive : this->primitives_)//trace shadow ray
     {
-        const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
-        if (primitive.intersect(intersection, ray)) {
+        if (primitive->intersect(intersection, ray)) {
             return true;
         }
     }
@@ -77,5 +73,10 @@ unsigned int Scene::getInstances(void) noexcept {
 void Scene::resetSampling(void) noexcept {
     for (Light *light : this->lights_) {
         light->resetSampling();
+    }
+}
+
+void Scene::buildAccelerator(void) noexcept {
+    for (Primitive *p : this->primitives_) {
     }
 }

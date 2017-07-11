@@ -53,3 +53,25 @@ void Sphere::moveTo(const float x, const float y) noexcept {
 float Sphere::getZ(void) const noexcept {
     return this->center_.z_;
 }
+
+const Point3D Sphere::getPositionMin(void) const noexcept {
+    float x, y, z;
+    const float radius(std::sqrt(this->sq_radius_));
+
+    x = this->center_.x_ - radius;
+    y = this->center_.x_ - radius;
+    z = this->center_.x_ - radius;
+
+    return Point3D(x, y, z);
+}
+
+const Point3D Sphere::getPositionMax(void) const noexcept {
+    float x, y, z;
+    const float radius(std::sqrt(this->sq_radius_));
+
+    x = this->center_.x_ + radius;
+    y = this->center_.x_ + radius;
+    z = this->center_.x_ + radius;
+
+    return Point3D(x, y, z);
+}

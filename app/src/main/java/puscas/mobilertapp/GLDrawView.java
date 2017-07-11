@@ -8,4 +8,15 @@ public class GLDrawView extends GLSurfaceView {
     public GLDrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
 }

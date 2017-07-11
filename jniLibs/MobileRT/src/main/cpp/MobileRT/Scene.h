@@ -5,18 +5,20 @@
 #ifndef MOBILERAYTRACER_SCENE_H
 #define MOBILERAYTRACER_SCENE_H
 
+#include <vector>
 #include "Light.h"
 #include "Primitive.h"
 #include "Intersection.h"
 #include "Ray.h"
 #include "Utils.h"
-#include <vector>
+#include "Accelerators/AxisAlignedBoundingBox.h"
 
 namespace MobileRT {
     class Scene final {
     public:
         std::vector<Light *> lights_;
         std::vector<Primitive *> primitives_;
+        AxisAlignedBoundingBox *bb;
 
     private:
         int traceLights(Intersection &intersection, const Ray &ray) const noexcept;
@@ -33,6 +35,8 @@ namespace MobileRT {
         static unsigned int getInstances(void) noexcept;
 
         void resetSampling(void) noexcept;
+
+        void buildAccelerator(void) noexcept;
     };
 }
 

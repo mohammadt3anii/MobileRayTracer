@@ -5,8 +5,8 @@
 #ifndef MOBILERAYTRACER_AXISALIGNEDBOUNDINGBOX_H
 #define MOBILERAYTRACER_AXISALIGNEDBOUNDINGBOX_H
 
-#include "../Utils.h"
 #include <vector>
+#include "../Utils.h"
 #include "../Intersection.h"
 #include "../Ray.h"
 #include "../Material.h"
@@ -14,12 +14,15 @@
 
 namespace MobileRT {
     class AxisAlignedBoundingBox final {
-    public:
+    private:
         const Point3D pointMin_;
         const Point3D pointMax_;
 
     public:
-        //std::vector<Primitive *> *primitives_;
+        std::vector<Primitive *> primitives_;
+
+    private:
+        bool intersectPrimitives(Intersection &intersection, const Ray &ray) const;
 
     public:
         explicit AxisAlignedBoundingBox(const Point3D &pointA,
