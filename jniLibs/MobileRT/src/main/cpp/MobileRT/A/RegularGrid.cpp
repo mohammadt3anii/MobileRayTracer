@@ -10,7 +10,7 @@ RegularGrid::RegularGrid(const float/*minX*/, const float/*maxX*/,
                          const float/*minY*/, const float/*maxY*/,
                          const float/*minZ*/, const float/*maxZ*/,
                          const unsigned int/*numberOfBlocks*/,
-                         std::vector<Primitive *>/*primitives*/) {
+                         const std::vector<Primitive *>&/*primitives*/) {
     /*  loop boundingBoxes
      *      descobrir ponto min e max
      *      criar boundingBox

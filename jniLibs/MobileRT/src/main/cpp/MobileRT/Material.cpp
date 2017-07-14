@@ -11,34 +11,34 @@ Material::Material() noexcept : refractiveIndice_(1.0f) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const float refractiveIndice) noexcept :
-        Kd_(Kd),
+Material::Material(RGB Kd, const float refractiveIndice) noexcept :
+        Kd_(std::move(Kd)),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const float refractiveIndice) noexcept :
-        Kd_(Kd),
-        Ks_(Ks),
+Material::Material(RGB Kd, RGB Ks, const float refractiveIndice) noexcept :
+        Kd_(std::move(Kd)),
+        Ks_(std::move(Ks)),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt,
+Material::Material(RGB Kd, RGB Ks, RGB Kt,
                    const float refractiveIndice) noexcept :
-        Kd_(Kd),
-        Ks_(Ks),
-        Kt_(Kt),
+        Kd_(std::move(Kd)),
+        Ks_(std::move(Ks)),
+        Kt_(std::move(Kt)),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }
 
-Material::Material(const RGB &Kd, const RGB &Ks, const RGB &Kt, const RGB &Le,
+Material::Material(RGB Kd, RGB Ks, RGB Kt, RGB Le,
                    const float refractiveIndice) noexcept :
-        Kd_(Kd),
-        Ks_(Ks),
-        Kt_(Kt),
-        Le_(Le),
+        Kd_(std::move(Kd)),
+        Ks_(std::move(Ks)),
+        Kt_(std::move(Kt)),
+        Le_(std::move(Le)),
         refractiveIndice_(refractiveIndice) {
     counter++;
 }

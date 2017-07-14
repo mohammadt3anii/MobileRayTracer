@@ -23,7 +23,15 @@ namespace MobileRT {
                          unsigned int blockSizeX,
                          unsigned int blockSizeY) noexcept;
 
+		Sampler(const Sampler &sampler) noexcept = delete;
+
+		Sampler(Sampler &&sampler) noexcept = delete;
+
         virtual ~Sampler() noexcept = default;
+
+		Sampler &operator=(const Sampler &sampler) const noexcept = delete;
+
+		Sampler &&operator=(Sampler &&sampler) const noexcept = delete;
 
         void resetSampling() noexcept;
 

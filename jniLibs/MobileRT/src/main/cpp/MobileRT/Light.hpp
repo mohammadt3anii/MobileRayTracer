@@ -7,8 +7,8 @@
 
 #include "Intersection.hpp"
 #include "Point3D.hpp"
-#include "Ray.hpp"
 #include "RGB.hpp"
+#include "Ray.hpp"
 
 namespace MobileRT {
     class Light {
@@ -16,9 +16,17 @@ namespace MobileRT {
         const Material radiance_;
 
     public:
-        explicit Light(const Material &radiance) noexcept;
+        explicit Light(Material radiance) noexcept;
+
+		Light(const Light &light) noexcept = default;
+
+		Light(Light &&light) noexcept = default;
 
         virtual ~Light() noexcept = default;
+
+		Light &operator=(const Light &light) const noexcept = delete;
+
+		Light &&operator=(Light &&light) const noexcept = delete;
 
         virtual const Point3D getPosition() noexcept = 0;
 

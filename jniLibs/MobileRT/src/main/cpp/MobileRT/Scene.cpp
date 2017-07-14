@@ -8,7 +8,11 @@ using MobileRT::Scene;
 
 static unsigned int counter(0u);
 
-Scene::Scene() noexcept {
+Scene::Scene() noexcept :
+	lights_(std::vector<Light *>()),
+	primitives_(std::vector<Primitive *>()),
+	bb(nullptr)
+{
     counter++;
 }
 
@@ -39,7 +43,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
 
 int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     int res(-1);
-    const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
+    const auto primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
     for (unsigned int i(0u); i < primitivesSize; i++) {
         const Primitive &primitive(*this->primitives_[static_cast<uint64_t> (i)]);

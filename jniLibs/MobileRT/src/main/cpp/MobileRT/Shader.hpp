@@ -25,7 +25,15 @@ namespace MobileRT {
     public:
         explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;
 
+		Shader(const Shader &shader) noexcept = default;
+
+		Shader(Shader &&shader) noexcept = default;
+
         virtual ~Shader() noexcept = default;
+
+		Shader &operator=(const Shader &shader) const noexcept = delete;
+
+		Shader &&operator=(Shader &&shader) const noexcept = delete;
 
         void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept;
 

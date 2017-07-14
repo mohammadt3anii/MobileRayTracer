@@ -139,13 +139,6 @@ const Vector3D Vector3D::operator*(const float value) const noexcept {
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
-const Vector3D &Vector3D::operator=(const Vector3D &vector) noexcept {
-    this->x_ = vector.x_;
-    this->y_ = vector.y_;
-    this->z_ = vector.z_;
-    return *this;
-}
-
 const Vector3D Vector3D::operator*(const float value) noexcept {
     return Vector3D(this->x_ * value,
                     this->y_ * value,

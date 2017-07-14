@@ -22,12 +22,17 @@ namespace MobileRT {
         Shape *const shape_;
 
     public:
-        explicit Primitive(Shape *shape, const Material &material) noexcept;
+        explicit Primitive(Shape *shape, Material material) noexcept;
 
-		explicit Primitive(const Primitive &primitive) noexcept :
-		material_(primitive.material_), shape_(primitive.shape_) {}
+		Primitive(const Primitive &primitive) noexcept = default;
+
+		Primitive(Primitive &&primitive) noexcept = default;
 
         ~Primitive() noexcept;
+
+		Primitive &operator=(const Primitive &primitive) const noexcept = delete;
+
+		Primitive &&operator=(Primitive &&primitive) const noexcept = delete;
 
         bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 

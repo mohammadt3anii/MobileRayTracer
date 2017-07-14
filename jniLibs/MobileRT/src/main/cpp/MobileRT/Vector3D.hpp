@@ -39,7 +39,13 @@ namespace MobileRT {
 
         Vector3D(const Vector3D &vector) noexcept;
 
-        const Vector3D &operator=(const Vector3D &vector) noexcept;
+		Vector3D(Vector3D &&vector) noexcept = default;
+
+		~Vector3D() noexcept = default;
+
+        Vector3D &operator=(const Vector3D &vector) noexcept = default;
+
+		Vector3D &operator=(Vector3D &&vector) noexcept = default;
 
         const Vector3D operator*(float value) noexcept;
 

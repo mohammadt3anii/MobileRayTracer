@@ -15,7 +15,7 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
         camera_(camera),
         width_(width),
         height_(height),
-        accumulate_(new RGB[width * height]),
+		accumulate_(std::vector<RGB> (width * height)),
         domainSize_((width / blockSizeX) * (height / blockSizeY)),
         blockSizeX_(blockSizeX),
         blockSizeY_(blockSizeY),
@@ -23,10 +23,6 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
         samplerPixel_(samplerPixel),
         sample_(0u),
         toneMapper_([&](const float value) { return value; }) {
-}
-
-Renderer::~Renderer() noexcept {
-    delete[] this->accumulate_;
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
@@ -62,7 +58,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 }
 
 void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) noexcept {
-    toneMapper_ = toneMapper;
+    toneMapper_ = std::move(toneMapper);
 }
 
 void Renderer::stopRender() noexcept {
@@ -88,12 +84,14 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     RGB pixelRGB;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
-        for (float block(this->samplerCamera_.getSample(sample));;
-             block = this->samplerCamera_.getSample(sample)) {
+        for (;;)
+		{
+			float block (this->samplerCamera_.getSample(sample));
             if (block >= 1.0f) {break;}
-            const auto pixel(
-                    static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
-                    this->blockSizeX_ % resolution_);
+			const auto pixel(std::lround(block * this->domainSize_) * this->blockSizeX_ % resolution_);
+            // const auto pixel(
+            //         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
+            //         this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
             const unsigned int endY(startY + this->blockSizeY_);
             for (unsigned int y(startY); y < endY; y++) {

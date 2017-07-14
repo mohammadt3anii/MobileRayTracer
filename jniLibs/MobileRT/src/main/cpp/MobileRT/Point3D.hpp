@@ -23,9 +23,15 @@ namespace MobileRT {
     public:
         explicit Point3D(float x, float y, float z) noexcept;
 
-        Point3D(const Point3D &point) noexcept;
+		Point3D(const Point3D &point) noexcept = default;
 
-        void operator=(const Point3D &point3D) noexcept;
+		Point3D(Point3D &&point) noexcept = default;
+
+		~Point3D() noexcept = default;
+
+        Point3D &operator=(const Point3D &point3D) noexcept = default;
+
+		Point3D &&operator=(Point3D &&point) const noexcept = delete;
 
         const Vector3D operator-(const Point3D &point) const noexcept;
 

@@ -8,25 +8,25 @@
 #include <cstdio>
 #include <cstring>
 
-#define FILENAMEL (std::strrchr(__FILE__, '/') != nullptr?\
-std::strrchr(__FILE__, '/') + 1 : __FILE__)
-
-#define FILENAMEW (std::strrchr(__FILE__, '\\') != nullptr?\
-std::strrchr(__FILE__, '\\') + 1 : __FILE__)
-
 #ifndef NO_ANDROID
 
 #include <android/log.h>
 
+#define FILENAMEL (std::strrchr(__FILE__, '/') != nullptr?\
+std::strrchr(__FILE__, '/') : __FILE__)
+
 #define LOG(msg, ...)\
     __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
-        FILENAMEW, __LINE__, __VA_ARGS__);
+        FILENAMEL, __LINE__, __VA_ARGS__);
 
 #else
 
+#define FILENAMEW (std::strrchr(__FILE__, '\\') != nullptr?\
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+
 #define LOG(msg, ...)\
     printf("%s::line:%d: " msg "\n",\
-        FILENAMEL, __LINE__, __VA_ARGS__);
+        FILENAMEW, __LINE__, __VA_ARGS__);
 
 /*#define LOG(msg, ...)\
 	//template<typename... P>

@@ -22,8 +22,6 @@ namespace Components {
                              const Point3D &lookAt, const Vector3D &up,
                              float hFov, float vFov) noexcept;
 
-        ~Perspective() noexcept final = default;
-
         const Ray generateRay(float u, float v,
                                       float deviationU,
                                       float deviationV) const noexcept final;

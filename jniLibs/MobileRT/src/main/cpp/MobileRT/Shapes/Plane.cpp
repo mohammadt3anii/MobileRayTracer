@@ -9,7 +9,8 @@ using MobileRT::Point3D;
 
 Plane::Plane(const Point3D &point, const Vector3D &normal) noexcept :
         point_(point),
-        normal_(normal.returnNormalized()) {
+        normal_(normal.returnNormalized())
+{
 }
 
 bool Plane::intersect(Intersection &intersection, const Ray &ray,

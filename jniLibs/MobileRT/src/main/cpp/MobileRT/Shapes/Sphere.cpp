@@ -9,7 +9,8 @@ using MobileRT::Point3D;
 
 Sphere::Sphere(const Point3D &center, const float radius) noexcept :
         sq_radius_(radius * radius),
-        center_(center) {
+        center_(center)
+{
 }
 
 bool Sphere::intersect(Intersection &intersection, const Ray &ray,

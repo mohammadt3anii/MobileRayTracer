@@ -27,8 +27,6 @@ namespace Components {
                            const Point3D &pointB,
                            const Point3D &pointC) noexcept;
 
-		~AreaLight() noexcept final = default;
-
         const Point3D getPosition() noexcept final;
 
         void resetSampling() noexcept final;

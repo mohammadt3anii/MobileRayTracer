@@ -26,7 +26,15 @@ namespace MobileRT {
     public:
         explicit Scene() noexcept;
 
+		Scene(const Scene &scene) noexcept = delete;
+
+		Scene(Scene &&scene) noexcept = delete;
+
         ~Scene() noexcept;
+
+		Scene &operator=(const Scene &scene) const noexcept = delete;
+
+		Scene &&operator=(Scene &&scene) const noexcept = delete;
 
         int trace(Intersection &intersection, const Ray &ray) const noexcept;
 

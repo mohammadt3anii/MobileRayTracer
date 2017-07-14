@@ -31,6 +31,14 @@ RGB::RGB(const RGB &rgb) noexcept :
     counter++;
 }
 
+RGB::RGB(RGB &&rgb) noexcept :
+        samples_(0u),
+        R_(rgb.R_),
+        G_(rgb.G_),
+        B_(rgb.B_) {
+    counter++;
+}
+
 bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }

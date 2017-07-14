@@ -22,9 +22,7 @@ namespace MobileRT {
                              float minY, float maxY,
                              float minZ, float maxZ,
                              unsigned int numberOfBlocks,
-                             std::vector<Primitive *> primitives);
-
-        ~RegularGrid() = default;
+                             const std::vector<Primitive *> &primitives);
 
         bool intersect(Intersection &intersection, Ray &ray);
     };

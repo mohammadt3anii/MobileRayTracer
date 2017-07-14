@@ -16,13 +16,6 @@ Point3D::Point3D(const float x, const float y, const float z) noexcept :
     counter++;
 }
 
-Point3D::Point3D(const Point3D &point) noexcept :
-        x_(point.x_),
-        y_(point.y_),
-        z_(point.z_) {
-    counter++;
-}
-
 Point3D::Point3D(const Point3D &point, const Vector3D &vector, const float value) noexcept :
         x_(vector.x_ * value + point.x_),
         y_(vector.y_ * value + point.y_),
@@ -39,12 +32,6 @@ const Point3D Point3D::operator+(const Vector3D &vector) const noexcept {
     return Point3D(this->x_ + vector.x_,
                    this->y_ + vector.y_,
                    this->z_ + vector.z_);
-}
-
-void Point3D::operator=(const Point3D &point3D) noexcept {
-    this->x_ = point3D.x_;
-    this->y_ = point3D.y_;
-    this->z_ = point3D.z_;
 }
 
 unsigned int Point3D::getInstances() noexcept {

@@ -9,6 +9,8 @@
 #include "RGB.hpp"
 #include "Sampler.hpp"
 #include "Shader.hpp"
+#include "Utils.hpp"
+#include <cmath>
 #include <thread>
 
 namespace MobileRT {
@@ -19,7 +21,7 @@ namespace MobileRT {
         const Camera &camera_;
         const unsigned int width_;
         const unsigned int height_;
-        RGB *const accumulate_;
+		std::vector<RGB> accumulate_;
         const unsigned int domainSize_;
         unsigned int blockSizeX_;
         unsigned int blockSizeY_;
@@ -41,7 +43,15 @@ namespace MobileRT {
                           unsigned int blockSizeY,
                           Sampler &samplerPixel) noexcept;
 
-        ~Renderer() noexcept;
+		Renderer(const Renderer &renderer) noexcept = delete;
+
+		Renderer(Renderer &&renderer) noexcept = delete;
+
+        ~Renderer() noexcept = default;
+
+		Renderer &operator=(const Renderer &renderer) const noexcept = delete;
+
+		Renderer &&operator=(Renderer &&renderer) const noexcept = delete;
 
         void renderFrame(unsigned int *bitmap, unsigned int numThreads) noexcept;
 
