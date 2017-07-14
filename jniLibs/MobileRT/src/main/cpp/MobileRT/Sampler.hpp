@@ -10,12 +10,12 @@
 namespace MobileRT {
     class Sampler {
     public:
-        std::atomic<unsigned long long int> sample_;
-        const unsigned long long int domainSize_;
-        unsigned long long int samples_;
+        std::atomic<uint64_t> sample_;
+        const uint64_t domainSize_;
+        uint64_t samples_;
 
     public:
-        explicit Sampler(unsigned long long int domainSize,
+        explicit Sampler(uint64_t domainSize,
                          unsigned int samples) noexcept;
 
         explicit Sampler(unsigned int width, unsigned int height,
@@ -23,7 +23,7 @@ namespace MobileRT {
                          unsigned int blockSizeX,
                          unsigned int blockSizeY) noexcept;
 
-        virtual ~Sampler() noexcept;
+        virtual ~Sampler() noexcept = default;
 
         void resetSampling() noexcept;
 

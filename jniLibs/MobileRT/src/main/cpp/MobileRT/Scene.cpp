@@ -28,7 +28,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
     const auto lightsSize(static_cast<unsigned int> (lights_.size()));
 
     for (unsigned int i(0u); i < lightsSize; i++) {
-        const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
+        const Light &light(*this->lights_[static_cast<uint64_t> (i)]);
         if (light.intersectL(intersection, ray)) {
             res = static_cast<int> (i);
         }
@@ -42,7 +42,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
     for (unsigned int i(0u); i < primitivesSize; i++) {
-        const Primitive &primitive(*this->primitives_[static_cast<unsigned long> (i)]);
+        const Primitive &primitive(*this->primitives_[static_cast<uint64_t> (i)]);
         if (primitive.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }

@@ -10,14 +10,14 @@
 namespace Components {
     class Stratified final : public MobileRT::Sampler {
     public:
-        explicit Stratified(unsigned long long int domainSize,
+        explicit Stratified(uint64_t domainSize,
                             unsigned int samples) noexcept;
 
         explicit Stratified(unsigned int width, unsigned int height,
                             unsigned int samples,
                             unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
 
-        virtual float getSample(unsigned int sample) noexcept override final;
+        float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components
 

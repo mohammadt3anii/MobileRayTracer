@@ -24,7 +24,7 @@ namespace MobileRT {
                              unsigned int numberOfBlocks,
                              std::vector<Primitive *> primitives);
 
-        ~RegularGrid();
+        ~RegularGrid() = default;
 
         bool intersect(Intersection &intersection, Ray &ray);
     };

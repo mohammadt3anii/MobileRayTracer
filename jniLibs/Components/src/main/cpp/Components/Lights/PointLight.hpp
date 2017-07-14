@@ -19,12 +19,12 @@ namespace Components {
     public:
         explicit PointLight(const Material &radiance, const Point3D &position) noexcept;
 
-        virtual const Point3D getPosition() noexcept override final;
+        const Point3D getPosition() noexcept final;
 
-        virtual void resetSampling() noexcept override final;
+        void resetSampling() noexcept final;
 
-        virtual bool
-        intersectL(Intersection &intersection, const Ray &ray) const noexcept override final;
+        bool
+        intersectL(Intersection &intersection, const Ray &ray) const noexcept final;
     };
 }//namespace Components
 

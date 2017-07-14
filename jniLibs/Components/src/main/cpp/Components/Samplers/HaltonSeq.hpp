@@ -5,23 +5,23 @@
 #ifndef MOBILERAYTRACER_JITTERED_H
 #define MOBILERAYTRACER_JITTERED_H
 
-#include <cmath>
 #include "MobileRT/Sampler.hpp"
+#include <cmath>
 
 namespace Components {
     class HaltonSeq final : public MobileRT::Sampler {
     private:
-        float haltonSequence(unsigned long long int index, const unsigned int base) noexcept;
+        float haltonSequence(uint64_t index, unsigned int base) noexcept;
 
     public:
-        explicit HaltonSeq(unsigned long long int domainSize,
+        explicit HaltonSeq(uint64_t domainSize,
                            unsigned int samples) noexcept;
 
         explicit HaltonSeq(unsigned int width, unsigned int height,
                            unsigned int samples,
                            unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
 
-        virtual float getSample(const unsigned int sample) noexcept override final;
+        float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components
 

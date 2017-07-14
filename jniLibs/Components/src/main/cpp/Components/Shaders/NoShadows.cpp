@@ -13,13 +13,13 @@ NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {
 }
 
-void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) const noexcept {
+void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &/*ray*/) const noexcept {
     const RGB &Le(intersection.material_->Le_);
     const RGB &kD(intersection.material_->Kd_);
 
     // direct lighting - only for diffuse materials
     if (kD.hasColor()) {
-        const unsigned long sizeLights(scene_.lights_.size());
+        const uint64_t sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
         for (unsigned int i(0u); i < sizeLights; i++) {
             for (unsigned int j(0u); j < samplesLight; j++) {

@@ -13,6 +13,3 @@ Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &u
         right_(up.crossProduct(direction_)),
         up_(direction_.crossProduct(right_)) {
 }
-
-Camera::~Camera() noexcept {
-}

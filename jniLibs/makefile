@@ -53,4 +53,4 @@ all: $(EXE)
 
 INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
 tidy:
-	clang-tidy-5.0 -checks='*' -analyze-temporary-dtors -p . ./*/*/*/*/*/Renderer.hpp -- -std=c++14 $(INCLUDES) -isystem /usr/include/c++/v1
+	clang-tidy-5.0 -checks='*,-*google-runtime-references*' -analyze-temporary-dtors -p . ./MobileRT/src/main/cpp/*/*.*pp -- -std=c++14 $(INCLUDES) -isystem /usr/include/c++/v1 > tidy.out

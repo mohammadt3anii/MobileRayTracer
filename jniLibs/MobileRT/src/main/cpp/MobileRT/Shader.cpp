@@ -10,9 +10,6 @@ Shader::Shader(Scene &scene, const unsigned int samplesLight) noexcept :
         scene_(scene), samplesLight_(samplesLight) {
 }
 
-Shader::~Shader() noexcept {
-}
-
 //ray trace and verifies if intersects primitives
 void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept {
     rgb.reset();//pixel color without intersection

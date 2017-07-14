@@ -25,8 +25,8 @@ namespace MobileRT {
         bool intersectPrimitives(Intersection &intersection, const Ray &ray) const;
 
     public:
-        explicit AxisAlignedBoundingBox(const Point3D &pointA,
-                                        const Point3D &pointH);
+        explicit AxisAlignedBoundingBox(const Point3D &pointMin,
+                                        const Point3D &pointMax);
 
         bool intersect(Intersection &intersection, const Ray &ray,
                        const Material &material) const;

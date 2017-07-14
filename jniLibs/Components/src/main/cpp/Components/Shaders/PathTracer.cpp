@@ -14,7 +14,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
         Shader(scene, samplesLight),
         samplerRay_(samplerRay),
         samplerLight_(samplerLight) {
-    LOG("sizeLights = %lu", long(scene_.lights_.size()));
+    LOG("sizeLights = %lu", uint64_t(scene_.lights_.size()));
     LOG("samplesLight = %u", this->samplesLight_);
 }
 

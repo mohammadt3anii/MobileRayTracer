@@ -23,7 +23,7 @@ namespace MobileRT {
 
         float magnitude() const noexcept;
 
-        const Point3D operator/(const float value) const noexcept;
+        const Point3D operator/(float value) const noexcept;
 
     public:
         explicit Vector3D(float x, float y, float z) noexcept;
@@ -53,7 +53,7 @@ namespace MobileRT {
 
         const Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
-        void mult(const float value) noexcept;
+        void mult(float value) noexcept;
 
         const Vector3D returnNormalized() const noexcept;
 

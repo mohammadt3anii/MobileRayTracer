@@ -12,10 +12,10 @@
 namespace Components {
     class Random final : public MobileRT::Sampler {
     public:
-        explicit Random(unsigned long long int domainSize,
+        explicit Random(uint64_t domainSize,
                         unsigned int samples) noexcept;
 
-        virtual float getSample(unsigned int sample) noexcept override final;
+        float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components
 

@@ -31,7 +31,7 @@ namespace MobileRT {
 
         void addMult(const RGB &rgb, float value) noexcept;
 
-        void addMult(const RGB &rgb1, const RGB &rgb2, const float value) noexcept;
+        void addMult(const RGB &rgb1, const RGB &rgb2, float value) noexcept;
 
         void addMult(const RGB &rgb1, const RGB &rgb2) noexcept;
 

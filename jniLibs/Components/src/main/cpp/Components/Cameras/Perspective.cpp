@@ -14,9 +14,6 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
         vFov_((vFov * PI) / 180.0f) {
 }
 
-Perspective::~Perspective() noexcept {
-}
-
 const Ray Perspective::generateRay(const float u, const float v,
                                    const float deviationU, const float deviationV) const noexcept {
     const float u_alpha(fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU);

@@ -1,0 +1,275 @@
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Camera.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_CAMERA_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_CAMERA_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Camera.hpp:12:11: warning: class 'Camera' defines a default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Camera {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Intersection.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_INTERSECTION_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_INTERSECTION_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Light.cpp:9:14: warning: pass by value and use std::move [modernize-pass-by-value]
+Light::Light(const Material &radiance) noexcept :
+             ^~~~~~~~~~~~~~~~~~~~~~~~
+             Material 
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Light.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_LIGHT_H
+        ^~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_LIGHT_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Light.hpp:10:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "Ray.hpp"
+^        ~~~~~~~~~
+         "RGB.hpp"
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Light.hpp:14:11: warning: class 'Light' defines a default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [cppcoreguidelines-special-member-functions]
+    class Light {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Material.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_MATERIAL_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_MATERIAL_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.cpp:44:1: warning: operator=() should return 'Point3D&' [cppcoreguidelines-c-copy-assignment-signature]
+void Point3D::operator=(const Point3D &point3D) noexcept {
+^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_POINT3D_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_POINT3D_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.hpp:13:11: warning: class 'Point3D' defines a copy constructor and a copy assignment operator but does not define a destructor, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Point3D final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Point3D.hpp:28:9: warning: operator=() should return 'Point3D&' [cppcoreguidelines-c-copy-assignment-signature]
+        void operator=(const Point3D &point3D) noexcept;
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Primitive.cpp:11:36: warning: pass by value and use std::move [modernize-pass-by-value]
+Primitive::Primitive(Shape *shape, const Material &material) noexcept :
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+                                   Material 
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Primitive.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_PRIMITIVE_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_PRIMITIVE_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Primitive.hpp:17:11: warning: class 'Primitive' defines a non-default destructor and a copy constructor but does not define a copy assignment operator, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Primitive final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Primitive.hpp:27:12: warning: copy constructor should not be declared explicit [google-explicit-constructor]
+                explicit Primitive(const Primitive &primitive) noexcept :
+                ~~~~~~~~~^~~~~~~~~
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Primitive.hpp:27:12: warning: use '= default' to define a trivial copy constructor [hicpp-use-equals-default]
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/RGB.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_RGB_H
+        ^~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_RGB_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/RGB.hpp:11:11: warning: class 'RGB' defines a copy constructor but does not define a destructor, a copy assignment operator, a move constructor or a move assignment operator [cppcoreguidelines-special-member-functions]
+    class RGB final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/../Ray.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_RAY_H
+        ^~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_RAY_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:33:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("START - resolution = %u", resolution_);
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:33:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("START - resolution = %u", resolution_);
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:37:9: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+        this->accumulate_[i].reset();
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:54:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("point3D = %u", Point3D::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:54:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("point3D = %u", Point3D::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:55:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("vector3D = %u", Vector3D::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:55:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("vector3D = %u", Vector3D::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:56:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("RGB = %u", RGB::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:56:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("RGB = %u", RGB::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:57:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("scene = %u", Scene::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:57:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("scene = %u", Scene::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:58:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("ray = %u", Ray::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:58:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("ray = %u", Ray::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:59:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("material = %u", Material::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:59:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("material = %u", Material::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:60:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("intersection = %u", Intersection::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:60:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("intersection = %u", Intersection::getInstances());
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:61:5: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+    LOG("%s", "FINISH");
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:22:5: note: expanded from macro 'LOG'
+    __android_log_print(ANDROID_LOG_INFO, "LOG", "%s::line:%d: " msg "\n",\
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:61:5: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+    LOG("%s", "FINISH");
+    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:23:9: note: expanded from macro 'LOG'
+        FILENAMEW, __LINE__, __VA_ARGS__);
+        ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:15:30: note: expanded from macro 'FILENAMEW'
+std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+                             ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:65:19: warning: parameter 'toneMapper' is passed by value and only copied once; consider moving it to avoid unnecessary copies [performance-unnecessary-value-param]
+    toneMapper_ = toneMapper;
+                  ^~~~~~~~~~~
+                  std::move()
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:92:20: warning: loop induction expression should not have floating-point type [cert-flp30-c]
+             block = this->samplerCamera_.getSample(sample)) {
+                   ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:95:48: warning: casting (double + 0.5) to integer leads to incorrect rounding; consider using lround (#include <cmath>) instead [misc-incorrect-roundings]
+                    static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
+                                               ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:113:21: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+                    this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
+                    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:115:21: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+                    bitmap[yWidth + x] = pixelRGB.RGB2Color();
+                    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_RENDERER_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_RENDERER_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.hpp:15:11: warning: class 'Renderer' defines a non-default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Renderer final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Sampler.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_SAMPLER_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_SAMPLER_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Sampler.hpp:11:11: warning: class 'Sampler' defines a default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [cppcoreguidelines-special-member-functions]
+    class Sampler {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.cpp:11:1: warning: constructor does not initialize these fields: bb [cppcoreguidelines-pro-type-member-init]
+Scene::Scene() noexcept {
+^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.cpp:42:11: warning: use auto when initializing with a cast to avoid duplicating the type name [modernize-use-auto]
+    const unsigned int primitivesSize(static_cast<unsigned int> (primitives_.size()));
+          ^~~~~~~~~~~~
+          auto
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_SCENE_H
+        ^~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_SCENE_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Scene.hpp:17:11: warning: class 'Scene' defines a non-default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [cppcoreguidelines-special-member-functions]
+    class Scene final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shader.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_SHADER_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_SHADER_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shader.hpp:15:11: warning: class 'Shader' defines a default destructor but does not define a copy constructor, a copy assignment operator, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Shader {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_UTILS
+        ^~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_UTILS_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Vector3D.cpp:142:1: warning: operator=() should return 'Vector3D&' [cppcoreguidelines-c-copy-assignment-signature]
+const Vector3D &Vector3D::operator=(const Vector3D &vector) noexcept {
+^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/../Vector3D.hpp:5:9: warning: header guard does not follow preferred style [llvm-header-guard]
+#ifndef MOBILERAYTRACER_VECTOR3D_H
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+        _MNT_D_ANDROID_STUDIO_PROJECTS_MOBILERAYTRACER_JNILIBS_MOBILERT_SRC_MAIN_CPP_MOBILERT_VECTOR3D_HPP
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/../Vector3D.hpp:14:11: warning: class 'Vector3D' defines a copy constructor and a copy assignment operator but does not define a destructor, a move constructor or a move assignment operator [hicpp-special-member-functions]
+    class Vector3D final {
+          ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Shapes/../Vector3D.hpp:42:9: warning: operator=() should return 'Vector3D&' [cppcoreguidelines-c-copy-assignment-signature]
+        const Vector3D &operator=(const Vector3D &vector) noexcept;
+        ^

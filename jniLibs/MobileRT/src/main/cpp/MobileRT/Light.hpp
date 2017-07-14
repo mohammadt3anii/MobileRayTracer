@@ -18,7 +18,7 @@ namespace MobileRT {
     public:
         explicit Light(const Material &radiance) noexcept;
 
-        virtual ~Light() noexcept;
+        virtual ~Light() noexcept = default;
 
         virtual const Point3D getPosition() noexcept = 0;
 

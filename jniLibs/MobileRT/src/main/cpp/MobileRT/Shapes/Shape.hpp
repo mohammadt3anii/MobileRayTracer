@@ -12,10 +12,10 @@
 namespace MobileRT {
     class Shape {
     public:
-        virtual ~Shape() noexcept;
+        virtual ~Shape() noexcept = default;
 
-        virtual bool intersect(Intersection &,
-                               const Ray &, const Material &) const noexcept = 0;
+        virtual bool intersect(Intersection &/*intersection*/,
+                               const Ray &/*ray*/, const Material &/*material*/) const noexcept = 0;
 
         virtual float getZ() const noexcept = 0;
 

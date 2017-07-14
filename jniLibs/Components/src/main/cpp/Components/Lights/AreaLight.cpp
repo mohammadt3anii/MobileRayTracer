@@ -13,10 +13,6 @@ AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
         samplerPointLight_(samplerPointLight) {
 }
 
-AreaLight::~AreaLight() noexcept {
-	//delete &samplerPointLight_;
-}
-
 const Point3D AreaLight::getPosition() noexcept {
     float R(samplerPointLight_.getSample(0u));
     float S(samplerPointLight_.getSample(0u));

@@ -9,17 +9,17 @@ using MobileRT::Vector3D;
 
 static unsigned int counter(0u);
 
-Point3D::Point3D(const float px, const float py, const float pz) noexcept :
-        x_(px),
-        y_(py),
-        z_(pz) {
+Point3D::Point3D(const float x, const float y, const float z) noexcept :
+        x_(x),
+        y_(y),
+        z_(z) {
     counter++;
 }
 
-Point3D::Point3D(const Point3D &p) noexcept :
-        x_(p.x_),
-        y_(p.y_),
-        z_(p.z_) {
+Point3D::Point3D(const Point3D &point) noexcept :
+        x_(point.x_),
+        y_(point.y_),
+        z_(point.z_) {
     counter++;
 }
 

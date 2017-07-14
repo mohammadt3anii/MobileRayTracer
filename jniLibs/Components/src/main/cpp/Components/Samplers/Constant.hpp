@@ -15,7 +15,7 @@ namespace Components {
     public:
         explicit Constant(float value) noexcept;
 
-        virtual float getSample(unsigned int sample) noexcept override final;
+        float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components
 

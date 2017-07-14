@@ -6,8 +6,8 @@
 #define MOBILERAYTRACER_SHADER_H
 
 #include "Intersection.hpp"
-#include "Ray.hpp"
 #include "RGB.hpp"
+#include "Ray.hpp"
 #include "Scene.hpp"
 #include "Vector3D.hpp"
 
@@ -20,12 +20,12 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB &, const Intersection &, const Ray &) const noexcept = 0;
+        virtual void shade(RGB &/*rgb*/, const Intersection &/*intersection*/, const Ray &/*ray*/) const noexcept = 0;
 
     public:
         explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;
 
-        virtual ~Shader() noexcept;
+        virtual ~Shader() noexcept = default;
 
         void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept;
 

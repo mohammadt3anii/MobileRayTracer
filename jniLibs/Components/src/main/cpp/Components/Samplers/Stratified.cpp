@@ -6,7 +6,7 @@
 
 using Components::Stratified;
 
-Stratified::Stratified(const unsigned long long int domainSize, const unsigned int samples) noexcept
+Stratified::Stratified(const uint64_t domainSize, const unsigned int samples) noexcept
         :
         Sampler(domainSize, samples) {
 }
@@ -18,7 +18,7 @@ Stratified::Stratified(const unsigned int width, const unsigned int height,
 }
 
 float Stratified::getSample(const unsigned int sample) noexcept {
-    const unsigned long long int current(this->sample_.fetch_add(1ull, std::memory_order_acq_rel));
+    const uint64_t current(this->sample_.fetch_add(1ull, std::memory_order_acq_rel));
     if (current >= (this->domainSize_ * (sample + 1u))) {
         this->sample_.fetch_sub(1ull, std::memory_order_acq_rel);
         return 1.0f;

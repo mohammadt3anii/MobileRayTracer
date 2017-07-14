@@ -17,8 +17,9 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray,
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));
-    if (normalized_projection * (1.0f + (normalized_projection < 0.0f) * -2.0f) < VECT_PROJ_MIN)
+    if (std::fabs(normalized_projection) < VECT_PROJ_MIN) {
         return false;
+	}
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
     const float distanceToIntersection(
@@ -38,7 +39,7 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Plane::moveTo(float, float) noexcept {
+void Plane::moveTo(const float/*x*/, const float/*y*/) noexcept {
 }
 
 float Plane::getZ() const noexcept {

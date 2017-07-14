@@ -24,7 +24,7 @@ bool Rectangle::intersect(Intersection &intersection, const Ray &ray,
                          const Material &material) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
-    if (normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f) < VECT_PROJ_MIN) {
+    if (std::fabs(normalizedProjection) < VECT_PROJ_MIN) {
 		return false;
 	}
 
@@ -62,7 +62,7 @@ bool Rectangle::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Rectangle::moveTo(float, float) noexcept {
+void Rectangle::moveTo(const float/*x*/, const float/*y*/) noexcept {
 }
 
 float Rectangle::getZ() const noexcept {

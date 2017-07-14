@@ -13,9 +13,6 @@ Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const
         sizeV_(sizeV / 2.0f) {
 }
 
-Orthographic::~Orthographic() noexcept {
-}
-
 const Ray Orthographic::generateRay(const float u, const float v,
                                     const float deviationU, const float deviationV) const noexcept {
     const Point3D position(this->position_ +

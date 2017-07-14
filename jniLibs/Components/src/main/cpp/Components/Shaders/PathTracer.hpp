@@ -22,16 +22,16 @@ namespace Components {
         Sampler &samplerLight_;
 
     private:
-        virtual void shade(RGB &rgb,
+        void shade(RGB &rgb,
                            const Intersection &intersection,
-                           const Ray &ray) const noexcept override final;
+                           const Ray &ray) const noexcept final;
 
     public:
         explicit PathTracer(Scene &scene,
                             Sampler &samplerRay, Sampler &samplerLight,
                             unsigned int samplesLight) noexcept;
 
-        virtual void resetSampling() noexcept override final;
+        void resetSampling() noexcept final;
     };
 }//namespace Components
 

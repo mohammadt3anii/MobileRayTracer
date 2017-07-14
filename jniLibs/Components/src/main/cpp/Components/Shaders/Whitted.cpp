@@ -40,7 +40,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     // shadowed direct lighting - only for diffuse materials
     if (kD.hasColor()) {
         Intersection lightIntersection;
-        const unsigned long sizeLights(scene_.lights_.size());
+        const uint64_t sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
         for (unsigned int i(0u); i < sizeLights; i++) {
             Light &light(*scene_.lights_[i]);
