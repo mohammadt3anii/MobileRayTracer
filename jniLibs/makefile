@@ -1,21 +1,29 @@
 .SUFFIXES:
-.PHONY: all clean
+.PHONY: all clean tidy
 .PRECIOUS: %.s
 default: all
 
 EXE := raytracer
-CXX := c++
+#CXX := c++
+CXX :=  clang++-5.0
 LD := $(CXX)
 MAKEFLAGS := -j5
+INCLUDES := -I./MobileRT/src/main/cpp
+INCLUDES += -I./Components/src/main/cpp
+INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
-CXXFLAGS := -Wpedantic -Wall -Wextra -Werror -Wfatal-errors -MMD -std=c++14 -g
-CXXFLAGS += -march=native -ftree-vectorize -Ofast
-CXXFLAGS += -DNO_ANDROID
-CXXFLAGS += -I./MobileRT/src/main/cpp
-CXXFLAGS += -I./Components/src/main/cpp
-CXXFLAGS += $(shell pkg-config --cflags gtk+-2.0)
+CXXFLAGS := -std=c++14 -Wpedantic -Wall -Wextra -MMD -pedantic -isystem /usr/include/c++/v1 ${SANITIZER}
+#SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
+#CXXFLAGS += -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
+#CXXFLAGS := -std=c++14 -Wpedantic -Wall -Wextra -MMD -pedantic
+#CXXFLAGS += -Weffc++
+#CXXFLAGS += -march=native -ftree-vectorize -Ofast
+CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+#CXXFLAGS += -Werror
+CXXFLAGS += -DNO_ANDROID $(INCLUDES)
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp -lc++
+LDFLAGS += $(SANITIZER)
 
 ###############################################################################
 
@@ -26,7 +34,7 @@ ASSM := $(addsuffix .s,$(basename $(SOURCES)))
 GARB := $(shell find . -regextype gnu-awk -iname "*.fuse*" -print)
 
 %.o: %.s
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAG) -c $< -o $@
 	objdump --source $@ > $<
 
 %.s: %.cpp
@@ -42,3 +50,7 @@ clean:
 	@echo "Clean done"
 
 all: $(EXE)
+
+INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
+tidy:
+	clang-tidy-5.0 -checks='*' -analyze-temporary-dtors -p . ./*/*/*/*/*/Renderer.hpp -- -std=c++14 $(INCLUDES) -isystem /usr/include/c++/v1

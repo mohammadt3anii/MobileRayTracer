@@ -51,6 +51,8 @@ class MainRenderer implements Renderer {
             1.0f, 0.0f
     };
     private Bitmap bitmap;
+    private FloatBuffer floatBufferVertices;
+    private FloatBuffer floatBufferTexture;
 
     private static int loadShader(final int shaderType, final String source) {
         final int shader = GLES20.glCreateShader(shaderType);
@@ -70,7 +72,7 @@ class MainRenderer implements Renderer {
     }
 
     @Override
-    public void onDrawFrame(final GL10 arg0) {
+    public void onDrawFrame(final GL10 gl) {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 4);
         GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap);
     }
@@ -82,8 +84,9 @@ class MainRenderer implements Renderer {
 
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        bitmap = Bitmap.createBitmap(996, 1208, Bitmap.Config.ARGB_8888);
 
         //Enable culling
         GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -93,13 +96,13 @@ class MainRenderer implements Renderer {
         //Create geometry and texCoords buffers
         final ByteBuffer bbVertices = ByteBuffer.allocateDirect(vertices.length << 2);
         bbVertices.order(ByteOrder.nativeOrder());
-        final FloatBuffer floatBufferVertices = bbVertices.asFloatBuffer();
+        floatBufferVertices = bbVertices.asFloatBuffer();
         floatBufferVertices.put(vertices);
         floatBufferVertices.position(0);
 
         final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length << 2);
         byteBufferTexCoords.order(ByteOrder.nativeOrder());
-        final FloatBuffer floatBufferTexture = byteBufferTexCoords.asFloatBuffer();
+        floatBufferTexture = byteBufferTexCoords.asFloatBuffer();
         floatBufferTexture.put(texCoords);
         floatBufferTexture.position(0);
 
@@ -143,7 +146,6 @@ class MainRenderer implements Renderer {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        bitmap = Bitmap.createBitmap(996, 1208, Bitmap.Config.ARGB_8888);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 
         //Bind Attributes

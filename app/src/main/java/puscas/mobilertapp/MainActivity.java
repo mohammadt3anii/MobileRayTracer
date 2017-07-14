@@ -34,6 +34,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSampler_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
+    private ScheduledExecutorService scheduler_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -75,14 +76,13 @@ public final class MainActivity extends Activity {
         final ConfigurationInfo info = am.getDeviceConfigurationInfo();
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2) {
-            final MainRenderer mainRenderer = new MainRenderer();
             glDrawView_ = (GLDrawView) findViewById(R.id.drawLayout);
             glDrawView_.setEGLContextClientVersion(2);
             glDrawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
-            glDrawView_.setRenderer(mainRenderer);
+            glDrawView_.setRenderer(new MainRenderer());
             glDrawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-            final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
+            scheduler_ = Executors.newSingleThreadScheduledExecutor();
             scheduler_.scheduleAtFixedRate(() -> glDrawView_.requestRender(), 0L, 200, TimeUnit.MILLISECONDS);
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');

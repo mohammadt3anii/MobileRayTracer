@@ -2,9 +2,9 @@
 // Created by Tiago on 23-Jan-17.
 //
 
-#include "Camera.h"
+#include "Camera.hpp"
 
-using namespace MobileRT;
+using MobileRT::Camera;
 
 //Left hand rule
 Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &up) noexcept :
@@ -14,5 +14,5 @@ Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &u
         up_(direction_.crossProduct(right_)) {
 }
 
-Camera::~Camera(void) noexcept {
+Camera::~Camera() noexcept {
 }

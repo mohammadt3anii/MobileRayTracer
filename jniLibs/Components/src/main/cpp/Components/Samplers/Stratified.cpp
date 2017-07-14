@@ -2,9 +2,9 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#include "Stratified.h"
+#include "Stratified.hpp"
 
-using namespace Components;
+using Components::Stratified;
 
 Stratified::Stratified(const unsigned long long int domainSize, const unsigned int samples) noexcept
         :

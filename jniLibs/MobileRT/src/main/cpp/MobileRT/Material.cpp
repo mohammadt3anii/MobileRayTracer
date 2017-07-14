@@ -2,12 +2,12 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Material.h"
+#include "Material.hpp"
 
-using namespace MobileRT;
+using MobileRT::Material;
 static unsigned int counter(0u);
 
-Material::Material(void) noexcept : refractiveIndice_(1.0f) {
+Material::Material() noexcept : refractiveIndice_(1.0f) {
     counter++;
 }
 

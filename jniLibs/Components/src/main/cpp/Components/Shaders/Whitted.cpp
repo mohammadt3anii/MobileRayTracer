@@ -2,9 +2,12 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Whitted.h"
+#include "Whitted.hpp"
 
-using namespace Components;
+using Components::Whitted;
+using MobileRT::Light;
+using MobileRT::Vector3D;
+using MobileRT::Point3D;
 
 Whitted::Whitted(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {
@@ -12,7 +15,7 @@ Whitted::Whitted(Scene &scene, const unsigned int samplesLight) noexcept :
 
 void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int rayDepth(ray.depth_);
-    if (rayDepth > RAY_DEPTH_MAX) return;
+    if (rayDepth > RAY_DEPTH_MAX) {return;}
 
     const RGB &Le(intersection.material_->Le_);
     if (Le.hasColor())//stop if it intersects a light source
@@ -114,6 +117,6 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
     rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
 }
 
-void Whitted::resetSampling(void) noexcept {
+void Whitted::resetSampling() noexcept {
     this->scene_.resetSampling();
 }

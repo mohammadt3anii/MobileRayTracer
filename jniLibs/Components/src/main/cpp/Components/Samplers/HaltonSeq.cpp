@@ -2,9 +2,9 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#include "HaltonSeq.h"
+#include "HaltonSeq.hpp"
 
-using namespace Components;
+using Components::HaltonSeq;
 
 HaltonSeq::HaltonSeq(const unsigned long long int domainSize, const unsigned int samples) noexcept :
         Sampler(domainSize, samples) {

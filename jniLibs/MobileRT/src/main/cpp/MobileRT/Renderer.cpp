@@ -2,11 +2,11 @@
 // Created by Tiago on 09-Feb-17.
 //
 
-#include "Renderer.h"
+#include "Renderer.hpp"
 
-using namespace MobileRT;
+using MobileRT::Renderer;
 
-Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
+Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
                    const unsigned int width, const unsigned int height,
                    const unsigned int blockSizeX, const unsigned int blockSizeY,
                    Sampler &samplerPixel) noexcept :
@@ -25,11 +25,12 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, const Camera &camera,
         toneMapper_([&](const float value) { return value; }) {
 }
 
-Renderer::~Renderer(void) noexcept {
+Renderer::~Renderer() noexcept {
     delete[] this->accumulate_;
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
+    LOG("START - resolution = %u", resolution_);
     this->sample_ = 0u;
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0u); i < size; i++) {
@@ -38,17 +39,18 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     this->samplerCamera_.resetSampling();
     this->samplerPixel_.resetSampling();
     this->shader_.resetSampling();
-    std::thread *const threads(new std::thread[numThreads - 1u]);
-    for (unsigned int i(0u); i < numThreads - 1u; i++) {
-        threads[i] = std::thread(&Renderer::renderScene, this, bitmap, i);
+    const unsigned numChildren (numThreads - 1u);
+	std::vector<std::thread> threads;
+	threads.reserve(numChildren);
+    for (unsigned int i(0u); i < numChildren; i++) {
+		threads.emplace_back(std::thread(&Renderer::renderScene, this, bitmap, i));
     }
-    renderScene(bitmap, numThreads - 1u);
-    for (unsigned int i(0u); i < numThreads - 1u; i++) {
+    renderScene(bitmap, numChildren);
+    for (unsigned int i(0u); i < numChildren; i++) {
         threads[i].join();
     }
-    delete[] threads;
+	threads.clear();
 
-    LOG("START - resolution = %u", resolution_);
     LOG("point3D = %u", Point3D::getInstances());
     LOG("vector3D = %u", Vector3D::getInstances());
     LOG("RGB = %u", RGB::getInstances());
@@ -63,7 +65,7 @@ void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) 
     toneMapper_ = toneMapper;
 }
 
-void Renderer::stopRender(void) noexcept {
+void Renderer::stopRender() noexcept {
     this->blockSizeX_ = 0u;
     this->blockSizeY_ = 0u;
     this->samplerCamera_.stopSampling();
@@ -81,15 +83,15 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
-    const unsigned int samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
+    const auto samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     Intersection intersection;
     RGB pixelRGB;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
         for (float block(this->samplerCamera_.getSample(sample));;
              block = this->samplerCamera_.getSample(sample)) {
-            if (block >= 1.0f) break;
-            const unsigned int pixel(
+            if (block >= 1.0f) {break;}
+            const auto pixel(
                     static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
                     this->blockSizeX_ % resolution_);
             const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
@@ -114,10 +116,10 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                 }
             }
         }
-        if (tid == 0u) this->sample_ = sample + 1u;
+        if (tid == 0u) {this->sample_ = sample + 1u;}
     }
 }
 
-unsigned int Renderer::getSample(void) noexcept {
+unsigned int Renderer::getSample() noexcept {
     return this->sample_;
 }

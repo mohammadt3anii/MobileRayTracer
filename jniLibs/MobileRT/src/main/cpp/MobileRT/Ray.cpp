@@ -2,9 +2,9 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Ray.h"
+#include "Ray.hpp"
 
-using namespace MobileRT;
+using MobileRT::Ray;
 
 static unsigned int counter(0u);
 

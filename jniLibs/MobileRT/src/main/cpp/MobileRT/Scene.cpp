@@ -2,17 +2,17 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Scene.h"
+#include "Scene.hpp"
 
-using namespace MobileRT;
+using MobileRT::Scene;
 
 static unsigned int counter(0u);
 
-Scene::Scene(void) noexcept {
+Scene::Scene() noexcept {
     counter++;
 }
 
-Scene::~Scene(void) noexcept {
+Scene::~Scene() noexcept {
     for (Light *light : this->lights_) {
         delete light;
     }
@@ -25,7 +25,7 @@ Scene::~Scene(void) noexcept {
 
 int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcept {
     int res(-1);
-    const unsigned int lightsSize(static_cast<unsigned int> (lights_.size()));
+    const auto lightsSize(static_cast<unsigned int> (lights_.size()));
 
     for (unsigned int i(0u); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<unsigned long> (i)]);
@@ -64,19 +64,19 @@ bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const noexce
     return false;
 }
 
-unsigned int Scene::getInstances(void) noexcept {
+unsigned int Scene::getInstances() noexcept {
     const unsigned int res(counter);
     counter = 0u;
     return res;
 }
 
-void Scene::resetSampling(void) noexcept {
+void Scene::resetSampling() noexcept {
     for (Light *light : this->lights_) {
         light->resetSampling();
     }
 }
 
-void Scene::buildAccelerator(void) noexcept {
-    for (Primitive *p : this->primitives_) {
-    }
+void Scene::buildAccelerator() noexcept {
+    /*for (Primitive *p : this->primitives_) {
+    }*/
 }

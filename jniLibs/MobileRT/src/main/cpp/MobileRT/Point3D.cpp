@@ -2,18 +2,12 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Point3D.h"
+#include "Point3D.hpp"
 
-using namespace MobileRT;
+using MobileRT::Point3D;
+using MobileRT::Vector3D;
 
 static unsigned int counter(0u);
-
-Point3D::Point3D(void) noexcept :
-        x_(0.0f),
-        y_(0.0f),
-        z_(0.0f) {
-    counter++;
-}
 
 Point3D::Point3D(const float px, const float py, const float pz) noexcept :
         x_(px),

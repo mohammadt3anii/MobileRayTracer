@@ -22,13 +22,12 @@
                     android:name="android.intent.action.MAIN"
                     android:hardwareAccelerated="true"
                     android:largeHeap="true"/>
-                <action
-                    android:name="android.intent.action.VIEW"
-                    android:hardwareAccelerated="true"
-                    android:largeHeap="true"/>
-
                 <category
                     android:name="android.intent.category.LAUNCHER"
+                    android:hardwareAccelerated="true"
+                    android:largeHeap="true"/>
+                <action
+                    android:name="android.intent.action.VIEW"
                     android:hardwareAccelerated="true"
                     android:largeHeap="true"/>
             </intent-filter>

@@ -2,13 +2,13 @@
 // Created by Tiago on 23-Jan-17.
 //
 
-#include "Light.h"
+#include "Light.hpp"
 
-using namespace MobileRT;
+using MobileRT::Light;
 
 Light::Light(const Material &radiance) noexcept :
         radiance_(radiance) {
 }
 
-Light::~Light(void) noexcept {
+Light::~Light() noexcept {
 }

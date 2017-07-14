@@ -2,9 +2,9 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Primitive.h"
+#include "Primitive.hpp"
 
-using namespace MobileRT;
+using MobileRT::Primitive;
 
 static unsigned int counter(0u);
 
@@ -14,7 +14,7 @@ Primitive::Primitive(Shape *shape, const Material &material) noexcept :
     counter++;
 }
 
-Primitive::~Primitive(void) noexcept {
+Primitive::~Primitive() noexcept {
     delete this->shape_;
 }
 

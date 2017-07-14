@@ -2,14 +2,19 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Intersection.h"
+#include "Intersection.hpp"
 
-using namespace MobileRT;
+using MobileRT::Intersection;
 
 static unsigned int counter(0u);
 
-Intersection::Intersection(void) noexcept :
-        length_(RAY_LENGTH_MAX) {
+Intersection::Intersection() noexcept :
+        point_(Point3D(0,0,0)),
+        normal_(Vector3D(0,0,0)),
+        symNormal_(Vector3D(0,0,0)),
+        material_(nullptr),
+        length_(RAY_LENGTH_MAX)
+{
     counter++;
 }
 

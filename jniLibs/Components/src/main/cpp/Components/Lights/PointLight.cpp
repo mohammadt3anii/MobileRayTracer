@@ -2,20 +2,20 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "PointLight.h"
+#include "PointLight.hpp"
 
-using namespace Components;
+using Components::PointLight;
 
 PointLight::PointLight(const Material &radiance, const Point3D &position) noexcept :
         Light(radiance),
         position_(position) {
 }
 
-const Point3D PointLight::getPosition(void) noexcept {
+const Point3D PointLight::getPosition() noexcept {
     return this->position_;
 }
 
-void PointLight::resetSampling(void) noexcept {
+void PointLight::resetSampling() noexcept {
 }
 
 bool PointLight::intersectL(Intersection &, const Ray &) const noexcept {

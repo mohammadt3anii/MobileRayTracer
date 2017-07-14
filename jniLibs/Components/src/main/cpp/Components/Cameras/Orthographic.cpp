@@ -2,9 +2,9 @@
 // Created by Tiago on 22-Jun-17.
 //
 
-#include "Orthographic.h"
+#include "Orthographic.hpp"
 
-using namespace Components;
+using Components::Orthographic;
 
 Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                            const float sizeH, const float sizeV) noexcept :
@@ -13,7 +13,7 @@ Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const
         sizeV_(sizeV / 2.0f) {
 }
 
-Orthographic::~Orthographic(void) noexcept {
+Orthographic::~Orthographic() noexcept {
 }
 
 const Ray Orthographic::generateRay(const float u, const float v,

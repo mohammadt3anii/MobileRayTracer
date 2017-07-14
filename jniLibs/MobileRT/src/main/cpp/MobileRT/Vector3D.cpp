@@ -2,31 +2,29 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Vector3D.h"
+#include "Vector3D.hpp"
 
-using namespace MobileRT;
+using MobileRT::Vector3D;
+using MobileRT::Point3D;
 
 static unsigned int counter(0u);
-
-Vector3D::Vector3D(void) noexcept :
-        x_(0.0f),
-        y_(0.0f),
-        z_(0.0f) {
-    counter++;
-}
 
 Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
         x_(x),
         y_(y),
-        z_(z) {
+        z_(z),
+		magnitude_(magnitude())
+{
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector) noexcept :
         x_(vector.x_),
         y_(vector.y_),
-        z_(vector.z_) {
-    const float len(magnitude());
+        z_(vector.z_),
+		magnitude_(magnitude())
+{
+    const float len(magnitude_);
     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
@@ -37,15 +35,19 @@ Vector3D::Vector3D(const Vector3D &vector) noexcept :
 Vector3D::Vector3D(const Vector3D &vector, const float value) noexcept :
         x_(vector.x_ * value),
         y_(vector.y_ * value),
-        z_(vector.z_ * value) {
+        z_(vector.z_ * value),
+		magnitude_(magnitude())
+{
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float value) noexcept :
         x_(vector1.x_ - vector2.x_ * value),
         y_(vector1.y_ - vector2.y_ * value),
-        z_(vector1.z_ - vector2.z_ * value) {
-    const float len(magnitude());
+        z_(vector1.z_ - vector2.z_ * value),
+		magnitude_(magnitude())
+{
+    const float len(magnitude_);
     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
@@ -57,16 +59,18 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) noexcept :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_) {
+        z_(dest.z_ - orig.z_),
+		magnitude_(magnitude())
+{
     counter++;
 }
 
 Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) noexcept :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
-        z_(dest.z_ - orig.z_) {
-    magnitude_ = magnitude();
-
+        z_(dest.z_ - orig.z_),
+		magnitude_(magnitude())
+{
     const float inv_length(magnitude_ == 0.0f ? 1.0f : 1.0f / magnitude_);
     this->x_ *= inv_length;
     this->y_ *= inv_length;
@@ -79,10 +83,12 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool) noexcept :
 Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept :
         x_(vector1.y_ * vector2.z_ - vector1.z_ * vector2.y_),
         y_(vector1.z_ * vector2.x_ - vector1.x_ * vector2.z_),
-        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_) {
+        z_(vector1.x_ * vector2.y_ - vector1.y_ * vector2.x_),
+		magnitude_(magnitude())
+{
 }
 
-float Vector3D::normalize(void) noexcept {
+float Vector3D::normalize() noexcept {
     const float len(magnitude());
     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
     this->x_ *= inv_length;
@@ -91,7 +97,7 @@ float Vector3D::normalize(void) noexcept {
     return len;
 }
 
-const Vector3D Vector3D::returnNormalized(void) const noexcept {
+const Vector3D Vector3D::returnNormalized() const noexcept {
     return Vector3D(*this);
 }
 
@@ -105,11 +111,11 @@ float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const noexc
             this->z_ * (dest.z_ - orig.z_));
 }
 
-float Vector3D::squareMagnitude(void) const noexcept {
+float Vector3D::squareMagnitude() const noexcept {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
-float Vector3D::magnitude(void) const noexcept {
+float Vector3D::magnitude() const noexcept {
     return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
@@ -163,6 +169,6 @@ unsigned int Vector3D::getInstances() noexcept {
     return res;
 }
 
-const Vector3D Vector3D::symmetric(void) const noexcept {
+const Vector3D Vector3D::symmetric() const noexcept {
     return Vector3D(-this->x_, -this->y_, -this->z_);
 }

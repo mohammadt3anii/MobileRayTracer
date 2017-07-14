@@ -2,9 +2,10 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Sphere.h"
+#include "Sphere.hpp"
 
-using namespace MobileRT;
+using MobileRT::Sphere;
+using MobileRT::Point3D;
 
 Sphere::Sphere(const Point3D &center, const float radius) noexcept :
         sq_radius_(radius * radius),
@@ -22,7 +23,7 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray,
 
     const float discriminant(B * B - 4.0f * C);
     //don't intersect (ignores tangent point of the sphere)
-    if (discriminant <= 0.0f) return false;
+    if (discriminant <= 0.0f) {return false;}
 
     //ray intersects the sphere in 2 points
     const float rootDiscriminant(std::sqrt(discriminant));
@@ -34,8 +35,9 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray,
                                        (distanceToIntersection2 < distanceToIntersection1) *
                                        distanceToIntersection2);
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_) {
         return false;
+	}
 
     // if so, then we have an intersection
     intersection.reset(ray.origin_, ray.direction_, distanceToIntersection,
@@ -50,11 +52,11 @@ void Sphere::moveTo(const float x, const float y) noexcept {
     this->center_.y_ = y;
 }
 
-float Sphere::getZ(void) const noexcept {
+float Sphere::getZ() const noexcept {
     return this->center_.z_;
 }
 
-const Point3D Sphere::getPositionMin(void) const noexcept {
+const Point3D Sphere::getPositionMin() const noexcept {
     float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 
@@ -65,7 +67,7 @@ const Point3D Sphere::getPositionMin(void) const noexcept {
     return Point3D(x, y, z);
 }
 
-const Point3D Sphere::getPositionMax(void) const noexcept {
+const Point3D Sphere::getPositionMax() const noexcept {
     float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 

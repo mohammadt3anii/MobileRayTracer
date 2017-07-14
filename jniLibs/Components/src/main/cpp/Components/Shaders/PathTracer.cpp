@@ -2,9 +2,12 @@
 // Created by puscas on 20-02-2017.
 //
 
-#include "PathTracer.h"
+#include "PathTracer.hpp"
 
-using namespace Components;
+using Components::PathTracer;
+using MobileRT::Light;
+using MobileRT::Vector3D;
+using MobileRT::Point3D;
 
 PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
                        const unsigned int samplesLight) noexcept :
@@ -18,7 +21,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 //pag 28 slides Monte Carlo
 void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int rayDepth(ray.depth_);
-    if (rayDepth > RAY_DEPTH_MAX) return;
+    if (rayDepth > RAY_DEPTH_MAX || intersection.material_ == nullptr) {return;}
 
     const RGB &Le(intersection.material_->Le_);
     if (Le.hasColor())//stop if it intersects a light source
@@ -35,6 +38,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
     thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
     thread_local static std::mt19937 gen(std::random_device{}());
+	//thread_local static std::mt19937 gen(0);
     static const float finish_probability(0.5f);
     static const float continue_probability(1.0f - finish_probability);
 
@@ -50,14 +54,14 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p -> Wr)
     if (kD.hasColor()) {
-        const unsigned long sizeLights(scene_.lights_.size() - 1ul);
+        const uint64_t sizeLights(scene_.lights_.size() - 1ul);
         const unsigned int samplesLight(this->samplesLight_);
         Intersection intersectLight;
         //direct light
         for (unsigned int i(0u); i < samplesLight; i++) {
             const float qrn(samplerLight_.getSample(0u));
             //PDF = 1 / sizeLights
-            const unsigned int chosenLight(
+            const auto chosenLight(
                     static_cast<unsigned int> ((qrn + 0.5f) * sizeLights));
             Light &light(*scene_.lights_[chosenLight]);
             //calculates vector starting in intersection to the light
@@ -86,15 +90,12 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
 
-            const float r1(2.0f * PI * samplerRay_.getSample(0));
-            const float r2(samplerRay_.getSample(0));
+            const float r1(2.0f * PI * samplerRay_.getSample(0u));
+            //const float r2(samplerRay_.getSample(0u));
+            //const float r1(0.4f);
+            const float r2(0.78f);
             const float r2s(std::sqrt(r2));
-            Vector3D u;
-            if (std::fabs(intersection.normal_.x_) > 0.1f)
-                u = Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_);
-            else
-                u = Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_);
-
+            Vector3D u(std::fabs(intersection.normal_.x_) > 0.1f? Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) : Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_));
             u.normalize();
             Vector3D aux(intersection.normal_.crossProduct(u));
             Vector3D direction((u * std::cos(r1) * r2s + aux * std::sin(r1) * r2s +
@@ -185,7 +186,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                 RGB LiD;
                 //LiD.addMult(kD, LiD_RGB, PI);
                 LiD.addMult(kD, LiD_RGB);
-                if (rayDepth > RAY_DEPTH_MIN) LiD /= continue_probability;
+                if (rayDepth > RAY_DEPTH_MIN) {LiD /= continue_probability;}
                 LiD /= rayDepth;
 
                 rgb.add(LiD);
@@ -239,7 +240,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     }
 }
 
-void PathTracer::resetSampling(void) noexcept {
+void PathTracer::resetSampling() noexcept {
     this->scene_.resetSampling();
     this->samplerRay_.resetSampling();
     this->samplerLight_.resetSampling();

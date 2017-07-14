@@ -1,23 +1,24 @@
-#include <iostream>
-#include <gtk/gtk.h>
-#include <omp.h>
+#include "Components/src/main/cpp/Components/Cameras/Orthographic.hpp"
+#include "Components/src/main/cpp/Components/Cameras/Perspective.hpp"
+#include "Components/src/main/cpp/Components/Lights/AreaLight.hpp"
+#include "Components/src/main/cpp/Components/Lights/PointLight.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Constant.hpp"
+#include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Random.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
+#include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
+#include "Components/src/main/cpp/Components/Shaders/PathTracer.hpp"
+#include "Components/src/main/cpp/Components/Shaders/Whitted.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Renderer.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Scene.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
+#include <cstdint>
 #include <gdk/gdkkeysyms.h>
-
-#include "MobileRT/src/main/cpp/MobileRT/Scene.h"
-#include "MobileRT/src/main/cpp/MobileRT/Renderer.h"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Plane.h"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.h"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.h"
-#include "Components/src/main/cpp/Components/Shaders/NoShadows.h"
-#include "Components/src/main/cpp/Components/Shaders/Whitted.h"
-#include "Components/src/main/cpp/Components/Shaders/PathTracer.h"
-#include "Components/src/main/cpp/Components/Samplers/Stratified.h"
-#include "Components/src/main/cpp/Components/Samplers/HaltonSeq.h"
-#include "Components/src/main/cpp/Components/Samplers/Random.h"
-#include "Components/src/main/cpp/Components/Samplers/Constant.h"
-#include "Components/src/main/cpp/Components/Cameras/Perspective.h"
-#include "Components/src/main/cpp/Components/Lights/PointLight.h"
-#include "Components/src/main/cpp/Components/Lights/AreaLight.h"
+#include <gtk/gtk.h>
+#include <iostream>
+#include <omp.h>
 
 static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
@@ -35,11 +36,12 @@ static unsigned int blockSize_(4u);
 static unsigned int blockSizeX_(0u);
 static unsigned int blockSizeY_(0u);
 
-static const unsigned int width_(1000u);
-static const unsigned int height_(1000u);
+static const unsigned int width_(900u);
+static const unsigned int height_(900u);
 static unsigned int canvas[width_ * height_];
+static unsigned char buffer[width_ * height_ * 4u];//RGBA
 
-MobileRT::Scene *cornellBoxScene(void) {
+MobileRT::Scene *cornellBoxScene() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -99,18 +101,13 @@ MobileRT::Scene *cornellBoxScene(void) {
     return &scene;
 }
 
-MobileRT::Scene *cornellBoxScene2(void) {
+MobileRT::Scene *cornellBoxScene2() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
 
-    const unsigned long long int max(static_cast<unsigned long long int> (-1));
-    LOG("samplesLight = %u, max = %llu", samplesLight_, max);
-    const unsigned long long int domainPointLight(/*roundUpPower2*/(
-                                                                           (width_ * height_ *
-                                                                            2llu) * 2llu *
-                                                                           samplesLight_ *
-                                                                           samplesPixel_ *
-                                                                           RAY_DEPTH_MAX));
-    LOG("domainPointLight = %llu", domainPointLight);
+    const auto max(static_cast<uint64_t> (-1));
+    LOG("samplesLight = %u, max = %lu", samplesLight_, max);
+    const uint64_t domainPointLight(/*roundUpPower2*/(                            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    LOG("domainPointLight = %lu", domainPointLight);
     LOG("width_ = %u", width_);
     LOG("height_ = %u", height_);
     LOG("samplesLight_ = %u", samplesLight_);
@@ -208,7 +205,7 @@ MobileRT::Scene *cornellBoxScene2(void) {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene(void) {
+MobileRT::Scene *spheresScene() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -243,7 +240,7 @@ MobileRT::Scene *spheresScene(void) {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene2(void) {
+MobileRT::Scene *spheresScene2() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -285,11 +282,11 @@ MobileRT::Scene *spheresScene2(void) {
     return &scene;
 }
 
-void destroy(GtkWidget *, gpointer) {
+void destroy(GtkWidget* /*unused*/, gpointer /*unused*/) {
     gtk_main_quit();
 }
 
-static bool check_escape(GtkWidget *, GdkEventKey *event, gpointer) {
+static bool check_escape(GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/) {
     if (event->keyval == GDK_KEY_Escape) {
         gtk_main_quit();
         return true;
@@ -301,7 +298,7 @@ int main(int argc, char **argv) {
     unsigned int repeats(1);
     const int scene(3);
     const int shader(2);
-    const int threads(5);
+    const int threads(atoi(argv[1]));
     const int sampler(0);
     const int samplesPixel(1);
     const int samplesLight(1);
@@ -371,9 +368,9 @@ int main(int argc, char **argv) {
     }
     samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
-    const unsigned long long int domainRay(
+    const uint64_t domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
-    const unsigned long long int domainLight(
+    const uint64_t domainLight(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
@@ -381,7 +378,7 @@ int main(int argc, char **argv) {
             break;
 
         case 2:
-            LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
+            LOG("domainRay = %lu, domainLight = %lu", domainRay, domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
             samplerRay_ = new Components::Random(domainRay, 1);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
@@ -397,7 +394,7 @@ int main(int argc, char **argv) {
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    if (dynamic_cast<Components::PathTracer *>(shader_) != NULL) {
+    if (dynamic_cast<Components::PathTracer *>(shader_) != nullptr) {
         renderer_->registerToneMapper([&](const float value) {
             return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
         });
@@ -413,17 +410,23 @@ int main(int argc, char **argv) {
     try {
         do {
             renderer_->renderFrame(canvas, threads);
-            repeats--;
-        } while (repeats > 0u);
+			camera_->position_.x_ += 2.0f;
+        } while (repeats-- > 1u);
     } catch (...) {
         LOG("%s", "EXCEPTION");
         raise(SIGTRAP);
     }
+	delete samplerCamera_;
+	delete samplerPixel_;
+    delete samplerPointLight_;
+    delete samplerRay_;
+	delete samplerLight_;
+    delete camera_;
+    delete scene_;
+    delete shader_;
+    delete renderer_;
     const double end(omp_get_wtime() - start);
     std::cout << "\nTime in secs::" << end << std::endl;
-
-    //RGBA
-    unsigned char *buffer(new unsigned char[width_ * height_ * 4u]);
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(canvas[j]);
@@ -435,13 +438,14 @@ int main(int argc, char **argv) {
     gtk_init(&argc, &argv);
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GdkPixbuf *pixbuff = gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-                                                  width_, height_, width_ * 4, NULL, NULL);
+                                                  width_, height_, width_ * 4, nullptr, nullptr);
     GtkWidget *image = gtk_image_new_from_pixbuf(pixbuff);
-    gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(destroy), NULL);
+    gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(destroy), nullptr);
     gtk_signal_connect(GTK_OBJECT(window), "key_press_event",
-                       GTK_SIGNAL_FUNC(check_escape), NULL);
+                       GTK_SIGNAL_FUNC(check_escape), nullptr);
     gtk_container_add(GTK_CONTAINER(window), image);
     gtk_widget_show_all(window);
     gtk_main();
+	g_object_unref (G_OBJECT(pixbuff));
     return 0;
 }

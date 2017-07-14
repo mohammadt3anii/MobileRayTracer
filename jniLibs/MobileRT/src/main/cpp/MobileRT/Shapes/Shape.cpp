@@ -2,9 +2,9 @@
 // Created by Tiago on 19-Jan-17.
 //
 
-#include "Shape.h"
+#include "Shape.hpp"
 
-using namespace MobileRT;
+using MobileRT::Shape;
 
-Shape::~Shape(void) noexcept {
+Shape::~Shape() noexcept {
 }

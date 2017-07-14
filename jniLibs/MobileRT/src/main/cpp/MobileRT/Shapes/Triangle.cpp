@@ -3,9 +3,10 @@
 // Uses: Moller and Trumbore
 //
 
-#include "Triangle.h"
+#include "Triangle.hpp"
 
-using namespace MobileRT;
+using MobileRT::Triangle;
+using MobileRT::Point3D;
 
 Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
         pointA_(pointA),
@@ -20,8 +21,9 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
                          const Material &material) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(AB_.dotProduct(perpendicularVector));
-    if (normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f) < VECT_PROJ_MIN)
+    if (normalizedProjection * (1.0f + (normalizedProjection < 0.0f) * -2.0f) < VECT_PROJ_MIN) {
         return false;
+	}
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);
 
@@ -29,22 +31,25 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
 
     const float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
 
-    if (u < 0.0f || u > 1.0f)
+    if (u < 0.0f || u > 1.0f) {
         return false;
+	}
 
     const Vector3D upPerpendicularVector(vertexToCamera, this->AB_);//cross product
     const float v(normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector));
 
-    if (v < 0.0f || (u + v) > 1.0f)
+    if (v < 0.0f || (u + v) > 1.0f) {
         return false;
+	}
 
     // at this stage we can compute t to find out where
     // the intersection point is on the line
     const float distanceToIntersection(
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector));
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_)
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_) {
         return false;
+	}
 
     intersection.reset(
             ray.origin_, ray.direction_, distanceToIntersection,
@@ -57,60 +62,78 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
 void Triangle::moveTo(float, float) noexcept {
 }
 
-float Triangle::getZ(void) const noexcept {
+float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-const Point3D Triangle::getPositionMin(void) const noexcept {
+const Point3D Triangle::getPositionMin() const noexcept {
     float x, y, z;
 
-    if (pointA_.x_ < pointB_.x_ && pointA_.x_ < pointC_.x_)
+    if (pointA_.x_ < pointB_.x_ && pointA_.x_ < pointC_.x_) {
         x = pointA_.x_;
-    else if (pointB_.x_ < pointC_.x_)
+	}
+    else if (pointB_.x_ < pointC_.x_) {
         x = pointB_.x_;
-    else
+	}
+    else {
         x = pointC_.x_;
+	}
 
-    if (pointA_.y_ < pointB_.y_ && pointA_.y_ < pointC_.y_)
+    if (pointA_.y_ < pointB_.y_ && pointA_.y_ < pointC_.y_) {
         y = pointA_.y_;
-    else if (pointB_.y_ < pointC_.y_)
+	}
+    else if (pointB_.y_ < pointC_.y_) {
         y = pointB_.y_;
-    else
+	}
+    else {
         y = pointC_.y_;
+	}
 
-    if (pointA_.z_ < pointB_.z_ && pointA_.z_ < pointC_.z_)
+    if (pointA_.z_ < pointB_.z_ && pointA_.z_ < pointC_.z_) {
         z = pointA_.z_;
-    else if (pointB_.z_ < pointC_.z_)
+	}
+    else if (pointB_.z_ < pointC_.z_) {
         z = pointB_.z_;
-    else
+	}
+    else {
         z = pointC_.z_;
+	}
 
     return Point3D(x, y, z);
 }
 
-const Point3D Triangle::getPositionMax(void) const noexcept {
+const Point3D Triangle::getPositionMax() const noexcept {
     float x, y, z;
 
-    if (pointA_.x_ > pointB_.x_ && pointA_.x_ > pointC_.x_)
+    if (pointA_.x_ > pointB_.x_ && pointA_.x_ > pointC_.x_) {
         x = pointA_.x_;
-    else if (pointB_.x_ > pointC_.x_)
+	}
+    else if (pointB_.x_ > pointC_.x_) {
         x = pointB_.x_;
-    else
+	}
+    else {
         x = pointC_.x_;
+	}
 
-    if (pointA_.y_ > pointB_.y_ && pointA_.y_ > pointC_.y_)
+    if (pointA_.y_ > pointB_.y_ && pointA_.y_ > pointC_.y_) {
         y = pointA_.y_;
-    else if (pointB_.y_ > pointC_.y_)
+	}
+    else if (pointB_.y_ > pointC_.y_) {
         y = pointB_.y_;
-    else
+	}
+    else {
         y = pointC_.y_;
+	}
 
-    if (pointA_.z_ > pointB_.z_ && pointA_.z_ > pointC_.z_)
+    if (pointA_.z_ > pointB_.z_ && pointA_.z_ > pointC_.z_) {
         z = pointA_.z_;
-    else if (pointB_.z_ > pointC_.z_)
+	}
+    else if (pointB_.z_ > pointC_.z_) {
         z = pointB_.z_;
-    else
+	}
+    else {
         z = pointC_.z_;
+	}
 
     return Point3D(x, y, z);
 }

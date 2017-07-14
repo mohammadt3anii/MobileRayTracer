@@ -2,9 +2,9 @@
 // Created by puscas on 03-03-2017.
 //
 
-#include "AreaLight.h"
+#include "AreaLight.hpp"
 
-using namespace Components;
+using Components::AreaLight;
 
 AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
                      const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
@@ -13,7 +13,11 @@ AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
         samplerPointLight_(samplerPointLight) {
 }
 
-const Point3D AreaLight::getPosition(void) noexcept {
+AreaLight::~AreaLight() noexcept {
+	//delete &samplerPointLight_;
+}
+
+const Point3D AreaLight::getPosition() noexcept {
     float R(samplerPointLight_.getSample(0u));
     float S(samplerPointLight_.getSample(0u));
     if (R + S >= 1.0f) {
@@ -25,7 +29,7 @@ const Point3D AreaLight::getPosition(void) noexcept {
                    pointA_.z_ + R * AB_.z_ + S * AC_.z_);
 }
 
-void AreaLight::resetSampling(void) noexcept {
+void AreaLight::resetSampling() noexcept {
     samplerPointLight_.resetSampling();
 }
 

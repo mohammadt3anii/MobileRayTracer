@@ -2,9 +2,12 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "NoShadows.h"
+#include "NoShadows.hpp"
 
-using namespace Components;
+using Components::NoShadows;
+using MobileRT::Light;
+using MobileRT::Point3D;
+using MobileRT::Vector3D;
 
 NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {
@@ -41,6 +44,6 @@ void NoShadows::shade(RGB &rgb, const Intersection &intersection, const Ray &) c
     rgb.add(Le);
 }
 
-void NoShadows::resetSampling(void) noexcept {
+void NoShadows::resetSampling() noexcept {
     this->scene_.resetSampling();
 }

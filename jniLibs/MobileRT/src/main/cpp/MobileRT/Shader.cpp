@@ -2,15 +2,15 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Shader.h"
+#include "Shader.hpp"
 
-using namespace MobileRT;
+using MobileRT::Shader;
 
 Shader::Shader(Scene &scene, const unsigned int samplesLight) noexcept :
         scene_(scene), samplesLight_(samplesLight) {
 }
 
-Shader::~Shader(void) noexcept {
+Shader::~Shader() noexcept {
 }
 
 //ray trace and verifies if intersects primitives

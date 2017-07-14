@@ -1,13 +1,13 @@
 //
 // Created by Tiago on 16-10-2016.
 //
-#include "RGB.h"
+#include "RGB.hpp"
 
-using namespace MobileRT;
+using MobileRT::RGB;
 
 static unsigned int counter(0u);
 
-RGB::RGB(void) noexcept :
+RGB::RGB() noexcept :
         samples_(0u),
         R_(0.0f),
         G_(0.0f),
@@ -31,7 +31,7 @@ RGB::RGB(const RGB &rgb) noexcept :
     counter++;
 }
 
-bool RGB::hasColor(void) const noexcept {
+bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
@@ -96,14 +96,14 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
     sample.B_ /= sample.samples_;
 }
 
-void RGB::reset(void) noexcept {
+void RGB::reset() noexcept {
     this->R_ = 0.0f;
     this->G_ = 0.0f;
     this->B_ = 0.0f;
     this->samples_ = 0u;
 }
 
-unsigned int RGB::RGB2Color(void) noexcept {
+unsigned int RGB::RGB2Color() noexcept {
     const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
     const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
@@ -116,7 +116,7 @@ unsigned int RGB::getInstances() noexcept {
     return res;
 }
 
-float RGB::getMax(void) noexcept {
+float RGB::getMax() noexcept {
     return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ :
            this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ :
            this->B_;

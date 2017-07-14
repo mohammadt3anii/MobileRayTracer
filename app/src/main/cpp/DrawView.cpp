@@ -2,7 +2,7 @@
 // Created by Tiago on 14-10-2016.
 //
 
-#include "DrawView.h"
+#include "DrawView.hpp"
 
 enum State {
     IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
@@ -166,6 +166,10 @@ static MobileRT::Scene *cornellBoxScene2(void) noexcept {
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
                                                            lightGrayMat));
+    /*scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Rectangle(
+MobileRT::Point3D(-1.0f, -1.0f, -1.0f),
+MobileRT::Point3D(1.0f, -1.0f, -1.0f),
+MobileRT::Point3D(1.0f, 1.0f, -1.0f)),lightGrayMat));*/
 
     // front wall - light blue
     const MobileRT::Material lightBlueMat(MobileRT::RGB(0.0f, 0.9f, 0.9f));
@@ -192,7 +196,7 @@ static MobileRT::Scene *cornellBoxScene2(void) noexcept {
             MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
 
     // sphere - mirror
-    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+   const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                        MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
             MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
@@ -297,7 +301,7 @@ static MobileRT::Scene *spheresScene2(void) noexcept {
     return &scene;
 }
 
-void thread_work(void *dstPixels, unsigned int numThreads) noexcept {
+void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
     unsigned int rep(2u);
     do {
         const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
@@ -358,15 +362,15 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        JNIEnv *,// env,
-        jobject,//this,
-        jint scene,
-        jint shader,
-        jint width,
-        jint height,
-        jint sampler,
-        jint samplesPixel,
-        jint samplesLight
+        const JNIEnv *,// env,
+        const jobject,//this,
+        const jint scene,
+        const jint shader,
+        const jint width,
+        const jint height,
+        const jint sampler,
+        const jint samplesPixel,
+        const jint samplesLight
 ) noexcept {
     working_ = IDLE;
     LOG("%s", "WORKING = IDLE");

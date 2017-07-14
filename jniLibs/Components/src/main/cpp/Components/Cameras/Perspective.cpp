@@ -2,9 +2,9 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Perspective.h"
+#include "Perspective.hpp"
 
-using namespace Components;
+using Components::Perspective;
 
 Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                          const float hFov, const float vFov) noexcept :
@@ -14,7 +14,7 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
         vFov_((vFov * PI) / 180.0f) {
 }
 
-Perspective::~Perspective(void) noexcept {
+Perspective::~Perspective() noexcept {
 }
 
 const Ray Perspective::generateRay(const float u, const float v,
