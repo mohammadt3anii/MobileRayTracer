@@ -2,8 +2,8 @@
 // Created by puscas on 06-03-2017.
 //
 
-#ifndef MOBILERAYTRACER_AXISALIGNEDBOUNDINGBOX_H
-#define MOBILERAYTRACER_AXISALIGNEDBOUNDINGBOX_H
+#ifndef MOBILERT_ACCELERATORS_AABB_HPP
+#define MOBILERT_ACCELERATORS_AABB_HPP
 
 #include "../Intersection.hpp"
 #include "../Material.hpp"
@@ -33,4 +33,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_AXISALIGNEDBOUNDINGBOX_H
+#endif //MOBILERT_ACCELERATORS_AABB_HPP

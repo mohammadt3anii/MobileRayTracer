@@ -2,8 +2,8 @@
 // Created by puscas on 20-02-2017.
 //
 
-#ifndef MOBILERAYTRACER_PATHTRACER_H
-#define MOBILERAYTRACER_PATHTRACER_H
+#ifndef COMPONENTS_SHADERS_PATHTRACER_HPP
+#define COMPONENTS_SHADERS_PATHTRACER_HPP
 
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Shader.hpp"
@@ -35,4 +35,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_PATHTRACER_H
+#endif //COMPONENTS_SHADERS_PATHTRACER_HPP

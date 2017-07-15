@@ -2,8 +2,8 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#ifndef MOBILERAYTRACER_SAMPLER_H
-#define MOBILERAYTRACER_SAMPLER_H
+#ifndef MOBILERT_SAMPLER_HPP
+#define MOBILERT_SAMPLER_HPP
 
 #include <atomic>
 
@@ -41,4 +41,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_SAMPLER_H
+#endif //MOBILERT_SAMPLER_HPP

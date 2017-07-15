@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_RGB_H
-#define MOBILERAYTRACER_RGB_H
+#ifndef MOBILERT_RGB_HPP
+#define MOBILERT_RGB_HPP
 
 #include <mutex>
 
@@ -63,4 +63,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_RGB_H
+#endif //MOBILERT_RGB_HPP

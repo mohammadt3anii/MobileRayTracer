@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SHADER_H
-#define MOBILERAYTRACER_SHADER_H
+#ifndef MOBILERT_SHADER_HPP
+#define MOBILERT_SHADER_HPP
 
 #include "Intersection.hpp"
 #include "RGB.hpp"
@@ -25,9 +25,9 @@ namespace MobileRT {
     public:
         explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;
 
-		Shader(const Shader &shader) noexcept = default;
+		Shader(const Shader &shader) noexcept = delete;
 
-		Shader(Shader &&shader) noexcept = default;
+		Shader(Shader &&shader) noexcept = delete;
 
         virtual ~Shader() noexcept = default;
 
@@ -43,4 +43,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_SHADER_H
+#endif //MOBILERT_SHADER_HPP

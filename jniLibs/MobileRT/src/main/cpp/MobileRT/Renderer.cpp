@@ -84,11 +84,10 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     RGB pixelRGB;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
-        for (;;)
-		{
-			float block (this->samplerCamera_.getSample(sample));
+        for (;;) {
+			const float block (this->samplerCamera_.getSample(sample));
             if (block >= 1.0f) {break;}
-			const auto pixel(std::lround(block * this->domainSize_) * this->blockSizeX_ % resolution_);
+			const auto pixel(static_cast<unsigned int>(static_cast<uint32_t>(::lroundf(block * this->domainSize_)) * this->blockSizeX_ % resolution_));
             // const auto pixel(
             //         static_cast<unsigned int> (block * this->domainSize_ + 0.5f) *
             //         this->blockSizeX_ % resolution_);

@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SCENE_H
-#define MOBILERAYTRACER_SCENE_H
+#ifndef MOBILERT_SCENE_HPP
+#define MOBILERT_SCENE_HPP
 
 #include "A/AABB.hpp"
 #include "Intersection.hpp"
@@ -48,4 +48,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_SCENE_H
+#endif //MOBILERT_SCENE_HPP

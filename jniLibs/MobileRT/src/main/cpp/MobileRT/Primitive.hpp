@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_PRIMITIVE_H
-#define MOBILERAYTRACER_PRIMITIVE_H
+#ifndef MOBILERT_PRIMITIVE_HPP
+#define MOBILERT_PRIMITIVE_HPP
 
 #include "Intersection.hpp"
 #include "Material.hpp"
@@ -24,9 +24,9 @@ namespace MobileRT {
     public:
         explicit Primitive(Shape *shape, Material material) noexcept;
 
-		Primitive(const Primitive &primitive) noexcept = default;
+		Primitive(const Primitive &primitive) noexcept = delete;
 
-		Primitive(Primitive &&primitive) noexcept = default;
+		Primitive(Primitive &&primitive) noexcept = delete;
 
         ~Primitive() noexcept;
 
@@ -40,4 +40,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_PRIMITIVE_H
+#endif //MOBILERT_PRIMITIVE_HPP

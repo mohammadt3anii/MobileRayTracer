@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SHAPE_H
-#define MOBILERAYTRACER_SHAPE_H
+#ifndef MOBILERT_SHAPES_SHAPE_HPP
+#define MOBILERT_SHAPES_SHAPE_HPP
 
 #include "../Intersection.hpp"
 #include "../Material.hpp"
@@ -14,9 +14,9 @@ namespace MobileRT {
     public:
 		Shape() noexcept = default;
 
-		Shape(const Shape &shape) noexcept = default;
+		Shape(const Shape &shape) noexcept = delete;
 
-		Shape(Shape &&shape) noexcept = default;
+		Shape(Shape &&shape) noexcept = delete;
 
 		Shape &operator=(const Shape &shape) const noexcept = delete;
 
@@ -37,4 +37,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_SHAPE_H
+#endif //MOBILERT_SHAPES_SHAPE_HPP

@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_VECTOR3D_H
-#define MOBILERAYTRACER_VECTOR3D_H
+#ifndef MOBILERT_VECTOR3D_HPP
+#define MOBILERT_VECTOR3D_HPP
 
 #include "Point3D.hpp"
 #include <cmath>
@@ -73,4 +73,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_VECTOR3D_H
+#endif //MOBILERT_VECTOR3D_HPP

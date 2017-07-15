@@ -2,8 +2,8 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#ifndef MOBILERAYTRACER_JITTERED_H
-#define MOBILERAYTRACER_JITTERED_H
+#ifndef COMPONENTS_SAMPLERS_HALTONSEQ_HPP
+#define COMPONENTS_SAMPLERS_HALTONSEQ_HPP
 
 #include "MobileRT/Sampler.hpp"
 #include <cmath>
@@ -25,4 +25,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_JITTERED_H
+#endif //COMPONENTS_SAMPLERS_HALTONSEQ_HPP

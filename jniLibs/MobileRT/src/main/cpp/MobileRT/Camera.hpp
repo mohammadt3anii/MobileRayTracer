@@ -2,8 +2,8 @@
 // Created by Tiago on 14/01/2017.
 //
 
-#ifndef MOBILERAYTRACER_CAMERA_H
-#define MOBILERAYTRACER_CAMERA_H
+#ifndef MOBILERT_CAMERA_HPP
+#define MOBILERT_CAMERA_HPP
 
 #include "Point3D.hpp"
 #include "Ray.hpp"
@@ -20,9 +20,9 @@ namespace MobileRT {
         explicit Camera(const Point3D &position,
                         const Point3D &lookAt, const Vector3D &up) noexcept;
 
-		Camera(const Camera &camera) noexcept = default;
+		Camera(const Camera &camera) noexcept = delete;
 
-		Camera(Camera &&camera) noexcept = default;
+		Camera(Camera &&camera) noexcept = delete;
 
         virtual ~Camera() noexcept = default;
 
@@ -36,4 +36,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_CAMERA_H
+#endif //MOBILERT_CAMERA_HPP

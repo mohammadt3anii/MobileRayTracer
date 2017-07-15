@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_RAY_H
-#define MOBILERAYTRACER_RAY_H
+#ifndef MOBILERT_RAY_HPP
+#define MOBILERT_RAY_HPP
 
 #include "Point3D.hpp"
 #include "Utils.hpp"
@@ -29,4 +29,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_RAY_H
+#endif //MOBILERT_RAY_HPP

@@ -162,6 +162,6 @@ class MainRenderer implements Renderer {
         GLES20.glUniform1i(textureUniform, 0);
 
         DrawView.initialize(3, 2, bitmap.getWidth(), bitmap.getHeight(), 0, 1, 1);
-        DrawView.renderIntoBitmap(bitmap, 16);
+        DrawView.renderIntoBitmap(bitmap, 4);
     }
 }

@@ -10,6 +10,7 @@ using MobileRT::Sampler;
 using MobileRT::Point3D;
 using MobileRT::Ray;
 using MobileRT::Intersection;
+using MobileRT::Triangle;
 
 AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
                      const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :

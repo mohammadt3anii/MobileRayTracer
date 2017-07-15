@@ -2,8 +2,8 @@
 // Created by Tiago on 19-04-2017.
 //
 
-#ifndef MOBILERAYTRACER_RANDOM_H
-#define MOBILERAYTRACER_RANDOM_H
+#ifndef COMPONENTS_SAMPLERS_RANDOM_HPP
+#define COMPONENTS_SAMPLERS_RANDOM_HPP
 
 #include "MobileRT/Sampler.hpp"
 #include <random>
@@ -18,4 +18,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_RANDOM_H
+#endif //COMPONENTS_SAMPLERS_RANDOM_HPP

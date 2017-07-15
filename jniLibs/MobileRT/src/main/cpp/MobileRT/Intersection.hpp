@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_INTERSECTION_H
-#define MOBILERAYTRACER_INTERSECTION_H
+#ifndef MOBILERT_INTERSECTION_HPP
+#define MOBILERT_INTERSECTION_HPP
 
 #include "Material.hpp"
 #include "Point3D.hpp"
@@ -34,4 +34,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_INTERSECTION_H
+#endif //MOBILERT_INTERSECTION_HPP

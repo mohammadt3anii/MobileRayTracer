@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_POINTLIGHT_H
-#define MOBILERAYTRACER_POINTLIGHT_H
+#ifndef COMPONENTS_LIGHTS_POINTLIGHT_HPP
+#define COMPONENTS_LIGHTS_POINTLIGHT_HPP
 
 #include "MobileRT/Light.hpp"
 
@@ -28,4 +28,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_POINTLIGHT_H
+#endif //COMPONENTS_LIGHTS_POINTLIGHT_HPP

@@ -2,8 +2,8 @@
 // Created by Tiago on 15-11-2016.
 //
 
-#ifndef MOBILERAYTRACER_TRIANGLE_H
-#define MOBILERAYTRACER_TRIANGLE_H
+#ifndef MOBILERT_SHAPES_TRIANGLE_HPP
+#define MOBILERT_SHAPES_TRIANGLE_HPP
 
 #include "Shape.hpp"
 #include "../Point3D.hpp"
@@ -36,4 +36,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_TRIANGLE_H
+#endif //MOBILERT_SHAPES_TRIANGLE_HPP

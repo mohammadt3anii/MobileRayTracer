@@ -2,10 +2,11 @@
 // Created by Tiago on 14-11-2016.
 //
 
-#ifndef MOBILERAYTRACER_UTILS
-#define MOBILERAYTRACER_UTILS
+#ifndef MOBILERT_UTILS_HPP
+#define MOBILERT_UTILS_HPP
 
 #include <cstring>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -34,7 +35,7 @@ void log(Args... args)
     std::ostringstream oss;
     MagicLog(oss, args...);
 	#ifdef NO_ANDROID
-		printf("%s\n", oss.str().c_str());
+		std::cout << oss.str() << std::endl;
 	#else
 		__android_log_print(ANDROID_LOG_INFO, "LOG", "%s\n", oss.str().c_str());
 	#endif
@@ -46,8 +47,11 @@ std::strrchr(__FILE__, '/') : __FILE__)
 #define LOG(msg,...) \
 {std::string filepath;\
 getFileName(filepath, __FILE__);\
-log(filepath,"::",__LINE__,"::",msg,__VA_ARGS__);}
+log(filepath,":",__LINE__,": ",msg,__VA_ARGS__);}
 
+#ifndef LOG
+	#define LOG(...)
+#endif
 
 inline void getFileName (std::string& str, const char *filepath) {
 	std::stringstream ss;
@@ -192,4 +196,4 @@ float fastArcTan(float value) noexcept;
 unsigned int roundDownToMultipleOf(unsigned int value,
                                    unsigned int multiple) noexcept;
 
-#endif //MOBILERAYTRACER_UTILS
+#endif //MOBILERT_UTILS_HPP

@@ -530,7 +530,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
     const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
-    const auto index(static_cast<uint64_t>(primitiveIndex));
+    const auto index(static_cast<uint32_t>(primitiveIndex));
     const MobileRT::Material material;
     const MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),

@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_SPHERE_H
-#define MOBILERAYTRACER_SPHERE_H
+#ifndef MOBILERT_SHAPES_SPHERE_HPP
+#define MOBILERT_SHAPES_SPHERE_HPP
 
 #include "Shape.hpp"
 
@@ -29,4 +29,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_SPHERE_H
+#endif //MOBILERT_SHAPES_SPHERE_HPP

@@ -2,8 +2,8 @@
 // Created by Tiago on 07-04-2017.
 //
 
-#ifndef MOBILERAYTRACER_CONSTANT_H
-#define MOBILERAYTRACER_CONSTANT_H
+#ifndef COMPONENTS_SAMPLERS_CONSTANT_HPP
+#define COMPONENTS_SAMPLERS_CONSTANT_HPP
 
 #include "MobileRT/Sampler.hpp"
 
@@ -19,4 +19,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_STRATIFIED_H
+#endif //COMPONENTS_SAMPLERS_CONSTANT_HPP

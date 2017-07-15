@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_POINT3D_H
-#define MOBILERAYTRACER_POINT3D_H
+#ifndef MOBILERT_POINT3D_HPP
+#define MOBILERT_POINT3D_HPP
 
 #include "Vector3D.hpp"
 
@@ -29,7 +29,7 @@ namespace MobileRT {
 
 		~Point3D() noexcept = default;
 
-        Point3D &operator=(const Point3D &point3D) noexcept = default;
+        Point3D &operator=(const Point3D &point3D) noexcept = delete;
 
 		Point3D &&operator=(Point3D &&point) const noexcept = delete;
 
@@ -41,4 +41,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_POINT3D_H
+#endif //MOBILERT_POINT3D_HPP

@@ -2,8 +2,8 @@
 // Created by Tiago on 14/01/2017.
 //
 
-#ifndef MOBILERAYTRACER_LIGHT_H
-#define MOBILERAYTRACER_LIGHT_H
+#ifndef MOBILERT_LIGHT_HPP
+#define MOBILERT_LIGHT_HPP
 
 #include "Intersection.hpp"
 #include "Point3D.hpp"
@@ -18,9 +18,9 @@ namespace MobileRT {
     public:
         explicit Light(Material radiance) noexcept;
 
-		Light(const Light &light) noexcept = default;
+		Light(const Light &light) noexcept = delete;
 
-		Light(Light &&light) noexcept = default;
+		Light(Light &&light) noexcept = delete;
 
         virtual ~Light() noexcept = default;
 
@@ -36,4 +36,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_LIGHT_H
+#endif //MOBILERT_LIGHT_HPP

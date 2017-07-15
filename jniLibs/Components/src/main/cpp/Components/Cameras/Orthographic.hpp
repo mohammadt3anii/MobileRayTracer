@@ -2,8 +2,8 @@
 // Created by Tiago on 22-Jun-17.
 //
 
-#ifndef MOBILERAYTRACER_ORTHOGRAPHIC_H
-#define MOBILERAYTRACER_ORTHOGRAPHIC_H
+#ifndef COMPONENTS_CAMERAS_ORTHOGRAPHIC_HPP
+#define COMPONENTS_CAMERAS_ORTHOGRAPHIC_HPP
 
 #include "MobileRT/Camera.hpp"
 
@@ -27,4 +27,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_ORTHOGRAPHIC_H
+#endif //COMPONENTS_CAMERAS_ORTHOGRAPHIC_HPP

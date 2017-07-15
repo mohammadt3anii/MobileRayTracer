@@ -1,24 +1,4 @@
-#include "Components/src/main/cpp/Components/Cameras/Orthographic.hpp"
-#include "Components/src/main/cpp/Components/Cameras/Perspective.hpp"
-#include "Components/src/main/cpp/Components/Lights/AreaLight.hpp"
-#include "Components/src/main/cpp/Components/Lights/PointLight.hpp"
-#include "Components/src/main/cpp/Components/Samplers/Constant.hpp"
-#include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
-#include "Components/src/main/cpp/Components/Samplers/Random.hpp"
-#include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
-#include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
-#include "Components/src/main/cpp/Components/Shaders/PathTracer.hpp"
-#include "Components/src/main/cpp/Components/Shaders/Whitted.hpp"
-#include "MobileRT/src/main/cpp/MobileRT/Renderer.hpp"
-#include "MobileRT/src/main/cpp/MobileRT/Scene.hpp"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Plane.hpp"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.hpp"
-#include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
-#include <cstdint>
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
-#include <iostream>
-#include <omp.h>
+#include "RayTracerMain.hpp"
 
 static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
@@ -41,7 +21,7 @@ static const unsigned int height_(900u);
 static unsigned int canvas[width_ * height_];
 static unsigned char buffer[width_ * height_ * 4u];//RGBA
 
-MobileRT::Scene *cornellBoxScene() {
+static MobileRT::Scene *cornellBoxScene() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -101,7 +81,7 @@ MobileRT::Scene *cornellBoxScene() {
     return &scene;
 }
 
-MobileRT::Scene *cornellBoxScene2() {
+static MobileRT::Scene *cornellBoxScene2() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
 
     const auto max(static_cast<uint64_t> (-1));
@@ -205,7 +185,7 @@ MobileRT::Scene *cornellBoxScene2() {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene() {
+static MobileRT::Scene *spheresScene() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -240,7 +220,7 @@ MobileRT::Scene *spheresScene() {
     return &scene;
 }
 
-MobileRT::Scene *spheresScene2() {
+static MobileRT::Scene *spheresScene2() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -409,7 +389,7 @@ int main(int argc, char **argv) {
     const double start(omp_get_wtime());
     try {
         do {
-            renderer_->renderFrame(canvas, threads);
+            renderer_->renderFrame(canvas, static_cast<unsigned int>(threads));
 			camera_->position_.x_ += 2.0f;
         } while (repeats-- > 1u);
     } catch (...) {
@@ -426,7 +406,7 @@ int main(int argc, char **argv) {
     delete shader_;
     delete renderer_;
     const double end(omp_get_wtime() - start);
-    LOG("Time in secs::", end);
+    std::cout << "Time in secs = " << end << std::endl;
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(canvas[j]);

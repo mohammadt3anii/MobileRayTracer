@@ -2,8 +2,8 @@
 // Created by Tiago on 09-Feb-17.
 //
 
-#ifndef MOBILERAYTRACER_RENDERER_H
-#define MOBILERAYTRACER_RENDERER_H
+#ifndef MOBILERT_RENDERER_HPP
+#define MOBILERT_RENDERER_HPP
 
 #include "Camera.hpp"
 #include "RGB.hpp"
@@ -63,4 +63,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_RENDERER_H
+#endif //MOBILERT_RENDERER_HPP

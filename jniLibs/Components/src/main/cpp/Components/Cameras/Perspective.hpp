@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_PERSPECTIVE_H
-#define MOBILERAYTRACER_PERSPECTIVE_H
+#ifndef COMPONENTS_CAMERAS_PERSPECTIVE_HPP
+#define COMPONENTS_CAMERAS_PERSPECTIVE_HPP
 
 #include "MobileRT/Camera.hpp"
 #include "MobileRT/Utils.hpp"
@@ -28,4 +28,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_PERSPECTIVE_H
+#endif //COMPONENTS_CAMERAS_PERSPECTIVE_HPP

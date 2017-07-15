@@ -2,8 +2,8 @@
 // Created by Tiago on 10-Jul-17.
 //
 
-#ifndef MOBILERAYTRACER_RECTANGLE_H
-#define MOBILERAYTRACER_RECTANGLE_H
+#ifndef MOBILERT_SHAPES_RECTANGLE_HPP
+#define MOBILERT_SHAPES_RECTANGLE_HPP
 
 #include "Shape.hpp"
 #include "../Point3D.hpp"
@@ -36,4 +36,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_RECTANGLE_H
+#endif //MOBILERT_SHAPES_RECTANGLE_HPP

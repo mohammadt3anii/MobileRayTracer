@@ -2,8 +2,8 @@
 // Created by puscas on 03-03-2017.
 //
 
-#ifndef MOBILERAYTRACER_AREALIGHT_H
-#define MOBILERAYTRACER_AREALIGHT_H
+#ifndef COMPONENTS_LIGHTS_AREALIGHT_HPP
+#define COMPONENTS_LIGHTS_AREALIGHT_HPP
 
 #include "MobileRT/Light.hpp"
 #include "MobileRT/Sampler.hpp"
@@ -36,4 +36,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_AREALIGHT_H
+#endif //COMPONENTS_LIGHTS_AREALIGHT_HPP

@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_MATERIAL_H
-#define MOBILERAYTRACER_MATERIAL_H
+#ifndef MOBILERT_MATERIAL_HPP
+#define MOBILERT_MATERIAL_HPP
 
 #include "RGB.hpp"
 
@@ -35,4 +35,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_MATERIAL_H
+#endif //MOBILERT_MATERIAL_HPP

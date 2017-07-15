@@ -2,8 +2,8 @@
 // Created by Tiago on 14/01/2017.
 //
 
-#ifndef MOBILERAYTRACER_REGULARGRID_H
-#define MOBILERAYTRACER_REGULARGRID_H
+#ifndef MOBILERT_ACCELERATORS_REGULARGRID_HPP
+#define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
 #include "AABB.hpp"
 #include "../Primitive.hpp"
@@ -28,4 +28,4 @@ namespace MobileRT {
     };
 }//namespace MobileRT
 
-#endif //MOBILERAYTRACER_REGULARGRID_H
+#endif //MOBILERT_ACCELERATORS_REGULARGRID_HPP

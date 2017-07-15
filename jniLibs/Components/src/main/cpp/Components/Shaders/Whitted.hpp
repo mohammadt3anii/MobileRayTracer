@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#ifndef MOBILERAYTRACER_WHITTED_H
-#define MOBILERAYTRACER_WHITTED_H
+#ifndef COMPONENTS_SHADERS_WHITTED_HPP
+#define COMPONENTS_SHADERS_WHITTED_HPP
 
 #include "MobileRT/Shader.hpp"
 
@@ -25,4 +25,4 @@ namespace Components {
     };
 }//namespace Components
 
-#endif //MOBILERAYTRACER_WHITTED_H
+#endif //COMPONENTS_SHADERS_WHITTED_HPP
