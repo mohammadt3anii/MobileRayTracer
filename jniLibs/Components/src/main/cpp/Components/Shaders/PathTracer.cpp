@@ -96,11 +96,11 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
 
             const float r1(2.0f * PI * samplerRay_.getSample(0u));
-            //const float r2(samplerRay_.getSample(0u));
-            //const float r1(0.4f);
-            const float r2(0.78f);
+            const float r2(samplerRay_.getSample(0u));
             const float r2s(std::sqrt(r2));
-            Vector3D u(std::fabs(intersection.normal_.x_) > 0.1f? Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) : Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_));
+            Vector3D u(std::fabs(intersection.normal_.x_) > 0.1f ?
+                       Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) :
+                       Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_));
             u.normalize();
             Vector3D aux(intersection.normal_.crossProduct(u));
             Vector3D direction((u * std::cos(r1) * r2s + aux * std::sin(r1) * r2s +
