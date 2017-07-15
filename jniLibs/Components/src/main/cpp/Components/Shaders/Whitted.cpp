@@ -70,7 +70,6 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
             rgb *= kD;
             rgb /= this->samplesLight_;
         }
-        // ambient light
     } // end direct + ambient
 
     // specular reflection
@@ -118,7 +117,7 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
         rgb.addMult(kT, LiT_RGB);
     }
 
-    rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
+	rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
 }
 
 void Whitted::resetSampling() noexcept {

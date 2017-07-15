@@ -11,9 +11,9 @@ namespace MobileRT {
     class RGB final {
     private:
         std::mutex mutex_;
-        unsigned int samples_{0u};
 
     public:
+		unsigned int samples_{0u};
         float R_{0.0f};
         float G_{0.0f};
         float B_{0.0f};
@@ -56,6 +56,8 @@ namespace MobileRT {
         void reset() noexcept;
 
         unsigned int RGB2Color() noexcept;
+
+		unsigned int RGB2Color2() noexcept;
 
         float getMax() noexcept;
 

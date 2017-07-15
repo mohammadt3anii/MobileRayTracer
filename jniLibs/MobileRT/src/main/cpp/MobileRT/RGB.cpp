@@ -7,29 +7,35 @@ using MobileRT::RGB;
 
 static unsigned int counter(0u);
 
-RGB::RGB() noexcept
+RGB::RGB() noexcept : samples_(0u)
 {
     counter++;
 }
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
+		samples_(0u),
         R_(r),
         G_(g),
-        B_(b) {
+        B_(b)
+{
     counter++;
 }
 
 RGB::RGB(const RGB &rgb) noexcept :
+		samples_(rgb.samples_),
         R_(rgb.R_),
         G_(rgb.G_),
-        B_(rgb.B_) {
+        B_(rgb.B_)
+{
     counter++;
 }
 
 RGB::RGB(RGB &&rgb) noexcept :
+		samples_(rgb.samples_),
         R_(rgb.R_),
         G_(rgb.G_),
-        B_(rgb.B_) {
+        B_(rgb.B_)
+{
     counter++;
 }
 
@@ -105,6 +111,13 @@ void RGB::reset() noexcept {
     this->samples_ = 0u;
 }
 
+unsigned int RGB::RGB2Color2() noexcept {
+    const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
+    const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
+    const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
+    return ((r*1000000) + (g*1000) + b);
+}
+
 unsigned int RGB::RGB2Color() noexcept {
     const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
@@ -119,7 +132,7 @@ unsigned int RGB::getInstances() noexcept {
 }
 
 float RGB::getMax() noexcept {
-    return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ :
-           this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ :
-           this->B_;
+    return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ / samples_:
+           this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ / samples_:
+           this->B_ / samples_;
 }

@@ -47,6 +47,25 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     }
 	threads.clear();
 
+	float max(-1.0f);
+	unsigned int ii(0u);
+	unsigned int jj(0u);
+	for (unsigned int i (0); i < this->height_; i++) {
+		for (unsigned int j (0); j < this->width_; j++) {
+			const unsigned int pixel (i*this->width_ + j);
+			const float pixelMax (this->accumulate_[pixel].getMax());
+			if (pixelMax > max) {
+				max = pixelMax;
+				ii = i;
+				jj = j;
+			}
+		}
+	}
+	const unsigned int pixel2 (ii*this->width_ + jj);
+	RGB& pixelRGB2 (this->accumulate_[pixel2]);
+	LOG("max = ", max, ", i = ", ii, ", j = ", jj);
+	LOG("r = ", pixelRGB2.R_, ", g = ", pixelRGB2.G_, ", b = ", pixelRGB2.B_, " , s = ", pixelRGB2.samples_, " , color = ", pixelRGB2.RGB2Color2());
+
     LOG("point3D = ", Point3D::getInstances());
     LOG("vector3D = ", Vector3D::getInstances());
     LOG("RGB = ", RGB::getInstances());
@@ -113,7 +132,10 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                 }
             }
         }
-        if (tid == 0u) {this->sample_ = sample + 1u;}
+        if (tid == 0u) {
+			this->sample_ = sample + 1u;
+			LOG("Samples terminados = ", this->sample_);
+		}
     }
 }
 
