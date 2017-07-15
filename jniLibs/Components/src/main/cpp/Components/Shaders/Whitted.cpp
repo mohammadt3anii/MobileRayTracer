@@ -8,6 +8,10 @@ using Components::Whitted;
 using MobileRT::Light;
 using MobileRT::Vector3D;
 using MobileRT::Point3D;
+using MobileRT::RGB;
+using MobileRT::Intersection;
+using MobileRT::Ray;
+using MobileRT::Scene;
 
 Whitted::Whitted(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {

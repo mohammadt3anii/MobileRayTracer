@@ -8,14 +8,19 @@ using Components::PathTracer;
 using MobileRT::Light;
 using MobileRT::Vector3D;
 using MobileRT::Point3D;
+using MobileRT::Sampler;
+using MobileRT::RGB;
+using MobileRT::Intersection;
+using MobileRT::Ray;
+using MobileRT::Scene;
 
 PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
                        const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight),
         samplerRay_(samplerRay),
         samplerLight_(samplerLight) {
-    LOG("sizeLights = %lu", uint64_t(scene_.lights_.size()));
-    LOG("samplesLight = %u", this->samplesLight_);
+    LOG("sizeLights = ", scene_.lights_.size());
+    LOG("samplesLight = ", this->samplesLight_);
 }
 
 //pag 28 slides Monte Carlo

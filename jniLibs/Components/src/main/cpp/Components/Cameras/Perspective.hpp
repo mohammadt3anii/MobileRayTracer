@@ -8,10 +8,10 @@
 #include "MobileRT/Camera.hpp"
 #include "MobileRT/Utils.hpp"
 
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
-using MobileRT::Ray;
 namespace Components {
+	using MobileRT::Point3D;
+	using MobileRT::Vector3D;
+	using MobileRT::Ray;
     class Perspective final : public MobileRT::Camera {
     private:
         const float hFov_;

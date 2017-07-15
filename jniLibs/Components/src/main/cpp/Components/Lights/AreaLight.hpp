@@ -10,12 +10,12 @@
 #include "MobileRT/Shapes/Triangle.hpp"
 #include "MobileRT/Utils.hpp"
 
-using MobileRT::Material;
-using MobileRT::Sampler;
-using MobileRT::Point3D;
-using MobileRT::Ray;
-using MobileRT::Intersection;
 namespace Components {
+	using MobileRT::Material;
+	using MobileRT::Sampler;
+	using MobileRT::Point3D;
+	using MobileRT::Ray;
+	using MobileRT::Intersection;
     class AreaLight final : public MobileRT::Light, public MobileRT::Triangle {
     private:
         Sampler &samplerPointLight_;

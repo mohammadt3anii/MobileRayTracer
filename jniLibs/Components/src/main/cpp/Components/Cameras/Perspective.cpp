@@ -5,6 +5,9 @@
 #include "Perspective.hpp"
 
 using Components::Perspective;
+using MobileRT::Point3D;
+using MobileRT::Vector3D;
+using MobileRT::Ray;
 
 Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                          const float hFov, const float vFov) noexcept :

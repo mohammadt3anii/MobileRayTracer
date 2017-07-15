@@ -6,7 +6,6 @@
 #define MOBILERAYTRACER_RANDOM_H
 
 #include "MobileRT/Sampler.hpp"
-#include <cstdlib>
 #include <random>
 
 namespace Components {

@@ -5,6 +5,10 @@
 #include "PointLight.hpp"
 
 using Components::PointLight;
+using MobileRT::Material;
+using MobileRT::Point3D;
+using MobileRT::Intersection;
+using MobileRT::Ray;
 
 PointLight::PointLight(const Material &radiance, const Point3D &position) noexcept :
         Light(radiance),

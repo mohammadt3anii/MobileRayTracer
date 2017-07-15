@@ -4,7 +4,6 @@
 default: all
 
 EXE := raytracer
-#CXX := c++
 CXX :=  clang++-5.0
 LD := $(CXX)
 MAKEFLAGS := -j5
@@ -15,11 +14,8 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 CXXFLAGS := -std=c++14 -Wpedantic -Wall -Wextra -MMD -pedantic -isystem /usr/include/c++/v1 ${SANITIZER} -Werror -ferror-limit=1
 #SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
 #CXXFLAGS += -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
-#CXXFLAGS := -std=c++14 -Wpedantic -Wall -Wextra -MMD -pedantic
-#CXXFLAGS += -Weffc++
 #CXXFLAGS += -march=native -ftree-vectorize -Ofast
 CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
-#CXXFLAGS += -Werror
 CXXFLAGS += -DNO_ANDROID $(INCLUDES)
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp -lc++
@@ -54,7 +50,14 @@ all: $(EXE)
 INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
 tidy:
 	clang-tidy-5.0 \
-	-checks='*,-*google-runtime-references*,-*llvm-header-guard*,-*cppcoreguidelines-pro-type-vararg*' \
+	-checks='*,-*google-runtime-references*,-*llvm-header-guard*' \
 	-analyze-temporary-dtors \
-	-p *.*pp ./MobileRT/src/main/cpp/*/*.*pp ./MobileRT/src/main/cpp/*/*/*.*pp ./Components/src/main/cpp/*/*/*.*pp \
+	-header-filter=*.*p \
+	-system-headers \
+	-p \
+	*.*p \
+	./MobileRT/src/main/cpp/*/*.*p \
+	./MobileRT/src/main/cpp/*/*/*.*p \
+	./Components/src/main/cpp/*/*/*.*p \
+	../app/src/main/cpp/*.*p \
 	-- -std=c++14 $(INCLUDES) -isystem /usr/include/c++/v1 > tidy.out

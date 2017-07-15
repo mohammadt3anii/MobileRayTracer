@@ -1,3 +1,6 @@
-/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:114:6: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
-                }
-     ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/Renderer.cpp:113:21: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+                    bitmap[yWidth + x] = pixelRGB.RGB2Color();
+                    ^
+/mnt/D/Android_Studio_Projects/MobileRayTracer/jniLibs/MobileRT/src/main/cpp/MobileRT/A/../Utils.hpp:39:3: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg]
+                __android_log_print(ANDROID_LOG_INFO, "LOG", "%s\n", oss.str().c_str());
+                ^

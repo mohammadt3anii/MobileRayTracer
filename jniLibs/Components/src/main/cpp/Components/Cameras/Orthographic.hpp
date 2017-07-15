@@ -7,10 +7,10 @@
 
 #include "MobileRT/Camera.hpp"
 
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
-using MobileRT::Ray;
 namespace Components {
+	using MobileRT::Point3D;
+	using MobileRT::Vector3D;
+	using MobileRT::Ray;
     class Orthographic final : public MobileRT::Camera {
     private:
         const float sizeH_;

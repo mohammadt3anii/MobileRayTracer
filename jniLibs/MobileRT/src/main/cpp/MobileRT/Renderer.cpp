@@ -26,7 +26,7 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
-    LOG("START - resolution = %u", resolution_);
+    LOG("START - resolution = ", resolution_);
     this->sample_ = 0u;
     const unsigned int size(this->width_ * this->height_);
     for (unsigned int i(0u); i < size; i++) {
@@ -47,14 +47,14 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     }
 	threads.clear();
 
-    LOG("point3D = %u", Point3D::getInstances());
-    LOG("vector3D = %u", Vector3D::getInstances());
-    LOG("RGB = %u", RGB::getInstances());
-    LOG("scene = %u", Scene::getInstances());
-    LOG("ray = %u", Ray::getInstances());
-    LOG("material = %u", Material::getInstances());
-    LOG("intersection = %u", Intersection::getInstances());
-    LOG("%s", "FINISH");
+    LOG("point3D = ", Point3D::getInstances());
+    LOG("vector3D = ", Vector3D::getInstances());
+    LOG("RGB = ", RGB::getInstances());
+    LOG("scene = ", Scene::getInstances());
+    LOG("ray = ", Ray::getInstances());
+    LOG("material = ", Material::getInstances());
+    LOG("intersection = ", Intersection::getInstances());
+    LOG("FINISH", "");
 }
 
 void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) noexcept {

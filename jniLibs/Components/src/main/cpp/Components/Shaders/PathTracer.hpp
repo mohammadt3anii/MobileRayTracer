@@ -10,12 +10,12 @@
 #include <iostream>
 #include <random>
 
-using MobileRT::Sampler;
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
 namespace Components {
+	using MobileRT::Sampler;
+	using MobileRT::RGB;
+	using MobileRT::Intersection;
+	using MobileRT::Ray;
+	using MobileRT::Scene;
     class PathTracer final : public MobileRT::Shader {
     private:
         Sampler &samplerRay_;

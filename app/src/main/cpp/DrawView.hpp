@@ -5,95 +5,94 @@
 #ifndef MOBILERAYTRACER_DRAWVIEW_H
 #define MOBILERAYTRACER_DRAWVIEW_H
 
-#include <thread>
-#include <android/bitmap.h>
-#include <android/log.h>
-
+#include "Components/Cameras/Orthographic.hpp"
+#include "Components/Cameras/Perspective.hpp"
+#include "Components/Lights/AreaLight.hpp"
+#include "Components/Lights/PointLight.hpp"
+#include "Components/Samplers/Constant.hpp"
+#include "Components/Samplers/HaltonSeq.hpp"
+#include "Components/Samplers/Random.hpp"
+#include "Components/Samplers/Stratified.hpp"
+#include "Components/Shaders/NoShadows.hpp"
+#include "Components/Shaders/PathTracer.hpp"
+#include "Components/Shaders/Whitted.hpp"
 #include "MobileRT/Renderer.hpp"
 #include "MobileRT/Scene.hpp"
 #include "MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/Shapes/Rectangle.hpp"
 #include "MobileRT/Shapes/Sphere.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
-#include "MobileRT/Shapes/Rectangle.hpp"
-#include "Components/Shaders/NoShadows.hpp"
-#include "Components/Shaders/Whitted.hpp"
-#include "Components/Shaders/PathTracer.hpp"
-#include "Components/Samplers/Constant.hpp"
-#include "Components/Samplers/Stratified.hpp"
-#include "Components/Samplers/HaltonSeq.hpp"
-#include "Components/Samplers/Random.hpp"
-#include "Components/Cameras/Orthographic.hpp"
-#include "Components/Cameras/Perspective.hpp"
-#include "Components/Lights/PointLight.hpp"
-#include "Components/Lights/AreaLight.hpp"
+#include <android/bitmap.h>
+#include <android/log.h>
+#include <thread>
 
-static void FPS(void) noexcept;
+static void FPS() noexcept;
 
-static MobileRT::Scene *cornellBoxScene(void) noexcept;
+static MobileRT::Scene *cornellBoxScene() noexcept;
 
-static MobileRT::Scene *cornellBoxScene2(void) noexcept;
+static MobileRT::Scene *cornellBoxScene2() noexcept;
 
-static MobileRT::Scene *spheresScene(void) noexcept;
+static MobileRT::Scene *spheresScene() noexcept;
 
-static MobileRT::Scene *spheresScene2(void) noexcept;
+static MobileRT::Scene *spheresScene2() noexcept;
 
-static void thread_work(void *dstPixels, const unsigned int numThreads) noexcept;
+static void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_isWorking(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        const JNIEnv *,// env,
-        const jobject,//this,
-        const jint scene,
-        const jint shader,
-        const jint width,
-        const jint height,
-        const jint sampler,
-        const jint samplesPixel,
-        const jint samplesLight
+        const JNIEnv *env,
+        jobject thiz,
+        jint scene,
+        jint shader,
+        jint width,
+        jint height,
+        jint sampler,
+        jint samplesPixel,
+        jint samplesLight
 ) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
-        jobject,//this,
+        jobject thiz,
         jobject dstBitmap,
         jint nThreads) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
-        jobject,//this,
+        jobject thiz,
         jobject dstBitmap) noexcept;
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
-        JNIEnv *,
-        jobject,
+        JNIEnv *env,
+        jobject thiz,
         jfloat jx,
         jfloat jy) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
-        JNIEnv *,
-        jobject,
+        JNIEnv *env,
+        jobject thiz,
         jfloat jx,
         jfloat jy,
         jint primitiveIndex
@@ -101,26 +100,26 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
-        JNIEnv *,
-        jobject
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_getTimeFrame(
-        JNIEnv *,
-        jobject
+int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
-        JNIEnv *,
-        jobject
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv *,
-        jobject,
+        JNIEnv *env,
+        jobject thiz,
         jint size
 ) noexcept;
 

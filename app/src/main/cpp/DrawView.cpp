@@ -29,9 +29,9 @@ static unsigned int blockSizeY_(0u);
 static unsigned int width_(0u);
 static unsigned int height_(0u);
 static float fps_(0.0f);
-static long long timeFrame_(0ll);
+static int64_t timeFrame_(0ll);
 
-static void FPS(void) noexcept {
+static void FPS() noexcept {
     static int frame(0);
     static std::chrono::steady_clock::time_point timebase_;
     frame++;
@@ -44,7 +44,7 @@ static void FPS(void) noexcept {
     }
 }
 
-static MobileRT::Scene *cornellBoxScene(void) noexcept {
+static MobileRT::Scene *cornellBoxScene() noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -111,17 +111,17 @@ static MobileRT::Scene *cornellBoxScene(void) noexcept {
     return &scene;
 }
 
-static MobileRT::Scene *cornellBoxScene2(void) noexcept {
+static MobileRT::Scene *cornellBoxScene2() noexcept {
     MobileRT::Scene &scene(*new MobileRT::Scene());
 
-    const unsigned long long int max(static_cast<unsigned long long int> (-1));
+    const auto max(static_cast<uint64_t> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
-    const unsigned long long int domainPointLight(/*roundUpPower2*/(
+    const uint64_t domainPointLight(
                                                                            (width_ * height_ *
                                                                             2llu) * 2llu *
                                                                            samplesLight_ *
                                                                            samplesPixel_ *
-                                                                           RAY_DEPTH_MAX));
+                                                                           RAY_DEPTH_MAX);
     LOG("domainPointLight = %llu", domainPointLight);
     LOG("width_ = %u", width_);
     LOG("height_ = %u", height_);
@@ -224,7 +224,7 @@ MobileRT::Point3D(1.0f, 1.0f, -1.0f)),lightGrayMat));*/
     return &scene;
 }
 
-static MobileRT::Scene *spheresScene(void) noexcept {
+static MobileRT::Scene *spheresScene() noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -259,7 +259,7 @@ static MobileRT::Scene *spheresScene(void) noexcept {
     return &scene;
 }
 
-static MobileRT::Scene *spheresScene2(void) noexcept {
+static MobileRT::Scene *spheresScene2() noexcept {
     MobileRT::Scene &scene = *new MobileRT::Scene();
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -320,8 +320,8 @@ void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv * /*env*/,
+        jobject /*thiz*/
 ) noexcept {
     thread_->join();
     delete thread_;
@@ -342,16 +342,16 @@ void Java_puscas_mobilertapp_DrawView_finish(
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_isWorking(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv * /*env*/,
+        jobject /*thiz*/
 ) noexcept {
     return working_;
 }
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
-        JNIEnv *,// env,
-        jobject//this
+        JNIEnv * /*env*/,
+        jobject /*thiz*/
 ) noexcept {
     working_ = STOPPED;
     LOG("%s", "WORKING = STOPPED");
@@ -362,8 +362,8 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        const JNIEnv *,// env,
-        const jobject,//this,
+        const JNIEnv * /*env*/,
+        jobject /*this*/,
         const jint scene,
         const jint shader,
         const jint width,
@@ -442,9 +442,9 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }
     samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
-    const unsigned long long int domainRay(
+    const uint64_t domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
-    const unsigned long long int domainLight(
+    const uint64_t domainLight(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
@@ -483,7 +483,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
-        jobject,//this,
+        jobject /*this*/,
         jobject dstBitmap,
         jint nThreads) noexcept {
     void *dstPixels;
@@ -497,7 +497,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
-        jobject,//this,
+        jobject /*this*/,
         jobject dstBitmap) noexcept {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
@@ -507,8 +507,8 @@ int Java_puscas_mobilertapp_DrawView_redraw(
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
-        JNIEnv *,
-        jobject,
+        JNIEnv * /*env*/,
+        jobject /*this*/,
         jfloat jx,
         jfloat jy) noexcept {
     const float u(static_cast<float> (jx) / width_);
@@ -521,8 +521,8 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
-        JNIEnv *,
-        jobject,
+        JNIEnv * /*env*/,
+        jobject /*this*/,
         jfloat jx,
         jfloat jy,
         jint primitiveIndex
@@ -530,7 +530,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
     const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
-    const unsigned long index(static_cast<unsigned long>(primitiveIndex));
+    const auto index(static_cast<uint64_t>(primitiveIndex));
     const MobileRT::Material material;
     const MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
@@ -542,32 +542,32 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
-        JNIEnv *,
-        jobject
+        JNIEnv * /*env*/,
+        jobject /*this*/
 ) noexcept {
     return fps_;
 }
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_getTimeFrame(
-        JNIEnv *,
-        jobject
+int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
+        JNIEnv * /*env*/,
+        jobject /*this*/
 ) noexcept {
     return timeFrame_;
 }
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
-        JNIEnv *,
-        jobject
+        JNIEnv * /*env*/,
+        jobject /*this*/
 ) noexcept {
     return renderer_->getSample();
 }
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv *,
-        jobject,
+        JNIEnv * /*env*/,
+        jobject /*this*/,
         jint size
 ) noexcept {
     return roundDownToMultipleOf(static_cast<unsigned int> (size), numberOfBlocks_);

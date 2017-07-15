@@ -8,6 +8,10 @@ using Components::NoShadows;
 using MobileRT::Light;
 using MobileRT::Point3D;
 using MobileRT::Vector3D;
+using MobileRT::RGB;
+using MobileRT::Intersection;
+using MobileRT::Ray;
+using MobileRT::Scene;
 
 NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) noexcept :
         Shader(scene, samplesLight) {

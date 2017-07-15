@@ -7,11 +7,11 @@
 
 #include "MobileRT/Shader.hpp"
 
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
 namespace Components {
+	using MobileRT::RGB;
+	using MobileRT::Intersection;
+	using MobileRT::Ray;
+	using MobileRT::Scene;
     class NoShadows final : public MobileRT::Shader {
     private:
         void shade(RGB &rgb,

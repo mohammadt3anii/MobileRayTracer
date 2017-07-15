@@ -105,14 +105,14 @@ MobileRT::Scene *cornellBoxScene2() {
     MobileRT::Scene &scene = *new MobileRT::Scene();
 
     const auto max(static_cast<uint64_t> (-1));
-    LOG("samplesLight = %u, max = %lu", samplesLight_, max);
+    LOG("samplesLight = ", samplesLight_, " max = ", max);
     const uint64_t domainPointLight(/*roundUpPower2*/(                            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
-    LOG("domainPointLight = %lu", domainPointLight);
-    LOG("width_ = %u", width_);
-    LOG("height_ = %u", height_);
-    LOG("samplesLight_ = %u", samplesLight_);
-    LOG("samplesPixel_ = %u", samplesPixel_);
-    LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
+    LOG("domainPointLight = ", domainPointLight);
+    LOG("width_ = ", width_);
+    LOG("height_ = ", height_);
+    LOG("samplesLight_ = ", samplesLight_);
+    LOG("samplesPixel_ = ", samplesPixel_);
+    LOG("RAY_DEPTH_MAX = ", RAY_DEPTH_MAX);
     //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1);
     samplerPointLight_ = new Components::Random(domainPointLight, 1);
 
@@ -308,8 +308,8 @@ int main(int argc, char **argv) {
     blockSizeY_ = height_ / blockSize_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
-    LOG("samplesPixel_ = %u", samplesPixel_);
-    LOG("samplesLight_ = %u", samplesLight_);
+    LOG("samplesPixel_ = ", samplesPixel_);
+    LOG("samplesLight_ = ", samplesLight_);
     switch (scene) {
         case 1:
             camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
@@ -378,7 +378,7 @@ int main(int argc, char **argv) {
             break;
 
         case 2:
-            LOG("domainRay = %lu, domainLight = %lu", domainRay, domainLight);
+            LOG("domainRay = ", domainRay, " domainLight = ", domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
             samplerRay_ = new Components::Random(domainRay, 1);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
@@ -401,11 +401,11 @@ int main(int argc, char **argv) {
     }
 
 
-    LOG("x = %d [%d]", blockSizeX_, width_);
-    LOG("y = %d [%d]", blockSizeY_, height_);
+    LOG("x = ", blockSizeX_, "[", width_, "]");
+    LOG("y = ", blockSizeY_, "[", height_, "]");
 
 
-    LOG("Threads = %u", threads);
+    LOG("Threads = ", threads);
     const double start(omp_get_wtime());
     try {
         do {
@@ -413,7 +413,7 @@ int main(int argc, char **argv) {
 			camera_->position_.x_ += 2.0f;
         } while (repeats-- > 1u);
     } catch (...) {
-        LOG("%s", "EXCEPTION");
+        LOG("EXCEPTION", "");
         raise(SIGTRAP);
     }
 	delete samplerCamera_;
@@ -426,7 +426,7 @@ int main(int argc, char **argv) {
     delete shader_;
     delete renderer_;
     const double end(omp_get_wtime() - start);
-    std::cout << "\nTime in secs::" << end << std::endl;
+    LOG("Time in secs::", end);
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(canvas[j]);
