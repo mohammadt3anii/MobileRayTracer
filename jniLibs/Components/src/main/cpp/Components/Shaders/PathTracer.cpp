@@ -26,16 +26,21 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 //pag 28 slides Monte Carlo
 void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
     const unsigned int rayDepth(ray.depth_);
+	static thread_local unsigned int max(RAY_DEPTH_MIN); 
     if (rayDepth > RAY_DEPTH_MAX || intersection.material_ == nullptr) {return;}
+	if (rayDepth > max) {max = rayDepth; LOG("rayDepth = ", rayDepth);}
 
     const RGB &Le(intersection.material_->Le_);
     if (Le.hasColor())//stop if it intersects a light source
     {
         //rgb.add(Le * scene_.lights_.size() * RAY_DEPTH_MAX);
         rgb.add(Le);
-        rgb /= rayDepth;
         return;
     }
+	RGB Ld;
+	RGB LiD;
+	RGB LiS;
+	RGB LiT;
 
     const RGB &kD(intersection.material_->Kd_);
     const RGB &kS(intersection.material_->Ks_);
@@ -43,7 +48,6 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
     thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
     thread_local static std::mt19937 gen(std::random_device{}());
-	//thread_local static std::mt19937 gen(0);
     static const float finish_probability(0.5f);
     static const float continue_probability(1.0f - finish_probability);
 
@@ -59,15 +63,15 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p -> Wr)
     if (kD.hasColor()) {
-        const uint64_t sizeLights(scene_.lights_.size() - 1ul);
+        const uint64_t sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
         Intersection intersectLight;
         //direct light
         for (unsigned int i(0u); i < samplesLight; i++) {
-            const float qrn(samplerLight_.getSample(0u));
+            const float randomNumber(samplerLight_.getSample(0u));
             //PDF = 1 / sizeLights
             const auto chosenLight(
-                    static_cast<unsigned int> ((qrn + 0.5f) * sizeLights));
+                    static_cast<unsigned int> ((randomNumber + 0.5f) * (sizeLights - 1ul)));
             Light &light(*scene_.lights_[chosenLight]);
             //calculates vector starting in intersection to the light
             const Point3D lightPosition(light.getPosition());
@@ -84,17 +88,16 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                 intersectLight.length_ = distanceToLight;
                 if (!scene_.shadowTrace(intersectLight, shadowRay)) {
                     //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
-                    rgb.addMult(light.radiance_.Le_, cosNormalLight);
+                    Ld.addMult(light.radiance_.Le_, cosNormalLight);
                 }
             }
         }
-        rgb *= kD;
-        rgb *= sizeLights + 1ul;
-        rgb /= samplesLight;
+        Ld *= kD;
+        //Ld *= sizeLights;
+        Ld /= samplesLight;
 
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
-
             const float r1(2.0f * PI * samplerRay_.getSample(0u));
             const float r2(samplerRay_.getSample(0u));
             const float r2s(std::sqrt(r2));
@@ -102,7 +105,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                        Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) :
                        Vector3D(1.0f, 0.0f, 0.0f).crossProduct(intersection.normal_));
             u.normalize();
-            Vector3D aux(intersection.normal_.crossProduct(u));
+            const Vector3D aux(intersection.normal_.crossProduct(u));
             Vector3D direction((u * std::cos(r1) * r2s + aux * std::sin(r1) * r2s +
                                 intersection.normal_ * std::sqrt(1.0f - r2)));
             direction.normalize();
@@ -111,90 +114,22 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
 
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
-
-            /*const float r1(samplerRay_.getSample(0u));
-            const float r2(samplerRay_.getSample(0u));
-            float localX(std::cos(2.0f * PI * r1) * std::sqrt(1.0f - r2));
-            float localZ(std::sin(2.0f * PI * r1) * std::sqrt(1.0f - r2));
-            float localY(std::sqrt(r2));
-            const float localMagnitude(
-                    std::sqrt(localX * localX + localY * localY + localZ * localZ));
-            localX /= localMagnitude;
-            localY /= localMagnitude;
-            localZ /= localMagnitude;
-
-            const Vector3D up(0.0f, 1.0f, 0.0f);
-            Vector3D u(intersection.normal_.crossProduct(up));
-            u.x_ = u.x_ == 0.0f && u.y_ == 0.0f && u.z_ == 0.0f ? 1.0f : u.x_;
-            const float cosTheta(up.dotProduct(intersection.normal_));
-            //const float cosTheta (1.0f);
-            float sinThetaSq(1.0f - cosTheta * cosTheta);
-            sinThetaSq = sinThetaSq < 0.0f ? sinThetaSq * -1.0f : sinThetaSq;
-            const float sinTheta(std::sqrt(sinThetaSq));
-            const float rotationMatrix[3][3]
-                    {
-                            {
-                                    cosTheta + u.x_ * u.x_ * (1.0f - cosTheta),
-                                    u.x_ * u.y_ * (1.0f - cosTheta) - u.z_ * sinTheta,
-                                    u.x_ * u.z_ * (1.0f - cosTheta) + u.y_ * sinTheta
-                            },
-
-                            {
-                                    u.y_ * u.x_ * (1.0f - cosTheta) + u.z_ * sinTheta,
-                                    cosTheta + u.y_ * u.y_ * (1.0f - cosTheta),
-                                    u.y_ * u.z_ * (1.0f - cosTheta) - u.x_ * sinTheta
-                            },
-
-                            {
-                                    u.z_ * u.x_ * (1.0f - cosTheta) - u.y_ * sinTheta,
-                                    u.z_ * u.y_ * (1.0f - cosTheta) + u.x_ * sinTheta,
-                                    cosTheta + u.z_ * u.z_ * (1.0f - cosTheta)
-                            }
-                    };
-
-            float globalX(localX * rotationMatrix[0][0] +
-                          localY * rotationMatrix[1][0] +
-                          localZ * rotationMatrix[2][0]);
-
-            float globalY(localX * rotationMatrix[0][1] +
-                          localY * rotationMatrix[1][1] +
-                          localZ * rotationMatrix[2][1]);
-
-            float globalZ(localX * rotationMatrix[0][2] +
-                          localY * rotationMatrix[1][2] +
-                          localZ * rotationMatrix[2][2]);
-
-            float globalMagnitude(std::sqrt(
-                    globalX * globalX + globalY * globalY + globalZ * globalZ));
-            globalX /= globalMagnitude;
-            globalY /= globalMagnitude;
-            globalZ /= globalMagnitude;
-
-            //secundaryRay -> origin =  intersection.point_, direction = global, depth = rayDepth+1
-            const Ray normalizedSecundaryRay(globalX, globalY, globalZ, intersection.point_,
-                                             rayDepth + 1u);*/
-            //secundaryIntersection = intersection
             Intersection secundaryIntersection;
-
             RGB LiD_RGB;
             rayTrace(LiD_RGB, normalizedSecundaryRay, secundaryIntersection);
+			//PDF = cos(theta) / PI
+			//cos (theta) = cos(dir, normal)
+			//PDF = cos(dir, normal) / PI
+			//LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
+			//LiD += kD * LiD_RGB * PI / continue_probability
+			//LiD.addMult(kD, LiD_RGB, PI);
+			LiD.addMult(kD, LiD_RGB);
+			if (rayDepth > RAY_DEPTH_MIN) {LiD /= continue_probability;}
 
-            //if it intersects a light source then LiD = 0
-            if (secundaryIntersection.material_ != nullptr &&
+            //if it has Ld and if LiD intersects a light source then LiD = 0
+            if (Ld.hasColor() && secundaryIntersection.material_ != nullptr &&
                 !secundaryIntersection.material_->Le_.hasColor()) {
-                //PDF = cos(theta) / PI
-                //cos (theta) = cos(dir, normal)
-                //PDF = cos(dir, normal) / PI
-                //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
-                //LiD += kD * LiD_RGB * PI / continue_probability
-
-                RGB LiD;
-                //LiD.addMult(kD, LiD_RGB, PI);
-                LiD.addMult(kD, LiD_RGB);
-                if (rayDepth > RAY_DEPTH_MIN) {LiD /= continue_probability;}
-                LiD /= rayDepth;
-
-                rgb.add(LiD);
+                LiD.reset();
             }
         }
     }
@@ -202,7 +137,6 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
     // specular reflection
     if (kS.hasColor()) {
         //PDF = 1 / 2 PI
-
         //reflectionDir = rayDirection - (2 * rayDirection . normal) * normal
         const Vector3D reflectionDir(
                 ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_));
@@ -211,13 +145,12 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         RGB LiS_RGB;
         Intersection specularInt;
         rayTrace(LiS_RGB, specularRay, specularInt);
-        rgb.addMult(kS, LiS_RGB);
+        LiS.addMult(kS, LiS_RGB);
     }
 
     // specular transmission
     if (kT.hasColor()) {
         //PDF = 1 / 2 PI
-
         Vector3D shadingNormalT(shadingNormal);
         float refractiveIndice(intersection.material_->refractiveIndice_);
         if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
@@ -241,8 +174,15 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         RGB LiT_RGB;
         Intersection transmissionInt;
         rayTrace(LiT_RGB, transmissionRay, transmissionInt);
-        rgb.addMult(kT, LiT_RGB);
+        LiT.addMult(kT, LiT_RGB);
     }
+	//if(Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
+	Ld /= rayDepth;
+	LiD /= rayDepth;
+	rgb.add(Ld);
+	rgb.add(LiD);
+	rgb.add(LiS);
+	rgb.add(LiT);
 }
 
 void PathTracer::resetSampling() noexcept {
