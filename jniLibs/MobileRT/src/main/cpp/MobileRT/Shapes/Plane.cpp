@@ -9,7 +9,7 @@ using MobileRT::Point3D;
 
 Plane::Plane(const Point3D &point, const Vector3D &normal) noexcept :
         point_(point),
-        normal_(normal.returnNormalized())
+        normal_(normal)
 {
 }
 
@@ -40,7 +40,7 @@ bool Plane::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Plane::moveTo(const float/*x*/, const float/*y*/) noexcept {
+void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {
 }
 
 float Plane::getZ() const noexcept {

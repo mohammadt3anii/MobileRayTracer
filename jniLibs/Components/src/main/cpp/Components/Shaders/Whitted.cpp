@@ -103,14 +103,13 @@ void Whitted::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) 
         const float cosTheta2(
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
         const Ray transmissionRay(cosTheta2 > 0.0f ? // refraction direction
-                                  //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
-                                  (ray.direction_ * refractiveIndice) +
-                                  (shadingNormalT * (refractiveIndice * cosTheta1 -
-                                                     (std::sqrt(cosTheta2)))) :
-                                  //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                                  ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
-                                  intersection.point_,
-                                  rayDepth + 1u);
+			//rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
+			(ray.direction_*refractiveIndice) +
+			(shadingNormalT*(refractiveIndice*cosTheta1-(std::sqrt(cosTheta2)))) :
+			//rayDir = (ray.d + N*(cost1 * 2)).norm();
+			ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+			intersection.point_,
+			rayDepth + 1u);
         RGB LiT_RGB;
         Intersection transmissionInt;
         rayTrace(LiT_RGB, transmissionRay, transmissionInt);

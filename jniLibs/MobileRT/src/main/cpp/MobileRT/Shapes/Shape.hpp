@@ -24,8 +24,8 @@ namespace MobileRT {
 
         virtual ~Shape() noexcept = default;
 
-        virtual bool intersect(Intersection &/*intersection*/,
-                               const Ray &/*ray*/, const Material &/*material*/) const noexcept = 0;
+        virtual bool intersect(Intersection & /*intersection*/,
+                               const Ray & /*ray*/, const Material & /*material*/) const noexcept = 0;
 
         virtual float getZ() const noexcept = 0;
 

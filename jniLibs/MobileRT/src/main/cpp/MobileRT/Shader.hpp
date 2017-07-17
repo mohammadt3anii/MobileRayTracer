@@ -20,7 +20,7 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB &/*rgb*/, const Intersection &/*intersection*/, const Ray &/*ray*/) const noexcept = 0;
+        virtual void shade(RGB & /*rgb*/, const Intersection & /*intersection*/, const Ray & /*ray*/) const noexcept = 0;
 
     public:
         explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;

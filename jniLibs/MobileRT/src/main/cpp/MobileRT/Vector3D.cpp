@@ -18,19 +18,19 @@ Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
     counter++;
 }
 
-Vector3D::Vector3D(const Vector3D &vector) noexcept :
-        x_(vector.x_),
-        y_(vector.y_),
-        z_(vector.z_),
-		magnitude_(magnitude())
-{
-    const float len(magnitude_);
-    const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
-    counter++;
-}
+// Vector3D::Vector3D(const Vector3D &vector) noexcept :
+//         x_(vector.x_),
+//         y_(vector.y_),
+//         z_(vector.z_),
+// 		magnitude_(magnitude())
+// {
+//     const float len(magnitude_);
+//     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
+//     this->x_ *= inv_length;
+//     this->y_ *= inv_length;
+//     this->z_ *= inv_length;
+//     counter++;
+// }
 
 Vector3D::Vector3D(const Vector3D &vector, const float value) noexcept :
         x_(vector.x_ * value),
@@ -65,7 +65,7 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig) noexcept :
     counter++;
 }
 
-Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool/*unused*/) noexcept :
+Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool /*normalize*/) noexcept :
         x_(dest.x_ - orig.x_),
         y_(dest.y_ - orig.y_),
         z_(dest.z_ - orig.z_),
@@ -95,10 +95,6 @@ float Vector3D::normalize() noexcept {
     this->y_ *= inv_length;
     this->z_ *= inv_length;
     return len;
-}
-
-const Vector3D Vector3D::returnNormalized() const noexcept {
-    return Vector3D(*this);
 }
 
 float Vector3D::dotProduct(const Vector3D &vector) const noexcept {

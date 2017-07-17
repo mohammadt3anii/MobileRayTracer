@@ -1,5 +1,5 @@
 .SUFFIXES:
-.PHONY: all clean tidy
+.PHONY: all clean tidy gtest
 .PRECIOUS: %.s
 default: all
 
@@ -32,7 +32,6 @@ endif
 SOURCES := $(shell find \
 ./Components/src \
 ./MobileRT/src \
-./RayTracerMain.* \
 ! -name "DrawView.cpp" -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
 DEPS := $(addsuffix .d,$(basename $(SOURCES)))
@@ -58,13 +57,13 @@ GARB := $(shell find \
 %.s: %.cpp
 	$(CXX) $(CXXFLAGS) -S $< -o $@
 
-$(EXE): $(OBJS)
-	$(LD) $(OBJS) -o $@ $(LDFLAGS)
-	@rm -f $(OBJS) $(DEPS) $(GARB)
+$(EXE): $(OBJS) RayTracerMain.o
+	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS)
+	@rm -f $(OBJS) $(DEPS) $(GARB) RayTracerMain.o RayTracerMain.s RayTracerMain.d
 	@echo "Compilation done"
 
 clean:
-	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(EXE) gtest
+	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s
 	@echo "Clean done"
 
 all: $(EXE)
@@ -72,17 +71,16 @@ all: $(EXE)
 INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
 tidy:
 	clang-tidy-5.0 \
-	-checks=\
-	'*,-*google-runtime-references*,-*llvm-header-guard*' \
 	-analyze-temporary-dtors \
-	-header-filter=*.*pp* \
+	-checks='*,-*google-runtime-references*,-*llvm-header-guard*' \
+	-header-filter=*.*pp \
 	-system-headers \
 	-p \
-	*.*pp* \
-	./MobileRT/src/main/cpp/*/*.*pp* \
-	./MobileRT/src/main/cpp/*/*/*.*pp* \
-	./Components/src/main/cpp/*/*/*.*pp* \
-	../app/src/main/cpp/*.*p* \
+	./*.*pp \
+	./MobileRT/src/main/cpp/*/*.*pp \
+	./MobileRT/src/main/cpp/*/*/*.*pp \
+	./Components/src/main/cpp/*/*/*.*pp \
+	../app/src/main/cpp/*.*pp \
 	-- -std=c++14 -isystem /usr/include/c++/v1 \
 	-I./MobileRT/src/main/cpp \
 	-I./Components/src/main/cpp \
@@ -90,12 +88,11 @@ tidy:
 	-I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include \
 	2>&1 | tee tidy.out
 
-
 GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -print)
 GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 %.gto: %.cpp
-	g++ -c $< -o $@
+	g++ -std=c++14 -c $< -o $@
 
-gtest: $(GTESTOBJS)
-	g++ $(GTESTOBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
+gtest: $(OBJS) $(GTESTOBJS)
+	g++ $(GTESTOBJS) $(OBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
 	@echo "Compilation Test Units done"

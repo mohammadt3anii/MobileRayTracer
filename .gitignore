@@ -7,7 +7,9 @@
 **/.fuse*
 **/.gradle
 **/raytracer
+**/gtest
 **/*.d
 **/*.o
 **/*.s
 **/*.out
+**/*.gto

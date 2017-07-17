@@ -6,11 +6,11 @@
 
 using MobileRT::RegularGrid;
 
-RegularGrid::RegularGrid(const float/*minX*/, const float/*maxX*/,
-                         const float/*minY*/, const float/*maxY*/,
-                         const float/*minZ*/, const float/*maxZ*/,
-                         const unsigned int/*numberOfBlocks*/,
-                         const std::vector<Primitive *>&/*primitives*/) {
+RegularGrid::RegularGrid(const float /*minX*/, const float /*maxX*/,
+                         const float /*minY*/, const float /*maxY*/,
+                         const float /*minZ*/, const float /*maxZ*/,
+                         const unsigned int /*numberOfBlocks*/,
+                         const std::vector<Primitive *>& /*primitives*/) {
     /*  loop boundingBoxes
      *      descobrir ponto min e max
      *      criar boundingBox

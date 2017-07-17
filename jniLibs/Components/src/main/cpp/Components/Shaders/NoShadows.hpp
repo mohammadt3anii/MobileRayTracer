@@ -16,7 +16,7 @@ namespace Components {
     private:
         void shade(RGB &rgb,
                            const Intersection &intersection,
-                           const Ray &/*ray*/) const noexcept final;
+                           const Ray & /*ray*/) const noexcept final;
 
     public:
         explicit NoShadows(Scene &scene, unsigned int samplesLight) noexcept;

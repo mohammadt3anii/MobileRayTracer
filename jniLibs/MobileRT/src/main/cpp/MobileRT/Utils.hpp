@@ -71,11 +71,11 @@ inline void getFileName (std::string& str, const char *filepath) {
 
 #define ASSERT(left, operator, right)\
 {\
-    if(!(left operator right))\
+    if(!((left) operator (right)))\
     {\
         std::cerr << FILENAME << "::line:" << __LINE__ << ": " << "ASSERT FAILED: "\
         << std::fixed << std::setprecision(7) << #left << #operator << #right << " @ "\
-        << #left << "=" << left << "; " << #right << "=" << right << std::endl;\
+        << #left << "=" << (left) << "; " << #right << "=" << (right) << std::endl;\
         raise(SIGTRAP);\
     }\
 }

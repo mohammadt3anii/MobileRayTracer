@@ -60,7 +60,7 @@ bool Triangle::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Triangle::moveTo(const float/*x*/, const float/*y*/) noexcept {
+void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
 }
 
 float Triangle::getZ() const noexcept {

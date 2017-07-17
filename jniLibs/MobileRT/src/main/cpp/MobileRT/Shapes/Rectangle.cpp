@@ -62,7 +62,7 @@ bool Rectangle::intersect(Intersection &intersection, const Ray &ray,
     return true;
 }
 
-void Rectangle::moveTo(const float/*x*/, const float/*y*/) noexcept {
+void Rectangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
 }
 
 float Rectangle::getZ() const noexcept {

@@ -37,7 +37,7 @@ namespace MobileRT {
 
         explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept;
 
-        Vector3D(const Vector3D &vector) noexcept;
+        Vector3D(const Vector3D &vector) noexcept = default;
 
 		Vector3D(Vector3D &&vector) noexcept = default;
 
@@ -60,8 +60,6 @@ namespace MobileRT {
         const Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
         void mult(float value) noexcept;
-
-        const Vector3D returnNormalized() const noexcept;
 
         const Vector3D operator*(float value) const noexcept;
 
