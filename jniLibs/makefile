@@ -5,20 +5,18 @@ default: all
 
 EXE := raytracer
 CXX := clang++
-CXX := g++
 LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
-
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror
 #SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
+
+CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
 CXXFLAGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-weak-vtables -Wno-shift-sign-overflow -Wno-unused-variable -Wno-global-constructors
 
 CXXFLAGS += -march=native -ftree-vectorize -Ofast
 #CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
-CXXFLAGS += -DNO_ANDROID $(INCLUDES)
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 LDFLAGS += $(SANITIZER)
@@ -96,8 +94,8 @@ tidy:
 GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -print)
 GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 %.gto: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	g++ -c $< -o $@
 
 gtest: $(GTESTOBJS)
-	$(LD) $(GTESTOBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
+	g++ $(GTESTOBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
 	@echo "Compilation Test Units done"
