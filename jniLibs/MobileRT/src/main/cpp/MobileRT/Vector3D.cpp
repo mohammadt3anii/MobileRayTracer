@@ -18,20 +18,6 @@ Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
     counter++;
 }
 
-// Vector3D::Vector3D(const Vector3D &vector) noexcept :
-//         x_(vector.x_),
-//         y_(vector.y_),
-//         z_(vector.z_),
-// 		magnitude_(magnitude())
-// {
-//     const float len(magnitude_);
-//     const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
-//     this->x_ *= inv_length;
-//     this->y_ *= inv_length;
-//     this->z_ *= inv_length;
-//     counter++;
-// }
-
 Vector3D::Vector3D(const Vector3D &vector, const float value) noexcept :
         x_(vector.x_ * value),
         y_(vector.y_ * value),
