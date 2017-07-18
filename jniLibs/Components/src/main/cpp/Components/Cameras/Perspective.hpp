@@ -17,6 +17,9 @@ namespace Components {
         const float hFov_;
         const float vFov_;
 
+	private:
+		float fastArcTan(float value) const noexcept;
+
     public:
         explicit Perspective(const Point3D &position,
                              const Point3D &lookAt, const Vector3D &up,

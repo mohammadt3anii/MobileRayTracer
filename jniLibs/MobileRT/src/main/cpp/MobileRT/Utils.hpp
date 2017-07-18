@@ -43,7 +43,7 @@ void log(Args... args)
 	#endif
 }
 
-#define FILENAME (std::strrchr(__FILE__, '/') != nullptr?\
+#define FILENAME (std::strrchr(__FILE__, '/') != nullptr ?\
 std::strrchr(__FILE__, '/') : __FILE__)
 
 #define LOG(msg,...) \
@@ -71,7 +71,7 @@ inline void getFileName (std::string& str, const char *filepath) {
 
 #define ASSERT(left, operator, right)\
 {\
-    if(!((left) operator (right)))\
+    if (!((left) operator (right)))\
     {\
         std::cerr << FILENAME << "::line:" << __LINE__ << ": " << "ASSERT FAILED: "\
         << std::fixed << std::setprecision(7) << #left << #operator << #right << " @ "\
@@ -87,8 +87,6 @@ inline void getFileName (std::string& str, const char *filepath) {
 #define PI              3.14159265358979323846f
 #define PI_4            0.78539816339744830962f
 #define VECT_PROJ_MIN   1.0e-3f // kEpsilon
-
-float fastArcTan(float value) noexcept;
 
 unsigned int roundDownToMultipleOf(unsigned int value,
                                    unsigned int multiple) noexcept;
