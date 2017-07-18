@@ -144,6 +144,6 @@ unsigned int Vector3D::getInstances() noexcept {
     return res;
 }
 
-Vector3D Vector3D::symmetric() const noexcept {
-    return Vector3D(-this->x_, -this->y_, -this->z_);
+Vector3D Vector3D::operator-() const noexcept {
+	return Vector3D(-this->x_, -this->y_, -this->z_);
 }

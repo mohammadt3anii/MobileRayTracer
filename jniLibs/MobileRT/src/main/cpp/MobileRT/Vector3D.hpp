@@ -63,7 +63,7 @@ namespace MobileRT {
 
         Vector3D operator*(float value) const noexcept;
 
-        Vector3D symmetric() const noexcept;
+        Vector3D operator-() const noexcept;
 
         float normalize() noexcept;
 
