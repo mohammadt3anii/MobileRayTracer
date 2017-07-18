@@ -56,7 +56,7 @@ float Sphere::getZ() const noexcept {
     return this->center_.z_;
 }
 
-const Point3D Sphere::getPositionMin() const noexcept {
+Point3D Sphere::getPositionMin() const noexcept {
     float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 
@@ -67,7 +67,7 @@ const Point3D Sphere::getPositionMin() const noexcept {
     return Point3D(x, y, z);
 }
 
-const Point3D Sphere::getPositionMax() const noexcept {
+Point3D Sphere::getPositionMax() const noexcept {
     float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 

@@ -67,7 +67,7 @@ float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-const Point3D Triangle::getPositionMin() const noexcept {
+Point3D Triangle::getPositionMin() const noexcept {
     float x, y, z;
 
     if (pointA_.x_ < pointB_.x_ && pointA_.x_ < pointC_.x_) {
@@ -103,7 +103,7 @@ const Point3D Triangle::getPositionMin() const noexcept {
     return Point3D(x, y, z);
 }
 
-const Point3D Triangle::getPositionMax() const noexcept {
+Point3D Triangle::getPositionMax() const noexcept {
     float x, y, z;
 
     if (pointA_.x_ > pointB_.x_ && pointA_.x_ > pointC_.x_) {

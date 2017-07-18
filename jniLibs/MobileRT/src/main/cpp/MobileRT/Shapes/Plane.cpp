@@ -47,10 +47,10 @@ float Plane::getZ() const noexcept {
     return 0.0f;
 }
 
-const Point3D Plane::getPositionMin() const noexcept {
+Point3D Plane::getPositionMin() const noexcept {
     return this->point_;
 }
 
-const Point3D Plane::getPositionMax() const noexcept {
+Point3D Plane::getPositionMax() const noexcept {
     return this->point_;
 }

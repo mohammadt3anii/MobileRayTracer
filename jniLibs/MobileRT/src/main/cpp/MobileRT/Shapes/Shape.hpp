@@ -31,9 +31,9 @@ namespace MobileRT {
 
         virtual void moveTo(float x, float y) noexcept = 0;
 
-        virtual const Point3D getPositionMin() const noexcept = 0;
+        virtual Point3D getPositionMin() const noexcept = 0;
 
-        virtual const Point3D getPositionMax() const noexcept = 0;
+        virtual Point3D getPositionMax() const noexcept = 0;
     };
 }//namespace MobileRT
 

@@ -69,7 +69,7 @@ float Rectangle::getZ() const noexcept {
     return 0.0f;
 }
 
-const Point3D Rectangle::getPositionMin() const noexcept {
+Point3D Rectangle::getPositionMin() const noexcept {
     float x, y, z;
 
     if (pointA_.x_ < pointB_.x_ && pointA_.x_ < pointC_.x_ && pointA_.x_ < pointD_.x_) {
@@ -114,7 +114,7 @@ const Point3D Rectangle::getPositionMin() const noexcept {
     return Point3D(x, y, z);
 }
 
-const Point3D Rectangle::getPositionMax() const noexcept {
+Point3D Rectangle::getPositionMax() const noexcept {
     float x, y, z;
 
     if (pointA_.x_ > pointB_.x_ && pointA_.x_ > pointC_.x_ && pointA_.x_ > pointD_.x_) {

@@ -23,9 +23,9 @@ namespace MobileRT {
 
         float getZ() const noexcept final;
 
-        const Point3D getPositionMin() const noexcept final;
+        Point3D getPositionMin() const noexcept final;
 
-        const Point3D getPositionMax() const noexcept final;
+        Point3D getPositionMax() const noexcept final;
     };
 }//namespace MobileRT
 
