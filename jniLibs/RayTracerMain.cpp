@@ -86,7 +86,7 @@ static MobileRT::Scene *cornellBoxScene2() {
 
     const auto max(static_cast<uint64_t> (-1));
     LOG("samplesLight = ", samplesLight_, " max = ", max);
-    const uint64_t domainPointLight(/*roundUpPower2*/(                            (width_ * height_ * 2llu) * 2llu * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    const uint64_t domainPointLight(/*roundUpPower2*/(                            (width_ * height_ * 2ull) * 2ull * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
     LOG("domainPointLight = ", domainPointLight);
     LOG("width_ = ", width_);
     LOG("height_ = ", height_);
@@ -326,7 +326,7 @@ int main(int argc, char **argv) {
     switch (sampler) {
         case 1:
             if (samplesPixel_ > 1u) {
-                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
+                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2ull * samplesPixel_,
                                                           1u);
             } else {
                 samplerPixel_ = new Components::Constant(0.5f);
@@ -337,7 +337,7 @@ int main(int argc, char **argv) {
 
         default:
             if (samplesPixel_ > 1u) {
-                samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
+                samplerPixel_ = new Components::Stratified(width_ * height_ * 2ull * samplesPixel_,
                                                            1u);
             } else {
                 samplerPixel_ = new Components::Constant(0.5f);
