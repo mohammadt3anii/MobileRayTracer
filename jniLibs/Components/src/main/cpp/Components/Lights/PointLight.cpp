@@ -15,7 +15,7 @@ PointLight::PointLight(const Material &radiance, const Point3D &position) noexce
         position_(position) {
 }
 
-const Point3D PointLight::getPosition() noexcept {
+Point3D PointLight::getPosition() noexcept {
     return this->position_;
 }
 

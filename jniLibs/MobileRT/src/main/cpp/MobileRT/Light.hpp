@@ -28,7 +28,7 @@ namespace MobileRT {
 
 		Light &&operator=(Light &&light) const noexcept = delete;
 
-        virtual const Point3D getPosition() noexcept = 0;
+        virtual Point3D getPosition() noexcept = 0;
 
         virtual void resetSampling() noexcept = 0;
 

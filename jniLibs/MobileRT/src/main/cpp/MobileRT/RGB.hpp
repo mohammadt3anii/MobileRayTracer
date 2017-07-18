@@ -43,7 +43,7 @@ namespace MobileRT {
 
         void addMult(const RGB &rgb1, const RGB &rgb2) noexcept;
 
-        const RGB operator*(float value) const noexcept;
+        RGB operator*(float value) const noexcept;
 
         void operator*=(const RGB &rgb) noexcept;
 

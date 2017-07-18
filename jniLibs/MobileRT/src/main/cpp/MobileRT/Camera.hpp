@@ -30,7 +30,7 @@ namespace MobileRT {
 
 		Camera &&operator=(Camera &&camera) const noexcept = delete;
 
-        virtual const Ray generateRay(float u, float v,
+        virtual Ray generateRay(float u, float v,
                                       float deviationU,
                                       float deviationV) const noexcept = 0;
     };

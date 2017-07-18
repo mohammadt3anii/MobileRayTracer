@@ -22,13 +22,13 @@ Point3D::Point3D(const Point3D &point, const Vector3D &vector, const float value
         z_(vector.z_ * value + point.z_) {
 }
 
-const Vector3D Point3D::operator-(const Point3D &point) const noexcept {
+Vector3D Point3D::operator-(const Point3D &point) const noexcept {
     return Vector3D(this->x_ - point.x_,
                     this->y_ - point.y_,
                     this->z_ - point.z_);
 }
 
-const Point3D Point3D::operator+(const Vector3D &vector) const noexcept {
+Point3D Point3D::operator+(const Vector3D &vector) const noexcept {
     return Point3D(this->x_ + vector.x_,
                    this->y_ + vector.y_,
                    this->z_ + vector.z_);

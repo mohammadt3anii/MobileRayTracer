@@ -101,7 +101,7 @@ float Vector3D::magnitude() const noexcept {
     return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
-const Vector3D Vector3D::crossProduct(const Vector3D &vector) const noexcept {
+Vector3D Vector3D::crossProduct(const Vector3D &vector) const noexcept {
     const float x(this->y_ * vector.z_ - this->z_ * vector.y_);
     const float y(this->z_ * vector.x_ - this->x_ * vector.z_);
     const float z(this->x_ * vector.y_ - this->y_ * vector.x_);
@@ -117,24 +117,24 @@ void Vector3D::mult(const float value) noexcept {
     this->z_ *= value;
 }
 
-const Vector3D Vector3D::operator*(const float value) const noexcept {
+Vector3D Vector3D::operator*(const float value) const noexcept {
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
-const Vector3D Vector3D::operator*(const float value) noexcept {
+Vector3D Vector3D::operator*(const float value) noexcept {
     return Vector3D(this->x_ * value,
                     this->y_ * value,
                     this->z_ * value);
 }
 
-const Point3D Vector3D::operator/(const float value) const noexcept {
+Point3D Vector3D::operator/(const float value) const noexcept {
     return Point3D(
             this->x_ / value,
             this->y_ / value,
             this->z_ / value);
 }
 
-const Vector3D Vector3D::operator+(const Vector3D &vector) const noexcept {
+Vector3D Vector3D::operator+(const Vector3D &vector) const noexcept {
     return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 
@@ -144,6 +144,6 @@ unsigned int Vector3D::getInstances() noexcept {
     return res;
 }
 
-const Vector3D Vector3D::symmetric() const noexcept {
+Vector3D Vector3D::symmetric() const noexcept {
     return Vector3D(-this->x_, -this->y_, -this->z_);
 }

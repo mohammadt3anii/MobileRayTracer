@@ -72,7 +72,7 @@ void RGB::operator*=(const RGB &rgb) noexcept {
     this->B_ *= rgb.B_;
 }
 
-const RGB RGB::operator*(const float value) const noexcept {
+RGB RGB::operator*(const float value) const noexcept {
     return RGB(this->R_ * value, this->G_ * value, this->B_ * value);
 }
 

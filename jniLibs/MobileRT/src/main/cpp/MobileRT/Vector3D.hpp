@@ -23,7 +23,7 @@ namespace MobileRT {
 
         float magnitude() const noexcept;
 
-        const Point3D operator/(float value) const noexcept;
+        Point3D operator/(float value) const noexcept;
 
     public:
         explicit Vector3D(float x, float y, float z) noexcept;
@@ -47,9 +47,9 @@ namespace MobileRT {
 
 		Vector3D &operator=(Vector3D &&vector) noexcept = default;
 
-        const Vector3D operator*(float value) noexcept;
+        Vector3D operator*(float value) noexcept;
 
-        const Vector3D operator+(const Vector3D &vector) const noexcept;
+        Vector3D operator+(const Vector3D &vector) const noexcept;
 
         float dotProduct(const Vector3D &vector) const noexcept;
 
@@ -57,13 +57,13 @@ namespace MobileRT {
 
         float squareMagnitude() const noexcept;
 
-        const Vector3D crossProduct(const Vector3D &vector) const noexcept;
+        Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
         void mult(float value) noexcept;
 
-        const Vector3D operator*(float value) const noexcept;
+        Vector3D operator*(float value) const noexcept;
 
-        const Vector3D symmetric() const noexcept;
+        Vector3D symmetric() const noexcept;
 
         float normalize() noexcept;
 

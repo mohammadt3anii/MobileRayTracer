@@ -19,7 +19,7 @@ namespace Components {
     public:
         explicit PointLight(const Material &radiance, const Point3D &position) noexcept;
 
-        const Point3D getPosition() noexcept final;
+        Point3D getPosition() noexcept final;
 
         void resetSampling() noexcept final;
 

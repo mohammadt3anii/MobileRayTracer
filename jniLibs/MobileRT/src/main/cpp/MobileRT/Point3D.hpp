@@ -33,9 +33,9 @@ namespace MobileRT {
 
 		Point3D &&operator=(Point3D &&point) const noexcept = delete;
 
-        const Vector3D operator-(const Point3D &point) const noexcept;
+        Vector3D operator-(const Point3D &point) const noexcept;
 
-        const Point3D operator+(const Vector3D &vector) const noexcept;
+        Point3D operator+(const Vector3D &vector) const noexcept;
 
         static unsigned int getInstances() noexcept;
     };

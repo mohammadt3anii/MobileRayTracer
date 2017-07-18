@@ -27,7 +27,7 @@ namespace Components {
                            const Point3D &pointB,
                            const Point3D &pointC) noexcept;
 
-        const Point3D getPosition() noexcept final;
+        Point3D getPosition() noexcept final;
 
         void resetSampling() noexcept final;
 
