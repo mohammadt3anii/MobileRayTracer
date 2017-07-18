@@ -31,8 +31,8 @@ namespace Components {
 
         void resetSampling() noexcept final;
 
-        bool
-        intersectL(Intersection &intersection, const Ray &ray) const noexcept final;
+		using MobileRT::Triangle::intersect;
+        bool intersect(Intersection &intersection, const Ray &ray) const noexcept final;
     };
 }//namespace Components
 

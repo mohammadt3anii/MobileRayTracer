@@ -33,7 +33,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
 
     for (unsigned int i(0u); i < lightsSize; i++) {
         const Light &light(*this->lights_[static_cast<uint32_t> (i)]);
-        if (light.intersectL(intersection, ray)) {
+        if (light.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }
     }

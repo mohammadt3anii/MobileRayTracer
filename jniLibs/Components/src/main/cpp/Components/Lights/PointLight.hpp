@@ -24,7 +24,7 @@ namespace Components {
         void resetSampling() noexcept final;
 
         bool
-        intersectL(Intersection &intersection, const Ray &ray) const noexcept final;
+        intersect(Intersection &intersection, const Ray &ray) const noexcept final;
     };
 }//namespace Components
 
