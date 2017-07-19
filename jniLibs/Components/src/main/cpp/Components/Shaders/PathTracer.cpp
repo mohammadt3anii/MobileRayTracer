@@ -24,7 +24,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, Intersection &&intersection, Ray &&ray) const noexcept
+void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
 	static thread_local unsigned int max(RAY_DEPTH_MIN); 

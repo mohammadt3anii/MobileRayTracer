@@ -17,7 +17,7 @@ Intersection Shader::rayTrace(RGB &rgb, Ray &&ray) const noexcept {
 	rgb.reset(); //pixel color without intersection
 	if (this->scene_.trace(intersection, ray) >= 0)
 	{
-		shade(rgb, std::move(intersection), std::move(ray)); // compute radiance
+		shade(rgb, intersection, std::move(ray)); // compute radiance
 	}
 	return intersection;
 }

@@ -23,7 +23,7 @@ namespace Components {
 
     private:
 			void shade(RGB &rgb,
-								 Intersection &&intersection,
+								 Intersection const &intersection,
 								 Ray &&ray) const noexcept final;
 
 		public:
