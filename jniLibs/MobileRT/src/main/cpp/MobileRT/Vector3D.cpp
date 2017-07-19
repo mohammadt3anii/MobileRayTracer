@@ -121,12 +121,6 @@ Vector3D Vector3D::operator*(const float value) const noexcept {
     return Vector3D(this->x_ * value, this->y_ * value, this->z_ * value);
 }
 
-Vector3D Vector3D::operator*(const float value) noexcept {
-    return Vector3D(this->x_ * value,
-                    this->y_ * value,
-                    this->z_ * value);
-}
-
 Point3D Vector3D::operator/(const float value) const noexcept {
     return Point3D(
             this->x_ / value,
