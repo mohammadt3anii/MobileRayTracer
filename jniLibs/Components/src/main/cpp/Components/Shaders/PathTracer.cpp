@@ -24,8 +24,9 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ray) const noexcept {
-    const unsigned int rayDepth(ray.depth_);
+void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) const noexcept
+{
+	const unsigned int rayDepth(ray.depth_);
 	static thread_local unsigned int max(RAY_DEPTH_MIN); 
     if (rayDepth > RAY_DEPTH_MAX || intersection.material_ == nullptr) {return;}
 	if (rayDepth > max) {max = rayDepth; LOG("rayDepth = ", rayDepth);}
@@ -109,14 +110,14 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
             Vector3D direction((u * std::cos(r1) * r2s + aux * std::sin(r1) * r2s +
                                 intersection.normal_ * std::sqrt(1.0f - r2)));
             direction.normalize();
-            const Ray normalizedSecundaryRay(direction, intersection.point_,
+            Ray normalizedSecundaryRay(direction, intersection.point_,
                                              rayDepth + 1u);
 
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
             Intersection secundaryIntersection;
             RGB LiD_RGB;
-            rayTrace(LiD_RGB, normalizedSecundaryRay, secundaryIntersection);
+            rayTrace(LiD_RGB, std::move(normalizedSecundaryRay), secundaryIntersection);
 			//PDF = cos(theta) / PI
 			//cos (theta) = cos(dir, normal)
 			//PDF = cos(dir, normal) / PI
@@ -131,7 +132,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                 !secundaryIntersection.material_->Le_.hasColor()) {
                 LiD.reset();
             }
-        }
+				}
     }
 
     // specular reflection
@@ -141,12 +142,12 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         const Vector3D reflectionDir(
                 ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_));
 
-        const Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
+        Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
         RGB LiS_RGB;
         Intersection specularInt;
-        rayTrace(LiS_RGB, specularRay, specularInt);
+        rayTrace(LiS_RGB, std::move(specularRay), specularInt);
         LiS.addMult(kS, LiS_RGB);
-    }
+		}
 
     // specular transmission
     if (kT.hasColor()) {
@@ -162,7 +163,7 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
         const float cosTheta1((shadingNormalT.dotProduct(ray.direction_)) * -1.0f);
         const float cosTheta2(
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
-        const Ray transmissionRay(cosTheta2 > 0.0f ? // refraction direction
+        Ray transmissionRay(cosTheta2 > 0.0f ? // refraction direction
                                   //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                                   (ray.direction_ * refractiveIndice) +
                                   (shadingNormalT * (refractiveIndice * cosTheta1 -
@@ -173,9 +174,9 @@ void PathTracer::shade(RGB &rgb, const Intersection &intersection, const Ray &ra
                                   rayDepth + 1u);
         RGB LiT_RGB;
         Intersection transmissionInt;
-        rayTrace(LiT_RGB, transmissionRay, transmissionInt);
+        rayTrace(LiT_RGB, std::move(transmissionRay), transmissionInt);
         LiT.addMult(kT, LiT_RGB);
-    }
+		}
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
 	Ld /= rayDepth;
 	LiD /= rayDepth;

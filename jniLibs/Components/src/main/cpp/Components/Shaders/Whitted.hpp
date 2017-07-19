@@ -14,11 +14,11 @@ namespace Components {
 	using MobileRT::Scene;
     class Whitted final : public MobileRT::Shader {
     private:
-        void shade(RGB &rgb,
-                           const Intersection &intersection,
-                           const Ray &ray) const noexcept final;
+			void shade(RGB &rgb,
+								 Intersection const &intersection,
+								 Ray &&ray) const noexcept final;
 
-    public:
+		public:
         explicit Whitted(Scene &scene, unsigned int samplesLight) noexcept;
 
 		Whitted(const Whitted &whitted) noexcept = delete;

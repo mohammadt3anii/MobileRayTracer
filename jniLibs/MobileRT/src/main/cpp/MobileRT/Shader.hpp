@@ -20,9 +20,9 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-        virtual void shade(RGB & /*rgb*/, const Intersection & /*intersection*/, const Ray & /*ray*/) const noexcept = 0;
+			virtual void shade(RGB & /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
 
-    public:
+		public:
         explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;
 
 		Shader(const Shader &shader) noexcept = delete;
@@ -35,7 +35,7 @@ namespace MobileRT {
 
 		Shader &operator=(Shader &&shader) noexcept = delete;
 
-        void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept;
+        void rayTrace(RGB &rgb, Ray &&ray, Intersection &intersection) const noexcept;
 
         int traceTouch(Intersection &intersection, const Ray &ray) const noexcept;
 

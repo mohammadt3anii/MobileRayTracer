@@ -11,10 +11,10 @@ Shader::Shader(Scene &scene, const unsigned int samplesLight) noexcept :
 }
 
 //ray trace and verifies if intersects primitives
-void Shader::rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept {
+void Shader::rayTrace(RGB &rgb, Ray &&ray, Intersection &intersection) const noexcept {
     rgb.reset();//pixel color without intersection
     if (this->scene_.trace(intersection, ray) >= 0) {
-        shade(rgb, intersection, ray);// compute radiance
+        shade(rgb, intersection, std::move(ray));// compute radiance
     }
 }
 

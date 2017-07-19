@@ -120,9 +120,9 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     const float r2(this->samplerPixel_.getSample(0u));
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
-                    const Ray &ray(this->camera_.generateRay(u, v, deviationU, deviationV));
+                    Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
                     intersection.length_ = RAY_LENGTH_MAX;
-                    this->shader_.rayTrace(pixelRGB, ray, intersection);
+                    this->shader_.rayTrace(pixelRGB, std::move(ray), intersection);
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
                     toneMapper(pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();

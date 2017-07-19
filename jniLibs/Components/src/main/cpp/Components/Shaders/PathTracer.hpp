@@ -22,11 +22,11 @@ namespace Components {
         Sampler &samplerLight_;
 
     private:
-        void shade(RGB &rgb,
-                           const Intersection &intersection,
-                           const Ray &ray) const noexcept final;
+			void shade(RGB &rgb,
+								 Intersection const &intersection,
+								 Ray &&ray) const noexcept final;
 
-    public:
+		public:
         explicit PathTracer(Scene &scene,
                             Sampler &samplerRay, Sampler &samplerLight,
                             unsigned int samplesLight) noexcept;

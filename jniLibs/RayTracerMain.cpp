@@ -281,8 +281,8 @@ int main(int argc, char **argv) {
     const int threads(atoi(argv[1]));
     const int sampler(0);
     const int samplesPixel(1);
-    const int samplesLight(1);
-    const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
+		const int samplesLight(1);
+		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
     blockSizeX_ = width_ / blockSize_;
     blockSizeY_ = height_ / blockSize_;

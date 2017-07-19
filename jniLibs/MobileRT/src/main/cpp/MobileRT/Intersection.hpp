@@ -32,15 +32,15 @@ namespace MobileRT {
 
 		Intersection &operator=(Intersection &&intersection) noexcept = delete;
 
-        void reset(const Point3D &orig, const Vector3D &dir, float dist,
-                   const Vector3D &normal,
-                   const Material &material) noexcept;
+		void reset(const Point3D &orig, const Vector3D &dir, float dist,
+							 const Vector3D &normal,
+							 const Material &material) noexcept;
 
-        void reset(const Point3D &orig, const Vector3D &dir, float dist,
-                   const Point3D &center,
-                   const Material &material) noexcept;
+		void reset(const Point3D &orig, const Vector3D &dir, float dist,
+							 const Point3D &center,
+							 const Material &material) noexcept;
 
-        static unsigned int getInstances() noexcept;
+		static unsigned int getInstances() noexcept;
     };
 }//namespace MobileRT
 
