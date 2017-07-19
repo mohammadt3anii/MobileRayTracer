@@ -38,7 +38,7 @@ namespace MobileRT {
 
         int trace(Intersection &intersection, const Ray &ray) const noexcept;
 
-        bool shadowTrace(Intersection &intersection, const Ray &ray) const noexcept;
+        bool shadowTrace(Intersection &intersection, Ray &&ray) const noexcept;
 
         static unsigned int getInstances() noexcept;
 

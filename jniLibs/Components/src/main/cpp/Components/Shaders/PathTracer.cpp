@@ -83,11 +83,11 @@ void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) c
             const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
             if (cosNormalLight > 0.0f) {
                 //shadow ray -> orig=intersection, dir=light
-                const Ray shadowRay(vectorToLight, intersection.point_, rayDepth);
+                Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
                 //intersection between shadow ray and the closest primitive
                 //if there are no primitives between intersection and the light
                 intersectLight.length_ = distanceToLight;
-                if (!scene_.shadowTrace(intersectLight, shadowRay)) {
+                if (!scene_.shadowTrace(intersectLight, std::move(shadowRay))) {
                     //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                     Ld.addMult(light.radiance_.Le_, cosNormalLight);
                 }

@@ -57,7 +57,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     return res;
 }
 
-bool Scene::shadowTrace(Intersection &intersection, const Ray &ray) const noexcept {
+bool Scene::shadowTrace(Intersection &intersection, Ray &&ray) const noexcept {
     for (const Primitive *primitive : this->primitives_)//trace shadow ray
     {
         if (primitive->intersect(intersection, ray)) {
