@@ -16,6 +16,16 @@ namespace MobileRT {
     public:
         explicit Plane(const Point3D &point, const Vector3D &normal) noexcept;
 
+		Plane(const Plane &plane) noexcept = delete;
+
+		Plane(Plane &&plane) noexcept = delete;
+
+		~Plane() noexcept final = default;
+
+        Plane &operator=(const Plane &plane) noexcept = delete;
+
+		Plane &operator=(Plane &&plane) noexcept = delete;
+
         bool intersect(Intersection &intersection, const Ray &ray,
                                const Material &material) const noexcept final;
 

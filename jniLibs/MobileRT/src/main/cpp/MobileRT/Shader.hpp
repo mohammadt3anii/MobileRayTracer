@@ -31,9 +31,9 @@ namespace MobileRT {
 
         virtual ~Shader() noexcept = default;
 
-		Shader &operator=(const Shader &shader) const noexcept = delete;
+		Shader &operator=(const Shader &shader) noexcept = delete;
 
-		Shader &&operator=(Shader &&shader) const noexcept = delete;
+		Shader &operator=(Shader &&shader) noexcept = delete;
 
         void rayTrace(RGB &rgb, const Ray &ray, Intersection &intersection) const noexcept;
 

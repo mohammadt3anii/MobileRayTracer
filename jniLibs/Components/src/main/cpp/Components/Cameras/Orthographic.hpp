@@ -21,6 +21,16 @@ namespace Components {
                               const Point3D &lookAt, const Vector3D &up,
                               float sizeH, float sizeV) noexcept;
 
+		Orthographic(const Orthographic &orthographic) noexcept = delete;
+
+		Orthographic(Orthographic &&orthographic) noexcept = delete;
+
+		~Orthographic() noexcept final = default;
+
+        Orthographic &operator=(const Orthographic &orthographic) noexcept = delete;
+
+		Orthographic &operator=(Orthographic &&orthographic) noexcept = delete;
+
         Ray generateRay(float u, float v,
                                       float deviationU,
                                       float deviationV) const noexcept final;

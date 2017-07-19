@@ -30,9 +30,9 @@ namespace MobileRT {
 
         ~Primitive() noexcept;
 
-		Primitive &operator=(const Primitive &primitive) const noexcept = delete;
+		Primitive &operator=(const Primitive &primitive) noexcept = delete;
 
-		Primitive &&operator=(Primitive &&primitive) const noexcept = delete;
+		Primitive &operator=(Primitive &&primitive) noexcept = delete;
 
         bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 

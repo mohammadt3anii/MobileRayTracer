@@ -25,6 +25,16 @@ namespace MobileRT {
         explicit Ray(const Vector3D &dir, const Point3D &origin,
                      unsigned int depth) noexcept;
 
+		Ray(const Ray &ray) noexcept = delete;
+
+		Ray(Ray &&ray) noexcept = default;
+
+        ~Ray() noexcept = default;
+
+		Ray &operator=(const Ray &ray) noexcept = delete;
+
+		Ray &operator=(Ray &&ray) noexcept = delete;
+
         static unsigned int getInstances() noexcept;
     };
 }//namespace MobileRT

@@ -31,6 +31,16 @@ namespace Components {
                             Sampler &samplerRay, Sampler &samplerLight,
                             unsigned int samplesLight) noexcept;
 
+		PathTracer(const PathTracer &pathTracer) noexcept = delete;
+
+		PathTracer(PathTracer &&pathTracer) noexcept = delete;
+
+		~PathTracer() noexcept final = default;
+
+        PathTracer &operator=(const PathTracer &pathTracer) noexcept = delete;
+
+		PathTracer &operator=(PathTracer &&pathTracer) noexcept = delete;
+
         void resetSampling() noexcept final;
     };
 }//namespace Components

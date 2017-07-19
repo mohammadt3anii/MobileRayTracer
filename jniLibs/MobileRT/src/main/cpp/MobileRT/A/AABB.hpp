@@ -28,6 +28,16 @@ namespace MobileRT {
         explicit AxisAlignedBoundingBox(const Point3D &pointMin,
                                         const Point3D &pointMax);
 
+		AxisAlignedBoundingBox(const AxisAlignedBoundingBox &axisAlignedBoundingBox) noexcept = delete;
+
+		AxisAlignedBoundingBox(AxisAlignedBoundingBox &&axisAlignedBoundingBox) noexcept = delete;
+
+		~AxisAlignedBoundingBox() noexcept = delete;
+
+        AxisAlignedBoundingBox &operator=(const AxisAlignedBoundingBox &axisAlignedBoundingBox) noexcept = delete;
+
+		AxisAlignedBoundingBox &operator=(AxisAlignedBoundingBox &&axisAlignedBoundingBox) noexcept = delete;
+
         bool intersect(Intersection &intersection, const Ray &ray,
                        const Material &material) const;
     };

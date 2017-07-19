@@ -24,6 +24,7 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
+	// this->point_ = orig + dir * dist;
     this->normal_ = normal;
     this->length_ = dist;
     this->material_ = &material;
@@ -38,6 +39,7 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
+	// this->point_ = orig + dir * dist;
     this->normal_ = Vector3D(this->point_, center, true);
     this->length_ = dist;
     this->material_ = &material;

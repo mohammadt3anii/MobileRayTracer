@@ -16,6 +16,16 @@ namespace MobileRT {
     public:
         explicit Sphere(const Point3D &center, float radius) noexcept;
 
+		Sphere(const Sphere &sphere) noexcept = delete;
+
+		Sphere(Sphere &&sphere) noexcept = delete;
+
+		~Sphere() noexcept final = default;
+
+        Sphere &operator=(const Sphere &sphere) noexcept = delete;
+
+		Sphere &operator=(Sphere &&sphere) noexcept = delete;
+
         bool intersect(Intersection &intersection, const Ray &ray,
                                const Material &material) const noexcept final;
 

@@ -21,6 +21,16 @@ namespace Components {
     public:
         explicit NoShadows(Scene &scene, unsigned int samplesLight) noexcept;
 
+		NoShadows(const NoShadows &noShadows) noexcept = delete;
+
+		NoShadows(NoShadows &&noShadows) noexcept = delete;
+
+		~NoShadows() noexcept final = default;
+
+        NoShadows &operator=(const NoShadows &noShadows) noexcept = delete;
+
+		NoShadows &operator=(NoShadows &&noShadows) noexcept = delete;
+
         void resetSampling() noexcept final;
     };
 }//namespace Components

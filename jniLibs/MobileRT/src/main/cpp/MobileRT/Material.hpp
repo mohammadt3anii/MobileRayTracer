@@ -31,6 +31,16 @@ namespace MobileRT {
         explicit Material(RGB Kd, RGB Ks, RGB Kt, RGB Le,
                           float refractiveIndice = 1.0f) noexcept;
 
+		Material(const Material &material) noexcept = default;
+
+		Material(Material &&material) noexcept = default;
+
+        ~Material() noexcept = default;
+
+		Material &operator=(const Material &material) noexcept = delete;
+
+		Material &operator=(Material &&material) noexcept = delete;
+
         static unsigned int getInstances() noexcept;
     };
 }//namespace MobileRT

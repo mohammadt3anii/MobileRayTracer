@@ -29,9 +29,9 @@ namespace MobileRT {
 
         virtual ~Sampler() noexcept = default;
 
-		Sampler &operator=(const Sampler &sampler) const noexcept = delete;
+		Sampler &operator=(const Sampler &sampler) noexcept = delete;
 
-		Sampler &&operator=(Sampler &&sampler) const noexcept = delete;
+		Sampler &operator=(Sampler &&sampler) noexcept = delete;
 
         void resetSampling() noexcept;
 

@@ -24,6 +24,16 @@ namespace MobileRT {
                              unsigned int numberOfBlocks,
                              const std::vector<Primitive *> &primitives);
 
+		RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
+
+		RegularGrid(RegularGrid &&regularGrid) noexcept = delete;
+
+		~RegularGrid() noexcept = delete;
+
+        RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = delete;
+
+		RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = delete;
+
         bool intersect(Intersection &intersection, Ray &ray);
     };
 }//namespace MobileRT

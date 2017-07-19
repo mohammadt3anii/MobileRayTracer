@@ -49,9 +49,9 @@ namespace MobileRT {
 
         ~Renderer() noexcept = default;
 
-		Renderer &operator=(const Renderer &renderer) const noexcept = delete;
+		Renderer &operator=(const Renderer &renderer) noexcept = delete;
 
-		Renderer &&operator=(Renderer &&renderer) const noexcept = delete;
+		Renderer &operator=(Renderer &&renderer) noexcept = delete;
 
         void renderFrame(unsigned int *bitmap, unsigned int numThreads) noexcept;
 

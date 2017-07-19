@@ -29,9 +29,9 @@ namespace MobileRT {
 
 		~RGB() noexcept = default;
 
-		RGB &operator=(const RGB &rgb) const noexcept = delete;
+		RGB &operator=(const RGB &rgb) noexcept = delete;
 
-		RGB &&operator=(RGB &&rgb) const noexcept = delete;
+		RGB &operator=(RGB &&rgb) noexcept = delete;
 
         bool hasColor() const noexcept;
 

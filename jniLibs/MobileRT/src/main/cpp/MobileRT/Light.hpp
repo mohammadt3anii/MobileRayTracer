@@ -24,9 +24,9 @@ namespace MobileRT {
 
         virtual ~Light() noexcept = default;
 
-		Light &operator=(const Light &light) const noexcept = delete;
+		Light &operator=(const Light &light) noexcept = delete;
 
-		Light &&operator=(Light &&light) const noexcept = delete;
+		Light &operator=(Light &&light) noexcept = delete;
 
         virtual Point3D getPosition() noexcept = 0;
 

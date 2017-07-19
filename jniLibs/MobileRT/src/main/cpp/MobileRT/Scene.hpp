@@ -32,9 +32,9 @@ namespace MobileRT {
 
         ~Scene() noexcept;
 
-		Scene &operator=(const Scene &scene) const noexcept = delete;
+		Scene &operator=(const Scene &scene) noexcept = delete;
 
-		Scene &&operator=(Scene &&scene) const noexcept = delete;
+		Scene &operator=(Scene &&scene) noexcept = delete;
 
         int trace(Intersection &intersection, const Ray &ray) const noexcept;
 

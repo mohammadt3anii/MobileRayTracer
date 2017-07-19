@@ -23,6 +23,16 @@ namespace MobileRT {
     public:
         explicit Rectangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept;
 
+		Rectangle(const Rectangle &rectangle) noexcept = delete;
+
+		Rectangle(Rectangle &&rectangle) noexcept = delete;
+
+		~Rectangle() noexcept final = default;
+
+        Rectangle &operator=(const Rectangle &rectangle) noexcept = delete;
+
+		Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
+
         bool intersect(Intersection &intersection, const Ray &ray,
                                const Material &material) const noexcept final;
 

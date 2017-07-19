@@ -17,6 +17,16 @@ namespace Components {
         explicit HaltonSeq(uint64_t domainSize,
                            unsigned int samples) noexcept;
 
+		HaltonSeq(const HaltonSeq &haltonSeq) noexcept = delete;
+
+		HaltonSeq(HaltonSeq &&haltonSeq) noexcept = delete;
+
+		~HaltonSeq() noexcept final = default;
+
+        HaltonSeq &operator=(const HaltonSeq &haltonSeq) noexcept = delete;
+
+		HaltonSeq &operator=(HaltonSeq &&haltonSeq) noexcept = delete;
+
         explicit HaltonSeq(unsigned int width, unsigned int height,
                            unsigned int samples,
                            unsigned int blockSizeX, unsigned int blockSizeY) noexcept;

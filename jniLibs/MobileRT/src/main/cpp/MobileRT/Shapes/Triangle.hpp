@@ -23,6 +23,16 @@ namespace MobileRT {
         explicit Triangle(const Point3D &pointA, const Point3D &pointB,
                           const Point3D &pointC) noexcept;
 
+		Triangle(const Triangle &triangle) noexcept = delete;
+
+		Triangle(Triangle &&triangle) noexcept = delete;
+
+		~Triangle() noexcept override = default;
+
+        Triangle &operator=(const Triangle &triangle) noexcept = delete;
+
+		Triangle &operator=(Triangle &&triangle) noexcept = delete;
+
         bool intersect(Intersection &intersection, const Ray &ray,
                                const Material &material) const noexcept final;
 

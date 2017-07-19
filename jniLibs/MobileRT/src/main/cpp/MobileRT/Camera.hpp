@@ -26,9 +26,9 @@ namespace MobileRT {
 
         virtual ~Camera() noexcept = default;
 
-		Camera &operator=(const Camera &camera) const noexcept = delete;
+		Camera &operator=(const Camera &camera) noexcept = delete;
 
-		Camera &&operator=(Camera &&camera) const noexcept = delete;
+		Camera &operator=(Camera &&camera) noexcept = delete;
 
         virtual Ray generateRay(float u, float v,
                                       float deviationU,

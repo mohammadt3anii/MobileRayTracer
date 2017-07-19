@@ -17,6 +17,16 @@ namespace Components {
                             unsigned int samples,
                             unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
 
+		Stratified(const Stratified &stratified) noexcept = delete;
+
+		Stratified(Stratified &&stratified) noexcept = delete;
+
+		~Stratified() noexcept final = default;
+
+        Stratified &operator=(const Stratified &stratified) noexcept = delete;
+
+		Stratified &operator=(Stratified &&stratified) noexcept = delete;
+
         float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components

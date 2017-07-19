@@ -15,6 +15,16 @@ namespace Components {
     public:
         explicit Constant(float value) noexcept;
 
+		Constant(const Constant &constant) noexcept = delete;
+
+		Constant(Constant &&constant) noexcept = delete;
+
+		~Constant() noexcept final = default;
+
+        Constant &operator=(const Constant &constant) noexcept = delete;
+
+		Constant &operator=(Constant &&constant) noexcept = delete;
+
         float getSample(unsigned int sample) noexcept final;
     };
 }//namespace Components
