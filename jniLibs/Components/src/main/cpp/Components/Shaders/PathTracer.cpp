@@ -24,7 +24,7 @@ PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
 }
 
 //pag 28 slides Monte Carlo
-void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) const noexcept
+void PathTracer::shade(RGB &rgb, Intersection &&intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
 	static thread_local unsigned int max(RAY_DEPTH_MIN); 
@@ -115,17 +115,18 @@ void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) c
 
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
-            Intersection secundaryIntersection;
             RGB LiD_RGB;
-            rayTrace(LiD_RGB, std::move(normalizedSecundaryRay), secundaryIntersection);
-			//PDF = cos(theta) / PI
-			//cos (theta) = cos(dir, normal)
-			//PDF = cos(dir, normal) / PI
-			//LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
-			//LiD += kD * LiD_RGB * PI / continue_probability
-			//LiD.addMult(kD, LiD_RGB, PI);
-			LiD.addMult(kD, LiD_RGB);
-			if (rayDepth > RAY_DEPTH_MIN) {LiD /= continue_probability;}
+						Intersection secundaryIntersection(rayTrace(LiD_RGB, std::move(normalizedSecundaryRay)));
+						//PDF = cos(theta) / PI
+						//cos (theta) = cos(dir, normal)
+						//PDF = cos(dir, normal) / PI
+						//LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
+						//LiD += kD * LiD_RGB * PI / continue_probability
+						//LiD.addMult(kD, LiD_RGB, PI);
+						LiD.addMult(kD, LiD_RGB);
+						if (rayDepth > RAY_DEPTH_MIN)
+						{
+							LiD /= continue_probability;}
 
             //if it has Ld and if LiD intersects a light source then LiD = 0
             if (Ld.hasColor() && secundaryIntersection.material_ != nullptr &&
@@ -144,8 +145,7 @@ void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) c
 
         Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
         RGB LiS_RGB;
-        Intersection specularInt;
-        rayTrace(LiS_RGB, std::move(specularRay), specularInt);
+        rayTrace(LiS_RGB, std::move(specularRay));
         LiS.addMult(kS, LiS_RGB);
 		}
 
@@ -173,8 +173,7 @@ void PathTracer::shade(RGB &rgb, Intersection const  &intersection, Ray &&ray) c
                                   intersection.point_,
                                   rayDepth + 1u);
         RGB LiT_RGB;
-        Intersection transmissionInt;
-        rayTrace(LiT_RGB, std::move(transmissionRay), transmissionInt);
+        rayTrace(LiT_RGB, std::move(transmissionRay));
         LiT.addMult(kT, LiT_RGB);
 		}
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}

@@ -24,9 +24,9 @@ namespace MobileRT {
 
 		Intersection(const Intersection &intersection) noexcept = delete;
 
-		Intersection(Intersection &&intersection) noexcept = delete;
+		Intersection(Intersection &&intersection) noexcept = default;
 
-        ~Intersection() noexcept = default;
+		~Intersection() noexcept = default;
 
 		Intersection &operator=(const Intersection &intersection) noexcept = delete;
 
