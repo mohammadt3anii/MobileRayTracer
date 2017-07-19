@@ -275,13 +275,13 @@ static bool check_escape(GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*u
 }
 
 int main(int argc, char **argv) {
-    unsigned int repeats(1);
-    const int scene(3);
-    const int shader(2);
+    int repeats(atoi(argv[4]));
+    const int scene(atoi(argv[3]));
+    const int shader(atoi(argv[2]));
     const int threads(atoi(argv[1]));
     const int sampler(0);
-    const int samplesPixel(1);
-		const int samplesLight(1);
+    const int samplesPixel(atoi(argv[5]));
+		const int samplesLight(atoi(argv[6]));
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 
     blockSizeX_ = width_ / blockSize_;
@@ -391,7 +391,7 @@ int main(int argc, char **argv) {
         do {
             renderer_->renderFrame(canvas, static_cast<unsigned int>(threads));
 			camera_->position_.x_ += 2.0f;
-        } while (repeats-- > 1u);
+        } while (repeats-- > 1);
     } catch (...) {
         LOG("EXCEPTION", "");
         raise(SIGTRAP);
