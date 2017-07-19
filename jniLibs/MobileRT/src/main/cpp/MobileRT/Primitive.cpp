@@ -8,8 +8,8 @@ using MobileRT::Primitive;
 
 static unsigned int counter(0u);
 
-Primitive::Primitive(Shape *shape, Material material) noexcept :
-        material_(std::move(material)),
+Primitive::Primitive(Shape *shape, Material const &material) noexcept :
+        material_(material),
         shape_(shape) {
     counter++;
 }

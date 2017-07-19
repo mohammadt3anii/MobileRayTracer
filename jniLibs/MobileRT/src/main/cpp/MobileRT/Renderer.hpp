@@ -55,7 +55,7 @@ namespace MobileRT {
 
         void renderFrame(unsigned int *bitmap, unsigned int numThreads) noexcept;
 
-        void registerToneMapper(std::function<float(float value)> toneMapper) noexcept;
+        void registerToneMapper(std::function<float(float value)> const &toneMapper) noexcept;
 
         void stopRender() noexcept;
 

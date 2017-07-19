@@ -22,7 +22,7 @@ namespace MobileRT {
         Shape *const shape_;
 
     public:
-        explicit Primitive(Shape *shape, Material material) noexcept;
+        explicit Primitive(Shape *shape, Material const &material) noexcept;
 
 		Primitive(const Primitive &primitive) noexcept = delete;
 

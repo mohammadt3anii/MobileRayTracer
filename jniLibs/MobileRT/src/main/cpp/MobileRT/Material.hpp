@@ -33,7 +33,7 @@ namespace MobileRT {
 
 		Material(const Material &material) noexcept = default;
 
-		Material(Material &&material) noexcept = default;
+		Material(Material &&material) noexcept = delete;
 
         ~Material() noexcept = default;
 

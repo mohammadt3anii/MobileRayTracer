@@ -76,8 +76,8 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("FINISH", "");
 }
 
-void Renderer::registerToneMapper(std::function<float(const float)> toneMapper) noexcept {
-    toneMapper_ = std::move(toneMapper);
+void Renderer::registerToneMapper(std::function<float(const float)> const &toneMapper) noexcept {
+    toneMapper_ = toneMapper;
 }
 
 void Renderer::stopRender() noexcept {
