@@ -6,7 +6,6 @@
 #define COMPONENTS_CAMERAS_PERSPECTIVE_HPP
 
 #include "MobileRT/Camera.hpp"
-#include "MobileRT/Utils.hpp"
 
 namespace Components {
 	using MobileRT::Point3D;

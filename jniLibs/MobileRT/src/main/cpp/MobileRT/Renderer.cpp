@@ -90,6 +90,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     const float pixelHeight(0.5f / this->height_);
     const auto samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     RGB pixelRGB;
+		Intersection intersection;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
         for (;;) {
@@ -111,7 +112,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
                     Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
 										pixelRGB.reset(); //pixel color without intersection
-                    this->shader_.rayTrace(pixelRGB, std::move(ray));
+										intersection.length_ = RAY_LENGTH_MAX;
+                    this->shader_.rayTrace(pixelRGB, intersection, std::move(ray));
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }

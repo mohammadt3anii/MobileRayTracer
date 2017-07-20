@@ -116,7 +116,8 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
             RGB LiD_RGB;
-						Intersection secundaryIntersection(rayTrace(LiD_RGB, std::move(normalizedSecundaryRay)));
+						Intersection secundaryIntersection;
+						rayTrace(LiD_RGB, secundaryIntersection, std::move(normalizedSecundaryRay));
 						//PDF = cos(theta) / PI
 						//cos (theta) = cos(dir, normal)
 						//PDF = cos(dir, normal) / PI
@@ -145,7 +146,8 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
 
         Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
         RGB LiS_RGB;
-        rayTrace(LiS_RGB, std::move(specularRay));
+				Intersection specularInt;
+        rayTrace(LiS_RGB, std::move(specularInt), std::move(specularRay));
         LiS.addMult(kS, LiS_RGB);
 		}
 
@@ -173,7 +175,8 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
                                   intersection.point_,
                                   rayDepth + 1u);
         RGB LiT_RGB;
-        rayTrace(LiT_RGB, std::move(transmissionRay));
+				Intersection transmissionInt;
+        rayTrace(LiT_RGB, std::move(transmissionInt), std::move(transmissionRay));
         LiT.addMult(kT, LiT_RGB);
 		}
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}

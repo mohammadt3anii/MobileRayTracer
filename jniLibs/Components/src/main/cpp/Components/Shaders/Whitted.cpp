@@ -91,7 +91,8 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 
 		Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
 		RGB LiS_RGB;
-		rayTrace(LiS_RGB, std::move(specularRay));
+		Intersection specularInt;
+		rayTrace(LiS_RGB, std::move(specularInt), std::move(specularRay));
 		rgb.addMult(kS, LiS_RGB);
 	}
 
@@ -121,7 +122,8 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 												intersection.point_,
 												rayDepth + 1u);
 		RGB LiT_RGB;
-		rayTrace(LiT_RGB, std::move(transmissionRay));
+		Intersection transmissionInt;
+		rayTrace(LiT_RGB, std::move(transmissionInt), std::move(transmissionRay));
 		rgb.addMult(kT, LiT_RGB);
 	}
 

@@ -35,7 +35,14 @@ namespace MobileRT {
 
 		Shader &operator=(Shader &&shader) noexcept = delete;
 
-        Intersection rayTrace(RGB &rgb, Ray &&ray) const noexcept;
+		//ray trace and verifies if intersects primitives
+		template<typename T>
+		void rayTrace(RGB &rgb, T &&intersection, Ray &&ray) const noexcept {
+			if (this->scene_.trace(intersection, ray) >= 0)
+			{
+				shade(rgb, intersection, std::move(ray)); // compute radiance
+			}
+		}
 
         int traceTouch(Intersection &intersection, const Ray &ray) const noexcept;
 
