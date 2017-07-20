@@ -13,8 +13,8 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-NoShadows::NoShadows(Scene &scene, const unsigned int samplesLight) noexcept :
-        Shader(scene, samplesLight) {
+NoShadows::NoShadows(Scene &&scene, const unsigned int samplesLight) noexcept :
+        Shader(std::move(scene), samplesLight) {
 }
 
 void NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/) const noexcept {

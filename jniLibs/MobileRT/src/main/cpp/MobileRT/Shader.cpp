@@ -7,7 +7,7 @@
 using MobileRT::Shader;
 using MobileRT::Intersection;
 
-Shader::Shader(Scene &scene, const unsigned int samplesLight) noexcept :
+Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
         scene_(scene), samplesLight_(samplesLight) {
 }
 

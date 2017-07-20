@@ -13,8 +13,8 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-Whitted::Whitted(Scene &scene, const unsigned int samplesLight) noexcept :
-        Shader(scene, samplesLight) {
+Whitted::Whitted(Scene &&scene, const unsigned int samplesLight) noexcept :
+        Shader(std::move(scene), samplesLight) {
 }
 
 void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept

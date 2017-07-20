@@ -23,13 +23,13 @@
 #include <iostream>
 #include <omp.h>
 
-static MobileRT::Scene *cornellBoxScene();
+static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene);
 
-static MobileRT::Scene *cornellBoxScene2();
+static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene);
 
-static MobileRT::Scene *spheresScene();
+static MobileRT::Scene spheresScene(MobileRT::Scene&& scene);
 
-static MobileRT::Scene *spheresScene2();
+static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene);
 
 static void destroy(GtkWidget* /*unused*/, gpointer /*unused*/);
 

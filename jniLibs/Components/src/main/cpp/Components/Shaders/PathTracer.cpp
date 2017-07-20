@@ -14,12 +14,11 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-PathTracer::PathTracer(Scene &scene, Sampler &samplerRay, Sampler &samplerLight,
+PathTracer::PathTracer(Scene &&scene, Sampler &samplerRay, Sampler &samplerLight,
                        const unsigned int samplesLight) noexcept :
-        Shader(scene, samplesLight),
+        Shader(std::move(scene), samplesLight),
         samplerRay_(samplerRay),
         samplerLight_(samplerLight) {
-    LOG("sizeLights = ", scene_.lights_.size());
     LOG("samplesLight = ", this->samplesLight_);
 }
 

@@ -19,7 +19,7 @@ namespace Components {
 								 Ray && /*ray*/) const noexcept final;
 
 		public:
-        explicit NoShadows(Scene &scene, unsigned int samplesLight) noexcept;
+        explicit NoShadows(Scene &&scene, unsigned int samplesLight) noexcept;
 
 		NoShadows(const NoShadows &noShadows) noexcept = delete;
 

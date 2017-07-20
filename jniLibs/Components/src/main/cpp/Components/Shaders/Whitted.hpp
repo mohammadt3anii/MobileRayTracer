@@ -19,7 +19,7 @@ namespace Components {
 								 Ray &&ray) const noexcept final;
 
 		public:
-        explicit Whitted(Scene &scene, unsigned int samplesLight) noexcept;
+        explicit Whitted(Scene &&scene, unsigned int samplesLight) noexcept;
 
 		Whitted(const Whitted &whitted) noexcept = delete;
 

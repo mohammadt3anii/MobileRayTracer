@@ -23,7 +23,7 @@ namespace MobileRT {
 			virtual void shade(RGB & /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
 
 		public:
-        explicit Shader(Scene &scene, unsigned int samplesLight) noexcept;
+        explicit Shader(Scene &&scene, unsigned int samplesLight) noexcept;
 
 		Shader(const Shader &shader) noexcept = delete;
 

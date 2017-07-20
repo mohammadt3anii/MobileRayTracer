@@ -1,6 +1,5 @@
 #include "RayTracerMain.hpp"
 
-static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
@@ -21,8 +20,7 @@ static const unsigned int height_(900u);
 static unsigned int canvas[width_ * height_];
 static unsigned char buffer[width_ * height_ * 4u];//RGBA
 
-static MobileRT::Scene *cornellBoxScene() {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) {
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -79,12 +77,10 @@ static MobileRT::Scene *cornellBoxScene() {
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
 
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *cornellBoxScene2() {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
-
+static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) {
     const auto max(static_cast<uint64_t> (-1));
     LOG("samplesLight = ", samplesLight_, " max = ", max);
     const uint64_t domainPointLight(/*roundUpPower2*/(                            (width_ * height_ * 2ull) * 2ull * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
@@ -184,11 +180,10 @@ static MobileRT::Scene *cornellBoxScene2() {
             MobileRT::Point3D(0.5f, 0.5f, 1.0f),
             MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
 
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *spheresScene() {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene spheresScene(MobileRT::Scene&& scene) {
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -220,11 +215,10 @@ static MobileRT::Scene *spheresScene() {
             new MobileRT::Primitive(
                     new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
                     greenMat));
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *spheresScene2() {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) {
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -263,7 +257,7 @@ static MobileRT::Scene *spheresScene2() {
     scene.primitives_.emplace_back(
             new MobileRT::Primitive(
                     new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
-    return &scene;
+    return std::move(scene);
 }
 
 void destroy(GtkWidget* /*unused*/, gpointer /*unused*/) {
@@ -287,6 +281,7 @@ int main(int argc, char **argv) {
     const int samplesPixel(atoi(argv[5]));
 		const int samplesLight(atoi(argv[6]));
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
+		MobileRT::Scene scene_;
 
     blockSizeX_ = width_ / blockSize_;
     blockSizeY_ = height_ / blockSize_;
@@ -300,7 +295,7 @@ int main(int argc, char **argv) {
                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   60.0f, 60.0f * ratio);
-            scene_ = spheresScene();
+            scene_ = spheresScene(std::move(scene_));
             break;
 
         case 2:
@@ -308,7 +303,7 @@ int main(int argc, char **argv) {
                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   60.0f, 60.0f * ratio);
-            scene_ = spheresScene2();
+            scene_ = spheresScene2(std::move(scene_));
             break;
 
         case 3:
@@ -316,7 +311,7 @@ int main(int argc, char **argv) {
                                                   MobileRT::Point3D(0.0f, 0.0f, 1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   45.0f, 45.0f * ratio);
-            scene_ = cornellBoxScene2();
+            scene_ = cornellBoxScene2(std::move(scene_));
             break;
 
         default:
@@ -324,7 +319,7 @@ int main(int argc, char **argv) {
                                                   MobileRT::Point3D(0.0f, 0.0f, 1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   45.0f, 45.0f * ratio);
-            scene_ = cornellBoxScene();
+            scene_ = cornellBoxScene(std::move(scene_));
             break;
     }
     switch (sampler) {
@@ -350,7 +345,7 @@ int main(int argc, char **argv) {
                                                         blockSizeX_, blockSizeY_);
             break;
     }
-    samplerRay_ = nullptr;
+		samplerRay_ = nullptr;
     samplerPointLight_ = nullptr;
     const uint64_t domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
@@ -358,7 +353,7 @@ int main(int argc, char **argv) {
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
-            shader_ = new Components::Whitted(*scene_, samplesLight_);
+            shader_ = new Components::Whitted(std::move(scene_), samplesLight_);
             break;
 
         case 2:
@@ -368,11 +363,11 @@ int main(int argc, char **argv) {
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::Random(domainLight, 1);
             shader_ = new Components::PathTracer(
-                    *scene_, *samplerRay_, *samplerLight_, samplesLight_);
+                    std::move(scene_), *samplerRay_, *samplerLight_, samplesLight_);
             break;
 
         default:
-            shader_ = new Components::NoShadows(*scene_, samplesLight_);
+            shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
@@ -399,7 +394,6 @@ int main(int argc, char **argv) {
     delete samplerRay_;
 	delete samplerLight_;
     delete camera_;
-    delete scene_;
     delete shader_;
     delete renderer_;
     const double end(omp_get_wtime() - start);

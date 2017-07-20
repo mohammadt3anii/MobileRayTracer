@@ -27,7 +27,7 @@ namespace Components {
 								 Ray &&ray) const noexcept final;
 
 		public:
-        explicit PathTracer(Scene &scene,
+        explicit PathTracer(Scene &&scene,
                             Sampler &samplerRay, Sampler &samplerLight,
                             unsigned int samplesLight) noexcept;
 

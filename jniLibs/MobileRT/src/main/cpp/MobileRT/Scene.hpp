@@ -28,13 +28,13 @@ namespace MobileRT {
 
 		Scene(const Scene &scene) noexcept = delete;
 
-		Scene(Scene &&scene) noexcept = delete;
+		Scene(Scene &&scene) noexcept = default;
 
         ~Scene() noexcept;
 
 		Scene &operator=(const Scene &scene) noexcept = delete;
 
-		Scene &operator=(Scene &&scene) noexcept = delete;
+		Scene &operator=(Scene &&scene) noexcept = default;
 
         int trace(Intersection &intersection, const Ray &ray) const noexcept;
 
