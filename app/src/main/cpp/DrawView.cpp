@@ -10,7 +10,6 @@ enum State {
 
 static int working_(IDLE);
 
-static MobileRT::Scene *scene_(nullptr);
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
@@ -44,8 +43,7 @@ static void FPS() noexcept {
     }
 }
 
-static MobileRT::Scene *cornellBoxScene() noexcept {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
     // point light - white
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -109,12 +107,10 @@ static MobileRT::Scene *cornellBoxScene() noexcept {
             MobileRT::Point3D(0.5f, 0.5f, 1.0f),
             MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
 
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *cornellBoxScene2() noexcept {
-    MobileRT::Scene &scene(*new MobileRT::Scene());
-
+static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
     const auto max(static_cast<uint64_t> (-1));
     LOG("samplesLight = %u, max = %llu", samplesLight_, max);
     const uint64_t domainPointLight(
@@ -223,11 +219,10 @@ MobileRT::Point3D(1.0f, 1.0f, -1.0f)),lightGrayMat));*/
             MobileRT::Point3D(0.5f, 0.5f, 1.0f),
             MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
 
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *spheresScene() noexcept {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept {
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -259,11 +254,10 @@ static MobileRT::Scene *spheresScene() noexcept {
             new MobileRT::Primitive(
                     new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f),
                     greenMat));
-    return &scene;
+    return std::move(scene);
 }
 
-static MobileRT::Scene *spheresScene2() noexcept {
-    MobileRT::Scene &scene = *new MobileRT::Scene();
+static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
     // create one light source
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -302,7 +296,7 @@ static MobileRT::Scene *spheresScene2() noexcept {
     scene.primitives_.emplace_back(
             new MobileRT::Primitive(
                     new MobileRT::Sphere(MobileRT::Point3D(0.0f, 0.5f, 4.5f), 0.5f), greenMat));
-    return &scene;
+    return std::move(scene);
 }
 
 void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
@@ -334,7 +328,6 @@ void Java_puscas_mobilertapp_DrawView_finish(
     delete samplerPointLight_;
     delete samplerRay_;
     delete camera_;
-    delete scene_;
     delete shader_;
     delete renderer_;
 
@@ -382,6 +375,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     height_ = static_cast<unsigned int>(height);
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
 
+		MobileRT::Scene scene_;
     blockSizeX_ = width_ / numberOfBlocks_;
     blockSizeY_ = height_ / numberOfBlocks_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
@@ -394,7 +388,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                    MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                    6.5f, 4.5f);
-            scene_ = spheresScene();
+            scene_ = spheresScene(std::move(scene_));
             break;
 
         case 2:
@@ -402,7 +396,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   60.0f, 60.0f * ratio);
-            scene_ = spheresScene2();
+            scene_ = spheresScene2(std::move(scene_));
             break;
 
         case 3:
@@ -410,7 +404,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                   MobileRT::Point3D(0.0f, 0.0f, 1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                   45.0f, 45.0f * ratio);
-            scene_ = cornellBoxScene2();
+            scene_ = cornellBoxScene2(std::move(scene_));
             break;
 
         default:
@@ -418,7 +412,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                    MobileRT::Point3D(0.0f, 0.0f, 1.0f),
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                    2.0f, 2.0f);
-            scene_ = cornellBoxScene();
+            scene_ = cornellBoxScene(std::move(scene_));
             break;
     }
     switch (sampler) {
@@ -452,7 +446,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX * samplesLight_);
     switch (shader) {
         case 1:
-            shader_ = new Components::Whitted(*scene_, samplesLight_);
+            shader_ = new Components::Whitted(std::move(scene_), samplesLight_);
             break;
 
         case 2:
@@ -462,11 +456,11 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::Random(domainLight, 1u);
             shader_ = new Components::PathTracer(
-                    *scene_, *samplerRay_, *samplerLight_, samplesLight_);
+                    std::move(scene_), *samplerRay_, *samplerLight_, samplesLight_);
             break;
 
         default:
-            shader_ = new Components::NoShadows(*scene_, samplesLight_);
+            shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
             break;
     }
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
@@ -537,11 +531,11 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     const auto index(static_cast<uint32_t>(primitiveIndex));
     const MobileRT::Material material;
     const MobileRT::Plane plane(
-            MobileRT::Point3D(0.0f, 0.0f, scene_->primitives_[index]->shape_->getZ()),
+            MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.primitives_[index]->shape_->getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
     plane.intersect(intersection, ray, material);
-    scene_->primitives_[index]->shape_->moveTo(intersection.point_.x_, intersection.point_.y_);
+    shader_->scene_.primitives_[index]->shape_->moveTo(intersection.point_.x_, intersection.point_.y_);
 }
 
 extern "C"

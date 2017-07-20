@@ -281,8 +281,8 @@ int main(int argc, char **argv) {
     const int samplesPixel(atoi(argv[5]));
 		const int samplesLight(atoi(argv[6]));
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
+		
 		MobileRT::Scene scene_;
-
     blockSizeX_ = width_ / blockSize_;
     blockSizeY_ = height_ / blockSize_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);

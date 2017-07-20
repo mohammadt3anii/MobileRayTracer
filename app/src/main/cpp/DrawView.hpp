@@ -28,13 +28,13 @@
 
 static void FPS() noexcept;
 
-static MobileRT::Scene *cornellBoxScene() noexcept;
+static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene *cornellBoxScene2() noexcept;
+static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene *spheresScene() noexcept;
+static MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene *spheresScene2() noexcept;
+static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept;
 
 static void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
 

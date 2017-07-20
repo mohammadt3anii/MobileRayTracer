@@ -8,7 +8,7 @@ using MobileRT::Shader;
 using MobileRT::Intersection;
 
 Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
-        scene_(scene), samplesLight_(samplesLight) {
+        scene_(std::move(scene)), samplesLight_(samplesLight) {
 }
 
 int Shader::traceTouch(Intersection &intersection, const Ray &ray) const noexcept {

@@ -14,7 +14,7 @@
 namespace MobileRT {
     class Shader {
     public:
-        Scene &scene_;
+        Scene scene_;
 
     protected:
         const unsigned int samplesLight_;
