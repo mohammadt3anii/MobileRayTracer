@@ -19,9 +19,7 @@ namespace MobileRT {
         float B_{0.0f};
 
     public:
-        explicit RGB() noexcept;
-
-        explicit RGB(float r, float g, float b) noexcept;
+        explicit RGB(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned int samples = 0u) noexcept;
 
         RGB(const RGB &rgb) noexcept;
 

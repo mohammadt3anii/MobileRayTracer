@@ -7,12 +7,8 @@ using MobileRT::RGB;
 
 static unsigned int counter(0u);
 
-RGB::RGB() noexcept
-{
-    counter++;
-}
-
-RGB::RGB(const float r, const float g, const float b) noexcept :
+RGB::RGB(const float r, const float g, const float b, const unsigned int samples) noexcept :
+				samples_(samples),
         R_(r),
         G_(g),
         B_(b)
@@ -37,7 +33,6 @@ RGB::RGB(RGB &&rgb) noexcept :
 {
     counter++;
 }
-
 bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
@@ -93,10 +88,10 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
     this->R_ += sample.R_;
     this->G_ += sample.G_;
     this->B_ += sample.B_;
+		sample.samples_ = ++this->samples_;
     sample.R_ = this->R_;
     sample.G_ = this->G_;
     sample.B_ = this->B_;
-    sample.samples_ = ++this->samples_;
     this->mutex_.unlock();
     sample.R_ /= sample.samples_;
     sample.G_ /= sample.samples_;
@@ -104,10 +99,10 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
 }
 
 void RGB::reset(const float r, const float g, const float b, const unsigned int samples) noexcept {
+		this->samples_ = samples;
     this->R_ = r;
     this->G_ = g;
     this->B_ = b;
-    this->samples_ = samples;
 }
 
 unsigned int RGB::RGB2Color2() noexcept {
