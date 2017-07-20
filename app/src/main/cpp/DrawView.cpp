@@ -100,33 +100,22 @@ static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
             MobileRT::Point3D(0.5f, -0.5f, 0.99f), MobileRT::Point3D(-0.5f, -0.5f, 0.99f),
             MobileRT::Point3D(0.5f, 0.5f, 1.001f)), yellowMat));
 
-    // triangle - green
-    const MobileRT::Material greenMat(MobileRT::RGB(0.0f, 0.9f, 0.0f));
-    scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Triangle(
-            MobileRT::Point3D(-0.5f, 0.5f, 1.0f),
-            MobileRT::Point3D(0.5f, 0.5f, 1.0f),
-            MobileRT::Point3D(-0.5f, -0.5f, 1.0f)), greenMat));
-
     return std::move(scene);
 }
 
 static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
     const auto max(static_cast<uint64_t> (-1));
-    LOG("samplesLight = %u, max = %llu", samplesLight_, max);
-    const uint64_t domainPointLight(
-                                                                           (width_ * height_ *
-                                                                            2llu) * 2llu *
-                                                                           samplesLight_ *
-                                                                           samplesPixel_ *
-                                                                           RAY_DEPTH_MAX);
-    LOG("domainPointLight = %llu", domainPointLight);
-    LOG("width_ = %u", width_);
-    LOG("height_ = %u", height_);
-    LOG("samplesLight_ = %u", samplesLight_);
-    LOG("samplesPixel_ = %u", samplesPixel_);
-    LOG("RAY_DEPTH_MAX = %u", RAY_DEPTH_MAX);
-    //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1u);
-    samplerPointLight_ = new Components::Random(domainPointLight, 1u);
+    LOG("samplesLight = ", samplesLight_, " max = ", max);
+    const uint64_t domainPointLight(/*roundUpPower2*/
+            ((width_ * height_ * 2ull) * 2ull * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
+    LOG("domainPointLight = ", domainPointLight);
+    LOG("width_ = ", width_);
+    LOG("height_ = ", height_);
+    LOG("samplesLight_ = ", samplesLight_);
+    LOG("samplesPixel_ = ", samplesPixel_);
+    LOG("RAY_DEPTH_MAX = ", RAY_DEPTH_MAX);
+    //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1);
+    samplerPointLight_ = new Components::Random(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -164,10 +153,6 @@ static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Plane(
             MobileRT::Point3D(0.0f, 0.0f, 1.0f), MobileRT::Vector3D(0.0f, 0.0f, -1.0f)),
                                                            lightGrayMat));
-    /*scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Rectangle(
-MobileRT::Point3D(-1.0f, -1.0f, -1.0f),
-MobileRT::Point3D(1.0f, -1.0f, -1.0f),
-MobileRT::Point3D(1.0f, 1.0f, -1.0f)),lightGrayMat));*/
 
     // front wall - light blue
     const MobileRT::Material lightBlueMat(MobileRT::RGB(0.0f, 0.9f, 0.9f));
@@ -194,7 +179,7 @@ MobileRT::Point3D(1.0f, 1.0f, -1.0f)),lightGrayMat));*/
             MobileRT::Point3D(1.0f, 0.0f, 0.0f), MobileRT::Vector3D(-1.0f, 0.0f, 0.0f)), blueMat));
 
     // sphere - mirror
-   const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
+    const MobileRT::Material MirrorMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                        MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.primitives_.emplace_back(new MobileRT::Primitive(new MobileRT::Sphere(
             MobileRT::Point3D(0.45f, -0.65f, 0.4f), 0.35f), MirrorMat));
@@ -319,7 +304,7 @@ void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv * /*env*/,
-        const jobject /*thiz*/
+        jobject /*thiz*/
 ) noexcept {
     thread_->join();
     delete thread_;
@@ -340,7 +325,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_isWorking(
         JNIEnv * /*env*/,
-        const jobject /*thiz*/
+        jobject /*thiz*/
 ) noexcept {
     return working_;
 }
@@ -348,7 +333,7 @@ int Java_puscas_mobilertapp_DrawView_isWorking(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv * /*env*/,
-        const jobject /*thiz*/
+        jobject /*thiz*/
 ) noexcept {
     working_ = STOPPED;
     LOG("%s", "WORKING = STOPPED");
@@ -360,14 +345,14 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv * /*env*/,
-        const jobject /*this*/,
-        const jint scene,
-        const jint shader,
-        const jint width,
-        const jint height,
-        const jint sampler,
-        const jint samplesPixel,
-        const jint samplesLight
+        jobject /*thiz*/,
+        jint const scene,
+        jint const shader,
+        jint const width,
+        jint const height,
+        jint const sampler,
+        jint const samplesPixel,
+        jint const samplesLight
 ) noexcept {
     working_ = IDLE;
     LOG("%s", "WORKING = IDLE");
@@ -481,9 +466,9 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
-        const jobject /*this*/,
-        const jobject dstBitmap,
-        const jint nThreads) noexcept {
+        jobject /*thiz*/,
+        jobject dstBitmap,
+        jint const nThreads) noexcept {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
@@ -495,8 +480,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
-        const jobject /*this*/,
-        const jobject dstBitmap) noexcept {
+        jobject /*thiz*/,
+        jobject dstBitmap) noexcept {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
@@ -506,9 +491,9 @@ int Java_puscas_mobilertapp_DrawView_redraw(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv * /*env*/,
-        const jobject /*this*/,
-        const jfloat jx,
-        const jfloat jy) noexcept {
+        jobject /*thiz*/,
+        jfloat const jx,
+        jfloat const jy) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
     const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
@@ -520,10 +505,10 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
         JNIEnv * /*env*/,
-        const jobject /*this*/,
-        const jfloat jx,
-        const jfloat jy,
-        const jint primitiveIndex
+        jobject /*thiz*/,
+        jfloat const jx,
+        jfloat const jy,
+        jint const primitiveIndex
 ) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
@@ -541,7 +526,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
         JNIEnv * /*env*/,
-        const jobject /*this*/
+        jobject /*thiz*/
 ) noexcept {
     return fps_;
 }
@@ -549,7 +534,7 @@ float Java_puscas_mobilertapp_DrawView_getFPS(
 extern "C"
 int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
         JNIEnv * /*env*/,
-        const jobject /*this*/
+        jobject /*thiz*/
 ) noexcept {
     return timeFrame_;
 }
@@ -557,7 +542,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
         JNIEnv * /*env*/,
-        const jobject /*this*/
+        jobject /*thiz*/
 ) noexcept {
     return renderer_->getSample();
 }
@@ -565,8 +550,8 @@ unsigned int Java_puscas_mobilertapp_DrawView_getSample(
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv * /*env*/,
-        const jobject /*this*/,
-        const jint size
+        jobject /*thiz*/,
+        jint const size
 ) noexcept {
     return roundDownToMultipleOf(static_cast<unsigned int> (size), numberOfBlocks_);
 }

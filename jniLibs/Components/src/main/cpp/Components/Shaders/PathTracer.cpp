@@ -179,7 +179,7 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
         LiT.addMult(kT, LiT_RGB);
 		}
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
-	Ld /= rayDepth;
+    //Ld /= rayDepth;
 	LiD /= rayDepth;
 	rgb += Ld;
 	rgb += LiD;
