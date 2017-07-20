@@ -3,7 +3,7 @@ android {
     signingConfigs {
         Puscas {
             keyAlias "Puscas"
-            storeFile file("../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks")
+            storeFile file("../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks").absoluteFile
             keyPassword "@puscas99"
             storePassword "@puscas99"
         }
