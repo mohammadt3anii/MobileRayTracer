@@ -50,6 +50,7 @@ static MobileRT::Scene *cornellBoxScene() noexcept {
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      1.0f,
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.lights_.emplace_back(new Components::PointLight(lightMat,
                                                           MobileRT::Point3D(0.0f, 0.99f, 0.0f)));
@@ -134,6 +135,7 @@ static MobileRT::Scene *cornellBoxScene2() noexcept {
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      1.0f,
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
 
     scene.lights_.emplace_back(new Components::AreaLight(lightMat,
@@ -230,6 +232,7 @@ static MobileRT::Scene *spheresScene() noexcept {
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      1.0f,
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.lights_.emplace_back(new Components::PointLight(lightMat,
                                                           MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
@@ -265,6 +268,7 @@ static MobileRT::Scene *spheresScene2() noexcept {
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
+                                      1.0f,
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
     scene.lights_.emplace_back(new Components::PointLight(lightMat,
                                                           MobileRT::Point3D(0.0f, 15.0f, 4.0f)));
