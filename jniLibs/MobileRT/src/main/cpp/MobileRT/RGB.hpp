@@ -35,7 +35,7 @@ namespace MobileRT {
 
         bool hasColor() const noexcept;
 
-        void add(const RGB &rgb) noexcept;
+        void operator+=(const RGB &rgb) noexcept;
 
         void addMult(const RGB &rgb, float value) noexcept;
 

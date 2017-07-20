@@ -111,7 +111,7 @@ Vector3D Vector3D::crossProduct(const Vector3D &vector) const noexcept {
     return Vector3D(x * length, y * length, z * length);
 }
 
-void Vector3D::mult(const float value) noexcept {
+void Vector3D::operator*=(const float value) noexcept {
     this->x_ *= value;
     this->y_ *= value;
     this->z_ *= value;

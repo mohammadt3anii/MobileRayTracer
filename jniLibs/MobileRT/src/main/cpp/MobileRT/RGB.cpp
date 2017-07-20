@@ -42,7 +42,7 @@ bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
-void RGB::add(const RGB &rgb) noexcept {
+void RGB::operator+=(const RGB &rgb) noexcept {
     this->R_ += rgb.R_;
     this->G_ += rgb.G_;
     this->B_ += rgb.B_;

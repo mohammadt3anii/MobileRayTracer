@@ -35,7 +35,7 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
     if (Le.hasColor())//stop if it intersects a light source
     {
         //rgb.add(Le * scene_.lights_.size() * RAY_DEPTH_MAX);
-        rgb.add(Le);
+        rgb += Le;
         return;
     }
 	RGB Ld;
@@ -155,7 +155,7 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
         Vector3D shadingNormalT(shadingNormal);
         float refractiveIndice(intersection.material_->refractiveIndice_);
         if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
-            shadingNormalT.mult(-1.0f);//N = N*-1;
+            shadingNormalT *= -1.0f;//N = N*-1;
             refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
         }
         refractiveIndice = 1.0f / refractiveIndice;
@@ -179,10 +179,10 @@ void PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
 	Ld /= rayDepth;
 	LiD /= rayDepth;
-	rgb.add(Ld);
-	rgb.add(LiD);
-	rgb.add(LiS);
-	rgb.add(LiT);
+	rgb += Ld;
+	rgb += LiD;
+	rgb += LiS;
+	rgb += LiT;
 }
 
 void PathTracer::resetSampling() noexcept {

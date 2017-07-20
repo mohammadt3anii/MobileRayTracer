@@ -45,7 +45,7 @@ void NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/
         rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
     } // end direct + ambient
 
-    rgb.add(Le);
+    rgb += Le;
 }
 
 void NoShadows::resetSampling() noexcept {

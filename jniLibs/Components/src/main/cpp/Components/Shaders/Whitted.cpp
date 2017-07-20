@@ -28,7 +28,7 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 	const RGB &Le(intersection.material_->Le_);
 	if (Le.hasColor()) //stop if it intersects a light source
 	{
-		rgb.add(Le);
+		rgb += Le;
 		return;
 	}
 
@@ -104,7 +104,7 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 		float refractiveIndice(intersection.material_->refractiveIndice_);
 		if (shadingNormalT.dotProduct(ray.direction_) > 0.0f)
 		{																							//we are inside the medium
-			shadingNormalT.mult(-1.0f);									//N = N*-1;
+			shadingNormalT *= -1.0f;									//N = N*-1;
 			refractiveIndice = 1.0f / refractiveIndice; //n = 1 / n;
 		}
 		refractiveIndice = 1.0f / refractiveIndice;

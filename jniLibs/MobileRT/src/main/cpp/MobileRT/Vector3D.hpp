@@ -59,7 +59,7 @@ namespace MobileRT {
 
         Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
-        void mult(float value) noexcept;
+        void operator*=(float value) noexcept;
 
         Vector3D operator-() const noexcept;
 
