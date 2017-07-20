@@ -103,11 +103,11 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
     sample.B_ /= sample.samples_;
 }
 
-void RGB::reset() noexcept {
-    this->R_ = 0.0f;
-    this->G_ = 0.0f;
-    this->B_ = 0.0f;
-    this->samples_ = 0u;
+void RGB::reset(const float r, const float g, const float b, const unsigned int samples) noexcept {
+    this->R_ = r;
+    this->G_ = g;
+    this->B_ = b;
+    this->samples_ = samples;
 }
 
 unsigned int RGB::RGB2Color2() noexcept {

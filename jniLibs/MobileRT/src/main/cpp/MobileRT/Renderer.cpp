@@ -120,6 +120,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
                     Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
+										pixelRGB.reset(); //pixel color without intersection
                     this->shader_.rayTrace(pixelRGB, std::move(ray));
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
                     toneMapper(pixelRGB);
