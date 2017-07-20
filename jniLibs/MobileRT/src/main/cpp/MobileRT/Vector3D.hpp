@@ -13,10 +13,10 @@ namespace MobileRT {
 
     class Vector3D final {
     public:
-        float x_;
-        float y_;
-        float z_;
-        float magnitude_;
+        float x_{0.0f};
+        float y_{0.0f};
+        float z_{0.0f};
+        float magnitude_{1.0f};
 
     private:
         explicit Vector3D(const Vector3D &vector, float value) noexcept;
@@ -26,6 +26,8 @@ namespace MobileRT {
         Point3D operator/(float value) const noexcept;
 
     public:
+				explicit Vector3D() noexcept;
+
         explicit Vector3D(float x, float y, float z) noexcept;
 
         explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,

@@ -9,6 +9,11 @@ using MobileRT::Point3D;
 
 static unsigned int counter(0u);
 
+Vector3D::Vector3D() noexcept
+{
+    counter++;
+}
+
 Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
         x_(x),
         y_(y),

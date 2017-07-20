@@ -7,8 +7,12 @@ using MobileRT::RGB;
 
 static unsigned int counter(0u);
 
-RGB::RGB(const float r, const float g, const float b, const unsigned int samples) noexcept :
-				samples_(samples),
+RGB::RGB() noexcept
+{
+    counter++;
+}
+
+RGB::RGB(const float r, const float g, const float b) noexcept :
         R_(r),
         G_(g),
         B_(b)
