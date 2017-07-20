@@ -378,13 +378,6 @@ int main(int argc, char **argv) {
     renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
                                        height_, blockSizeX_, blockSizeY_, *samplerPixel_);
 
-    /*if (dynamic_cast<Components::PathTracer *>(shader_) != nullptr) {
-        renderer_->registerToneMapper([&](const float value) {
-            return 1.0f - std::cos(std::sqrt(std::sqrt(value)));
-        });
-    }*/
-
-
     LOG("x = ", blockSizeX_, "[", width_, "]");
     LOG("y = ", blockSizeY_, "[", height_, "]");
 

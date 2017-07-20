@@ -132,12 +132,12 @@ Vector3D Vector3D::operator+(const Vector3D &vector) const noexcept {
     return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 
+Vector3D Vector3D::operator-() const noexcept {
+	return Vector3D(-this->x_, -this->y_, -this->z_);
+}
+
 unsigned int Vector3D::getInstances() noexcept {
     const unsigned int res(counter);
     counter = 0u;
     return res;
-}
-
-Vector3D Vector3D::operator-() const noexcept {
-	return Vector3D(-this->x_, -this->y_, -this->z_);
 }

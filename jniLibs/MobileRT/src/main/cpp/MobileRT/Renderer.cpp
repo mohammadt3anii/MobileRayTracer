@@ -21,8 +21,8 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
         blockSizeY_(blockSizeY),
         resolution_(width * height),
         samplerPixel_(samplerPixel),
-        sample_(0u),
-        toneMapper_([&](const float value) { return value; }) {
+        sample_(0u)
+{
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
@@ -76,21 +76,11 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("FINISH", "");
 }
 
-void Renderer::registerToneMapper(std::function<float(const float)> const &toneMapper) noexcept {
-    toneMapper_ = toneMapper;
-}
-
 void Renderer::stopRender() noexcept {
     this->blockSizeX_ = 0u;
     this->blockSizeY_ = 0u;
     this->samplerCamera_.stopSampling();
     this->samplerPixel_.stopSampling();
-}
-
-void Renderer::toneMapper(RGB &pixel) noexcept {
-    pixel.R_ = toneMapper_(pixel.R_);
-    pixel.G_ = toneMapper_(pixel.G_);
-    pixel.B_ = toneMapper_(pixel.B_);
 }
 
 void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) noexcept {
@@ -123,7 +113,6 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
 										pixelRGB.reset(); //pixel color without intersection
                     this->shader_.rayTrace(pixelRGB, std::move(ray));
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
-                    toneMapper(pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }
             }

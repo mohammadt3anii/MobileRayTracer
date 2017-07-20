@@ -28,12 +28,9 @@ namespace MobileRT {
         const unsigned int resolution_;
         Sampler &samplerPixel_;
         unsigned int sample_;
-        std::function<float(float)> toneMapper_;
 
     private:
         void renderScene(unsigned int *bitmap, unsigned int tid) noexcept;
-
-        void toneMapper(RGB &pixel) noexcept;
 
     public:
         explicit Renderer(Sampler &samplerCamera, Shader &shader,
@@ -54,8 +51,6 @@ namespace MobileRT {
 		Renderer &operator=(Renderer &&renderer) noexcept = delete;
 
         void renderFrame(unsigned int *bitmap, unsigned int numThreads) noexcept;
-
-        void registerToneMapper(std::function<float(float value)> const &toneMapper) noexcept;
 
         void stopRender() noexcept;
 
