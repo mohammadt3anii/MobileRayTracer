@@ -32,6 +32,6 @@ Ray Perspective::generateRay(const float u, const float v,
 
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
-    const float absValue(value < 0.0f ? -value : value);
+    const float absValue(std::fabs(value));
     return PI_4 * value - (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
 }
