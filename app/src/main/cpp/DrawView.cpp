@@ -319,7 +319,7 @@ void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv * /*env*/,
-        jobject /*thiz*/
+        const jobject /*thiz*/
 ) noexcept {
     thread_->join();
     delete thread_;
@@ -340,7 +340,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_isWorking(
         JNIEnv * /*env*/,
-        jobject /*thiz*/
+        const jobject /*thiz*/
 ) noexcept {
     return working_;
 }
@@ -348,7 +348,7 @@ int Java_puscas_mobilertapp_DrawView_isWorking(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv * /*env*/,
-        jobject /*thiz*/
+        const jobject /*thiz*/
 ) noexcept {
     working_ = STOPPED;
     LOG("%s", "WORKING = STOPPED");
@@ -359,8 +359,8 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        const JNIEnv * /*env*/,
-        jobject /*this*/,
+        JNIEnv * /*env*/,
+        const jobject /*this*/,
         const jint scene,
         const jint shader,
         const jint width,
@@ -408,10 +408,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         default:
-            camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-                                                   MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                   2.0f, 2.0f);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+                                                  MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             scene_ = cornellBoxScene(std::move(scene_));
             break;
     }
@@ -481,9 +481,9 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *env,
-        jobject /*this*/,
-        jobject dstBitmap,
-        jint nThreads) noexcept {
+        const jobject /*this*/,
+        const jobject dstBitmap,
+        const jint nThreads) noexcept {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
@@ -495,8 +495,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_redraw(
         JNIEnv *env,
-        jobject /*this*/,
-        jobject dstBitmap) noexcept {
+        const jobject /*this*/,
+        const jobject dstBitmap) noexcept {
     void *dstPixels;
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
@@ -506,9 +506,9 @@ int Java_puscas_mobilertapp_DrawView_redraw(
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv * /*env*/,
-        jobject /*this*/,
-        jfloat jx,
-        jfloat jy) noexcept {
+        const jobject /*this*/,
+        const jfloat jx,
+        const jfloat jy) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
     const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
@@ -520,10 +520,10 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
         JNIEnv * /*env*/,
-        jobject /*this*/,
-        jfloat jx,
-        jfloat jy,
-        jint primitiveIndex
+        const jobject /*this*/,
+        const jfloat jx,
+        const jfloat jy,
+        const jint primitiveIndex
 ) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
@@ -541,7 +541,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
         JNIEnv * /*env*/,
-        jobject /*this*/
+        const jobject /*this*/
 ) noexcept {
     return fps_;
 }
@@ -549,7 +549,7 @@ float Java_puscas_mobilertapp_DrawView_getFPS(
 extern "C"
 int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
         JNIEnv * /*env*/,
-        jobject /*this*/
+        const jobject /*this*/
 ) noexcept {
     return timeFrame_;
 }
@@ -557,7 +557,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
         JNIEnv * /*env*/,
-        jobject /*this*/
+        const jobject /*this*/
 ) noexcept {
     return renderer_->getSample();
 }
@@ -565,8 +565,8 @@ unsigned int Java_puscas_mobilertapp_DrawView_getSample(
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv * /*env*/,
-        jobject /*this*/,
-        jint size
+        const jobject /*this*/,
+        const jint size
 ) noexcept {
     return roundDownToMultipleOf(static_cast<unsigned int> (size), numberOfBlocks_);
 }
