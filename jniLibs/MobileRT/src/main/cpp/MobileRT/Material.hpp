@@ -13,23 +13,11 @@ namespace MobileRT {
         const RGB Kd_;   // diffuse reflection
         const RGB Ks_;   // specular reflection
         const RGB Kt_;   // specular transmission
+				const float refractiveIndice_;
         const RGB Le_;   // auto emission
-        const float refractiveIndice_;
 
     public:
-        explicit Material() noexcept;
-
-        explicit Material(RGB Kd,
-                          float refractiveIndice = 1.0f) noexcept;
-
-        explicit Material(RGB Kd, RGB Ks,
-                          float refractiveIndice = 1.0f) noexcept;
-
-        explicit Material(RGB Kd, RGB Ks, RGB Kt,
-                          float refractiveIndice = 1.0f) noexcept;
-
-        explicit Material(RGB Kd, RGB Ks, RGB Kt, RGB Le,
-                          float refractiveIndice = 1.0f) noexcept;
+        explicit Material(RGB Kd = RGB(), RGB Ks = RGB(), RGB Kt = RGB(), float refractiveIndice = 1.0f, RGB Le = RGB()) noexcept;
 
 		Material(const Material &material) noexcept = default;
 

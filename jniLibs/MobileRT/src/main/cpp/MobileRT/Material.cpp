@@ -7,39 +7,13 @@
 using MobileRT::Material;
 static unsigned int counter(0u);
 
-Material::Material() noexcept : refractiveIndice_(1.0f) {
-    counter++;
-}
-
-Material::Material(RGB Kd, const float refractiveIndice) noexcept :
-        Kd_(std::move(Kd)),
-        refractiveIndice_(refractiveIndice) {
-    counter++;
-}
-
-Material::Material(RGB Kd, RGB Ks, const float refractiveIndice) noexcept :
-        Kd_(std::move(Kd)),
-        Ks_(std::move(Ks)),
-        refractiveIndice_(refractiveIndice) {
-    counter++;
-}
-
-Material::Material(RGB Kd, RGB Ks, RGB Kt,
-                   const float refractiveIndice) noexcept :
+Material::Material(RGB Kd, RGB Ks, RGB Kt, const float refractiveIndice, RGB Le)noexcept :
         Kd_(std::move(Kd)),
         Ks_(std::move(Ks)),
         Kt_(std::move(Kt)),
-        refractiveIndice_(refractiveIndice) {
-    counter++;
-}
-
-Material::Material(RGB Kd, RGB Ks, RGB Kt, RGB Le,
-                   const float refractiveIndice) noexcept :
-        Kd_(std::move(Kd)),
-        Ks_(std::move(Ks)),
-        Kt_(std::move(Kt)),
-        Le_(std::move(Le)),
-        refractiveIndice_(refractiveIndice) {
+				refractiveIndice_(refractiveIndice),
+        Le_(std::move(Le))
+{
     counter++;
 }
 
