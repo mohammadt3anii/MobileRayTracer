@@ -515,11 +515,12 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
     const auto index(static_cast<uint32_t>(primitiveIndex));
     const MobileRT::Material material;
     const MobileRT::Plane plane(
-            MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.primitives_[index]->shape_->getZ()),
+            MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.primitives_[index]->shape_.getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
     plane.intersect(intersection, ray, material);
-    shader_->scene_.primitives_[index]->shape_->moveTo(intersection.point_.x_, intersection.point_.y_);
+    shader_->scene_.primitives_[index]->shape_.moveTo(intersection.point_.x_,
+                                                      intersection.point_.y_);
 }
 
 extern "C"
