@@ -2,8 +2,8 @@
 // Created by Tiago on 15-Feb-17.
 //
 
-#ifndef MOBILERAYTRACER_DRAWVIEW_H
-#define MOBILERAYTRACER_DRAWVIEW_H
+#ifndef APP_DRAWVIEW_HPP
+#define APP_DRAWVIEW_HPP
 
 #include "Components/Cameras/Orthographic.hpp"
 #include "Components/Cameras/Perspective.hpp"
@@ -118,9 +118,9 @@ unsigned int Java_puscas_mobilertapp_DrawView_getSample(
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv *env,
-        jobject thiz,
-        jint size
+        JNIEnv * /*env*/,
+        jobject /*thiz*/,
+        jint const size
 ) noexcept;
 
-#endif //MOBILERAYTRACER_DRAWVIEW_H
+#endif //APP_DRAWVIEW_HPP

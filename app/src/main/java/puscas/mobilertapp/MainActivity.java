@@ -10,16 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
+
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("Components");
@@ -27,14 +27,12 @@ public final class MainActivity extends Activity {
     }
 
     private DrawView drawView_;
-    private GLDrawView glDrawView_;
     private NumberPicker pickerScene_;
     private NumberPicker pickerShader_;
     private NumberPicker pickerThreads_;
     private NumberPicker pickerSampler_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
-    private ScheduledExecutorService scheduler_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -54,13 +52,13 @@ public final class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        glDrawView_.onPause();
+        drawView_.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        glDrawView_.onResume();
+        drawView_.onResume();
     }
 
     @Override
@@ -76,26 +74,46 @@ public final class MainActivity extends Activity {
         final ConfigurationInfo info = am.getDeviceConfigurationInfo();
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2) {
-            glDrawView_ = (GLDrawView) findViewById(R.id.drawLayout);
-            glDrawView_.setEGLContextClientVersion(2);
-            glDrawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
-            glDrawView_.setRenderer(new MainRenderer());
-            glDrawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+            drawView_ = (DrawView) findViewById(R.id.drawLayout);
+            if (drawView_ == null) {
+                Log.e("DrawView", "DrawView is NULL !!!");
+                System.exit(0);
+            }
+            drawView_.setVisibility(View.INVISIBLE);
+            drawView_.setEGLContextClientVersion(2);
+            drawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
+            final MainRenderer renderer = new MainRenderer();
+            drawView_.renderer = renderer;
+            drawView_.setRenderer(renderer);
+            drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-            scheduler_ = Executors.newSingleThreadScheduledExecutor();
-            scheduler_.scheduleAtFixedRate(() -> glDrawView_.requestRender(), 0L, 200, TimeUnit.MILLISECONDS);
+            drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+            if (drawView_.buttonRender_ == null) {
+                Log.e("Button", "Button is NULL !!!");
+                System.exit(0);
+            }
+            final TextView textView = (TextView) findViewById(R.id.timeText);
+            if (textView == null) {
+                Log.e("TextView", "TextView is NULL !!!");
+                System.exit(0);
+            }
+            drawView_.setView(textView);
+            drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+            if (drawView_.buttonRender_ == null) {
+                Log.e("Button", "Button is NULL !!!");
+                System.exit(0);
+            }
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
+            System.exit(0);
         }
-
-        /*final TextView textView_ = (TextView) findViewById(R.id.timeText);
-        drawView_ = (DrawView) findViewById(R.id.drawLayout);
-        drawView_.setVisibility(View.VISIBLE);
-        drawView_.setView(textView_);
-        drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);*/
 
         final String[] scenes = {"Cornell", "Spheres", "Spheres2", "Cornell2"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
+        if (pickerScene_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerScene_.setMinValue(0);
         pickerScene_.setMaxValue(scenes.length - 1);
         pickerScene_.setDisplayedValues(scenes);
@@ -104,6 +122,10 @@ public final class MainActivity extends Activity {
 
         final String[] shaders = {"NoShadows", "Whitted", "PathTracer", ""};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
+        if (pickerShader_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerShader_.setMinValue(0);
         pickerShader_.setMaxValue(shaders.length - 1);
         pickerShader_.setDisplayedValues(shaders);
@@ -116,6 +138,10 @@ public final class MainActivity extends Activity {
             samplesPixel[i] = Integer.toString((i + 1) * (i + 1));
         }
         pickerSamplesPixel_ = (NumberPicker) findViewById(R.id.pickerSamplesPixel);
+        if (pickerSamplesPixel_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerSamplesPixel_.setMinValue(1);
         pickerSamplesPixel_.setMaxValue(maxSamplesPixel);
         pickerSamplesPixel_.setDisplayedValues(samplesPixel);
@@ -134,6 +160,10 @@ public final class MainActivity extends Activity {
             samplesLight[i] = Integer.toString(i + 1);
         }
         pickerSamplesLight_ = (NumberPicker) findViewById(R.id.pickerSamplesLight);
+        if (pickerSamplesLight_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerSamplesLight_.setMinValue(1);
         pickerSamplesLight_.setMaxValue(maxSamplesLight);
         pickerSamplesLight_.setDisplayedValues(samplesLight);
@@ -142,6 +172,10 @@ public final class MainActivity extends Activity {
 
         final String[] samplers = {"Stratified", "HaltonSeq"};
         pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
+        if (pickerSampler_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerSampler_.setMinValue(0);
         pickerSampler_.setMaxValue(samplers.length - 1);
         pickerSampler_.setDisplayedValues(samplers);
@@ -149,6 +183,10 @@ public final class MainActivity extends Activity {
         pickerSampler_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
+        if (pickerThreads_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
         pickerThreads_.setMinValue(1);
         pickerThreads_.setMaxValue(MainActivity.getNumberOfCores() << 1);
         pickerThreads_.setWrapSelectorWheel(true);
@@ -177,8 +215,8 @@ public final class MainActivity extends Activity {
                 drawView_.startRender();
                 break;
 
-            default:
-                this.drawView_.stopDrawing();//if ray-tracer is busy
+            default://if ray-tracer is busy
+                this.drawView_.stopDrawing();
                 break;
         }
     }

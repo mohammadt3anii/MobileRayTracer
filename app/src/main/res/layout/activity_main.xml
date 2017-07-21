@@ -84,7 +84,7 @@
         android:layout_toLeftOf="@+id/pickerSamplesPixel"
         android:layout_toStartOf="@+id/pickerSamplesPixel"/>
 
-    <puscas.mobilertapp.GLDrawView
+    <puscas.mobilertapp.DrawView
         android:id="@+id/drawLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -297,7 +297,7 @@ void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
     } while (working_ != STOPPED && rep-- > 1u);
     if (working_ != STOPPED) {
         working_ = FINISHED;
-        LOG("%s", "WORKING = FINISHED");
+        LOG("WORKING = FINISHED", "");
     }
 }
 
@@ -317,7 +317,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
     delete renderer_;
 
     working_ = IDLE;
-    LOG("%s", "WORKING = IDLE");
+    LOG("WORKING = IDLE", "");
     timeFrame_ = 0ll;
     fps_ = 0.0f;
 }
@@ -336,7 +336,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
         jobject /*thiz*/
 ) noexcept {
     working_ = STOPPED;
-    LOG("%s", "WORKING = STOPPED");
+    LOG("WORKING = STOPPED", "");
     renderer_->stopRender();
     //timeFrame_ = 0;
     //fps_ = 0.0f;
@@ -355,7 +355,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint const samplesLight
 ) noexcept {
     working_ = IDLE;
-    LOG("%s", "WORKING = IDLE");
+    LOG("WORKING = IDLE", "");
     width_ = static_cast<unsigned int>(width);
     height_ = static_cast<unsigned int>(height);
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
@@ -365,8 +365,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     blockSizeY_ = height_ / numberOfBlocks_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
-    LOG("samplesPixel_ = %u", samplesPixel_);
-    LOG("samplesLight_ = %u", samplesLight_);
+    LOG("samplesPixel_ = ", samplesPixel_);
+    LOG("samplesLight_ = ", samplesLight_);
     switch (scene) {
         case 1:
             camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
@@ -434,8 +434,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             shader_ = new Components::Whitted(std::move(scene_), samplesLight_);
             break;
 
-        case 2:
-            LOG("domainRay = %llu, domainLight = %llu", domainRay, domainLight);
+        case 2: LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1u);
             samplerRay_ = new Components::Random(domainRay, 1u);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
@@ -459,8 +458,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }*/
 
 
-    LOG("x = %d [%d]", blockSizeX_, width_);
-    LOG("y = %d [%d]", blockSizeY_, height_);
+    LOG("x = ", blockSizeX_, "[", width_, "]");
+    LOG("x = ", blockSizeY_, "[", height_, "]");
 }
 
 extern "C"
@@ -473,7 +472,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
     working_ = BUSY;
-    LOG("%s", "WORKING = BUSY");
+    LOG("WORKING = BUSY", "");
     thread_ = new std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
 }
 

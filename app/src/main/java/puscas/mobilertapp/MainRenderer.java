@@ -50,7 +50,7 @@ class MainRenderer implements Renderer {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    private Bitmap bitmap;
+    Bitmap bitmap = null;
     private FloatBuffer floatBufferVertices;
     private FloatBuffer floatBufferTexture;
 
@@ -86,7 +86,6 @@ class MainRenderer implements Renderer {
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        bitmap = Bitmap.createBitmap(996, 1208, Bitmap.Config.ARGB_8888);
 
         //Enable culling
         GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -113,8 +112,8 @@ class MainRenderer implements Renderer {
         //Create Program
         final int shaderProgram = GLES20.glCreateProgram();
         if (shaderProgram == 0) {
-            Log.e("PROGRAM SHADER LOG", "Could not create program: ");
-            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(0));
+            Log.e("PROGRAM SHADER", "Could not create program: ");
+            Log.e("PROGRAM SHADER", GLES20.glGetProgramInfoLog(0));
             System.exit(0);
         }
 
@@ -160,8 +159,5 @@ class MainRenderer implements Renderer {
         //Bind Uniform
         final int textureUniform = GLES20.glGetUniformLocation(shaderProgram, "u_Texture");
         GLES20.glUniform1i(textureUniform, 0);
-
-        DrawView.initialize(3, 2, bitmap.getWidth(), bitmap.getHeight(), 0, 1, 1);
-        DrawView.renderIntoBitmap(bitmap, 4);
     }
 }
