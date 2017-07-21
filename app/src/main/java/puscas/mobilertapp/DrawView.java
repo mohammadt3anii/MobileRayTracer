@@ -2,7 +2,6 @@ package puscas.mobilertapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Debug;
@@ -23,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import puscas.mobilertapp.DrawView.RenderTask.TouchTracker;
 
 public class DrawView extends GLSurfaceView {
+    Bitmap bitmap_ = null;
     MainRenderer renderer;
     long start_ = 0L;
     long period_ = 0L;
@@ -46,7 +46,6 @@ public class DrawView extends GLSurfaceView {
     private String threadsT_ = null;
     private String samplesPixelT_ = null;
     private String samplesLightT_ = null;
-    private Bitmap bitmap_ = null;
 
     public DrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -139,8 +138,8 @@ public class DrawView extends GLSurfaceView {
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,
                      final int samplesPixel, final int samplesLight) {
-        final int width = resize(getWidth());
-        final int height = resize(getHeight());
+        final int width = resize(getWidth()) / 1;
+        final int height = resize(getHeight()) / 1;
         DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
         numThreads_ = numThreads;
         frame_ = 0;
@@ -149,7 +148,7 @@ public class DrawView extends GLSurfaceView {
 
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         renderer.bitmap = bitmap_;
-        setBackground(new BitmapDrawable(getResources(), bitmap_));
+        //setBackground(new BitmapDrawable(getResources(), bitmap_));
         setVisibility(View.VISIBLE);
         requestRender();
     }
@@ -191,8 +190,7 @@ public class DrawView extends GLSurfaceView {
             for (int i = 0; i < touchesSize; i++) {
                 final TouchTracker touch = touches_.get(i);
                 moveTouch(touch.x_, touch.y_, touch.primitiveID_);
-                /*System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch ("
-                 + touch.x_ + "," + touch.y_ + ")");System.out.flush();*/
+                //System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch (" + touch.x_ + "," + touch.y_ + ")");System.out.flush();
             }
             stage_ = isWorking();
             requestRender();
