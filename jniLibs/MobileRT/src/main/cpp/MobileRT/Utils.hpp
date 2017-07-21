@@ -43,9 +43,6 @@ void log(Args... args)
 	#endif
 }
 
-#define FILENAME (std::strrchr(__FILE__, '/') != nullptr ?\
-std::strrchr(__FILE__, '/') : __FILE__)
-
 #define LOG(msg,...) \
 {std::string filepath;\
 getFileName(filepath, __FILE__);\
@@ -67,17 +64,6 @@ inline void getFileName (std::string& str, const char *filepath) {
 		filePos = 0;
 	}
 	str = filePath.substr(filePos);
-}
-
-#define ASSERT(left, operator, right)\
-{\
-    if (!((left) operator (right)))\
-    {\
-        std::cerr << FILENAME << "::line:" << __LINE__ << ": " << "ASSERT FAILED: "\
-        << std::fixed << std::setprecision(7) << #left << #operator << #right << " @ "\
-        << #left << "=" << (left) << "; " << #right << "=" << (right) << std::endl;\
-        raise(SIGTRAP);\
-    }\
 }
 
 #define RAY_LENGTH_MIN  1.0e-3f

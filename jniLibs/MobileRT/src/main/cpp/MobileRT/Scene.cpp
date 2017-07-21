@@ -9,22 +9,22 @@ using MobileRT::Scene;
 static unsigned int counter(0u);
 
 Scene::Scene() noexcept :
-	lights_(std::vector<Light *>()),
-	primitives_(std::vector<Primitive *>()),
-	bb(nullptr)
+        primitives_(std::vector<Primitive *>()),
+        lights_(std::vector<Light *>())
+//bb(nullptr)
 {
     counter++;
 }
 
 Scene::~Scene() noexcept {
-    for (Light *light : this->lights_) {
-        delete light;
-    }
-    this->lights_.clear();
     for (Primitive *primitive : this->primitives_) {
         delete primitive;
     }
     this->primitives_.clear();
+    for (Light *light : this->lights_) {
+        delete light;
+    }
+    this->lights_.clear();
 }
 
 int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcept {

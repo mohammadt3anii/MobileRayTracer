@@ -11,16 +11,16 @@ Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
                    const unsigned int blockSizeX, const unsigned int blockSizeY,
                    Sampler &samplerPixel) noexcept :
         samplerCamera_(samplerCamera),
-        shader_(shader),
+        samplerPixel_(samplerPixel),
         camera_(camera),
+        shader_(shader),
+        accumulate_(std::vector<RGB>(width * height)),
+        domainSize_((width / blockSizeX) * (height / blockSizeY)),
         width_(width),
         height_(height),
-		accumulate_(std::vector<RGB> (width * height)),
-        domainSize_((width / blockSizeX) * (height / blockSizeY)),
         blockSizeX_(blockSizeX),
         blockSizeY_(blockSizeY),
         resolution_(width * height),
-        samplerPixel_(samplerPixel),
         sample_(0u)
 {
 }
@@ -90,19 +90,19 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     const float pixelHeight(0.5f / this->height_);
     const auto samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
     RGB pixelRGB;
-		Intersection intersection;
+    Intersection intersection;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
         for (;;) {
 			const float block (this->samplerCamera_.getSample(sample));
             if (block >= 1.0f) {break;}
 			const auto pixel(static_cast<unsigned int>(static_cast<uint32_t>(::lroundf(block * this->domainSize_)) * this->blockSizeX_ % resolution_));
-            const unsigned int startY(((pixel / width_) * blockSizeY_) % height_);
+            const unsigned int startY(((pixel / this->width_) * this->blockSizeY_) % this->height_);
             const unsigned int endY(startY + this->blockSizeY_);
             for (unsigned int y(startY); y < endY; y++) {
-                const unsigned int yWidth(y * width_);
+                const unsigned int yWidth(y * this->width_);
                 const float v(y * INV_IMG_HEIGHT);
-                const unsigned int startX((pixel + yWidth) % width_);
+                const unsigned int startX((pixel + yWidth) % this->width_);
                 const unsigned int endX(startX + this->blockSizeX_);
                 for (unsigned int x(startX); x < endX; x++) {
                     const float u(x * INV_IMG_WIDTH);

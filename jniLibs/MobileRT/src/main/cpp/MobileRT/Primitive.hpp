@@ -15,11 +15,11 @@
 
 namespace MobileRT {
     class Primitive final {
-    private:
-        const Material material_;
-
     public:
         Shape *const shape_;
+
+    private:
+        const Material material_;
 
     public:
         explicit Primitive(Shape *shape, Material const &material) noexcept;

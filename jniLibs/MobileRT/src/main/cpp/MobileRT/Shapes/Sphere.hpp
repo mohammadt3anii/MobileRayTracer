@@ -10,8 +10,8 @@
 namespace MobileRT {
     class Sphere final : public Shape {
     private:
-        const float sq_radius_;
         Point3D center_;
+        const float sq_radius_;
 
     public:
         explicit Sphere(const Point3D &center, float radius) noexcept;

@@ -21,19 +21,19 @@ RGB::RGB(const float r, const float g, const float b) noexcept :
 }
 
 RGB::RGB(const RGB &rgb) noexcept :
-		samples_(rgb.samples_),
         R_(rgb.R_),
         G_(rgb.G_),
-        B_(rgb.B_)
+        B_(rgb.B_),
+        samples_(rgb.samples_)
 {
     counter++;
 }
 
 RGB::RGB(RGB &&rgb) noexcept :
-		samples_(rgb.samples_),
         R_(rgb.R_),
         G_(rgb.G_),
-        B_(rgb.B_)
+        B_(rgb.B_),
+        samples_(rgb.samples_)
 {
     counter++;
 }
@@ -92,7 +92,7 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
     this->R_ += sample.R_;
     this->G_ += sample.G_;
     this->B_ += sample.B_;
-		sample.samples_ = ++this->samples_;
+    sample.samples_ = ++this->samples_;
     sample.R_ = this->R_;
     sample.G_ = this->G_;
     sample.B_ = this->B_;
@@ -103,7 +103,7 @@ void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
 }
 
 void RGB::reset(const float r, const float g, const float b, const unsigned int samples) noexcept {
-		this->samples_ = samples;
+    this->samples_ = samples;
     this->R_ = r;
     this->G_ = g;
     this->B_ = b;

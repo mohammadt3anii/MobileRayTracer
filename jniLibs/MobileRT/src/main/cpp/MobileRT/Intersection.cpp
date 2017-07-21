@@ -13,7 +13,9 @@ Intersection::Intersection() noexcept
     counter++;
 }
 
-void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
+void Intersection::reset(const Point3D &orig,
+                         const Vector3D &dir,
+                         const float dist,
                          const Vector3D &normal,
                          const Material &material) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
@@ -21,14 +23,16 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->point_.z_ = orig.z_ + dir.z_ * dist;
 	// this->point_ = orig + dir * dist;
     this->normal_ = normal;
-    this->length_ = dist;
-    this->material_ = &material;
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;
     this->symNormal_.z_ = -this->normal_.z_;
+    this->material_ = &material;
+    this->length_ = dist;
 }
 
-void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float dist,
+void Intersection::reset(const Point3D &orig,
+                         const Vector3D &dir,
+                         const float dist,
                          const Point3D &center,
                          const Material &material) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
@@ -36,11 +40,11 @@ void Intersection::reset(const Point3D &orig, const Vector3D &dir, const float d
     this->point_.z_ = orig.z_ + dir.z_ * dist;
 	// this->point_ = orig + dir * dist;
     this->normal_ = Vector3D(this->point_, center, true);
-    this->length_ = dist;
-    this->material_ = &material;
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;
     this->symNormal_.z_ = -this->normal_.z_;
+    this->material_ = &material;
+    this->length_ = dist;
 }
 
 unsigned int Intersection::getInstances() noexcept {

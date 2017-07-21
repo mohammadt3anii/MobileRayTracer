@@ -12,12 +12,12 @@
 namespace MobileRT {
     class Triangle : public Shape {
     public:
+        const Vector3D AC_;
+        const Vector3D AB_;
+        const Vector3D normal_;
         const Point3D pointA_;
         const Point3D pointB_;
         const Point3D pointC_;
-        const Vector3D AB_;
-        const Vector3D AC_;
-        const Vector3D normal_;
 
     public:
         explicit Triangle(const Point3D &pointA, const Point3D &pointB,

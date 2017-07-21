@@ -10,27 +10,27 @@ using MobileRT::Point3D;
 Rectangle::Rectangle(const Point3D &pointA,
                      const Point3D &pointB,
                      const Point3D &pointC) noexcept :
+        AC_(pointC - pointA),
+        AB_(pointB - pointA),
+        normal_(AB_.crossProduct(AC_)),
         pointA_(pointA),
         pointB_(pointB),
-		pointC_(pointC),
-        pointD_(pointA_ + (pointB - pointA) + (pointC - pointA)),
-        AB_(pointB - pointA),
-        AC_(pointC - pointA),
-        normal_(AB_.crossProduct(AC_))
+        pointC_(pointC),
+        pointD_(pointA_ + (pointB - pointA) + (pointC - pointA))
 {
 }
 
 bool Rectangle::intersect(Intersection &intersection, const Ray &ray,
                          const Material &material) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
-    const float normalizedProjection(AB_.dotProduct(perpendicularVector));
+    const float normalizedProjection(this->AB_.dotProduct(perpendicularVector));
     if (std::fabs(normalizedProjection) < VECT_PROJ_MIN) {
 		return false;
 	}
 
     const float normalizedProjectionInv(1.0f / normalizedProjection);
 
-    const Vector3D vertexToCamera(ray.origin_, pointA_);
+    const Vector3D vertexToCamera(ray.origin_, this->pointA_);
 
     const float u(normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector));
 

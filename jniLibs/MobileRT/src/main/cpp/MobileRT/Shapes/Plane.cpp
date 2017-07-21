@@ -8,8 +8,8 @@ using MobileRT::Plane;
 using MobileRT::Point3D;
 
 Plane::Plane(const Point3D &point, const Vector3D &normal) noexcept :
-        point_(point),
-        normal_(normal)
+        normal_(normal),
+        point_(point)
 {
 }
 

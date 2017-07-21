@@ -8,11 +8,11 @@ using MobileRT::Material;
 static unsigned int counter(0u);
 
 Material::Material(RGB Kd, RGB Ks, RGB Kt, const float refractiveIndice, RGB Le)noexcept :
+        Le_(std::move(Le)),
         Kd_(std::move(Kd)),
         Ks_(std::move(Ks)),
         Kt_(std::move(Kt)),
-				refractiveIndice_(refractiveIndice),
-        Le_(std::move(Le))
+        refractiveIndice_(refractiveIndice)
 {
     counter++;
 }

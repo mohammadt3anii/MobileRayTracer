@@ -16,9 +16,9 @@
 namespace MobileRT {
     class Scene final {
     public:
+		std::vector<Primitive *> primitives_;
         std::vector<Light *> lights_;
-        std::vector<Primitive *> primitives_;
-        AxisAlignedBoundingBox *bb;
+		//AxisAlignedBoundingBox *bb;
 
     private:
         int traceLights(Intersection &intersection, const Ray &ray) const noexcept;

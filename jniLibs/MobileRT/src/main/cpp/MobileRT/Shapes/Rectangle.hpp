@@ -12,13 +12,13 @@
 namespace MobileRT {
     class Rectangle : public Shape {
     private:
+        Vector3D AC_;
+        Vector3D AB_;
+        Vector3D normal_;
         Point3D pointA_;
         Point3D pointB_;
         Point3D pointC_;
         Point3D pointD_;
-        Vector3D AB_;
-        Vector3D AC_;
-        Vector3D normal_;
 
     public:
         explicit Rectangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept;

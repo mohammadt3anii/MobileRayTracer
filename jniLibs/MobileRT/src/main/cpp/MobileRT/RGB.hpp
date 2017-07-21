@@ -9,14 +9,16 @@
 
 namespace MobileRT {
     class RGB final {
-    private:
-        std::mutex mutex_;
-
     public:
-		unsigned int samples_{0u};
         float R_{0.0f};
         float G_{0.0f};
         float B_{0.0f};
+
+	private:
+		std::mutex mutex_;
+
+	public:
+		unsigned int samples_{0u};
 
     public:
 				explicit RGB() noexcept;
