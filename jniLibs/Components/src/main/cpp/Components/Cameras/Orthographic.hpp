@@ -25,7 +25,7 @@ namespace Components {
 
 		Orthographic(Orthographic &&orthographic) noexcept = delete;
 
-		~Orthographic() noexcept final = default;
+        //~Orthographic() noexcept final = default;
 
         Orthographic &operator=(const Orthographic &orthographic) noexcept = delete;
 

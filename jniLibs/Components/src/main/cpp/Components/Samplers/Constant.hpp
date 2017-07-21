@@ -19,7 +19,7 @@ namespace Components {
 
 		Constant(Constant &&constant) noexcept = delete;
 
-		~Constant() noexcept final = default;
+		//~Constant() noexcept final = default;
 
         Constant &operator=(const Constant &constant) noexcept = delete;
 

@@ -23,7 +23,7 @@ namespace Components {
 
 		PointLight(PointLight &&pointLight) noexcept = delete;
 
-		~PointLight() noexcept final = default;
+		//~PointLight() noexcept final = default;
 
         PointLight &operator=(const PointLight &pointLight) noexcept = delete;
 

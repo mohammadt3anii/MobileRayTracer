@@ -20,7 +20,7 @@ namespace MobileRT {
 
 		Plane(Plane &&plane) noexcept = delete;
 
-		~Plane() noexcept final = default;
+        //~Plane() noexcept final = default;
 
         Plane &operator=(const Plane &plane) noexcept = delete;
 

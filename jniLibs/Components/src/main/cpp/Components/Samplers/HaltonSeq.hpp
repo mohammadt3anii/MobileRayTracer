@@ -21,7 +21,7 @@ namespace Components {
 
 		HaltonSeq(HaltonSeq &&haltonSeq) noexcept = delete;
 
-		~HaltonSeq() noexcept final = default;
+        //~HaltonSeq() noexcept final = default;
 
         HaltonSeq &operator=(const HaltonSeq &haltonSeq) noexcept = delete;
 

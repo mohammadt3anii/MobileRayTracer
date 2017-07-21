@@ -28,7 +28,7 @@ namespace Components {
 
 		Perspective(Perspective &&perspective) noexcept = delete;
 
-        ~Perspective() noexcept final = default;
+        //~Perspective() noexcept final = default;
 
 		Perspective &operator=(const Perspective &perspective) const noexcept = delete;
 

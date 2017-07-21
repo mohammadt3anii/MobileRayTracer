@@ -27,7 +27,7 @@ namespace MobileRT {
 
 		Triangle(Triangle &&triangle) noexcept = delete;
 
-		~Triangle() noexcept override = default;
+        //~Triangle() noexcept override = default;
 
         Triangle &operator=(const Triangle &triangle) noexcept = delete;
 
