@@ -16,11 +16,13 @@ CXXFLAGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro 
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 
-#SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -O0 -g3 -fno-omit-frame-pointer
+ifeq ($(S),1)
+	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -O0 -g3 -fno-omit-frame-pointer
+endif
 ifeq ($(SANITIZER),)
-	CXXFLAGS += -march=native -ftree-vectorize -Ofast
-	#CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
-	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+	#CXXFLAGS += -march=native -ftree-vectorize -Ofast
+	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+	#LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
 endif
 
 ifeq ($(CXX),clang++)

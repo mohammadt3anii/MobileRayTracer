@@ -27,14 +27,13 @@ void MagicLog(std::ostream& o, T t)
 template<typename T, typename... Args>
 void MagicLog(std::ostream& o, T t, Args... args)
 {
-    MagicLog(o, t);
-    MagicLog(o, args...);
+    MagicLog(o << t, args...);
 }
 
 template<typename... Args>
 void log(Args... args)
 {
-    std::ostringstream oss;
+    std::ostringstream oss("");
     MagicLog(oss, args...);
 	#ifdef NO_ANDROID
 		std::cout << oss.str() << std::endl;
@@ -43,16 +42,14 @@ void log(Args... args)
 	#endif
 }
 
-#define LOG(msg,...) \
-{std::string filepath;\
-getFileName(filepath, __FILE__);\
-log(filepath,":",__LINE__,": ",msg,__VA_ARGS__);}
+#define LOG(...) {\
+log(getFileName(__FILE__),":",__LINE__,": ",__VA_ARGS__);}
 
 #ifndef LOG
 	#define LOG(...)
 #endif
 
-inline void getFileName (std::string& str, const char *filepath) {
+inline std::string getFileName (const char *filepath) {
 	std::stringstream ss (filepath);
 	std::string filePath(ss.str());
 	std::string::size_type filePos (filePath.rfind('/'));
@@ -62,7 +59,7 @@ inline void getFileName (std::string& str, const char *filepath) {
 	else {
 		filePos = 0;
 	}
-	str = filePath.substr(filePos);
+	return std::string(filePath.substr(filePos));
 }
 
 #define RAY_LENGTH_MIN  1.0e-3f

@@ -73,7 +73,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     LOG("ray = ", Ray::getInstances());
     LOG("material = ", Material::getInstances());
     LOG("intersection = ", Intersection::getInstances());
-    LOG("FINISH", "");
+    LOG("FINISH");
 }
 
 void Renderer::stopRender() noexcept {

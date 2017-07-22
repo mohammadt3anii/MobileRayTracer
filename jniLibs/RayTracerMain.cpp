@@ -1,23 +1,41 @@
-#include "RayTracerMain.hpp"
+#include "Components/src/main/cpp/Components/Cameras/Orthographic.hpp"
+#include "Components/src/main/cpp/Components/Cameras/Perspective.hpp"
+#include "Components/src/main/cpp/Components/Lights/AreaLight.hpp"
+#include "Components/src/main/cpp/Components/Lights/PointLight.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Constant.hpp"
+#include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Random.hpp"
+#include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
+#include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
+#include "Components/src/main/cpp/Components/Shaders/PathTracer.hpp"
+#include "Components/src/main/cpp/Components/Shaders/Whitted.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Renderer.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Scene.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.hpp"
+#include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
+#include <cstdint>
+#include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
+#include <iostream>
+#include <omp.h>
 
 static MobileRT::Camera *camera_(nullptr);
 static MobileRT::Shader *shader_(nullptr);
 static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
-static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
-
-static unsigned int samplesPixel_(0u);
-static unsigned int samplesLight_(0u);
+static MobileRT::Sampler *samplerPointLight_(nullptr);
 static unsigned int blockSize_(4u);
 static unsigned int blockSizeX_(0u);
 static unsigned int blockSizeY_(0u);
-
+static unsigned int samplesPixel_(0u);
+static unsigned int samplesLight_(0u);
 static const unsigned int width_(900u);
 static const unsigned int height_(900u);
-static unsigned int canvas[width_ * height_];
+static unsigned int bitmap[width_ * height_];
 static unsigned char buffer[width_ * height_ * 4u];//RGBA
 
 static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
@@ -251,18 +269,6 @@ static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
     return std::move(scene);
 }
 
-void destroy(GtkWidget* /*unused*/, gpointer /*unused*/) noexcept {
-    gtk_main_quit();
-}
-
-static bool check_escape(GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/) noexcept {
-    if (event->keyval == GDK_KEY_Escape) {
-        gtk_main_quit();
-        return true;
-    }
-    return false;
-}
-
 int main(int argc, char **argv) noexcept {
     int repeats(atoi(argv[4]));
     const int scene(atoi(argv[3]));
@@ -372,35 +378,47 @@ int main(int argc, char **argv) noexcept {
     const double start(omp_get_wtime());
     try {
         do {
-            renderer_->renderFrame(canvas, static_cast<unsigned int>(threads));
+            renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
 			camera_->position_.x_ += 2.0f;
         } while (repeats-- > 1);
     } catch (...) {
-        LOG("EXCEPTION", "");
+        LOG("EXCEPTION");
         raise(SIGTRAP);
     }
     delete renderer_;
     const double end(omp_get_wtime() - start);
-    std::cout << "Time in secs = " << end << std::endl;
+    LOG("Time in secs = ", end);
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
-        const unsigned int color(canvas[j]);
+        const unsigned int color(bitmap[j]);
         buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
         buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
         buffer[i + 2] = static_cast<unsigned char> ((color & 0x00FF0000) >> 16);
         buffer[i + 3] = static_cast<unsigned char> ((color & 0xFF000000) >> 24);
     }
-    gtk_init(&argc, &argv);
-    GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    GdkPixbuf *pixbuff = gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-                                                  width_, height_, width_ * 4, nullptr, nullptr);
-    GtkWidget *image = gtk_image_new_from_pixbuf(pixbuff);
-    gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(destroy), nullptr);
-    gtk_signal_connect(GTK_OBJECT(window), "key_press_event",
-                       GTK_SIGNAL_FUNC(check_escape), nullptr);
-    gtk_container_add(GTK_CONTAINER(window), image);
-    gtk_widget_show_all(window);
-    gtk_main();
-	g_object_unref (G_OBJECT(pixbuff));
-    return 0;
+  //   gtk_init(&argc, &argv);
+  //   GtkWidget *window (gtk_window_new(GTK_WINDOW_TOPLEVEL));
+  //   GdkPixbuf *pixbuff (gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
+  //                                                 width_, height_, width_ * 4, nullptr, nullptr));
+  //   GtkWidget *image (gtk_image_new_from_pixbuf(pixbuff));
+	// 	gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
+	// 		[]() -> void {
+	// 			gtk_main_quit();
+	// 		}
+	// 	), nullptr);
+	// 	auto *check_escape (static_cast<bool(*)(
+	// 		GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/)>([](GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/){
+	// 		if (event->keyval == GDK_KEY_Escape) {
+	// 				gtk_main_quit();
+	// 				return true;
+	// 			}
+	// 			return false;
+	// 		})
+	// 	);
+  //   gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape), nullptr);
+  //   gtk_container_add(GTK_CONTAINER(window), image);
+  //   gtk_widget_show_all(window);
+  //   gtk_main();
+	// g_object_unref (G_OBJECT(pixbuff));
+    return argc;
 }
