@@ -27,7 +27,7 @@ namespace MobileRT {
 
 		Rectangle(Rectangle &&rectangle) noexcept = delete;
 
-        //~Rectangle() noexcept final = default;
+        ~Rectangle() noexcept final = default;
 
         Rectangle &operator=(const Rectangle &rectangle) noexcept = delete;
 

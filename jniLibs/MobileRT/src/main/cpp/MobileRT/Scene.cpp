@@ -9,7 +9,7 @@ using MobileRT::Scene;
 static unsigned int counter(0u);
 
 Scene::Scene() noexcept :
-        primitives_(std::vector<Primitive *>()),
+        primitives_(std::vector<Primitive>()),
         lights_(std::vector<Light *>())
 //bb(nullptr)
 {
@@ -17,8 +17,8 @@ Scene::Scene() noexcept :
 }
 
 Scene::~Scene() noexcept {
-    for (Primitive *primitive : this->primitives_) {
-        delete primitive;
+    for (Primitive &primitive : this->primitives_) {
+        delete &primitive;
     }
     this->primitives_.clear();
     for (Light *light : this->lights_) {
@@ -46,7 +46,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     const auto primitivesSize(static_cast<unsigned int> (primitives_.size()));
 
     for (unsigned int i(0u); i < primitivesSize; i++) {
-        const Primitive &primitive(*this->primitives_[static_cast<uint32_t> (i)]);
+        const Primitive &primitive(this->primitives_[static_cast<uint32_t> (i)]);
         if (primitive.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }
@@ -58,9 +58,9 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
 }
 
 bool Scene::shadowTrace(Intersection &intersection, Ray &&ray) const noexcept {
-    for (const Primitive *primitive : this->primitives_)//trace shadow ray
+    for (const Primitive &primitive : this->primitives_)//trace shadow ray
     {
-        if (primitive->intersect(intersection, ray)) {
+        if (primitive.intersect(intersection, ray)) {
             return true;
         }
     }

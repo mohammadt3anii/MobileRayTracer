@@ -31,7 +31,7 @@ namespace Components {
 
 		AreaLight(AreaLight &&areaLight) noexcept = delete;
 
-		//~AreaLight() noexcept final = default;
+		~AreaLight() noexcept final = default;
 
         AreaLight &operator=(const AreaLight &areaLight) noexcept = delete;
 

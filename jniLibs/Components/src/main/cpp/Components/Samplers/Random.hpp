@@ -18,7 +18,7 @@ namespace Components {
 
 		Random(Random &&random) noexcept = delete;
 
-        //~Random() noexcept final = default;
+        ~Random() noexcept final = default;
 
         Random &operator=(const Random &random) noexcept = delete;
 

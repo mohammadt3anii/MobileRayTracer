@@ -20,7 +20,7 @@ namespace MobileRT {
 
 		Sphere(Sphere &&sphere) noexcept = delete;
 
-        //~Sphere() noexcept final = default;
+        ~Sphere() noexcept final = default;
 
         Sphere &operator=(const Sphere &sphere) noexcept = delete;
 

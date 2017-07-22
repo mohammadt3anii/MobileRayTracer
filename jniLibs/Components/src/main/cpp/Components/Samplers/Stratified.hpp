@@ -21,7 +21,7 @@ namespace Components {
 
 		Stratified(Stratified &&stratified) noexcept = delete;
 
-        //~Stratified() noexcept final = default;
+        ~Stratified() noexcept final = default;
 
         Stratified &operator=(const Stratified &stratified) noexcept = delete;
 

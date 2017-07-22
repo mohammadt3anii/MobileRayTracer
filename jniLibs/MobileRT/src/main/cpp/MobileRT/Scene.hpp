@@ -16,7 +16,7 @@
 namespace MobileRT {
     class Scene final {
     public:
-		std::vector<Primitive *> primitives_;
+		std::vector<Primitive> primitives_;
         std::vector<Light *> lights_;
 		//AxisAlignedBoundingBox *bb;
 

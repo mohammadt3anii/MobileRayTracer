@@ -16,7 +16,7 @@
 namespace MobileRT {
     class Primitive final {
     public:
-		Shape &shape_;
+        Shape *shape_;
 
     private:
         const Material material_;
@@ -26,7 +26,7 @@ namespace MobileRT {
 
 		Primitive(const Primitive &primitive) noexcept = delete;
 
-		Primitive(Primitive &&primitive) noexcept = delete;
+        Primitive(Primitive &&primitive) noexcept;
 
         ~Primitive() noexcept;
 

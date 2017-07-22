@@ -120,7 +120,7 @@ extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv * /*env*/,
         jobject /*thiz*/,
-        jint const size
+        jint size
 ) noexcept;
 
 #endif //APP_DRAWVIEW_HPP
