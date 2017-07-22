@@ -28,6 +28,8 @@ namespace MobileRT {
     public:
 				explicit Vector3D() noexcept;
 
+				explicit Vector3D(float x, float y, float z, float magnitude) noexcept;
+
         explicit Vector3D(float x, float y, float z) noexcept;
 
         explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,

@@ -12,8 +12,8 @@ INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
-CXXFLAGS += -Wno-c++98-compat-pedantic -Wno-padded -Wno-weak-vtables
 CXXFLAGS += -Wno-shift-sign-overflow -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-documentation-unknown-command -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro
+CXXFLAGS += -Wno-c++98-compat-pedantic -Wno-padded -Wno-weak-vtables -Wno-unused-variable
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 
@@ -23,17 +23,21 @@ ifeq ($(S),)
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
+	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
 endif
 
 ifeq ($(S),2)
-	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
+	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
 	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
+	SANITIZER_LD := -fsanitize-address-use-after-scope
+	ASAN_OPTIONS := strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 endif
 
 ifeq ($(CXX),clang++)
   CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1 $(SANITIZER)
-  LDFLAGS += -lc++ $(SANITIZER)
+  LDFLAGS += -lc++ $(SANITIZER) $(SANITIZER_LD)
 endif
 
 ###############################################################################

@@ -5,17 +5,19 @@
 #ifndef MOBILERT_UTILS_HPP
 #define MOBILERT_UTILS_HPP
 
-#include <csignal>
-#include <cstring>
-#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <string>
 
 #ifndef NO_ANDROID
 
 #include <android/log.h>
 
+#endif
+
+//#define LOG(...) {log(getFileName(__FILE__),":",__LINE__,": ",__VA_ARGS__);}
+
+#ifndef LOG
+    #define LOG(...)
 #endif
 
 template <typename T>
@@ -41,12 +43,6 @@ void log(Args... args)
 		__android_log_print(ANDROID_LOG_INFO, "LOG", "%s\n", oss.str().c_str());
 	#endif
 }
-
-#define LOG(...) {log(getFileName(__FILE__),":",__LINE__,": ",__VA_ARGS__);}
-
-#ifndef LOG
-	#define LOG(...)
-#endif
 
 inline std::string getFileName (const char *filepath) {
 	std::string filePath(filepath);

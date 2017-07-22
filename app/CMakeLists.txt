@@ -40,7 +40,7 @@ set(MOBILE_APP_PATH ${PROJECT_PATH}/app/src/main/cpp)
 file(GLOB_RECURSE MOBILE_APP_SOURCES "${MOBILE_APP_PATH}/**.cpp")
 add_library(DrawView SHARED ${MOBILE_APP_SOURCES})
 
-target_compile_options(DrawView PRIVATE $<$<CONFIG:DEBUG>:-g3 -O2>)
+target_compile_options(DrawView PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls>)
 target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
 target_compile_options(DrawView PRIVATE -std=c++14 -Weverything -Wfatal-errors --verbose -Werror)
@@ -59,4 +59,9 @@ optimized -Wl,-gc-sections
 optimized -Wl,-z,norelro
 optimized -Wl,-hash-style=sysv
 optimized -Wl,-build-id=none
-optimized -Wl,-s)
+optimized -Wl,-s
+debug -Wl,-O0
+debug -Wl,-g
+debug -Wl,-fno-omit-frame-pointer
+debug -Wl,-fno-optimize-sibling-calls
+)

@@ -57,9 +57,9 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 			{
 				const Point3D lightPosition(light.getPosition());
 				//calculates vector starting in intersection to the light
-				const Vector3D vectorToLight(lightPosition, intersection.point_, true);
+				Vector3D vectorToLight(lightPosition, intersection.point_);
 				//distance from intersection to the light (and normalize it)
-				const float distanceToLight(vectorToLight.magnitude_);
+				const float distanceToLight(vectorToLight.normalize());
 				const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
 				if (cos_N_L > 0.0f)
 				{

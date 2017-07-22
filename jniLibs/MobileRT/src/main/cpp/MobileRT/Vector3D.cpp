@@ -14,6 +14,15 @@ Vector3D::Vector3D() noexcept
     counter++;
 }
 
+Vector3D::Vector3D(const float x, const float y, const float z, const float magnitude) noexcept :
+        x_(x),
+        y_(y),
+        z_(z),
+        magnitude_(magnitude)
+{
+    counter++;
+}
+
 Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
         x_(x),
         y_(y),
@@ -38,11 +47,10 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2, const float
         z_(vector1.z_ - vector2.z_ * value),
 		magnitude_(magnitude())
 {
-    const float len(magnitude_);
-    const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ /= this->magnitude_;
+    this->y_ /= this->magnitude_;
+    this->z_ /= this->magnitude_;
+    this->magnitude_ = 1.0f;
     counter++;
 }
 
@@ -62,10 +70,10 @@ Vector3D::Vector3D(const Point3D &dest, const Point3D &orig, bool /*normalize*/)
         z_(dest.z_ - orig.z_),
 		magnitude_(magnitude())
 {
-    const float inv_length(magnitude_ == 0.0f ? 1.0f : 1.0f / magnitude_);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ /= this->magnitude_;
+    this->y_ /= this->magnitude_;
+    this->z_ /= this->magnitude_;
+    this->magnitude_ = 1.0f;
 
     counter++;
 }
@@ -81,10 +89,10 @@ Vector3D::Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept :
 
 float Vector3D::normalize() noexcept {
     const float len(magnitude());
-    const float inv_length(len == 0.0f ? 1.0f : 1.0f / len);
-    this->x_ *= inv_length;
-    this->y_ *= inv_length;
-    this->z_ *= inv_length;
+    this->x_ /= len;
+    this->y_ /= len;
+    this->z_ /= len;
+    this->magnitude_ = 1.0f;
     return len;
 }
 
@@ -138,7 +146,7 @@ Vector3D Vector3D::operator+(const Vector3D &vector) const noexcept {
 }
 
 Vector3D Vector3D::operator-() const noexcept {
-	return Vector3D(-this->x_, -this->y_, -this->z_);
+	return Vector3D(-this->x_, -this->y_, -this->z_, this->magnitude_);
 }
 
 unsigned int Vector3D::getInstances() noexcept {

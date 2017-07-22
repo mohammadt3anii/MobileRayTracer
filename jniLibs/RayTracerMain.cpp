@@ -387,7 +387,7 @@ int main(int argc, char **argv) noexcept {
     }
     delete renderer_;
     const double end(omp_get_wtime() - start);
-    LOG("Time in secs = ", end);
+    //std::cout << "Time in secs = " << end << std::endl;
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(bitmap[j]);
@@ -396,29 +396,29 @@ int main(int argc, char **argv) noexcept {
         buffer[i + 2] = static_cast<unsigned char> ((color & 0x00FF0000) >> 16);
         buffer[i + 3] = static_cast<unsigned char> ((color & 0xFF000000) >> 24);
     }
-  //   gtk_init(&argc, &argv);
-  //   GtkWidget *window (gtk_window_new(GTK_WINDOW_TOPLEVEL));
-  //   GdkPixbuf *pixbuff (gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-  //                                                 width_, height_, width_ * 4, nullptr, nullptr));
-  //   GtkWidget *image (gtk_image_new_from_pixbuf(pixbuff));
-	// 	gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
-	// 		[]() -> void {
-	// 			gtk_main_quit();
-	// 		}
-	// 	), nullptr);
-	// 	auto *check_escape (static_cast<bool(*)(
-	// 		GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/)>([](GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/){
-	// 		if (event->keyval == GDK_KEY_Escape) {
-	// 				gtk_main_quit();
-	// 				return true;
-	// 			}
-	// 			return false;
-	// 		})
-	// 	);
-  //   gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape), nullptr);
-  //   gtk_container_add(GTK_CONTAINER(window), image);
-  //   gtk_widget_show_all(window);
-  //   gtk_main();
-	// g_object_unref (G_OBJECT(pixbuff));
+    // gtk_init(&argc, &argv);
+    // GtkWidget *window (gtk_window_new(GTK_WINDOW_TOPLEVEL));
+    // GdkPixbuf *pixbuff (gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
+    // 	width_, height_, width_ * 4, nullptr, nullptr));
+    // GtkWidget *image (gtk_image_new_from_pixbuf(pixbuff));
+		// gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
+		// 	[]() -> void {
+		// 		gtk_main_quit();
+		// 	}
+		// ), nullptr);
+		// auto *check_escape (static_cast<bool(*)(
+		// 	GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/)>([](GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/){
+		// 	if (event->keyval == GDK_KEY_Escape) {
+		// 			gtk_main_quit();
+		// 			return true;
+		// 		}
+		// 		return false;
+		// 	})
+		// );
+    // gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape), nullptr);
+    // gtk_container_add(GTK_CONTAINER(window), image);
+    // gtk_widget_show_all(window);
+    // gtk_main();
+		// g_object_unref (G_OBJECT(pixbuff));
     return argc;
 }
