@@ -49,8 +49,7 @@ void log(Args... args)
 #endif
 
 inline std::string getFileName (const char *filepath) {
-	std::stringstream ss (filepath);
-	std::string filePath(ss.str());
+	std::string filePath(filepath);
 	std::string::size_type filePos (filePath.rfind('/'));
 	if (filePos != std::string::npos) {
 		++filePos;
