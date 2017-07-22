@@ -10,21 +10,22 @@ MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
-#SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
 CXXFLAGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-weak-vtables -Wno-shift-sign-overflow -Wno-unused-variable -Wno-global-constructors
 
-#CXXFLAGS += -march=native -ftree-vectorize -Ofast
-CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
-
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
-LDFLAGS += $(SANITIZER)
-#LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+
+#SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -O0 -g3 -fno-omit-frame-pointer
+ifeq ($(SANITIZER),)
+	CXXFLAGS += -march=native -ftree-vectorize -Ofast
+	#CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+endif
 
 ifeq ($(CXX),clang++)
-  CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1 ${SANITIZER}
-  LDFLAGS += -lc++
+  CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1 $(SANITIZER)
+  LDFLAGS += -lc++ $(SANITIZER)
 endif
 
 ###############################################################################
