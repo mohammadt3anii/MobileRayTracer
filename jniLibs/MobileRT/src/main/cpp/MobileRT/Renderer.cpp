@@ -39,7 +39,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 	std::vector<std::thread> threads;
 	threads.reserve(numChildren);
     for (unsigned int i(0u); i < numChildren; i++) {
-		threads.emplace_back(std::thread(&Renderer::renderScene, this, bitmap, i));
+		threads.emplace_back(&Renderer::renderScene, this, bitmap, i);
     }
     renderScene(bitmap, numChildren);
     for (unsigned int i(0u); i < numChildren; i++) {
