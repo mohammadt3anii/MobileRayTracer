@@ -15,12 +15,12 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
 CXXFLAGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-weak-vtables -Wno-shift-sign-overflow -Wno-unused-variable -Wno-global-constructors
 
-CXXFLAGS += -march=native -ftree-vectorize -Ofast
-#CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+#CXXFLAGS += -march=native -ftree-vectorize -Ofast
+CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 LDFLAGS += $(SANITIZER)
-LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+#LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
 
 ifeq ($(CXX),clang++)
   CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1 ${SANITIZER}

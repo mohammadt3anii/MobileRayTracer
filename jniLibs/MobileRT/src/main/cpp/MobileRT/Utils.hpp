@@ -53,10 +53,9 @@ log(filepath,":",__LINE__,": ",msg,__VA_ARGS__);}
 #endif
 
 inline void getFileName (std::string& str, const char *filepath) {
-	std::stringstream ss;
-	ss << filepath;
+	std::stringstream ss (filepath);
 	std::string filePath(ss.str());
-	std::string::size_type filePos = filePath.rfind('/');
+	std::string::size_type filePos (filePath.rfind('/'));
 	if (filePos != std::string::npos) {
 		++filePos;
 	}

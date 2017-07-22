@@ -23,16 +23,16 @@
 #include <iostream>
 #include <omp.h>
 
-static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene);
+static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene);
+static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene spheresScene(MobileRT::Scene&& scene);
+static MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept;
 
-static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene);
+static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept;
 
-static void destroy(GtkWidget* /*unused*/, gpointer /*unused*/);
+static void destroy(GtkWidget* /*unused*/, gpointer /*unused*/) noexcept;
 
-static bool check_escape(GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/);
+static bool check_escape(GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/) noexcept;
 
 #endif //RAYTRACERMAIN_HPP
