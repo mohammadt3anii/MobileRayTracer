@@ -12,17 +12,23 @@ INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
-CXXFLAGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-reserved-id-macro -Wno-documentation -Wno-padded -Wno-deprecated-dynamic-exception-spec -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-weak-vtables -Wno-shift-sign-overflow -Wno-unused-variable -Wno-global-constructors
+CXXFLAGS += -Wno-c++98-compat-pedantic -Wno-padded -Wno-weak-vtables
+CXXFLAGS += -Wno-shift-sign-overflow -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-documentation-unknown-command -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 
-ifeq ($(S),1)
-	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -O0 -g3 -fno-omit-frame-pointer
+ifeq ($(S),)
+	CXXFLAGS += -march=native -ftree-vectorize -Ofast
+	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
 endif
-ifeq ($(SANITIZER),)
-	#CXXFLAGS += -march=native -ftree-vectorize -Ofast
+
+ifeq ($(S),1)
 	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
-	#LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+endif
+
+ifeq ($(S),2)
+	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer
+	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
 endif
 
 ifeq ($(CXX),clang++)
