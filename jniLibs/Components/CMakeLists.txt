@@ -41,7 +41,7 @@ file(GLOB_RECURSE MOBILE_RC_SOURCES "${MOBILE_RC_PATH}/**.cpp")
 add_library(Components SHARED ${MOBILE_RC_SOURCES})
 target_include_directories(Components INTERFACE ${MOBILE_RC_PATH})
 
-target_compile_options(Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls>)
+target_compile_options(Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls>)
 target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
 target_compile_options(Components PRIVATE -std=c++14 -Weverything -Wfatal-errors --verbose -Werror)
@@ -53,16 +53,12 @@ target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -f
 
 target_link_libraries(Components
 PUBLIC MobileRT PRIVATE --verbose
-optimized -Wl,-O3
-optimized -Wl,-discard-all
-optimized -Wl,-no-undefined
-optimized -Wl,-gc-sections
-optimized -Wl,-z,norelro
-optimized -Wl,-hash-style=sysv
+general -Wl,-O3
+general -Wl,-discard-all
+general -Wl,-no-undefined
+general -Wl,-gc-sections
+general -Wl,-z,norelro
+general -Wl,-hash-style=sysv
 optimized -Wl,-build-id=none
 optimized -Wl,-s
-debug -Wl,-O0
-debug -Wl,-g
-debug -Wl,-fno-omit-frame-pointer
-debug -Wl,-fno-optimize-sibling-calls
 )
