@@ -10,9 +10,9 @@
 namespace MobileRT {
     class Sampler {
     public:
-        std::atomic<uint64_t> sample_;
-        const uint64_t domainSize_;
-        uint64_t samples_;
+        std::atomic<uint64_t> sample_ {0};
+        const uint64_t domainSize_ {0};
+        uint64_t samples_ {0};
 
     public:
         explicit Sampler(uint64_t domainSize,
