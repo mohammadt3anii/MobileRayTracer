@@ -99,8 +99,7 @@ static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
 }
 
 static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
-    const auto max(static_cast<uint64_t> (-1));
-    LOG("samplesLight = ", samplesLight_, " max = ", max);
+    LOG("samplesLight = ", samplesLight_, " max = ", static_cast<uint64_t> (-1));
     const uint64_t domainPointLight(/*roundUpPower2*/
             ((width_ * height_ * 2ull) * 2ull * samplesLight_ * samplesPixel_ * RAY_DEPTH_MAX));
     LOG("domainPointLight = ", domainPointLight);

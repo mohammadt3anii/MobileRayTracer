@@ -61,10 +61,8 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 			}
 		}
 	}
-	const unsigned int pixel2 (ii*this->width_ + jj);
-	RGB& pixelRGB2 (this->accumulate_[pixel2]);
 	LOG("max = ", max, ", i = ", ii, ", j = ", jj);
-	LOG("r = ", pixelRGB2.R_, ", g = ", pixelRGB2.G_, ", b = ", pixelRGB2.B_, " , s = ", pixelRGB2.samples_, " , color = ", pixelRGB2.RGB2Color2());
+	LOG("r = ", this->accumulate_[ii*this->width_ + jj].R_, ", g = ", this->accumulate_[ii*this->width_ + jj].G_, ", b = ", this->accumulate_[ii*this->width_ + jj].B_, " , s = ", this->accumulate_[ii*this->width_ + jj].samples_, " , color = ", this->accumulate_[ii*this->width_ + jj].RGB2Color2());
 
     LOG("point3D = ", Point3D::getInstances());
     LOG("vector3D = ", Vector3D::getInstances());
