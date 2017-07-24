@@ -10,7 +10,7 @@
 #include "../Vector3D.hpp"
 
 namespace MobileRT {
-    class Rectangle : public Shape {
+    class Rectangle final : public Shape {
     private:
         Vector3D AC_;
         Vector3D AB_;

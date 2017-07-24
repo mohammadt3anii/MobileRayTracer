@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace MobileRT {
-    class RegularGrid {
+    class RegularGrid final {
     private:
         //std::vector<AxisAlignedBoundingBox *> *boxes_;
 
