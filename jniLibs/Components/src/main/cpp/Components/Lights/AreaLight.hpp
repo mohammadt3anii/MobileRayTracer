@@ -16,8 +16,12 @@ namespace Components {
 	using MobileRT::Point3D;
 	using MobileRT::Ray;
 	using MobileRT::Intersection;
-    class AreaLight final : public MobileRT::Light, public MobileRT::Triangle {
+	using MobileRT::Triangle;
+    class AreaLight final : public MobileRT::Light
+		//, public MobileRT::Triangle
+		{
     private:
+				Triangle triangle_;
         Sampler &samplerPointLight_;
 
     public:
@@ -41,7 +45,7 @@ namespace Components {
 
         void resetSampling() noexcept final;
 
-		using MobileRT::Triangle::intersect;
+		//using MobileRT::Triangle::intersect;
         bool intersect(Intersection &intersection, const Ray &ray) const noexcept final;
     };
 }//namespace Components

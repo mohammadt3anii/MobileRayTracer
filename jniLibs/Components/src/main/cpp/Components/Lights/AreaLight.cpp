@@ -15,7 +15,7 @@ using MobileRT::Triangle;
 AreaLight::AreaLight(const Material &radiance, Sampler &samplerPointLight,
                      const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
         Light(radiance),
-        Triangle(pointA, pointB, pointC),
+        triangle_(pointA, pointB, pointC),
         samplerPointLight_(samplerPointLight) {
 }
 
@@ -26,9 +26,9 @@ Point3D AreaLight::getPosition() noexcept {
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    return Point3D(pointA_.x_ + R * AB_.x_ + S * AC_.x_,
-                   pointA_.y_ + R * AB_.y_ + S * AC_.y_,
-                   pointA_.z_ + R * AB_.z_ + S * AC_.z_);
+    return Point3D(triangle_.pointA_.x_ + R * triangle_.AB_.x_ + S * triangle_.AC_.x_,
+                   triangle_.pointA_.y_ + R * triangle_.AB_.y_ + S * triangle_.AC_.y_,
+                   triangle_.pointA_.z_ + R * triangle_.AB_.z_ + S * triangle_.AC_.z_);
 }
 
 void AreaLight::resetSampling() noexcept {
@@ -36,5 +36,5 @@ void AreaLight::resetSampling() noexcept {
 }
 
 bool AreaLight::intersect(Intersection &intersection, const Ray &ray) const noexcept {
-    return Triangle::intersect(intersection, ray, this->radiance_);
+    return triangle_.intersect(intersection, ray, this->radiance_);
 }
