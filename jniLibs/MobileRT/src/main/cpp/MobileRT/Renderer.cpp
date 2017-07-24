@@ -111,6 +111,10 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
                     pixelRGB.reset(); //pixel color without intersection
                     intersection.length_ = RAY_LENGTH_MAX;
+										intersection.material_ = nullptr;
+										// LOG("triangles = ", shader_.scene_.triangles_.size());
+										// LOG("spheres = ", shader_.scene_.spheres_.size());
+										// LOG("planes = ", shader_.scene_.planes_.size());
                     this->shader_.rayTrace(pixelRGB, intersection, std::move(ray));
                     this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();

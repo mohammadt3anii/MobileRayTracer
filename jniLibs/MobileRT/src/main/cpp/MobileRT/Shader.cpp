@@ -11,7 +11,9 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
         scene_(std::move(scene)),
         samplesLight_(samplesLight)
 {
-    this->scene_.primitives_.shrink_to_fit();
+    this->scene_.triangles_.shrink_to_fit();
+		this->scene_.spheres_.shrink_to_fit();
+		this->scene_.planes_.shrink_to_fit();
     this->scene_.lights_.shrink_to_fit();
 }
 

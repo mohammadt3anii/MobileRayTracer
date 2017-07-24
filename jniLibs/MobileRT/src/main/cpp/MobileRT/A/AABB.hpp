@@ -7,7 +7,6 @@
 
 #include "../Intersection.hpp"
 #include "../Material.hpp"
-#include "../Primitive.hpp"
 #include "../Ray.hpp"
 #include "../Utils.hpp"
 #include <vector>
@@ -19,7 +18,7 @@ namespace MobileRT {
         const Point3D pointMax_;
 
     public:
-        std::vector<Primitive *> primitives_;
+        //std::vector<Primitive *> primitives_;
 
     private:
         bool intersectPrimitives(Intersection &intersection, const Ray &ray) const;

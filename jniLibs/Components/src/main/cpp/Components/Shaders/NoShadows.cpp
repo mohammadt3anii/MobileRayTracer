@@ -17,7 +17,7 @@ NoShadows::NoShadows(Scene &&scene, const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight) {
 }
 
-void NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/) const noexcept {
+bool NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/) const noexcept {
     const RGB &Le(intersection.material_->Le_);
     const RGB &kD(intersection.material_->Kd_);
 
@@ -46,6 +46,7 @@ void NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/
     } // end direct + ambient
 
     rgb += Le;
+		return false;
 }
 
 void NoShadows::resetSampling() noexcept {

@@ -5,12 +5,13 @@
 #ifndef MOBILERT_SHAPES_RECTANGLE_HPP
 #define MOBILERT_SHAPES_RECTANGLE_HPP
 
-#include "Shape.hpp"
+#include "../Intersection.hpp"
 #include "../Point3D.hpp"
+#include "../Ray.hpp"
 #include "../Vector3D.hpp"
 
 namespace MobileRT {
-    class Rectangle final : public Shape {
+    class Rectangle final {
     private:
         Vector3D AC_;
         Vector3D AB_;
@@ -23,26 +24,25 @@ namespace MobileRT {
     public:
         explicit Rectangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept;
 
-		Rectangle(const Rectangle &rectangle) noexcept = delete;
+		Rectangle(const Rectangle &rectangle) noexcept = default;
 
-		Rectangle(Rectangle &&rectangle) noexcept = delete;
+		Rectangle(Rectangle &&rectangle) noexcept = default;
 
-        ~Rectangle() noexcept final = default;
+        ~Rectangle() noexcept = default;
 
         Rectangle &operator=(const Rectangle &rectangle) noexcept = delete;
 
 		Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
 
-        bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const noexcept final;
+        bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 
-        void moveTo(float x, float y) noexcept final;
+        void moveTo(float x, float y) noexcept;
 
-        float getZ() const noexcept final;
+        float getZ() const noexcept;
 
-        Point3D getPositionMin() const noexcept final;
+        Point3D getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept final;
+        Point3D getPositionMax() const noexcept;
     };
 }//namespace MobileRT
 

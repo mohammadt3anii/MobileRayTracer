@@ -5,10 +5,12 @@
 #ifndef MOBILERT_SHAPES_SPHERE_HPP
 #define MOBILERT_SHAPES_SPHERE_HPP
 
-#include "Shape.hpp"
+#include "../Intersection.hpp"
+#include "../Point3D.hpp"
+#include "../Ray.hpp"
 
 namespace MobileRT {
-    class Sphere final : public Shape {
+    class Sphere final {
     private:
         Point3D center_;
         const float sq_radius_;
@@ -16,26 +18,25 @@ namespace MobileRT {
     public:
         explicit Sphere(const Point3D &center, float radius) noexcept;
 
-		Sphere(const Sphere &sphere) noexcept = delete;
+		Sphere(const Sphere &sphere) noexcept = default;
 
-		Sphere(Sphere &&sphere) noexcept = delete;
+		Sphere(Sphere &&sphere) noexcept = default;
 
-        ~Sphere() noexcept final = default;
+        ~Sphere() noexcept = default;
 
         Sphere &operator=(const Sphere &sphere) noexcept = delete;
 
 		Sphere &operator=(Sphere &&sphere) noexcept = delete;
 
-        bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const noexcept final;
+        bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 
-        void moveTo(float x, float y) noexcept final;
+        void moveTo(float x, float y) noexcept;
 
-        float getZ() const noexcept final;
+        float getZ() const noexcept;
 
-        Point3D getPositionMin() const noexcept final;
+        Point3D getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept final;
+        Point3D getPositionMax() const noexcept;
     };
 }//namespace MobileRT
 

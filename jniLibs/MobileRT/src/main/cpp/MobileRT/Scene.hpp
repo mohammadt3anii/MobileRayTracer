@@ -8,16 +8,22 @@
 #include "A/AABB.hpp"
 #include "Intersection.hpp"
 #include "Light.hpp"
-#include "Primitive.hpp"
+#include "Material.hpp"
 #include "Ray.hpp"
+#include "Shapes/Plane.hpp"
+#include "Shapes/Sphere.hpp"
+#include "Shapes/Triangle.hpp"
 #include "Utils.hpp"
 #include <vector>
 
 namespace MobileRT {
     class Scene final {
     public:
-		std::vector<Primitive> primitives_;
-        std::vector<Light *> lights_;
+		std::vector<Triangle> triangles_;
+		std::vector<Sphere> spheres_;
+		std::vector<Plane> planes_;
+		std::vector<Material> materials_;
+		std::vector<Light *> lights_;
 		//AxisAlignedBoundingBox *bb;
 
     private:

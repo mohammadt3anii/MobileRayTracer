@@ -6,7 +6,7 @@
 #define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
 #include "AABB.hpp"
-#include "../Primitive.hpp"
+#include "../Shapes/Triangle.hpp"
 #include <vector>
 
 namespace MobileRT {
@@ -22,7 +22,7 @@ namespace MobileRT {
                              float minY, float maxY,
                              float minZ, float maxZ,
                              unsigned int numberOfBlocks,
-                             const std::vector<Primitive *> &primitives);
+                             const std::vector<Triangle *> &primitives);
 
 		RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 

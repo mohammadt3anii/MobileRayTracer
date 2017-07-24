@@ -5,12 +5,13 @@
 #include "RegularGrid.hpp"
 
 using MobileRT::RegularGrid;
+using MobileRT::Triangle;
 
 RegularGrid::RegularGrid(const float /*minX*/, const float /*maxX*/,
                          const float /*minY*/, const float /*maxY*/,
                          const float /*minZ*/, const float /*maxZ*/,
                          const unsigned int /*numberOfBlocks*/,
-                         const std::vector<Primitive *>& /*primitives*/) {
+                         const std::vector<Triangle *>& /*primitives*/) {
     /*  loop boundingBoxes
      *      descobrir ponto min e max
      *      criar boundingBox

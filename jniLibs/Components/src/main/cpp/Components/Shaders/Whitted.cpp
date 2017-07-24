@@ -17,19 +17,19 @@ Whitted::Whitted(Scene &&scene, const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight) {
 }
 
-void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept
+bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
 	if (rayDepth > RAY_DEPTH_MAX)
 	{
-		return;
+		return false;
 	}
 
 	const RGB &Le(intersection.material_->Le_);
 	if (Le.hasColor()) //stop if it intersects a light source
 	{
 		rgb += Le;
-		return;
+		return true;
 	}
 
 	const RGB &kD(intersection.material_->Kd_);
@@ -128,6 +128,7 @@ void Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 	}
 
 	rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
+	return false;
 }
 
 void Whitted::resetSampling() noexcept {

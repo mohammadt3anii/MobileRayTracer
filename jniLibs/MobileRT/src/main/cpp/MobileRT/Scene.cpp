@@ -5,11 +5,18 @@
 #include "Scene.hpp"
 
 using MobileRT::Scene;
+using MobileRT::Triangle;
+using MobileRT::Sphere;
+using MobileRT::Plane;
+using MobileRT::Material;
 
 static unsigned int counter(0u);
 
 Scene::Scene() noexcept :
-        primitives_(std::vector<Primitive>()),
+        triangles_(std::vector<Triangle>()),
+				spheres_(std::vector<Sphere>()),
+				planes_(std::vector<Plane>()),
+				materials_(std::vector<Material>()),
         lights_(std::vector<Light *>())
 //bb(nullptr)
 {
@@ -17,10 +24,6 @@ Scene::Scene() noexcept :
 }
 
 Scene::~Scene() noexcept {
-    for (Primitive &primitive : this->primitives_) {
-        delete &primitive;
-    }
-    this->primitives_.clear();
     for (Light *light : this->lights_) {
         delete light;
     }
@@ -43,14 +46,32 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
 
 int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     int res(-1);
-    const auto primitivesSize(static_cast<unsigned int> (primitives_.size()));
-
-    for (unsigned int i(0u); i < primitivesSize; i++) {
-        const Primitive &primitive(this->primitives_[static_cast<uint32_t> (i)]);
+    const auto trianglesSize(static_cast<unsigned int> (triangles_.size()));
+    for (unsigned int i(0u); i < trianglesSize; i++) {
+        const Triangle &primitive(this->triangles_[static_cast<uint32_t> (i)]);
         if (primitive.intersect(intersection, ray)) {
             res = static_cast<int> (i);
         }
     }
+
+		const auto spheresSize(static_cast<unsigned int> (spheres_.size()));
+		for (unsigned int i(0u); i < spheresSize; i++) {
+        const Sphere &primitive(this->spheres_[static_cast<uint32_t> (i)]);
+        if (primitive.intersect(intersection, ray)) {
+            res = static_cast<int> (i + trianglesSize);
+        }
+    }
+
+		const auto planesSize(static_cast<unsigned int> (planes_.size()));
+		for (unsigned int i(0u); i < planesSize; i++) {
+        const Plane &primitive(this->planes_[static_cast<uint32_t> (i)]);
+        if (primitive.intersect(intersection, ray)) {
+            res = static_cast<int> (i + trianglesSize + spheresSize);
+        }
+    }
+		if(res >= 0) {
+			intersection.material_ = &materials_[static_cast<uint32_t>(res)];
+		}
 
     traceLights(intersection, ray);
 
@@ -58,8 +79,19 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
 }
 
 bool Scene::shadowTrace(Intersection &intersection, Ray &&ray) const noexcept {
-    for (const Primitive &primitive : this->primitives_)//trace shadow ray
-    {
+    for (const Triangle &primitive : triangles_) {
+        if (primitive.intersect(intersection, ray)) {
+            return true;
+        }
+    }
+
+		for (const Sphere &primitive : spheres_) {
+        if (primitive.intersect(intersection, ray)) {
+            return true;
+        }
+    }
+
+		for (const Plane &primitive : planes_) {
         if (primitive.intersect(intersection, ray)) {
             return true;
         }

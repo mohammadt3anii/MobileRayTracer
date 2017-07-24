@@ -16,8 +16,7 @@ Intersection::Intersection() noexcept
 void Intersection::reset(const Point3D &orig,
                          const Vector3D &dir,
                          const float dist,
-                         const Vector3D &normal,
-                         const Material &material) noexcept {
+                         const Vector3D &normal) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
@@ -26,15 +25,13 @@ void Intersection::reset(const Point3D &orig,
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;
     this->symNormal_.z_ = -this->normal_.z_;
-    this->material_ = &material;
     this->length_ = dist;
 }
 
 void Intersection::reset(const Point3D &orig,
                          const Vector3D &dir,
                          const float dist,
-                         const Point3D &center,
-                         const Material &material) noexcept {
+                         const Point3D &center) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
@@ -43,7 +40,6 @@ void Intersection::reset(const Point3D &orig,
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;
     this->symNormal_.z_ = -this->normal_.z_;
-    this->material_ = &material;
     this->length_ = dist;
 }
 

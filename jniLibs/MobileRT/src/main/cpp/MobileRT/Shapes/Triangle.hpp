@@ -5,12 +5,13 @@
 #ifndef MOBILERT_SHAPES_TRIANGLE_HPP
 #define MOBILERT_SHAPES_TRIANGLE_HPP
 
-#include "Shape.hpp"
+#include "../Intersection.hpp"
 #include "../Point3D.hpp"
+#include "../Ray.hpp"
 #include "../Vector3D.hpp"
 
 namespace MobileRT {
-    class Triangle final : public Shape {
+    class Triangle final {
     public:
         const Vector3D AC_;
         const Vector3D AB_;
@@ -23,26 +24,25 @@ namespace MobileRT {
         explicit Triangle(const Point3D &pointA, const Point3D &pointB,
                           const Point3D &pointC) noexcept;
 
-		Triangle(const Triangle &triangle) noexcept = delete;
+		Triangle(const Triangle &triangle) noexcept = default;
 
-		Triangle(Triangle &&triangle) noexcept = delete;
+		Triangle(Triangle &&triangle) noexcept = default;
 
-		~Triangle() noexcept final = default;
+		~Triangle() noexcept = default;
 
         Triangle &operator=(const Triangle &triangle) noexcept = delete;
 
 		Triangle &operator=(Triangle &&triangle) noexcept = delete;
 
-        bool intersect(Intersection &intersection, const Ray &ray,
-                               const Material &material) const noexcept final;
+        bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
 
-        void moveTo(float x, float y) noexcept final;
+        void moveTo(float x, float y) noexcept;
 
-        float getZ() const noexcept final;
+        float getZ() const noexcept;
 
-        Point3D getPositionMin() const noexcept final;
+        Point3D getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept final;
+        Point3D getPositionMax() const noexcept;
     };
 }//namespace MobileRT
 

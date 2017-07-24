@@ -35,5 +35,9 @@ void AreaLight::resetSampling() noexcept {
 }
 
 bool AreaLight::intersect(Intersection &intersection, const Ray &ray) const noexcept {
-    return triangle_.intersect(intersection, ray, this->radiance_);
+    if (triangle_.intersect(intersection, ray)) {
+			intersection.material_ = &radiance_;
+			return true;
+		}
+		return false;
 }

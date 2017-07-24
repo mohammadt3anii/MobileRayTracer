@@ -42,12 +42,12 @@ bool AxisAlignedBoundingBox::intersect(Intersection &intersection, const Ray &ra
     return intersectPrimitives(intersection, ray);
 }
 
-bool AxisAlignedBoundingBox::intersectPrimitives(Intersection &intersection, const Ray &ray) const {
+bool AxisAlignedBoundingBox::intersectPrimitives(Intersection &/*intersection*/, const Ray &/*ray*/) const {
     bool res(false);
-    for (Primitive *p : this->primitives_) {
+    /*for (Primitive *p : this->primitives_) {
         if (p->intersect(intersection, ray)) {
             res = true;
         }
-    }
+    }*/
     return res;
 }

@@ -22,7 +22,7 @@ namespace Components {
         Sampler &samplerLight_;
 
     private:
-			void shade(RGB &rgb,
+			bool shade(RGB &rgb,
 								 Intersection const &intersection,
 								 Ray &&ray) const noexcept final;
 

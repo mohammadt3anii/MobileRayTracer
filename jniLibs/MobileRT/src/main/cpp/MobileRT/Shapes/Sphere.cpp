@@ -13,8 +13,7 @@ Sphere::Sphere(const Point3D &center, const float radius) noexcept :
 {
 }
 
-bool Sphere::intersect(Intersection &intersection, const Ray &ray,
-                       const Material &material) const noexcept {
+bool Sphere::intersect(Intersection &intersection, const Ray &ray) const noexcept {
 //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vector3D centerToOrigin(ray.origin_, this->center_);
 
@@ -41,8 +40,7 @@ bool Sphere::intersect(Intersection &intersection, const Ray &ray,
 
     // if so, then we have an intersection
     intersection.reset(ray.origin_, ray.direction_, distanceToIntersection,
-                       this->center_,
-                       material);
+                       this->center_);
 
     return true;
 }
