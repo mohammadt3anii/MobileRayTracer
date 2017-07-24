@@ -29,7 +29,7 @@ namespace MobileRT {
 
 		Shader(Shader &&shader) noexcept = delete;
 
-        virtual ~Shader() noexcept = default;
+        virtual ~Shader() noexcept;
 
 		Shader &operator=(const Shader &shader) noexcept = delete;
 

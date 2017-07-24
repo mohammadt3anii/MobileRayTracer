@@ -18,7 +18,7 @@ namespace MobileRT {
 
 		Shape(Shape &&shape) noexcept = delete;
 
-		virtual ~Shape() noexcept = default;
+		virtual ~Shape() noexcept;
 
 		Shape &operator=(const Shape &shape) const noexcept = delete;
 

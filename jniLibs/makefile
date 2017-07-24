@@ -13,7 +13,7 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -DNO_ANDROID $(INCLUDES)
 CXXFLAGS += -Wno-shift-sign-overflow -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-documentation-unknown-command -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro
-CXXFLAGS += -Wno-c++98-compat-pedantic -Wno-padded -Wno-weak-vtables -Wno-unused-variable
+CXXFLAGS += -Wno-c++98-compat-pedantic -Wno-padded -Wno-unused-variable
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
 

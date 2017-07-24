@@ -26,3 +26,6 @@ void Sampler::resetSampling() noexcept {
 void Sampler::stopSampling() noexcept {
     this->samples_ = 0ull;
 }
+
+Sampler::~Sampler () noexcept {
+}

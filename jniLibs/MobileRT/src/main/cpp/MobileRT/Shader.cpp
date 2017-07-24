@@ -18,3 +18,6 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
 int Shader::traceTouch(Intersection &intersection, const Ray &ray) const noexcept {
     return this->scene_.trace(intersection, ray);
 }
+
+Shader::~Shader () noexcept {
+}
