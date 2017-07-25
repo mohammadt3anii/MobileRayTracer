@@ -4,8 +4,10 @@
 
 #include "Shader.hpp"
 
-using MobileRT::Shader;
 using MobileRT::Intersection;
+using MobileRT::Ray;
+using MobileRT::RGB;
+using MobileRT::Shader;
 
 Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
         scene_(std::move(scene)),
@@ -17,9 +19,17 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
     this->scene_.lights_.shrink_to_fit();
 }
 
-int Shader::traceTouch(Intersection &intersection, const Ray &ray) const noexcept {
+int Shader::traceTouch(Intersection *intersection, const Ray &ray) const noexcept {
     return this->scene_.trace(intersection, ray);
 }
 
 Shader::~Shader () noexcept {
+}
+
+bool Shader::rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept {
+	if (this->scene_.trace(intersection, ray) >= 0)
+	{// compute radiance
+		return shade(rgb, *intersection, std::move(ray)); 
+	}
+	return false;
 }

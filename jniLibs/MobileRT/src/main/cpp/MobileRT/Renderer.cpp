@@ -6,10 +6,10 @@
 
 using MobileRT::Renderer;
 
-Renderer::Renderer(Sampler &samplerCamera, Shader &shader, Camera &camera,
+Renderer::Renderer(Sampler *samplerCamera, Shader *shader, Camera const &camera,
                    const unsigned int width, const unsigned int height,
                    const unsigned int blockSizeX, const unsigned int blockSizeY,
-                   Sampler &samplerPixel) noexcept :
+                   Sampler *samplerPixel) noexcept :
         samplerCamera_(samplerCamera),
         samplerPixel_(samplerPixel),
         camera_(camera),
@@ -32,9 +32,9 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
     for (unsigned int i(0u); i < size; i++) {
         this->accumulate_[i].reset();
     }
-    this->samplerCamera_.resetSampling();
-    this->samplerPixel_.resetSampling();
-    this->shader_.resetSampling();
+    this->samplerCamera_->resetSampling();
+    this->samplerPixel_->resetSampling();
+    this->shader_->resetSampling();
     const unsigned numChildren (numThreads - 1u);
 	std::vector<std::thread> threads;
 	threads.reserve(numChildren);
@@ -77,8 +77,8 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 void Renderer::stopRender() noexcept {
     this->blockSizeX_ = 0u;
     this->blockSizeY_ = 0u;
-    this->samplerCamera_.stopSampling();
-    this->samplerPixel_.stopSampling();
+    this->samplerCamera_->stopSampling();
+    this->samplerPixel_->stopSampling();
 }
 
 void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) noexcept {
@@ -86,13 +86,13 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     const float INV_IMG_HEIGHT(1.0f / this->height_);
     const float pixelWidth(0.5f / this->width_);
     const float pixelHeight(0.5f / this->height_);
-    const auto samples(static_cast<unsigned int> (this->samplerCamera_.samples_));
+    const auto samples(static_cast<unsigned int> (this->samplerCamera_->samples_));
     RGB pixelRGB;
     Intersection intersection;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
         for (;;) {
-			const float block (this->samplerCamera_.getSample(sample));
+			const float block (this->samplerCamera_->getSample(sample));
             if (block >= 1.0f) {break;}
 			const auto pixel(static_cast<unsigned int>(static_cast<uint32_t>(::lroundf(block * this->domainSize_)) * this->blockSizeX_ % resolution_));
             const unsigned int startY(((pixel / this->width_) * this->blockSizeY_) % this->height_);
@@ -104,8 +104,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                 const unsigned int endX(startX + this->blockSizeX_);
                 for (unsigned int x(startX); x < endX; x++) {
                     const float u(x * INV_IMG_WIDTH);
-                    const float r1(this->samplerPixel_.getSample(0u));
-                    const float r2(this->samplerPixel_.getSample(0u));
+                    const float r1(this->samplerPixel_->getSample(0u));
+                    const float r2(this->samplerPixel_->getSample(0u));
                     const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
                     const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
                     Ray ray(this->camera_.generateRay(u, v, deviationU, deviationV));
@@ -115,8 +115,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
 										// LOG("triangles = ", shader_.scene_.triangles_.size());
 										// LOG("spheres = ", shader_.scene_.spheres_.size());
 										// LOG("planes = ", shader_.scene_.planes_.size());
-                    this->shader_.rayTrace(pixelRGB, intersection, std::move(ray));
-                    this->accumulate_[yWidth + x].addSampleAndCalcAvg(pixelRGB);
+                    this->shader_->rayTrace(&pixelRGB, &intersection, std::move(ray));
+                    this->accumulate_[yWidth + x].addSampleAndCalcAvg(&pixelRGB);
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }
             }

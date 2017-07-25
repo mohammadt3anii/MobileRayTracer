@@ -53,7 +53,7 @@ namespace MobileRT {
 
         void operator/=(float value) noexcept;
 
-        void addSampleAndCalcAvg(RGB &sample) noexcept;
+        void addSampleAndCalcAvg(RGB *sample) noexcept;
 
         void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned int samples = 0u) noexcept;
 

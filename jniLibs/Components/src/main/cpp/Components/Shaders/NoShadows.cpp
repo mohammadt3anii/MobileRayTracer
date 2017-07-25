@@ -17,7 +17,7 @@ NoShadows::NoShadows(Scene &&scene, const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight) {
 }
 
-bool NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/) const noexcept {
+bool NoShadows::shade(RGB *rgb, Intersection const &intersection, Ray && /*ray*/) const noexcept {
     const RGB &Le(intersection.material_->Le_);
     const RGB &kD(intersection.material_->Kd_);
 
@@ -35,17 +35,17 @@ bool NoShadows::shade(RGB &rgb, Intersection const &intersection, Ray && /*ray*/
                 const float cos_N_L(vectorToLightNormalized.dotProduct(
                         intersection.normal_));
                 if (cos_N_L > 0.0f) {
-                    rgb.addMult(kD, light.radiance_.Le_, cos_N_L);//rgb += kD * radLight * cos_N_L;
+                    rgb->addMult(kD, light.radiance_.Le_, cos_N_L);//rgb += kD * radLight * cos_N_L;
                 }
             }
         }
-        rgb /= this->samplesLight_;
-        rgb /= sizeLights;
+        *rgb /= this->samplesLight_;
+        *rgb /= sizeLights;
         // ambient light
-        rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
+        rgb->addMult(kD, 0.1f);//rgb += kD *  0.1f
     } // end direct + ambient
 
-    rgb += Le;
+    *rgb += Le;
 		return false;
 }
 

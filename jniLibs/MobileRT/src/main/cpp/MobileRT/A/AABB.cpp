@@ -10,7 +10,7 @@ AxisAlignedBoundingBox::AxisAlignedBoundingBox(const Point3D &pointMin, const Po
         pointMin_(pointMin), pointMax_(pointMax) {
 }
 
-bool AxisAlignedBoundingBox::intersect(Intersection &intersection, const Ray &ray,
+bool AxisAlignedBoundingBox::intersect(Intersection *intersection, const Ray &ray,
                                        const Material & /*material*/) const {
     float txmin((pointMin_.x_ - ray.origin_.x_) / ray.direction_.x_);
     float txmax((pointMax_.x_ - ray.origin_.x_) / ray.direction_.x_);
@@ -42,7 +42,7 @@ bool AxisAlignedBoundingBox::intersect(Intersection &intersection, const Ray &ra
     return intersectPrimitives(intersection, ray);
 }
 
-bool AxisAlignedBoundingBox::intersectPrimitives(Intersection &/*intersection*/, const Ray &/*ray*/) const {
+bool AxisAlignedBoundingBox::intersectPrimitives(Intersection * /*intersection*/, const Ray &/*ray*/) const {
     bool res(false);
     /*for (Primitive *p : this->primitives_) {
         if (p->intersect(intersection, ray)) {

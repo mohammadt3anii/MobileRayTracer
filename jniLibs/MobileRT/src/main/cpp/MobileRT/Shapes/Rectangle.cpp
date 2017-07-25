@@ -20,7 +20,7 @@ Rectangle::Rectangle(const Point3D &pointA,
 {
 }
 
-bool Rectangle::intersect(Intersection &intersection, const Ray &ray) const noexcept {
+bool Rectangle::intersect(Intersection *intersection, const Ray &ray) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(this->AB_.dotProduct(perpendicularVector));
     if (std::fabs(normalizedProjection) < VECT_PROJ_MIN) {
@@ -49,11 +49,11 @@ bool Rectangle::intersect(Intersection &intersection, const Ray &ray) const noex
     const float distanceToIntersection(
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector));
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection.length_) {
+    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection->length_) {
         return false;
 	}
 
-    intersection.reset(
+    intersection->reset(
             ray.origin_, ray.direction_, distanceToIntersection,
             this->normal_);
 

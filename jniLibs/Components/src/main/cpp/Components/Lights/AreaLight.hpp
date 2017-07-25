@@ -22,11 +22,11 @@ namespace Components {
 		{
     private:
 				Triangle triangle_;
-        Sampler &samplerPointLight_;
+        Sampler *samplerPointLight_;
 
     public:
         explicit AreaLight(const Material &radiance,
-                           Sampler &samplerPointLight,
+                           Sampler *samplerPointLight,
                            const Point3D &pointA,
                            const Point3D &pointB,
                            const Point3D &pointC) noexcept;
@@ -46,7 +46,7 @@ namespace Components {
         void resetSampling() noexcept final;
 
 		//using MobileRT::Triangle::intersect;
-        bool intersect(Intersection &intersection, const Ray &ray) const noexcept final;
+        bool intersect(Intersection *intersection, const Ray &ray) const noexcept final;
     };
 }//namespace Components
 

@@ -14,7 +14,7 @@ namespace Components {
 	using MobileRT::Scene;
     class Whitted final : public MobileRT::Shader {
     private:
-			bool shade(RGB &rgb,
+			bool shade(RGB *rgb,
 								 Intersection const &intersection,
 								 Ray &&ray) const noexcept final;
 

@@ -34,7 +34,7 @@ namespace MobileRT {
 
 		Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
 
-        bool intersect(Intersection &intersection, const Ray &ray) const noexcept;
+        bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 

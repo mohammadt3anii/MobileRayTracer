@@ -14,7 +14,7 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-PathTracer::PathTracer(Scene &&scene, Sampler &samplerRay, Sampler &samplerLight,
+PathTracer::PathTracer(Scene &&scene, Sampler *samplerRay, Sampler *samplerLight,
                        const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight),
         samplerRay_(samplerRay),
@@ -23,7 +23,7 @@ PathTracer::PathTracer(Scene &&scene, Sampler &samplerRay, Sampler &samplerLight
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept
+bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
 	static thread_local unsigned int max(RAY_DEPTH_MIN); 
@@ -36,7 +36,7 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
     if (Le.hasColor())//stop if it intersects a light source
     {
         //rgb.add(Le * scene_.lights_.size() * RAY_DEPTH_MAX);
-        rgb += Le;
+        *rgb += Le;
         return true;
     }
     bool intersectedLight (false);
@@ -72,7 +72,7 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
         Intersection intersectLight;
         //direct light
         for (unsigned int i(0u); i < samplesLight; i++) {
-            const float randomNumber(samplerLight_.getSample(0u));
+            const float randomNumber(samplerLight_->getSample(0u));
             //PDF = 1 / sizeLights
             // const auto chosenLight(
 						// 	static_cast<unsigned int> (std::round(randomNumber * maxIndex)));
@@ -91,7 +91,7 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
                 //intersection between shadow ray and the closest primitive
                 //if there are no primitives between intersection and the light
                 intersectLight.length_ = distanceToLight;
-                if (!scene_.shadowTrace(intersectLight, std::move(shadowRay))) {
+                if (!scene_.shadowTrace(&intersectLight, std::move(shadowRay))) {
                     //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                     Ld.addMult(light.radiance_.Le_, cosNormalLight);
                 }
@@ -103,8 +103,8 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
 
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
-            const float r1(2.0f * PI * samplerRay_.getSample(0u));
-            const float r2(samplerRay_.getSample(0u));
+            const float r1(2.0f * PI * samplerRay_->getSample(0u));
+            const float r2(samplerRay_->getSample(0u));
             const float r2s(std::sqrt(r2));
             Vector3D u(std::fabs(intersection.normal_.x_) > 0.1f ?
                        Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) :
@@ -121,7 +121,7 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
             RGB LiD_RGB;
             Intersection secundaryIntersection;
-            intersectedLight = rayTrace(LiD_RGB, std::move(secundaryIntersection), std::move(normalizedSecundaryRay));
+            intersectedLight = rayTrace(&LiD_RGB, &secundaryIntersection, std::move(normalizedSecundaryRay));
             //PDF = cos(theta) / PI
             //cos (theta) = cos(dir, normal)
             //PDF = cos(dir, normal) / PI
@@ -152,7 +152,7 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
         Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
         RGB LiS_RGB;
 				Intersection specularInt;
-        rayTrace(LiS_RGB, std::move(specularInt), std::move(specularRay));
+        rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
         LiS.addMult(kS, LiS_RGB);
 		}
 
@@ -181,22 +181,22 @@ bool PathTracer::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) co
                                   rayDepth + 1u);
         RGB LiT_RGB;
 				Intersection transmissionInt;
-        rayTrace(LiT_RGB, std::move(transmissionInt), std::move(transmissionRay));
+        rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
         LiT.addMult(kT, LiT_RGB);
 		}
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
     //Ld /= rayDepth;
 	//LiD /= rayDepth;
 
-	rgb += Ld;
-	rgb += LiD;
-	rgb += LiS;
-	rgb += LiT;
+	*rgb += Ld;
+	*rgb += LiD;
+	*rgb += LiS;
+	*rgb += LiT;
 	return intersectedLight;
 }
 
 void PathTracer::resetSampling() noexcept {
     this->scene_.resetSampling();
-    this->samplerRay_.resetSampling();
-    this->samplerLight_.resetSampling();
+    this->samplerRay_->resetSampling();
+    this->samplerLight_->resetSampling();
 }

@@ -11,7 +11,7 @@ INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -Wno-c++98-compat-pedantic -DNO_ANDROID $(INCLUDES)
+CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -Wno-c++98-compat-pedantic -fno-rtti -fno-exceptions -DNO_ANDROID $(INCLUDES)
 CXXFLAGS += -Wno-shift-sign-overflow -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-documentation-unknown-command -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro
 CXXFLAGS +=  -Wno-padded
 
@@ -85,7 +85,7 @@ INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
 tidy:
 	clang-tidy-5.0 \
 	-analyze-temporary-dtors \
-	-checks='*,-*google-runtime-references*,-*llvm-header-guard*' \
+	-checks='*,-*llvm-header-guard*' \
 	-header-filter=*.*pp \
 	-system-headers \
 	-p \

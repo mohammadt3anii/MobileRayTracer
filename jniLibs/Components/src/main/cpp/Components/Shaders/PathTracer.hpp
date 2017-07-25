@@ -18,17 +18,17 @@ namespace Components {
 	using MobileRT::Scene;
     class PathTracer final : public MobileRT::Shader {
     private:
-        Sampler &samplerRay_;
-        Sampler &samplerLight_;
+        Sampler *samplerRay_;
+        Sampler *samplerLight_;
 
     private:
-			bool shade(RGB &rgb,
+			bool shade(RGB *rgb,
 								 Intersection const &intersection,
 								 Ray &&ray) const noexcept final;
 
 		public:
         explicit PathTracer(Scene &&scene,
-                            Sampler &samplerRay, Sampler &samplerLight,
+                            Sampler *samplerRay, Sampler *samplerLight,
                             unsigned int samplesLight) noexcept;
 
 		PathTracer(const PathTracer &pathTracer) noexcept = delete;

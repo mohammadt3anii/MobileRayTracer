@@ -131,13 +131,13 @@ static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
 
     scene.lights_.emplace_back(new Components::AreaLight(lightMat,
-                                                         *samplerPointLight_,
+                                                         samplerPointLight_,
                                                          MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
                                                          MobileRT::Point3D(0.25f, 0.99f, -0.25f),
                                                          MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
 
     scene.lights_.emplace_back(new Components::AreaLight(lightMat,
-                                                         *samplerPointLight_,
+                                                         samplerPointLight_,
                                                          MobileRT::Point3D(0.25f, 0.99f, 0.25f),
                                                          MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
                                                          MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
@@ -431,15 +431,15 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::Random(domainLight, 1u);
             shader_ = new Components::PathTracer(
-                    std::move(scene_), *samplerRay_, *samplerLight_, samplesLight_);
+                    std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
             break;
 
         default:
             shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
             break;
     }
-    renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
-                                       height_, blockSizeX_, blockSizeY_, *samplerPixel_);
+    renderer_ = new MobileRT::Renderer(samplerCamera_, shader_, *camera_, width_,
+                                       height_, blockSizeX_, blockSizeY_, samplerPixel_);
 
     //Path Tracer needs tone mapper
     /*if (shader == 2) {
@@ -488,7 +488,7 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
     const float v(static_cast<float> (jy) / height_);
     const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     MobileRT::Intersection intersection;
-    const int primitiveID(shader_->traceTouch(intersection, ray));
+    const int primitiveID(shader_->traceTouch(&intersection, ray));
     return primitiveID;
 }
 
@@ -508,7 +508,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
             MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.planes_[index].getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
-    plane.intersect(intersection, ray);
+    plane.intersect(&intersection, ray);
     shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
                                                       intersection.point_.y_);
 }

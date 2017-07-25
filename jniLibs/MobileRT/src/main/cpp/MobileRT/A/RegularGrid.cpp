@@ -50,7 +50,7 @@ RegularGrid::RegularGrid(const float /*minX*/, const float /*maxX*/,
 
 }
 
-bool RegularGrid::intersect(Intersection &/*intersection*/, Ray &/*ray*/) {
+bool RegularGrid::intersect(Intersection * /*intersection*/, Ray const &/*ray*/) {
     return false;
 }
 

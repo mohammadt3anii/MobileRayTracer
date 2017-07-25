@@ -87,19 +87,19 @@ void RGB::operator/=(const float value) noexcept {
     this->B_ /= value;
 }
 
-void RGB::addSampleAndCalcAvg(RGB &sample) noexcept {
+void RGB::addSampleAndCalcAvg(RGB *sample) noexcept {
     this->mutex_.lock();
-    this->R_ += sample.R_;
-    this->G_ += sample.G_;
-    this->B_ += sample.B_;
-    sample.samples_ = ++this->samples_;
-    sample.R_ = this->R_;
-    sample.G_ = this->G_;
-    sample.B_ = this->B_;
+    this->R_ += sample->R_;
+    this->G_ += sample->G_;
+    this->B_ += sample->B_;
+    sample->samples_ = ++this->samples_;
+    sample->R_ = this->R_;
+    sample->G_ = this->G_;
+    sample->B_ = this->B_;
     this->mutex_.unlock();
-    sample.R_ /= sample.samples_;
-    sample.G_ /= sample.samples_;
-    sample.B_ /= sample.samples_;
+    sample->R_ /= sample->samples_;
+    sample->G_ /= sample->samples_;
+    sample->B_ /= sample->samples_;
 }
 
 void RGB::reset(const float r, const float g, const float b, const unsigned int samples) noexcept {

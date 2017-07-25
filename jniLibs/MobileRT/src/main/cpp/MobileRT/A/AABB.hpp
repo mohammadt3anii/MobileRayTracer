@@ -21,7 +21,7 @@ namespace MobileRT {
         //std::vector<Primitive *> primitives_;
 
     private:
-        bool intersectPrimitives(Intersection &intersection, const Ray &ray) const;
+        bool intersectPrimitives(Intersection *intersection, const Ray &ray) const;
 
     public:
         explicit AxisAlignedBoundingBox(const Point3D &pointMin,
@@ -37,7 +37,7 @@ namespace MobileRT {
 
 		AxisAlignedBoundingBox &operator=(AxisAlignedBoundingBox &&axisAlignedBoundingBox) noexcept = delete;
 
-        bool intersect(Intersection &intersection, const Ray &ray,
+        bool intersect(Intersection *intersection, const Ray &ray,
                        const Material &material) const;
     };
 }//namespace MobileRT

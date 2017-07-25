@@ -27,7 +27,7 @@ namespace MobileRT {
 		//AxisAlignedBoundingBox *bb;
 
     private:
-        int traceLights(Intersection &intersection, const Ray &ray) const noexcept;
+        int traceLights(Intersection *intersection, const Ray &ray) const noexcept;
 
     public:
         explicit Scene() noexcept;
@@ -42,9 +42,9 @@ namespace MobileRT {
 
 		Scene &operator=(Scene &&scene) noexcept = default;
 
-        int trace(Intersection &intersection, const Ray &ray) const noexcept;
+        int trace(Intersection *intersection, const Ray &ray) const noexcept;
 
-        bool shadowTrace(Intersection &intersection, Ray &&ray) const noexcept;
+        bool shadowTrace(Intersection *intersection, Ray &&ray) const noexcept;
 
         static unsigned int getInstances() noexcept;
 

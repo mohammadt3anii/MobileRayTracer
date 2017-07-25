@@ -16,10 +16,10 @@
 namespace MobileRT {
     class Renderer final {
     private:
-        Sampler &samplerCamera_;
-		Sampler &samplerPixel_;
-		Camera &camera_;
-        Shader &shader_;
+        Sampler *samplerCamera_;
+		Sampler *samplerPixel_;
+		Camera const &camera_;
+        Shader *shader_;
 		std::vector<RGB> accumulate_;
 		const unsigned int domainSize_;
         const unsigned int width_;
@@ -33,12 +33,12 @@ namespace MobileRT {
         void renderScene(unsigned int *bitmap, unsigned int tid) noexcept;
 
     public:
-        explicit Renderer(Sampler &samplerCamera, Shader &shader,
-                          Camera &camera,
+        explicit Renderer(Sampler *samplerCamera, Shader *shader,
+                          Camera const &camera,
                           unsigned int width, unsigned int height,
                           unsigned int blockSizeX,
                           unsigned int blockSizeY,
-                          Sampler &samplerPixel) noexcept;
+                          Sampler *samplerPixel) noexcept;
 
 		Renderer(const Renderer &renderer) noexcept = delete;
 

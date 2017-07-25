@@ -22,6 +22,6 @@ Point3D PointLight::getPosition() noexcept {
 void PointLight::resetSampling() noexcept {
 }
 
-bool PointLight::intersect(Intersection & /*intersection*/, const Ray & /*ray*/) const noexcept {
+bool PointLight::intersect(Intersection * /*intersection*/, const Ray & /*ray*/) const noexcept {
     return false;
 }

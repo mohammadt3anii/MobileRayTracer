@@ -17,7 +17,7 @@ Whitted::Whitted(Scene &&scene, const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight) {
 }
 
-bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const noexcept
+bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
 	if (rayDepth > RAY_DEPTH_MAX)
@@ -28,7 +28,7 @@ bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 	const RGB &Le(intersection.material_->Le_);
 	if (Le.hasColor()) //stop if it intersects a light source
 	{
-		rgb += Le;
+		*rgb += Le;
 		return true;
 	}
 
@@ -68,15 +68,15 @@ bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 					lightIntersection.length_ = distanceToLight;
 					//intersection between shadow ray and the closest primitive
 					//if there are no primitives between intersection and the light
-					if (!scene_.shadowTrace(lightIntersection, std::move(shadowRay)))
+					if (!scene_.shadowTrace(&lightIntersection, std::move(shadowRay)))
 					{
 						//rgb += kD * radLight * cos_N_L;
-						rgb.addMult(light.radiance_.Le_, cos_N_L);
+						rgb->addMult(light.radiance_.Le_, cos_N_L);
 					}
 				}
 			}
-			rgb *= kD;
-			rgb /= this->samplesLight_;
+			*rgb *= kD;
+			*rgb /= this->samplesLight_;
 		}
 	} // end direct + ambient
 
@@ -92,8 +92,8 @@ bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 		Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
 		RGB LiS_RGB;
 		Intersection specularInt;
-		rayTrace(LiS_RGB, std::move(specularInt), std::move(specularRay));
-		rgb.addMult(kS, LiS_RGB);
+		rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
+		rgb->addMult(kS, LiS_RGB);
 	}
 
 	// specular transmission
@@ -123,11 +123,11 @@ bool Whitted::shade(RGB &rgb, Intersection const &intersection, Ray &&ray) const
 												rayDepth + 1u);
 		RGB LiT_RGB;
 		Intersection transmissionInt;
-		rayTrace(LiT_RGB, std::move(transmissionInt), std::move(transmissionRay));
-		rgb.addMult(kT, LiT_RGB);
+		rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
+		rgb->addMult(kT, LiT_RGB);
 	}
 
-	rgb.addMult(kD, 0.1f);//rgb += kD *  0.1f
+	rgb->addMult(kD, 0.1f);//rgb += kD *  0.1f
 	return false;
 }
 

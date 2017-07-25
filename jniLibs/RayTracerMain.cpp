@@ -126,13 +126,13 @@ static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
                                       MobileRT::RGB(0.9f, 0.9f, 0.9f));
 
     scene.lights_.emplace_back(new Components::AreaLight(lightMat,
-                                                         *samplerPointLight_,
+                                                         samplerPointLight_,
                                                          MobileRT::Point3D(-0.25f, 0.99f, -0.25f),
                                                          MobileRT::Point3D(0.25f, 0.99f, -0.25f),
                                                          MobileRT::Point3D(0.25f, 0.99f, 0.25f)));
 
     scene.lights_.emplace_back(new Components::AreaLight(lightMat,
-                                                         *samplerPointLight_,
+                                                         samplerPointLight_,
                                                          MobileRT::Point3D(0.25f, 0.99f, 0.25f),
                                                          MobileRT::Point3D(-0.25f, 0.99f, 0.25f),
                                                          MobileRT::Point3D(-0.25f, 0.99f, -0.25f)));
@@ -365,15 +365,15 @@ int main(int argc, char **argv) noexcept {
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::Random(domainLight, 1);
             shader_ = new Components::PathTracer(
-                    std::move(scene_), *samplerRay_, *samplerLight_, samplesLight_);
+                    std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
             break;
 
         default:
             shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
             break;
     }
-    renderer_ = new MobileRT::Renderer(*samplerCamera_, *shader_, *camera_, width_,
-                                       height_, blockSizeX_, blockSizeY_, *samplerPixel_);
+    renderer_ = new MobileRT::Renderer(samplerCamera_, shader_, *camera_, width_,
+                                       height_, blockSizeX_, blockSizeY_, samplerPixel_);
 
     LOG("x = ", blockSizeX_, "[", width_, "]");
     LOG("y = ", blockSizeY_, "[", height_, "]");
@@ -381,15 +381,10 @@ int main(int argc, char **argv) noexcept {
 
     LOG("Threads = ", threads);
     const double start(omp_get_wtime());
-    try {
-        do {
-            renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
-			camera_->position_.x_ += 2.0f;
-        } while (repeats-- > 1);
-    } catch (...) {
-        LOG("EXCEPTION");
-        raise(SIGTRAP);
-    }
+			do {
+					renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
+		camera_->position_.x_ += 2.0f;
+			} while (repeats-- > 1);
     delete renderer_;
     const double end(omp_get_wtime() - start);
     std::cout << "Time in secs = " << end << std::endl;

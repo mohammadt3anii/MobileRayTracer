@@ -21,7 +21,7 @@ namespace MobileRT {
         const unsigned int samplesLight_;
 
     protected:
-			virtual bool shade(RGB & /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
+			virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
 
 		public:
         explicit Shader(Scene &&scene, unsigned int samplesLight) noexcept;
@@ -37,16 +37,9 @@ namespace MobileRT {
 		Shader &operator=(Shader &&shader) noexcept = delete;
 
 		//ray trace and verifies if intersects primitives
-		template<typename T>
-		bool rayTrace(RGB &rgb, T &&intersection, Ray &&ray) const noexcept {
-			if (this->scene_.trace(intersection, ray) >= 0)
-			{
-				return shade(rgb, std::forward<T>(intersection), std::move(ray)); // compute radiance
-			}
-			return false;
-		}
+		bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept;
 
-        int traceTouch(Intersection &intersection, const Ray &ray) const noexcept;
+        int traceTouch(Intersection *intersection, const Ray &ray) const noexcept;
 
         virtual void resetSampling() noexcept = 0;
     };

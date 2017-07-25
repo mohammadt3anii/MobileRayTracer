@@ -30,7 +30,7 @@ Scene::~Scene() noexcept {
     this->lights_.clear();
 }
 
-int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcept {
+int Scene::traceLights(Intersection *intersection, const Ray &ray) const noexcept {
     int res(-1);
     const auto lightsSize(static_cast<unsigned int> (lights_.size()));
 
@@ -44,7 +44,7 @@ int Scene::traceLights(Intersection &intersection, const Ray &ray) const noexcep
     return res;
 }
 
-int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
+int Scene::trace(Intersection *intersection, const Ray &ray) const noexcept {
     int res(-1);
     const auto trianglesSize(static_cast<unsigned int> (triangles_.size()));
     for (unsigned int i(0u); i < trianglesSize; i++) {
@@ -70,7 +70,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
         }
     }
 		if(res >= 0) {
-			intersection.material_ = &materials_[static_cast<uint32_t>(res)];
+			intersection->material_ = &materials_[static_cast<uint32_t>(res)];
 		}
 
     traceLights(intersection, ray);
@@ -78,7 +78,7 @@ int Scene::trace(Intersection &intersection, const Ray &ray) const noexcept {
     return res;
 }
 
-bool Scene::shadowTrace(Intersection &intersection, Ray &&ray) const noexcept {
+bool Scene::shadowTrace(Intersection *intersection, Ray &&ray) const noexcept {
     for (const Triangle &primitive : triangles_) {
         if (primitive.intersect(intersection, ray)) {
             return true;

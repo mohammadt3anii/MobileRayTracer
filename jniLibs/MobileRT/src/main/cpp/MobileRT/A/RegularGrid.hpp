@@ -34,7 +34,7 @@ namespace MobileRT {
 
 		RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = delete;
 
-        bool intersect(Intersection &intersection, Ray &ray);
+        bool intersect(Intersection *intersection, Ray const &ray);
     };
 }//namespace MobileRT
 
