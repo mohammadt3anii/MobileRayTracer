@@ -33,7 +33,7 @@ namespace MobileRT {
 
 			~RegularGrid() noexcept = default;
 
-			RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = default;
+			RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = delete;
 
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 

@@ -5,7 +5,6 @@
 #include "RegularGrid.hpp"
 
 using MobileRT::RegularGrid;
-using MobileRT::Triangle;
 
 RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, int gridShift) :
 	//scene_(scene),
@@ -44,24 +43,24 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, i
 		Point3D bv2 (bound.pointMax_);
 
 		// find out which cells could contain the primitive (based on aabb)
-		int x1 = static_cast<int>((bv1.x_ - min.x_) * dx_reci);
-		int x2 = static_cast<int>((bv2.x_ - min.x_) * dx_reci) + 1;
+		auto x1 (static_cast<int>((bv1.x_ - min.x_) * dx_reci));
+		auto x2 (static_cast<int>((bv2.x_ - min.x_) * dx_reci) + 1);
 		x1 = (x1 < 0)?0:x1;
 		x2 = (x2 > (gridSize_ - 1))?gridSize_ - 1:x2;
-		int y1 = static_cast<int>((bv1.y_ - min.y_) * dy_reci);
-		int y2 = static_cast<int>((bv2.y_ - min.y_) * dy_reci) + 1;
+		auto y1 (static_cast<int>((bv1.y_ - min.y_) * dy_reci));
+		auto y2 (static_cast<int>((bv2.y_ - min.y_) * dy_reci) + 1);
 		y1 = (y1 < 0)?0:y1;
 		y2 = (y2 > (gridSize_ - 1))?gridSize_ - 1:y2;
-		int z1 = static_cast<int>((bv1.z_ - min.z_) * dz_reci);
-		int z2 = static_cast<int>((bv2.z_ - min.z_) * dz_reci) + 1;
+		auto z1 (static_cast<int>((bv1.z_ - min.z_) * dz_reci));
+		auto z2 (static_cast<int>((bv2.z_ - min.z_) * dz_reci) + 1);
 		z1 = (z1 < 0)?0:z1;
 		z2 = (z2 > (gridSize_ - 1))?gridSize_ - 1:z2;
 
-		for ( int x = x1; x < x2; x++ ) {
-			for ( int y = y1; y < y2; y++ ) {
-				for ( int z = z1; z < z2; z++ ) {
+		for ( int x (x1); x < x2; x++ ) {
+			for ( int y (y1); y < y2; y++ ) {
+				for ( int z (z1); z < z2; z++ ) {
 					// construct aabb for current cell
-					const size_t idx (static_cast<size_t>(x + y * gridSize_ + z * gridSize_ * gridSize_));
+					const auto idx (static_cast<size_t>(x + y * gridSize_ + z * gridSize_ * gridSize_));
 					const Point3D pos( min.x_ + x * dx, min.y_ + y * dy, min.z_ + z * dz );
 					const AABB cell( pos, Point3D( dx, dy, dz ) );
 					// do an accurate aabb / primitive intersection test
@@ -82,7 +81,7 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, i
 }
 
 bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const noexcept {
-	bool retval = false;
+	bool retval (false);
 	Vector3D const &raydir(ray.direction_);
 	Point3D const &curpos(ray.origin_);
 	AABB e (m_Extends);
@@ -93,7 +92,9 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 	int stepY, outY, Y = static_cast<int>(cell.y_);
 	int stepZ, outZ, Z = static_cast<int>(cell.z_);
 
-	if ((X < 0) || (X >= gridSize_) || (Y < 0) || (Y >= gridSize_) || (Z < 0) || (Z >= gridSize_)) return false;
+	if ((X < 0) || (X >= gridSize_) || (Y < 0) || (Y >= gridSize_) || (Z < 0) || (Z >= gridSize_)) {
+		return false;
+	}
 
 	if (raydir.x_ > 0)
 	{
@@ -141,7 +142,9 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		tmax.x_ = (cb.x_ - curpos.x_) * rxr; 
 		tdelta.x_ = m_CW.x_ * stepX * rxr;
 	}
-	else tmax.x_ = 1000000;
+	else {
+		tmax.x_ = 1000000;
+	}
 
 	if (raydir.y_ != 0)
 	{
@@ -149,7 +152,9 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		tmax.y_ = (cb.y_ - curpos.y_) * ryr; 
 		tdelta.y_ = m_CW.y_ * stepY * ryr;
 	}
-	else tmax.y_ = 1000000;
+	else {
+		tmax.y_ = 1000000;
+	}
 
 	if (raydir.z_ != 0)
 	{
@@ -157,13 +162,14 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		tmax.z_ = (cb.z_ - curpos.z_) * rzr; 
 		tdelta.z_ = m_CW.z_ * stepZ * rzr;
 	}
-	else tmax.z_ = 1000000;
+	else {
+		tmax.z_ = 1000000;
+	}
 
 	// start stepping
-	auto *list = spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].data();
-	list = nullptr;
+	Sphere *const *list (nullptr);
 	// trace primary ray
-	while (1)
+	while (true)
 	{
 		list = spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].data();
 
@@ -172,7 +178,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		while (i < spheresSize)
 		{
 			Sphere* pr (list[i]);
-			bool result;
+			bool result (false);
 			// if (pr->GetLastRayID() != a_Ray.GetID()) {
 				result = pr->intersect( intersection, ray );
 				if (result) {
@@ -188,13 +194,17 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 			if (tmax.x_ < tmax.z_)
 			{
 				X = X + stepX;
-				if (X == outX) return false;
+				if (X == outX) {
+					return false;
+				}
 				tmax.x_ += tdelta.x_;
 			}
 			else
 			{
 				Z = Z + stepZ;
-				if (Z == outZ) return false;
+				if (Z == outZ) {
+					return false;
+				}
 				tmax.z_ += tdelta.z_;
 			}
 		}
@@ -203,13 +213,17 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 			if (tmax.y_ < tmax.z_)
 			{
 				Y = Y + stepY;
-				if (Y == outY) return false;
+				if (Y == outY) {
+					return false;
+				}
 				tmax.y_ += tdelta.y_;
 			}
 			else
 			{
 				Z = Z + stepZ;
-				if (Z == outZ) return false;
+				if (Z == outZ) {
+					return false;
+				}
 				tmax.z_ += tdelta.z_;
 			}
 		}
@@ -217,17 +231,16 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 	}
 
 	testloop:
-	while (1)
+	while (true)
 	{
 		list = spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].data();
 
 		size_t i (0);
 		size_t spheresSize (spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].size());
-		// size_t spheresSize (*list.size());
 		while (i < spheresSize)
 		{
-			Sphere* pr = list[i];
-			int result;
+			Sphere* pr (list[i]);
+			bool result (false);
 			// if (pr->GetLastRayID() != a_Ray.GetID()) {
 				result = pr->intersect( intersection, ray );
 				if (result) {
@@ -240,16 +253,24 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		{
 			if (tmax.x_ < tmax.z_)
 			{
-				if (intersection->length_ < tmax.x_) break;
+				if (intersection->length_ < tmax.x_) {
+					break;
+				}
 				X = X + stepX;
-				if (X == outX) break;
+				if (X == outX) {
+					break;
+				}
 				tmax.x_ += tdelta.x_;
 			}
 			else
 			{
-				if (intersection->length_ < tmax.z_) break;
+				if (intersection->length_ < tmax.z_) {
+					break;
+				}
 				Z = Z + stepZ;
-				if (Z == outZ) break;
+				if (Z == outZ) {
+					break;
+				}
 				tmax.z_ += tdelta.z_;
 			}
 		}
@@ -257,16 +278,24 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		{
 			if (tmax.y_ < tmax.z_)
 			{
-				if (intersection->length_ < tmax.y_) break;
+				if (intersection->length_ < tmax.y_) {
+					break;
+				}
 				Y = Y + stepY;
-				if (Y == outY) break;
+				if (Y == outY) {
+					break;
+				}
 				tmax.y_ += tdelta.y_;
 			}
 			else
 			{
-				if (intersection->length_ < tmax.z_) break;
+				if (intersection->length_ < tmax.z_) {
+					break;
+				}
 				Z = Z + stepZ;
-				if (Z == outZ) break;
+				if (Z == outZ) {
+					break;
+				}
 				tmax.z_ += tdelta.z_;
 			}
 		}
