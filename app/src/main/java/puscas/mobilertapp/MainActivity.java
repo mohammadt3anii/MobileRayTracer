@@ -14,12 +14,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
@@ -58,7 +56,6 @@ public final class MainActivity extends Activity {
         InputStream stream = null;
         try {
             stream = getAssets().open(filename);
-
             final int size = stream.available();
             final byte[] buffer = new byte[size];
             stream.read(buffer);
@@ -76,8 +73,7 @@ public final class MainActivity extends Activity {
                 }
             }
         }
-        //asset.deleteCharAt(asset.length() - 1);
-        return asset.toString();
+        return asset;
     }
 
     @Override
@@ -121,8 +117,6 @@ public final class MainActivity extends Activity {
             final String fragmentShader = loadAsset("FragmentShader.glsl");
             drawView_.renderer.vertexShaderCode = vertexShader;
             drawView_.renderer.fragmentShaderCode = fragmentShader;
-            System.out.println ("VertexShader = " + vertexShader);
-            System.out.println ("FragmentShader = " + fragmentShader);
 
             drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
             if (drawView_.buttonRender_ == null) {
