@@ -14,8 +14,12 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
@@ -47,6 +51,33 @@ public final class MainActivity extends Activity {
     private static int getNumberOfCores() {
         return (Build.VERSION.SDK_INT < 17) ? MainActivity.getNumCoresOldPhones() :
                 Runtime.getRuntime().availableProcessors();
+    }
+
+    private String loadAsset(final String filename) {
+        String asset = null;
+        InputStream stream = null;
+        try {
+            stream = getAssets().open(filename);
+
+            final int size = stream.available();
+            final byte[] buffer = new byte[size];
+            stream.read(buffer);
+            asset = new String(buffer);
+        } catch (final IOException e) {
+            Log.e("Assets", "Couldn't read asset " + filename);
+            Log.e("Assets", e.getMessage());
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (final IOException e) {
+                    Log.e("Assets", "Couldn't close asset " + filename);
+                    Log.e("Assets", e.toString());
+                }
+            }
+        }
+        //asset.deleteCharAt(asset.length() - 1);
+        return asset.toString();
     }
 
     @Override
@@ -86,6 +117,12 @@ public final class MainActivity extends Activity {
             drawView_.renderer = renderer;
             drawView_.setRenderer(renderer);
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+            final String vertexShader = loadAsset("VertexShader.glsl");
+            final String fragmentShader = loadAsset("FragmentShader.glsl");
+            drawView_.renderer.vertexShaderCode = vertexShader;
+            drawView_.renderer.fragmentShaderCode = fragmentShader;
+            System.out.println ("VertexShader = " + vertexShader);
+            System.out.println ("FragmentShader = " + fragmentShader);
 
             drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
             if (drawView_.buttonRender_ == null) {

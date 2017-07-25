@@ -14,29 +14,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 class MainRenderer implements Renderer {
-    private static final String vertexShaderCode =
-            "precision lowp float;" +
-                    "attribute vec4 vPosition;" +
-                    "attribute vec2 a_texCoord;" +
-                    "varying vec2 v_texCoord;" +
-                    "void main () {" +
-                    "   gl_Position = vPosition;" +
-                    "   v_texCoord = a_texCoord;" +
-                    '}';
-    private static final String fragmentShaderCode =
-            "precision lowp float;" +
-                    "uniform sampler2D u_Texture;" +
-                    "varying vec2 v_texCoord;" +
-                    "float toneMap (float value) {" +
-                    //"   return 1.0 - cos(sqrt(value));" +
-                    //"   return pow(1.0 - exp(-value * 1.0), 1.0 / 2.2);" +
-                    "   return value;" +
-                    '}' +
-                    "void main () {" +
-                    "   vec4 color = texture2D(u_Texture, v_texCoord);" +
-                    //"   gl_FragColor = texture2D(u_Texture, v_texCoord);" +
-                    "   gl_FragColor = vec4(toneMap(color[0]), toneMap(color[1]), toneMap(color[2]), 1.0);" +
-                    '}';
+    String vertexShaderCode = null;
+    String fragmentShaderCode = null;
+    Bitmap bitmap = null;
 
     private final float[] vertices = {
             -1.0f, 1.0f, 0.0f,
@@ -50,7 +30,6 @@ class MainRenderer implements Renderer {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    Bitmap bitmap = null;
     private FloatBuffer floatBufferVertices;
     private FloatBuffer floatBufferTexture;
 
@@ -64,6 +43,7 @@ class MainRenderer implements Renderer {
             if (compiled[0] == 0) {
                 Log.e("SHADER", "Could not compile shader " + shaderType + ':');
                 Log.e("SHADER", GLES20.glGetShaderInfoLog(shader));
+                Log.e("SHADER", source);
                 GLES20.glDeleteShader(shader);
                 System.exit(0);
             }
@@ -106,8 +86,8 @@ class MainRenderer implements Renderer {
         floatBufferTexture.position(0);
 
         //Load shaders
-        final int vertexShader = MainRenderer.loadShader(GLES20.GL_VERTEX_SHADER, MainRenderer.vertexShaderCode);
-        final int fragmentShader = MainRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, MainRenderer.fragmentShaderCode);
+        final int vertexShader = MainRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        final int fragmentShader = MainRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         //Create Program
         final int shaderProgram = GLES20.glCreateProgram();
