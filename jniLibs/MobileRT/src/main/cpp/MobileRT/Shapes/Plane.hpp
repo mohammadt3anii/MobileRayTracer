@@ -5,6 +5,7 @@
 #ifndef MOBILERT_SHAPES_PLANE_HPP
 #define MOBILERT_SHAPES_PLANE_HPP
 
+#include "../Accelerators/AABB.hpp"
 #include "../Intersection.hpp"
 #include "../Ray.hpp"
 
@@ -14,28 +15,33 @@ namespace MobileRT {
         const Vector3D normal_;    // normal to the plane
         const Point3D point_;   // point in the plane
 
+		private:
+				Point3D getPositionMin() const noexcept;
+
+        Point3D getPositionMax() const noexcept;
+
     public:
         explicit Plane(const Point3D &point, const Vector3D &normal) noexcept;
 
-		Plane(const Plane &plane) noexcept = default;
+			Plane(const Plane &plane) noexcept = default;
 
-		Plane(Plane &&plane) noexcept = default;
+			Plane(Plane &&plane) noexcept = default;
 
-        ~Plane() noexcept = default;
+      ~Plane() noexcept = default;
 
-        Plane &operator=(const Plane &plane) noexcept = delete;
+      Plane &operator=(const Plane &plane) noexcept = delete;
 
-		Plane &operator=(Plane &&plane) noexcept = delete;
+			Plane &operator=(Plane &&plane) noexcept = delete;
 
-        bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
+      bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
 
-        void moveTo(float x, float y) noexcept;
+      void moveTo(float x, float y) noexcept;
 
-        float getZ() const noexcept;
+      float getZ() const noexcept;
 
-        Point3D getPositionMin() const noexcept;
+			AABB getAABB() const noexcept;
 
-        Point3D getPositionMax() const noexcept;
+			bool intersect(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

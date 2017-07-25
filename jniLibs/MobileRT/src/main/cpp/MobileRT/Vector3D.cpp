@@ -145,6 +145,14 @@ Vector3D Vector3D::operator+(const Vector3D &vector) const noexcept {
     return Vector3D(this->x_ + vector.x_, this->y_ + vector.y_, this->z_ + vector.z_);
 }
 
+Vector3D Vector3D::operator-(const Vector3D &vector) const noexcept {
+    return Vector3D(this->x_ - vector.x_, this->y_ - vector.y_, this->z_ - vector.z_);
+}
+
+Vector3D Vector3D::operator*(const Vector3D &vector) const noexcept {
+    return Vector3D(this->x_ * vector.x_, this->y_ * vector.y_, this->z_ * vector.z_);
+}
+
 Vector3D Vector3D::operator-() const noexcept {
 	return Vector3D(-this->x_, -this->y_, -this->z_, this->magnitude_);
 }

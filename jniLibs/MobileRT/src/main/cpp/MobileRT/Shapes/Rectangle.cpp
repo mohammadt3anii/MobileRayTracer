@@ -4,6 +4,7 @@
 
 #include "Rectangle.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Rectangle;
 using MobileRT::Point3D;
 
@@ -155,4 +156,12 @@ Point3D Rectangle::getPositionMax() const noexcept {
 	}
 
     return Point3D(x, y, z);
+}
+
+AABB Rectangle::getAABB() const noexcept {
+	return AABB(getPositionMin(), getPositionMax());
+}
+
+bool Rectangle::intersect(const AABB & /*box*/) const noexcept {
+	return true;
 }

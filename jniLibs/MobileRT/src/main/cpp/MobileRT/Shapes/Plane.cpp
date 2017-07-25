@@ -4,6 +4,7 @@
 
 #include "Plane.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Plane;
 using MobileRT::Point3D;
 
@@ -51,4 +52,12 @@ Point3D Plane::getPositionMin() const noexcept {
 
 Point3D Plane::getPositionMax() const noexcept {
     return this->point_;
+}
+
+AABB Plane::getAABB() const noexcept {
+	return AABB(getPositionMin(), getPositionMax());
+}
+
+bool Plane::intersect(const AABB & /*box*/) const noexcept {
+	return true;
 }

@@ -5,6 +5,7 @@
 #ifndef MOBILERT_SHAPES_TRIANGLE_HPP
 #define MOBILERT_SHAPES_TRIANGLE_HPP
 
+#include "../Accelerators/AABB.hpp"
 #include "../Intersection.hpp"
 #include "../Point3D.hpp"
 #include "../Ray.hpp"
@@ -20,29 +21,34 @@ namespace MobileRT {
         const Point3D pointB_;
         const Point3D pointC_;
 
-    public:
-        explicit Triangle(const Point3D &pointA, const Point3D &pointB,
-                          const Point3D &pointC) noexcept;
-
-		Triangle(const Triangle &triangle) noexcept = default;
-
-		Triangle(Triangle &&triangle) noexcept = default;
-
-		~Triangle() noexcept = default;
-
-        Triangle &operator=(const Triangle &triangle) noexcept = delete;
-
-		Triangle &operator=(Triangle &&triangle) noexcept = delete;
-
-        bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
-
-        void moveTo(float x, float y) noexcept;
-
-        float getZ() const noexcept;
-
-        Point3D getPositionMin() const noexcept;
+		private:
+				Point3D getPositionMin() const noexcept;
 
         Point3D getPositionMax() const noexcept;
+
+    public:
+			explicit Triangle(const Point3D &pointA, const Point3D &pointB,
+                          const Point3D &pointC) noexcept;
+
+			Triangle(const Triangle &triangle) noexcept = default;
+
+			Triangle(Triangle &&triangle) noexcept = default;
+
+			~Triangle() noexcept = default;
+
+			Triangle &operator=(const Triangle &triangle) noexcept = delete;
+
+			Triangle &operator=(Triangle &&triangle) noexcept = delete;
+
+			bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
+
+			void moveTo(float x, float y) noexcept;
+
+			float getZ() const noexcept;
+
+			AABB getAABB() const noexcept;
+
+			bool intersect(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

@@ -5,7 +5,7 @@
 #ifndef MOBILERT_SCENE_HPP
 #define MOBILERT_SCENE_HPP
 
-#include "A/AABB.hpp"
+#include "Accelerators/AABB.hpp"
 #include "Intersection.hpp"
 #include "Light.hpp"
 #include "Material.hpp"
@@ -19,12 +19,12 @@
 namespace MobileRT {
     class Scene final {
     public:
-		std::vector<Triangle> triangles_;
-		std::vector<Sphere> spheres_;
-		std::vector<Plane> planes_;
-		std::vector<Material> materials_;
-		std::vector<Light *> lights_;
-		//AxisAlignedBoundingBox *bb;
+			std::vector<Triangle> triangles_;
+			std::vector<Sphere> spheres_;
+			std::vector<Plane> planes_;
+
+			std::vector<Material> materials_;
+			std::vector<Light *> lights_;
 
     private:
         int traceLights(Intersection *intersection, const Ray &ray) const noexcept;

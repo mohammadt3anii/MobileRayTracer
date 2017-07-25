@@ -19,57 +19,61 @@ namespace MobileRT {
         float magnitude_{1.0f};
 
     private:
-        explicit Vector3D(const Vector3D &vector, float value) noexcept;
+			explicit Vector3D(const Vector3D &vector, float value) noexcept;
 
-        float magnitude() const noexcept;
+			float magnitude() const noexcept;
 
-        Point3D operator/(float value) const noexcept;
+			Point3D operator/(float value) const noexcept;
 
     public:
-				explicit Vector3D() noexcept;
+			explicit Vector3D() noexcept;
 
-				explicit Vector3D(float x, float y, float z, float magnitude) noexcept;
+			explicit Vector3D(float x, float y, float z, float magnitude) noexcept;
 
-        explicit Vector3D(float x, float y, float z) noexcept;
+			explicit Vector3D(float x, float y, float z) noexcept;
 
-        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,
-                          float value) noexcept;
+			explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,
+												float value) noexcept;
 
-        explicit Vector3D(const Point3D &dest, const Point3D &orig, bool) noexcept;
+			explicit Vector3D(const Point3D &dest, const Point3D &orig, bool) noexcept;
 
-        explicit Vector3D(const Point3D &dest, const Point3D &orig) noexcept;
+			explicit Vector3D(const Point3D &dest, const Point3D &orig) noexcept;
 
-        explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept;
+			explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2) noexcept;
 
-        Vector3D(const Vector3D &vector) noexcept = default;
+			Vector3D(const Vector3D &vector) noexcept = default;
 
-		Vector3D(Vector3D &&vector) noexcept = default;
+			Vector3D(Vector3D &&vector) noexcept = default;
 
-		~Vector3D() noexcept = default;
+			~Vector3D() noexcept = default;
 
-        Vector3D &operator=(const Vector3D &vector) noexcept = default;
+			Vector3D &operator=(const Vector3D &vector) noexcept = default;
 
-		Vector3D &operator=(Vector3D &&vector) noexcept = default;
+			Vector3D &operator=(Vector3D &&vector) noexcept = default;
 
-				Vector3D operator*(float value) const noexcept;
+			Vector3D operator*(float value) const noexcept;
 
-        Vector3D operator+(const Vector3D &vector) const noexcept;
+			Vector3D operator+(const Vector3D &vector) const noexcept;
 
-        float dotProduct(const Vector3D &vector) const noexcept;
+			Vector3D operator-(const Vector3D &vector) const noexcept;
 
-        float dotProduct(const Point3D &dest, const Point3D &orig) const noexcept;
+			Vector3D operator*(const Vector3D &vector) const noexcept;
 
-        float squareMagnitude() const noexcept;
+			float dotProduct(const Vector3D &vector) const noexcept;
 
-        Vector3D crossProduct(const Vector3D &vector) const noexcept;
+			float dotProduct(const Point3D &dest, const Point3D &orig) const noexcept;
 
-        void operator*=(float value) noexcept;
+			float squareMagnitude() const noexcept;
 
-        Vector3D operator-() const noexcept;
+			Vector3D crossProduct(const Vector3D &vector) const noexcept;
 
-        float normalize() noexcept;
+			void operator*=(float value) noexcept;
 
-        static unsigned int getInstances() noexcept;
+			Vector3D operator-() const noexcept;
+
+			float normalize() noexcept;
+
+			static unsigned int getInstances() noexcept;
     };
 }//namespace MobileRT
 

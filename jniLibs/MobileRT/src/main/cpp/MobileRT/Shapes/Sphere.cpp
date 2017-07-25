@@ -4,6 +4,7 @@
 
 #include "Sphere.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Sphere;
 using MobileRT::Point3D;
 
@@ -74,4 +75,38 @@ Point3D Sphere::getPositionMax() const noexcept {
     z = this->center_.x_ + radius;
 
     return Point3D(x, y, z);
+}
+
+AABB Sphere::getAABB() const noexcept {
+	return AABB(getPositionMin(), getPositionMax());
+}
+
+bool Sphere::intersect(const AABB &box) const noexcept {
+	float dmin = 0;
+	const Point3D v1 = box.pointMin_, v2 = box.pointMax_;
+	if (center_.x_ < v1.x_) 
+	{
+		dmin = dmin + (center_.x_ - v1.x_) * (center_.x_ - v1.x_);
+	}
+	else if (center_.x_ > v2.x_)
+	{
+		dmin = dmin + (center_.x_ - v2.x_) * (center_.x_ - v2.x_);
+	}
+	if (center_.y_ < v1.y_)
+	{
+		dmin = dmin + (center_.y_ - v1.y_) * (center_.y_ - v1.y_);
+	}
+	else if (center_.y_ > v2.y_)
+	{
+		dmin = dmin + (center_.y_ - v2.y_) * (center_.y_ - v2.y_);
+	}
+	if (center_.z_ < v1.z_)
+	{
+		dmin = dmin + (center_.z_ - v1.z_) * (center_.z_ - v1.z_);
+	}
+	else if (center_.z_ > v2.z_)
+	{
+		dmin = dmin + (center_.z_ - v2.z_) * (center_.z_ - v2.z_);
+	}
+	return (dmin <= sq_radius_);
 }

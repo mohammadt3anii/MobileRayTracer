@@ -5,6 +5,7 @@
 
 #include "Triangle.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Triangle;
 using MobileRT::Point3D;
 
@@ -135,4 +136,12 @@ Point3D Triangle::getPositionMax() const noexcept {
 	}
 
     return Point3D(x, y, z);
+}
+
+AABB Triangle::getAABB() const noexcept {
+	return AABB(getPositionMin(), getPositionMax());
+}
+
+bool Triangle::intersect(const AABB & /*box*/) const noexcept {
+	return true;
 }

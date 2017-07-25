@@ -5,6 +5,7 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
+#include "Accelerators/RegularGrid.hpp"
 #include "Intersection.hpp"
 #include "RGB.hpp"
 #include "Ray.hpp"
@@ -16,6 +17,7 @@ namespace MobileRT {
     class Shader {
     public:
         Scene scene_;
+				RegularGrid regularGrid_;
 
     protected:
         const unsigned int samplesLight_;
