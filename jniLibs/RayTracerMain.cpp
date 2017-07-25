@@ -386,8 +386,7 @@ int main(int argc, char **argv) noexcept {
 		camera_->position_.x_ += 2.0f;
 			} while (repeats-- > 1);
     delete renderer_;
-    const double end(omp_get_wtime() - start);
-    std::cout << "Time in secs = " << end << std::endl;
+    std::cout << "Time in secs = " << omp_get_wtime() - start << std::endl;
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(bitmap[j]);

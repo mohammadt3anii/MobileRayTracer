@@ -31,8 +31,10 @@ ifeq ($(S),2)
 	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
 	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
 	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
+	#SANITIZER := -fsanitize=address
+	SANITIZER += -fsanitize-recover=address
 	SANITIZER_LD := -fsanitize-address-use-after-scope
-	ASAN_OPTIONS := strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
+	ASAN_OPTIONS := strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0
 endif
 
 ifeq ($(CXX),clang++)
