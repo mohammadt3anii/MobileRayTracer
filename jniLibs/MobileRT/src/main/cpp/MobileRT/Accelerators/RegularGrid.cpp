@@ -130,10 +130,9 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		cb.z_ = e.pointMin_.z_ + Z * m_CW.z_;
 	}
 
-	float rxr, ryr, rzr;
 	if (raydir.x_ != 0)
 	{
-		rxr = 1.0f / raydir.x_;
+		const float rxr (1.0f / raydir.x_);
 		tmax.x_ = (cb.x_ - curpos.x_) * rxr; 
 		tdelta.x_ = m_CW.x_ * stepX * rxr;
 	}
@@ -143,7 +142,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 
 	if (raydir.y_ != 0)
 	{
-		ryr = 1.0f / raydir.y_;
+		const float ryr (1.0f / raydir.y_);
 		tmax.y_ = (cb.y_ - curpos.y_) * ryr; 
 		tdelta.y_ = m_CW.y_ * stepY * ryr;
 	}
@@ -153,7 +152,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 
 	if (raydir.z_ != 0)
 	{
-		rzr = 1.0f / raydir.z_;
+		const float rzr (1.0f / raydir.z_);
 		tmax.z_ = (cb.z_ - curpos.z_) * rzr; 
 		tdelta.z_ = m_CW.z_ * stepZ * rzr;
 	}
