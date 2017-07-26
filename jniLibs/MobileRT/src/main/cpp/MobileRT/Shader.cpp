@@ -18,7 +18,7 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
 		this->scene_.spheres_.shrink_to_fit();
 		this->scene_.planes_.shrink_to_fit();
     this->scene_.lights_.shrink_to_fit();
-		this->regularGrid_ = RegularGrid(Point3D(-100,-100,-100), Point3D(100,100,100), &scene_);
+		this->regularGrid_ = RegularGrid(Point3D(-4,-4,-4), Point3D(4,4,4), &scene_, 8, 3);
 }
 
 int Shader::traceTouch(Intersection *intersection, const Ray &ray) const noexcept {
@@ -32,7 +32,7 @@ bool Shader::rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noe
 	if (regularGrid_.intersect(intersection, ray))
 	// if (this->scene_.trace(intersection, ray) >= 0)
 	{// compute radiance
-		intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(5)];
+		intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
 		return shade(rgb, *intersection, std::move(ray)); 
 	}
 	return false;

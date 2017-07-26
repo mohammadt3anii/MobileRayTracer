@@ -56,23 +56,21 @@ float Sphere::getZ() const noexcept {
 }
 
 Point3D Sphere::getPositionMin() const noexcept {
-    float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 
-    x = this->center_.x_ - radius;
-    y = this->center_.x_ - radius;
-    z = this->center_.x_ - radius;
+    const float x (this->center_.x_ - radius);
+    const float y (this->center_.y_ - radius);
+    const float z (this->center_.z_ - radius);
 
     return Point3D(x, y, z);
 }
 
 Point3D Sphere::getPositionMax() const noexcept {
-    float x, y, z;
     const float radius(std::sqrt(this->sq_radius_));
 
-    x = this->center_.x_ + radius;
-    y = this->center_.x_ + radius;
-    z = this->center_.x_ + radius;
+    const float x (this->center_.x_ + radius);
+    const float y (this->center_.y_ + radius);
+    const float z (this->center_.z_ + radius);
 
     return Point3D(x, y, z);
 }
@@ -82,8 +80,9 @@ AABB Sphere::getAABB() const noexcept {
 }
 
 bool Sphere::intersect(const AABB &box) const noexcept {
-	float dmin = 0;
-	const Point3D v1 = box.pointMin_, v2 = box.pointMax_;
+	float dmin (0);
+	const Point3D v1 (box.pointMin_);
+	const Point3D v2 (box.pointMax_);
 	if (center_.x_ < v1.x_) 
 	{
 		dmin = dmin + (center_.x_ - v1.x_) * (center_.x_ - v1.x_);

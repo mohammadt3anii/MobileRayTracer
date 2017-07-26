@@ -66,11 +66,6 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, i
 					// do an accurate aabb / primitive intersection test
 					if (sphere.intersect( cell ))
 					{
-						// object intersects cell; add to object list
-						// ObjectList* l = new ObjectList();
-						// l->SetPrimitive( m_Primitive[p] );
-						// l->SetNext( m_Grid[idx] );
-						// m_Grid[idx] = l;
 						spheres_[idx].emplace_back(&sphere);
 					}
 				}
