@@ -81,6 +81,12 @@ void RGB::operator*=(const float value) noexcept {
     this->B_ *= value;
 }
 
+void RGB::operator+=(const float value) noexcept {
+    this->R_ += value;
+    this->G_ += value;
+    this->B_ += value;
+}
+
 void RGB::operator/=(const float value) noexcept {
     this->R_ /= value;
     this->G_ /= value;

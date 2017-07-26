@@ -16,34 +16,34 @@
 namespace MobileRT {
     class Shader {
     public:
-        Scene scene_;
-				RegularGrid regularGrid_;
+			Scene scene_;
+			RegularGrid regularGrid_;
 
     protected:
-        const unsigned int samplesLight_;
+			const unsigned int samplesLight_;
 
     protected:
 			virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
 
 		public:
-        explicit Shader(Scene &&scene, unsigned int samplesLight) noexcept;
+			explicit Shader(Scene &&scene, unsigned int samplesLight = 0) noexcept;
 
-		Shader(const Shader &shader) noexcept = delete;
+			Shader(const Shader &shader) noexcept = delete;
 
-		Shader(Shader &&shader) noexcept = delete;
+			Shader(Shader &&shader) noexcept = delete;
 
-        virtual ~Shader() noexcept;
+			virtual ~Shader() noexcept;
 
-		Shader &operator=(const Shader &shader) noexcept = delete;
+			Shader &operator=(const Shader &shader) noexcept = delete;
 
-		Shader &operator=(Shader &&shader) noexcept = delete;
+			Shader &operator=(Shader &&shader) noexcept = delete;
 
-		//ray trace and verifies if intersects primitives
-		bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept;
+			//ray trace and verifies if intersects primitives
+			bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept;
 
-        int traceTouch(Intersection *intersection, const Ray &ray) const noexcept;
+			int traceTouch(Intersection *intersection, const Ray &ray) const noexcept;
 
-        virtual void resetSampling() noexcept = 0;
+			virtual void resetSampling() noexcept = 0;
     };
 }//namespace MobileRT
 

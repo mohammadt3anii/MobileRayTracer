@@ -6,6 +6,7 @@
 #include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Random.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
+#include "Components/src/main/cpp/Components/Shaders/DepthMap.hpp"
 #include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
 #include "Components/src/main/cpp/Components/Shaders/PathTracer.hpp"
 #include "Components/src/main/cpp/Components/Shaders/Whitted.hpp"
@@ -367,6 +368,10 @@ int main(int argc, char **argv) noexcept {
             shader_ = new Components::PathTracer(
                     std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
             break;
+
+				case 3:
+						shader_ = new Components::DepthMap(std::move(scene_), MobileRT::Point3D(1,1,1));
+						break;
 
         default:
             shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
