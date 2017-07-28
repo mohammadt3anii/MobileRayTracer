@@ -26,25 +26,25 @@ Renderer::Renderer(Sampler *samplerCamera, Shader *shader, Camera const &camera,
 }
 
 void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThreads) noexcept {
-    LOG("START - resolution = ", resolution_);
-    this->sample_ = 0u;
-    const unsigned int size(this->width_ * this->height_);
-    for (unsigned int i(0u); i < size; i++) {
-        this->accumulate_[i].reset();
-    }
-    this->samplerCamera_->resetSampling();
-    this->samplerPixel_->resetSampling();
-    this->shader_->resetSampling();
-    const unsigned numChildren (numThreads - 1u);
+	LOG("START - resolution = ", resolution_);
+	this->sample_ = 0u;
+	const unsigned int size(this->width_ * this->height_);
+	for (unsigned int i(0u); i < size; i++) {
+			this->accumulate_[i].reset();
+	}
+	this->samplerCamera_->resetSampling();
+	this->samplerPixel_->resetSampling();
+	this->shader_->resetSampling();
+	const unsigned numChildren (numThreads - 1u);
 	std::vector<std::thread> threads;
 	threads.reserve(numChildren);
-    for (unsigned int i(0u); i < numChildren; i++) {
+	for (unsigned int i(0u); i < numChildren; i++) {
 		threads.emplace_back(&Renderer::renderScene, this, bitmap, i);
-    }
-    renderScene(bitmap, numChildren);
-    for (unsigned int i(0u); i < numChildren; i++) {
-        threads[i].join();
-    }
+	}
+	renderScene(bitmap, numChildren);
+	for (std::thread& thread : threads) {
+		thread.join();
+	}
 	threads.clear();
 
 	float max(-1.0f);
@@ -64,14 +64,14 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 	LOG("max = ", max, ", i = ", ii, ", j = ", jj);
 	LOG("r = ", this->accumulate_[ii*this->width_ + jj].R_, ", g = ", this->accumulate_[ii*this->width_ + jj].G_, ", b = ", this->accumulate_[ii*this->width_ + jj].B_, " , s = ", this->accumulate_[ii*this->width_ + jj].samples_, " , color = ", this->accumulate_[ii*this->width_ + jj].RGB2Color2());
 
-    LOG("point3D = ", Point3D::getInstances());
-    LOG("vector3D = ", Vector3D::getInstances());
-    LOG("RGB = ", RGB::getInstances());
-    LOG("scene = ", Scene::getInstances());
-    LOG("ray = ", Ray::getInstances());
-    LOG("material = ", Material::getInstances());
-    LOG("intersection = ", Intersection::getInstances());
-    LOG("FINISH");
+	LOG("point3D = ", Point3D::getInstances());
+	LOG("vector3D = ", Vector3D::getInstances());
+	LOG("RGB = ", RGB::getInstances());
+	LOG("scene = ", Scene::getInstances());
+	LOG("ray = ", Ray::getInstances());
+	LOG("material = ", Material::getInstances());
+	LOG("intersection = ", Intersection::getInstances());
+	LOG("FINISH");
 }
 
 void Renderer::stopRender() noexcept {

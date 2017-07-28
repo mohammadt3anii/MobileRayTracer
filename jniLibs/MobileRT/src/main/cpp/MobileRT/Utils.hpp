@@ -21,15 +21,16 @@
 #endif
 
 template <typename T>
-void MagicLog(std::ostream& o, T t)
+void MagicLog(std::ostringstream& o, T t)
 {
     o << t;
 }
 
 template<typename T, typename... Args>
-void MagicLog(std::ostream& o, T t, Args... args)
+void MagicLog(std::ostringstream& o, T t, Args... args)
 {
-    MagicLog(o << t, args...);
+	o << t;
+	MagicLog(o, args...);
 }
 
 template<typename... Args>
@@ -37,10 +38,11 @@ void log(Args... args)
 {
     std::ostringstream oss("");
     MagicLog(oss, args...);
+		oss << std::endl;
 	#ifdef NO_ANDROID
-		std::cout << oss.str() << std::endl;
+		std::cout << oss.str();
 	#else
-		__android_log_print(ANDROID_LOG_INFO, "LOG", "%s\n", oss.str().c_str());
+		__android_log_print(ANDROID_LOG_INFO, "LOG", "%s", oss.str().c_str());
 	#endif
 }
 

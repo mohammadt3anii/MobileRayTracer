@@ -5,9 +5,7 @@
 #include "DepthMap.hpp"
 
 using Components::DepthMap;
-using MobileRT::Light;
 using MobileRT::Point3D;
-using MobileRT::Vector3D;
 using MobileRT::RGB;
 using MobileRT::Intersection;
 using MobileRT::Ray;
@@ -15,7 +13,7 @@ using MobileRT::Scene;
 
 DepthMap::DepthMap(Scene &&scene, Point3D&& maxPoint) noexcept :
         Shader(std::move(scene)),
-				maxPoint_(std::move(maxPoint))
+				maxPoint_(maxPoint)
 {
 }
 

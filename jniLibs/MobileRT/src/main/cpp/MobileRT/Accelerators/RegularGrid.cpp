@@ -6,17 +6,16 @@
 
 using MobileRT::RegularGrid;
 
-RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, int gridShift) :
+RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridSize, const int gridShift) :
+	spheres_(std::vector<std::vector<Sphere*>> (static_cast<size_t> (gridSize * gridSize * gridSize))),
 	//scene_(scene),
 	gridSize_(gridSize),
 	gridShift_(gridShift),
 	m_Extends (AABB( min, max ))
 {
-	if (scene == nullptr) {
-		return;
+	for (unsigned int i (0); i < static_cast<unsigned int> (gridSize_ * gridSize_ * gridSize_); i++) {
+		spheres_[i] = std::vector<Sphere*> ();
 	}
-	spheres_ = std::vector<std::vector<Sphere*>> ();
-	spheres_.reserve(static_cast<size_t> (gridSize_ * gridSize_ * gridSize_));
 
 	// precalculate 1 / size of a cell (for x, y and z)
 	m_SR.x_ = gridSize_ / (m_Extends.pointMax_.x_ - m_Extends.pointMin_.x_);
@@ -29,9 +28,9 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, i
 	const float dy ((max.y_ - min.y_) / gridSize_);
 	const float dz ((max.z_ - min.z_) / gridSize_);
 
-	const float dx_reci = 1.0f / dx;
-	const float dy_reci = 1.0f / dy;
-	const float dz_reci = 1.0f / dz;
+	const float dx_reci (1.0f / dx);
+	const float dy_reci (1.0f / dy);
+	const float dz_reci (1.0f / dz);
 
 	size_t spheresSize (scene->spheres_.size());
 	// store primitives in the grid cells
@@ -45,16 +44,16 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize, i
 		// find out which cells could contain the primitive (based on aabb)
 		auto x1 (static_cast<int>((bv1.x_ - min.x_) * dx_reci));
 		auto x2 (static_cast<int>((bv2.x_ - min.x_) * dx_reci) + 1);
-		x1 = (x1 < 0)?0:x1;
-		x2 = (x2 > (gridSize_ - 1))?gridSize_ - 1:x2;
+		x1 = (x1 < 0) ? 0 : x1;
+		x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
 		auto y1 (static_cast<int>((bv1.y_ - min.y_) * dy_reci));
 		auto y2 (static_cast<int>((bv2.y_ - min.y_) * dy_reci) + 1);
-		y1 = (y1 < 0)?0:y1;
-		y2 = (y2 > (gridSize_ - 1))?gridSize_ - 1:y2;
+		y1 = (y1 < 0) ? 0 : y1;
+		y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
 		auto z1 (static_cast<int>((bv1.z_ - min.z_) * dz_reci));
 		auto z2 (static_cast<int>((bv2.z_ - min.z_) * dz_reci) + 1);
-		z1 = (z1 < 0)?0:z1;
-		z2 = (z2 > (gridSize_ - 1))?gridSize_ - 1:z2;
+		z1 = (z1 < 0) ? 0 : z1;
+		z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
 
 		for ( int x (x1); x < x2; x++ ) {
 			for ( int y (y1); y < y2; y++ ) {
@@ -81,8 +80,8 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 	Point3D const &curpos(ray.origin_);
 	AABB e (m_Extends);
 	// setup 3DDDA (double check reusability of primary ray data)
-	Vector3D cb, tmax, tdelta, cell;
-	cell = (curpos - e.pointMin_) * m_SR;
+	Vector3D cb, tmax, tdelta;
+	Vector3D cell ((curpos - e.pointMin_) * m_SR);
 	int stepX, outX, X = static_cast<int>(cell.x_);
 	int stepY, outY, Y = static_cast<int>(cell.y_);
 	int stepZ, outZ, Z = static_cast<int>(cell.z_);

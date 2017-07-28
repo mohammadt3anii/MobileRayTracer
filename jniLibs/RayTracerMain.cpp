@@ -27,8 +27,8 @@ static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
-static MobileRT::Renderer *renderer_(nullptr);
 static MobileRT::Sampler *samplerPointLight_(nullptr);
+static MobileRT::Renderer *renderer_(nullptr);
 static unsigned int blockSize_(4u);
 static unsigned int blockSizeX_(0u);
 static unsigned int blockSizeY_(0u);
@@ -284,6 +284,14 @@ int main(int argc, char **argv) noexcept {
     const int samplesPixel(atoi(argv[5]));
 		const int samplesLight(atoi(argv[6]));
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
+		camera_ = nullptr;
+		shader_ = nullptr;
+		samplerCamera_ = nullptr;
+		samplerPixel_ = nullptr;
+		samplerRay_ = nullptr;
+		samplerLight_ = nullptr;
+		samplerPointLight_ = nullptr;
+		renderer_ = nullptr;
 		
 		MobileRT::Scene scene_;
     blockSizeX_ = width_ / blockSize_;
@@ -348,8 +356,6 @@ int main(int argc, char **argv) noexcept {
                                                         blockSizeX_, blockSizeY_);
             break;
     }
-		samplerRay_ = nullptr;
-    samplerPointLight_ = nullptr;
     const uint64_t domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
     const uint64_t domainLight(
@@ -386,12 +392,22 @@ int main(int argc, char **argv) noexcept {
 
     LOG("Threads = ", threads);
     const double start(omp_get_wtime());
-			do {
-					renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
+		do {
+			renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
 		camera_->position_.x_ += 2.0f;
-			} while (repeats-- > 1);
+		} while (repeats-- > 1);
+
+		delete camera_;
+		delete shader_;
+		delete samplerCamera_;
+		delete samplerPixel_;
+		delete samplerRay_;
+		delete samplerLight_;
+		delete samplerPointLight_;
     delete renderer_;
-    std::cout << "Time in secs = " << omp_get_wtime() - start << std::endl;
+
+    std::cout << "Time in secs = ";
+		std::cout << omp_get_wtime() - start << std::endl;
 
     for (unsigned int i(0u), j(0u); i < width_ * height_ * 4u; i += 4u, j += 1u) {
         const unsigned int color(bitmap[j]);
@@ -411,8 +427,10 @@ int main(int argc, char **argv) noexcept {
 			}
 		), nullptr);
 		auto *check_escape (static_cast<bool(*)(
-			GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/)>([](GtkWidget* /*unused*/, GdkEventKey *event, gpointer /*unused*/){
+			GtkWidget* gtkWidget, GdkEventKey *event, gpointer /*unused*/)>(
+			[](GtkWidget* gtkWidget, GdkEventKey *event, gpointer /*unused*/){
 			if (event->keyval == GDK_KEY_Escape) {
+					gtk_widget_destroy(gtkWidget);
 					gtk_main_quit();
 					return true;
 				}

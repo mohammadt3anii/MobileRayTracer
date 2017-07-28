@@ -11,4 +11,5 @@ Light::Light(Material const &radiance) noexcept :
 }
 
 Light::~Light() noexcept {
+	LOG("LIGHT DELETED");
 }

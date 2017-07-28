@@ -11,14 +11,13 @@ using MobileRT::Shader;
 
 Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
 	scene_(std::move(scene)),
-	regularGrid_(Point3D(), Point3D(), nullptr),
+	regularGrid_(Point3D(-4,-4,-4), Point3D(4,4,4), &scene_, 8, 3),
 	samplesLight_(samplesLight)
 {
     this->scene_.triangles_.shrink_to_fit();
 		this->scene_.spheres_.shrink_to_fit();
 		this->scene_.planes_.shrink_to_fit();
     this->scene_.lights_.shrink_to_fit();
-		this->regularGrid_ = RegularGrid(Point3D(-4,-4,-4), Point3D(4,4,4), &scene_, 8, 3);
 }
 
 int Shader::traceTouch(Intersection *intersection, const Ray &ray) const noexcept {
@@ -26,6 +25,7 @@ int Shader::traceTouch(Intersection *intersection, const Ray &ray) const noexcep
 }
 
 Shader::~Shader () noexcept {
+	LOG("SHADER DELETED");
 }
 
 bool Shader::rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept {

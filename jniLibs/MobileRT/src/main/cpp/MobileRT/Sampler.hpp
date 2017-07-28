@@ -5,6 +5,7 @@
 #ifndef MOBILERT_SAMPLER_HPP
 #define MOBILERT_SAMPLER_HPP
 
+#include "Utils.hpp"
 #include <atomic>
 
 namespace MobileRT {

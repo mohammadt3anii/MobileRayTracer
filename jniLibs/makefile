@@ -11,11 +11,11 @@ INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -Wno-c++98-compat-pedantic -fno-rtti -fno-exceptions -DNO_ANDROID $(INCLUDES)
-CXXFLAGS += -Wno-shift-sign-overflow -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-documentation-unknown-command -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro
+CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
+CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
 CXXFLAGS +=  -Wno-padded -Wno-float-equal
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -fopenmp
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp
 
 ifeq ($(S),)
 	CXXFLAGS += -march=native -ftree-vectorize -Ofast
@@ -23,23 +23,33 @@ ifeq ($(S),)
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
-	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
+	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-check
+	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-check
 endif
 
 ifeq ($(S),2)
+	#CXX := g++
 	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
 	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
-	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
-	#SANITIZER := -fsanitize=address
+	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor #MemorySanitizer, a detector of uninitialized reads. Requires instrumentation of all program code.
+	#SANITIZER := -fsanitize=address #AddressSanitizer, a memory error detector.
+	#SANITIZER := -fsanitize=thread #ThreadSanitizer, a data race detector.
+	#SANITIZER := -fsanitize=undefined #UndefinedBehaviorSanitizer, a fast and compatible undefined behavior checker.
+	#SANITIZER := -fsanitize=dataflow #DataFlowSanitizer, a general data flow analysis.
+	#SANITIZER := -fsanitize=cfi #control flow integrity checks. Requires -flto.
+	#SANITIZER := -fsanitize=safe-stack #safe stack protection against stack-based memory corruption errors.
 	SANITIZER += -fsanitize-recover=address
-	SANITIZER_LD := -fsanitize-address-use-after-scope
-	ASAN_OPTIONS := strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0
+	#SANITIZER_CXX := -static-libasan
+	SANITIZER_LD := -fsanitize-address-use-after-scope# -ltsan -lasan
+	ASAN_OPTIONS=verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0
+	CXXFLAGS += $(SANITIZER) $(SANITIZER_CXX)
+	LDFLAGS += $(SANITIZER) $(SANITIZER_LD)
 endif
 
 ifeq ($(CXX),clang++)
-  CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1 $(SANITIZER)
-  LDFLAGS += -lc++ $(SANITIZER) $(SANITIZER_LD)
+  CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1
+	CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
+  LDFLAGS += -lc++
 endif
 
 ###############################################################################
@@ -111,3 +121,7 @@ GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 gtest: $(OBJS) $(GTESTOBJS)
 	g++ $(GTESTOBJS) $(OBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
 	@echo "Compilation Test Units done"
+
+#valgrind --leak-check=full --show-leak-kinds=all --tool=memcheck --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --track-origins=yes --show-reachable=yes --error-limit=no ./raytracer 1 3 3 0 1 1
+
+#--tool=exp-sgcheck

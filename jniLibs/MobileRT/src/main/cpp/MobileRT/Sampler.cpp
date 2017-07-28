@@ -28,4 +28,5 @@ void Sampler::stopSampling() noexcept {
 }
 
 Sampler::~Sampler () noexcept {
+	LOG("SAMPLER DELETED");
 }

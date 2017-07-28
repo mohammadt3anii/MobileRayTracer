@@ -15,4 +15,5 @@ Camera::Camera(const Point3D &position, const Point3D &lookAt, const Vector3D &u
 }
 
 Camera::~Camera () noexcept {
+	LOG("CAMERA DELETED");
 }
