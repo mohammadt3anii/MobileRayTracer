@@ -276,7 +276,7 @@ static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
 }
 
 void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
-    unsigned int rep(2u);
+    unsigned int rep(1u);
     do {
         const std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
         renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
@@ -288,7 +288,7 @@ void thread_work(void *dstPixels, const unsigned int numThreads) noexcept {
     } while (working_ != STOPPED && rep-- > 1u);
     if (working_ != STOPPED) {
         working_ = FINISHED;
-        LOG("WORKING = FINISHED", "");
+        LOG("WORKING = FINISHED");
     }
 }
 
@@ -300,15 +300,17 @@ void Java_puscas_mobilertapp_DrawView_finish(
     thread_->join();
     delete thread_;
 
-    //delete samplerCamera_;
-    //delete samplerPointLight_;
-    //delete samplerRay_;
-    //delete camera_;
-    //delete shader_;
+    delete camera_;
+    delete shader_;
+    delete samplerCamera_;
+    delete samplerPixel_;
+    delete samplerRay_;
+    delete samplerLight_;
+    delete samplerPointLight_;
     delete renderer_;
 
     working_ = IDLE;
-    LOG("WORKING = IDLE", "");
+    LOG("WORKING = IDLE");
     timeFrame_ = 0ll;
     fps_ = 0.0f;
 }
@@ -327,7 +329,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
         jobject /*thiz*/
 ) noexcept {
     working_ = STOPPED;
-    LOG("WORKING = STOPPED", "");
+    LOG("WORKING = STOPPED");
     renderer_->stopRender();
     //timeFrame_ = 0;
     //fps_ = 0.0f;
@@ -346,10 +348,18 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint const samplesLight
 ) noexcept {
     working_ = IDLE;
-    LOG("WORKING = IDLE", "");
+    LOG("WORKING = IDLE");
     width_ = static_cast<unsigned int>(width);
     height_ = static_cast<unsigned int>(height);
     const float ratio(static_cast<float>(height) / static_cast<float>(width));
+    camera_ = nullptr;
+    shader_ = nullptr;
+    samplerCamera_ = nullptr;
+    samplerPixel_ = nullptr;
+    samplerRay_ = nullptr;
+    samplerLight_ = nullptr;
+    samplerPointLight_ = nullptr;
+    renderer_ = nullptr;
 
     MobileRT::Scene scene_;
     blockSizeX_ = width_ / numberOfBlocks_;
@@ -463,7 +473,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
     AndroidBitmap_unlockPixels(env, dstBitmap);
     working_ = BUSY;
-    LOG("WORKING = BUSY", "");
+    LOG("WORKING = BUSY");
     thread_ = new std::thread(thread_work, dstPixels, static_cast<unsigned int> (nThreads));
 }
 
@@ -502,13 +512,13 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 ) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
-    const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
+    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     const auto index(static_cast<uint32_t>(primitiveIndex));
     const MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.planes_[index].getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
-    plane.intersect(&intersection, ray);
+    plane.intersect(&intersection, std::move(ray));
     shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
                                                       intersection.point_.y_);
 }
