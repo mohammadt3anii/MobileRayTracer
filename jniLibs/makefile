@@ -122,6 +122,22 @@ gtest: $(OBJS) $(GTESTOBJS)
 	g++ $(GTESTOBJS) $(OBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
 	@echo "Compilation Test Units done"
 
-#valgrind --leak-check=full --show-leak-kinds=all --tool=memcheck --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --track-origins=yes --show-reachable=yes --error-limit=no ./raytracer 1 3 3 0 1 1
+#valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#--tool=exp-sgcheck
+#valgrind --tool=cachegrind --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=callgrind --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=helgrind  --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=drd --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=massif --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=exp-dhat --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=exp-sgcheck --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=exp-bbv --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#valgrind --tool=lackey --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
