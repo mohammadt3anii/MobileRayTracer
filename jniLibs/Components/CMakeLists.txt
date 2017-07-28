@@ -25,7 +25,7 @@ target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
 target_compile_options(Components PRIVATE -std=c++14 -Weverything -Wfatal-errors --verbose -Werror)
 target_compile_options(Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded)
-target_compile_options(Components PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable -Wno-unused-function -Wno-unused-command-line-argument -Wno-weak-vtables)
+target_compile_options(Components PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable -Wno-unused-function -Wno-float-equal)
 
 target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
 target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)

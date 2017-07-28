@@ -129,7 +129,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		cb.z_ = e.pointMin_.z_ + Z * m_CW.z_;
 	}
 
-	if (raydir.x_ != 0)
+    if (raydir.x_ != 0.0f)
 	{
 		const float rxr (1.0f / raydir.x_);
 		tmax.x_ = (cb.x_ - curpos.x_) * rxr; 
@@ -139,7 +139,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		tmax.x_ = 1000000;
 	}
 
-	if (raydir.y_ != 0)
+    if (raydir.y_ != 0.0f)
 	{
 		const float ryr (1.0f / raydir.y_);
 		tmax.y_ = (cb.y_ - curpos.y_) * ryr; 
@@ -149,7 +149,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 		tmax.y_ = 1000000;
 	}
 
-	if (raydir.z_ != 0)
+    if (raydir.z_ != 0.0f)
 	{
 		const float rzr (1.0f / raydir.z_);
 		tmax.z_ = (cb.z_ - curpos.z_) * rzr; 

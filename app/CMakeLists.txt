@@ -24,7 +24,7 @@ target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
 target_compile_options(DrawView PRIVATE -std=c++14 -Weverything -Wfatal-errors --verbose -Werror)
 target_compile_options(DrawView PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -Wno-over-aligned)
-target_compile_options(DrawView PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable -Wno-unused-function -Wno-unused-command-line-argument -Wno-weak-vtables)
+target_compile_options(DrawView PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable -Wno-unused-function -Wno-float-equal)
 
 target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
 target_compile_options(DrawView PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)
