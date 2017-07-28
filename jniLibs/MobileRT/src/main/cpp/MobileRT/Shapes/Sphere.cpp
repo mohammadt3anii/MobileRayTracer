@@ -35,7 +35,7 @@ bool Sphere::intersect(Intersection *intersection, const Ray &ray) const noexcep
 			distanceToIntersection1 < distanceToIntersection2 ?		
 			distanceToIntersection1 : distanceToIntersection2);
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection->length_) {
+    if (distanceToIntersection < EPSILON || distanceToIntersection > intersection->length_) {
         return false;
 	}
 

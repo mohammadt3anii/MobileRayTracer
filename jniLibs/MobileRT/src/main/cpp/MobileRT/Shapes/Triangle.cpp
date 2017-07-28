@@ -22,7 +22,7 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
 bool Triangle::intersect(Intersection *intersection, const Ray &ray) const noexcept {
     const Vector3D perpendicularVector(ray.direction_, this->AC_);
     const float normalizedProjection(this->AB_.dotProduct(perpendicularVector));
-    if (std::fabs(normalizedProjection) < VECT_PROJ_MIN) {
+    if (std::fabs(normalizedProjection) < EPSILON) {
         return false;
 	}
 
@@ -48,7 +48,7 @@ bool Triangle::intersect(Intersection *intersection, const Ray &ray) const noexc
     const float distanceToIntersection(
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector));
 
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection->length_) {
+    if (distanceToIntersection < EPSILON || distanceToIntersection > intersection->length_) {
         return false;
 	}
 

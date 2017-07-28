@@ -58,13 +58,12 @@ inline std::string getFileName (const char *filepath) {
 	return std::string(filePath.substr(filePos));
 }
 
-#define RAY_LENGTH_MIN  1.0e-3f
-#define RAY_LENGTH_MAX  1.0e+5f
+#define EPSILON         1.0e-05f
+#define RAY_LENGTH_MAX  1.0e+30f
 #define RAY_DEPTH_MIN   4u
 #define RAY_DEPTH_MAX   8u
 #define PI              3.14159265358979323846f
 #define PI_4            0.78539816339744830962f
-#define VECT_PROJ_MIN   1.0e-3f // kEpsilon
 
 unsigned int roundDownToMultipleOf(unsigned int value,
                                    unsigned int multiple) noexcept;

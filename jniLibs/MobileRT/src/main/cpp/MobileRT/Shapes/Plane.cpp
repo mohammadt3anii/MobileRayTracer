@@ -18,7 +18,7 @@ bool Plane::intersect(Intersection *intersection, const Ray &ray) const noexcept
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));
-    if (std::fabs(normalized_projection) < VECT_PROJ_MIN) {
+    if (std::fabs(normalized_projection) < EPSILON) {
         return false;
 	}
 
@@ -28,7 +28,7 @@ bool Plane::intersect(Intersection *intersection, const Ray &ray) const noexcept
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < RAY_LENGTH_MIN || distanceToIntersection > intersection->length_) {
+    if (distanceToIntersection < EPSILON || distanceToIntersection > intersection->length_) {
         return false;
 	}
 
