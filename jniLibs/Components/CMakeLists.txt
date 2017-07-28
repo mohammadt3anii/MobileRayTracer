@@ -38,6 +38,7 @@ general -Wl,-no-undefined
 general -Wl,-gc-sections
 general -Wl,-z,norelro
 general -Wl,-hash-style=sysv
+general -Wl,-flto
 optimized -Wl,-build-id=none
 optimized -Wl,-s
 )

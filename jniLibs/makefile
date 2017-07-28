@@ -13,9 +13,9 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
 CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
-CXXFLAGS +=  -Wno-padded -Wno-float-equal
+CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto
 
 ifeq ($(S),)
 	CXXFLAGS += -march=native -ftree-vectorize -Ofast
@@ -77,8 +77,8 @@ GARB := $(shell find \
 ###############################################################################
 
 %.o: %.s
-	$(CXX) $(CXXFLAG) -c $< -o $@
-	objdump --source $@ > $<
+	$(CXX) $(CXXFLAGS) -c $(basename $<).cpp -o $@
+#	objdump --source $@ > $<
 
 %.s: %.llvmIR
 	$(CXX) $(CXXFLAGS) -S $(basename $<).cpp -o $@

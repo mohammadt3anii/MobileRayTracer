@@ -34,10 +34,10 @@ static unsigned int blockSizeX_(0u);
 static unsigned int blockSizeY_(0u);
 static unsigned int samplesPixel_(0u);
 static unsigned int samplesLight_(0u);
-static const unsigned int width_(900u);
-static const unsigned int height_(900u);
-static unsigned int bitmap[width_ * height_];
-static unsigned char buffer[width_ * height_ * 4u];//RGBA
+static unsigned int width_(0u);
+static unsigned int height_(0u);
+static unsigned int *bitmap;
+static unsigned char *buffer;//RGBA
 
 static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
     // point light - white
@@ -283,6 +283,10 @@ int main(int argc, char **argv) noexcept {
     const int sampler(0);
     const int samplesPixel(atoi(argv[5]));
 		const int samplesLight(atoi(argv[6]));
+		width_ = static_cast<unsigned int> (atoi(argv[7]));
+		height_ = static_cast<unsigned int> (atoi(argv[7]));
+		bitmap = new unsigned int [width_ * height_];
+		buffer = new unsigned char [width_ * height_ * 4u];
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
 		camera_ = nullptr;
 		shader_ = nullptr;
@@ -419,10 +423,12 @@ int main(int argc, char **argv) noexcept {
     gtk_init(&argc, &argv);
     GtkWidget *window (gtk_window_new(GTK_WINDOW_TOPLEVEL));
     GdkPixbuf *pixbuff (gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-    	width_, height_, width_ * 4, nullptr, nullptr));
+    	static_cast<int> (width_), static_cast<int> (height_), static_cast<int> (width_ * 4), nullptr, nullptr));
     GtkWidget *image (gtk_image_new_from_pixbuf(pixbuff));
 		gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
 			[]() -> void {
+				delete[] bitmap;
+				delete[] buffer;
 				gtk_main_quit();
 			}
 		), nullptr);
