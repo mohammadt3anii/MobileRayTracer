@@ -13,6 +13,7 @@
 #include "Components/Samplers/HaltonSeq.hpp"
 #include "Components/Samplers/Random.hpp"
 #include "Components/Samplers/Stratified.hpp"
+#include "Components/Shaders/DepthMap.hpp"
 #include "Components/Shaders/NoShadows.hpp"
 #include "Components/Shaders/PathTracer.hpp"
 #include "Components/Shaders/Whitted.hpp"

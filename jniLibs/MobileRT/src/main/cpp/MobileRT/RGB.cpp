@@ -115,14 +115,22 @@ void RGB::reset(const float r, const float g, const float b, const unsigned int 
     this->B_ = b;
 }
 
-unsigned int RGB::RGB2Color2() noexcept {
+unsigned int RGB::getColor() noexcept {
     const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
     const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
     return ((r*1000000) + (g*1000) + b);
 }
 
+void RGB::toneMap () noexcept {
+    const float value (1.0f);
+    this->R_ = (this->R_ / (this->R_ + value));
+    this->G_ = (this->G_ / (this->G_ + value));
+    this->B_ = (this->B_ / (this->B_ + value));
+}
+
 unsigned int RGB::RGB2Color() noexcept {
+    //toneMap();
     const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
     const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
     const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));

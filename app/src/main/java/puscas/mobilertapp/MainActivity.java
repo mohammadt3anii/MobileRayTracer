@@ -151,7 +151,7 @@ public final class MainActivity extends Activity {
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", ""};
+        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap"};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");

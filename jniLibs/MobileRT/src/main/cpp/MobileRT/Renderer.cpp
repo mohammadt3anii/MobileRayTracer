@@ -62,7 +62,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const unsigned int numThr
 		}
 	}
 	LOG("max = ", max, ", i = ", ii, ", j = ", jj);
-	LOG("r = ", this->accumulate_[ii*this->width_ + jj].R_, ", g = ", this->accumulate_[ii*this->width_ + jj].G_, ", b = ", this->accumulate_[ii*this->width_ + jj].B_, " , s = ", this->accumulate_[ii*this->width_ + jj].samples_, " , color = ", this->accumulate_[ii*this->width_ + jj].RGB2Color2());
+	LOG("r = ", this->accumulate_[ii*this->width_ + jj].R_, ", g = ", this->accumulate_[ii*this->width_ + jj].G_, ", b = ", this->accumulate_[ii*this->width_ + jj].B_, " , s = ", this->accumulate_[ii*this->width_ + jj].samples_, " , color = ", this->accumulate_[ii*this->width_ + jj].getColor());
 
 	LOG("point3D = ", Point3D::getInstances());
 	LOG("vector3D = ", Vector3D::getInstances());
@@ -91,7 +91,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
     Intersection intersection;
 
     for (unsigned int sample(0u); sample < samples; sample++) {
-        for (;;) {
+        do {
 			const float block (this->samplerCamera_->getSample(sample));
             if (block >= 1.0f) {break;}
 			const auto pixel(static_cast<unsigned int>(static_cast<uint32_t>(::lroundf(block * this->domainSize_)) * this->blockSizeX_ % resolution_));
@@ -120,7 +120,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const unsigned int tid) n
                     bitmap[yWidth + x] = pixelRGB.RGB2Color();
                 }
             }
-        }
+        } while (true);
         if (tid == 0u) {
 			this->sample_ = sample + 1u;
 			LOG("Samples terminados = ", this->sample_);

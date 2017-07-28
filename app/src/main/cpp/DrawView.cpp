@@ -444,6 +444,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                     std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
             break;
 
+        case 3:
+            shader_ = new Components::DepthMap(std::move(scene_), MobileRT::Point3D(1, 1, 1));
+            break;
+
         default:
             shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);
             break;

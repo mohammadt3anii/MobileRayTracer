@@ -1,6 +1,6 @@
 .SUFFIXES:
 .PHONY: all clean tidy gtest
-.PRECIOUS: %.s
+.PRECIOUS: %.s %.llvmIR
 default: all
 
 EXE := raytracer
@@ -61,6 +61,7 @@ SOURCES := $(shell find \
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
 DEPS := $(addsuffix .d,$(basename $(SOURCES)))
 ASSM := $(addsuffix .s,$(basename $(SOURCES)))
+LLVM := $(addsuffix .llvmIR,$(basename $(SOURCES)))
 GARB := $(shell find \
 ./Components/src \
 ./MobileRT/src \
@@ -79,8 +80,11 @@ GARB := $(shell find \
 	$(CXX) $(CXXFLAG) -c $< -o $@
 	objdump --source $@ > $<
 
-%.s: %.cpp
-	$(CXX) $(CXXFLAGS) -S $< -o $@
+%.s: %.llvmIR
+	$(CXX) $(CXXFLAGS) -S $(basename $<).cpp -o $@
+
+%.llvmIR: %.cpp
+	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
 
 $(EXE): $(OBJS) RayTracerMain.o
 	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS)
@@ -88,7 +92,7 @@ $(EXE): $(OBJS) RayTracerMain.o
 	@echo "Compilation done"
 
 clean:
-	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s
+	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(LLVM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s
 	@echo "Clean done"
 
 all: $(EXE)
@@ -122,22 +126,22 @@ gtest: $(OBJS) $(GTESTOBJS)
 	g++ $(GTESTOBJS) $(OBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
 	@echo "Compilation Test Units done"
 
-#valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=cachegrind --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=cachegrind --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=callgrind --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=callgrind --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=helgrind  --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=helgrind  --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=drd --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=drd --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=massif --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=massif --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=exp-dhat --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=exp-dhat --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=exp-sgcheck --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=exp-sgcheck --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=exp-bbv --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=exp-bbv --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
-#valgrind --tool=lackey --suppressions=valgrind.supp --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+#valgrind --tool=lackey --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
