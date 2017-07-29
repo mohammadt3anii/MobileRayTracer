@@ -13,9 +13,9 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
 CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
-CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf #-fprofile-generate=pgo
+CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf #-fprofile-generate=pgo
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fsingle-precision-constant -funswitch-loops -ffunction-sections -fdata-sections -fprofile-correction
 
 ifeq ($(S),)
 	CXXFLAGS += -march=native -ftree-vectorize -Ofast
@@ -88,11 +88,11 @@ GARB := $(shell find \
 
 $(EXE): $(OBJS) RayTracerMain.o
 	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS)
-	@rm -f $(OBJS) $(DEPS) $(GARB) RayTracerMain.o RayTracerMain.s RayTracerMain.d
+	@rm -f $(OBJS) $(DEPS) $(GARB) RayTracerMain.o RayTracerMain.d
 	@echo "Compilation done"
 
 clean:
-	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(LLVM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s
+	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(LLVM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s RayTracerMain.llvmIR
 	@echo "Clean done"
 
 all: $(EXE)
@@ -145,3 +145,7 @@ gtest: $(OBJS) $(GTESTOBJS)
 #valgrind --tool=exp-bbv --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 
 #valgrind --tool=lackey --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
+
+#llvm-profdata-5.0 merge -o testcov.profdata pgo/default_4412358617431096720_0.profraw
+
+#llvm-cov-5.0 show ./testcov -instr-profile=testcov.profdata testcov.c
