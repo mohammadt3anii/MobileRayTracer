@@ -2,15 +2,15 @@
 // Created by Tiago on 19-04-2017.
 //
 
-#include "Random.hpp"
+#include "MersenneTwister.hpp"
 
-using Components::Random;
+using Components::MersenneTwister;
 
-Random::Random(const uint64_t domainSize, const unsigned int samples) noexcept :
+MersenneTwister::MersenneTwister(const uint64_t domainSize, const unsigned int samples) noexcept :
         Sampler(domainSize, samples) {
 }
 
-float Random::getSample(const unsigned int /*sample*/) noexcept {
+float MersenneTwister::getSample(const unsigned int /*sample*/) noexcept {
     thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
     thread_local static std::mt19937 gen(std::random_device{}());
     return uniform_dist(gen);

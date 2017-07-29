@@ -4,7 +4,7 @@
 #include "Components/src/main/cpp/Components/Lights/PointLight.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Constant.hpp"
 #include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
-#include "Components/src/main/cpp/Components/Samplers/Random.hpp"
+#include "Components/src/main/cpp/Components/Samplers/MersenneTwister.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
 #include "Components/src/main/cpp/Components/Shaders/DepthMap.hpp"
 #include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
@@ -118,7 +118,7 @@ static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
     LOG("samplesPixel_ = ", samplesPixel_);
     LOG("RAY_DEPTH_MAX = ", RAY_DEPTH_MAX);
     //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1);
-    samplerPointLight_ = new Components::Random(domainPointLight, 1);
+    samplerPointLight_ = new Components::MersenneTwister(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -372,9 +372,9 @@ int main(int argc, char **argv) noexcept {
         case 2:
             LOG("domainRay = ", domainRay, " domainLight = ", domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
-            samplerRay_ = new Components::Random(domainRay, 1);
+            samplerRay_ = new Components::MersenneTwister(domainRay, 1);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
-            samplerLight_ = new Components::Random(domainLight, 1);
+            samplerLight_ = new Components::MersenneTwister(domainLight, 1);
             shader_ = new Components::PathTracer(
                     std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
             break;
