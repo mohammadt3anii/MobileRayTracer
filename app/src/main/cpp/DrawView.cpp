@@ -516,13 +516,13 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 ) noexcept {
     const float u(static_cast<float> (jx) / width_);
     const float v(static_cast<float> (jy) / height_);
-    MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
+    const MobileRT::Ray ray(camera_->generateRay(u, v, 0.0f, 0.0f));
     const auto index(static_cast<uint32_t>(primitiveIndex));
     const MobileRT::Plane plane(
             MobileRT::Point3D(0.0f, 0.0f, shader_->scene_.planes_[index].getZ()),
             MobileRT::Vector3D(0.0f, 0.0f, -1.0f));
     MobileRT::Intersection intersection;
-    plane.intersect(&intersection, std::move(ray));
+    plane.intersect(&intersection, ray);
     shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
                                                       intersection.point_.y_);
 }

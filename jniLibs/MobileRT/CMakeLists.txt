@@ -9,6 +9,7 @@ endforeach()
 #message(FATAL_ERROR "ACABOU")
 
 STRING(REGEX REPLACE "-Wa,--noexecstack" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+STRING(REGEX REPLACE "-Os" "" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(LIBCXX_FORCE_REBUILD FALSE)
@@ -30,12 +31,17 @@ target_include_directories(MobileRT INTERFACE ${MOBILE_RT_PATH})
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls>)
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
 
-target_compile_options(MobileRT PRIVATE -std=c++14 -Weverything -Wfatal-errors --verbose -Werror)
+target_compile_options(MobileRT PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf)
 target_compile_options(MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded)
 target_compile_options(MobileRT PRIVATE -fno-exceptions -fno-rtti -Wno-unused-variable -Wno-unused-function -Wno-float-equal)
 
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident>)
 target_compile_options(MobileRT PRIVATE $<$<CONFIG:RELEASE>:-fno-math-errno -ffunction-sections -fdata-sections>)
+
+target_compile_options(MobileRT PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$">>:-flto=full>)
+if(NOT ANDROID_ABI MATCHES "^mips(64)?$")
+    set(GOLD "-fuse-ld=gold")
+endif()
 
 target_link_libraries(MobileRT
 PUBLIC log atomic PRIVATE --verbose
@@ -45,7 +51,8 @@ general -Wl,-no-undefined
 general -Wl,-gc-sections
 general -Wl,-z,norelro
 general -Wl,-hash-style=sysv
-general -Wl,-flto
+general -gsplit-dwarf
+general -flto=full ${GOLD}
 optimized -Wl,-build-id=none
 optimized -Wl,-s
 )

@@ -13,13 +13,13 @@ INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
 CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
-CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto
+CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf #-fprofile-generate=pgo
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf #-fprofile-generate=pgo
 
 ifeq ($(S),)
 	CXXFLAGS += -march=native -ftree-vectorize -Ofast
-	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s
+	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
 ifeq ($(S),1)
