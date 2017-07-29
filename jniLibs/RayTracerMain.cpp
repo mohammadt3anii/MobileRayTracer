@@ -27,6 +27,7 @@ static MobileRT::Sampler *samplerCamera_(nullptr);
 static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
+static MobileRT::Sampler *samplerRussianRoulette_(nullptr);
 static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static unsigned int blockSize_(4u);
@@ -294,6 +295,7 @@ int main(int argc, char **argv) noexcept {
 		samplerPixel_ = nullptr;
 		samplerRay_ = nullptr;
 		samplerLight_ = nullptr;
+    samplerRussianRoulette_ = nullptr;
 		samplerPointLight_ = nullptr;
 		renderer_ = nullptr;
 		
@@ -375,8 +377,10 @@ int main(int argc, char **argv) noexcept {
             samplerRay_ = new Components::MersenneTwister(domainRay, 1);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
             samplerLight_ = new Components::MersenneTwister(domainLight, 1);
+            samplerRussianRoulette_ = new Components::MersenneTwister(domainLight, 1);
             shader_ = new Components::PathTracer(
-                    std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
+                    std::move(scene_), samplerRay_, samplerLight_, samplerRussianRoulette_,
+                    samplesLight_);
             break;
 
 				case 3:
@@ -407,6 +411,7 @@ int main(int argc, char **argv) noexcept {
 		delete samplerPixel_;
 		delete samplerRay_;
 		delete samplerLight_;
+    delete samplerRussianRoulette_;
 		delete samplerPointLight_;
     delete renderer_;
 

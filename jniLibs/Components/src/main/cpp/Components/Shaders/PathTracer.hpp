@@ -20,6 +20,7 @@ namespace Components {
     private:
         Sampler *samplerRay_;
         Sampler *samplerLight_;
+        Sampler *samplerRussianRoulette_;
 
     private:
 			bool shade(RGB *rgb,
@@ -29,17 +30,18 @@ namespace Components {
 		public:
         explicit PathTracer(Scene &&scene,
                             Sampler *samplerRay, Sampler *samplerLight,
+                            Sampler *samplerRussianRoulette,
                             unsigned int samplesLight) noexcept;
 
-		PathTracer(const PathTracer &pathTracer) noexcept = delete;
+        PathTracer(const PathTracer &pathTracer) noexcept = delete;
 
-		PathTracer(PathTracer &&pathTracer) noexcept = delete;
+        PathTracer(PathTracer &&pathTracer) noexcept = delete;
 
-		~PathTracer() noexcept final = default;
+        ~PathTracer() noexcept final = default;
 
         PathTracer &operator=(const PathTracer &pathTracer) noexcept = delete;
 
-		PathTracer &operator=(PathTracer &&pathTracer) noexcept = delete;
+        PathTracer &operator=(PathTracer &&pathTracer) noexcept = delete;
 
         void resetSampling() noexcept final;
     };

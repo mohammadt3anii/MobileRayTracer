@@ -16,14 +16,15 @@
 namespace MobileRT {
     class Shader {
     public:
-			Scene scene_;
-			RegularGrid regularGrid_;
+		Scene scene_;
+		RegularGrid regularGrid_;
 
     protected:
-			const unsigned int samplesLight_;
+		const unsigned int samplesLight_;
 
     protected:
-			virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/, Ray && /*ray*/) const noexcept = 0;
+		virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/,
+						   Ray && /*ray*/) const noexcept = 0;
 
 		public:
 			explicit Shader(Scene &&scene, unsigned int samplesLight = 0) noexcept;

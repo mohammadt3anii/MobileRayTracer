@@ -17,6 +17,7 @@ static MobileRT::Sampler *samplerPixel_(nullptr);
 static MobileRT::Sampler *samplerRay_(nullptr);
 static MobileRT::Sampler *samplerPointLight_(nullptr);
 static MobileRT::Sampler *samplerLight_(nullptr);
+static MobileRT::Sampler *samplerRussianRoulette_(nullptr);
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
 static unsigned int samplesPixel_(0u);
@@ -122,7 +123,7 @@ static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept {
     LOG("samplesPixel_ = ", samplesPixel_);
     LOG("RAY_DEPTH_MAX = ", RAY_DEPTH_MAX);
     //samplerPointLight_ = new Components::HaltonSeq(domainPointLight, 1);
-    samplerPointLight_ = new Components::Random(domainPointLight, 1);
+    samplerPointLight_ = new Components::MersenneTwister(domainPointLight, 1);
 
     const MobileRT::Material lightMat(MobileRT::RGB(0.0f, 0.0f, 0.0f),
                                       MobileRT::RGB(0.0f, 0.0f, 0.0f),
@@ -306,6 +307,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
     delete samplerPixel_;
     delete samplerRay_;
     delete samplerLight_;
+    delete samplerRussianRoulette_;
     delete samplerPointLight_;
     delete renderer_;
 
@@ -358,6 +360,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     samplerPixel_ = nullptr;
     samplerRay_ = nullptr;
     samplerLight_ = nullptr;
+    samplerRussianRoulette_ = nullptr;
     samplerPointLight_ = nullptr;
     renderer_ = nullptr;
 
@@ -437,11 +440,13 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
         case 2: LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
             //samplerRay_ = new Components::HaltonSeq(domainRay, 1u);
-            samplerRay_ = new Components::Random(domainRay, 1u);
+            samplerRay_ = new Components::MersenneTwister(domainRay, 1u);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
-            samplerLight_ = new Components::Random(domainLight, 1u);
+            samplerLight_ = new Components::MersenneTwister(domainLight, 1u);
+            samplerRussianRoulette_ = new Components::MersenneTwister(domainLight, 1);
             shader_ = new Components::PathTracer(
-                    std::move(scene_), samplerRay_, samplerLight_, samplesLight_);
+                    std::move(scene_), samplerRay_, samplerLight_,
+                    samplerRussianRoulette_, samplesLight_);
             break;
 
         case 3:

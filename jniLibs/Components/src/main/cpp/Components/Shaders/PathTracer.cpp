@@ -15,10 +15,12 @@ using MobileRT::Ray;
 using MobileRT::Scene;
 
 PathTracer::PathTracer(Scene &&scene, Sampler *samplerRay, Sampler *samplerLight,
+                       Sampler *samplerRussianRoulette,
                        const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight),
         samplerRay_(samplerRay),
-        samplerLight_(samplerLight) {
+        samplerLight_(samplerLight),
+        samplerRussianRoulette_(samplerRussianRoulette) {
     LOG("samplesLight = ", this->samplesLight_);
 }
 
@@ -26,11 +28,9 @@ PathTracer::PathTracer(Scene &&scene, Sampler *samplerRay, Sampler *samplerLight
 bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept
 {
 	const unsigned int rayDepth(ray.depth_);
-	static thread_local unsigned int max(RAY_DEPTH_MIN); 
     if (rayDepth > RAY_DEPTH_MAX || intersection.material_ == nullptr) {
 			return false;
-		}
-	if (rayDepth > max) {max = rayDepth; LOG("rayDepth = ", rayDepth);}
+    }
 
     const RGB &Le(intersection.material_->Le_);
     if (Le.hasColor())//stop if it intersects a light source
@@ -49,8 +49,6 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
     const RGB &kS(intersection.material_->Ks_);
     const RGB &kT(intersection.material_->Kt_);
 
-    thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
-    thread_local static std::mt19937 gen(std::random_device{}());
     static const float finish_probability(0.5f);
     static const float continue_probability(1.0f - finish_probability);
 
@@ -76,7 +74,8 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
             //PDF = 1 / sizeLights
             // const auto chosenLight(
 						// 	static_cast<unsigned int> (std::round(randomNumber * maxIndex)));
-						const auto chosenLight(static_cast<unsigned int> (std::floor(randomNumber*sizeLights*0.99999f)));
+            const auto chosenLight(
+                    static_cast<unsigned int> (std::floor(randomNumber * sizeLights * 0.99999f)));
             Light &light(*scene_.lights_[chosenLight]);
             //calculates vector starting in intersection to the light
             const Point3D lightPosition(light.getPosition());
@@ -102,7 +101,8 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
         Ld /= samplesLight;
 
         //indirect light
-        if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
+        if (rayDepth <= RAY_DEPTH_MIN ||
+            samplerRussianRoulette_->getSample(0u) > finish_probability) {
             const float r1(2.0f * PI * samplerRay_->getSample(0u));
             const float r2(samplerRay_->getSample(0u));
             const float r2s(std::sqrt(r2));
@@ -151,10 +151,10 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
 
         Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
         RGB LiS_RGB;
-				Intersection specularInt;
+        Intersection specularInt;
         rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
         LiS.addMult(kS, LiS_RGB);
-		}
+    }
 
     // specular transmission
     if (kT.hasColor()) {
@@ -180,10 +180,10 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
                                   intersection.point_,
                                   rayDepth + 1u);
         RGB LiT_RGB;
-				Intersection transmissionInt;
+        Intersection transmissionInt;
         rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
         LiT.addMult(kT, LiT_RGB);
-		}
+    }
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
     //Ld /= rayDepth;
 	//LiD /= rayDepth;
