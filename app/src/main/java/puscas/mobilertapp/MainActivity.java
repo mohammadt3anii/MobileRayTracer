@@ -35,6 +35,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSampler_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
+    private String objFile_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -51,7 +52,7 @@ public final class MainActivity extends Activity {
                 Runtime.getRuntime().availableProcessors();
     }
 
-    private String loadAsset(final String filename) {
+    private String readTextAsset(final String filename) {
         String asset = null;
         InputStream stream = null;
         try {
@@ -113,8 +114,9 @@ public final class MainActivity extends Activity {
             drawView_.renderer = renderer;
             drawView_.setRenderer(renderer);
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-            final String vertexShader = loadAsset("VertexShader.glsl");
-            final String fragmentShader = loadAsset("FragmentShader.glsl");
+            final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
+            final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
+            objFile_ = readTextAsset("WavefrontOBJs/teapot/teapot.obj");
             drawView_.renderer.vertexShaderCode = vertexShader;
             drawView_.renderer.fragmentShaderCode = fragmentShader;
 
@@ -241,7 +243,8 @@ public final class MainActivity extends Activity {
                         Integer.parseInt(
                                 pickerSamplesLight_.getDisplayedValues()
                                         [pickerSamplesLight_.getValue() - 1]
-                        )
+                        ),
+                        objFile_
                 );
                 drawView_.startRender();
                 break;

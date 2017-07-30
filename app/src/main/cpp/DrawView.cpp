@@ -339,7 +339,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        JNIEnv * /*env*/,
+        JNIEnv * env,
         jobject /*thiz*/,
         jint const scene,
         jint const shader,
@@ -347,8 +347,14 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint const height,
         jint const sampler,
         jint const samplesPixel,
-        jint const samplesLight
+        jint const samplesLight,
+        jstring const objFile
 ) noexcept {
+    const char *nativeString = (env)->GetStringUTFChars(objFile, JNI_FALSE);
+    std::string f(nativeString);
+    Components::OBJLoader objLoader (f);
+    objLoader.process();
+
     working_ = IDLE;
     LOG("WORKING = IDLE");
     width_ = static_cast<unsigned int>(width);

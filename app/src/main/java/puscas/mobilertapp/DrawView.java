@@ -54,7 +54,7 @@ public class DrawView extends GLSurfaceView {
 
     static native int redraw(final Bitmap bitmap);
 
-    static native void initialize(final int scene, final int shader, final int width, final int height, final int sampler, final int samplesPixel, final int samplesLight);
+    static native void initialize(final int scene, final int shader, final int width, final int height, final int sampler, final int samplesPixel, final int samplesLight, final String objFile);
 
     static native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -137,10 +137,10 @@ public class DrawView extends GLSurfaceView {
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,
-                     final int samplesPixel, final int samplesLight) {
+                     final int samplesPixel, final int samplesLight, final String objFile) {
         final int width = resize(getWidth()) / 1;
         final int height = resize(getHeight()) / 1;
-        DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight);
+        DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight, objFile);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;

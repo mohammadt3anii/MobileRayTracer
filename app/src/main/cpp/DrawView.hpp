@@ -9,6 +9,7 @@
 #include "Components/Cameras/Perspective.hpp"
 #include "Components/Lights/AreaLight.hpp"
 #include "Components/Lights/PointLight.hpp"
+#include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Samplers/Constant.hpp"
 #include "Components/Samplers/HaltonSeq.hpp"
 #include "Components/Samplers/MersenneTwister.hpp"
@@ -67,7 +68,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint height,
         jint sampler,
         jint samplesPixel,
-        jint samplesLight
+        jint samplesLight,
+        jstring const objFile
 ) noexcept;
 
 extern "C"

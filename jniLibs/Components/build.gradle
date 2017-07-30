@@ -8,11 +8,6 @@ android {
         //noinspection OldTargetApi
         targetSdkVersion 25
         versionCode 1
-        externalNativeBuild {
-            cmake {
-                arguments "-DPROJECT_PATH=" + project.rootDir
-            }
-        }
     }
     externalNativeBuild {
         cmake { path "CMakeLists.txt" }

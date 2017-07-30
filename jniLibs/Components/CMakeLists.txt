@@ -1,40 +1,41 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required( VERSION 3.6.0 )
 
-file(TO_CMAKE_PATH ${PROJECT_PATH} PROJECT_PATH)
-include(${PROJECT_PATH}/jniLibs/MobileRT/CMakeLists.txt)
+include( "${CMAKE_CURRENT_LIST_DIR}/../MobileRT/CMakeLists.txt" )
+include( "${CMAKE_CURRENT_LIST_DIR}/../../third-party/tinyobjloader/CMakeLists.txt" )
 
-set(CMAKE_VERBOSE_MAKEFILE on)
-set(LIBCXX_FORCE_REBUILD FALSE)
-set(STLPORT_FORCE_REBUILD FALSE)
-set(LOCAL_ARM_NEON TRUE)
-set(ANDROID_ARM_NEON TRUE)
-set(ANDROID_TOOLCHAIN clang)
-set(ANDROID_STL c++_shared)
-set(ANDROID_ARM_MODE THUMB)
-set(ANDROID_DISABLE_NO_EXECUTE TRUE)
-set(ANDROID_DISABLE_FORMAT_STRING_CHECKS TRUE)
-set(ANDROID_PIE ON)
+set( CMAKE_VERBOSE_MAKEFILE on )
+set( LIBCXX_FORCE_REBUILD FALSE )
+set( STLPORT_FORCE_REBUILD FALSE )
+set( LOCAL_ARM_NEON TRUE )
+set( ANDROID_ARM_NEON TRUE )
+set( ANDROID_TOOLCHAIN clang )
+set( ANDROID_STL c++_shared )
+set( ANDROID_ARM_MODE THUMB )
+set( ANDROID_DISABLE_NO_EXECUTE TRUE )
+set( ANDROID_DISABLE_FORMAT_STRING_CHECKS TRUE )
+set( ANDROID_PIE ON )
 
-set(MOBILE_RC_PATH ${PROJECT_PATH}/jniLibs/Components/src/main/cpp)
-file(GLOB_RECURSE MOBILE_RC_SOURCES "${MOBILE_RC_PATH}/**.cpp")
-add_library(Components SHARED ${MOBILE_RC_SOURCES})
-target_include_directories(Components INTERFACE ${MOBILE_RC_PATH})
+file( GLOB_RECURSE MOBILE_RC_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp/**.cpp" )
+add_library( Components SHARED ${MOBILE_RC_SOURCES} )
+target_include_directories( Components INTERFACE "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp" )
+target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../third-party" )
 
-target_compile_options(Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls>)
-target_compile_options(Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast>)
+target_compile_options( Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
+target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast> )
 
-target_compile_options(Components PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf)
-target_compile_options(Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti)
+target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
+target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
 
-target_compile_options(Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident)
+target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field )
+target_compile_options( Components PRIVATE -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident )
 
-target_compile_options(Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$">>:-flto=full>)
-if(NOT ANDROID_ABI MATCHES "^mips(64)?$")
-    set(GOLD "-fuse-ld=gold")
+target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full>)
+if(NOT ANDROID_ABI MATCHES "^mips(64)?$" )
+    set(GOLD "-fuse-ld=gold" )
 endif()
 
-target_link_libraries(Components
-PUBLIC MobileRT PRIVATE --verbose
+target_link_libraries( Components
+PUBLIC MobileRT tinyobjloader PRIVATE --verbose
 general -Wl,-O3
 general -Wl,-discard-all
 general -Wl,-no-undefined
