@@ -2,11 +2,13 @@
 #include "Components/src/main/cpp/Components/Cameras/Perspective.hpp"
 #include "Components/src/main/cpp/Components/Lights/AreaLight.hpp"
 #include "Components/src/main/cpp/Components/Lights/PointLight.hpp"
+#include "Components/src/main/cpp/Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Constant.hpp"
 #include "Components/src/main/cpp/Components/Samplers/HaltonSeq.hpp"
 #include "Components/src/main/cpp/Components/Samplers/MersenneTwister.hpp"
 #include "Components/src/main/cpp/Components/Samplers/Stratified.hpp"
 #include "Components/src/main/cpp/Components/Shaders/DepthMap.hpp"
+#include "Components/src/main/cpp/Components/Shaders/DiffuseMaterial.hpp"
 #include "Components/src/main/cpp/Components/Shaders/NoShadows.hpp"
 #include "Components/src/main/cpp/Components/Shaders/PathTracer.hpp"
 #include "Components/src/main/cpp/Components/Shaders/Whitted.hpp"
@@ -16,6 +18,7 @@
 #include "MobileRT/src/main/cpp/MobileRT/Shapes/Sphere.hpp"
 #include "MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
 #include <cstdint>
+#include <fstream>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <iostream>
@@ -298,21 +301,41 @@ int main(int argc, char **argv) noexcept {
     samplerRussianRoulette_ = nullptr;
 		samplerPointLight_ = nullptr;
 		renderer_ = nullptr;
-		
-		MobileRT::Scene scene_;
-    blockSizeX_ = width_ / blockSize_;
+		blockSizeX_ = width_ / blockSize_;
     blockSizeY_ = height_ / blockSize_;
+		std::ifstream obj("../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj");
+		std::string line;
+		std::stringstream ssObj;
+		while(std::getline(obj, line)) {
+			ssObj << line;
+		}
+		std::ifstream mtl("../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl");
+		std::stringstream ssMtl;
+		while(std::getline(mtl, line)) {
+			ssMtl << line;
+		}
+		Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
+    objLoader.process();
+		LOG("OBJ = ", ssObj.str());
+		LOG("MTL = ", ssMtl.str());
+
+		MobileRT::Scene scene_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
     LOG("samplesPixel_ = ", samplesPixel_);
     LOG("samplesLight_ = ", samplesLight_);
     switch (scene) {
         case 1:
-            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+            /*camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                   6.5f, 4.5f);
+            scene_ = spheresScene(std::move(scene_));*/
+            objLoader.fillTriangles(scene_);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 3.0f),
+                                                  MobileRT::Point3D(0.0f, 0.5f, -1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                  60.0f, 60.0f * ratio);
-            scene_ = spheresScene(std::move(scene_));
+                                                  45.0f, 45.0f * ratio);
             break;
 
         case 2:
@@ -342,7 +365,7 @@ int main(int argc, char **argv) noexcept {
     switch (sampler) {
         case 1:
             if (samplesPixel_ > 1u) {
-                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2ull * samplesPixel_,
+                samplerPixel_ = new Components::HaltonSeq(width_ * height_ * 2llu * samplesPixel_,
                                                           1u);
             } else {
                 samplerPixel_ = new Components::Constant(0.5f);
@@ -353,7 +376,7 @@ int main(int argc, char **argv) noexcept {
 
         default:
             if (samplesPixel_ > 1u) {
-                samplerPixel_ = new Components::Stratified(width_ * height_ * 2ull * samplesPixel_,
+                samplerPixel_ = new Components::Stratified(width_ * height_ * 2llu * samplesPixel_,
                                                            1u);
             } else {
                 samplerPixel_ = new Components::Constant(0.5f);
@@ -362,6 +385,8 @@ int main(int argc, char **argv) noexcept {
                                                         blockSizeX_, blockSizeY_);
             break;
     }
+    samplerRay_ = nullptr;
+    samplerPointLight_ = nullptr;
     const uint64_t domainRay(
             (width_ * height_ * 2ull) * samplesPixel_ * RAY_DEPTH_MAX);
     const uint64_t domainLight(
@@ -371,21 +396,24 @@ int main(int argc, char **argv) noexcept {
             shader_ = new Components::Whitted(std::move(scene_), samplesLight_);
             break;
 
-        case 2:
-            LOG("domainRay = ", domainRay, " domainLight = ", domainLight);
-            //samplerRay_ = new Components::HaltonSeq(domainRay, 1);
-            samplerRay_ = new Components::MersenneTwister(domainRay, 1);
+        case 2: LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
+            //samplerRay_ = new Components::HaltonSeq(domainRay, 1u);
+            samplerRay_ = new Components::MersenneTwister(domainRay, 1u);
             //samplerLight_ = new Components::HaltonSeq(domainLight, 1);
-            samplerLight_ = new Components::MersenneTwister(domainLight, 1);
+            samplerLight_ = new Components::MersenneTwister(domainLight, 1u);
             samplerRussianRoulette_ = new Components::MersenneTwister(domainLight, 1);
             shader_ = new Components::PathTracer(
-                    std::move(scene_), samplerRay_, samplerLight_, samplerRussianRoulette_,
-                    samplesLight_);
+                    std::move(scene_), samplerRay_, samplerLight_,
+                    samplerRussianRoulette_, samplesLight_);
             break;
 
-				case 3:
-						shader_ = new Components::DepthMap(std::move(scene_), MobileRT::Point3D(1,1,1));
-						break;
+        case 3:
+            shader_ = new Components::DepthMap(std::move(scene_), MobileRT::Point3D(1, 1, 1));
+            break;
+
+        case 4:
+          shader_ = new Components::DiffuseMaterial(std::move(scene_));
+            break;
 
         default:
             shader_ = new Components::NoShadows(std::move(scene_), samplesLight_);

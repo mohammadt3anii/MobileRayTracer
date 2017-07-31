@@ -370,10 +370,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     samplerRussianRoulette_ = nullptr;
     samplerPointLight_ = nullptr;
     renderer_ = nullptr;
-
-    MobileRT::Scene scene_;
     blockSizeX_ = width_ / numberOfBlocks_;
     blockSizeY_ = height_ / numberOfBlocks_;
+
+    MobileRT::Scene scene_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
     samplesLight_ = static_cast<unsigned int>(samplesLight);
     LOG("samplesPixel_ = ", samplesPixel_);

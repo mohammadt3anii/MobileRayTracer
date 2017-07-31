@@ -13,8 +13,10 @@ INCLUDES += -I../third-party
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
-CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-unused-variable
+CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-unused-variable -Wno-unused-function
 CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections
+
+INCLUDES += -L../third-party/tinyobjloader
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fsingle-precision-constant -funswitch-loops -ffunction-sections -fdata-sections -fprofile-correction
 
@@ -58,7 +60,9 @@ endif
 SOURCES := $(shell find \
 ./Components/src \
 ./MobileRT/src \
-! -name "DrawView.cpp" -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
+../third-party/tinyobjloader/tiny_obj_loader.cc \
+! -name "DrawView.cpp" \
+-regextype gnu-awk -iname "*.cpp" -print | sort -nr)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
 DEPS := $(addsuffix .d,$(basename $(SOURCES)))
 ASSM := $(addsuffix .s,$(basename $(SOURCES)))
@@ -68,12 +72,13 @@ GARB := $(shell find \
 ./MobileRT/src \
 ./RayTracerMain.* \
 ./GoogleUnitTest \
--regextype gnu-awk -iname "*fuse*" -print \
--o -regextype gnu-awk -iname "*.d" -print \
+-regextype gnu-awk -iname "*.d" -print \
 -o -regextype gnu-awk -iname "*.s" -print \
 -o -regextype gnu-awk -iname "*.o" -print \
 -o -regextype gnu-awk -iname "*.out" -print \
--o -regextype gnu-awk -iname "*.gto" -print)
+-o -regextype gnu-awk -iname "*.gto" -print \
+-regextype gnu-awk -iname "*fuse*" -print \
+)
 
 ###############################################################################
 
@@ -87,8 +92,8 @@ GARB := $(shell find \
 %.llvmIR: %.cpp
 	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
 
-$(EXE): $(OBJS) RayTracerMain.o
-	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS)
+$(EXE): $(OBJS) RayTracerMain.o third_party
+	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS) third-party/tiny_obj_loader.o
 	@rm -f $(OBJS) $(DEPS) $(GARB) RayTracerMain.o RayTracerMain.d
 	@echo "Compilation done"
 
@@ -97,6 +102,9 @@ clean:
 	@echo "Clean done"
 
 all: $(EXE)
+
+third_party:
+	$(CXX) $(CXXFLAGS) -c ../third-party/tinyobjloader/tiny_obj_loader.cc -o third-party/tiny_obj_loader.o
 
 INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
 tidy:
