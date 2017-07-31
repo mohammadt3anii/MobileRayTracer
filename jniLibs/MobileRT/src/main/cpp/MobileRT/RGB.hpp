@@ -24,9 +24,7 @@ namespace MobileRT {
 		void toneMap () noexcept;
 
     public:
-		explicit RGB() noexcept;
-
-		explicit RGB(float r, float g, float b) noexcept;
+		explicit RGB(float r = 0.0f, float g = 0.0f, float b = 0.0f) noexcept;
 
 		RGB(const RGB &rgb) noexcept;
 
