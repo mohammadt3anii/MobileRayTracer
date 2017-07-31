@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
 include( "${CMAKE_CURRENT_LIST_DIR}/../MobileRT/CMakeLists.txt" )
-include( "${CMAKE_CURRENT_LIST_DIR}/../../third-party/tinyobjloader/CMakeLists.txt" )
+include( "${CMAKE_CURRENT_LIST_DIR}/../../third-party/tinyobjloader/CMakeLists_Android.txt" )
 
 set( CMAKE_VERBOSE_MAKEFILE on )
 set( LIBCXX_FORCE_REBUILD FALSE )
@@ -26,7 +26,7 @@ target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast> )
 target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
 
-target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field )
+target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field -Wno-over-aligned )
 target_compile_options( Components PRIVATE -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident )
 
 target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full>)

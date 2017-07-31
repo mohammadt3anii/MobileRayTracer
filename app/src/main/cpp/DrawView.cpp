@@ -348,11 +348,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint const sampler,
         jint const samplesPixel,
         jint const samplesLight,
-        jstring const objFile
+        jstring const objFile,
+        jstring const matText
 ) noexcept {
-    const char *nativeString = (env)->GetStringUTFChars(objFile, JNI_FALSE);
-    std::string f(nativeString);
-    Components::OBJLoader objLoader (f);
+    const char *obj = (env)->GetStringUTFChars(objFile, JNI_FALSE);
+    const char *mat = (env)->GetStringUTFChars(matText, JNI_FALSE);
+    Components::OBJLoader objLoader{std::string(obj), std::string(mat)};
     objLoader.process();
 
     working_ = IDLE;
@@ -379,11 +380,16 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     LOG("samplesLight_ = ", samplesLight_);
     switch (scene) {
         case 1:
-            camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+            /*camera_ = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
                                                    MobileRT::Point3D(0.0f, 0.0f, 7.0f),
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                    6.5f, 4.5f);
-            scene_ = spheresScene(std::move(scene_));
+            scene_ = spheresScene(std::move(scene_));*/
+            objLoader.fillTriangles(scene_);
+            camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 3.0f),
+                                                  MobileRT::Point3D(0.0f, 0.5f, -1.0f),
+                                                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                                  45.0f, 45.0f * ratio);
             break;
 
         case 2:
@@ -457,6 +463,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
         case 3:
             shader_ = new Components::DepthMap(std::move(scene_), MobileRT::Point3D(1, 1, 1));
+            break;
+
+        case 4:
+            shader_ = new Components::DiffuseMaterial(std::move(scene_));
             break;
 
         default:

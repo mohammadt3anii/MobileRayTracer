@@ -5,6 +5,7 @@
 #ifndef MOBILERAYTRACER_OBJECTLOADER_HPP
 #define MOBILERAYTRACER_OBJECTLOADER_HPP
 
+#include "MobileRT/Scene.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
 #include <string>
 
@@ -19,7 +20,7 @@ namespace Components {
 
         bool isProcessed() const noexcept;
 
-        virtual bool fillTriangles(std::vector<MobileRT::Triangle> &triangles) noexcept = 0;
+        virtual bool fillTriangles(MobileRT::Scene &scene) noexcept = 0;
 
         virtual ~ObjectLoader() noexcept;
     };

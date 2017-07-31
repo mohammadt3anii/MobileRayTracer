@@ -65,40 +65,43 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
     //Ld = Ld (p -> Wr)
     if (kD.hasColor()) {
         const uint64_t sizeLights(scene_.lights_.size());
-        const unsigned int samplesLight(this->samplesLight_);
-				//const auto maxIndex((static_cast<float> (sizeLights) - 1.0f));
-        Intersection intersectLight;
-        //direct light
-        for (unsigned int i(0u); i < samplesLight; i++) {
-            const float randomNumber(samplerLight_->getSample(0u));
-            //PDF = 1 / sizeLights
-            // const auto chosenLight(
-						// 	static_cast<unsigned int> (std::round(randomNumber * maxIndex)));
-            const auto chosenLight(
-                    static_cast<unsigned int> (std::floor(randomNumber * sizeLights * 0.99999f)));
-            Light &light(*scene_.lights_[chosenLight]);
-            //calculates vector starting in intersection to the light
-            const Point3D lightPosition(light.getPosition());
-            Vector3D vectorToLight(lightPosition, intersection.point_);
-            //distance from intersection to the light (and normalize it)
-            const float distanceToLight(vectorToLight.normalize());
-            //x*x + y*y + z*z
-            const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
-            if (cosNormalLight > 0.0f) {
-                //shadow ray -> orig=intersection, dir=light
-                Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
-                //intersection between shadow ray and the closest primitive
-                //if there are no primitives between intersection and the light
-                intersectLight.length_ = distanceToLight;
-                if (!scene_.shadowTrace(&intersectLight, std::move(shadowRay))) {
-                    //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
-                    Ld.addMult(light.radiance_.Le_, cosNormalLight);
+        if (sizeLights > 0) {
+            const unsigned int samplesLight(this->samplesLight_);
+            //const auto maxIndex((static_cast<float> (sizeLights) - 1.0f));
+            Intersection intersectLight;
+            //direct light
+            for (unsigned int i(0u); i < samplesLight; i++) {
+                const float randomNumber(samplerLight_->getSample(0u));
+                //PDF = 1 / sizeLights
+                // const auto chosenLight(
+                // 	static_cast<unsigned int> (std::round(randomNumber * maxIndex)));
+                const auto chosenLight(
+                        static_cast<unsigned int> (std::floor(
+                                randomNumber * sizeLights * 0.99999f)));
+                Light &light(*scene_.lights_[chosenLight]);
+                //calculates vector starting in intersection to the light
+                const Point3D lightPosition(light.getPosition());
+                Vector3D vectorToLight(lightPosition, intersection.point_);
+                //distance from intersection to the light (and normalize it)
+                const float distanceToLight(vectorToLight.normalize());
+                //x*x + y*y + z*z
+                const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
+                if (cosNormalLight > 0.0f) {
+                    //shadow ray -> orig=intersection, dir=light
+                    Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
+                    //intersection between shadow ray and the closest primitive
+                    //if there are no primitives between intersection and the light
+                    intersectLight.length_ = distanceToLight;
+                    if (!scene_.shadowTrace(&intersectLight, std::move(shadowRay))) {
+                        //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
+                        Ld.addMult(light.radiance_.Le_, cosNormalLight);
+                    }
                 }
             }
+            Ld *= kD;
+            //Ld *= sizeLights;
+            Ld /= samplesLight;
         }
-        Ld *= kD;
-        //Ld *= sizeLights;
-        Ld /= samplesLight;
 
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN ||

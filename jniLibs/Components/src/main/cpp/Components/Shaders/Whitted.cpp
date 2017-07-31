@@ -17,17 +17,14 @@ Whitted::Whitted(Scene &&scene, const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight) {
 }
 
-bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept
-{
+bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept {
 	const unsigned int rayDepth(ray.depth_);
-	if (rayDepth > RAY_DEPTH_MAX)
-	{
+    if (rayDepth > RAY_DEPTH_MAX) {
 		return false;
 	}
 
 	const RGB &Le(intersection.material_->Le_);
-	if (Le.hasColor()) //stop if it intersects a light source
-	{
+    if (Le.hasColor()) {//stop if it intersects a light source
 		*rgb += Le;
 		return true;
 	}
@@ -41,35 +38,33 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 	// the ray intersected the object from the inside and the shading normal
 	// should be symmetric to the geometric normal
 	const Vector3D &shadingNormal(
-			(ray.direction_.dotProduct(intersection.normal_) < 0.0f) ? intersection.normal_ : // entering the object
-					intersection.symNormal_);																											// We have to reverse the normal now
+            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+            // entering the object
+            intersection.normal_ :
+            // We have to reverse the normal now
+            intersection.symNormal_);
 
 	// shadowed direct lighting - only for diffuse materials
-	if (kD.hasColor())
-	{
+    if (kD.hasColor()) {
 		Intersection lightIntersection;
 		const uint64_t sizeLights(scene_.lights_.size());
 		const unsigned int samplesLight(this->samplesLight_);
-		for (unsigned int i(0u); i < sizeLights; i++)
-		{
+        for (unsigned int i(0u); i < sizeLights; i++) {
 			Light &light(*scene_.lights_[i]);
-			for (unsigned int j(0u); j < samplesLight; j++)
-			{
+            for (unsigned int j(0u); j < samplesLight; j++) {
 				const Point3D lightPosition(light.getPosition());
 				//calculates vector starting in intersection to the light
 				Vector3D vectorToLight(lightPosition, intersection.point_);
 				//distance from intersection to the light (and normalize it)
 				const float distanceToLight(vectorToLight.normalize());
 				const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
-				if (cos_N_L > 0.0f)
-				{
+                if (cos_N_L > 0.0f) {
 					//shadow ray - orig=intersection, dir=light
 					Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
 					lightIntersection.length_ = distanceToLight;
 					//intersection between shadow ray and the closest primitive
 					//if there are no primitives between intersection and the light
-					if (!scene_.shadowTrace(&lightIntersection, std::move(shadowRay)))
-					{
+                    if (!scene_.shadowTrace(&lightIntersection, std::move(shadowRay))) {
 						//rgb += kD * radLight * cos_N_L;
 						rgb->addMult(light.radiance_.Le_, cos_N_L);
 					}
@@ -81,8 +76,7 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 	} // end direct + ambient
 
 	// specular reflection
-	if (kS.hasColor())
-	{
+    if (kS.hasColor()) {
 		//PDF = 1 / 2 PI
 
 		//reflectionDir = rayDirection - (2 * rayDirection . normal) * normal
@@ -97,14 +91,13 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 	}
 
 	// specular transmission
-	if (kT.hasColor())
-	{
+    if (kT.hasColor()) {
 		//PDF = 1 / 2 PI
 
 		Vector3D shadingNormalT(shadingNormal);
 		float refractiveIndice(intersection.material_->refractiveIndice_);
-		if (shadingNormalT.dotProduct(ray.direction_) > 0.0f)
-		{																							//we are inside the medium
+        if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {
+            //we are inside the medium
 			shadingNormalT *= -1.0f;									//N = N*-1;
 			refractiveIndice = 1.0f / refractiveIndice; //n = 1 / n;
 		}
@@ -113,14 +106,15 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 		const float cosTheta1((shadingNormalT.dotProduct(ray.direction_)) * -1.0f);
 		const float cosTheta2(
 				1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1));
-		Ray transmissionRay(cosTheta2 > 0.0f ? // refraction direction
-														//rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
-														(ray.direction_ * refractiveIndice) + (shadingNormalT * (refractiveIndice * cosTheta1 - (std::sqrt(cosTheta2))))
-																				 :
-																				 //rayDir = (ray.d + N*(cost1 * 2)).norm();
-														ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
-												intersection.point_,
-												rayDepth + 1u);
+        Ray transmissionRay(cosTheta2 > 0.0f ?// refraction direction
+                            //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
+                            (ray.direction_ * refractiveIndice) + (shadingNormalT *
+                                                                   (refractiveIndice * cosTheta1 -
+                                                                    (std::sqrt(cosTheta2)))) :
+                            //rayDir = (ray.d + N*(cost1 * 2)).norm();
+                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+                            intersection.point_,
+                            rayDepth + 1u);
 		RGB LiT_RGB;
 		Intersection transmissionInt;
 		rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));

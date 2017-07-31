@@ -35,7 +35,8 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSampler_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
-    private String objFile_;
+    private String objText_;
+    private String matText_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -116,7 +117,9 @@ public final class MainActivity extends Activity {
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
-            objFile_ = readTextAsset("WavefrontOBJs/teapot/teapot.obj");
+            final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+            objText_ = readTextAsset(obj + ".obj");
+            matText_ = readTextAsset(obj + ".mtl");
             drawView_.renderer.vertexShaderCode = vertexShader;
             drawView_.renderer.fragmentShaderCode = fragmentShader;
 
@@ -153,7 +156,7 @@ public final class MainActivity extends Activity {
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap"};
+        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "DiffuseMaterial"};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
@@ -244,7 +247,8 @@ public final class MainActivity extends Activity {
                                 pickerSamplesLight_.getDisplayedValues()
                                         [pickerSamplesLight_.getValue() - 1]
                         ),
-                        objFile_
+                        objText_,
+                        matText_
                 );
                 drawView_.startRender();
                 break;

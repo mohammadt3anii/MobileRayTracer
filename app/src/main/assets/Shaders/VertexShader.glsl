@@ -1,3 +1,5 @@
+#version 100
+
 precision lowp float;
 attribute vec4 vPosition;
 attribute vec2 a_texCoord;

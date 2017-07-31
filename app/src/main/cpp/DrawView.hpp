@@ -15,6 +15,7 @@
 #include "Components/Samplers/MersenneTwister.hpp"
 #include "Components/Samplers/Stratified.hpp"
 #include "Components/Shaders/DepthMap.hpp"
+#include "Components/Shaders/DiffuseMaterial.hpp"
 #include "Components/Shaders/NoShadows.hpp"
 #include "Components/Shaders/PathTracer.hpp"
 #include "Components/Shaders/Whitted.hpp"
@@ -69,7 +70,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint sampler,
         jint samplesPixel,
         jint samplesLight,
-        jstring const objFile
+        jstring const objFile,
+        jstring const matText
 ) noexcept;
 
 extern "C"

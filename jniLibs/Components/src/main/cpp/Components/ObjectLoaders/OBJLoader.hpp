@@ -12,13 +12,17 @@ namespace Components {
     class OBJLoader : public ObjectLoader {
     private:
         std::string text_;
+        std::string materialsText_;
+        tinyobj::attrib_t attrib_;
+        std::vector<tinyobj::shape_t> shapes_;
+        std::vector<tinyobj::material_t> materials_;
 
     public:
-        explicit OBJLoader (std::string text);
+        explicit OBJLoader(const std::string &text, const std::string &materials);
 
         virtual void process();
 
-        virtual bool fillTriangles(std::vector<MobileRT::Triangle> &triangles) noexcept;
+        virtual bool fillTriangles(MobileRT::Scene &triangles) noexcept;
 
         virtual ~OBJLoader() noexcept;
     };
