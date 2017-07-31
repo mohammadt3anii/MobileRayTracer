@@ -5,11 +5,11 @@
 #ifndef MOBILERAYTRACER_OBJECTLOADER_HPP
 #define MOBILERAYTRACER_OBJECTLOADER_HPP
 
-#include "MobileRT/Scene.hpp"
-#include "MobileRT/Shapes/Triangle.hpp"
+#include "Scene.hpp"
+#include "Shapes/Triangle.hpp"
 #include <string>
 
-namespace Components {
+namespace MobileRT {
     class ObjectLoader {
     protected:
         bool isProcessed_{false};

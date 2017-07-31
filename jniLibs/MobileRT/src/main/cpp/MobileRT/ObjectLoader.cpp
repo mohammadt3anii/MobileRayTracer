@@ -4,7 +4,7 @@
 
 #include "ObjectLoader.hpp"
 
-using Components::ObjectLoader;
+using MobileRT::ObjectLoader;
 
 ObjectLoader::~ObjectLoader() noexcept {
     LOG("ObjectLoader DELETED");

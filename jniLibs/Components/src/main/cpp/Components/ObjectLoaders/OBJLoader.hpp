@@ -5,11 +5,11 @@
 #ifndef MOBILERAYTRACER_OBJLOADER_HPP
 #define MOBILERAYTRACER_OBJLOADER_HPP
 
-#include "ObjectLoader.hpp"
+#include "MobileRT/ObjectLoader.hpp"
 #include "tinyobjloader/tiny_obj_loader.h"
 
 namespace Components {
-    class OBJLoader : public ObjectLoader {
+  class OBJLoader final : public MobileRT::ObjectLoader {
     private:
         std::string text_;
         std::string materialsText_;
