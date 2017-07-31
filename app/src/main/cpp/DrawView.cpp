@@ -466,7 +466,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
             break;
 
         case 4:
-            shader_ = new Components::DiffuseMaterial(std::move(scene_));
+          //shader_ = new Components::DiffuseMaterial(std::move(scene_));
             break;
 
         default:

@@ -9,10 +9,11 @@ LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
+INCLUDES += -I../third-party
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
-CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant
+CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-unused-variable
 CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fsingle-precision-constant -funswitch-loops -ffunction-sections -fdata-sections -fprofile-correction
