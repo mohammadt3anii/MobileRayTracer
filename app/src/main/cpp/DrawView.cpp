@@ -484,8 +484,13 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     }*/
 
 
-    LOG("x = ", blockSizeX_, "[", width_, "]");
-    LOG("x = ", blockSizeY_, "[", height_, "]");
+  LOG("x = ", blockSizeX_, "[", width_, "]");
+  LOG("y = ", blockSizeY_, "[", height_, "]");
+  LOG("TRIANGLES = ", shader_->scene_.triangles_.size());
+  LOG("SPHERES = ", shader_->scene_.spheres_.size());
+  LOG("PLANES = ", shader_->scene_.planes_.size());
+  LOG("LIGHTS = ", shader_->scene_.lights_.size());
+  LOG("MATERIALS = ", shader_->scene_.materials_.size());
 }
 
 extern "C"

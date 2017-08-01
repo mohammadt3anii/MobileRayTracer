@@ -288,7 +288,7 @@ int main(int argc, char **argv) noexcept {
     const int samplesPixel(atoi(argv[5]));
 		const int samplesLight(atoi(argv[6]));
 		width_ = static_cast<unsigned int> (atoi(argv[7]));
-		height_ = static_cast<unsigned int> (atoi(argv[7]));
+		height_ = static_cast<unsigned int> (atoi(argv[8]));
 		bitmap = new unsigned int [width_ * height_];
 		buffer = new unsigned char [width_ * height_ * 4u];
 		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
@@ -424,7 +424,11 @@ int main(int argc, char **argv) noexcept {
 
     LOG("x = ", blockSizeX_, "[", width_, "]");
     LOG("y = ", blockSizeY_, "[", height_, "]");
-
+		LOG("TRIANGLES = ", shader_->scene_.triangles_.size());
+		LOG("SPHERES = ", shader_->scene_.spheres_.size());
+		LOG("PLANES = ", shader_->scene_.planes_.size());
+		LOG("LIGHTS = ", shader_->scene_.lights_.size());
+		LOG("MATERIALS = ", shader_->scene_.materials_.size());
 
     LOG("Threads = ", threads);
     const double start(omp_get_wtime());
