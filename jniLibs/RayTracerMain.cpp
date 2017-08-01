@@ -430,7 +430,13 @@ int main(int argc, char **argv) noexcept {
 		LOG("LIGHTS = ", shader_->scene_.lights_.size());
 		LOG("MATERIALS = ", shader_->scene_.materials_.size());
 
-    LOG("Threads = ", threads);
+    LOG("threads = ", threads);
+		LOG("shader = ", shader);
+		LOG("scene = ", scene);
+		LOG("samplesPixel = ", samplesPixel);
+		LOG("samplesLight = ", samplesLight);
+		LOG("width_ = ", width_);
+		LOG("height_ = ", height_)
     const double start(omp_get_wtime());
 		do {
 			renderer_->renderFrame(bitmap, static_cast<unsigned int>(threads));
