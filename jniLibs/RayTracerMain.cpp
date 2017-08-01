@@ -307,17 +307,15 @@ int main(int argc, char **argv) noexcept {
 		std::string line;
 		std::stringstream ssObj;
 		while(std::getline(obj, line)) {
-			ssObj << line;
+			ssObj << line << std::endl;
 		}
 		std::ifstream mtl("../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl");
 		std::stringstream ssMtl;
 		while(std::getline(mtl, line)) {
-			ssMtl << line;
+			ssMtl << line << std::endl;
 		}
 		Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
     objLoader.process();
-		LOG("OBJ = ", ssObj.str());
-		LOG("MTL = ", ssMtl.str());
 
 		MobileRT::Scene scene_;
     samplesPixel_ = static_cast<unsigned int>(samplesPixel);
@@ -331,7 +329,7 @@ int main(int argc, char **argv) noexcept {
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                    6.5f, 4.5f);
             scene_ = spheresScene(std::move(scene_));*/
-            objLoader.fillTriangles(scene_);
+            objLoader.fillScene(&scene_);
             camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 3.0f),
                                                   MobileRT::Point3D(0.0f, 0.5f, -1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),

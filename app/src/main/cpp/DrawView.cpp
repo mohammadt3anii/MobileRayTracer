@@ -348,8 +348,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint const sampler,
         jint const samplesPixel,
         jint const samplesLight,
-        jstring const objFile,
-        jstring const matText
+        jstring objFile,
+        jstring matText
 ) noexcept {
     const char *obj = (env)->GetStringUTFChars(objFile, JNI_FALSE);
     const char *mat = (env)->GetStringUTFChars(matText, JNI_FALSE);
@@ -385,7 +385,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
                                                    MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
                                                    6.5f, 4.5f);
             scene_ = spheresScene(std::move(scene_));*/
-            objLoader.fillTriangles(scene_);
+            objLoader.fillScene(&scene_);
             camera_ = new Components::Perspective(MobileRT::Point3D(0.0f, 0.5f, 3.0f),
                                                   MobileRT::Point3D(0.0f, 0.5f, -1.0f),
                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),

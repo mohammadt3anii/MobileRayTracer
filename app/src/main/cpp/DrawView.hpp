@@ -70,8 +70,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jint sampler,
         jint samplesPixel,
         jint samplesLight,
-        jstring const objFile,
-        jstring const matText
+        jstring objFile,
+        jstring matText
 ) noexcept;
 
 extern "C"

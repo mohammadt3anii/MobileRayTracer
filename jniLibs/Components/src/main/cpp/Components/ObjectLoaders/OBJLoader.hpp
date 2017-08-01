@@ -2,11 +2,11 @@
 // Created by puscas on 30/07/17.
 //
 
-#ifndef MOBILERAYTRACER_OBJLOADER_HPP
-#define MOBILERAYTRACER_OBJLOADER_HPP
+#ifndef COMPONENTS_OBJECTLOADERS_OBJLOADER_HPP
+#define COMPONENTS_OBJECTLOADERS_OBJLOADER_HPP
 
 #include "MobileRT/ObjectLoader.hpp"
-#include "tinyobjloader/tiny_obj_loader.h"
+#include <tinyobjloader/tiny_obj_loader.h>
 
 namespace Components {
   class OBJLoader final : public MobileRT::ObjectLoader {
@@ -18,14 +18,22 @@ namespace Components {
         std::vector<tinyobj::material_t> materials_;
 
     public:
-        explicit OBJLoader(const std::string &text, const std::string &materials);
+        explicit OBJLoader(std::string text, std::string materials) noexcept;
 
-        virtual void process();
+				OBJLoader(const OBJLoader &objLoader) noexcept = delete;
 
-        virtual bool fillTriangles(MobileRT::Scene &triangles) noexcept;
+				OBJLoader(OBJLoader &&objLoader) noexcept = delete;
 
-        virtual ~OBJLoader() noexcept;
+				~OBJLoader() noexcept final;
+
+				OBJLoader &operator=(const OBJLoader &objLoader) noexcept = delete;
+
+				OBJLoader &operator=(OBJLoader &&objLoader) noexcept = delete;
+
+        void process() noexcept final;
+
+        bool fillScene(MobileRT::Scene *scene) noexcept final;
     };
-}
+}//namespace Components
 
-#endif //MOBILERAYTRACER_OBJLOADER_HPP
+#endif //COMPONENTS_OBJECTLOADERS_OBJLOADER_HPP

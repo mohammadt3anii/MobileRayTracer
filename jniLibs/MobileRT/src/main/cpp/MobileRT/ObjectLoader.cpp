@@ -6,10 +6,15 @@
 
 using MobileRT::ObjectLoader;
 
+ObjectLoader::ObjectLoader () noexcept :
+	isProcessed_(false)
+{
+}
+
 ObjectLoader::~ObjectLoader() noexcept {
     LOG("ObjectLoader DELETED");
 }
 
-bool ObjectLoader::isProcessed() const {
+bool ObjectLoader::isProcessed() const noexcept {
     return isProcessed_;
 }

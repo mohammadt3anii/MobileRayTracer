@@ -2,8 +2,8 @@
 // Created by puscas on 30/07/17.
 //
 
-#ifndef MOBILERAYTRACER_OBJECTLOADER_HPP
-#define MOBILERAYTRACER_OBJECTLOADER_HPP
+#ifndef MOBILERT_OBJECTLOADER_HPP
+#define MOBILERT_OBJECTLOADER_HPP
 
 #include "Scene.hpp"
 #include "Shapes/Triangle.hpp"
@@ -12,18 +12,27 @@
 namespace MobileRT {
     class ObjectLoader {
     protected:
-        bool isProcessed_{false};
+        bool isProcessed_;
 
     public:
-        //explicit ObjectLoader (const std::string text) = delete;
-        virtual void process() = 0;
+      	explicit ObjectLoader () noexcept;
+
+				ObjectLoader(const ObjectLoader &objectLoader) noexcept = delete;
+
+				ObjectLoader(ObjectLoader &&objectLoader) noexcept = delete;
+
+				virtual ~ObjectLoader() noexcept;
+
+				ObjectLoader &operator=(const ObjectLoader &objectLoader) noexcept = delete;
+
+				ObjectLoader &operator=(ObjectLoader &&objectLoader) noexcept = delete;
+
+        virtual void process() noexcept = 0;
 
         bool isProcessed() const noexcept;
 
-        virtual bool fillTriangles(MobileRT::Scene &scene) noexcept = 0;
-
-        virtual ~ObjectLoader() noexcept;
+        virtual bool fillScene(MobileRT::Scene *scene) noexcept = 0;
     };
-}
+}//namespace MobileRT
 
-#endif //MOBILERAYTRACER_OBJECTLOADER_HPP
+#endif //MOBILERT_OBJECTLOADER_HPP

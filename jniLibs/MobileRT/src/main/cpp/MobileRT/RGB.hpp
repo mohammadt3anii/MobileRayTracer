@@ -18,7 +18,7 @@ namespace MobileRT {
 		std::mutex mutex_;
 
 	public:
-		unsigned int samples_{0u};
+		unsigned int samples_;
 
 	private:
 		void toneMap () noexcept;

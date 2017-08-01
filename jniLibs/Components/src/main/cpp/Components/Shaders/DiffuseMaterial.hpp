@@ -33,6 +33,6 @@ namespace Components {
 
     void resetSampling() noexcept final;
   };
-}
+}//namespace Components
 
 #endif //MOBILERAYTRACER_DIFFUSEMATERIAL_HPP
