@@ -58,7 +58,7 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridS
 			for ( int y (y1); y < y2; y++ ) {
 				for ( int z (z1); z < z2; z++ ) {
 					// construct aabb for current cell
-					const auto idx (static_cast<size_t>(x + y * gridSize_ + z * gridSize_ * gridSize_));
+					const auto idx (static_cast<size_t>(x) + static_cast<size_t>(y) * static_cast<size_t>(gridSize_) + static_cast<size_t>(z) * static_cast<size_t>(gridSize_) * static_cast<size_t>(gridSize_));
 					const Point3D pos( min.x_ + x * dx, min.y_ + y * dy, min.z_ + z * dz );
 					const AABB cell( pos, Point3D( dx, dy, dz ) );
 					// do an accurate aabb / primitive intersection test
@@ -146,10 +146,10 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 	Sphere *const *list (nullptr);
 	// trace primary ray
 	while (true) {
-		list = spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].data();
+		list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].data();
 
 		size_t i (0);
-		size_t spheresSize (spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].size());
+		size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
 		while (i < spheresSize) {
 			Sphere* pr (list[i]);
 			bool result (false);
@@ -198,10 +198,10 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 
 	testloop:
 	while (true) {
-		list = spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].data();
+		list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].data();
 
 		size_t i (0);
-		size_t spheresSize (spheres_[static_cast<size_t>(X + (Y << gridShift_) + (Z << (gridShift_ * 2)))].size());
+		size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
 		while (i < spheresSize) {
 			Sphere* pr (list[i]);
 			bool result (false);

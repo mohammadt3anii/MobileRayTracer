@@ -51,30 +51,21 @@ bool OBJLoader::fillScene(Scene *scene) noexcept {
             // Loop over vertices in the face.
             for (size_t v = 0; v < fv; v += 3) {
                 tinyobj::index_t idx1 = shape.mesh.indices[index_offset + v + 0];
-                tinyobj::real_t vx1 = attrib_.vertices[static_cast<size_t> (3 * idx1.vertex_index +
-                                                                            0)];
-                tinyobj::real_t vy1 = attrib_.vertices[static_cast<size_t> (3 * idx1.vertex_index +
-                                                                            1)];
-                tinyobj::real_t vz1 = attrib_.vertices[static_cast<size_t> (3 * idx1.vertex_index +
-                                                                            2)];
+                tinyobj::real_t vx1 = attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 0];
+                tinyobj::real_t vy1 = attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 1];
+                tinyobj::real_t vz1 = attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 2];
                 Point3D vertex1(vx1, vy1, vz1);
 
                 tinyobj::index_t idx2 = shape.mesh.indices[index_offset + v + 1];
-                tinyobj::real_t vx2 = attrib_.vertices[static_cast<size_t> (3 * idx2.vertex_index +
-                                                                            0)];
-                tinyobj::real_t vy2 = attrib_.vertices[static_cast<size_t> (3 * idx2.vertex_index +
-                                                                            1)];
-                tinyobj::real_t vz2 = attrib_.vertices[static_cast<size_t> (3 * idx2.vertex_index +
-                                                                            2)];
+                tinyobj::real_t vx2 = attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 0];
+                tinyobj::real_t vy2 = attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 1];
+                tinyobj::real_t vz2 = attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 2];
                 Point3D vertex2(vx2, vy2, vz2);
 
                 tinyobj::index_t idx3 = shape.mesh.indices[index_offset + v + 2];
-                tinyobj::real_t vx3 = attrib_.vertices[static_cast<size_t> (3 * idx3.vertex_index +
-                                                                            0)];
-                tinyobj::real_t vy3 = attrib_.vertices[static_cast<size_t> (3 * idx3.vertex_index +
-                                                                            1)];
-                tinyobj::real_t vz3 = attrib_.vertices[static_cast<size_t> (3 * idx3.vertex_index +
-                                                                            2)];
+                tinyobj::real_t vx3 = attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 0];
+                tinyobj::real_t vy3 = attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1];
+                tinyobj::real_t vz3 = attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2];
                 Point3D vertex3(vx3, vy3, vz3);
 
                 // per-face material
