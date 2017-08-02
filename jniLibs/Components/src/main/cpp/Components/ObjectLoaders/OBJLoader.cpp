@@ -88,7 +88,12 @@ bool OBJLoader::fillScene(Scene *scene) noexcept {
                     float e2 = m.emission[1];
                     float e3 = m.emission[2];
                     float max = std::max(std::max(e1, e2), e3);
-                    RGB emission(e1 / max, e2 / max, e3 / max);
+										if (max > 1.0f) {
+											e1 /= max;
+											e2 /= max;
+											e3 /= max;
+										}
+										RGB emission(e1, e2, e3);
                     Material material(diffuse, specular, transmittance, 1.0f, emission);
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         Point3D p1(vx1, vy1, vz1);
