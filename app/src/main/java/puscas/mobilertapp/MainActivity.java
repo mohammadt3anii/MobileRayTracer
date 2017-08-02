@@ -144,7 +144,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
 
-        final String[] scenes = {"Cornell", "Spheres", "Spheres2", "Cornell2"};
+        final String[] scenes = {"Cornell", "Spheres", "Cornell2", "Spheres2", "OBJ"};
         pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
         if (pickerScene_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
@@ -156,7 +156,7 @@ public final class MainActivity extends Activity {
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "DiffuseMaterial"};
+        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "Diffuse"};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");

@@ -8,6 +8,7 @@
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Shader.hpp"
 #include <iostream>
+#include <memory>
 #include <random>
 
 namespace Components {
@@ -18,9 +19,9 @@ namespace Components {
 	using MobileRT::Scene;
     class PathTracer final : public MobileRT::Shader {
     private:
-        Sampler *samplerRay_;
-        Sampler *samplerLight_;
-        Sampler *samplerRussianRoulette_;
+				std::unique_ptr<Sampler> samplerRay_;
+				std::unique_ptr<Sampler> samplerLight_;
+				std::unique_ptr<Sampler> samplerRussianRoulette_;
 
     private:
 			bool shade(RGB *rgb,
@@ -29,8 +30,8 @@ namespace Components {
 
 		public:
         explicit PathTracer(Scene &&scene,
-                            Sampler *samplerRay, Sampler *samplerLight,
-                            Sampler *samplerRussianRoulette,
+                            std::unique_ptr<Sampler> &&samplerRay, std::unique_ptr<Sampler> &&samplerLight,
+                            std::unique_ptr<Sampler> &&samplerRussianRoulette,
                             unsigned int samplesLight) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;

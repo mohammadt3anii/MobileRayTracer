@@ -4,7 +4,7 @@
 
 #include "Utils.hpp"
 
-unsigned int roundDownToMultipleOf(const unsigned int value, const unsigned int multiple) noexcept {
-    const unsigned int rest(value % multiple);
+int roundDownToMultipleOf(const int value, const int multiple) noexcept {
+    const int rest(value % multiple);
     return rest > 0 ? value - rest : value;
 }

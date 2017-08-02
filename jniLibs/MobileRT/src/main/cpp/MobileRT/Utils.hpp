@@ -65,7 +65,7 @@ inline std::string getFileName (const char *filepath) {
 #define PI              3.14159265358979323846f
 #define PI_4            0.78539816339744830962f
 
-unsigned int roundDownToMultipleOf(unsigned int value,
-                                   unsigned int multiple) noexcept;
+int roundDownToMultipleOf(int value,
+                                   int multiple) noexcept;
 
 #endif //MOBILERT_UTILS_HPP

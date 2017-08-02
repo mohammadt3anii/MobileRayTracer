@@ -99,8 +99,8 @@ bool OBJLoader::fillScene(Scene *scene) noexcept {
                         Point3D p1(vx1, vy1, vz1);
                         Point3D p2(vx2, vy2, vz2);
                         Point3D p3(vx3, vy3, vz3);
-                        Sampler *sampler = new Components::MersenneTwister(90000000, 32);
-                        scene->lights_.emplace_back(new AreaLight(material, sampler, p1, p2, p3));
+												std::unique_ptr<MobileRT::Sampler> sampler(std::make_unique<Components::MersenneTwister>(90000000, 32));
+                        scene->lights_.emplace_back(new AreaLight(material, std::move(sampler), p1, p2, p3));
                     } else {
                         scene->triangles_.emplace_back(vertex1, vertex2, vertex3);
                         scene->materials_.emplace_back(material);

@@ -9,6 +9,7 @@
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
 #include "MobileRT/Utils.hpp"
+#include <memory>
 
 namespace Components {
 	using MobileRT::Material;
@@ -17,37 +18,34 @@ namespace Components {
 	using MobileRT::Ray;
 	using MobileRT::Intersection;
 	using MobileRT::Triangle;
-    class AreaLight final : public MobileRT::Light
-		//, public MobileRT::Triangle
-		{
+	class AreaLight final : public MobileRT::Light {
     private:
-				Triangle triangle_;
-        Sampler *samplerPointLight_;
+			Triangle triangle_;
+			std::unique_ptr<Sampler> samplerPointLight_;
 
     public:
-        explicit AreaLight(const Material &radiance,
-                           Sampler *samplerPointLight,
-                           const Point3D &pointA,
-                           const Point3D &pointB,
-                           const Point3D &pointC) noexcept;
+			explicit AreaLight(const Material &radiance,
+												 std::unique_ptr<Sampler> &&samplerPointLight,
+												 const Point3D &pointA,
+												 const Point3D &pointB,
+												 const Point3D &pointC) noexcept;
 
-		AreaLight(const AreaLight &areaLight) noexcept = delete;
+			AreaLight(const AreaLight &areaLight) noexcept = delete;
 
-		AreaLight(AreaLight &&areaLight) noexcept = delete;
+			AreaLight(AreaLight &&areaLight) noexcept = delete;
 
-		~AreaLight() noexcept final = default;
+			~AreaLight() noexcept final = default;
 
-        AreaLight &operator=(const AreaLight &areaLight) noexcept = delete;
+			AreaLight &operator=(const AreaLight &areaLight) noexcept = delete;
 
-		AreaLight &operator=(AreaLight &&areaLight) noexcept = delete;
+			AreaLight &operator=(AreaLight &&areaLight) noexcept = delete;
 
-        Point3D getPosition() noexcept final;
+			Point3D getPosition() noexcept final;
 
-        void resetSampling() noexcept final;
+			void resetSampling() noexcept final;
 
-		//using MobileRT::Triangle::intersect;
-        bool intersect(Intersection *intersection, const Ray &ray) const noexcept final;
-    };
+			bool intersect(Intersection *intersection, const Ray &ray) const noexcept final;
+	};
 }//namespace Components
 
 #endif //COMPONENTS_LIGHTS_AREALIGHT_HPP

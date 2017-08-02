@@ -12,7 +12,7 @@ namespace Components {
     class MersenneTwister final : public MobileRT::Sampler {
     public:
       explicit MersenneTwister(uint64_t domainSize,
-                        unsigned int samples) noexcept;
+                               unsigned int samples) noexcept;
 		
 			MersenneTwister(const MersenneTwister &random) noexcept = delete;
 

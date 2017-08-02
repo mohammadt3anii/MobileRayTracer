@@ -14,13 +14,14 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-PathTracer::PathTracer(Scene &&scene, Sampler *samplerRay, Sampler *samplerLight,
-                       Sampler *samplerRussianRoulette,
-                       const unsigned int samplesLight) noexcept :
+PathTracer::PathTracer(Scene &&scene,
+												std::unique_ptr<Sampler> &&samplerRay, std::unique_ptr<Sampler> &&samplerLight,
+												std::unique_ptr<Sampler> &&samplerRussianRoulette,
+												const unsigned int samplesLight) noexcept :
         Shader(std::move(scene), samplesLight),
-        samplerRay_(samplerRay),
-        samplerLight_(samplerLight),
-        samplerRussianRoulette_(samplerRussianRoulette) {
+        samplerRay_(std::move(samplerRay)),
+        samplerLight_(std::move(samplerLight)),
+        samplerRussianRoulette_(std::move(samplerRussianRoulette)) {
     LOG("samplesLight = ", this->samplesLight_);
 }
 

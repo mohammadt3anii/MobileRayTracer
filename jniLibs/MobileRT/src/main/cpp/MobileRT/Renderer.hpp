@@ -15,30 +15,33 @@
 
 namespace MobileRT {
     class Renderer final {
-    private:
-        Sampler *samplerCamera_;
-		Sampler *samplerPixel_;
-		Camera const &camera_;
-        Shader *shader_;
-		std::vector<RGB> accumulate_;
-		const unsigned int domainSize_;
-        const unsigned int width_;
-        const unsigned int height_;
-        unsigned int blockSizeX_;
-        unsigned int blockSizeY_;
-		const unsigned int resolution_;
-        unsigned int sample_;
+		public:
+			Camera *camera_;
+			Shader *shader_;
 
     private:
-        void renderScene(unsigned int *bitmap, unsigned int tid) noexcept;
+			Sampler *samplerCamera_;
+			Sampler *samplerPixel_;
+			std::vector<RGB> accumulate_;
+			const unsigned int domainSize_;
+			const unsigned int width_;
+			const unsigned int height_;
+			unsigned int blockSizeX_;
+			unsigned int blockSizeY_;
+			const unsigned int resolution_;
+      unsigned int sample_;
+
+    private:
+        void renderScene(unsigned int *bitmap, int tid) noexcept;
 
     public:
-        explicit Renderer(Sampler *samplerCamera, Shader *shader,
-                          Camera const &camera,
+        explicit Renderer(std::unique_ptr<Sampler> &&samplerCamera,
+													std::unique_ptr<Shader> &&shader,
+                          std::unique_ptr<Camera> &&camera,
                           unsigned int width, unsigned int height,
                           unsigned int blockSizeX,
                           unsigned int blockSizeY,
-                          Sampler *samplerPixel) noexcept;
+                          std::unique_ptr<Sampler> &&samplerPixel) noexcept;
 
 		Renderer(const Renderer &renderer) noexcept = delete;
 
@@ -50,11 +53,11 @@ namespace MobileRT {
 
 		Renderer &operator=(Renderer &&renderer) noexcept = delete;
 
-        void renderFrame(unsigned int *bitmap, unsigned int numThreads) noexcept;
+        void renderFrame(unsigned int *bitmap, int numThreads) noexcept;
 
         void stopRender() noexcept;
 
-        unsigned int getSample() noexcept;
+      unsigned int getSample() noexcept;
     };
 }//namespace MobileRT
 

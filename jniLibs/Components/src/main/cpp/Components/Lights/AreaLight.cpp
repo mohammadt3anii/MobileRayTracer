@@ -11,11 +11,12 @@ using MobileRT::Point3D;
 using MobileRT::Ray;
 using MobileRT::Intersection;
 
-AreaLight::AreaLight(const Material &radiance, Sampler *samplerPointLight,
+AreaLight::AreaLight(const Material &radiance,
+										 std::unique_ptr<Sampler> &&samplerPointLight,
                      const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
         Light(radiance),
         triangle_(pointA, pointB, pointC),
-        samplerPointLight_(samplerPointLight) {
+        samplerPointLight_(std::move(samplerPointLight)) {
 }
 
 Point3D AreaLight::getPosition() noexcept {

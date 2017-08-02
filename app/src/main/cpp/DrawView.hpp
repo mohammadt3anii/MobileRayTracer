@@ -25,21 +25,15 @@
 #include "MobileRT/Shapes/Rectangle.hpp"
 #include "MobileRT/Shapes/Sphere.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
+#include "Scenes.hpp"
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <memory>
 #include <thread>
 
 static void FPS() noexcept;
 
-static MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept;
-
-static MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene) noexcept;
-
-static MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept;
-
-static MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept;
-
-static void thread_work(void *dstPixels, unsigned int numThreads) noexcept;
+static void thread_work(void *dstPixels, int numThreads) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
@@ -122,9 +116,9 @@ unsigned int Java_puscas_mobilertapp_DrawView_getSample(
 ) noexcept;
 
 extern "C"
-unsigned int Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/,
+int Java_puscas_mobilertapp_DrawView_resize(
+        JNIEnv *env,
+        jobject thiz,
         jint size
 ) noexcept;
 

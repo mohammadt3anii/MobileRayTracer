@@ -60,7 +60,7 @@ endif
 SOURCES := $(shell find \
 ./Components/src \
 ./MobileRT/src \
-../third-party/tinyobjloader/tiny_obj_loader.cc \
+../app/src/main/cpp/Scenes.cpp \
 ! -name "DrawView.cpp" \
 -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
 OBJS := $(addsuffix .o,$(basename $(SOURCES)))
