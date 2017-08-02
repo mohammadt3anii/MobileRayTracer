@@ -314,7 +314,7 @@ int main(int argc, char **argv) noexcept {
 		while(std::getline(mtl, line)) {
 			ssMtl << line << std::endl;
 		}
-		Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
+		Components::OBJLoader objLoader{ssObj.str().c_str(), ssMtl.str().c_str()};
     objLoader.process();
 
 		MobileRT::Scene scene_;

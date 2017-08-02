@@ -143,15 +143,16 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 	}
 
 	// start stepping
-	Sphere *const *list (nullptr);
+	//auto *list (nullptr);
 	// trace primary ray
 	while (true) {
-		list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].data();
+		auto list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))];
 
 		size_t i (0);
-		size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
-		while (i < spheresSize) {
-			Sphere* pr (list[i]);
+		//size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
+		//while (i < spheresSize) {
+		for (auto *pr : list) {
+			//Sphere* pr (list[i]);
 			bool result (false);
 			// if (pr->GetLastRayID() != a_Ray.GetID()) {
 				result = pr->intersect( intersection, ray );
@@ -198,12 +199,13 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 
 	testloop:
 	while (true) {
-		list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].data();
+		auto list = spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))];
 
 		size_t i (0);
-		size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
-		while (i < spheresSize) {
-			Sphere* pr (list[i]);
+		//size_t spheresSize (spheres_[static_cast<size_t>(X) + (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) + (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))].size());
+		//while (i < spheresSize) {
+		for (auto *pr : list) {
+			//Sphere* pr (list[i]);
 			bool result (false);
 			// if (pr->GetLastRayID() != a_Ray.GetID()) {
 				result = pr->intersect( intersection, ray );

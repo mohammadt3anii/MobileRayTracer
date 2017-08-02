@@ -13,9 +13,9 @@ using MobileRT::Point3D;
 using MobileRT::RGB;
 using MobileRT::Scene;
 
-OBJLoader::OBJLoader(std::string text, std::string materials) noexcept :
-        text_(std::move(text)),
-        materialsText_(std::move(materials)),
+OBJLoader::OBJLoader(const char* text, const char* materials) noexcept :
+        text_(text),
+        materialsText_(materials),
 				attrib_(tinyobj::attrib_t()),
         shapes_(std::vector<tinyobj::shape_t>()),
         materials_(std::vector<tinyobj::material_t>())

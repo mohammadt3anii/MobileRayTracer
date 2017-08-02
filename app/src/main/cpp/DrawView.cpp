@@ -351,9 +351,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         jstring objFile,
         jstring matText
 ) noexcept {
-    const char *obj = (env)->GetStringUTFChars(objFile, JNI_FALSE);
-    const char *mat = (env)->GetStringUTFChars(matText, JNI_FALSE);
-    Components::OBJLoader objLoader{std::string(obj), std::string(mat)};
+    jboolean isCopy (JNI_FALSE);
+    const char *obj ((env)->GetStringUTFChars(objFile, &isCopy));
+    const char *mat ((env)->GetStringUTFChars(matText, &isCopy));
+    Components::OBJLoader objLoader (obj, mat);
+    env->ReleaseStringUTFChars(objFile, obj);
+    env->ReleaseStringUTFChars(matText, mat);
     objLoader.process();
 
     working_ = IDLE;

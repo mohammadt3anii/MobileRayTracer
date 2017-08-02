@@ -18,7 +18,7 @@ namespace Components {
         std::vector<tinyobj::material_t> materials_;
 
     public:
-        explicit OBJLoader(std::string text, std::string materials) noexcept;
+        explicit OBJLoader(const char *text, const char *materials) noexcept;
 
 				OBJLoader(const OBJLoader &objLoader) noexcept = delete;
 
