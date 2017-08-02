@@ -72,6 +72,7 @@ GARB := $(shell find \
 ./MobileRT/src \
 ./RayTracerMain.* \
 ./GoogleUnitTest \
+./third-party \
 -regextype gnu-awk -iname "*.d" -print \
 -o -regextype gnu-awk -iname "*.s" -print \
 -o -regextype gnu-awk -iname "*.o" -print \
