@@ -63,132 +63,132 @@ int main(int argc, char **argv) noexcept {
 		
 		
 		MobileRT::Scene scene_;
-    std::unique_ptr<MobileRT::Sampler> samplerCamera;
-    std::unique_ptr<MobileRT::Sampler> samplerPixel;
-    std::unique_ptr<MobileRT::Shader> shader_;
-    std::unique_ptr<MobileRT::Camera> camera;
-    switch (scene) {
-			case 0:
-        camera = std::make_unique<Components::Perspective>(
-          MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-          MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-          MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-          45.0f, 45.0f * ratio);
-        scene_ = cornellBoxScene(std::move(scene_));
-        break;
+  std::unique_ptr<MobileRT::Sampler> samplerCamera;
+  std::unique_ptr<MobileRT::Sampler> samplerPixel;
+  std::unique_ptr<MobileRT::Shader> shader_;
+  std::unique_ptr<MobileRT::Camera> camera;
+  switch (scene) {
+    case 0:
+      camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+        MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        45.0f, 45.0f * ratio);
+      scene_ = cornellBoxScene(std::move(scene_));
+      break;
 
-      case 1:
-				camera = new Components::Orthographic(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                                   MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                                                   MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                                   6.5f, 4.5f);
-            scene_ = spheresScene(std::move(scene_));
-        break;
+    case 1:
+      camera = std::make_unique<Components::Orthographic>(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+                                            MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+                                            MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                                            6.5f, 4.5f);
+      scene_ = spheresScene(std::move(scene_));
+      break;
 
-			case 2:
-        camera = std::make_unique<Components::Perspective>(
-          MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-          MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-          MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-          45.0f, 45.0f * ratio);
-        scene_ = cornellBoxScene2(std::move(scene_), samplesLight, samplesPixel, width_, height_);
-        break;
+    case 2:
+      camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.0f, -3.4f),
+        MobileRT::Point3D(0.0f, 0.0f, 1.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        45.0f, 45.0f * ratio);
+      scene_ = cornellBoxScene2(std::move(scene_), samplesLight, samplesPixel, width_, height_);
+      break;
 
-      case 3:
-        camera = std::make_unique<Components::Perspective>(
-          MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-          MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-          MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-          60.0f, 60.0f * ratio);
-        scene_ = spheresScene2(std::move(scene_));
-        break;
+    case 3:
+      camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+        MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        60.0f, 60.0f * ratio);
+      scene_ = spheresScene2(std::move(scene_));
+      break;
 
-			default:
-				objLoader.fillScene(&scene_);
-        camera = std::make_unique<Components::Perspective>(
-          MobileRT::Point3D(0.0f, 0.5f, 3.0f),
-          MobileRT::Point3D(0.0f, 0.5f, -1.0f),
-          MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-          45.0f, 45.0f * ratio);
-				break;
+    default:
+      objLoader.fillScene(&scene_);
+      camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.5f, 3.0f),
+        MobileRT::Point3D(0.0f, 0.5f, -1.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        45.0f, 45.0f * ratio);
+      break;
+  }
+  switch (sampler) {
+    case 1:
+      if (samplesPixel > 1) {
+        samplerPixel = std::make_unique<Components::HaltonSeq>(
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+      } else {
+        samplerPixel = std::make_unique<Components::Constant>(0.5f);
+      }
+      samplerCamera = std::make_unique<Components::HaltonSeq>(
+        width_, height_, samplesPixel,
+        blockSizeX_, blockSizeY_);
+      break;
+
+    default:
+      if (samplesPixel > 1) {
+        samplerPixel = std::make_unique<Components::Stratified>(
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+      } else {
+        samplerPixel = std::make_unique<Components::Constant>(0.5f);
+      }
+      samplerCamera = std::make_unique<Components::Stratified>(
+        width_, height_, samplesPixel,
+        blockSizeX_, blockSizeY_);
+      break;
+  }
+  const uint64_t domainRay(
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
+  const uint64_t domainLight(
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
+  switch (shader) {
+    case 1: {
+      shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight);
+      break;
     }
-    switch (sampler) {
-      case 1:
-        if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::HaltonSeq>(
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
-        } else {
-          samplerPixel = std::make_unique<Components::Constant>(0.5f);
-        }
-        samplerCamera = std::make_unique<Components::HaltonSeq>(
-          width_, height_, samplesPixel,
-          blockSizeX_, blockSizeY_);
-        break;
 
-      default:
-        if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::Stratified>(
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
-        } else {
-          samplerPixel = std::make_unique<Components::Constant>(0.5f);
-        }
-        samplerCamera = std::make_unique<Components::Stratified>(
-          width_, height_, samplesPixel,
-          blockSizeX_, blockSizeY_);
-        break;
+    case 2: {
+      LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
+      //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1u));
+      std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::MersenneTwister>(domainRay, 1u));
+      //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
+      std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
+      //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
+      std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
+      shader_ = std::make_unique<Components::PathTracer>(
+        std::move(scene_), std::move(samplerRay), std::move(samplerLight),
+        std::move(samplerRussianRoulette), samplesLight);
+      break;
     }
-    const uint64_t domainRay(
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
-    const uint64_t domainLight(
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
-    switch (shader) {
-      case 1: {
-        shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight);
-        break;
-      }
 
-      case 2: {
-        LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
-        //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1u));
-        std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::MersenneTwister>(domainRay, 1u));
-        //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-        std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
-        shader_ = std::make_unique<Components::PathTracer>(
-          std::move(scene_), std::move(samplerRay), std::move(samplerLight),
-          std::move(samplerRussianRoulette), samplesLight);
-        break;
-      }
-
-      case 3: {
-        shader_ = std::make_unique<Components::DepthMap>(std::move(scene_), MobileRT::Point3D(1, 1, 1));
-        break;
-      }
-
-      case 4: {
-        shader_ = std::make_unique<Components::DiffuseMaterial>(std::move(scene_));
-        break;
-      }
-
-      default: {
-        shader_ = std::make_unique<Components::NoShadows>(std::move(scene_), samplesLight);
-        break;
-      }
+    case 3: {
+      shader_ = std::make_unique<Components::DepthMap>(std::move(scene_), MobileRT::Point3D(1, 1, 1));
+      break;
     }
-    renderer_ = new MobileRT::Renderer(std::move(samplerCamera),
-                                       std::move(shader_),
-                                       std::move(camera),
-                                       static_cast<unsigned>(width_), static_cast<unsigned>(height_), static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
-                                       std::move(samplerPixel));
 
-		LOG("x = ", blockSizeX_, "[", width_, "]");
-		LOG("y = ", blockSizeY_, "[", height_, "]");
-		LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size());
-		LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size());
-		LOG("PLANES = ", renderer_->shader_->scene_.planes_.size());
-		LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size());
-		LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size());
+    case 4: {
+      shader_ = std::make_unique<Components::DiffuseMaterial>(std::move(scene_));
+      break;
+    }
+
+    default: {
+      shader_ = std::make_unique<Components::NoShadows>(std::move(scene_), samplesLight);
+      break;
+    }
+  }
+  renderer_ = new MobileRT::Renderer(std::move(samplerCamera),
+                                     std::move(shader_),
+                                     std::move(camera),
+                                     static_cast<unsigned>(width_), static_cast<unsigned>(height_), static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
+                                     std::move(samplerPixel));
+
+  LOG("x = ", blockSizeX_, "[", width_, "]");
+  LOG("y = ", blockSizeY_, "[", height_, "]");
+  LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size());
+  LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size());
+  LOG("PLANES = ", renderer_->shader_->scene_.planes_.size());
+  LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size());
+  LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size());
 
 
     LOG("threads = ", threads);

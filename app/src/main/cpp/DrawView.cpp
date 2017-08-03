@@ -115,6 +115,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     int blockSizeX_ = width_ / numberOfBlocks_;
     int blockSizeY_ = height_ / numberOfBlocks_;
 
+
   MobileRT::Scene scene_;
   std::unique_ptr<MobileRT::Sampler> samplerCamera;
   std::unique_ptr<MobileRT::Sampler> samplerPixel;
