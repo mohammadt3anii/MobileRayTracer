@@ -35,6 +35,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSampler_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
+    private NumberPicker pickerSizes_;
     private String objText_;
     private String matText_;
 
@@ -112,7 +113,7 @@ public final class MainActivity extends Activity {
             drawView_.setEGLContextClientVersion(2);
             drawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
             final MainRenderer renderer = new MainRenderer();
-            drawView_.renderer = renderer;
+            drawView_.renderer_ = renderer;
             drawView_.setRenderer(renderer);
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
@@ -120,8 +121,8 @@ public final class MainActivity extends Activity {
             final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
             objText_ = readTextAsset(obj + ".obj");
             matText_ = readTextAsset(obj + ".mtl");
-            drawView_.renderer.vertexShaderCode = vertexShader;
-            drawView_.renderer.fragmentShaderCode = fragmentShader;
+            drawView_.renderer_.vertexShaderCode = vertexShader;
+            drawView_.renderer_.fragmentShaderCode = fragmentShader;
 
             drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
             if (drawView_.buttonRender_ == null) {
@@ -227,6 +228,30 @@ public final class MainActivity extends Activity {
         pickerThreads_.setMaxValue(MainActivity.getNumberOfCores() << 1);
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+        final int maxSizes = 10;
+        final String[] sizes;
+        try {
+            sizes = new String[maxSizes];
+        } catch (final OutOfMemoryError e) {
+            e.fillInStackTrace();
+            throw e;
+        }
+        for (int i = 0; i < maxSizes; i++) {
+            float value = 1.0f / (i + 1.0f);
+            value = Math.round(value * 1000f) / 1000f;
+            sizes[i] = Float.toString(value) + " x";
+        }
+        pickerSizes_ = (NumberPicker) findViewById(R.id.pickerSize);
+        if (pickerSizes_ == null) {
+            Log.e("NumberPicker", "NumberPicker is NULL !!!");
+            System.exit(0);
+        }
+        pickerSizes_.setMinValue(1);
+        pickerSizes_.setMaxValue(maxSizes);
+        pickerSizes_.setDisplayedValues(sizes);
+        pickerSizes_.setWrapSelectorWheel(true);
+        pickerSizes_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
     public void startRender(final View view) {
@@ -235,6 +260,7 @@ public final class MainActivity extends Activity {
         }
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
+                String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
@@ -247,6 +273,7 @@ public final class MainActivity extends Activity {
                                 pickerSamplesLight_.getDisplayedValues()
                                         [pickerSamplesLight_.getValue() - 1]
                         ),
+                        Float.parseFloat(str.substring(0, str.indexOf('x'))),
                         objText_,
                         matText_
                 );

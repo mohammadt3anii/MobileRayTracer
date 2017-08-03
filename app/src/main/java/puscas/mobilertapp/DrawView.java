@@ -23,7 +23,7 @@ import puscas.mobilertapp.DrawView.RenderTask.TouchTracker;
 
 public class DrawView extends GLSurfaceView {
     Bitmap bitmap_ = null;
-    MainRenderer renderer;
+    MainRenderer renderer_;
     long start_ = 0L;
     long period_ = 0L;
     int stage_ = 0;
@@ -137,20 +137,22 @@ public class DrawView extends GLSurfaceView {
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,
-                     final int samplesPixel, final int samplesLight, final String objFile, final String matText) {
-        final int width = resize(getWidth() / 4);
-        final int height = resize(getHeight() / 4);
+                     final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText) {
+        final int width = resize(Math.round(getWidth() * size));
+        final int height = resize(Math.round(getHeight() * size));
         DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight, objFile, matText);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
         resetPrint(width, height, samplesPixel, samplesLight);
-
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        renderer.bitmap = bitmap_;
+
+        setVisibility(View.INVISIBLE);
+        renderer_.bitmap_ = bitmap_;
+
+        requestRender();
         //setBackground(new BitmapDrawable(getResources(), bitmap_));
         setVisibility(View.VISIBLE);
-        requestRender();
     }
 
     int getTouchListIndex(final int pointerID) {

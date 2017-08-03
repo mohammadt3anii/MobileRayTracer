@@ -14,10 +14,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 class MainRenderer implements Renderer {
-    String vertexShaderCode = null;
-    String fragmentShaderCode = null;
-    Bitmap bitmap = null;
-
     private final float[] vertices = {
             -1.0f, 1.0f, 0.0f,
             -1.0f, -1.0f, 0.0f,
@@ -30,6 +26,9 @@ class MainRenderer implements Renderer {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
+    String vertexShaderCode = null;
+    String fragmentShaderCode = null;
+    Bitmap bitmap_ = null;
     private FloatBuffer floatBufferVertices;
     private FloatBuffer floatBufferTexture;
 
@@ -54,12 +53,13 @@ class MainRenderer implements Renderer {
     @Override
     public void onDrawFrame(final GL10 gl) {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 4);
-        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap);
+        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap_);
     }
 
     @Override
     public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
         GLES20.glViewport(0, 0, width, height);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap_, 0);
     }
 
     @Override
@@ -125,7 +125,6 @@ class MainRenderer implements Renderer {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 
         //Bind Attributes
         final int positionAttrib = GLES20.glGetAttribLocation(shaderProgram, "vPosition");
