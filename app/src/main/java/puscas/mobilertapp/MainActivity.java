@@ -260,7 +260,7 @@ public final class MainActivity extends Activity {
         }
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
-                String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
+                final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
