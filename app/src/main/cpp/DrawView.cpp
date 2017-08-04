@@ -132,10 +132,16 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       break;
 
     case 1:
-      camera = std::make_unique<Components::Orthographic>(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                            MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                                            MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                            6.5f, 4.5f);
+      camera = std::make_unique<Components::Orthographic>(
+        MobileRT::Point3D(0.0f, 1.0f, - 10.0f),
+        MobileRT::Point3D(0.0f, 1.0f, 7.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        10.0f, 10.0f);
+      /*camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+        MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        60.0f, 60.0f * ratio);*/
       scene_ = spheresScene(std::move(scene_));
       break;
 

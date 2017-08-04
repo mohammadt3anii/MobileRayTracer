@@ -18,8 +18,8 @@ namespace MobileRT {
         const unsigned int depth_;
 
     public:
-        explicit Ray(const Vector3D &dir, const Point3D &origin,
-                     unsigned int depth) noexcept;
+      explicit Ray(Vector3D dir, Point3D origin,
+                   unsigned int depth) noexcept;
 
 		Ray(const Ray &ray) noexcept = delete;
 

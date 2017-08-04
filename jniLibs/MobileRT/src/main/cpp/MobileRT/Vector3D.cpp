@@ -118,10 +118,9 @@ Vector3D Vector3D::crossProduct(const Vector3D &vector) const noexcept {
     const float x(this->y_ * vector.z_ - this->z_ * vector.y_);
     const float y(this->z_ * vector.x_ - this->x_ * vector.z_);
     const float z(this->x_ * vector.y_ - this->y_ * vector.x_);
-    const float length(
-            1.0f / std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_));
+  const float length(std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_));
 
-    return Vector3D(x * length, y * length, z * length);
+  return Vector3D(x / length, y / length, z / length);
 }
 
 void Vector3D::operator*=(const float value) noexcept {

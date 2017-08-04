@@ -16,11 +16,16 @@ Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const
         sizeV_(sizeV / 2.0f) {
 }
 
+/* u = x / width */
+/* v = y / height */
+/* deviationU = [-0.5f / width, 0.5f / width] */
+/* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Orthographic::generateRay(const float u, const float v,
-                                    const float deviationU, const float deviationV) const noexcept {
-    const Point3D position(this->position_ +
-                           (this->right_ * ((u - 0.5f) * 2.0f + deviationU * this->sizeH_)) +
-                           (this->up_ * ((0.5f - v) * 2.0f + deviationV * this->sizeV_)));
+                              const float deviationU, const float deviationV) const noexcept {
 
-    return Ray(this->direction_, position, 1u);
+  Vector3D deviationRight(this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU);
+  Vector3D deviationUp(this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV);
+  Point3D position(this->position_ + deviationRight + deviationUp);
+
+  return Ray(this->direction_, std::move(position), 1u);
 }

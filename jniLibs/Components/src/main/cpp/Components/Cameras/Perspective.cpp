@@ -17,17 +17,21 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
         vFov_((vFov * PI) / 180.0f) {
 }
 
+/* u = x / width */
+/* v = y / height */
+/* deviationU = [-0.5f / width, 0.5f / width] */
+/* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
-                                   const float deviationU, const float deviationV) const noexcept {
+                             const float deviationU, const float deviationV) const noexcept {
     const float u_alpha(fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU);
     const float v_alpha(fastArcTan(this->vFov_ * (0.5f - v)) + deviationV);
 
     const Point3D imagePoint(this->position_ + this->direction_ +
                              (this->right_ * u_alpha) + (this->up_ * v_alpha));
 
-    const Vector3D rayDirection(imagePoint, this->position_, true);
+  Vector3D rayDirection(imagePoint, this->position_, true);
 
-    return Ray(rayDirection, this->position_, 1u);
+  return Ray(std::move(rayDirection), this->position_, 1u);
 }
 
 //http://nghiaho.com/?p=997
