@@ -23,15 +23,13 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-    const float u_alpha(fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU);
-    const float v_alpha(fastArcTan(this->vFov_ * (0.5f - v)) + deviationV);
 
-    const Point3D imagePoint(this->position_ + this->direction_ +
-                             (this->right_ * u_alpha) + (this->up_ * v_alpha));
-
-  Vector3D rayDirection(imagePoint, this->position_, true);
-
-  return Ray(std::move(rayDirection), this->position_, 1u);
+  return Ray(Vector3D(this->position_ +
+                      this->direction_ +
+                      (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
+                      (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV)),
+                      this->position_, true),
+             this->position_, 1u);
 }
 
 //http://nghiaho.com/?p=997

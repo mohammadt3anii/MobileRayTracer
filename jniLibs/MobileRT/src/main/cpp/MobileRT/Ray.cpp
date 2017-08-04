@@ -10,8 +10,8 @@ static unsigned int counter(0u);
 
 Ray::Ray(Vector3D dir, Point3D origin,
          const unsigned int depth) noexcept :
-  origin_(std::move(origin)),
-  direction_(std::move(dir)),
+  origin_(origin),
+  direction_(dir),
   symDirection_(- direction_),
   depth_(depth) {
     counter++;
