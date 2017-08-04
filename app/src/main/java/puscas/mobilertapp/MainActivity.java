@@ -238,7 +238,7 @@ public final class MainActivity extends Activity {
             throw e;
         }
         for (int i = 0; i < maxSizes; i++) {
-            float value = 1.0f / (i + 1.0f);
+            float value = (i + 1.0f) * 0.1f;
             value = Math.round(value * 1000f) / 1000f;
             sizes[i] = Float.toString(value) + " x";
         }
