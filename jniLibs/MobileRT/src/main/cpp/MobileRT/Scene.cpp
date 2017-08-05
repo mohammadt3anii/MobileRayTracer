@@ -10,7 +10,7 @@ using MobileRT::Sphere;
 using MobileRT::Plane;
 using MobileRT::Material;
 
-static unsigned int counter(0u);
+static unsigned int counter(0);
 
 Scene::Scene() noexcept :
         triangles_(std::vector<Triangle>()),
@@ -38,7 +38,7 @@ int Scene::traceLights(Intersection *intersection, Ray ray) const noexcept {
     int res(-1);
     const auto lightsSize(static_cast<unsigned int> (lights_.size()));
 
-    for (unsigned int i(0u); i < lightsSize; i++) {
+  for (unsigned int i(0); i < lightsSize; i ++) {
         const Light &light(*this->lights_[static_cast<uint32_t> (i)]);
         if (light.intersect(intersection, ray)) {
             res = static_cast<int> (i);
@@ -53,7 +53,7 @@ int Scene::trace(const std::vector<T> &primitives, MobileRT::Intersection *const
                  const MobileRT::Ray ray, const int offset, int res) const noexcept {
 
   const auto primitivesSize(static_cast<unsigned int> (primitives.size()));
-  for (unsigned int i(0u); i < primitivesSize; i ++) {
+  for (unsigned int i(0); i < primitivesSize; i ++) {
     const T &primitive(primitives[static_cast<uint32_t> (i)]);
     if (primitive.intersect(intersection, ray)) {
       res = static_cast<int>(i) + offset;
@@ -104,7 +104,7 @@ bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) const noexc
 
 unsigned int Scene::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+  counter = 0;
     return res;
 }
 

@@ -116,7 +116,8 @@ int main(int argc, char **argv) noexcept {
     case 1:
       if (samplesPixel > 1) {
         samplerPixel = std::make_unique<Components::HaltonSeq>(
-          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
+          static_cast<uint64_t>(samplesPixel), 1);
       } else {
         samplerPixel = std::make_unique<Components::Constant>(0.5f);
       }
@@ -128,7 +129,8 @@ int main(int argc, char **argv) noexcept {
     default:
       if (samplesPixel > 1) {
         samplerPixel = std::make_unique<Components::Stratified>(
-          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
+          static_cast<uint64_t>(samplesPixel), 1);
       } else {
         samplerPixel = std::make_unique<Components::Constant>(0.5f);
       }
@@ -138,9 +140,11 @@ int main(int argc, char **argv) noexcept {
       break;
   }
   const uint64_t domainRay(
-    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
+    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
   const uint64_t domainLight(
-    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
+    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
   switch (shader) {
     case 1: {
       shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight);
@@ -149,12 +153,15 @@ int main(int argc, char **argv) noexcept {
 
     case 2: {
       LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
-      //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::MersenneTwister>(domainRay, 1u));
-      //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
-      //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
+      //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerRay(
+        std::make_unique<Components::MersenneTwister>(domainRay, 1));
+      //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerLight(
+        std::make_unique<Components::MersenneTwister>(domainLight, 1));
+      //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(
+        std::make_unique<Components::MersenneTwister>(domainLight, 1));
       shader_ = std::make_unique<Components::PathTracer>(
         std::move(scene_), std::move(samplerRay), std::move(samplerLight),
         std::move(samplerRussianRoulette), samplesLight);

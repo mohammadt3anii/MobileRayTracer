@@ -29,7 +29,7 @@ Ray Perspective::generateRay(const float u, const float v,
                       (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
                       (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV)),
                       this->position_, true),
-             this->position_, 1u);
+             this->position_, 1);
 }
 
 //http://nghiaho.com/?p=997

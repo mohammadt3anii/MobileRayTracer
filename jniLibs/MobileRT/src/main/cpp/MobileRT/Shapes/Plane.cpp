@@ -93,8 +93,8 @@ bool Plane::intersect(const AABB &box) const noexcept {
 
   Intersection intersectionPositive;
   Intersection intersectionNegative;
-  Ray rayPositive(this->normal_, positiveVertex, 1u);
-  Ray rayNegative(this->normal_, negativeVertex, 1u);
+  Ray rayPositive(this->normal_, positiveVertex, 1);
+  Ray rayNegative(this->normal_, negativeVertex, 1);
   if (intersect(&intersectionPositive, rayPositive)) {
     if (intersectionPositive.length_ < 0) {
       return false;

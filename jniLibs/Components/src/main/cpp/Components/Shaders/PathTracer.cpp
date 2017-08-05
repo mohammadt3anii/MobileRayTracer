@@ -71,8 +71,8 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
             //const auto maxIndex((static_cast<float> (sizeLights) - 1.0f));
             Intersection intersectLight;
             //direct light
-            for (unsigned int i(0u); i < samplesLight; i++) {
-                const float randomNumber(samplerLight_->getSample(0u));
+          for (unsigned int i(0); i < samplesLight; i ++) {
+            const float randomNumber(samplerLight_->getSample(0));
                 //PDF = 1 / sizeLights
                 // const auto chosenLight(
                 // 	static_cast<unsigned int> (std::round(randomNumber * maxIndex)));
@@ -89,7 +89,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
                 const float cosNormalLight(shadingNormal.dotProduct(vectorToLight));
                 if (cosNormalLight > 0.0f) {
                     //shadow ray -> orig=intersection, dir=light
-                    Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
+                  Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1);
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
                     intersectLight.length_ = distanceToLight;
@@ -106,9 +106,9 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
 
         //indirect light
         if (rayDepth <= RAY_DEPTH_MIN ||
-            samplerRussianRoulette_->getSample(0u) > finish_probability) {
-            const float r1(2.0f * PI * samplerRay_->getSample(0u));
-            const float r2(samplerRay_->getSample(0u));
+            samplerRussianRoulette_->getSample(0) > finish_probability) {
+          const float r1(2.0f * PI * samplerRay_->getSample(0));
+          const float r2(samplerRay_->getSample(0));
             const float r2s(std::sqrt(r2));
             Vector3D u(std::fabs(intersection.normal_.x_) > 0.1f ?
                        Vector3D(0.0f, 1.0f, 0.0f).crossProduct(intersection.normal_) :
@@ -119,7 +119,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
                                 intersection.normal_ * std::sqrt(1.0f - r2)));
             direction.normalize();
             Ray normalizedSecundaryRay(direction, intersection.point_,
-                                             rayDepth + 1u);
+                                       rayDepth + 1);
 
             //Li = PI/N * SOMATORIO i=1 -> i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
@@ -153,7 +153,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
         const Vector3D reflectionDir(
                 ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_));
 
-        Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
+      Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1);
         RGB LiS_RGB;
         Intersection specularInt;
         rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
@@ -181,8 +181,8 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
                                                      (std::sqrt(cosTheta2)))) :
                                   //rayDir = (ray.d + N*(cost1 * 2)).norm();
                                   ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
-                                  intersection.point_,
-                                  rayDepth + 1u);
+                            intersection.point_,
+                            rayDepth + 1);
         RGB LiT_RGB;
         Intersection transmissionInt;
         rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));

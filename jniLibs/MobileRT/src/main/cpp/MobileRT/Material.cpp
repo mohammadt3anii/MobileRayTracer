@@ -5,7 +5,8 @@
 #include "Material.hpp"
 
 using MobileRT::Material;
-static unsigned int counter(0u);
+
+static unsigned int counter(0);
 
 Material::Material(RGB Kd, RGB Ks, RGB Kt, const float refractiveIndice, RGB Le)noexcept :
         Le_(std::move(Le)),
@@ -19,6 +20,6 @@ Material::Material(RGB Kd, RGB Ks, RGB Kt, const float refractiveIndice, RGB Le)
 
 unsigned int Material::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+    counter = 0;
     return res;
 }

@@ -7,7 +7,7 @@
 using MobileRT::Vector3D;
 using MobileRT::Point3D;
 
-static unsigned int counter(0u);
+static unsigned int counter(0);
 
 Vector3D::Vector3D() noexcept
 {
@@ -158,6 +158,6 @@ Vector3D Vector3D::operator-() const noexcept {
 
 unsigned int Vector3D::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+    counter = 0;
     return res;
 }

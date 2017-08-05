@@ -7,8 +7,8 @@
 using Components::Constant;
 
 Constant::Constant(const float value) noexcept :
-        Sampler(0u, 0),
-        value_(value) {
+  Sampler(0, 0),
+  value_(value) {
 }
 
 float Constant::getSample(const unsigned int /*sample*/) noexcept {

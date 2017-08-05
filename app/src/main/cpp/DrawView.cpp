@@ -12,11 +12,15 @@ static int working_(IDLE);
 
 static MobileRT::Renderer *renderer_(nullptr);
 static std::thread *thread_(nullptr);
-static int numberOfBlocks_(4u);
-static int width_(0u);
-static int height_(0u);
+
+static int numberOfBlocks_(4);
+
+static int width_(0);
+
+static int height_(0);
 static float fps_(0.0f);
-static int64_t timeFrame_(0ll);
+
+static int64_t timeFrame_(0);
 
 static void FPS() noexcept {
     static int frame(0);
@@ -176,7 +180,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     case 1:
       if (samplesPixel > 1) {
         samplerPixel = std::make_unique<Components::HaltonSeq>(
-          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
+          static_cast<uint64_t>(samplesPixel), 1);
       } else {
         samplerPixel = std::make_unique<Components::Constant>(0.5f);
       }
@@ -188,7 +193,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     default:
       if (samplesPixel > 1) {
         samplerPixel = std::make_unique<Components::Stratified>(
-          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u * static_cast<uint64_t>(samplesPixel), 1u);
+          static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
+          static_cast<uint64_t>(samplesPixel), 1);
       } else {
         samplerPixel = std::make_unique<Components::Constant>(0.5f);
       }
@@ -198,9 +204,11 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       break;
   }
   const uint64_t domainRay(
-    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
+    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
   const uint64_t domainLight(
-    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2u) * static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
+    (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
+    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
   switch (shader) {
     case 1: {
       shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight);
@@ -209,12 +217,15 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
     case 2: {
       LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
-      //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::MersenneTwister>(domainRay, 1u));
-      //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
-      //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1u));
-      std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::MersenneTwister>(domainLight, 1u));
+      //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerRay(
+        std::make_unique<Components::MersenneTwister>(domainRay, 1));
+      //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerLight(
+        std::make_unique<Components::MersenneTwister>(domainLight, 1));
+      //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1));
+      std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(
+        std::make_unique<Components::MersenneTwister>(domainLight, 1));
       shader_ = std::make_unique<Components::PathTracer>(
         std::move(scene_), std::move(samplerRay), std::move(samplerLight),
         std::move(samplerRussianRoulette), samplesLight);

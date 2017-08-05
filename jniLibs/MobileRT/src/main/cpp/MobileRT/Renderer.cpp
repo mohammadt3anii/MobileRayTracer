@@ -40,7 +40,7 @@ void Renderer::renderFrame(unsigned int *const bitmap, const int numThreads) noe
 	const int numChildren (numThreads - 1);
 	std::vector<std::thread> threads;
 	threads.reserve(static_cast<unsigned>(numChildren));
-	for (int i(0u); i < numChildren; i++) {
+	for (int i(0); i < numChildren; i ++) {
 		threads.emplace_back(&Renderer::renderScene, this, bitmap, i);
 	}
 	renderScene(bitmap, numChildren);
@@ -50,8 +50,8 @@ void Renderer::renderFrame(unsigned int *const bitmap, const int numThreads) noe
 	threads.clear();
 
 	float max(-1.0f);
-	unsigned int ii(0u);
-	unsigned int jj(0u);
+	unsigned int ii(0);
+	unsigned int jj(0);
 	for (unsigned int i (0); i < this->height_; i++) {
 		for (unsigned int j (0); j < this->width_; j++) {
 			const unsigned int pixel (i*this->width_ + j);
@@ -77,8 +77,9 @@ void Renderer::renderFrame(unsigned int *const bitmap, const int numThreads) noe
 }
 
 void Renderer::stopRender() noexcept {
-    this->blockSizeX_ = 0u;
-    this->blockSizeY_ = 0u;
+
+	this->blockSizeX_ = 0;
+	this->blockSizeY_ = 0;
     this->samplerCamera_->stopSampling();
     this->samplerPixel_->stopSampling();
 }
@@ -106,8 +107,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const int tid) noexcept {
 				const unsigned int endX(startX + this->blockSizeX_);
 				for (unsigned int x(startX); x < endX; x++) {
 					const float u(x * INV_IMG_WIDTH);
-					const float r1(this->samplerPixel_->getSample(0u));
-					const float r2(this->samplerPixel_->getSample(0u));
+					const float r1(this->samplerPixel_->getSample(0));
+					const float r2(this->samplerPixel_->getSample(0));
 					const float deviationU((r1 - 0.5f) * 2.0f * pixelWidth);
 					const float deviationV((r2 - 0.5f) * 2.0f * pixelHeight);
 					Ray ray(this->camera_->generateRay(u, v, deviationU, deviationV));

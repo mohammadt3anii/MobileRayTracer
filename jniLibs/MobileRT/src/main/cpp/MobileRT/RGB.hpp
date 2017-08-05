@@ -58,7 +58,7 @@ namespace MobileRT {
 
 		void addSampleAndCalcAvg(RGB *sample) noexcept;
 
-		void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned int samples = 0u) noexcept;
+			void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned int samples = 0) noexcept;
 
 		unsigned int RGB2Color() noexcept;
 

@@ -49,9 +49,9 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 		Intersection lightIntersection;
 		const uint64_t sizeLights(scene_.lights_.size());
 		const unsigned int samplesLight(this->samplesLight_);
-        for (unsigned int i(0u); i < sizeLights; i++) {
+      for (unsigned int i(0); i < sizeLights; i ++) {
 			Light &light(*scene_.lights_[i]);
-            for (unsigned int j(0u); j < samplesLight; j++) {
+        for (unsigned int j(0); j < samplesLight; j ++) {
 				const Point3D lightPosition(light.getPosition());
 				//calculates vector starting in intersection to the light
 				Vector3D vectorToLight(lightPosition, intersection.point_);
@@ -60,7 +60,7 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 				const float cos_N_L(shadingNormal.dotProduct(vectorToLight));
                 if (cos_N_L > 0.0f) {
 					//shadow ray - orig=intersection, dir=light
-					Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1u);
+                  Ray shadowRay(vectorToLight, intersection.point_, rayDepth + 1);
 					lightIntersection.length_ = distanceToLight;
 					//intersection between shadow ray and the closest primitive
 					//if there are no primitives between intersection and the light
@@ -83,7 +83,7 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
 		const Vector3D reflectionDir(
 				ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_));
 
-		Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1u);
+      Ray specularRay(reflectionDir, intersection.point_, rayDepth + 1);
 		RGB LiS_RGB;
 		Intersection specularInt;
 		rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
@@ -114,7 +114,7 @@ bool Whitted::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const
                             //rayDir = (ray.d + N*(cost1 * 2)).norm();
                             ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
                             intersection.point_,
-                            rayDepth + 1u);
+                            rayDepth + 1);
 		RGB LiT_RGB;
 		Intersection transmissionInt;
 		rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));

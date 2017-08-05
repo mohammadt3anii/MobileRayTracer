@@ -5,13 +5,13 @@
 
 using MobileRT::RGB;
 
-static unsigned int counter(0u);
+static unsigned int counter(0);
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
-        R_(r),
-        G_(g),
-        B_(b),
-				samples_(0u)
+  R_(r),
+  G_(g),
+  B_(b),
+  samples_(0)
 {
     counter++;
 }
@@ -135,7 +135,7 @@ unsigned int RGB::RGB2Color() noexcept {
 
 unsigned int RGB::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+    counter = 0;
     return res;
 }
 

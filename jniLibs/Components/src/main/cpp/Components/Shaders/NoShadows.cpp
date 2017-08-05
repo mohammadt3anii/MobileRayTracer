@@ -37,9 +37,9 @@ bool NoShadows::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) con
     if (kD.hasColor()) {
         const uint64_t sizeLights(scene_.lights_.size());
         const unsigned int samplesLight(this->samplesLight_);
-        for (unsigned int i(0u); i < sizeLights; i++) {
+      for (unsigned int i(0); i < sizeLights; i ++) {
             Light &light(*scene_.lights_[i]);
-            for (unsigned int j(0u); j < samplesLight; j++) {
+        for (unsigned int j(0); j < samplesLight; j ++) {
                 const Point3D lightPosition(light.getPosition());
                 //vectorIntersectCameraNormalized = light.position_ - intersection.point_
                 const Vector3D vectorToLightNormalized(

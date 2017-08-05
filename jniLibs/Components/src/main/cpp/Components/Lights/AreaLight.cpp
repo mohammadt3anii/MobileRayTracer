@@ -20,8 +20,9 @@ AreaLight::AreaLight(const Material &radiance,
 }
 
 Point3D AreaLight::getPosition() noexcept {
-    float R(samplerPointLight_->getSample(0u));
-    float S(samplerPointLight_->getSample(0u));
+
+  float R(samplerPointLight_->getSample(0));
+  float S(samplerPointLight_->getSample(0));
     if (R + S >= 1.0f) {
         R = 1.0f - R;
         S = 1.0f - S;

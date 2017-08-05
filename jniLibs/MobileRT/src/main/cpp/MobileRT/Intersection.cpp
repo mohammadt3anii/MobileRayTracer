@@ -6,7 +6,7 @@
 
 using MobileRT::Intersection;
 
-static unsigned int counter(0u);
+static unsigned int counter(0);
 
 Intersection::Intersection() noexcept
 {
@@ -45,6 +45,6 @@ void Intersection::reset(const Point3D &orig,
 
 unsigned int Intersection::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+    counter = 0;
     return res;
 }

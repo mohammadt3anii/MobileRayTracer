@@ -6,7 +6,7 @@
 
 using MobileRT::Ray;
 
-static unsigned int counter(0u);
+static unsigned int counter(0);
 
 Ray::Ray(Vector3D dir, Point3D origin,
          const unsigned int depth) noexcept :
@@ -19,6 +19,6 @@ Ray::Ray(Vector3D dir, Point3D origin,
 
 unsigned int Ray::getInstances() noexcept {
     const unsigned int res(counter);
-    counter = 0u;
+    counter = 0;
     return res;
 }

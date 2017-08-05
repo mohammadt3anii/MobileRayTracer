@@ -26,5 +26,5 @@ Ray Orthographic::generateRay(const float u, const float v,
   return Ray(this->direction_,
              this->position_ +
              this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
-             this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1u);
+             this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1);
 }
