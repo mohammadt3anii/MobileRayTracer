@@ -58,6 +58,52 @@ AABB Plane::getAABB() const noexcept {
 	return AABB(getPositionMin(), getPositionMax());
 }
 
-bool Plane::intersect(const AABB & /*box*/) const noexcept {
-	return true;
+bool Plane::intersect(const AABB &box) const noexcept {
+
+  Point3D positiveVertex(box.pointMin_);
+  Point3D negativeVertex(box.pointMax_);
+  if (this->normal_.x_ >= 0.0f) {
+    positiveVertex.x_ = box.pointMax_.x_;
+  }
+  if (this->normal_.y_ >= 0.0f) {
+    positiveVertex.y_ = box.pointMax_.y_;
+  }
+  if (this->normal_.z_ >= 0.0f) {
+    positiveVertex.z_ = box.pointMax_.z_;
+  }
+
+  if (this->normal_.x_ >= 0.0f) {
+    negativeVertex.x_ = box.pointMin_.x_;
+  }
+  if (this->normal_.y_ >= 0.0f) {
+    negativeVertex.y_ = box.pointMin_.y_;
+  }
+  if (this->normal_.z_ >= 0.0f) {
+    negativeVertex.z_ = box.pointMin_.z_;
+  }
+
+  // is the positive vertex outside?
+  /*if (this->distance(positiveVertex(this->normal_)) < 0) {
+    return false;
+  }*/
+  // is the negative vertex outside?
+  /*else if (this->distance(negativeVertex(this->normal_)) < 0) {
+    return true;
+  }*/
+
+  Intersection intersectionPositive;
+  Intersection intersectionNegative;
+  Ray rayPositive(this->normal_, positiveVertex, 1u);
+  Ray rayNegative(this->normal_, negativeVertex, 1u);
+  if (intersect(&intersectionPositive, rayPositive)) {
+    if (intersectionPositive.length_ < 0) {
+      return false;
+    }
+  } else if (intersect(&intersectionNegative, rayNegative)) {
+    if (intersectionNegative.length_ < 0) {
+      return true;
+    }
+  }
+
+  return false;
 }

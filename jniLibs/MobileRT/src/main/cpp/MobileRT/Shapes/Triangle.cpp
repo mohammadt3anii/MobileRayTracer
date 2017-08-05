@@ -10,12 +10,13 @@ using MobileRT::Triangle;
 using MobileRT::Point3D;
 
 Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
-        AC_(pointC - pointA),
-        AB_(pointB - pointA),
-        normal_(AB_.crossProduct(AC_)),
-        pointA_(pointA),
-        pointB_(pointB),
-        pointC_(pointC)
+  AC_(pointC - pointA),
+  AB_(pointB - pointA),
+  BC_(pointC - pointB),
+  normal_(AB_.crossProduct(AC_)),
+  pointA_(pointA),
+  pointB_(pointB),
+  pointC_(pointC)
 {
 }
 
@@ -142,6 +143,60 @@ AABB Triangle::getAABB() const noexcept {
 	return AABB(getPositionMin(), getPositionMax());
 }
 
-bool Triangle::intersect(const AABB & /*box*/) const noexcept {
-	return true;
+bool Triangle::intersect(const AABB &box) const noexcept {
+
+  std::function<bool(Point3D orig, Vector3D vec)> intersectRayAABB(
+    [&](Point3D orig, Vector3D vec)->bool {
+      float tmin = (box.pointMin_.x_ - orig.x_) / vec.x_;
+      float tmax = (box.pointMax_.x_ - orig.x_) / vec.x_;
+
+      if (tmin > tmax) {
+        std::swap(tmin, tmax);
+      }
+
+      float tymin = (box.pointMin_.y_ - orig.y_) / vec.y_;
+      float tymax = (box.pointMax_.y_ - orig.y_) / vec.y_;
+
+      if (tymin > tymax) {
+        std::swap(tymin, tymax);
+      }
+
+      if ((tmin > tymax) || (tymin > tmax)) {
+        return false;
+      }
+
+      if (tymin > tmin) {
+        tmin = tymin;
+      }
+
+      if (tymax < tmax) {
+        tmax = tymax;
+      }
+
+      float tzmin = (box.pointMin_.z_ - orig.z_) / vec.z_;
+      float tzmax = (box.pointMax_.z_ - orig.z_) / vec.z_;
+
+      if (tzmin > tzmax) {
+        std::swap(tzmin, tzmax);
+      }
+
+      if ((tmin > tzmax) || (tzmin > tmax)) {
+        return false;
+      }
+
+      if (tzmin > tmin) {
+        tmin = tzmin;
+      }
+
+      if (tzmax < tmax) {
+        tmax = tzmax;
+      }
+      return true;
+    });
+
+  if (intersectRayAABB(this->pointA_, this->AB_) && intersectRayAABB(this->pointA_, this->AC_)) {
+    return intersectRayAABB(this->pointB_, this->BC_);
+  }
+
+  return false;
 }

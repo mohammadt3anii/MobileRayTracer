@@ -37,7 +37,7 @@ bool Sphere::intersect(Intersection *intersection, const Ray &ray) const noexcep
 
     if (distanceToIntersection < EPSILON || distanceToIntersection > intersection->length_) {
         return false;
-	}
+    }
 
     // if so, then we have an intersection
     intersection->reset(ray.origin_, ray.direction_, distanceToIntersection,

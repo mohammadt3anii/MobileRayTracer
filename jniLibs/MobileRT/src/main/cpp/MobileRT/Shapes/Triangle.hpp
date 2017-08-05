@@ -16,6 +16,8 @@ namespace MobileRT {
     public:
         const Vector3D AC_;
         const Vector3D AB_;
+
+      const Vector3D BC_;
         const Vector3D normal_;
         const Point3D pointA_;
         const Point3D pointB_;

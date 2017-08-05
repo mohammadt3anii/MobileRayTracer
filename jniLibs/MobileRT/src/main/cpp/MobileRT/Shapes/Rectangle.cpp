@@ -163,5 +163,6 @@ AABB Rectangle::getAABB() const noexcept {
 }
 
 bool Rectangle::intersect(const AABB & /*box*/) const noexcept {
-	return true;
+
+  return false;
 }

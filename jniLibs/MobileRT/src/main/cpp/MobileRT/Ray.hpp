@@ -21,7 +21,7 @@ namespace MobileRT {
       explicit Ray(Vector3D dir, Point3D origin,
                    unsigned int depth) noexcept;
 
-		Ray(const Ray &ray) noexcept = delete;
+      Ray(const Ray &ray) noexcept = default;
 
 		Ray(Ray &&ray) noexcept = default;
 

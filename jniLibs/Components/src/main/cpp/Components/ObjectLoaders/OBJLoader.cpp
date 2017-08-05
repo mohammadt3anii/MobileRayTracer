@@ -80,9 +80,9 @@ bool OBJLoader::fillScene(Scene *scene) noexcept {
                     float s2 = m.specular[1];
                     float s3 = m.specular[2];
                     RGB specular(s1, s2, s3);
-                    float t1 = m.transmittance[0];
-                    float t2 = m.transmittance[1];
-                    float t3 = m.transmittance[2];
+                    float t1 = m.transmittance[0] * (1.0f - m.dissolve);
+                    float t2 = m.transmittance[1] * (1.0f - m.dissolve);
+                    float t3 = m.transmittance[2] * (1.0f - m.dissolve);
                     RGB transmittance(t1, t2, t3);
                     float e1 = m.emission[0];
                     float e2 = m.emission[1];
@@ -94,7 +94,7 @@ bool OBJLoader::fillScene(Scene *scene) noexcept {
 											e3 /= max;
 										}
 										RGB emission(e1, e2, e3);
-                    Material material(diffuse, specular, transmittance, 1.0f, emission);
+                    Material material(diffuse, specular, transmittance, m.ior, emission);
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         Point3D p1(vx1, vy1, vz1);
                         Point3D p2(vx2, vy2, vz2);

@@ -18,7 +18,6 @@ Scene::Scene() noexcept :
 				planes_(std::vector<Plane>()),
 				materials_(std::vector<Material>()),
         lights_(std::vector<Light *>())
-//bb(nullptr)
 {
     counter++;
 }
@@ -35,7 +34,7 @@ Scene::~Scene() noexcept {
 		LOG("SCENE DELETED");
 }
 
-int Scene::traceLights(Intersection *intersection, const Ray &ray) const noexcept {
+int Scene::traceLights(Intersection *intersection, Ray ray) const noexcept {
     int res(-1);
     const auto lightsSize(static_cast<unsigned int> (lights_.size()));
 
@@ -49,60 +48,58 @@ int Scene::traceLights(Intersection *intersection, const Ray &ray) const noexcep
     return res;
 }
 
-int Scene::trace(Intersection *intersection, const Ray &ray) const noexcept {
-    int res(-1);
-    const auto trianglesSize(static_cast<unsigned int> (triangles_.size()));
-    for (unsigned int i(0u); i < trianglesSize; i++) {
-        const Triangle &primitive(this->triangles_[static_cast<uint32_t> (i)]);
-        if (primitive.intersect(intersection, ray)) {
-            res = static_cast<int> (i);
-        }
+template<typename T>
+int Scene::trace(const std::vector<T> &primitives, MobileRT::Intersection *const intersection,
+                 const MobileRT::Ray ray, const int offset, int res) const noexcept {
+
+  const auto primitivesSize(static_cast<unsigned int> (primitives.size()));
+  for (unsigned int i(0u); i < primitivesSize; i ++) {
+    const T &primitive(primitives[static_cast<uint32_t> (i)]);
+    if (primitive.intersect(intersection, ray)) {
+      res = static_cast<int>(i) + offset;
     }
-
-		const auto spheresSize(static_cast<unsigned int> (spheres_.size()));
-		for (unsigned int i(0u); i < spheresSize; i++) {
-        const Sphere &primitive(this->spheres_[static_cast<uint32_t> (i)]);
-        if (primitive.intersect(intersection, ray)) {
-            res = static_cast<int> (i + trianglesSize);
-        }
-    }
-
-		const auto planesSize(static_cast<unsigned int> (planes_.size()));
-		for (unsigned int i(0u); i < planesSize; i++) {
-        const Plane &primitive(this->planes_[static_cast<uint32_t> (i)]);
-        if (primitive.intersect(intersection, ray)) {
-            res = static_cast<int> (i + trianglesSize + spheresSize);
-        }
-    }
-		if(res >= 0) {
-			intersection->material_ = &materials_[static_cast<uint32_t>(res)];
-		}
-
-    traceLights(intersection, ray);
-
-    return res;
+  }
+  return res;
 }
 
-bool Scene::shadowTrace(Intersection *intersection, Ray &&ray) const noexcept {
-    for (const Triangle &primitive : triangles_) {
-        if (primitive.intersect(intersection, ray)) {
-            return true;
-        }
-    }
+int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
 
-		for (const Sphere &primitive : spheres_) {
-        if (primitive.intersect(intersection, ray)) {
-            return true;
-        }
-    }
+  const auto sizeTriangles(static_cast<int>(this->triangles_.size()));
+  const auto sizeSpheres(static_cast<int>(this->spheres_.size()));
+  const int resTriangles(trace<MobileRT::Triangle>(this->triangles_, intersection, ray, 0, - 1));
+  const int resSpheres(
+    trace<MobileRT::Sphere>(this->spheres_, intersection, ray, sizeTriangles, resTriangles));
+  const int res(
+    trace<MobileRT::Plane>(this->planes_, intersection, ray, sizeTriangles + sizeSpheres,
+                           resSpheres));
 
-		for (const Plane &primitive : planes_) {
-        if (primitive.intersect(intersection, ray)) {
-            return true;
-        }
-    }
+  if (res >= 0) {//if intersects primitive, get its material
+    intersection->material_ = &materials_[static_cast<uint32_t>(res)];
+  }
 
-    return false;
+  traceLights(intersection, ray);
+
+  return res;
+}
+
+template<typename T>
+bool Scene::shadowTrace(const std::vector<T> &primitives, Intersection *const intersection,
+                        const Ray ray) const noexcept {
+
+  for (const T &primitive : primitives) {
+    if (primitive.intersect(intersection, ray)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) const noexcept {
+
+  const bool intersectedTriangle(shadowTrace<Triangle>(this->triangles_, intersection, ray));
+  const bool intersectedSphere(shadowTrace<Sphere>(this->spheres_, intersection, ray));
+  const bool intersectedPlane(shadowTrace<Plane>(this->planes_, intersection, ray));
+  return intersectedTriangle || intersectedSphere || intersectedPlane;
 }
 
 unsigned int Scene::getInstances() noexcept {
@@ -115,9 +112,4 @@ void Scene::resetSampling() noexcept {
     for (Light *light : this->lights_) {
         light->resetSampling();
     }
-}
-
-void Scene::buildAccelerator() noexcept {
-    /*for (Primitive *p : this->primitives_) {
-    }*/
 }
