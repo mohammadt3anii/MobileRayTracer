@@ -10,9 +10,9 @@ using MobileRT::RGB;
 using MobileRT::Shader;
 
 Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
-	scene_(std::move(scene)),
-	regularGrid_(Point3D(-4,-4,-4), Point3D(4,4,4), &scene_, 8, 3),
-	samplesLight_(samplesLight)
+  scene_(std::move(scene)),
+  regularGrid_(),
+  samplesLight_(samplesLight)
 {
     this->scene_.triangles_.shrink_to_fit();
 		this->scene_.spheres_.shrink_to_fit();
@@ -32,7 +32,7 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
   max.x_ += offset;
   max.y_ += offset;
   max.z_ += offset;
-  regularGrid_ = RegularGrid(min, max, &scene_, 1, 3);
+  regularGrid_ = RegularGrid(min, max, &scene_, 8, 3);
 }
 
 template<typename T>

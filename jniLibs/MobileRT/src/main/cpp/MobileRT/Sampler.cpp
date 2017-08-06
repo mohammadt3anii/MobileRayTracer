@@ -20,7 +20,8 @@ Sampler::Sampler(const unsigned int width, const unsigned int height, const unsi
 }
 
 void Sampler::resetSampling() noexcept {
-    this->sample_ = 0ull;
+
+  this->sample_ = 0;
 }
 
 void Sampler::stopSampling() noexcept {

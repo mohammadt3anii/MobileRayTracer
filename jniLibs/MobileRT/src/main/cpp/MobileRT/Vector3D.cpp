@@ -9,25 +9,23 @@ using MobileRT::Point3D;
 
 static unsigned int counter(0);
 
-Vector3D::Vector3D() noexcept
-{
-    counter++;
+namespace MobileRT {
+  Vector3D operator/(int value, const Vector3D &vector) noexcept {
+
+    return Vector3D(value / vector.x_, value / vector.y_, value / vector.z_);
+  }
+}
+
+float Vector3D::magnitude() const noexcept {
+
+  return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z, const float magnitude) noexcept :
-        x_(x),
-        y_(y),
-        z_(z),
-        magnitude_(magnitude)
-{
-    counter++;
-}
-
-Vector3D::Vector3D(const float x, const float y, const float z) noexcept :
-        x_(x),
-        y_(y),
-        z_(z),
-		magnitude_(magnitude())
+  x_(x),
+  y_(y),
+  z_(z),
+  magnitude_(magnitude == 0.0f ? Vector3D::magnitude() : magnitude)
 {
     counter++;
 }
@@ -108,10 +106,6 @@ float Vector3D::dotProduct(const Point3D &dest, const Point3D &orig) const noexc
 
 float Vector3D::squareMagnitude() const noexcept {
     return (this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
-}
-
-float Vector3D::magnitude() const noexcept {
-    return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
 }
 
 Vector3D Vector3D::crossProduct(const Vector3D &vector) const noexcept {

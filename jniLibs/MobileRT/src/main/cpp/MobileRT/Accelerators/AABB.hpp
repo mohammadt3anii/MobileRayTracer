@@ -21,8 +21,8 @@ namespace MobileRT {
 			bool intersectPrimitives(Intersection *intersection, const Ray &ray) const;
 
     public:
-			explicit AABB(const Point3D &pointMin,
-                    	const Point3D &pointMax);
+			explicit AABB(const Point3D &pointMin = Point3D(),
+										const Point3D &pointMax = Point3D());
 
 			AABB(const AABB &AABB) noexcept = default;
 

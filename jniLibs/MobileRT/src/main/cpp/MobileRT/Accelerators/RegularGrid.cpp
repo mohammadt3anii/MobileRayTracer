@@ -6,6 +6,10 @@
 
 using MobileRT::RegularGrid;
 
+RegularGrid::RegularGrid() {
+
+}
+
 RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridSize, const int gridShift) :
   spheres_(
     std::vector<std::vector<Sphere *>>(static_cast<size_t> (gridSize * gridSize * gridSize))),
@@ -14,24 +18,26 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridS
   planes_(std::vector<std::vector<Plane *>>(static_cast<size_t> (gridSize * gridSize * gridSize))),
   gridSize_(gridSize),
   gridShift_(gridShift),
-  m_Extends(AABB(min, max))
+  m_Extends(AABB(min, max)),
+  // precalculate 1 / size of a cell (for x, y and z)
+  m_SR(gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)),
+  // precalculate size of a cell (for x, y, and z)
+  m_CW((m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_))
 {
-	// precalculate 1 / size of a cell (for x, y and z)
-	m_SR.x_ = gridSize_ / (m_Extends.pointMax_.x_ - m_Extends.pointMin_.x_);
-	m_SR.y_ = gridSize_ / (m_Extends.pointMax_.y_ - m_Extends.pointMin_.y_);
-	m_SR.z_ = gridSize_ / (m_Extends.pointMax_.z_ - m_Extends.pointMin_.z_);
-	// precalculate size of a cell (for x, y, and z)
-	m_CW = (m_Extends.pointMax_ -  m_Extends.pointMin_) * (1.0f / gridSize_);
-
   LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
+  LOG("SPHERES");
   addPrimitives<Sphere>(scene->spheres_, this->spheres_);
+  LOG("TRIANGLES");
   addPrimitives<Triangle>(scene->triangles_, this->triangles_);
+  LOG("PLANES");
   addPrimitives<Plane>(scene->planes_, this->planes_);
 }
 
 template<typename T>
 void RegularGrid::addPrimitives
   (std::vector<T> &primitives, std::vector<std::vector<T *>> &grid_primitives) noexcept {
+
+  int index(0);
 
   for (std::vector<T *> primitivesBox : grid_primitives) {
     primitivesBox = std::vector<T *>();
@@ -47,6 +53,7 @@ void RegularGrid::addPrimitives
 
   // store primitives in the grid cells
   for (T &primitive : primitives) {
+    index ++;
     AABB bound(primitive.getAABB());
     Point3D bv1(bound.pointMin_);
     Point3D bv2(bound.pointMax_);
@@ -76,6 +83,7 @@ void RegularGrid::addPrimitives
           const Point3D pos(m_Extends.pointMin_.x_ + x * dx, m_Extends.pointMin_.y_ + y * dy,
                             m_Extends.pointMin_.z_ + z * dz);
           const AABB cell(pos, Point3D(dx, dy, dz));
+          LOG("index = ", index);
           LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
           // do an accurate aabb / primitive intersection test
           if (primitive.intersect(cell)) {
@@ -88,7 +96,6 @@ void RegularGrid::addPrimitives
 }
 
 bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const noexcept {
-
   const bool intersectedSpheres(intersect<Sphere>(this->spheres_, intersection, ray));
   const bool intersectedTriangles(intersect<Triangle>(this->triangles_, intersection, ray));
   const bool intersectedPlanes(intersect<Plane>(this->planes_, intersection, ray));
@@ -96,20 +103,18 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 }
 
 template<typename T>
-bool
-RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
-                       const Ray &ray) const noexcept {
-
+bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
+                            Intersection *intersection, const Ray &ray) const noexcept {
   bool retval(false);
   const Vector3D &raydir(ray.direction_);
   const Point3D &curpos(ray.origin_);
-  const AABB e(m_Extends);
+  const AABB &e(m_Extends);
   // setup 3DDDA (double check reusability of primary ray data)
   Vector3D cb, tmax, tdelta;
   Vector3D cell((curpos - e.pointMin_) * m_SR);
-  int stepX, outX, X = static_cast<int>(cell.x_);
-  int stepY, outY, Y = static_cast<int>(cell.y_);
-  int stepZ, outZ, Z = static_cast<int>(cell.z_);
+  int stepX, outX, X(static_cast<int>(cell.x_));
+  int stepY, outY, Y(static_cast<int>(cell.y_));
+  int stepZ, outZ, Z(static_cast<int>(cell.z_));
 
   if ((X < 0) || (X >= gridSize_) || (Y < 0) || (Y >= gridSize_) || (Z < 0) || (Z >= gridSize_)) {
     return false;

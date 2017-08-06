@@ -247,11 +247,11 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       break;
     }
   }
-  renderer_ = new MobileRT::Renderer(std::move(samplerCamera),
-                                     std::move(shader_),
-                                     std::move(camera),
-                                     static_cast<unsigned>(width_), static_cast<unsigned>(height_), static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
-                                     std::move(samplerPixel));
+  renderer_ = new MobileRT::Renderer(
+    std::move(samplerCamera), std::move(shader_), std::move(camera),
+    static_cast<unsigned>(width_), static_cast<unsigned>(height_),
+    static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
+    std::move(samplerPixel));
 
   LOG("x = ", blockSizeX_, "[", width_, "]");
   LOG("y = ", blockSizeY_, "[", height_, "]");

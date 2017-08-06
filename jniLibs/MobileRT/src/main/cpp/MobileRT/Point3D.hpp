@@ -12,18 +12,18 @@ namespace MobileRT {
 
     class Point3D final {
     public:
-			float x_{0.0f};
-			float y_{0.0f};
-			float z_{0.0f};
+			float x_;
+
+			float y_;
+
+			float z_;
 
     private:
 			explicit Point3D(const Point3D &point, const Vector3D &vector,
                          float value) noexcept;
 
     public:
-			explicit Point3D() noexcept;
-		
-			explicit Point3D(float x, float y, float z) noexcept;
+			explicit Point3D(float x = 0.0f, float y = 0.0f, float z = 0.0f) noexcept;
 
 			Point3D(const Point3D &point) noexcept = default;
 

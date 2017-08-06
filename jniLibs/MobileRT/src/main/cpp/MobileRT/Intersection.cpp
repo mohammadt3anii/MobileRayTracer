@@ -8,7 +8,7 @@ using MobileRT::Intersection;
 
 static unsigned int counter(0);
 
-Intersection::Intersection() noexcept
+Intersection::Intersection() noexcept : material_(nullptr), length_(RAY_LENGTH_MAX)
 {
     counter++;
 }

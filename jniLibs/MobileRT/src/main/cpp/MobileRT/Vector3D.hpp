@@ -21,16 +21,14 @@ namespace MobileRT {
     private:
 			explicit Vector3D(const Vector3D &vector, float value) noexcept;
 
-			float magnitude() const noexcept;
-
 			Point3D operator/(float value) const noexcept;
 
+      private:
+      float magnitude() const noexcept;
+
     public:
-			explicit Vector3D() noexcept;
-
-			explicit Vector3D(float x, float y, float z, float magnitude) noexcept;
-
-			explicit Vector3D(float x, float y, float z) noexcept;
+      explicit Vector3D(float x = 0.0f, float y = 0.0f, float z = 0.0f,
+                        float magnitude = 0.0f) noexcept;
 
 			explicit Vector3D(const Vector3D &vector1, const Vector3D &vector2,
 												float value) noexcept;
@@ -75,6 +73,9 @@ namespace MobileRT {
 
 			static unsigned int getInstances() noexcept;
     };
+
+  Vector3D operator/(int value, const Vector3D &vector) noexcept;
+
 }//namespace MobileRT
 
 #endif //MOBILERT_VECTOR3D_HPP

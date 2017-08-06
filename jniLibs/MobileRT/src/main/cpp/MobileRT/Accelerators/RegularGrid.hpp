@@ -17,14 +17,15 @@ namespace MobileRT {
     class RegularGrid final {
     private:
       std::vector<std::vector<Sphere*>> spheres_;
-
       std::vector<std::vector<Triangle *>> triangles_;
-
       std::vector<std::vector<Plane *>> planes_;
-			int gridSize_ {0};
-			int gridShift_ {3};
+
+			int gridSize_;
+
+			int gridShift_;
 			AABB m_Extends;
-			Vector3D m_SR {0, 0, 0};
+
+			Vector3D m_SR;
 			Vector3D m_CW;
 
       private:
@@ -37,6 +38,8 @@ namespace MobileRT {
                      const Ray &ray) const noexcept;
 
       public:
+			explicit RegularGrid();
+
 			explicit RegularGrid(Point3D min, Point3D max, Scene *scene, int gridSize = 8, int gridShift = 3);
 
 			RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
