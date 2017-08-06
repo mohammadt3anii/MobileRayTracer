@@ -41,6 +41,8 @@ namespace MobileRT {
 
 			AABB getAABB() const noexcept;
 
+			float distance(const Point3D &point) const noexcept;
+
 			bool intersect(const AABB &box) const noexcept;
     };
 }//namespace MobileRT

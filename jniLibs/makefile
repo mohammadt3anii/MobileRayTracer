@@ -4,7 +4,7 @@
 default: all
 
 EXE := raytracer
-CXX := clang++
+CXX ?= clang++
 LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
@@ -70,6 +70,7 @@ LLVM := $(addsuffix .llvmIR,$(basename $(SOURCES)))
 GARB := $(shell find \
 ./Components/src \
 ./MobileRT/src \
+../app/src/main/cpp \
 ./RayTracerMain.* \
 ./GoogleUnitTest \
 ./third-party \
@@ -78,7 +79,7 @@ GARB := $(shell find \
 -o -regextype gnu-awk -iname "*.o" -print \
 -o -regextype gnu-awk -iname "*.out" -print \
 -o -regextype gnu-awk -iname "*.gto" -print \
--regextype gnu-awk -iname "*fuse*" -print \
+-o -regextype gnu-awk -iname "*.dwo" -print \
 )
 
 ###############################################################################
@@ -131,10 +132,10 @@ tidy:
 GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -print)
 GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 %.gto: %.cpp
-	g++ -std=c++14 -c $< -o $@
+	g++ -DNO_ANDROID -std=c++14 -c $< -o $@
 
 gtest: $(OBJS) $(GTESTOBJS)
-	g++ $(GTESTOBJS) $(OBJS) -o $@ $(LDFLAGS) -lgtest -lgtest_main
+	g++ $(GTESTOBJS) $(OBJS) -o $@ $(shell pkg-config --libs gtk+-2.0) -lgtest -lgtest_main -pthread
 	@echo "Compilation Test Units done"
 
 #valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1

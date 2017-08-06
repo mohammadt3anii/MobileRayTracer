@@ -23,6 +23,7 @@ RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridS
 	// precalculate size of a cell (for x, y, and z)
 	m_CW = (m_Extends.pointMax_ -  m_Extends.pointMin_) * (1.0f / gridSize_);
 
+  LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
   addPrimitives<Sphere>(scene->spheres_, this->spheres_);
   addPrimitives<Triangle>(scene->triangles_, this->triangles_);
   addPrimitives<Plane>(scene->planes_, this->planes_);
@@ -75,6 +76,7 @@ void RegularGrid::addPrimitives
           const Point3D pos(m_Extends.pointMin_.x_ + x * dx, m_Extends.pointMin_.y_ + y * dy,
                             m_Extends.pointMin_.z_ + z * dz);
           const AABB cell(pos, Point3D(dx, dy, dz));
+          LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
           // do an accurate aabb / primitive intersection test
           if (primitive.intersect(cell)) {
             grid_primitives[idx].emplace_back(&primitive);
@@ -170,8 +172,9 @@ RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives, Intersec
   // start stepping
   // trace primary ray
   while (true) {
-    auto list(primitives[static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) +
-                         (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))]);
+    const size_t index (static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) +
+                          (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2)));
+    auto list(primitives[index]);
 
     for (auto *pr : list) {
       bool result(false);
@@ -218,9 +221,10 @@ RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives, Intersec
 
   testloop:
   while (true) {
-    auto list(primitives[static_cast<size_t>(X) +
-                         (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) +
-                         (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))]);
+    const size_t index (static_cast<size_t>(X) +
+                        (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) +
+                        (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2)));
+    auto list(primitives[index]);
 
     for (auto *pr : list) {
       bool result(false);

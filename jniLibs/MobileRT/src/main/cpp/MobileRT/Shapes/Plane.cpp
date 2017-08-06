@@ -20,7 +20,7 @@ bool Plane::intersect(Intersection *intersection, const Ray &ray) const noexcept
     const float normalized_projection(this->normal_.dotProduct(ray.direction_));
     if (std::fabs(normalized_projection) < EPSILON) {
         return false;
-	}
+	  }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
     const float distanceToIntersection(
@@ -58,6 +58,18 @@ AABB Plane::getAABB() const noexcept {
 	return AABB(getPositionMin(), getPositionMax());
 }
 
+float Plane::distance(const Point3D &point) const noexcept {
+  //Plane Equation
+  //a(x-x0)+b(y-y0)+c(z-z0) = 0
+  //abc = normal
+  //x0,y0,z0 = point
+  //D = |ax0 + by0 + cz0 + d| / sqrt(a² + b² + c²)
+  const float d(normal_.x_*-point_.x_ + normal_.y_*-point_.y_ + normal_.z_*-point_.z_);
+  const float numerator (normal_.x_ * point.x_ + normal_.y_ * point.y_ + normal_.z_ * point.z_ + d);
+  const float denumerator (std::sqrt(normal_.x_*normal_.x_ + normal_.y_*normal_.y_ + normal_.z_*normal_.z_));
+  return numerator / denumerator;
+}
+
 bool Plane::intersect(const AABB &box) const noexcept {
 
   Point3D positiveVertex(box.pointMin_);
@@ -82,27 +94,12 @@ bool Plane::intersect(const AABB &box) const noexcept {
     negativeVertex.z_ = box.pointMin_.z_;
   }
 
-  // is the positive vertex outside?
-  /*if (this->distance(positiveVertex(this->normal_)) < 0) {
-    return false;
-  }*/
-  // is the negative vertex outside?
-  /*else if (this->distance(negativeVertex(this->normal_)) < 0) {
+  const float distanceP(distance(positiveVertex));
+  const float distanceN(distance(negativeVertex));
+  if (distanceP <= 0 && distanceN >= 0) {
     return true;
-  }*/
-
-  Intersection intersectionPositive;
-  Intersection intersectionNegative;
-  Ray rayPositive(this->normal_, positiveVertex, 1);
-  Ray rayNegative(this->normal_, negativeVertex, 1);
-  if (intersect(&intersectionPositive, rayPositive)) {
-    if (intersectionPositive.length_ < 0) {
-      return false;
-    }
-  } else if (intersect(&intersectionNegative, rayNegative)) {
-    if (intersectionNegative.length_ < 0) {
-      return true;
-    }
+  } else if (distanceP >= 0 && distanceN <= 0) {
+    return true;
   }
 
   return false;

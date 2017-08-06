@@ -32,7 +32,7 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
   max.x_ += offset;
   max.y_ += offset;
   max.z_ += offset;
-  regularGrid_ = RegularGrid(min, max, &scene_, 8, 3);
+  regularGrid_ = RegularGrid(min, max, &scene_, 1, 3);
 }
 
 template<typename T>

@@ -21,13 +21,13 @@
 #endif
 
 template <typename T>
-void MagicLog(std::ostringstream& o, T t)
+void MagicLog(std::ostringstream& o, const T t)
 {
     o << t;
 }
 
 template<typename T, typename... Args>
-void MagicLog(std::ostringstream& o, T t, Args... args)
+void MagicLog(std::ostringstream& o, const T t, const Args... args)
 {
 	o << t;
 	MagicLog(o, args...);
@@ -47,12 +47,11 @@ void log(Args... args)
 }
 
 inline std::string getFileName (const char *filepath) {
-	std::string filePath(filepath);
-	std::string::size_type filePos (filePath.rfind('/'));
+	const std::string filePath(filepath);
+  std::string::size_type filePos (filePath.rfind('/'));
 	if (filePos != std::string::npos) {
 		++filePos;
-	}
-	else {
+	} else {
 		filePos = 0;
 	}
 	return std::string(filePath.substr(filePos));
@@ -65,7 +64,6 @@ inline std::string getFileName (const char *filepath) {
 #define PI              3.14159265358979323846f
 #define PI_4            0.78539816339744830962f
 
-int roundDownToMultipleOf(int value,
-                                   int multiple) noexcept;
+int roundDownToMultipleOf(int value, int multiple) noexcept;
 
 #endif //MOBILERT_UTILS_HPP
