@@ -11,7 +11,6 @@ using MobileRT::Shader;
 
 Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
   scene_(std::move(scene)),
-  regularGrid_(),
   samplesLight_(samplesLight)
 {
     this->scene_.triangles_.shrink_to_fit();

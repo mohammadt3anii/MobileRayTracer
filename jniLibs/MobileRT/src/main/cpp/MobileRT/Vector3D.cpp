@@ -14,7 +14,7 @@ namespace MobileRT {
 
     return Vector3D(value / vector.x_, value / vector.y_, value / vector.z_);
   }
-}
+}//namespace MobileRT
 
 float Vector3D::magnitude() const noexcept {
 

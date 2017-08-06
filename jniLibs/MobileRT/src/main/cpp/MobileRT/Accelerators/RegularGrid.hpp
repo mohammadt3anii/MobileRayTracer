@@ -21,10 +21,8 @@ namespace MobileRT {
       std::vector<std::vector<Plane *>> planes_;
 
 			int gridSize_;
-
 			int gridShift_;
 			AABB m_Extends;
-
 			Vector3D m_SR;
 			Vector3D m_CW;
 

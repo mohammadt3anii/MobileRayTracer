@@ -6,7 +6,7 @@
 
 using MobileRT::RegularGrid;
 
-RegularGrid::RegularGrid() {
+RegularGrid::RegularGrid() : gridSize_(0), gridShift_(0) {
 
 }
 

@@ -96,11 +96,12 @@ bool Plane::intersect(const AABB &box) const noexcept {
 
   const float distanceP(distance(positiveVertex));
   const float distanceN(distance(negativeVertex));
+	bool res (false);
   if (distanceP <= 0 && distanceN >= 0) {
-    return true;
+    res = true;
   } else if (distanceP >= 0 && distanceN <= 0) {
-    return true;
+    res = true;
   }
 
-  return false;
+  return res;
 }
