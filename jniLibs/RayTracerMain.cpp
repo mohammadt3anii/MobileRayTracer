@@ -61,6 +61,7 @@ int main(int argc, char **argv) noexcept {
     LOG("samplesPixel = ", samplesPixel);
     LOG("samplesLight = ", samplesLight);
 
+
   MobileRT::Scene scene_ {};
   std::unique_ptr<MobileRT::Sampler> samplerCamera {};
   std::unique_ptr<MobileRT::Sampler> samplerPixel {};
@@ -69,27 +70,33 @@ int main(int argc, char **argv) noexcept {
   switch (scene) {
     case 0:
       camera = std::make_unique<Components::Perspective>(
-        MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
-        MobileRT::Point3D {0.0f, 0.0f, 1.0f},
-        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+        MobileRT::Point3D{0.0f, 0.0f, - 3.4f},
+        MobileRT::Point3D{0.0f, 0.0f, 1.0f},
+        MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
         45.0f, 45.0f * ratio);
       scene_ = cornellBoxScene(std::move(scene_));
       break;
 
     case 1:
-      camera = std::make_unique<Components::Orthographic> {MobileRT::Point3D {0.0f, 0.5f, 1.0f},
-                                                           MobileRT::Point3D {0.0f, 0.0f, 7.0f},
-                                                           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-                                                           6.5f, 4.5f};
+      camera = std::make_unique<Components::Orthographic>(
+        MobileRT::Point3D{0.0f, 1.0f, - 10.0f},
+        MobileRT::Point3D{0.0f, 1.0f, 7.0f},
+        MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+        10.0f, 10.0f);
+      /*camera = std::make_unique<Components::Perspective>(
+        MobileRT::Point3D(0.0f, 0.5f, 1.0f),
+        MobileRT::Point3D(0.0f, 0.0f, 7.0f),
+        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        60.0f, 60.0f * ratio);*/
       scene_ = spheresScene(std::move(scene_));
       break;
 
     case 2:
-      camera = std::make_unique<Components::Perspective>{
+      camera = std::make_unique<Components::Perspective>(
         MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
         MobileRT::Point3D {0.0f, 0.0f, 1.0f},
         MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-        45.0f, 45.0f * ratio};
+        45.0f, 45.0f * ratio);
       scene_ = cornellBoxScene2(std::move(scene_), samplesLight, samplesPixel, width_, height_);
       break;
 
@@ -182,13 +189,11 @@ int main(int argc, char **argv) noexcept {
       break;
     }
   }
-  renderer_ = new MobileRT::Renderer {std::move (samplerCamera),
-                                      std::move (shader_),
-                                      std::move (camera),
-                                      static_cast<unsigned>(width_), static_cast<unsigned>(height_),
-                                      static_cast<unsigned>(blockSizeX_),
-                                      static_cast<unsigned>(blockSizeY_),
-                                      std::move (samplerPixel)};
+  renderer_ = new MobileRT::Renderer {
+    std::move(samplerCamera), std::move(shader_), std::move(camera),
+    static_cast<unsigned>(width_), static_cast<unsigned>(height_),
+    static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
+    std::move (samplerPixel)};
 
   LOG("x = ", blockSizeX_, "[", width_, "]");
   LOG("y = ", blockSizeY_, "[", height_, "]");
