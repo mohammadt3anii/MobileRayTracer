@@ -11,7 +11,8 @@ MersenneTwister::MersenneTwister(const uint64_t domainSize, const unsigned int s
 }
 
 float MersenneTwister::getSample(const unsigned int /*sample*/) noexcept {
-    thread_local static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
-    thread_local static std::mt19937 gen(std::random_device{}());
-    return uniform_dist(gen);
+
+  thread_local static std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
+  thread_local static std::mt19937 gen (std::random_device {} ());
+  return uniform_dist (gen);
 }

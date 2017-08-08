@@ -16,20 +16,20 @@
 namespace MobileRT {
     class Renderer final {
 		public:
-			Camera *camera_;
-			Shader *shader_;
+      Camera *camera_ {};
+      Shader *shader_ {};
 
     private:
-			Sampler *samplerCamera_;
-			Sampler *samplerPixel_;
-			std::vector<RGB> accumulate_;
-			const unsigned int domainSize_;
-			const unsigned int width_;
-			const unsigned int height_;
-			unsigned int blockSizeX_;
-			unsigned int blockSizeY_;
-			const unsigned int resolution_;
-      unsigned int sample_;
+      Sampler *samplerCamera_ {};
+      Sampler *samplerPixel_ {};
+      std::vector<RGB> accumulate_ {};
+      const unsigned int domainSize_ {};
+      const unsigned int width_ {};
+      const unsigned int height_ {};
+      unsigned int blockSizeX_ {};
+      unsigned int blockSizeY_ {};
+      const unsigned int resolution_ {};
+      unsigned int sample_ {};
 
     private:
         void renderScene(unsigned int *bitmap, int tid) noexcept;

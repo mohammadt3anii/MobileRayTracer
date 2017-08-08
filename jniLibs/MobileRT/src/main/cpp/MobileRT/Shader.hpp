@@ -20,7 +20,7 @@ namespace MobileRT {
 		RegularGrid regularGrid_;
 
     protected:
-		const unsigned int samplesLight_;
+      const unsigned int samplesLight_ {};
 
     protected:
 		virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/,

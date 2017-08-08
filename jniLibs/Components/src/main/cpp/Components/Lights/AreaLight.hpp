@@ -21,7 +21,7 @@ namespace Components {
 	class AreaLight final : public MobileRT::Light {
     private:
 			Triangle triangle_;
-			std::unique_ptr<Sampler> samplerPointLight_;
+    std::unique_ptr<Sampler> samplerPointLight_ {};
 
     public:
 			explicit AreaLight(const Material &radiance,

@@ -16,15 +16,14 @@
 namespace MobileRT {
     class RegularGrid final {
     private:
-      std::vector<std::vector<Sphere*>> spheres_;
-      std::vector<std::vector<Triangle *>> triangles_;
-      std::vector<std::vector<Plane *>> planes_;
-
-			int gridSize_;
-			int gridShift_;
-			AABB m_Extends;
-			Vector3D m_SR;
-			Vector3D m_CW;
+      std::vector<std::vector<Sphere *>> spheres_ {};
+      std::vector<std::vector<Triangle *>> triangles_ {};
+      std::vector<std::vector<Plane *>> planes_ {};
+      int gridSize_ {};
+      int gridShift_ {};
+      AABB m_Extends {};
+      Vector3D m_SR {};
+      Vector3D m_CW {};
 
       private:
       template<typename T>

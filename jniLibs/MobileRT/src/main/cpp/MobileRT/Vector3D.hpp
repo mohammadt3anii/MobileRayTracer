@@ -13,10 +13,10 @@ namespace MobileRT {
 
     class Vector3D final {
     public:
-        float x_{0.0f};
-        float y_{0.0f};
-        float z_{0.0f};
-        float magnitude_{1.0f};
+      float x_ {0.0f};
+      float y_ {0.0f};
+      float z_ {0.0f};
+      float magnitude_ {1.0f};
 
     private:
 			explicit Vector3D(const Vector3D &vector, float value) noexcept;

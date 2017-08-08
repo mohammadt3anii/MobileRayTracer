@@ -7,7 +7,7 @@
 using MobileRT::ObjectLoader;
 
 ObjectLoader::ObjectLoader () noexcept :
-	isProcessed_(false)
+  isProcessed_ {false}
 {
 }
 

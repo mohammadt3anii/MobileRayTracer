@@ -13,8 +13,8 @@ namespace Components {
 	using MobileRT::Ray;
     class Orthographic final : public MobileRT::Camera {
     private:
-        const float sizeH_;
-        const float sizeV_;
+      const float sizeH_ {};
+      const float sizeV_ {};
 
     public:
         explicit Orthographic(const Point3D &position,

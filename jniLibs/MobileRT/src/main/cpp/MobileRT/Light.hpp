@@ -13,7 +13,7 @@
 namespace MobileRT {
     class Light {
     public:
-        const Material radiance_;
+      const Material radiance_ {};
 
     public:
         explicit Light(Material const &radiance) noexcept;

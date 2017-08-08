@@ -31,6 +31,10 @@
 #include <memory>
 #include <thread>
 
+enum class State {
+  IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
+};
+
 static void FPS() noexcept;
 
 static void thread_work(void *dstPixels, int numThreads) noexcept;
@@ -42,7 +46,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
 ) noexcept;
 
 extern "C"
-int Java_puscas_mobilertapp_DrawView_isWorking(
+State Java_puscas_mobilertapp_DrawView_isWorking (
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -76,7 +80,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jint nThreads) noexcept;
 
 extern "C"
-int Java_puscas_mobilertapp_DrawView_redraw(
+State Java_puscas_mobilertapp_DrawView_redraw (
         JNIEnv *env,
         jobject thiz,
         jobject dstBitmap) noexcept;

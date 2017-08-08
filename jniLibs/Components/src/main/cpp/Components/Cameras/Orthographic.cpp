@@ -11,9 +11,9 @@ using MobileRT::Ray;
 
 Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                            const float sizeH, const float sizeV) noexcept :
-        Camera(position, lookAt, up),
-        sizeH_(sizeH / 2.0f),
-        sizeV_(sizeV / 2.0f) {
+  Camera {position, lookAt, up},
+  sizeH_ {sizeH / 2.0f},
+  sizeV_ {sizeV / 2.0f} {
 }
 
 /* u = x / width */
@@ -23,8 +23,8 @@ Orthographic::Orthographic(const Point3D &position, const Point3D &lookAt, const
 Ray Orthographic::generateRay(const float u, const float v,
                               const float deviationU, const float deviationV) const noexcept {
 
-  return Ray(this->direction_,
-             this->position_ +
+  return Ray {this -> direction_,
+              this -> position_ +
              this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
-             this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1);
+              this -> up_ * (0.5f - v) * this -> sizeV_ + this -> up_ * deviationV, 1};
 }

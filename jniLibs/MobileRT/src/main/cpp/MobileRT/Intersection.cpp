@@ -8,7 +8,8 @@ using MobileRT::Intersection;
 
 static unsigned int counter(0);
 
-Intersection::Intersection() noexcept : material_(nullptr), length_(RAY_LENGTH_MAX)
+Intersection::Intersection () noexcept :
+  material_ {nullptr}, length_ {RayLengthMax}
 {
     counter++;
 }
@@ -44,7 +45,8 @@ void Intersection::reset(const Point3D &orig,
 }
 
 unsigned int Intersection::getInstances() noexcept {
-    const unsigned int res(counter);
+
+  const unsigned int res {counter};
     counter = 0;
     return res;
 }

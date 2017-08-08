@@ -15,7 +15,7 @@ namespace Components {
 	using MobileRT::Point3D;
 	class DepthMap final : public MobileRT::Shader {
 		private:
-			Point3D maxPoint_;
+    Point3D maxPoint_ {};
 
     private:
 			bool shade(RGB *rgb,

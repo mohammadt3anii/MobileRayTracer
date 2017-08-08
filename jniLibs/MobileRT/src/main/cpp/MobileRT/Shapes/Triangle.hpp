@@ -14,14 +14,13 @@
 namespace MobileRT {
     class Triangle final {
     public:
-        const Vector3D AC_;
-        const Vector3D AB_;
-
-      const Vector3D BC_;
-        const Vector3D normal_;
-        const Point3D pointA_;
-        const Point3D pointB_;
-        const Point3D pointC_;
+      const Vector3D AC_ {};
+      const Vector3D AB_ {};
+      const Vector3D BC_ {};
+      const Vector3D normal_ {};
+      const Point3D pointA_ {};
+      const Point3D pointB_ {};
+      const Point3D pointC_ {};
 
 		private:
 				Point3D getPositionMin() const noexcept;

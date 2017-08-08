@@ -10,11 +10,9 @@
 namespace MobileRT {
     class RGB final {
     public:
-      float R_;
-
-      float G_;
-
-      float B_;
+      float R_ {};
+      float G_ {};
+      float B_ {};
 
 	private:
 		std::mutex mutex_;

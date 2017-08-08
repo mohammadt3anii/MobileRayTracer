@@ -11,7 +11,7 @@ using MobileRT::Ray;
 using MobileRT::Scene;
 
 DiffuseMaterial::DiffuseMaterial(Scene &&scene) noexcept :
-  Shader(std::move(scene)) {
+  Shader {std::move (scene)} {
 }
 
 bool DiffuseMaterial::shade(RGB *rgb, Intersection const &intersection,

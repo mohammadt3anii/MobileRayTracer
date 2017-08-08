@@ -19,12 +19,11 @@
 namespace MobileRT {
     class Scene final {
     public:
-			std::vector<Triangle> triangles_;
-			std::vector<Sphere> spheres_;
-			std::vector<Plane> planes_;
-
-			std::vector<Material> materials_;
-			std::vector<Light *> lights_;
+      std::vector<Triangle> triangles_ {};
+      std::vector<Sphere> spheres_ {};
+      std::vector<Plane> planes_ {};
+      std::vector<Material> materials_ {};
+      std::vector<Light *> lights_ {};
 
     private:
       int traceLights(Intersection *intersection, Ray ray) const noexcept;

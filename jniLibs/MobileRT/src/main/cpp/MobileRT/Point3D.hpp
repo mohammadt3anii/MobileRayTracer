@@ -12,11 +12,9 @@ namespace MobileRT {
 
     class Point3D final {
     public:
-			float x_;
-
-			float y_;
-
-			float z_;
+      float x_ {};
+      float y_ {};
+      float z_ {};
 
     private:
 			explicit Point3D(const Point3D &point, const Vector3D &vector,

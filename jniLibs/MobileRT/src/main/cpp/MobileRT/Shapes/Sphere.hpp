@@ -13,8 +13,8 @@
 namespace MobileRT {
     class Sphere final {
     private:
-        Point3D center_;
-        const float sq_radius_;
+      Point3D center_ {};
+      const float sq_radius_ {};
 
 		private:
         Point3D getPositionMin() const noexcept;

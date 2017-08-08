@@ -25,80 +25,79 @@
 #include <iostream>
 #include <omp.h>
 
-static unsigned int *bitmap;
-static unsigned char *buffer;//RGBA
+static unsigned int *bitmap {};
+static unsigned char *buffer {};//RGBA
 
 int main(int argc, char **argv) noexcept {
-    int repeats(atoi(argv[4]));
-    const int scene(atoi(argv[3]));
-    const int shader(atoi(argv[2]));
-    const int threads(atoi(argv[1]));
-    const int sampler(0);
-    const int samplesPixel(atoi(argv[5]));
-		const int samplesLight(atoi(argv[6]));
-		const int width_(atoi(argv[7]));
-		const int height_(atoi(argv[8]));
+  int repeats {atoi (argv[4])};
+  const int scene {atoi (argv[3])};
+  const int shader {atoi (argv[2])};
+  const int threads {atoi (argv[1])};
+  const int sampler {0};
+  const int samplesPixel {atoi (argv[5])};
+  const int samplesLight {atoi (argv[6])};
+  const int width_ {atoi (argv[7])};
+  const int height_ {atoi (argv[8])};
 		bitmap = new unsigned int [static_cast<unsigned>(width_) * static_cast<unsigned>(height_)];
 		buffer = new unsigned char [static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 4u];
-		const float ratio(static_cast<float>(height_) / static_cast<float>(width_));
-		MobileRT::Renderer *renderer_ = nullptr;
-		const int blockSize_(4);
-		const int blockSizeX_(width_ / blockSize_);
-		const int blockSizeY_(height_ / blockSize_);
-		std::ifstream obj("../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj");
-		std::string line;
-		std::stringstream ssObj;
+  const float ratio {static_cast<float>(height_) / static_cast<float>(width_)};
+  MobileRT::Renderer *renderer_ {nullptr};
+  const int blockSize_ {4};
+  const int blockSizeX_ {width_ / blockSize_};
+  const int blockSizeY_ {height_ / blockSize_};
+  std::ifstream obj {"../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"};
+  std::string line {};
+  std::stringstream ssObj {};
 		while(std::getline(obj, line)) {
 			ssObj << line << std::endl;
 		}
-		std::ifstream mtl("../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl");
-		std::stringstream ssMtl;
+  std::ifstream mtl {"../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"};
+  std::stringstream ssMtl {};
 		while(std::getline(mtl, line)) {
 			ssMtl << line << std::endl;
 		}
-		Components::OBJLoader objLoader{ssObj.str().c_str(), ssMtl.str().c_str()};
+  Components::OBJLoader objLoader {ssObj . str () . c_str (), ssMtl . str () . c_str ()};
     objLoader.process();
     LOG("samplesPixel = ", samplesPixel);
     LOG("samplesLight = ", samplesLight);
-		
-		
-		MobileRT::Scene scene_;
-  std::unique_ptr<MobileRT::Sampler> samplerCamera;
-  std::unique_ptr<MobileRT::Sampler> samplerPixel;
-  std::unique_ptr<MobileRT::Shader> shader_;
-  std::unique_ptr<MobileRT::Camera> camera;
+
+  MobileRT::Scene scene_ {};
+  std::unique_ptr<MobileRT::Sampler> samplerCamera {};
+  std::unique_ptr<MobileRT::Sampler> samplerPixel {};
+  std::unique_ptr<MobileRT::Shader> shader_ {};
+  std::unique_ptr<MobileRT::Camera> camera {};
   switch (scene) {
     case 0:
       camera = std::make_unique<Components::Perspective>(
-        MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-        MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
+        MobileRT::Point3D {0.0f, 0.0f, 1.0f},
+        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
         45.0f, 45.0f * ratio);
       scene_ = cornellBoxScene(std::move(scene_));
       break;
 
     case 1:
-      camera = std::make_unique<Components::Orthographic>(MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                                            MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                                            MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-                                            6.5f, 4.5f);
+      camera = std::make_unique<Components::Orthographic> {MobileRT::Point3D {0.0f, 0.5f, 1.0f},
+                                                           MobileRT::Point3D {0.0f, 0.0f, 7.0f},
+                                                           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                                                           6.5f, 4.5f};
       scene_ = spheresScene(std::move(scene_));
       break;
 
     case 2:
-      camera = std::make_unique<Components::Perspective>(
-        MobileRT::Point3D(0.0f, 0.0f, -3.4f),
-        MobileRT::Point3D(0.0f, 0.0f, 1.0f),
-        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-        45.0f, 45.0f * ratio);
+      camera = std::make_unique<Components::Perspective>{
+        MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
+        MobileRT::Point3D {0.0f, 0.0f, 1.0f},
+        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+        45.0f, 45.0f * ratio};
       scene_ = cornellBoxScene2(std::move(scene_), samplesLight, samplesPixel, width_, height_);
       break;
 
     case 3:
       camera = std::make_unique<Components::Perspective>(
-        MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-        MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        MobileRT::Point3D {0.0f, 0.5f, 1.0f},
+        MobileRT::Point3D {0.0f, 0.0f, 7.0f},
+        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
         60.0f, 60.0f * ratio);
       scene_ = spheresScene2(std::move(scene_));
       break;
@@ -106,9 +105,9 @@ int main(int argc, char **argv) noexcept {
     default:
       objLoader.fillScene(&scene_);
       camera = std::make_unique<Components::Perspective>(
-        MobileRT::Point3D(0.0f, 0.5f, 3.0f),
-        MobileRT::Point3D(0.0f, 0.5f, -1.0f),
-        MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+        MobileRT::Point3D {0.0f, 0.5f, 3.0f},
+        MobileRT::Point3D {0.0f, 0.5f, - 1.0f},
+        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
         45.0f, 45.0f * ratio);
       break;
   }
@@ -139,12 +138,12 @@ int main(int argc, char **argv) noexcept {
         blockSizeX_, blockSizeY_);
       break;
   }
-  const uint64_t domainRay(
+  const uint64_t domainRay {
     (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX);
-  const uint64_t domainLight(
+    static_cast<uint64_t>(samplesPixel) * RayDepthMax};
+  const uint64_t domainLight {
     (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-    static_cast<uint64_t>(samplesPixel) * RAY_DEPTH_MAX * static_cast<uint64_t>(samplesLight));
+    static_cast<uint64_t>(samplesPixel) * RayDepthMax * static_cast<uint64_t>(samplesLight)};
   switch (shader) {
     case 1: {
       shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight);
@@ -183,11 +182,13 @@ int main(int argc, char **argv) noexcept {
       break;
     }
   }
-  renderer_ = new MobileRT::Renderer(std::move(samplerCamera),
-                                     std::move(shader_),
-                                     std::move(camera),
-                                     static_cast<unsigned>(width_), static_cast<unsigned>(height_), static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
-                                     std::move(samplerPixel));
+  renderer_ = new MobileRT::Renderer {std::move (samplerCamera),
+                                      std::move (shader_),
+                                      std::move (camera),
+                                      static_cast<unsigned>(width_), static_cast<unsigned>(height_),
+                                      static_cast<unsigned>(blockSizeX_),
+                                      static_cast<unsigned>(blockSizeY_),
+                                      std::move (samplerPixel)};
 
   LOG("x = ", blockSizeX_, "[", width_, "]");
   LOG("y = ", blockSizeY_, "[", height_, "]");
@@ -205,7 +206,7 @@ int main(int argc, char **argv) noexcept {
 		LOG("samplesLight = ", samplesLight);
 		LOG("width_ = ", width_);
 		LOG("height_ = ", height_)
-    const double start(omp_get_wtime());
+  const double start {omp_get_wtime ()};
 		do {
 			renderer_->renderFrame(bitmap, threads);
 			renderer_->camera_->position_.x_ += 2.0f;
@@ -217,17 +218,19 @@ int main(int argc, char **argv) noexcept {
 		std::cout << omp_get_wtime() - start << std::endl;
 
     for (int i(0), j(0); i < width_ * height_ * 4; i += 4, j += 1) {
-        const unsigned int color(bitmap[j]);
+      const unsigned int color {bitmap[j]};
         buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
         buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
         buffer[i + 2] = static_cast<unsigned char> ((color & 0x00FF0000) >> 16);
         buffer[i + 3] = static_cast<unsigned char> ((color & 0xFF000000) >> 24);
     }
     gtk_init(&argc, &argv);
-    GtkWidget *window (gtk_window_new(GTK_WINDOW_TOPLEVEL));
-    GdkPixbuf *pixbuff (gdk_pixbuf_new_from_data(buffer, GDK_COLORSPACE_RGB, TRUE, 8,
-    	static_cast<int> (width_), static_cast<int> (height_), static_cast<int> (width_ * 4), nullptr, nullptr));
-    GtkWidget *image (gtk_image_new_from_pixbuf(pixbuff));
+  GtkWidget *window {gtk_window_new (GTK_WINDOW_TOPLEVEL)};
+  GdkPixbuf *pixbuff {gdk_pixbuf_new_from_data (buffer, GDK_COLORSPACE_RGB, TRUE, 8,
+                                                static_cast<int> (width_),
+                                                static_cast<int> (height_),
+                                                static_cast<int> (width_ * 4), nullptr, nullptr)};
+  GtkWidget *image {gtk_image_new_from_pixbuf (pixbuff)};
 		gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
 			[]() -> void {
 				delete[] bitmap;
@@ -235,17 +238,17 @@ int main(int argc, char **argv) noexcept {
 				gtk_main_quit();
 			}
 		), nullptr);
-		auto *check_escape (static_cast<bool(*)(
-			GtkWidget* gtkWidget, GdkEventKey *event, gpointer /*unused*/)>(
-			[](GtkWidget* gtkWidget, GdkEventKey *event, gpointer /*unused*/){
-			if (event->keyval == GDK_KEY_Escape) {
-					gtk_widget_destroy(gtkWidget);
-					gtk_main_quit();
-					return true;
-				}
-				return false;
-			})
-		);
+  auto *check_escape {static_cast<bool (*) (
+    GtkWidget *gtkWidget, GdkEventKey *event, gpointer /*unused*/)>(
+                        [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer /*unused*/) {
+                          if (event -> keyval == GDK_KEY_Escape) {
+                            gtk_widget_destroy (gtkWidget);
+                            gtk_main_quit ();
+                            return true;
+                          }
+                          return false;
+                        })
+  };
     gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape), nullptr);
     gtk_container_add(GTK_CONTAINER(window), image);
     gtk_widget_show_all(window);

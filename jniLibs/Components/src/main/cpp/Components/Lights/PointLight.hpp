@@ -14,7 +14,7 @@ namespace Components {
 	using MobileRT::Ray;
     class PointLight final : public MobileRT::Light {
     private:
-        Point3D position_;
+      Point3D position_ {};
 
     public:
         explicit PointLight(const Material &radiance, const Point3D &position) noexcept;

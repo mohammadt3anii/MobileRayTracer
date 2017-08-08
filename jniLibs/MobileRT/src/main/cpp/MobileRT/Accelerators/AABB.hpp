@@ -14,11 +14,8 @@
 namespace MobileRT {
     class AABB final {
     public:
-			Point3D pointMin_;
-			Point3D pointMax_;
-
-    private:
-			bool intersectPrimitives(Intersection *intersection, const Ray &ray) const;
+      Point3D pointMin_ {};
+      Point3D pointMax_ {};
 
     public:
 			explicit AABB(const Point3D &pointMin = Point3D(),
@@ -33,9 +30,6 @@ namespace MobileRT {
 			AABB &operator=(const AABB &AABB) noexcept = default;
 
 			AABB &operator=(AABB &&AABB) noexcept = default;
-
-			bool intersect(Intersection *intersection, const Ray &ray,
-                       const Material &material) const;
     };
 }//namespace MobileRT
 

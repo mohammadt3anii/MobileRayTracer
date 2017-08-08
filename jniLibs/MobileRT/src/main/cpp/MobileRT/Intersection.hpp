@@ -13,12 +13,11 @@
 namespace MobileRT {
     class Intersection final {
     public:
-        Point3D point_;   // intersection point
-        Vector3D normal_;    // intersection normal
-        Vector3D symNormal_;
-
-			const Material *material_;// material of the intersected primitive
-			float length_;// ray length parameter
+      Point3D point_ {};   // intersection point
+      Vector3D normal_ {};    // intersection normal
+      Vector3D symNormal_ {};
+      const Material *material_ {};// material of the intersected primitive
+      float length_ {};// ray length parameter
 
     public:
 			explicit Intersection() noexcept;

@@ -17,7 +17,8 @@ HaltonSeq::HaltonSeq(const unsigned int width, const unsigned int height,
 }
 
 float HaltonSeq::getSample(const unsigned int sample) noexcept {
-    const uint64_t current(this->sample_.fetch_add(1ull, std::memory_order_relaxed));
+
+  const uint64_t current {this -> sample_ . fetch_add (1ull, std::memory_order_relaxed)};
   if (current >= (this->domainSize_ * (sample + 1))) {
         this->sample_.fetch_sub(1ull, std::memory_order_relaxed);
         return 1.0f;
@@ -27,9 +28,10 @@ float HaltonSeq::getSample(const unsigned int sample) noexcept {
 
 //https://en.wikipedia.org/wiki/Halton_sequence
 float HaltonSeq::haltonSequence(uint64_t index, const unsigned int base) noexcept {
-    float f(1.0f);
-    float result(0.0f);
-    while (index > 0ull) {
+
+  float f {1.0f};
+  float result {0.0f};
+  while (index > 0) {
         f /= base;
         result += f * (index % base);
         index = static_cast<uint64_t> (std::floor(index / base));

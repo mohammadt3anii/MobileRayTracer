@@ -11,10 +11,10 @@ using MobileRT::Ray;
 
 Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const Vector3D &up,
                          const float hFov, const float vFov) noexcept :
-        Camera(position, lookAt, up),
+  Camera {position, lookAt, up},
         // convert to radians
-        hFov_((hFov * PI) / 180.0f),
-        vFov_((vFov * PI) / 180.0f) {
+  hFov_ {(hFov * Pi) / 180.0f},
+  vFov_ {(vFov * Pi) / 180.0f} {
 }
 
 /* u = x / width */
@@ -24,16 +24,17 @@ Perspective::Perspective(const Point3D &position, const Point3D &lookAt, const V
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
 
-  return Ray(Vector3D(this->position_ +
-                      this->direction_ +
-                      (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
-                      (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV)),
-                      this->position_, true),
-             this->position_, 1);
+  return Ray {Vector3D {this -> position_ +
+                        this -> direction_ +
+                        (this -> right_ * (fastArcTan (this -> hFov_ * (u - 0.5f)) + deviationU)) +
+                        (this -> up_ * (fastArcTan (this -> vFov_ * (0.5f - v)) + deviationV)),
+                        this -> position_, true},
+              this -> position_, 1};
 }
 
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
-    const float absValue(value < 0.0f ? -value : value);
-    return PI_4 * value - (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
+
+  const float absValue {value < 0.0f ? - value : value};
+  return Pi_4 * value - (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
 }

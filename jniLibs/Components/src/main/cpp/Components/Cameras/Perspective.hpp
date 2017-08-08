@@ -13,8 +13,8 @@ namespace Components {
 	using MobileRT::Ray;
     class Perspective final : public MobileRT::Camera {
     private:
-        const float hFov_;
-        const float vFov_;
+      const float hFov_ {};
+      const float vFov_ {};
 
 	private:
 		float fastArcTan(float value) const noexcept;

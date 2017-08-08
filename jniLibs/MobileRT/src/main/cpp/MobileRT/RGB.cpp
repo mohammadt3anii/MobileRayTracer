@@ -8,28 +8,28 @@ using MobileRT::RGB;
 static unsigned int counter(0);
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
-  R_(r),
-  G_(g),
-  B_(b),
-  samples_(0)
+  R_ {r},
+  G_ {g},
+  B_ {b},
+  samples_ {0}
 {
     counter++;
 }
 
 RGB::RGB(const RGB &rgb) noexcept :
-        R_(rgb.R_),
-        G_(rgb.G_),
-        B_(rgb.B_),
-        samples_(rgb.samples_)
+  R_ {rgb . R_},
+  G_ {rgb . G_},
+  B_ {rgb . B_},
+  samples_ {rgb . samples_}
 {
     counter++;
 }
 
 RGB::RGB(RGB &&rgb) noexcept :
-        R_(rgb.R_),
-        G_(rgb.G_),
-        B_(rgb.B_),
-        samples_(rgb.samples_)
+  R_ {rgb . R_},
+  G_ {rgb . G_},
+  B_ {rgb . B_},
+  samples_ {rgb . samples_}
 {
     counter++;
 }
@@ -112,9 +112,10 @@ void RGB::reset(const float r, const float g, const float b, const unsigned int 
 }
 
 unsigned int RGB::getColor() noexcept {
-    const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
-    const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
-    const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
+
+  const unsigned int r {this -> R_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> R_ * 255u)};
+  const unsigned int g {this -> G_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> G_ * 255u)};
+  const unsigned int b {this -> B_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> B_ * 255u)};
     return ((r*1000000) + (g*1000) + b);
 }
 
@@ -127,14 +128,15 @@ void RGB::toneMap () noexcept {
 
 unsigned int RGB::RGB2Color() noexcept {
     //toneMap();
-    const unsigned int r(this->R_ >= 1.0f ? 255u : static_cast<unsigned int> (this->R_ * 255u));
-    const unsigned int g(this->G_ >= 1.0f ? 255u : static_cast<unsigned int> (this->G_ * 255u));
-    const unsigned int b(this->B_ >= 1.0f ? 255u : static_cast<unsigned int> (this->B_ * 255u));
+  const unsigned int r {this -> R_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> R_ * 255u)};
+  const unsigned int g {this -> G_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> G_ * 255u)};
+  const unsigned int b {this -> B_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> B_ * 255u)};
     return (0xFF000000u | (b << 16u) | (g << 8u) | r);
 }
 
 unsigned int RGB::getInstances() noexcept {
-    const unsigned int res(counter);
+
+  const unsigned int res {counter};
     counter = 0;
     return res;
 }

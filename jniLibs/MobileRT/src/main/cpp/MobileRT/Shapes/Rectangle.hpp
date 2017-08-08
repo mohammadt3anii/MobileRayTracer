@@ -14,13 +14,13 @@
 namespace MobileRT {
     class Rectangle final {
     private:
-        Vector3D AC_;
-        Vector3D AB_;
-        Vector3D normal_;
-        Point3D pointA_;
-        Point3D pointB_;
-        Point3D pointC_;
-        Point3D pointD_;
+      Vector3D AC_ {};
+      Vector3D AB_ {};
+      Vector3D normal_ {};
+      Point3D pointA_ {};
+      Point3D pointB_ {};
+      Point3D pointC_ {};
+      Point3D pointD_ {};
 
 		private:
         Point3D getPositionMin() const noexcept;

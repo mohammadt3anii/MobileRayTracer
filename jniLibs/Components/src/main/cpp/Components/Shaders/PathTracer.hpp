@@ -19,9 +19,9 @@ namespace Components {
 	using MobileRT::Scene;
     class PathTracer final : public MobileRT::Shader {
     private:
-				std::unique_ptr<Sampler> samplerRay_;
-				std::unique_ptr<Sampler> samplerLight_;
-				std::unique_ptr<Sampler> samplerRussianRoulette_;
+      std::unique_ptr<Sampler> samplerRay_ {};
+      std::unique_ptr<Sampler> samplerLight_ {};
+      std::unique_ptr<Sampler> samplerRussianRoulette_ {};
 
     private:
 			bool shade(RGB *rgb,

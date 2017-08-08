@@ -12,7 +12,7 @@
 namespace MobileRT {
     class ObjectLoader {
     protected:
-        bool isProcessed_;
+      bool isProcessed_ {};
 
     public:
       	explicit ObjectLoader () noexcept;

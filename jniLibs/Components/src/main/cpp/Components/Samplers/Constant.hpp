@@ -10,7 +10,7 @@
 namespace Components {
     class Constant final : public MobileRT::Sampler {
     private:
-        const float value_;
+      const float value_ {};
 
     public:
         explicit Constant(float value) noexcept;

@@ -7,7 +7,7 @@
 using MobileRT::Light;
 
 Light::Light(Material const &radiance) noexcept :
-        radiance_(radiance) {
+  radiance_ {radiance} {
 }
 
 Light::~Light() noexcept {

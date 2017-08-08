@@ -11,10 +11,10 @@
 namespace MobileRT {
     class Camera {
     public:
-        Point3D position_;
-        Vector3D direction_;
-        Vector3D right_;
-        Vector3D up_;
+      Point3D position_ {};
+      Vector3D direction_ {};
+      Vector3D right_ {};
+      Vector3D up_ {};
 
     public:
         explicit Camera(const Point3D &position,

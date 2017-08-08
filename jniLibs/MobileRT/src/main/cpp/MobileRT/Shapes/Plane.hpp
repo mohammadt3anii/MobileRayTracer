@@ -12,8 +12,8 @@
 namespace MobileRT {
     class Plane final {
     private:
-        const Vector3D normal_;    // normal to the plane
-        const Point3D point_;   // point in the plane
+      const Vector3D normal_ {};    // normal to the plane
+      const Point3D point_ {};   // point in the plane
 
 		private:
 				Point3D getPositionMin() const noexcept;
