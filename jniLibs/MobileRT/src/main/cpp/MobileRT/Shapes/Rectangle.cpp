@@ -8,9 +8,9 @@ using MobileRT::AABB;
 using MobileRT::Rectangle;
 using MobileRT::Point3D;
 
-Rectangle::Rectangle(const Point3D &pointA,
-                     const Point3D &pointB,
-                     const Point3D &pointC) noexcept :
+Rectangle::Rectangle (Point3D pointA,
+                      Point3D pointB,
+                      Point3D pointC) noexcept :
   AC_ {pointC - pointA},
   AB_ {pointB - pointA},
   normal_ {AB_ . crossProduct (AC_)},
@@ -21,7 +21,7 @@ Rectangle::Rectangle(const Point3D &pointA,
 {
 }
 
-bool Rectangle::intersect(Intersection *intersection, const Ray &ray) const noexcept {
+bool Rectangle::intersect (Intersection *const intersection, Ray ray) const noexcept {
 
   const Vector3D perpendicularVector {ray . direction_, this -> AC_};
   const float normalizedProjection {this -> AB_ . dotProduct (perpendicularVector)};
@@ -161,7 +161,7 @@ AABB Rectangle::getAABB() const noexcept {
 	return AABB(getPositionMin(), getPositionMax());
 }
 
-bool Rectangle::intersect(const AABB & /*box*/) const noexcept {
+bool Rectangle::intersect (AABB /*box*/) const noexcept {
 
   return false;
 }

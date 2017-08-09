@@ -27,7 +27,7 @@ static void FPS() noexcept {
     }
 }
 
-void thread_work(void *dstPixels, const int numThreads) noexcept {
+void thread_work (void *const dstPixels, const int numThreads) noexcept {
 
   int rep {1};
     do {
@@ -47,8 +47,8 @@ void thread_work(void *dstPixels, const int numThreads) noexcept {
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
     thread_->join();
     delete thread_;
@@ -62,16 +62,16 @@ void Java_puscas_mobilertapp_DrawView_finish(
 
 extern "C"
 State Java_puscas_mobilertapp_DrawView_isWorking (
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
     return working_;
 }
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
 
   working_ = State::STOPPED;
@@ -83,17 +83,17 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_initialize(
-        JNIEnv * env,
-        jobject /*thiz*/,
-        jint const scene,
-        jint const shader,
-        jint const width,
-        jint const height,
-        jint const sampler,
-        jint const samplesPixel,
-        jint const samplesLight,
-        jstring objFile,
-        jstring matText
+  JNIEnv *const env,
+  jobject /*thiz*/,
+  jint const scene,
+  jint const shader,
+  jint const width,
+  jint const height,
+  jint const sampler,
+  jint const samplesPixel,
+  jint const samplesLight,
+  jstring objFile,
+  jstring matText
 ) noexcept {
     jboolean isCopy (JNI_FALSE);
   const char *obj {(env) -> GetStringUTFChars (objFile, &isCopy)};
@@ -265,10 +265,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
-        JNIEnv *env,
-        jobject /*thiz*/,
-        jobject dstBitmap,
-        jint const nThreads) noexcept {
+  JNIEnv *const env,
+  jobject /*thiz*/,
+  jobject dstBitmap,
+  jint const nThreads) noexcept {
 
   void *dstPixels {nullptr};
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
@@ -280,9 +280,9 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
 extern "C"
 State Java_puscas_mobilertapp_DrawView_redraw (
-        JNIEnv *env,
-        jobject /*thiz*/,
-        jobject dstBitmap) noexcept {
+  JNIEnv *const env,
+  jobject /*thiz*/,
+  jobject dstBitmap) noexcept {
 
   void *dstPixels {nullptr};
     AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
@@ -292,10 +292,10 @@ State Java_puscas_mobilertapp_DrawView_redraw (
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/,
-        jfloat const jx,
-        jfloat const jy) noexcept {
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/,
+  jfloat const jx,
+  jfloat const jy) noexcept {
 
   const float u {static_cast<float> (jx) / width_};
   const float v {static_cast<float> (jy) / height_};
@@ -307,11 +307,11 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_moveTouch(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/,
-        jfloat const jx,
-        jfloat const jy,
-        jint const primitiveIndex
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/,
+  jfloat const jx,
+  jfloat const jy,
+  jint const primitiveIndex
 ) noexcept {
 
   const float u {static_cast<float> (jx) / width_};
@@ -329,33 +329,33 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 
 extern "C"
 float Java_puscas_mobilertapp_DrawView_getFPS(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
     return fps_;
 }
 
 extern "C"
 int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
     return timeFrame_;
 }
 
 extern "C"
 unsigned int Java_puscas_mobilertapp_DrawView_getSample(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
 ) noexcept {
     return renderer_->getSample();
 }
 
 extern "C"
 int Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/,
-        jint const size
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/,
+  jint const size
 ) noexcept {
     return roundDownToMultipleOf(size, numberOfBlocks_);
 }

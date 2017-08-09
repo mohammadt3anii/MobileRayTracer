@@ -19,8 +19,8 @@ namespace Components {
 
     private:
 			bool shade(RGB *rgb,
-								 Intersection const &intersection,
-								 Ray &&ray) const noexcept final;
+                 Intersection intersection,
+                 Ray &&ray) const noexcept final;
 
 		public:
       explicit DepthMap(Scene &&scene, Point3D&& maxPoint) noexcept;

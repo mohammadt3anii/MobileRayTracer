@@ -17,9 +17,9 @@ namespace Components {
       const float sizeV_ {};
 
     public:
-        explicit Orthographic(const Point3D &position,
-                              const Point3D &lookAt, const Vector3D &up,
-                              float sizeH, float sizeV) noexcept;
+			explicit Orthographic (Point3D position,
+														 Point3D lookAt, Vector3D up,
+														 float sizeH, float sizeV) noexcept;
 
 		Orthographic(const Orthographic &orthographic) noexcept = delete;
 

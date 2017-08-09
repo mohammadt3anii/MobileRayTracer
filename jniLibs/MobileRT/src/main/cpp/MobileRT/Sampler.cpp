@@ -7,7 +7,6 @@
 using MobileRT::Sampler;
 
 Sampler::Sampler(const uint64_t domainSize, const unsigned int samples) noexcept :
-  sample_ {0},
   domainSize_ {domainSize},
   samples_ {samples} {
 }

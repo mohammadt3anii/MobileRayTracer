@@ -8,13 +8,13 @@ using MobileRT::AABB;
 using MobileRT::Sphere;
 using MobileRT::Point3D;
 
-Sphere::Sphere(const Point3D &center, const float radius) noexcept :
+Sphere::Sphere (Point3D center, const float radius) noexcept :
   center_ {center},
   sq_radius_ {radius * radius}
 {
 }
 
-bool Sphere::intersect(Intersection *intersection, const Ray &ray) const noexcept {
+bool Sphere::intersect (Intersection *const intersection, Ray ray) const noexcept {
 //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
   const Vector3D centerToOrigin {ray . origin_, this -> center_};
 
@@ -79,7 +79,7 @@ AABB Sphere::getAABB() const noexcept {
   return AABB {getPositionMin (), getPositionMax ()};
 }
 
-bool Sphere::intersect(const AABB &box) const noexcept {
+bool Sphere::intersect (AABB box) const noexcept {
 
   float dmin {0};
   const Point3D v1 {box . pointMin_};

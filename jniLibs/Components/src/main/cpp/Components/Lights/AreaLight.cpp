@@ -11,10 +11,10 @@ using MobileRT::Point3D;
 using MobileRT::Ray;
 using MobileRT::Intersection;
 
-AreaLight::AreaLight(const Material &radiance,
-										 std::unique_ptr<Sampler> &&samplerPointLight,
-                     const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
-  Light (radiance),
+AreaLight::AreaLight (Material radiance,
+                      std::unique_ptr<Sampler> &&samplerPointLight,
+                      Point3D pointA, Point3D pointB, Point3D pointC) noexcept :
+  Light (std::move (radiance)),
   triangle_ {pointA, pointB, pointC},
   samplerPointLight_ {std::move (samplerPointLight)} {
 }
@@ -27,17 +27,17 @@ Point3D AreaLight::getPosition() noexcept {
         R = 1.0f - R;
         S = 1.0f - S;
     }
-  return Point3D {triangle_ . pointA_ . x_ + R * triangle_ . AB_ . x_ + S * triangle_ . AC_ . x_,
-                   triangle_.pointA_.y_ + R * triangle_.AB_.y_ + S * triangle_.AC_.y_,
-                  triangle_ . pointA_ . z_ + R * triangle_ . AB_ . z_ + S * triangle_ . AC_ . z_};
+  return Point3D {triangle_.pointA_.x_ + R * triangle_.AB_.x_ + S * triangle_.AC_.x_,
+                  triangle_.pointA_.y_ + R * triangle_.AB_.y_ + S * triangle_.AC_.y_,
+                  triangle_.pointA_.z_ + R * triangle_.AB_.z_ + S * triangle_.AC_.z_};
 }
 
 void AreaLight::resetSampling() noexcept {
     samplerPointLight_->resetSampling();
 }
 
-bool AreaLight::intersect(Intersection *intersection, const Ray &ray) const noexcept {
-    if (triangle_.intersect(intersection, ray)) {
+bool AreaLight::intersect (Intersection *const intersection, Ray ray) const noexcept {
+  if (triangle_.intersect (intersection, std::move (ray))) {
 			intersection->material_ = &radiance_;
 			return true;
 		}

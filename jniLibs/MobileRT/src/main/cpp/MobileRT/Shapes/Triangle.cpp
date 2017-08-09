@@ -9,7 +9,7 @@ using MobileRT::AABB;
 using MobileRT::Triangle;
 using MobileRT::Point3D;
 
-Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept :
+Triangle::Triangle (Point3D pointA, Point3D pointB, Point3D pointC) noexcept :
   AC_ {pointC - pointA},
   AB_ {pointB - pointA},
   BC_ {pointC - pointB},
@@ -20,7 +20,7 @@ Triangle::Triangle(const Point3D &pointA, const Point3D &pointB, const Point3D &
 {
 }
 
-bool Triangle::intersect(Intersection *intersection, const Ray &ray) const noexcept {
+bool Triangle::intersect (Intersection *const intersection, Ray ray) const noexcept {
 
   const Vector3D perpendicularVector {ray . direction_, this -> AC_};
   const float normalizedProjection {this -> AB_ . dotProduct (perpendicularVector)};
@@ -145,7 +145,7 @@ AABB Triangle::getAABB() const noexcept {
   return AABB {getPositionMin (), getPositionMax ()};
 }
 
-bool Triangle::intersect(const AABB &box) const noexcept {
+bool Triangle::intersect (AABB box) const noexcept {
 
   std::function<bool (Point3D orig, Vector3D vec)> intersectRayAABB {
     [&](Point3D orig, Vector3D vec)->bool {

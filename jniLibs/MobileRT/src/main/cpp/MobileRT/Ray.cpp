@@ -12,7 +12,6 @@ Ray::Ray(Vector3D dir, Point3D origin,
          const unsigned int depth) noexcept :
   origin_ {origin},
   direction_ {dir},
-  symDirection_ {- direction_},
   depth_ {depth} {
     counter++;
 }

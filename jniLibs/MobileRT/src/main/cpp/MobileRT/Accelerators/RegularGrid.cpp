@@ -6,11 +6,8 @@
 
 using MobileRT::RegularGrid;
 
-RegularGrid::RegularGrid () : gridSize_ {0}, gridShift_ {0} {
-
-}
-
-RegularGrid::RegularGrid(Point3D min, Point3D max, Scene *scene, const int gridSize, const int gridShift) :
+RegularGrid::RegularGrid (Point3D min, Point3D max, Scene *const scene, const int gridSize,
+                          const int gridShift) :
   spheres_ {
     std::vector<std::vector<Sphere *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
   triangles_ {
@@ -96,7 +93,7 @@ void RegularGrid::addPrimitives
   }
 }
 
-bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const noexcept {
+bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) const noexcept {
 
   const bool intersectedSpheres {intersect<Sphere> (this -> spheres_, intersection, ray)};
   const bool intersectedTriangles {intersect<Triangle> (this -> triangles_, intersection, ray)};
@@ -106,7 +103,7 @@ bool RegularGrid::intersect(Intersection *intersection, const Ray &ray) const no
 
 template<typename T>
 bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
-                            Intersection *intersection, const Ray &ray) const noexcept {
+                            Intersection *const intersection, Ray ray) const noexcept {
 
   bool retval {false};
   const Vector3D &raydir {ray . direction_};

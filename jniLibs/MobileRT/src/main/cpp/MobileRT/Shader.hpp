@@ -23,8 +23,8 @@ namespace MobileRT {
       const unsigned int samplesLight_ {};
 
     protected:
-		virtual bool shade(RGB * /*rgb*/, Intersection const & /*intersection*/,
-						   Ray && /*ray*/) const noexcept = 0;
+			virtual bool shade (RGB *rgb, Intersection intersection,
+													Ray &&ray) const noexcept = 0;
 
       private:
       template<typename T>

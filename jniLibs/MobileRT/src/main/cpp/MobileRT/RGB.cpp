@@ -10,8 +10,7 @@ static unsigned int counter(0);
 RGB::RGB(const float r, const float g, const float b) noexcept :
   R_ {r},
   G_ {g},
-  B_ {b},
-  samples_ {0}
+  B_ {b}
 {
     counter++;
 }
@@ -37,31 +36,33 @@ bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
-void RGB::operator+=(const RGB &rgb) noexcept {
+void RGB::operator+= (RGB rgb) noexcept {
     this->R_ += rgb.R_;
     this->G_ += rgb.G_;
     this->B_ += rgb.B_;
 }
 
-void RGB::addMult(const RGB &rgb1, const RGB &rgb2, const float value) noexcept {
-    this->R_ += rgb1.R_ * rgb2.R_ * value;
-    this->G_ += rgb1.G_ * rgb2.G_ * value;
-    this->B_ += rgb1.B_ * rgb2.B_ * value;
+void RGB::addMult (const std::initializer_list<const RGB> rgbs,
+                   const std::initializer_list<const float> floats) noexcept {
+  float red {1.0f};
+  float green {1.0f};
+  float blue {1.0f};
+  for (auto elem : rgbs) {
+    red *= elem.R_;
+    green *= elem.G_;
+    blue *= elem.B_;
+  }
+  for (auto elem : floats) {
+    red *= elem;
+    green *= elem;
+    blue *= elem;
+  }
+  this->R_ += red;
+  this->G_ += green;
+  this->B_ += blue;
 }
 
-void RGB::addMult(const RGB &rgb1, const RGB &rgb2) noexcept {
-    this->R_ += rgb1.R_ * rgb2.R_;
-    this->G_ += rgb1.G_ * rgb2.G_;
-    this->B_ += rgb1.B_ * rgb2.B_;
-}
-
-void RGB::addMult(const RGB &rgb, const float value) noexcept {
-    this->R_ += rgb.R_ * value;
-    this->G_ += rgb.G_ * value;
-    this->B_ += rgb.B_ * value;
-}
-
-void RGB::operator*=(const RGB &rgb) noexcept {
+void RGB::operator*= (RGB rgb) noexcept {
     this->R_ *= rgb.R_;
     this->G_ *= rgb.G_;
     this->B_ *= rgb.B_;
@@ -89,7 +90,7 @@ void RGB::operator/=(const float value) noexcept {
     this->B_ /= value;
 }
 
-void RGB::addSampleAndCalcAvg(RGB *sample) noexcept {
+void RGB::addSampleAndCalcAvg (RGB *const sample) noexcept {
     this->mutex_.lock();
     this->R_ += sample->R_;
     this->G_ += sample->G_;

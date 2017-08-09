@@ -10,21 +10,22 @@
 namespace MobileRT {
     class RGB final {
     public:
-      float R_ {};
-      float G_ {};
-      float B_ {};
+      float R_ {0.0f};
+      float G_ {0.0f};
+      float B_ {0.0f};
 
 	private:
-		std::mutex mutex_;
+      std::mutex mutex_ {};
 
 	public:
-		unsigned int samples_;
+      unsigned int samples_ {0};
 
 	private:
 		void toneMap () noexcept;
 
     public:
-		explicit RGB(float r = 0.0f, float g = 0.0f, float b = 0.0f) noexcept;
+      explicit RGB () noexcept = default;
+      explicit RGB (float r, float g, float b) noexcept;
 
 		RGB(const RGB &rgb) noexcept;
 
@@ -37,18 +38,12 @@ namespace MobileRT {
 		RGB &operator=(RGB &&rgb) noexcept = delete;
 
 		bool hasColor() const noexcept;
-
-		void operator+=(const RGB &rgb) noexcept;
-
-		void addMult(const RGB &rgb, float value) noexcept;
-
-		void addMult(const RGB &rgb1, const RGB &rgb2, float value) noexcept;
-
-		void addMult(const RGB &rgb1, const RGB &rgb2) noexcept;
+      void operator+= (RGB rgb) noexcept;
+      void addMult (const std::initializer_list<const RGB> rgbs,
+                    const std::initializer_list<const float> floats) noexcept;
 
 		RGB operator*(float value) const noexcept;
-
-		void operator*=(const RGB &rgb) noexcept;
+      void operator*= (RGB rgb) noexcept;
 
 		void operator*=(float value) noexcept;
 

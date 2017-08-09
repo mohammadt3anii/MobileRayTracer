@@ -21,8 +21,7 @@ namespace MobileRT {
                          float refractiveIndice = 1.0f, RGB Le = RGB{}) noexcept;
 
 		Material(const Material &material) noexcept = default;
-
-		Material(Material &&material) noexcept = delete;
+      Material (Material &&material) noexcept = default;
 
         ~Material() noexcept = default;
 

@@ -6,6 +6,6 @@
 
 using MobileRT::AABB;
 
-AABB::AABB(const Point3D &pointMin, const Point3D &pointMax) :
+AABB::AABB (Point3D pointMin, Point3D pointMax) noexcept :
   pointMin_ {pointMin}, pointMax_ {pointMax} {
 }

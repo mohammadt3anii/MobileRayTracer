@@ -12,10 +12,10 @@
 namespace MobileRT {
     class ObjectLoader {
     protected:
-      bool isProcessed_ {};
+			bool isProcessed_ {false};
 
     public:
-      	explicit ObjectLoader () noexcept;
+			explicit ObjectLoader () noexcept = default;
 
 				ObjectLoader(const ObjectLoader &objectLoader) noexcept = delete;
 

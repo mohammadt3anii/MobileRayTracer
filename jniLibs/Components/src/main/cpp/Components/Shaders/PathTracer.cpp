@@ -15,9 +15,10 @@ using MobileRT::Ray;
 using MobileRT::Scene;
 
 PathTracer::PathTracer(Scene &&scene,
-												std::unique_ptr<Sampler> &&samplerRay, std::unique_ptr<Sampler> &&samplerLight,
-												std::unique_ptr<Sampler> &&samplerRussianRoulette,
-												const unsigned int samplesLight) noexcept :
+                       std::unique_ptr<Sampler> &&samplerRay,
+                       std::unique_ptr<Sampler> &&samplerLight,
+                       std::unique_ptr<Sampler> &&samplerRussianRoulette,
+                       const unsigned int samplesLight) noexcept :
   Shader {std::move (scene), samplesLight},
   samplerRay_ {std::move (samplerRay)},
   samplerLight_ {std::move (samplerLight)},
@@ -26,9 +27,8 @@ PathTracer::PathTracer(Scene &&scene,
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept
+bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept
 {
-
   const unsigned int rayDepth {ray . depth_};
   if (rayDepth > RayDepthMax || intersection . material_ == nullptr) {
 			return false;
@@ -92,7 +92,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
                     intersectLight.length_ = distanceToLight;
                     if (!scene_.shadowTrace(&intersectLight, std::move(shadowRay))) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
-                        Ld.addMult(light.radiance_.Le_, cosNormalLight);
+                      Ld.addMult ({light.radiance_.Le_}, {cosNormalLight});
                     }
                 }
             }
@@ -129,7 +129,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
             //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
         //LiD += kD * LiD_RGB * Pi / continue_probability
         //LiD.addMult(kD, LiD_RGB, Pi);
-        LiD . addMult (kD, LiD_RGB);
+        LiD.addMult ({kD, LiD_RGB}, {});
         if (rayDepth > RayDepthMin)
             {
                 LiD /= continue_probability;
@@ -153,7 +153,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
       RGB LiS_RGB {};
       Intersection specularInt {};
         rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
-        LiS.addMult(kS, LiS_RGB);
+      LiS.addMult ({kS, LiS_RGB}, {});
     }
 
     // specular transmission
@@ -182,7 +182,7 @@ bool PathTracer::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) co
       RGB LiT_RGB {};
       Intersection transmissionInt {};
         rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
-        LiT.addMult(kT, LiT_RGB);
+      LiT.addMult ({kT, LiT_RGB}, {});
     }
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
     //Ld /= rayDepth;

@@ -8,20 +8,13 @@ using MobileRT::Intersection;
 
 static unsigned int counter(0);
 
-Intersection::Intersection () noexcept :
-  material_ {nullptr}, length_ {RayLengthMax}
-{
-    counter++;
-}
-
-void Intersection::reset(const Point3D &orig,
-                         const Vector3D &dir,
-                         const float dist,
-                         const Vector3D &normal) noexcept {
+void Intersection::reset (Point3D orig,
+                          Vector3D dir,
+                          const float dist,
+                          Vector3D normal) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
-	// this->point_ = orig + dir * dist;
     this->normal_ = normal;
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;
@@ -29,14 +22,13 @@ void Intersection::reset(const Point3D &orig,
     this->length_ = dist;
 }
 
-void Intersection::reset(const Point3D &orig,
-                         const Vector3D &dir,
-                         const float dist,
-                         const Point3D &center) noexcept {
+void Intersection::reset (Point3D orig,
+                          Vector3D dir,
+                          const float dist,
+                          Point3D center) noexcept {
     this->point_.x_ = orig.x_ + dir.x_ * dist;
     this->point_.y_ = orig.y_ + dir.y_ * dist;
     this->point_.z_ = orig.z_ + dir.z_ * dist;
-	// this->point_ = orig + dir * dist;
     this->normal_ = Vector3D(this->point_, center, true);
     this->symNormal_.x_ = -this->normal_.x_;
     this->symNormal_.y_ = -this->normal_.y_;

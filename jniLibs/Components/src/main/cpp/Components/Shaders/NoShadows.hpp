@@ -15,8 +15,8 @@ namespace Components {
     class NoShadows final : public MobileRT::Shader {
     private:
 			bool shade(RGB *rgb,
-								 Intersection const &intersection,
-								 Ray && /*ray*/) const noexcept final;
+								 Intersection intersection,
+								 Ray &&ray) const noexcept final;
 
 		public:
         explicit NoShadows(Scene &&scene, unsigned int samplesLight) noexcept;

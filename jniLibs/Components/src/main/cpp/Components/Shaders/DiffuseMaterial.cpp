@@ -14,8 +14,8 @@ DiffuseMaterial::DiffuseMaterial(Scene &&scene) noexcept :
   Shader {std::move (scene)} {
 }
 
-bool DiffuseMaterial::shade(RGB *rgb, Intersection const &intersection,
-                            Ray && /*ray*/) const noexcept {
+bool DiffuseMaterial::shade (RGB *const rgb, Intersection intersection,
+                             Ray && /*ray*/) const noexcept {
 
   if (intersection.material_ != nullptr) {
     *rgb += intersection.material_->Kd_;

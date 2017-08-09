@@ -13,12 +13,9 @@ using MobileRT::Point3D;
 using MobileRT::RGB;
 using MobileRT::Scene;
 
-OBJLoader::OBJLoader(const char* text, const char* materials) noexcept :
+OBJLoader::OBJLoader (const char *const text, const char *const materials) noexcept :
   text_ {text},
-  materialsText_ {materials},
-  attrib_ {},
-  shapes_ {std::vector<tinyobj::shape_t> ()},
-  materials_ {std::vector<tinyobj::material_t> ()}
+  materialsText_ {materials}
 {
 }
 
@@ -42,7 +39,7 @@ void OBJLoader::process() noexcept {
     isProcessed_ = true;
 }
 
-bool OBJLoader::fillScene(Scene *scene) noexcept {
+bool OBJLoader::fillScene (Scene *const scene) noexcept {
     for (auto & shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset {0};

@@ -8,13 +8,13 @@ using MobileRT::AABB;
 using MobileRT::Plane;
 using MobileRT::Point3D;
 
-Plane::Plane(const Point3D &point, const Vector3D &normal) noexcept :
+Plane::Plane (Point3D point, Vector3D normal) noexcept :
   normal_ {normal},
   point_ {point}
 {
 }
 
-bool Plane::intersect(Intersection *intersection, const Ray &ray) const noexcept {
+bool Plane::intersect (Intersection *const intersection, Ray ray) const noexcept {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
   const float normalized_projection {this -> normal_ . dotProduct (ray . direction_)};
@@ -59,7 +59,7 @@ AABB Plane::getAABB() const noexcept {
   return AABB {getPositionMin (), getPositionMax ()};
 }
 
-float Plane::distance(const Point3D &point) const noexcept {
+float Plane::distance (Point3D point) const noexcept {
   //Plane Equation
   //a(x-x0)+b(y-y0)+c(z-z0) = 0
   //abc = normal
@@ -75,7 +75,7 @@ float Plane::distance(const Point3D &point) const noexcept {
   return numerator / denumerator;
 }
 
-bool Plane::intersect(const AABB &box) const noexcept {
+bool Plane::intersect (AABB box) const noexcept {
 
   Point3D positiveVertex {box . pointMin_};
   Point3D negativeVertex {box . pointMax_};

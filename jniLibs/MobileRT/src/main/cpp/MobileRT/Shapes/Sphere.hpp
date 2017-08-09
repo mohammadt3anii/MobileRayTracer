@@ -22,7 +22,7 @@ namespace MobileRT {
         Point3D getPositionMax() const noexcept;
 
     public:
-			explicit Sphere(const Point3D &center, float radius) noexcept;
+			explicit Sphere (Point3D center, float radius) noexcept;
 
 			Sphere(const Sphere &sphere) noexcept = default;
 
@@ -33,16 +33,14 @@ namespace MobileRT {
 			Sphere &operator=(const Sphere &sphere) noexcept = delete;
 
 			Sphere &operator=(Sphere &&sphere) noexcept = delete;
-
-			bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
+			bool intersect (Intersection *intersection, Ray ray) const noexcept;
 
 			void moveTo(float x, float y) noexcept;
 
 			float getZ() const noexcept;
 
 			AABB getAABB() const noexcept;
-
-			bool intersect(const AABB &box) const noexcept;
+			bool intersect (AABB box) const noexcept;
     };
 }//namespace MobileRT
 

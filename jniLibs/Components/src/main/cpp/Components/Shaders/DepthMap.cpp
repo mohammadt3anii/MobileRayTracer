@@ -17,7 +17,7 @@ DepthMap::DepthMap(Scene &&scene, Point3D&& maxPoint) noexcept :
 {
 }
 
-bool DepthMap::shade(RGB *rgb, Intersection const &intersection, Ray &&ray) const noexcept {
+bool DepthMap::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept {
 
   const float maxDist {(maxPoint_ - ray . origin_) . normalize () * 1.1f};
   const float depth {intersection . length_};

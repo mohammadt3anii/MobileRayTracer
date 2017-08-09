@@ -16,13 +16,12 @@ namespace MobileRT {
       Point3D point_ {};   // intersection point
       Vector3D normal_ {};    // intersection normal
       Vector3D symNormal_ {};
-      const Material *material_ {};// material of the intersected primitive
-      float length_ {};// ray length parameter
+			const Material *material_ {nullptr};// material of the intersected primitive
+			float length_ {RayLengthMax};// ray length parameter
 
     public:
-			explicit Intersection() noexcept;
-
-		Intersection(const Intersection &intersection) noexcept = delete;
+			explicit Intersection () noexcept = default;
+			Intersection (const Intersection &intersection) noexcept = default;
 
 		Intersection(Intersection &&intersection) noexcept = default;
 
@@ -31,12 +30,10 @@ namespace MobileRT {
 		Intersection &operator=(const Intersection &intersection) noexcept = delete;
 
 		Intersection &operator=(Intersection &&intersection) noexcept = delete;
-
-		void reset(const Point3D &orig, const Vector3D &dir, float dist,
-							 const Vector3D &normal) noexcept;
-
-		void reset(const Point3D &orig, const Vector3D &dir, float dist,
-							 const Point3D &center) noexcept;
+			void reset (Point3D orig, Vector3D dir, float dist,
+									Vector3D normal) noexcept;
+			void reset (Point3D orig, Vector3D dir, float dist,
+									Point3D center) noexcept;
 
 		static unsigned int getInstances() noexcept;
     };

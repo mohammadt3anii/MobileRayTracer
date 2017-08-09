@@ -24,11 +24,11 @@ namespace Components {
     std::unique_ptr<Sampler> samplerPointLight_ {};
 
     public:
-			explicit AreaLight(const Material &radiance,
-												 std::unique_ptr<Sampler> &&samplerPointLight,
-												 const Point3D &pointA,
-												 const Point3D &pointB,
-												 const Point3D &pointC) noexcept;
+    explicit AreaLight (Material radiance,
+                        std::unique_ptr<Sampler> &&samplerPointLight,
+                        Point3D pointA,
+                        Point3D pointB,
+                        Point3D pointC) noexcept;
 
 			AreaLight(const AreaLight &areaLight) noexcept = delete;
 
@@ -43,8 +43,7 @@ namespace Components {
 			Point3D getPosition() noexcept final;
 
 			void resetSampling() noexcept final;
-
-			bool intersect(Intersection *intersection, const Ray &ray) const noexcept final;
+    bool intersect (Intersection *intersection, Ray ray) const noexcept final;
 	};
 }//namespace Components
 

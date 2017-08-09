@@ -28,7 +28,7 @@ namespace MobileRT {
         Point3D getPositionMax() const noexcept;
 
     public:
-			explicit Rectangle(const Point3D &pointA, const Point3D &pointB, const Point3D &pointC) noexcept;
+			explicit Rectangle (Point3D pointA, Point3D pointB, Point3D pointC) noexcept;
 
 			Rectangle(const Rectangle &rectangle) noexcept = default;
 
@@ -39,16 +39,14 @@ namespace MobileRT {
 			Rectangle &operator=(const Rectangle &rectangle) noexcept = delete;
 
 			Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
-
-			bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
+			bool intersect (Intersection *intersection, Ray ray) const noexcept;
 
 			void moveTo(float x, float y) noexcept;
 
 			float getZ() const noexcept;
 
 			AABB getAABB() const noexcept;
-
-			bool intersect(const AABB &box) const noexcept;
+			bool intersect (AABB box) const noexcept;
     };
 }//namespace MobileRT
 

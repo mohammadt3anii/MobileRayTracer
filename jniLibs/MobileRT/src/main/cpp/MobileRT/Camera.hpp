@@ -17,8 +17,8 @@ namespace MobileRT {
       Vector3D up_ {};
 
     public:
-        explicit Camera(const Point3D &position,
-                        const Point3D &lookAt, const Vector3D &up) noexcept;
+			explicit Camera (Point3D position,
+											 Point3D lookAt, Vector3D up) noexcept;
 
 		Camera(const Camera &camera) noexcept = delete;
 

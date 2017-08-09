@@ -18,8 +18,9 @@ namespace MobileRT {
       Point3D pointMax_ {};
 
     public:
-			explicit AABB(const Point3D &pointMin = Point3D(),
-										const Point3D &pointMax = Point3D());
+			explicit AABB () noexcept = default;
+			explicit AABB (Point3D pointMin,
+										 Point3D pointMax) noexcept;
 
 			AABB(const AABB &AABB) noexcept = default;
 

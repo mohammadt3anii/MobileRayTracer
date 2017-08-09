@@ -16,7 +16,7 @@ namespace MobileRT {
       const Material radiance_ {};
 
     public:
-        explicit Light(Material const &radiance) noexcept;
+      explicit Light (Material radiance) noexcept;
 
 		Light(const Light &light) noexcept = delete;
 
@@ -31,8 +31,7 @@ namespace MobileRT {
         virtual Point3D getPosition() noexcept = 0;
 
         virtual void resetSampling() noexcept = 0;
-
-        virtual bool intersect(Intersection *intersection, const Ray &ray) const noexcept = 0;
+      virtual bool intersect (Intersection *intersection, Ray ray) const noexcept = 0;
     };
 }//namespace MobileRT
 

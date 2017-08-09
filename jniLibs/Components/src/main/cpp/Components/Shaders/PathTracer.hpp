@@ -25,14 +25,15 @@ namespace Components {
 
     private:
 			bool shade(RGB *rgb,
-								 Intersection const &intersection,
+								 Intersection intersection,
 								 Ray &&ray) const noexcept final;
 
 		public:
         explicit PathTracer(Scene &&scene,
-                            std::unique_ptr<Sampler> &&samplerRay, std::unique_ptr<Sampler> &&samplerLight,
-                            std::unique_ptr<Sampler> &&samplerRussianRoulette,
-                            unsigned int samplesLight) noexcept;
+														std::unique_ptr<Sampler> &&samplerRay,
+														std::unique_ptr<Sampler> &&samplerLight,
+														std::unique_ptr<Sampler> &&samplerRussianRoulette,
+														unsigned int samplesLight) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;
 

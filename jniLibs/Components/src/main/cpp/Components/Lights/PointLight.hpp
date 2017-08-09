@@ -17,7 +17,7 @@ namespace Components {
       Point3D position_ {};
 
     public:
-        explicit PointLight(const Material &radiance, const Point3D &position) noexcept;
+      explicit PointLight (Material radiance, Point3D position) noexcept;
 
 		PointLight(const PointLight &pointLight) noexcept = delete;
 
@@ -34,7 +34,7 @@ namespace Components {
         void resetSampling() noexcept final;
 
         bool
-        intersect(Intersection *intersection, const Ray &ray) const noexcept final;
+        intersect (Intersection *intersection, Ray ray) const noexcept final;
     };
 }//namespace Components
 

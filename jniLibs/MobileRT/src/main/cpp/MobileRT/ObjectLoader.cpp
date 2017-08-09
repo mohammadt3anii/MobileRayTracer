@@ -6,11 +6,6 @@
 
 using MobileRT::ObjectLoader;
 
-ObjectLoader::ObjectLoader () noexcept :
-  isProcessed_ {false}
-{
-}
-
 ObjectLoader::~ObjectLoader() noexcept {
     LOG("ObjectLoader DELETED");
 }

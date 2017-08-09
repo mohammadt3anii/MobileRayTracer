@@ -35,8 +35,9 @@ Shader::Shader(Scene &&scene, const unsigned int samplesLight) noexcept :
 }
 
 template<typename T>
-void Shader::getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max) {
-  for (T &primitive : primitives) {
+void
+Shader::getSceneBounds (const std::vector<T> primitives, Point3D *const min, Point3D *const max) {
+  for (const T &primitive : primitives) {
     if (primitive.getAABB().pointMin_.x_ < min->x_) {
       min->x_ = primitive.getAABB().pointMin_.x_;
     }
@@ -58,7 +59,7 @@ void Shader::getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *ma
   }
 }
 
-int Shader::traceTouch(Intersection *intersection, Ray &&ray) const noexcept {
+int Shader::traceTouch (Intersection *const intersection, Ray &&ray) const noexcept {
   return this->scene_.trace(intersection, std::move(ray));
 }
 
@@ -66,7 +67,7 @@ Shader::~Shader () noexcept {
 	LOG("SHADER DELETED");
 }
 
-bool Shader::rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept {
+bool Shader::rayTrace (RGB *rgb, Intersection *const intersection, Ray &&ray) const noexcept {
   //if (regularGrid_.intersect(intersection, ray)) {
   if (this -> scene_ . trace (intersection, ray) >= 0) {// compute radiance
     //intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];

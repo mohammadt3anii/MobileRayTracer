@@ -20,9 +20,9 @@ namespace Components {
 		float fastArcTan(float value) const noexcept;
 
     public:
-        explicit Perspective(const Point3D &position,
-                             const Point3D &lookAt, const Vector3D &up,
-                             float hFov, float vFov) noexcept;
+			explicit Perspective (Point3D position,
+														Point3D lookAt, Vector3D up,
+														float hFov, float vFov) noexcept;
 
 		Perspective(const Perspective &perspective) noexcept = delete;
 
