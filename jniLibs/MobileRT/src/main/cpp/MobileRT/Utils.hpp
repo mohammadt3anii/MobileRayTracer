@@ -20,9 +20,9 @@
 #endif
 
 template<typename ...Args>
-void log (const Args &... args) {
+void log (Args &&... args) {
   std::ostringstream oss {""};
-  static_cast<void> (std::initializer_list<int> {(oss << args, 0)...});
+  static_cast<void> (std::initializer_list<int> {(oss << std::move (args), 0)...});
   oss << std::endl;
 #ifdef NO_ANDROID
   std::cout << oss.str();
