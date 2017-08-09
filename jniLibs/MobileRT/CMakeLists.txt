@@ -26,7 +26,7 @@ add_library( MobileRT SHARED ${MOBILE_RT_SOURCES} )
 target_include_directories( MobileRT INTERFACE "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp" )
 
 target_compile_options( MobileRT PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
-target_compile_options( MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast> )
+target_compile_options( MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
 target_compile_options( MobileRT PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
@@ -46,8 +46,9 @@ general -Wl,-no-undefined
 general -Wl,-gc-sections
 general -Wl,-z,norelro
 general -Wl,-hash-style=sysv
-general -gsplit-dwarf
-general -flto=full ${GOLD}
-optimized -Wl,-build-id=none
+general -Wl,-flto=full ${GOLD}
+general -Wl,-fno-rtti
+general -Wl,-fno-exceptions
 optimized -Wl,-s
+optimized -Wl,-build-id=none
 )

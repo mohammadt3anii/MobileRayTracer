@@ -19,31 +19,19 @@
   #define LOG(...)
 #endif
 
-inline void MagicLog (std::ostringstream & /*o*/) {}
-
-template<typename T, typename... Args>
-void MagicLog (std::ostringstream &o, T &&t, Args &&... args)
-{
-
-	o << t;
-  MagicLog (o, std::forward<Args> (args)...);
-}
-
-template<typename... Args>
-void log (Args &&... args)
-{
-
+template<typename ...Args>
+void log (const Args &... args) {
   std::ostringstream oss {""};
-  MagicLog<Args ...> (oss, std::forward<Args> (args)...);
+  static_cast<void> (std::initializer_list<int> {(oss << args, 0)...});
   oss << std::endl;
-	#ifdef NO_ANDROID
-		std::cout << oss.str();
-	#else
-		__android_log_print(ANDROID_LOG_INFO, "LOG", "%s", oss.str().c_str());
-	#endif
+#ifdef NO_ANDROID
+  std::cout << oss.str();
+#else
+  __android_log_print (ANDROID_LOG_INFO, "LOG", "%s", oss . str () . c_str ());
+#endif
 }
 
-inline std::string getFileName (const char *filepath) {
+inline std::string getFileName (const char *const filepath) {
 
   const std::string filePath {filepath};
   std::string::size_type filePos {filePath . rfind ('/')};

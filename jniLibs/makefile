@@ -11,29 +11,28 @@ INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
 INCLUDES += -I../third-party
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
+LDFLAGS += -L../third-party/tinyobjloader
 
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE $(INCLUDES)
-CXXFLAGS += -Wno-old-style-cast -Wno-zero-as-null-pointer-constant -Wno-unused-variable -Wno-unused-function
-CXXFLAGS +=  -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections
+CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE -fpie $(INCLUDES)
+CXXFLAGS += -Wno-zero-as-null-pointer-constant -Wno-old-style-cast
+CXXFLAGS += -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -static -fopenmp -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
-INCLUDES += -L../third-party/tinyobjloader
+LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -pie -fopenmp -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fsingle-precision-constant -funswitch-loops -ffunction-sections -fdata-sections -fprofile-correction
+LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -flto=full
 
 ifeq ($(S),)
-	CXXFLAGS += -march=native -ftree-vectorize -Ofast
-	LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -Wl,-build-id=none -Wl,-s -fvisibility=hidden -fvisibility-inlines-hidden
+	CXXFLAGS += -Ofast -DNDEBUG
+	LDFLAGS += -Wl,-s -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-check
-	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-check
+	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
 endif
 
 ifeq ($(S),2)
 	#CXX := g++
-	CXXFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
-	LDFLAGS += -O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls
+	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
 	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor #MemorySanitizer, a detector of uninitialized reads. Requires instrumentation of all program code.
 	#SANITIZER := -fsanitize=address #AddressSanitizer, a memory error detector.
 	#SANITIZER := -fsanitize=thread #ThreadSanitizer, a data race detector.
@@ -53,6 +52,11 @@ ifeq ($(CXX),clang++)
   CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1
 	CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
   LDFLAGS += -lc++
+endif
+
+ifeq ($(CXX),g++)
+	CXXFLAGS += -finline-limit=150
+	LDFLAGS += -finline-limit=150
 endif
 
 ###############################################################################

@@ -21,7 +21,7 @@ target_include_directories( Components INTERFACE "${CMAKE_CURRENT_LIST_DIR}/src/
 target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../third-party" )
 
 target_compile_options( Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
-target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast> )
+target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
 target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
@@ -29,7 +29,7 @@ target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padde
 target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field -Wno-over-aligned )
 target_compile_options( Components PRIVATE -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident )
 
-target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full>)
+target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full> )
 if(NOT ANDROID_ABI MATCHES "^mips(64)?$" )
     set(GOLD "-fuse-ld=gold" )
 endif()
@@ -42,8 +42,9 @@ general -Wl,-no-undefined
 general -Wl,-gc-sections
 general -Wl,-z,norelro
 general -Wl,-hash-style=sysv
-general -gsplit-dwarf
-general -flto=full ${GOLD}
-optimized -Wl,-build-id=none
+general -Wl,-flto=full ${GOLD}
+general -Wl,-fno-rtti
+general -Wl,-fno-exceptions
 optimized -Wl,-s
+optimized -Wl,-build-id=none
 )
