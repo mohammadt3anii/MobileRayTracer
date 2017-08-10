@@ -99,7 +99,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const int tid) noexcept {
       const float block {this -> samplerCamera_ -> getSample (sample)};
 			if (block >= 1.0f) {break;}
       const unsigned int pixel {
-        static_cast<unsigned int>(static_cast<uint32_t>(::lroundf (block * this -> domainSize_)) *
+        static_cast<unsigned int>(static_cast<uint32_t>(roundf (block * this->domainSize_)) *
                                   this -> blockSizeX_ % resolution_)};
       const unsigned int startY {
         ((pixel / this -> width_) * this -> blockSizeY_) % this -> height_};

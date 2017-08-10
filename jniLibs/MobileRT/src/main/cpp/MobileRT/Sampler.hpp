@@ -36,7 +36,7 @@ namespace MobileRT {
 			void resetSampling() noexcept;
 
 			void stopSampling() noexcept;
-		virtual float getSample (unsigned int sample = 0) noexcept = 0;
+    virtual float getSample (unsigned int sample = 0) noexcept = 0;
 	};
 }//namespace MobileRT
 
