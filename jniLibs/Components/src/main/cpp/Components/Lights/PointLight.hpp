@@ -12,30 +12,29 @@ namespace Components {
 	using MobileRT::Point3D;
 	using MobileRT::Intersection;
 	using MobileRT::Ray;
-    class PointLight final : public MobileRT::Light {
+	class PointLight final : public MobileRT::Light {
     private:
       Point3D position_ {};
 
     public:
       explicit PointLight (Material radiance, Point3D position) noexcept;
 
-		PointLight(const PointLight &pointLight) noexcept = delete;
+			PointLight(const PointLight &pointLight) noexcept = delete;
 
-		PointLight(PointLight &&pointLight) noexcept = delete;
+			PointLight(PointLight &&pointLight) noexcept = delete;
 
-        ~PointLight() noexcept final = default;
+			~PointLight() noexcept final = default;
 
-        PointLight &operator=(const PointLight &pointLight) noexcept = delete;
+			PointLight &operator=(const PointLight &pointLight) noexcept = delete;
 
-		PointLight &operator=(PointLight &&pointLight) noexcept = delete;
+			PointLight &operator=(PointLight &&pointLight) noexcept = delete;
 
-        Point3D getPosition() noexcept final;
+			Point3D getPosition() noexcept final;
 
-        void resetSampling() noexcept final;
+			void resetSampling() noexcept final;
 
-        bool
-        intersect (Intersection *intersection, Ray ray) const noexcept final;
-    };
+			bool intersect (Intersection *intersection, Ray ray) const noexcept final;
+	};
 }//namespace Components
 
 #endif //COMPONENTS_LIGHTS_POINTLIGHT_HPP

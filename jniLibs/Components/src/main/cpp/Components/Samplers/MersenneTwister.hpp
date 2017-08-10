@@ -9,23 +9,22 @@
 #include <random>
 
 namespace Components {
-    class MersenneTwister final : public MobileRT::Sampler {
-    public:
-      explicit MersenneTwister(uint64_t domainSize,
-                               unsigned int samples) noexcept;
-		
-			MersenneTwister(const MersenneTwister &random) noexcept = delete;
+	class MersenneTwister final : public MobileRT::Sampler {
+	public:
+		explicit MersenneTwister() noexcept = default;
 
-			MersenneTwister(MersenneTwister &&random) noexcept = delete;
+		MersenneTwister(const MersenneTwister &random) noexcept = delete;
 
-      ~MersenneTwister() noexcept final = default;
+		MersenneTwister(MersenneTwister &&random) noexcept = delete;
 
-      MersenneTwister &operator=(const MersenneTwister &random) noexcept = delete;
+		~MersenneTwister() noexcept final = default;
 
-			MersenneTwister &operator=(MersenneTwister &&random) noexcept = delete;
+		MersenneTwister &operator=(const MersenneTwister &random) noexcept = delete;
 
-      float getSample(unsigned int sample) noexcept final;
-    };
+		MersenneTwister &operator=(MersenneTwister &&random) noexcept = delete;
+
+		float getSample(unsigned int sample) noexcept final;
+	};
 }//namespace Components
 
 #endif //COMPONENTS_SAMPLERS_MERSENNETWISTER_HPP

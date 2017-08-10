@@ -17,18 +17,18 @@ Plane::Plane (Point3D point, Vector3D normal) noexcept :
 bool Plane::intersect (Intersection *const intersection, Ray ray) const noexcept {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
-  const float normalized_projection {this -> normal_ . dotProduct (ray . direction_)};
+  const float normalized_projection {this->normal_.dotProduct (ray.direction_)};
   if (std::fabs (normalized_projection) < Epsilon) {
         return false;
 	  }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
   const float distanceToIntersection {
-    this -> normal_ . dotProduct (this -> point_, ray . origin_) / normalized_projection};
+    this->normal_.dotProduct (this->point_, ray.origin_) / normalized_projection};
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-  if (distanceToIntersection < Epsilon || distanceToIntersection > intersection -> length_) {
+  if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
         return false;
 	}
 
@@ -66,19 +66,19 @@ float Plane::distance (Point3D point) const noexcept {
   //x0,y0,z0 = point
   //D = |ax0 + by0 + cz0 + d| / sqrt(a² + b² + c²)
   const float d {
-    normal_ . x_ * - point_ . x_ + normal_ . y_ * - point_ . y_ + normal_ . z_ * - point_ . z_};
+    normal_.x_ * - point_.x_ + normal_.y_ * - point_.y_ + normal_.z_ * - point_.z_};
   const float numerator {
-    normal_ . x_ * point . x_ + normal_ . y_ * point . y_ + normal_ . z_ * point . z_ + d};
+    normal_.x_ * point.x_ + normal_.y_ * point.y_ + normal_.z_ * point.z_ + d};
   const float denumerator {
     std::sqrt (
-      normal_ . x_ * normal_ . x_ + normal_ . y_ * normal_ . y_ + normal_ . z_ * normal_ . z_)};
+      normal_.x_ * normal_.x_ + normal_.y_ * normal_.y_ + normal_.z_ * normal_.z_)};
   return numerator / denumerator;
 }
 
 bool Plane::intersect (AABB box) const noexcept {
 
-  Point3D positiveVertex {box . pointMin_};
-  Point3D negativeVertex {box . pointMax_};
+  Point3D positiveVertex {box.pointMin_};
+  Point3D negativeVertex {box.pointMax_};
   if (this->normal_.x_ >= 0.0f) {
     positiveVertex.x_ = box.pointMax_.x_;
   }

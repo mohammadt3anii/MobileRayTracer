@@ -23,18 +23,16 @@ Perspective::Perspective (Point3D position, Point3D lookAt, Vector3D up,
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-
-  return Ray {Vector3D {this -> position_ +
-                        this -> direction_ +
-                        (this -> right_ * (fastArcTan (this -> hFov_ * (u - 0.5f)) + deviationU)) +
-                        (this -> up_ * (fastArcTan (this -> vFov_ * (0.5f - v)) + deviationV)),
-                        this -> position_, true},
-              this -> position_, 1};
+  return Ray {Vector3D {this->position_ +
+                        this->direction_ +
+                        (this->right_ * (fastArcTan (this->hFov_ * (u - 0.5f)) + deviationU)) +
+                        (this->up_ * (fastArcTan (this->vFov_ * (0.5f - v)) + deviationV)),
+                        this->position_, true},
+                        this->position_, 1};
 }
 
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
-
   const float absValue {value < 0.0f ? - value : value};
   return Pi_4 * value - (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
 }

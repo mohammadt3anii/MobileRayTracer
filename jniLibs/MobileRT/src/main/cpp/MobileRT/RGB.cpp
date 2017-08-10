@@ -16,19 +16,19 @@ RGB::RGB(const float r, const float g, const float b) noexcept :
 }
 
 RGB::RGB(const RGB &rgb) noexcept :
-  R_ {rgb . R_},
-  G_ {rgb . G_},
-  B_ {rgb . B_},
-  samples_ {rgb . samples_}
+  R_ {rgb.R_},
+  G_ {rgb.G_},
+  B_ {rgb.B_},
+  samples_ {rgb.samples_}
 {
     counter++;
 }
 
 RGB::RGB(RGB &&rgb) noexcept :
-  R_ {rgb . R_},
-  G_ {rgb . G_},
-  B_ {rgb . B_},
-  samples_ {rgb . samples_}
+  R_ {rgb.R_},
+  G_ {rgb.G_},
+  B_ {rgb.B_},
+  samples_ {rgb.samples_}
 {
     counter++;
 }

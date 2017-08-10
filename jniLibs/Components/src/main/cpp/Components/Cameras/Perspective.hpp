@@ -16,27 +16,26 @@ namespace Components {
       const float hFov_ {};
       const float vFov_ {};
 
-	private:
-		float fastArcTan(float value) const noexcept;
+		private:
+			float fastArcTan(float value) const noexcept;
 
     public:
 			explicit Perspective (Point3D position,
 														Point3D lookAt, Vector3D up,
 														float hFov, float vFov) noexcept;
 
-		Perspective(const Perspective &perspective) noexcept = delete;
+			Perspective(const Perspective &perspective) noexcept = delete;
 
-		Perspective(Perspective &&perspective) noexcept = delete;
+			Perspective(Perspective &&perspective) noexcept = delete;
 
-        ~Perspective() noexcept final = default;
+			~Perspective() noexcept final = default;
 
-		Perspective &operator=(const Perspective &perspective) const noexcept = delete;
+			Perspective &operator=(const Perspective &perspective) const noexcept = delete;
 
-		Perspective &&operator=(Perspective &&perspective) const noexcept = delete;
+			Perspective &&operator=(Perspective &&perspective) const noexcept = delete;
 
-        Ray generateRay(float u, float v,
-                                      float deviationU,
-                                      float deviationV) const noexcept final;
+			Ray generateRay(float u, float v,
+											float deviationU, float deviationV) const noexcept final;
     };
 }//namespace Components
 

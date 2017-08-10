@@ -8,27 +8,26 @@
 #include "MobileRT/Sampler.hpp"
 
 namespace Components {
-    class Stratified final : public MobileRT::Sampler {
+	class Stratified final : public MobileRT::Sampler {
     public:
-        explicit Stratified(uint64_t domainSize,
-                            unsigned int samples) noexcept;
+    explicit Stratified() noexcept = default;
 
-        explicit Stratified(unsigned int width, unsigned int height,
-                            unsigned int samples,
-                            unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
+		explicit Stratified(unsigned int width, unsigned int height,
+												unsigned int samples,
+												unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
 
 		Stratified(const Stratified &stratified) noexcept = delete;
 
 		Stratified(Stratified &&stratified) noexcept = delete;
 
-        ~Stratified() noexcept final = default;
+		~Stratified() noexcept final = default;
 
-        Stratified &operator=(const Stratified &stratified) noexcept = delete;
+		Stratified &operator=(const Stratified &stratified) noexcept = delete;
 
 		Stratified &operator=(Stratified &&stratified) noexcept = delete;
 
-        float getSample(unsigned int sample) noexcept final;
-    };
+		float getSample(unsigned int sample) noexcept final;
+	};
 }//namespace Components
 
 #endif //COMPONENTS_SAMPLERS_STRATIFIED_HPP

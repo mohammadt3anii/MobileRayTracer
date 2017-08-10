@@ -14,21 +14,19 @@ static float fps_ {0.0f};
 static int64_t timeFrame_ {0};
 
 static void FPS() noexcept {
-
   static int frame {0};
   static std::chrono::steady_clock::time_point timebase_ {};
-    frame++;
+  frame++;
   const std::chrono::steady_clock::time_point time {std::chrono::steady_clock::now ()};
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
-        fps_ = (frame * 1000.0f) /
-               (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count());
-        timebase_ = time;
-        frame = 0;
-    }
+  if (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
+    fps_ = (frame * 1000.0f) /
+           (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count());
+    timebase_ = time;
+    frame = 0;
+  }
 }
 
 void thread_work (void *const dstPixels, const int numThreads) noexcept {
-
   int rep {1};
     do {
       const std::chrono::steady_clock::time_point start {std::chrono::steady_clock::now ()};
@@ -36,13 +34,12 @@ void thread_work (void *const dstPixels, const int numThreads) noexcept {
         timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::steady_clock::now() - start).count();
         FPS();
-
         renderer_->camera_->position_.x_ += 1.0f;
     } while (working_ != State::STOPPED && rep -- > 1);
   if (working_ != State::STOPPED) {
     working_ = State::FINISHED;
         LOG("WORKING = FINISHED");
-    }
+  }
 }
 
 extern "C"
@@ -55,9 +52,9 @@ void Java_puscas_mobilertapp_DrawView_finish(
     delete renderer_;
 
   working_ = State::IDLE;
-    LOG("WORKING = IDLE");
+  LOG("WORKING = IDLE");
   timeFrame_ = 0;
-    fps_ = 0.0f;
+  fps_ = 0.0f;
 }
 
 extern "C"
@@ -73,12 +70,11 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
-
   working_ = State::STOPPED;
-    LOG("WORKING = STOPPED");
-    renderer_->stopRender();
-    //timeFrame_ = 0;
-    //fps_ = 0.0f;
+  LOG("WORKING = STOPPED");
+  renderer_->stopRender();
+  //timeFrame_ = 0;
+  //fps_ = 0.0f;
 }
 
 extern "C"
@@ -96,13 +92,13 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   jstring matText
 ) noexcept {
     jboolean isCopy (JNI_FALSE);
-  const char *obj {(env) -> GetStringUTFChars (objFile, &isCopy)};
-  const char *mat {(env) -> GetStringUTFChars (matText, &isCopy)};
+  const char *obj {(env)->GetStringUTFChars (objFile, &isCopy)};
+  const char *mat {(env)->GetStringUTFChars (matText, &isCopy)};
   Components::OBJLoader objLoader {obj, mat};
     env->ReleaseStringUTFChars(objFile, obj);
     env->ReleaseStringUTFChars(matText, mat);
     objLoader.process();
-  if (! objLoader . isProcessed ()) {
+  if (! objLoader.isProcessed ()) {
     exit (0);
   }
 
@@ -116,7 +112,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   int blockSizeY_ {height_ / numberOfBlocks_};
 
 
-  [&] () -> void {
+  [&] ()->void {
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerCamera {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
@@ -148,7 +144,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
       case 2:
         camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
+          MobileRT::Point3D {0.0f, 0.0f, -3.4f},
           MobileRT::Point3D {0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f, 45.0f * ratio);
@@ -165,10 +161,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         break;
 
       default:
-        objLoader . fillScene (&scene_);
+        objLoader.fillScene (&scene_);
         camera = std::make_unique<Components::Perspective> (
           MobileRT::Point3D {0.0f, 0.5f, 3.0f},
-          MobileRT::Point3D {0.0f, 0.5f, - 1.0f},
+          MobileRT::Point3D {0.0f, 0.5f, -1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f, 45.0f * ratio);
         break;
@@ -176,9 +172,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     switch (sampler) {
       case 1:
         if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::HaltonSeq> (
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
-            static_cast<uint64_t>(samplesPixel), 1);
+          samplerPixel = std::make_unique<Components::HaltonSeq> ();
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
@@ -189,9 +183,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
       default:
         if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::Stratified> (
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
-            static_cast<uint64_t>(samplesPixel), 1);
+          samplerPixel = std::make_unique<Components::Stratified> ();
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
@@ -200,12 +192,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           blockSizeX_, blockSizeY_);
         break;
     }
-    const uint64_t domainRay {
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-      static_cast<uint64_t>(samplesPixel) * RayDepthMax};
-    const uint64_t domainLight {
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-      static_cast<uint64_t>(samplesPixel) * RayDepthMax * static_cast<uint64_t>(samplesLight)};
     switch (shader) {
       case 1: {
         shader_ = std::make_unique<Components::Whitted> (std::move (scene_), samplesLight);
@@ -213,16 +199,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       }
 
       case 2: {
-        LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
-        //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerRay (
-          std::make_unique<Components::MersenneTwister> (domainRay, 1));
-        //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerLight (
-          std::make_unique<Components::MersenneTwister> (domainLight, 1));
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette (
-          std::make_unique<Components::MersenneTwister> (domainLight, 1));
+        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::MersenneTwister> ()};
         shader_ = std::make_unique<Components::PathTracer> (
           std::move (scene_), std::move (samplerRay), std::move (samplerLight),
           std::move (samplerRussianRoulette), samplesLight);
@@ -253,11 +235,11 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
     LOG("x = ", blockSizeX_, "[", width_, "]");
     LOG("y = ", blockSizeY_, "[", height_, "]");
-    LOG("TRIANGLES = ", renderer_ -> shader_ -> scene_ . triangles_ . size ());
-    LOG("SPHERES = ", renderer_ -> shader_ -> scene_ . spheres_ . size ());
-    LOG("PLANES = ", renderer_ -> shader_ -> scene_ . planes_ . size ());
-    LOG("LIGHTS = ", renderer_ -> shader_ -> scene_ . lights_ . size ());
-    LOG("MATERIALS = ", renderer_ -> shader_ -> scene_ . materials_ . size ());
+    LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
+    LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
+    LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
+    LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
+    LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size ());
   }();
 
 
@@ -269,13 +251,12 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
   jobject /*thiz*/,
   jobject dstBitmap,
   jint const nThreads) noexcept {
-
   void *dstPixels {nullptr};
-    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
-    AndroidBitmap_unlockPixels(env, dstBitmap);
+  AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
+  AndroidBitmap_unlockPixels(env, dstBitmap);
   working_ = State::BUSY;
-    LOG("WORKING = BUSY");
-    thread_ = new std::thread(thread_work, dstPixels, nThreads);
+  LOG("WORKING = BUSY");
+  thread_ = new std::thread(thread_work, dstPixels, nThreads);
 }
 
 extern "C"
@@ -284,10 +265,9 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
   jobject /*thiz*/,
   jfloat const jx,
   jfloat const jy) noexcept {
-
   const float u {static_cast<float> (jx) / width_};
   const float v {static_cast<float> (jy) / height_};
-  MobileRT::Ray ray {renderer_ -> camera_ -> generateRay (u, v, 0.0f, 0.0f)};
+  MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
   MobileRT::Intersection intersection {};
   const int primitiveID(renderer_->shader_->traceTouch(&intersection, std::move(ray)));
   return primitiveID;
@@ -301,18 +281,17 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
   jfloat const jy,
   jint const primitiveIndex
 ) noexcept {
-
   const float u {static_cast<float> (jx) / width_};
   const float v {static_cast<float> (jy) / height_};
-  const MobileRT::Ray ray {renderer_ -> camera_ -> generateRay (u, v, 0.0f, 0.0f)};
+  const MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
   const uint32_t index {static_cast<uint32_t>(primitiveIndex)};
   const MobileRT::Plane plane {
-    MobileRT::Point3D{0.0f, 0.0f, renderer_ -> shader_ -> scene_ . planes_[index] . getZ ()},
+    MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].getZ ()},
     MobileRT::Vector3D{0.0f, 0.0f, - 1.0f}};
   MobileRT::Intersection intersection {};
-    plane.intersect(&intersection, ray);
-    renderer_->shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
-                                                      intersection.point_.y_);
+  plane.intersect(&intersection, ray);
+  renderer_->shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
+                                                   intersection.point_.y_);
 }
 
 extern "C"
@@ -320,7 +299,7 @@ float Java_puscas_mobilertapp_DrawView_getFPS(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
-    return fps_;
+  return fps_;
 }
 
 extern "C"
@@ -328,7 +307,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
-    return timeFrame_;
+  return timeFrame_;
 }
 
 extern "C"
@@ -336,7 +315,7 @@ unsigned int Java_puscas_mobilertapp_DrawView_getSample(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
-    return renderer_->getSample();
+  return renderer_->getSample();
 }
 
 extern "C"
@@ -345,5 +324,5 @@ int Java_puscas_mobilertapp_DrawView_resize(
   jobject /*thiz*/,
   jint const size
 ) noexcept {
-    return roundDownToMultipleOf(size, numberOfBlocks_);
+  return roundDownToMultipleOf(size, numberOfBlocks_);
 }

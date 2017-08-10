@@ -6,16 +6,11 @@
 
 using MobileRT::Sampler;
 
-Sampler::Sampler(const uint64_t domainSize, const unsigned int samples) noexcept :
-  domainSize_ {domainSize},
-  samples_ {samples} {
-}
-
 Sampler::Sampler(const unsigned int width, const unsigned int height, const unsigned int samples,
                  const unsigned int blockSizeX, const unsigned int blockSizeY) noexcept :
-  sample_ {0},
   domainSize_ {(width / blockSizeX) * (height / blockSizeY)},
-  samples_ {samples} {
+  samples_ {samples}
+{
 }
 
 void Sampler::resetSampling() noexcept {

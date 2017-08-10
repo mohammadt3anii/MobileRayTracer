@@ -57,12 +57,12 @@ int main(int argc, char **argv) noexcept {
 			ssMtl << line << std::endl;
 		}
   Components::OBJLoader objLoader {ssObj . str () . c_str (), ssMtl . str () . c_str ()};
-    objLoader.process();
-    LOG("samplesPixel = ", samplesPixel);
-    LOG("samplesLight = ", samplesLight);
+  objLoader.process();
+  LOG("samplesPixel = ", samplesPixel);
+  LOG("samplesLight = ", samplesLight);
 
 
-  [&] () -> void {
+  [&] ()->void {
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerCamera {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
@@ -94,7 +94,7 @@ int main(int argc, char **argv) noexcept {
 
       case 2:
         camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D {0.0f, 0.0f, - 3.4f},
+          MobileRT::Point3D {0.0f, 0.0f, -3.4f},
           MobileRT::Point3D {0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f, 45.0f * ratio);
@@ -111,10 +111,10 @@ int main(int argc, char **argv) noexcept {
         break;
 
       default:
-        objLoader . fillScene (&scene_);
+        objLoader.fillScene (&scene_);
         camera = std::make_unique<Components::Perspective> (
           MobileRT::Point3D {0.0f, 0.5f, 3.0f},
-          MobileRT::Point3D {0.0f, 0.5f, - 1.0f},
+          MobileRT::Point3D {0.0f, 0.5f, -1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f, 45.0f * ratio);
         break;
@@ -122,9 +122,7 @@ int main(int argc, char **argv) noexcept {
     switch (sampler) {
       case 1:
         if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::HaltonSeq> (
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
-            static_cast<uint64_t>(samplesPixel), 1);
+          samplerPixel = std::make_unique<Components::HaltonSeq> ();
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
@@ -135,9 +133,7 @@ int main(int argc, char **argv) noexcept {
 
       default:
         if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::Stratified> (
-            static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2 *
-            static_cast<uint64_t>(samplesPixel), 1);
+          samplerPixel = std::make_unique<Components::Stratified> ();
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
@@ -146,12 +142,6 @@ int main(int argc, char **argv) noexcept {
           blockSizeX_, blockSizeY_);
         break;
     }
-    const uint64_t domainRay {
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-      static_cast<uint64_t>(samplesPixel) * RayDepthMax};
-    const uint64_t domainLight {
-      (static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 2) *
-      static_cast<uint64_t>(samplesPixel) * RayDepthMax * static_cast<uint64_t>(samplesLight)};
     switch (shader) {
       case 1: {
         shader_ = std::make_unique<Components::Whitted> (std::move (scene_), samplesLight);
@@ -159,16 +149,12 @@ int main(int argc, char **argv) noexcept {
       }
 
       case 2: {
-        LOG("domainRay = ", domainRay, "domainLight = ", domainLight);
-        //std::unique_ptr<MobileRT::Sampler> samplerRay(std::make_unique<Components::HaltonSeq>(domainRay, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerRay (
-          std::make_unique<Components::MersenneTwister> (domainRay, 1));
-        //std::unique_ptr<MobileRT::Sampler> samplerLight(std::make_unique<Components::HaltonSeq>(domainLight, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerLight (
-          std::make_unique<Components::MersenneTwister> (domainLight, 1));
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette(std::make_unique<Components::HaltonSeq>(domainLight, 1));
-        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette (
-          std::make_unique<Components::MersenneTwister> (domainLight, 1));
+        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::HaltonSeq>()};
+        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::MersenneTwister> ()};
         shader_ = std::make_unique<Components::PathTracer> (
           std::move (scene_), std::move (samplerRay), std::move (samplerLight),
           std::move (samplerRussianRoulette), samplesLight);
@@ -199,11 +185,11 @@ int main(int argc, char **argv) noexcept {
 
     LOG("x = ", blockSizeX_, "[", width_, "]");
     LOG("y = ", blockSizeY_, "[", height_, "]");
-    LOG("TRIANGLES = ", renderer_ -> shader_ -> scene_ . triangles_ . size ());
-    LOG("SPHERES = ", renderer_ -> shader_ -> scene_ . spheres_ . size ());
-    LOG("PLANES = ", renderer_ -> shader_ -> scene_ . planes_ . size ());
-    LOG("LIGHTS = ", renderer_ -> shader_ -> scene_ . lights_ . size ());
-    LOG("MATERIALS = ", renderer_ -> shader_ -> scene_ . materials_ . size ());
+    LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
+    LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
+    LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
+    LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
+    LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size ());
   }();
 
 

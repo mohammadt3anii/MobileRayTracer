@@ -7,7 +7,6 @@
 using Components::Constant;
 
 Constant::Constant(const float value) noexcept :
-  Sampler(0, 0),
   value_(value) {
 }
 

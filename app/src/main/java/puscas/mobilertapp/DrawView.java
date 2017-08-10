@@ -129,9 +129,8 @@ public class DrawView extends GLSurfaceView {
         start_ = SystemClock.elapsedRealtime();
         DrawView.renderIntoBitmap(bitmap_, numThreads_);
         scheduler_ = Executors.newSingleThreadScheduledExecutor();
-
         renderTask_.execute();
-        this.setOnTouchListener(new DrawView.TouchHandler());
+        //this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int sampler,

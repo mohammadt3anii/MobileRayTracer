@@ -21,10 +21,10 @@ namespace Components {
 	class AreaLight final : public MobileRT::Light {
     private:
 			Triangle triangle_;
-    std::unique_ptr<Sampler> samplerPointLight_ {};
+    	std::unique_ptr<Sampler> samplerPointLight_ {};
 
     public:
-    explicit AreaLight (Material radiance,
+    	explicit AreaLight (Material radiance,
                         std::unique_ptr<Sampler> &&samplerPointLight,
                         Point3D pointA,
                         Point3D pointB,
@@ -43,7 +43,8 @@ namespace Components {
 			Point3D getPosition() noexcept final;
 
 			void resetSampling() noexcept final;
-    bool intersect (Intersection *intersection, Ray ray) const noexcept final;
+
+			bool intersect (Intersection *intersection, Ray ray) const noexcept final;
 	};
 }//namespace Components
 

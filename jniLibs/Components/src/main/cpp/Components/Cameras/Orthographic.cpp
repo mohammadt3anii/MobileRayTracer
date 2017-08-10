@@ -22,9 +22,8 @@ Orthographic::Orthographic (Point3D position, Point3D lookAt, Vector3D up,
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Orthographic::generateRay(const float u, const float v,
                               const float deviationU, const float deviationV) const noexcept {
-
-  return Ray {this -> direction_,
-              this -> position_ +
-             this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
-              this -> up_ * (0.5f - v) * this -> sizeV_ + this -> up_ * deviationV, 1};
+  return Ray {this->direction_,
+              this->position_ +
+              this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
+              this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1};
 }
