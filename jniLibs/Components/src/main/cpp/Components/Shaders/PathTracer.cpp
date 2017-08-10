@@ -70,7 +70,7 @@ bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) co
           Intersection intersectLight {};
             //direct light
           for (unsigned int i {0}; i < samplesLight; i ++) {
-            const float randomNumber {samplerLight_->getSample (0)};
+            const float randomNumber {samplerLight_->getSample ()};
                 //PDF = 1 / sizeLights
             const unsigned int chosenLight {
                         static_cast<unsigned int> (std::floor(
@@ -101,9 +101,9 @@ bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) co
         }
 
         //indirect light
-      if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample(0) > finish_probability) {
-        const float r1 {2.0f * Pi * samplerRay_->getSample (0)};
-        const float r2 {samplerRay_->getSample (0)};
+      if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
+        const float r1 {2.0f * Pi * samplerRay_->getSample ()};
+        const float r2 {samplerRay_->getSample ()};
         const float r2s {std::sqrt (r2)};
         Vector3D u {std::fabs (intersection.normal_.x_) > 0.1f ?
                     Vector3D (0.0f, 1.0f, 0.0f).crossProduct (intersection.normal_) :

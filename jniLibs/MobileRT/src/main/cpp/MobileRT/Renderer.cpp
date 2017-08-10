@@ -111,8 +111,8 @@ void Renderer::renderScene(unsigned int *const bitmap, const int tid) noexcept {
         const unsigned int endX {startX + this -> blockSizeX_};
         for (unsigned int x {startX}; x < endX; x ++) {
           const float u {x * INV_IMG_WIDTH};
-          const float r1 {this -> samplerPixel_ -> getSample (0)};
-          const float r2 {this -> samplerPixel_ -> getSample (0)};
+          const float r1 {this->samplerPixel_->getSample ()};
+          const float r2 {this->samplerPixel_->getSample ()};
           const float deviationU {(r1 - 0.5f) * 2.0f * pixelWidth};
           const float deviationV {(r2 - 0.5f) * 2.0f * pixelHeight};
           Ray ray {this -> camera_ -> generateRay (u, v, deviationU, deviationV)};
