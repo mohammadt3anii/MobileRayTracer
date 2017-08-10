@@ -25,43 +25,29 @@ namespace MobileRT {
 
     public:
       explicit RGB () noexcept = default;
+
       explicit RGB (float r, float g, float b) noexcept;
+      RGB (const RGB &rgb) noexcept;
+      RGB (RGB &&rgb) noexcept;
+      ~RGB () noexcept = default;
+      RGB &operator= (const RGB &rgb) noexcept = delete;
+      RGB &operator= (RGB &&rgb) noexcept = delete;
+      bool hasColor () const noexcept;
 
-		RGB(const RGB &rgb) noexcept;
-
-		RGB(RGB &&rgb) noexcept;
-
-		~RGB() noexcept = default;
-
-		RGB &operator=(const RGB &rgb) noexcept = delete;
-
-		RGB &operator=(RGB &&rgb) noexcept = delete;
-
-		bool hasColor() const noexcept;
       void operator+= (RGB rgb) noexcept;
-      void addMult (const std::initializer_list<const RGB> rgbs,
-                    const std::initializer_list<const float> floats) noexcept;
-
-		RGB operator*(float value) const noexcept;
+      void addMult (std::initializer_list<const RGB> rgbs, float value = 1.0f) noexcept;
+      RGB operator* (float value) const noexcept;
       void operator*= (RGB rgb) noexcept;
-
-		void operator*=(float value) noexcept;
-
-		void operator+=(float value) noexcept;
-
-		void operator/=(float value) noexcept;
-
-		void addSampleAndCalcAvg(RGB *sample) noexcept;
+      void operator*= (float value) noexcept;
+      void operator+= (float value) noexcept;
+      void operator/= (float value) noexcept;
+      void addSampleAndCalcAvg (RGB *sample) noexcept;
 
 			void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned int samples = 0) noexcept;
-
-		unsigned int RGB2Color() noexcept;
-
-		unsigned int getColor() noexcept;
-
-		float getMax() noexcept;
-
-		static unsigned int getInstances() noexcept;
+      unsigned int RGB2Color () noexcept;
+      unsigned int getColor () noexcept;
+      float getMax () noexcept;
+      static unsigned int getInstances () noexcept;
     };
 }//namespace MobileRT
 

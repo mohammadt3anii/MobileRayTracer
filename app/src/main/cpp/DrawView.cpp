@@ -279,18 +279,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 }
 
 extern "C"
-State Java_puscas_mobilertapp_DrawView_redraw (
-  JNIEnv *const env,
-  jobject /*thiz*/,
-  jobject dstBitmap) noexcept {
-
-  void *dstPixels {nullptr};
-    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
-    AndroidBitmap_unlockPixels(env, dstBitmap);
-    return working_;
-}
-
-extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
   JNIEnv *const /*env*/,
   jobject /*thiz*/,

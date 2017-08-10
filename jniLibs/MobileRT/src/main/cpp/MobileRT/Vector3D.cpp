@@ -10,7 +10,7 @@ using MobileRT::Point3D;
 static unsigned int counter {0};
 
 namespace MobileRT {
-  Vector3D operator/(int value, const Vector3D &vector) noexcept {
+  Vector3D operator/ (int value, Vector3D vector) noexcept {
     return Vector3D(value / vector.x_, value / vector.y_, value / vector.z_);
   }
 }//namespace MobileRT

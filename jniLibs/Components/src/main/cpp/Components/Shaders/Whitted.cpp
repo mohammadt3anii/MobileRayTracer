@@ -67,7 +67,7 @@ bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const
 					//if there are no primitives between intersection and the light
                   if (! scene_ . shadowTrace (&lightIntersection, std::move (shadowRay))) {
 						//rgb += kD * radLight * cos_N_L;
-                    rgb->addMult ({light.radiance_.Le_}, {cos_N_L});
+                    rgb->addMult ({light.radiance_.Le_}, cos_N_L);
 					}
 				}
 			}
@@ -87,7 +87,7 @@ bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const
       RGB LiS_RGB {};
       Intersection specularInt {};
 		rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
-      rgb->addMult ({kS, LiS_RGB}, {});
+      rgb->addMult ({kS, LiS_RGB});
 	}
 
 	// specular transmission
@@ -118,9 +118,9 @@ bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const
       RGB LiT_RGB {};
       Intersection transmissionInt {};
 		rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
-      rgb->addMult ({kT, LiT_RGB}, {});
+      rgb->addMult ({kT, LiT_RGB});
 	}
-  rgb->addMult ({kD}, {0.1f});//rgb += kD *  0.1f
+  rgb->addMult ({kD}, 0.1f);//rgb += kD *  0.1f
 	return false;
 }
 

@@ -52,8 +52,6 @@ public class DrawView extends GLSurfaceView {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native int redraw(final Bitmap bitmap);
-
     static native void initialize(final int scene, final int shader, final int width, final int height, final int sampler, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
     static native void renderIntoBitmap(final Bitmap image, final int numThreads);
@@ -125,7 +123,7 @@ public class DrawView extends GLSurfaceView {
     }
 
     void startRender() {
-        period_ = 200L;
+        period_ = 250L;
         renderTask_ = new DrawView.RenderTask();
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
@@ -151,7 +149,6 @@ public class DrawView extends GLSurfaceView {
         renderer_.bitmap_ = bitmap_;
 
         requestRender();
-        //setBackground(new BitmapDrawable(getResources(), bitmap_));
         setVisibility(View.VISIBLE);
     }
 
@@ -196,7 +193,6 @@ public class DrawView extends GLSurfaceView {
             }
             stage_ = isWorking();
             requestRender();
-            //stage_ = DrawView.redraw(bitmap_);
             if (stage_ != Stage.BUSY.id_) {
                 scheduler_.shutdown();
             }
@@ -239,7 +235,6 @@ public class DrawView extends GLSurfaceView {
         @Override
         protected final void onPostExecute(final Void result) {
             requestRender();
-            //DrawView.redraw(bitmap_);
             printText();
             renderTask_.cancel(true);
             finish();

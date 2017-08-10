@@ -17,8 +17,8 @@ namespace MobileRT {
       const float refractiveIndice_ {};
 
     public:
-      explicit Material (RGB Kd = RGB{}, RGB Ks = RGB{}, RGB Kt = RGB{},
-                         float refractiveIndice = 1.0f, RGB Le = RGB{}) noexcept;
+      explicit Material (RGB Kd = RGB {}, RGB Ks = RGB {}, RGB Kt = RGB {},
+                         float refractiveIndice = 1.0f, RGB Le = RGB {}) noexcept;
 
 		Material(const Material &material) noexcept = default;
       Material (Material &&material) noexcept = default;

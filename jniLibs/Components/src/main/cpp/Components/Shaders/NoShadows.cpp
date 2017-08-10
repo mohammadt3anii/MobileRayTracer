@@ -48,7 +48,7 @@ bool NoShadows::shade (RGB *const rgb, Intersection intersection, Ray &&ray) con
           const float cos_N_L {shadingNormal . dotProduct (vectorToLightNormalized)};
                 if (cos_N_L > 0.0f) {
                     //rgb += kD * radLight * cos_N_L;
-                  rgb->addMult ({light.radiance_.Le_}, {cos_N_L});
+                  rgb->addMult ({light.radiance_.Le_}, cos_N_L);
                 }
             }
         }
@@ -56,7 +56,7 @@ bool NoShadows::shade (RGB *const rgb, Intersection intersection, Ray &&ray) con
         *rgb /= this->samplesLight_;
     } // end direct + ambient
 
-  rgb->addMult ({kD}, {0.1f});//rgb += kD *  0.1f
+  rgb->addMult ({kD}, 0.1f);//rgb += kD *  0.1f
     return false;
 }
 

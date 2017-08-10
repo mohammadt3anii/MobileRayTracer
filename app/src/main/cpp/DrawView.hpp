@@ -80,12 +80,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jint nThreads) noexcept;
 
 extern "C"
-State Java_puscas_mobilertapp_DrawView_redraw (
-        JNIEnv *env,
-        jobject thiz,
-        jobject dstBitmap) noexcept;
-
-extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *env,
         jobject thiz,

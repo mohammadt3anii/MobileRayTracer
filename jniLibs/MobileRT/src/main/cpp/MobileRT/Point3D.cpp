@@ -23,22 +23,19 @@ Point3D::Point3D (Point3D point, Vector3D vector, const float value) noexcept :
 }
 
 Vector3D Point3D::operator- (Point3D point) const noexcept {
-
   return Vector3D {this -> x_ - point . x_,
                     this->y_ - point.y_,
                    this -> z_ - point . z_};
 }
 
 Point3D Point3D::operator+ (Vector3D vector) const noexcept {
-
   return Point3D {this -> x_ + vector . x_,
-                   this->y_ + vector.y_,
+                  this->y_ + vector.y_,
                   this -> z_ + vector . z_};
 }
 
 unsigned int Point3D::getInstances() noexcept {
-
   const unsigned int res {counter};
-    counter = 0;
-    return res;
+  counter = 0;
+  return res;
 }
