@@ -7,8 +7,8 @@
 
 #include "MobileRT/Sampler.hpp"
 #include <array>
-#include <utility>
 #include <type_traits>
+#include <utility>
 
 namespace Components {
 	class HaltonSeq final : public MobileRT::Sampler {

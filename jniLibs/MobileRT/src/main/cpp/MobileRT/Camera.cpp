@@ -5,17 +5,19 @@
 #include "Camera.hpp"
 
 using MobileRT::Camera;
-namespace {
-  static std::array<float, NumberOfBlocks> VALUES;
 
-  static bool FillThings () {
+namespace {
+  std::array<float, NumberOfBlocks> VALUES;
+
+  bool FillThings () {
+    static std::mt19937 generator (std::random_device{} ());
     for (uint32_t i {0}; i < NumberOfBlocks; ++i) {
-      VALUES[i] = haltonSequence (i, 2);
+      VALUES.at (i) = haltonSequence (i, 2);
     }
-    std::random_shuffle (VALUES.begin (), VALUES.end ());
+    std::shuffle (VALUES.begin (), VALUES.end (), generator);
     return true;
   }
-}
+}//namespace
 
 float Camera::getBlock (unsigned int sample) noexcept {
   const unsigned current {this->block_.fetch_add (1, std::memory_order_relaxed)};
@@ -23,7 +25,7 @@ float Camera::getBlock (unsigned int sample) noexcept {
     this->block_.fetch_sub (1, std::memory_order_relaxed);
     return 1.0f;
   }
-  return VALUES[current];
+  return VALUES.at (current);
 }
 
 //Left hand rule

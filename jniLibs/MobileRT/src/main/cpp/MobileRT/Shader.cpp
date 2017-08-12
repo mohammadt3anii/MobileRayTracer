@@ -68,9 +68,9 @@ Shader::~Shader () noexcept {
 }
 
 bool Shader::rayTrace (RGB *rgb, Intersection *const intersection, Ray &&ray) const noexcept {
-  //if (regularGrid_.intersect(intersection, ray)) {
-  if (this -> scene_ . trace (intersection, ray) >= 0) {// compute radiance
-    //intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
+  if (regularGrid_.intersect (intersection, ray)) {
+    //if (this -> scene_ . trace (intersection, ray) >= 0) {// compute radiance
+    intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
 		return shade(rgb, *intersection, std::move(ray)); 
 	}
 	return false;
