@@ -4,7 +4,7 @@
 default: all
 
 EXE := raytracer
-CXX ?= clang++
+CXX := clang++
 LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp

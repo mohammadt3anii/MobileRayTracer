@@ -7,28 +7,15 @@
 using Components::HaltonSeq;
 
 HaltonSeq::HaltonSeq(const unsigned int width, const unsigned int height,
-                     const unsigned int samples,
-                     const unsigned int blockSizeX, const unsigned int blockSizeY) noexcept :
-  Sampler(width, height, samples, blockSizeX, blockSizeY) {
+                     const unsigned int samples) noexcept :
+  Sampler (width, height, samples) {
 }
 
 float HaltonSeq::getSample(const unsigned int sample) noexcept {
-  const uint64_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
+  const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
   if (current >= (this->domainSize_ * (sample + 1))) {
     this->sample_.fetch_sub (1, std::memory_order_relaxed);
     return 1.0f;
   }
   return haltonSequence(current - (sample * this->domainSize_), 2);
-}
-
-//https://en.wikipedia.org/wiki/Halton_sequence
-float HaltonSeq::haltonSequence(uint64_t index, const unsigned int base) noexcept {
-  float f {1.0f};
-  float result {0.0f};
-  while (index > 0) {
-    f /= base;
-    result += f * (index % base);
-    index = static_cast<uint64_t> (std::floor(index / base));
-  }
-  return result;
 }

@@ -13,8 +13,7 @@ namespace Components {
     explicit Stratified() noexcept = default;
 
 		explicit Stratified(unsigned int width, unsigned int height,
-												unsigned int samples,
-												unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
+                        unsigned int samples) noexcept;
 
 		Stratified(const Stratified &stratified) noexcept = delete;
 

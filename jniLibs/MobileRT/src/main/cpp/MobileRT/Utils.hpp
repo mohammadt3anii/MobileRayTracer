@@ -5,6 +5,7 @@
 #ifndef MOBILERT_UTILS_HPP
 #define MOBILERT_UTILS_HPP
 
+#include <cmath>
 #include <iostream>
 #include <sstream>
 
@@ -49,7 +50,9 @@ const float Pi {3.14159265358979323846f};
 const float Pi_4 {0.78539816339744830962f};
 const int RayDepthMin {4};
 const int RayDepthMax {8};
+const int NumberOfBlocks {64};
 
 int roundDownToMultipleOf(int value, int multiple) noexcept;
+float haltonSequence (uint32_t index, const unsigned int base) noexcept;
 
 #endif //MOBILERT_UTILS_HPP

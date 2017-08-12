@@ -6,19 +6,17 @@
 #define COMPONENTS_SAMPLERS_HALTONSEQ_HPP
 
 #include "MobileRT/Sampler.hpp"
-#include <cmath>
+#include <array>
+#include <utility>
+#include <type_traits>
 
 namespace Components {
 	class HaltonSeq final : public MobileRT::Sampler {
-    private:
-			float haltonSequence(uint64_t index, unsigned int base) noexcept;
-
     public:
 			explicit HaltonSeq() noexcept = default;
 
       explicit HaltonSeq(unsigned int width, unsigned int height,
-                         unsigned int samples,
-                         unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
+                         unsigned int samples) noexcept;
 
 			HaltonSeq(const HaltonSeq &haltonSeq) noexcept = delete;
 

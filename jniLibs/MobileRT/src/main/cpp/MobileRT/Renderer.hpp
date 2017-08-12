@@ -22,11 +22,11 @@ namespace MobileRT {
       Sampler *samplerCamera_ {};
       Sampler *samplerPixel_ {};
       std::vector<RGB> accumulate_ {};
-      const unsigned int domainSize_ {};
       const unsigned int width_ {};
       const unsigned int height_ {};
       unsigned int blockSizeX_ {};
       unsigned int blockSizeY_ {};
+    const unsigned int domainSize_ {};
       const unsigned int resolution_ {};
       unsigned int sample_ {};
     private:
@@ -37,7 +37,6 @@ namespace MobileRT {
                        std::unique_ptr<Shader> &&shader,
                        std::unique_ptr<Camera> &&camera,
                        unsigned int width, unsigned int height,
-                       unsigned int blockSizeX, unsigned int blockSizeY,
                        std::unique_ptr<Sampler> &&samplerPixel) noexcept;
     Renderer (const Renderer &renderer) noexcept = delete;
     Renderer (Renderer &&renderer) noexcept = delete;

@@ -10,19 +10,18 @@ Renderer::Renderer(std::unique_ptr<Sampler> &&samplerCamera,
 										std::unique_ptr<Shader> &&shader,
 										std::unique_ptr<Camera> &&camera,
 										unsigned int width, unsigned int height,
-										unsigned int blockSizeX,
-										unsigned int blockSizeY,
 										std::unique_ptr<Sampler> &&samplerPixel) noexcept :
   camera_ {camera . release ()},
   shader_ {shader . release ()},
   samplerCamera_ {samplerCamera . release ()},
   samplerPixel_ {samplerPixel . release ()},
   accumulate_ {std::vector<RGB> {width * height}},
-  domainSize_ {(width / blockSizeX) * (height / blockSizeY)},
   width_ {width},
   height_ {height},
-  blockSizeX_ {blockSizeX},
-  blockSizeY_ {blockSizeY},
+  blockSizeX_ {width / static_cast<unsigned int>(std::sqrt (NumberOfBlocks))},
+  blockSizeY_ {height / static_cast<unsigned int>(std::sqrt (NumberOfBlocks))},
+  domainSize_ {(width / (width / static_cast<unsigned int>(std::sqrt (NumberOfBlocks))) *
+                (height / (height / static_cast<unsigned int>(std::sqrt (NumberOfBlocks)))))},
   resolution_ {width * height},
   sample_ {0}
 {
@@ -85,7 +84,6 @@ void Renderer::stopRender() noexcept {
 }
 
 void Renderer::renderScene(unsigned int *const bitmap, const int tid) noexcept {
-
   const float INV_IMG_WIDTH {1.0f / this -> width_};
   const float INV_IMG_HEIGHT {1.0f / this -> height_};
   const float pixelWidth {0.5f / this -> width_};
@@ -96,7 +94,7 @@ void Renderer::renderScene(unsigned int *const bitmap, const int tid) noexcept {
 
   for (unsigned int sample {0}; sample < samples; sample ++) {
 		while (true) {
-      const float block {this -> samplerCamera_ -> getSample (sample)};
+      const float block {this->camera_->getBlock (sample)};
 			if (block >= 1.0f) {break;}
       const unsigned int pixel {
         static_cast<unsigned int>(static_cast<uint32_t>(roundf (block * this->domainSize_)) *

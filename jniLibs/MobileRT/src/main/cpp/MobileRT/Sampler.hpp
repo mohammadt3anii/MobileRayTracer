@@ -12,16 +12,15 @@
 namespace MobileRT {
   class Sampler {
     public:
-			std::atomic<uint64_t> sample_ {0};
-      const uint64_t domainSize_ {std::numeric_limits<uint64_t>::max()};
-      unsigned int samples_ {std::numeric_limits<unsigned int>::max()};
+    std::atomic<uint32_t> sample_ {0};
+    const uint32_t domainSize_ {std::numeric_limits<uint32_t>::max ()};
+    uint32_t samples_ {std::numeric_limits<uint32_t>::max ()};
 
     public:
 			explicit Sampler() noexcept = default;
 
 			explicit Sampler(unsigned int width, unsigned int height,
-											 unsigned int samples,
-											 unsigned int blockSizeX, unsigned int blockSizeY) noexcept;
+                       unsigned int samples) noexcept;
 
 			Sampler(const Sampler &sampler) noexcept = delete;
 

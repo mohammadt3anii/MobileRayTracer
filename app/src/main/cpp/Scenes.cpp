@@ -69,13 +69,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
   return std::move(scene);
 }
 
-MobileRT::Scene cornellBoxScene2(MobileRT::Scene&& scene, const int samplesLight, const int samplesPixel, const int width, const int height) noexcept {
-  LOG("width = ", width);
-  LOG("height = ", height);
-  LOG("samplesLight_ = ", samplesLight);
-  LOG("samplesPixel_ = ", samplesPixel);
-  LOG("RayDepthMax = ", RayDepthMax);
-
+MobileRT::Scene cornellBoxScene2 (MobileRT::Scene &&scene) noexcept {
   const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},

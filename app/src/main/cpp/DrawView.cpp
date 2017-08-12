@@ -7,7 +7,6 @@
 static State working_ {State::IDLE};
 static MobileRT::Renderer *renderer_ {nullptr};
 static std::thread *thread_ {nullptr};
-static int numberOfBlocks_ {4};
 static int width_ {0};
 static int height_ {0};
 static float fps_ {0.0f};
@@ -108,8 +107,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   height_ = height;
   const float ratio {static_cast<float>(height) / static_cast<float>(width)};
   renderer_ = nullptr;
-  int blockSizeX_ {width_ / numberOfBlocks_};
-  int blockSizeY_ {height_ / numberOfBlocks_};
 
 
   [&] ()->void {
@@ -148,7 +145,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D {0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f, 45.0f * ratio);
-        scene_ = cornellBoxScene2 (std::move (scene_), samplesLight, samplesPixel, width_, height_);
+        scene_ = cornellBoxScene2 (std::move (scene_));
         break;
 
       case 3:
@@ -172,13 +169,13 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     switch (sampler) {
       case 1:
         if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::HaltonSeq> ();
+          //samplerPixel = std::make_unique<Components::HaltonSeq> ();
+          samplerPixel = std::make_unique<Components::StaticHaltonSeq> ();
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
-        samplerCamera = std::make_unique<Components::HaltonSeq> (
-          width_, height_, samplesPixel,
-          blockSizeX_, blockSizeY_);
+        samplerCamera = std::make_unique<Components::HaltonSeq> (width_, height_, samplesPixel);
+        //samplerCamera = std::make_unique<Components::StaticHaltonSeq> (width_, height_, samplesPixel, blockSizeX_, blockSizeY_);
         break;
 
       default:
@@ -187,9 +184,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
-        samplerCamera = std::make_unique<Components::Stratified> (
-          width_, height_, samplesPixel,
-          blockSizeX_, blockSizeY_);
+        samplerCamera = std::make_unique<Components::Stratified> (width_, height_, samplesPixel);
         break;
     }
     switch (shader) {
@@ -200,11 +195,23 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
       case 2: {
         //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::HaltonSeq>()};
-        std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::MersenneTwister>()};
+        std::unique_ptr<MobileRT::Sampler> samplerRay {
+          std::make_unique<Components::StaticHaltonSeq> ()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::StaticMersenneTwister>()};
+
         //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::HaltonSeq>()};
-        std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::MersenneTwister>()};
+        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::MersenneTwister>()};
+        std::unique_ptr<MobileRT::Sampler> samplerLight {
+          std::make_unique<Components::StaticHaltonSeq> ()};
+        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::StaticMersenneTwister>()};
+
         //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::HaltonSeq>()};
-        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::MersenneTwister> ()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::MersenneTwister> ()};
+        std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {
+          std::make_unique<Components::StaticHaltonSeq> ()};
+        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::StaticMersenneTwister> ()};
+
         shader_ = std::make_unique<Components::PathTracer> (
           std::move (scene_), std::move (samplerRay), std::move (samplerLight),
           std::move (samplerRussianRoulette), samplesLight);
@@ -230,11 +237,8 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     renderer_ = new MobileRT::Renderer {
       std::move (samplerCamera), std::move (shader_), std::move (camera),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
-      static_cast<unsigned>(blockSizeX_), static_cast<unsigned>(blockSizeY_),
       std::move (samplerPixel)};
 
-    LOG("x = ", blockSizeX_, "[", width_, "]");
-    LOG("y = ", blockSizeY_, "[", height_, "]");
     LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
     LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
     LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
@@ -324,5 +328,5 @@ int Java_puscas_mobilertapp_DrawView_resize(
   jobject /*thiz*/,
   jint const size
 ) noexcept {
-  return roundDownToMultipleOf(size, numberOfBlocks_);
+  return roundDownToMultipleOf (size, static_cast<int>(std::sqrt (NumberOfBlocks)));
 }
