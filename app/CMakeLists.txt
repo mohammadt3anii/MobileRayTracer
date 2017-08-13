@@ -27,7 +27,7 @@ target_compile_options( DrawView PRIVATE -Wno-unused-variable -Wno-unused-functi
 
 target_compile_options( DrawView PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full> )
 if( NOT ANDROID_ABI MATCHES "^mips(64)?$" )
-    set( GOLD "-fuse-ld=gold" )
+    #set( GOLD "-fuse-ld=gold" )
 endif()
 
 target_link_libraries( DrawView

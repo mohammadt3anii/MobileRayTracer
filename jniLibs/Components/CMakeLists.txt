@@ -31,7 +31,7 @@ target_compile_options( Components PRIVATE -Wno-float-equal -funsafe-math-optimi
 
 target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full> )
 if(NOT ANDROID_ABI MATCHES "^mips(64)?$" )
-    set(GOLD "-fuse-ld=gold" )
+    #set(GOLD "-fuse-ld=gold" )
 endif()
 
 target_link_libraries( Components
