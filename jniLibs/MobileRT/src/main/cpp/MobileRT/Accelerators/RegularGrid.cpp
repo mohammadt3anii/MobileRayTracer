@@ -6,7 +6,8 @@
 
 using MobileRT::RegularGrid;
 
-RegularGrid::RegularGrid (Point3D min, Point3D max, Scene *const scene, const int gridSize,
+RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
+                          const int gridSize,
                           const int gridShift) :
   spheres_ {
     std::vector<std::vector<Sphere *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
@@ -49,7 +50,7 @@ void RegularGrid::addPrimitives
   // store primitives in the grid cells
   for (T &primitive : primitives) {
     index ++;
-    AABB bound {primitive.getAABB ()};
+    const AABB bound {primitive.getAABB ()};
     Point3D bv1 {bound.pointMin_};
     Point3D bv2 {bound.pointMax_};
 
@@ -92,7 +93,6 @@ void RegularGrid::addPrimitives
 }
 
 bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) const noexcept {
-
   const bool intersectedSpheres {intersect<Sphere> (this -> spheres_, intersection, ray)};
   const bool intersectedTriangles {intersect<Triangle> (this -> triangles_, intersection, ray)};
   const bool intersectedPlanes {intersect<Plane> (this -> planes_, intersection, ray)};
@@ -101,8 +101,7 @@ bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) c
 
 template<typename T>
 bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
-                            Intersection *const intersection, Ray ray) const noexcept {
-
+                            Intersection *const intersection, const Ray ray) const noexcept {
   bool retval {false};
   const Vector3D &raydir {ray.direction_};
   const Point3D &curpos {ray.origin_};

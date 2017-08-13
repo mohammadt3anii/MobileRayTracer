@@ -10,7 +10,7 @@ using MobileRT::Point3D;
 using MobileRT::Intersection;
 using MobileRT::Ray;
 
-PointLight::PointLight (Material radiance, Point3D position) noexcept :
+PointLight::PointLight (Material radiance, const Point3D position) noexcept :
   Light (std::move (radiance)),
   position_ {position} {
 }
@@ -22,6 +22,7 @@ Point3D PointLight::getPosition() noexcept {
 void PointLight::resetSampling() noexcept {
 }
 
-bool PointLight::intersect (Intersection *const /*intersection*/, Ray /*ray*/) const noexcept {
+bool
+PointLight::intersect (Intersection *const /*intersection*/, const Ray /*ray*/) const noexcept {
     return false;
 }

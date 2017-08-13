@@ -47,7 +47,7 @@ namespace MobileRT {
     Renderer &operator= (Renderer &&renderer) noexcept = delete;
     void renderFrame (unsigned *bitmap, int numThreads) noexcept;
     void stopRender () noexcept;
-    unsigned getSample () noexcept;
+    unsigned getSample () const noexcept;
   };
 }//namespace MobileRT
 

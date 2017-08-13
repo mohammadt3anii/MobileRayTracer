@@ -22,7 +22,7 @@ Scene::~Scene() noexcept {
 		LOG("SCENE DELETED");
 }
 
-int Scene::traceLights(Intersection *intersection, Ray ray) const noexcept {
+int Scene::traceLights (Intersection *const intersection, const Ray ray) const noexcept {
   int res {- 1};
   const unsigned lightsSize {static_cast<unsigned> (lights_.size ())};
   for (unsigned i {0}; i < lightsSize; i++) {
@@ -36,8 +36,8 @@ int Scene::traceLights(Intersection *intersection, Ray ray) const noexcept {
 }
 
 template<typename T>
-int Scene::trace(const std::vector<T> &primitives, MobileRT::Intersection *const intersection,
-                 MobileRT::Ray ray, const int offset, int res) const noexcept {
+int Scene::trace (const std::vector<T> &primitives, Intersection *const intersection,
+                  const Ray ray, const int offset, int res) const noexcept {
   const unsigned primitivesSize {static_cast<unsigned> (primitives.size ())};
   for (unsigned i {0}; i < primitivesSize; i++) {
     const T &primitive {primitives[static_cast<uint32_t> (i)]};

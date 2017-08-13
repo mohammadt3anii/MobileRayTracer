@@ -24,7 +24,7 @@ namespace MobileRT {
 
     protected:
 			virtual bool shade (RGB *rgb, Intersection intersection,
-													Ray &&ray) const noexcept = 0;
+                          Ray &&ray) const noexcept = 0;
 
       private:
       template<typename T>

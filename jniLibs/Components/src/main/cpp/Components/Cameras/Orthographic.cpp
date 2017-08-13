@@ -9,7 +9,7 @@ using MobileRT::Point3D;
 using MobileRT::Vector3D;
 using MobileRT::Ray;
 
-Orthographic::Orthographic (Point3D position, Point3D lookAt, Vector3D up,
+Orthographic::Orthographic (const Point3D position, const Point3D lookAt, const Vector3D up,
                             const float sizeH, const float sizeV) noexcept :
   Camera {position, lookAt, up},
   sizeH_ {sizeH / 2.0f},

@@ -17,14 +17,13 @@ NoShadows::NoShadows (Scene &&scene, const unsigned samplesLight) noexcept :
   Shader {std::move (scene), samplesLight} {
 }
 
-bool NoShadows::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept {
+bool NoShadows::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) const noexcept {
   const RGB &Le {intersection.material_->Le_};
   const RGB &kD {intersection.material_->Kd_};
-
-    if (Le.hasColor()) {//stop if it intersects a light source
-        *rgb += Le;
-        return true;
-    }
+  if (Le.hasColor ()) {//stop if it intersects a light source
+    *rgb += Le;
+    return true;
+  }
 
   const Vector3D &shadingNormal {
     (ray.direction_.dotProduct (intersection.normal_) < 0.0f) ?
@@ -56,7 +55,7 @@ bool NoShadows::shade (RGB *const rgb, Intersection intersection, Ray &&ray) con
     } // end direct + ambient
 
   rgb->addMult ({kD}, 0.1f);//rgb += kD *  0.1f
-    return false;
+  return false;
 }
 
 void NoShadows::resetSampling() noexcept {

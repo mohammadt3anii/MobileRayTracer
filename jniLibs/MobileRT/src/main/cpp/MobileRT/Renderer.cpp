@@ -76,7 +76,7 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 void Renderer::stopRender() noexcept {
 	this->blockSizeX_ = 0;
 	this->blockSizeY_ = 0;
-  this -> samplerPixel_ -> stopSampling ();
+  this->samplerPixel_->stopSampling ();
 }
 
 void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
@@ -128,6 +128,6 @@ void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
 	}
 }
 
-unsigned Renderer::getSample () noexcept {
+unsigned Renderer::getSample () const noexcept {
     return this->sample_;
 }

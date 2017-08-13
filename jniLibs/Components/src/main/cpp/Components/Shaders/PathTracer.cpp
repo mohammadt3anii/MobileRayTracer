@@ -27,8 +27,7 @@ PathTracer::PathTracer(Scene &&scene,
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept
-{
+bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) const noexcept {
   const unsigned rayDepth {ray.depth_};
   if (rayDepth > RayDepthMax || intersection.material_ == nullptr) {
 			return false;

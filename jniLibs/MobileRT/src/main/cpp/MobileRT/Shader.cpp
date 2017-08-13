@@ -19,7 +19,7 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight) noexcept :
   this->scene_.lights_.shrink_to_fit();
 
   Point3D min {1000.0f, 1000.0f, 1000.0f};
-  Point3D max {- 1000.0f, - 1000.0f, - 1000.0f};
+  Point3D max {-1000.0f, -1000.0f, -1000.0f};
   getSceneBounds<Triangle>(this->scene_.triangles_, &min, &max);
   getSceneBounds<Sphere>(this->scene_.spheres_, &min, &max);
   getSceneBounds<Plane>(this->scene_.planes_, &min, &max);
@@ -67,7 +67,7 @@ Shader::~Shader () noexcept {
 	LOG("SHADER DELETED");
 }
 
-bool Shader::rayTrace (RGB *rgb, Intersection *const intersection, Ray &&ray) const noexcept {
+bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) const noexcept {
   //if (regularGrid_.intersect (intersection, ray)) {
   if (this->scene_.trace (intersection, ray) >= 0) {// compute radiance
     //intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];

@@ -17,7 +17,7 @@ Whitted::Whitted (Scene &&scene, const unsigned samplesLight) noexcept :
   Shader {std::move (scene), samplesLight} {
 }
 
-bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept {
+bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) const noexcept {
   const unsigned rayDepth {ray.depth_};
   if (rayDepth > RayDepthMax) {
 		return false;

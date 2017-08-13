@@ -36,7 +36,7 @@ bool RGB::hasColor() const noexcept {
   return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }
 
-void RGB::operator+= (RGB rgb) noexcept {
+void RGB::operator+= (const RGB rgb) noexcept {
   this->R_ += rgb.R_;
   this->G_ += rgb.G_;
   this->B_ += rgb.B_;
@@ -56,7 +56,7 @@ void RGB::addMult (const std::initializer_list<const RGB> rgbs, const float valu
   this->B_ += blue;
 }
 
-void RGB::operator*= (RGB rgb) noexcept {
+void RGB::operator*= (const RGB rgb) noexcept {
   this->R_ *= rgb.R_;
   this->G_ *= rgb.G_;
   this->B_ *= rgb.B_;
@@ -106,7 +106,7 @@ void RGB::reset (const float r, const float g, const float b, const unsigned sam
   this->samples_ = samples;
 }
 
-unsigned RGB::getColor () noexcept {
+unsigned RGB::getColor () const noexcept {
   const unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
   const unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
   const unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
@@ -134,7 +134,7 @@ unsigned RGB::getInstances () noexcept {
   return res;
 }
 
-float RGB::getMax() noexcept {
+float RGB::getMax () const noexcept {
   return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ / samples_ :
          this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ / samples_ :
          this->B_ / samples_;

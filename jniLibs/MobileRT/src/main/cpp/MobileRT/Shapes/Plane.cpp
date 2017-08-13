@@ -8,35 +8,34 @@ using MobileRT::AABB;
 using MobileRT::Plane;
 using MobileRT::Point3D;
 
-Plane::Plane (Point3D point, Vector3D normal) noexcept :
+Plane::Plane (const Point3D point, const Vector3D normal) noexcept :
   normal_ {normal},
   point_ {point}
 {
 }
 
-bool Plane::intersect (Intersection *const intersection, Ray ray) const noexcept {
+bool Plane::intersect (Intersection *const intersection, const Ray ray) const noexcept {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
   const float normalized_projection {this->normal_.dotProduct (ray.direction_)};
   if (std::fabs (normalized_projection) < Epsilon) {
-        return false;
-	  }
+    return false;
+  }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
   const float distanceToIntersection {
     this->normal_.dotProduct (this->point_, ray.origin_) / normalized_projection};
 
-    // is it in front of the eye?
-    // is it farther than the ray length ??
+  // is it in front of the eye?
+  // is it farther than the ray length ??
   if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
         return false;
 	}
 
-    // if so, then we have an intersection
-    intersection->reset(ray.origin_, ray.direction_, distanceToIntersection,
+  // if so, then we have an intersection
+  intersection->reset (ray.origin_, ray.direction_, distanceToIntersection,
                        this->normal_);
-
-    return true;
+  return true;
 }
 
 void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -55,11 +54,10 @@ Point3D Plane::getPositionMax() const noexcept {
 }
 
 AABB Plane::getAABB() const noexcept {
-
   return AABB {getPositionMin (), getPositionMax ()};
 }
 
-float Plane::distance (Point3D point) const noexcept {
+float Plane::distance (const Point3D point) const noexcept {
   //Plane Equation
   //a(x-x0)+b(y-y0)+c(z-z0) = 0
   //abc = normal
@@ -75,8 +73,7 @@ float Plane::distance (Point3D point) const noexcept {
   return numerator / denumerator;
 }
 
-bool Plane::intersect (AABB box) const noexcept {
-
+bool Plane::intersect (const AABB box) const noexcept {
   Point3D positiveVertex {box.pointMin_};
   Point3D negativeVertex {box.pointMax_};
   if (this->normal_.x_ >= 0.0f) {
@@ -101,12 +98,7 @@ bool Plane::intersect (AABB box) const noexcept {
 
   const float distanceP {distance (positiveVertex)};
   const float distanceN {distance (negativeVertex)};
-  bool res {false};
-  if (distanceP <= 0 && distanceN >= 0) {
-    res = true;
-  } else if (distanceP >= 0 && distanceN <= 0) {
-    res = true;
-  }
+  const bool res {distanceP <= 0 && distanceN >= 0 ? true : distanceP >= 0 && distanceN <= 0};
 
   return res;
 }

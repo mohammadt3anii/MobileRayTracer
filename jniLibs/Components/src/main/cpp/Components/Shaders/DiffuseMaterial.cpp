@@ -14,9 +14,8 @@ DiffuseMaterial::DiffuseMaterial(Scene &&scene) noexcept :
   Shader {std::move (scene)} {
 }
 
-bool DiffuseMaterial::shade (RGB *const rgb, Intersection intersection,
+bool DiffuseMaterial::shade (RGB *const rgb, const Intersection intersection,
                              Ray && /*ray*/) const noexcept {
-
   if (intersection.material_ != nullptr) {
     *rgb += intersection.material_->Kd_;
   }
@@ -24,6 +23,5 @@ bool DiffuseMaterial::shade (RGB *const rgb, Intersection intersection,
 }
 
 void DiffuseMaterial::resetSampling() noexcept {
-
   this->scene_.resetSampling();
 }

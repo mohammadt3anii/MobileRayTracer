@@ -19,7 +19,7 @@ namespace {
   }
 }//namespace
 
-float Camera::getBlock (unsigned sample) noexcept {
+float Camera::getBlock (const unsigned sample) noexcept {
   const unsigned current {this->block_.fetch_add (1, std::memory_order_relaxed)};
   if (current >= (NumberOfBlocks * (sample + 1))) {
     this->block_.fetch_sub (1, std::memory_order_relaxed);
@@ -29,7 +29,7 @@ float Camera::getBlock (unsigned sample) noexcept {
 }
 
 //Left hand rule
-Camera::Camera (Point3D position, Point3D lookAt, Vector3D up) noexcept :
+Camera::Camera (const Point3D position, const Point3D lookAt, const Vector3D up) noexcept :
   position_ {position},
   direction_ {Vector3D (lookAt, position, true)},
   right_ {up.crossProduct (direction_)},

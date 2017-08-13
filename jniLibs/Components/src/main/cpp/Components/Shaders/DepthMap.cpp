@@ -11,18 +11,17 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-DepthMap::DepthMap(Scene &&scene, Point3D&& maxPoint) noexcept :
+DepthMap::DepthMap (Scene &&scene, const Point3D &&maxPoint) noexcept :
   Shader {std::move (scene)},
   maxPoint_ {maxPoint}
 {
 }
 
-bool DepthMap::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept {
-
+bool DepthMap::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) const noexcept {
   const float maxDist {(maxPoint_ - ray.origin_).normalize () * 1.1f};
   const float depth {intersection.length_};
-		*rgb += (maxDist - depth) / maxDist;
-		return false;
+  *rgb += (maxDist - depth) / maxDist;
+  return false;
 }
 
 void DepthMap::resetSampling() noexcept {
