@@ -51,8 +51,8 @@ void RegularGrid::addPrimitives
   for (T &primitive : primitives) {
     index ++;
     const AABB bound {primitive.getAABB ()};
-    Point3D bv1 {bound.pointMin_};
-    Point3D bv2 {bound.pointMax_};
+    const Point3D bv1 {bound.pointMin_};
+    const Point3D bv2 {bound.pointMax_};
 
     // find out which cells could contain the primitive (based on aabb)
     int x1 {static_cast<int>((bv1.x_ - m_Extends.pointMin_.x_) * dx_reci)};

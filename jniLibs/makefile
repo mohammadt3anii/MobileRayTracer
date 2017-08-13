@@ -4,7 +4,7 @@
 default: all
 
 EXE := raytracer
-CXX := clang++
+CXX ?= clang++
 LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
@@ -137,6 +137,11 @@ GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -pr
 GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 %.gto: %.cpp
 	g++ -DNO_ANDROID -std=c++14 -c $< -o $@
+
+gcc:
+	 $(eval CXX := g++)
+	 $(eval CXXFLAGS := $(filter-out -Weverything,$(CXXFLAGS)))
+	 $(eval CXXFLAGS := $(filter-out -ferror-limit=1,$(CXXFLAGS)))
 
 gtest: $(OBJS) $(GTESTOBJS)
 	g++ $(GTESTOBJS) $(OBJS) -o $@ $(shell pkg-config --libs gtk+-2.0) -lgtest -lgtest_main -pthread
