@@ -110,7 +110,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
 ) noexcept;
 
 extern "C"
-unsigned int Java_puscas_mobilertapp_DrawView_getSample(
+unsigned Java_puscas_mobilertapp_DrawView_getSample (
         JNIEnv *env,
         jobject thiz
 ) noexcept;

@@ -10,7 +10,7 @@ int roundDownToMultipleOf(const int value, const int multiple) noexcept {
 }
 
 //https://en.wikipedia.org/wiki/Halton_sequence
-float haltonSequence (uint32_t index, const unsigned int base) noexcept {
+float haltonSequence (uint32_t index, const unsigned base) noexcept {
   float f {1.0f};
   float result {0.0f};
   while (index > 0) {

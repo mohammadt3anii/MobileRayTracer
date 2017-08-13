@@ -6,8 +6,7 @@
 
 using MobileRT::Point3D;
 using MobileRT::Vector3D;
-
-static unsigned int counter(0);
+static unsigned counter {0};
 
 Point3D::Point3D(const float x, const float y, const float z) noexcept :
   x_ {x},
@@ -34,8 +33,8 @@ Point3D Point3D::operator+ (Vector3D vector) const noexcept {
                   this -> z_ + vector . z_};
 }
 
-unsigned int Point3D::getInstances() noexcept {
-  const unsigned int res {counter};
+unsigned Point3D::getInstances () noexcept {
+  const unsigned res {counter};
   counter = 0;
   return res;
 }

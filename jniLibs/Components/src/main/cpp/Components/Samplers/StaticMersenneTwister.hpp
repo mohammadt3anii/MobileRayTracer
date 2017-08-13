@@ -18,7 +18,7 @@ namespace Components {
     ~StaticMersenneTwister () noexcept final = default;
     StaticMersenneTwister &operator= (const StaticMersenneTwister &random) noexcept = delete;
     StaticMersenneTwister &operator= (StaticMersenneTwister &&random) noexcept = delete;
-    float getSample (unsigned int sample) noexcept final;
+    float getSample (unsigned sample) noexcept final;
   };
 }//namespace Components
 

@@ -33,7 +33,7 @@ namespace Components {
 														std::unique_ptr<Sampler> &&samplerRay,
 														std::unique_ptr<Sampler> &&samplerLight,
 														std::unique_ptr<Sampler> &&samplerRussianRoulette,
-														unsigned int samplesLight) noexcept;
+														unsigned samplesLight) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;
 

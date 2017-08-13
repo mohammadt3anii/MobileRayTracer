@@ -13,13 +13,12 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-Whitted::Whitted(Scene &&scene, const unsigned int samplesLight) noexcept :
+Whitted::Whitted (Scene &&scene, const unsigned samplesLight) noexcept :
   Shader {std::move (scene), samplesLight} {
 }
 
 bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept {
-
-  const unsigned int rayDepth {ray.depth_};
+  const unsigned rayDepth {ray.depth_};
   if (rayDepth > RayDepthMax) {
 		return false;
 	}
@@ -49,10 +48,10 @@ bool Whitted::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const
     if (kD.hasColor()) {
       Intersection lightIntersection {};
       const uint64_t sizeLights {scene_.lights_.size ()};
-      const unsigned int samplesLight {this->samplesLight_};
-      for (unsigned int i {0}; i < sizeLights; i ++) {
+      const unsigned samplesLight {this->samplesLight_};
+      for (unsigned i {0}; i < sizeLights; i++) {
         Light &light (*scene_.lights_[i]);
-        for (unsigned int j {0}; j < samplesLight; j ++) {
+        for (unsigned j {0}; j < samplesLight; j++) {
           const Point3D lightPosition {light.getPosition ()};
 				//calculates vector starting in intersection to the light
           Vector3D vectorToLight {lightPosition, intersection.point_};

@@ -14,23 +14,17 @@ namespace MobileRT {
     public:
       const Point3D origin_ {};
       const Vector3D direction_ {};
-      const unsigned int depth_ {};
+      const unsigned depth_ {};
 
     public:
       explicit Ray(Vector3D dir, Point3D origin,
-                   unsigned int depth) noexcept;
-
-      Ray(const Ray &ray) noexcept = default;
-
-		Ray(Ray &&ray) noexcept = default;
-
-        ~Ray() noexcept = default;
-
-		Ray &operator=(const Ray &ray) noexcept = delete;
-
-		Ray &operator=(Ray &&ray) noexcept = delete;
-
-        static unsigned int getInstances() noexcept;
+                   unsigned depth) noexcept;
+      Ray (const Ray &ray) noexcept = default;
+      Ray (Ray &&ray) noexcept = default;
+      ~Ray () noexcept = default;
+      Ray &operator= (const Ray &ray) noexcept = delete;
+      Ray &operator= (Ray &&ray) noexcept = delete;
+      static unsigned getInstances () noexcept;
     };
 }//namespace MobileRT
 

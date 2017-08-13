@@ -6,12 +6,12 @@
 
 using Components::Stratified;
 
-Stratified::Stratified(const unsigned int width, const unsigned int height,
-                       const unsigned int samples) noexcept :
+Stratified::Stratified (const unsigned width, const unsigned height,
+                        const unsigned samples) noexcept :
   Sampler (width, height, samples) {
 }
 
-float Stratified::getSample(const unsigned int sample) noexcept {
+float Stratified::getSample (const unsigned sample) noexcept {
   const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
   if (current >= (this->domainSize_ * (sample + 1))) {
     this->sample_.fetch_sub(1, std::memory_order_relaxed);

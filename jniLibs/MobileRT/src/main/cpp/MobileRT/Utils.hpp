@@ -53,6 +53,6 @@ const int RayDepthMax {8};
 const int NumberOfBlocks {64};
 
 int roundDownToMultipleOf(int value, int multiple) noexcept;
-float haltonSequence (uint32_t index, unsigned int base) noexcept;
+float haltonSequence (uint32_t index, unsigned base) noexcept;
 
 #endif //MOBILERT_UTILS_HPP

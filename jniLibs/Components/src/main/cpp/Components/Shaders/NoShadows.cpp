@@ -13,7 +13,7 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-NoShadows::NoShadows(Scene &&scene, const unsigned int samplesLight) noexcept :
+NoShadows::NoShadows (Scene &&scene, const unsigned samplesLight) noexcept :
   Shader {std::move (scene), samplesLight} {
 }
 
@@ -36,10 +36,10 @@ bool NoShadows::shade (RGB *const rgb, Intersection intersection, Ray &&ray) con
     // direct lighting - only for diffuse materials
     if (kD.hasColor()) {
       const uint64_t sizeLights {scene_.lights_.size ()};
-      const unsigned int samplesLight {this->samplesLight_};
-      for (unsigned int i {0}; i < sizeLights; i ++) {
+      const unsigned samplesLight {this->samplesLight_};
+      for (unsigned i {0}; i < sizeLights; i++) {
         Light &light (*scene_.lights_[i]);
-        for (unsigned int j {0}; j < samplesLight; j ++) {
+        for (unsigned j {0}; j < samplesLight; j++) {
           const Point3D lightPosition {light.getPosition ()};
                 //vectorIntersectCameraNormalized = light.position_ - intersection.point_
           const Vector3D vectorToLightNormalized {

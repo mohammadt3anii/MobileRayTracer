@@ -5,20 +5,18 @@
 #include "Ray.hpp"
 
 using MobileRT::Ray;
-
-static unsigned int counter(0);
+static unsigned counter {0};
 
 Ray::Ray(Vector3D dir, Point3D origin,
-         const unsigned int depth) noexcept :
+         const unsigned depth) noexcept :
   origin_ {origin},
   direction_ {dir},
   depth_ {depth} {
     counter++;
 }
 
-unsigned int Ray::getInstances() noexcept {
-
-  const unsigned int res {counter};
-    counter = 0;
-    return res;
+unsigned Ray::getInstances () noexcept {
+  const unsigned res {counter};
+  counter = 0;
+  return res;
 }

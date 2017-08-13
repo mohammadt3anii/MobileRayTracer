@@ -34,8 +34,7 @@ namespace MobileRT {
 									Vector3D normal) noexcept;
 			void reset (Point3D orig, Vector3D dir, float dist,
 									Point3D center) noexcept;
-
-		static unsigned int getInstances() noexcept;
+      static unsigned getInstances () noexcept;
     };
 }//namespace MobileRT
 

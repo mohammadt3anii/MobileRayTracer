@@ -6,7 +6,8 @@
 
 using Components::StaticMersenneTwister;
 namespace {
-  const uint32_t SIZE {0xFFFFF};
+  const uint32_t MASK {0xFFFFF};
+  const uint32_t SIZE {MASK + 1};
   std::array<float, SIZE> VALUES;
 
   bool FillThings () {
@@ -21,9 +22,10 @@ namespace {
 
 StaticMersenneTwister::StaticMersenneTwister () noexcept {
   static bool unused {FillThings ()};
+  static_cast<void> (unused);
 }
 
-float StaticMersenneTwister::getSample (const unsigned int /*sample*/) noexcept {
+float StaticMersenneTwister::getSample (const unsigned /*sample*/) noexcept {
   const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
-  return VALUES.at (current & SIZE);
+  return VALUES.at (current & MASK);
 }

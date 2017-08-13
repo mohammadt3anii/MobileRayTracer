@@ -4,8 +4,7 @@
 #include "RGB.hpp"
 
 using MobileRT::RGB;
-
-static unsigned int counter(0);
+static unsigned counter {0};
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
   R_ {r},
@@ -100,17 +99,17 @@ void RGB::addSampleAndCalcAvg (RGB *const sample) noexcept {
   sample->B_ /= sample->samples_;
 }
 
-void RGB::reset(const float r, const float g, const float b, const unsigned int samples) noexcept {
+void RGB::reset (const float r, const float g, const float b, const unsigned samples) noexcept {
   this->R_ = r;
   this->G_ = g;
   this->B_ = b;
   this->samples_ = samples;
 }
 
-unsigned int RGB::getColor() noexcept {
-  const unsigned int r {this -> R_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> R_ * 255u)};
-  const unsigned int g {this -> G_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> G_ * 255u)};
-  const unsigned int b {this -> B_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> B_ * 255u)};
+unsigned RGB::getColor () noexcept {
+  const unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
+  const unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
+  const unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
   return ((r * 1000000) + (g * 1000) + b);
 }
 
@@ -121,16 +120,16 @@ void RGB::toneMap () noexcept {
   this->B_ = (this->B_ / (this->B_ + value));
 }
 
-unsigned int RGB::RGB2Color() noexcept {
+unsigned RGB::RGB2Color () noexcept {
   //toneMap();
-  const unsigned int r {this -> R_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> R_ * 255u)};
-  const unsigned int g {this -> G_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> G_ * 255u)};
-  const unsigned int b {this -> B_ >= 1.0f ? 255u : static_cast<unsigned int> (this -> B_ * 255u)};
+  const unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
+  const unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
+  const unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
   return (0xFF000000u | (b << 16u) | (g << 8u) | r);
 }
 
-unsigned int RGB::getInstances() noexcept {
-  const unsigned int res {counter};
+unsigned RGB::getInstances () noexcept {
+  const unsigned res {counter};
   counter = 0;
   return res;
 }

@@ -13,8 +13,8 @@
 #include <random>
 
 namespace MobileRT {
-    class Camera {
-      protected:
+  class Camera {
+    protected:
       std::atomic<unsigned> block_ {0};
 
     public:
@@ -34,7 +34,7 @@ namespace MobileRT {
       virtual Ray generateRay (float u, float v,
                                float deviationU,
                                float deviationV) const noexcept = 0;
-      float getBlock (unsigned int sample) noexcept;
+    float getBlock (unsigned sample) noexcept;
     };
 }//namespace MobileRT
 

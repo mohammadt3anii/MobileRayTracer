@@ -10,6 +10,6 @@ Constant::Constant(const float value) noexcept :
   value_(value) {
 }
 
-float Constant::getSample(const unsigned int /*sample*/) noexcept {
+float Constant::getSample (const unsigned /*sample*/) noexcept {
     return value_;
 }

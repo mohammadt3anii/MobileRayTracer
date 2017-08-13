@@ -19,19 +19,13 @@ namespace Components {
 								 Ray &&ray) const noexcept final;
 
 		public:
-        explicit NoShadows(Scene &&scene, unsigned int samplesLight) noexcept;
-
-		NoShadows(const NoShadows &noShadows) noexcept = delete;
-
-		NoShadows(NoShadows &&noShadows) noexcept = delete;
-
-		~NoShadows() noexcept final = default;
-
-        NoShadows &operator=(const NoShadows &noShadows) noexcept = delete;
-
-		NoShadows &operator=(NoShadows &&noShadows) noexcept = delete;
-
-        void resetSampling() noexcept final;
+			explicit NoShadows (Scene &&scene, unsigned samplesLight) noexcept;
+			NoShadows (const NoShadows &noShadows) noexcept = delete;
+			NoShadows (NoShadows &&noShadows) noexcept = delete;
+			~NoShadows () noexcept final = default;
+			NoShadows &operator= (const NoShadows &noShadows) noexcept = delete;
+			NoShadows &operator= (NoShadows &&noShadows) noexcept = delete;
+			void resetSampling () noexcept final;
     };
 }//namespace Components
 

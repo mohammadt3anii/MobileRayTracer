@@ -5,8 +5,7 @@
 #include "Intersection.hpp"
 
 using MobileRT::Intersection;
-
-static unsigned int counter(0);
+static unsigned counter {0};
 
 void Intersection::reset (Point3D orig,
                           Vector3D dir,
@@ -36,9 +35,8 @@ void Intersection::reset (Point3D orig,
     this->length_ = dist;
 }
 
-unsigned int Intersection::getInstances() noexcept {
-
-  const unsigned int res {counter};
+unsigned Intersection::getInstances () noexcept {
+  const unsigned res {counter};
     counter = 0;
     return res;
 }

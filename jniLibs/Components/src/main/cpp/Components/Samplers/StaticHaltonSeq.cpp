@@ -6,7 +6,8 @@
 
 using Components::StaticHaltonSeq;
 namespace {
-  const uint32_t SIZE {0xFFFFF};
+  const uint32_t MASK {0xFFFFF};
+  const uint32_t SIZE {MASK + 1};
   std::array<float, SIZE> VALUES;
 
   bool FillThings () {
@@ -21,15 +22,17 @@ namespace {
 
 StaticHaltonSeq::StaticHaltonSeq () noexcept {
   static bool unused {FillThings ()};
+  static_cast<void> (unused);
 }
 
-StaticHaltonSeq::StaticHaltonSeq (const unsigned int width, const unsigned int height,
-                                  const unsigned int samples) noexcept :
+StaticHaltonSeq::StaticHaltonSeq (const unsigned width, const unsigned height,
+                                  const unsigned samples) noexcept :
   Sampler (width, height, samples) {
   static bool unused {FillThings ()};
+  static_cast<void> (unused);
 }
 
-float StaticHaltonSeq::getSample (const unsigned int /*sample*/) noexcept {
+float StaticHaltonSeq::getSample (const unsigned /*sample*/) noexcept {
   const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
-  return VALUES.at (current & SIZE);
+  return VALUES.at (current & MASK);
 }

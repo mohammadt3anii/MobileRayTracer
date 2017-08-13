@@ -29,7 +29,7 @@ void thread_work (void *const dstPixels, const int numThreads) noexcept {
   int rep {1};
     do {
       const std::chrono::steady_clock::time_point start {std::chrono::steady_clock::now ()};
-        renderer_->renderFrame(static_cast<unsigned int *>(dstPixels), numThreads);
+      renderer_->renderFrame (static_cast<unsigned *>(dstPixels), numThreads);
         timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::steady_clock::now() - start).count();
         FPS();
@@ -111,7 +111,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
   [&] ()->void {
     MobileRT::Scene scene_ {};
-    std::unique_ptr<MobileRT::Sampler> samplerCamera {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
     std::unique_ptr<MobileRT::Camera> camera {};
@@ -174,8 +173,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
-        samplerCamera = std::make_unique<Components::HaltonSeq> (width_, height_, samplesPixel);
-        //samplerCamera = std::make_unique<Components::StaticHaltonSeq> (width_, height_, samplesPixel, blockSizeX_, blockSizeY_);
         break;
 
       default:
@@ -184,7 +181,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         } else {
           samplerPixel = std::make_unique<Components::Constant> (0.5f);
         }
-        samplerCamera = std::make_unique<Components::Stratified> (width_, height_, samplesPixel);
         break;
     }
     switch (shader) {
@@ -235,9 +231,9 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       }
     }
     renderer_ = new MobileRT::Renderer {
-      std::move (samplerCamera), std::move (shader_), std::move (camera),
+      std::move (shader_), std::move (camera), std::move (samplerPixel),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
-      std::move (samplerPixel)};
+      static_cast<unsigned>(samplesPixel)};
 
     LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
     LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
@@ -315,7 +311,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
 }
 
 extern "C"
-unsigned int Java_puscas_mobilertapp_DrawView_getSample(
+unsigned Java_puscas_mobilertapp_DrawView_getSample (
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {

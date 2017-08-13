@@ -20,7 +20,7 @@ namespace MobileRT {
 		RegularGrid regularGrid_;
 
     protected:
-      const unsigned int samplesLight_ {};
+			const unsigned samplesLight_ {};
 
     protected:
 			virtual bool shade (RGB *rgb, Intersection intersection,
@@ -31,7 +31,7 @@ namespace MobileRT {
       void getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max);
 
 		public:
-			explicit Shader(Scene &&scene, unsigned int samplesLight = 0) noexcept;
+			explicit Shader (Scene &&scene, unsigned samplesLight = 0) noexcept;
 
 			Shader(const Shader &shader) noexcept = delete;
 

@@ -18,7 +18,7 @@ PathTracer::PathTracer(Scene &&scene,
                        std::unique_ptr<Sampler> &&samplerRay,
                        std::unique_ptr<Sampler> &&samplerLight,
                        std::unique_ptr<Sampler> &&samplerRussianRoulette,
-                       const unsigned int samplesLight) noexcept :
+                       const unsigned samplesLight) noexcept :
   Shader {std::move (scene), samplesLight},
   samplerRay_ {std::move (samplerRay)},
   samplerLight_ {std::move (samplerLight)},
@@ -29,7 +29,7 @@ PathTracer::PathTracer(Scene &&scene,
 //pag 28 slides Monte Carlo
 bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) const noexcept
 {
-  const unsigned int rayDepth {ray.depth_};
+  const unsigned rayDepth {ray.depth_};
   if (rayDepth > RayDepthMax || intersection.material_ == nullptr) {
 			return false;
   }
@@ -66,14 +66,14 @@ bool PathTracer::shade (RGB *const rgb, Intersection intersection, Ray &&ray) co
     if (kD.hasColor()) {
       const uint64_t sizeLights {scene_.lights_.size ()};
         if (sizeLights > 0) {
-          const unsigned int samplesLight {this->samplesLight_};
+          const unsigned samplesLight {this->samplesLight_};
           Intersection intersectLight {};
             //direct light
-          for (unsigned int i {0}; i < samplesLight; i ++) {
+          for (unsigned i {0}; i < samplesLight; i++) {
             const float randomNumber {samplerLight_->getSample ()};
                 //PDF = 1 / sizeLights
-            const unsigned int chosenLight {
-                        static_cast<unsigned int> (std::floor(
+            const unsigned chosenLight {
+              static_cast<unsigned> (std::floor (
                           randomNumber * sizeLights * 0.99999f))};
             Light &light (*scene_.lights_[chosenLight]);
                 //calculates vector starting in intersection to the light

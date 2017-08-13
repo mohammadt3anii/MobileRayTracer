@@ -19,17 +19,13 @@ namespace MobileRT {
     public:
       explicit Material (RGB Kd = RGB {}, RGB Ks = RGB {}, RGB Kt = RGB {},
                          float refractiveIndice = 1.0f, RGB Le = RGB {}) noexcept;
+      Material (const Material &material) noexcept = default;
 
-		Material(const Material &material) noexcept = default;
       Material (Material &&material) noexcept = default;
-
-        ~Material() noexcept = default;
-
-		Material &operator=(const Material &material) noexcept = delete;
-
-		Material &operator=(Material &&material) noexcept = delete;
-
-        static unsigned int getInstances() noexcept;
+      ~Material () noexcept = default;
+      Material &operator= (const Material &material) noexcept = delete;
+      Material &operator= (Material &&material) noexcept = delete;
+      static unsigned getInstances () noexcept;
     };
 }//namespace MobileRT
 

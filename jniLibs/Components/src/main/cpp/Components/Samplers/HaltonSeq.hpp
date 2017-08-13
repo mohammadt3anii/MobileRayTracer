@@ -14,9 +14,8 @@ namespace Components {
 	class HaltonSeq final : public MobileRT::Sampler {
     public:
 			explicit HaltonSeq() noexcept = default;
-
-      explicit HaltonSeq(unsigned int width, unsigned int height,
-                         unsigned int samples) noexcept;
+    explicit HaltonSeq (unsigned width, unsigned height,
+                        unsigned samples) noexcept;
 
 			HaltonSeq(const HaltonSeq &haltonSeq) noexcept = delete;
 
@@ -27,8 +26,7 @@ namespace Components {
 			HaltonSeq &operator=(const HaltonSeq &haltonSeq) noexcept = delete;
 
 			HaltonSeq &operator=(HaltonSeq &&haltonSeq) noexcept = delete;
-
-			float getSample(unsigned int sample) noexcept final;
+    float getSample (unsigned sample) noexcept final;
 	};
 }//namespace Components
 

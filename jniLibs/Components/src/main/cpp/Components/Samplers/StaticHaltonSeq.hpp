@@ -14,14 +14,14 @@ namespace Components {
   class StaticHaltonSeq final : public MobileRT::Sampler {
     public:
     explicit StaticHaltonSeq () noexcept;
-    explicit StaticHaltonSeq (unsigned int width, unsigned int height,
-                              unsigned int samples) noexcept;
+    explicit StaticHaltonSeq (unsigned width, unsigned height,
+                              unsigned samples) noexcept;
     StaticHaltonSeq (const StaticHaltonSeq &random) noexcept = delete;
     StaticHaltonSeq (StaticHaltonSeq &&random) noexcept = delete;
     ~StaticHaltonSeq () noexcept final = default;
     StaticHaltonSeq &operator= (const StaticHaltonSeq &random) noexcept = delete;
     StaticHaltonSeq &operator= (StaticHaltonSeq &&random) noexcept = delete;
-    float getSample (unsigned int sample) noexcept final;
+    float getSample (unsigned sample) noexcept final;
   };
 }//namespace Components
 

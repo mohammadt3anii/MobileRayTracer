@@ -11,9 +11,8 @@ namespace Components {
 	class Stratified final : public MobileRT::Sampler {
     public:
     explicit Stratified() noexcept = default;
-
-		explicit Stratified(unsigned int width, unsigned int height,
-                        unsigned int samples) noexcept;
+    explicit Stratified (unsigned width, unsigned height,
+                         unsigned samples) noexcept;
 
 		Stratified(const Stratified &stratified) noexcept = delete;
 
@@ -24,8 +23,7 @@ namespace Components {
 		Stratified &operator=(const Stratified &stratified) noexcept = delete;
 
 		Stratified &operator=(Stratified &&stratified) noexcept = delete;
-
-		float getSample(unsigned int sample) noexcept final;
+    float getSample (unsigned sample) noexcept final;
 	};
 }//namespace Components
 

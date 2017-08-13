@@ -24,8 +24,7 @@ namespace Components {
 			Constant &operator=(const Constant &constant) noexcept = delete;
 
 			Constant &operator=(Constant &&constant) noexcept = delete;
-
-			float getSample(unsigned int sample) noexcept final;
+    float getSample (unsigned sample) noexcept final;
 	};
 }//namespace Components
 
