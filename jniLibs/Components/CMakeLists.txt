@@ -23,16 +23,14 @@ target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../t
 target_compile_options( Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
-target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
+target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
 
 target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field -Wno-over-aligned )
 target_compile_options( Components PRIVATE -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -ftemplate-depth=10000000 )
+target_compile_options( Components PRIVATE -ftree-vectorize -funroll-loops )
 
-target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64) ?$" >>:-flto=full> )
-if(NOT ANDROID_ABI MATCHES "^mips(64)?$" )
-    #set(GOLD "-fuse-ld=gold" )
-endif()
+target_compile_options( Components PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full -mfma> )
 
 target_link_libraries( Components
 PUBLIC MobileRT tinyobjloader PRIVATE --verbose
