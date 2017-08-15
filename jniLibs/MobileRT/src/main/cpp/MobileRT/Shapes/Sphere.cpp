@@ -74,7 +74,7 @@ AABB Sphere::getAABB() const noexcept {
   return AABB {getPositionMin (), getPositionMax ()};
 }
 
-bool Sphere::intersect (AABB box) const noexcept {
+bool Sphere::intersect (const AABB box) const noexcept {
   float dmin {0};
   const Point3D v1 {box.pointMin_};
   const Point3D v2 {box.pointMax_};

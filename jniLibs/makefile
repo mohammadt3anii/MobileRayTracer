@@ -135,8 +135,8 @@ tidy:
 
 GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -print)
 GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
-%.gto: %.cpp
-	g++ -DNO_ANDROID -std=c++14 -c $< -o $@
+%.gto: %.cpp third_party
+	g++ $(CXXFLAGS) -DNO_ANDROID -std=c++14 -c $< -o $@
 
 gcc:
 	 $(eval CXX := g++)
@@ -144,7 +144,7 @@ gcc:
 	 $(eval CXXFLAGS := $(filter-out -ferror-limit=1,$(CXXFLAGS)))
 
 gtest: $(OBJS) $(GTESTOBJS)
-	g++ $(GTESTOBJS) $(OBJS) -o $@ $(shell pkg-config --libs gtk+-2.0) -lgtest -lgtest_main -pthread
+	g++ $(CXXFLAGS) $(GTESTOBJS) $(OBJS) third-party/tiny_obj_loader.o -o $@ $(LDFLAGS) $(shell pkg-config --libs gtk+-2.0) -lgtest -lgtest_main -pthread
 	@echo "Compilation Test Units done"
 
 #valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1

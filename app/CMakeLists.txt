@@ -20,7 +20,7 @@ add_library( DrawView SHARED ${MOBILE_APP_SOURCES} )
 target_compile_options( DrawView PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 target_compile_options( DrawView PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
-target_compile_options( DrawView PRIVATE -std=c++14 -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
+target_compile_options( DrawView PRIVATE -std=c++14 -pedantic-errors -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( DrawView PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -Wno-over-aligned -fno-exceptions -fno-rtti )
 
 target_compile_options( DrawView PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -static -ftemplate-depth=10000000 )

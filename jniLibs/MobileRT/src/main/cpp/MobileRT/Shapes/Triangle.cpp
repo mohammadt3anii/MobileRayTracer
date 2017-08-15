@@ -134,9 +134,7 @@ bool Triangle::intersect (const AABB box) const noexcept {
       return true;
     }};
 
-  if (intersectRayAABB(this->pointA_, this->AB_) && intersectRayAABB(this->pointA_, this->AC_)) {
-    return intersectRayAABB(this->pointB_, this->BC_);
-  }
-
-  return false;
+    return intersectRayAABB(this->pointA_, this->AB_) ||
+           intersectRayAABB(this->pointA_, this->AC_) ||
+           intersectRayAABB(this->pointB_, this->BC_);
 }

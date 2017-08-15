@@ -101,18 +101,8 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
 
         //indirect light
       if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
-        const float r1 {2.0f * Pi * samplerRay_->getSample ()};
-        const float r2 {samplerRay_->getSample ()};
-        const float r2s {std::sqrt (r2)};
-        Vector3D u {std::fabs (intersection.normal_.x_) > 0.1f ?
-                    Vector3D (0.0f, 1.0f, 0.0f).crossProduct (intersection.normal_) :
-                    Vector3D (1.0f, 0.0f, 0.0f).crossProduct (intersection.normal_)};
-        u.normalize();
-        const Vector3D aux {intersection.normal_.crossProduct (u)};
-        Vector3D direction {(u * std::cos (r1) * r2s + aux * std::sin (r1) * r2s +
-                             intersection.normal_ * std::sqrt (1.0f - r2))};
-        direction.normalize();
-        Ray normalizedSecundaryRay {direction, intersection.point_, rayDepth + 1};
+        const Vector3D newDirection {getCosineSampleHemisphere (shadingNormal)};
+        Ray normalizedSecundaryRay {newDirection, intersection.point_, rayDepth + 1};
 
         //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
@@ -132,8 +122,6 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
         //if it has Ld and if LiD intersects a light source then LiD = 0
         if (Ld.hasColor() && intersectedLight) {
           LiD.reset();
-          // LiS.reset();
-          // LiT.reset();
         }
       }
     }
@@ -176,11 +164,11 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
                            rayDepth + 1};
       RGB LiT_RGB {};
       Intersection transmissionInt {};
-        rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
+      rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
       LiT.addMult ({kT, LiT_RGB});
     }
 	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
-    //Ld /= rayDepth;
+  //Ld /= rayDepth;
 	//LiD /= rayDepth;
 
 	*rgb += Ld;
@@ -194,4 +182,20 @@ void PathTracer::resetSampling() noexcept {
     this->scene_.resetSampling();
     this->samplerRay_->resetSampling();
     this->samplerLight_->resetSampling();
+}
+
+Vector3D PathTracer::getCosineSampleHemisphere (const Vector3D normal) const noexcept {
+  const float r1 {2.0f * Pi * samplerRay_->getSample ()};
+  const float r2 {samplerRay_->getSample ()};
+  const float r2s {std::sqrt (r2)};
+  Vector3D u {std::fabs (normal.x_) > 0.1f ?
+              Vector3D (0.0f, 1.0f, 0.0f).crossProduct (normal) :
+              Vector3D (1.0f, 0.0f, 0.0f).crossProduct (normal)};
+  u.normalize();
+  const Vector3D v {normal.crossProduct (u)};
+  Vector3D direction {(u * (std::cos (r1) * r2s) +
+                       v * (std::sin (r1) * r2s) +
+                       normal * std::sqrt (1.0f - r2))};
+  direction.normalize();
+  return direction;
 }

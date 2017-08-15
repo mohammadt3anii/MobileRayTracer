@@ -23,7 +23,7 @@ target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../t
 target_compile_options( Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
-target_compile_options( Components PRIVATE -std=c++14 -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
+target_compile_options( Components PRIVATE -std=c++14 -pedantic-errors -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( Components PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
 
 target_compile_options( Components PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-unused-private-field -Wno-over-aligned )

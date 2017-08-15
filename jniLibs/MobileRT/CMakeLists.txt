@@ -28,7 +28,7 @@ target_include_directories( MobileRT INTERFACE "${CMAKE_CURRENT_LIST_DIR}/src/ma
 target_compile_options( MobileRT PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 target_compile_options( MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
-target_compile_options( MobileRT PRIVATE -std=c++14 -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
+target_compile_options( MobileRT PRIVATE -std=c++14 -pedantic-errors -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
 target_compile_options( MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
 
 target_compile_options( MobileRT PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -ftemplate-depth=10000000 )

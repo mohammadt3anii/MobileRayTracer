@@ -5,6 +5,7 @@
 #ifndef MOBILERT_CAMERA_HPP
 #define MOBILERT_CAMERA_HPP
 
+#include "Accelerators/AABB.hpp"
 #include "Point3D.hpp"
 #include "Ray.hpp"
 #include <algorithm>
@@ -13,6 +14,7 @@
 #include <random>
 
 namespace MobileRT {
+  using MobileRT::AABB;
   class Camera {
     protected:
       std::atomic<unsigned> block_ {0};
@@ -34,7 +36,8 @@ namespace MobileRT {
       virtual Ray generateRay (float u, float v,
                                float deviationU,
                                float deviationV) const noexcept = 0;
-    float getBlock (unsigned sample) noexcept;
+			float getBlock (unsigned sample) noexcept;
+			AABB getAABB () noexcept;
     };
 }//namespace MobileRT
 

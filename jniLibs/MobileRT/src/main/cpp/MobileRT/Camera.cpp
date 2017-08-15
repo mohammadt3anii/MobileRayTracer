@@ -4,6 +4,7 @@
 
 #include "Camera.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Camera;
 
 namespace {
@@ -26,6 +27,12 @@ float Camera::getBlock (const unsigned sample) noexcept {
     return 1.0f;
   }
   return VALUES.at (current);
+}
+
+AABB Camera::getAABB () noexcept {
+  const Point3D min {};
+  const Point3D max {};
+  return AABB {min, max};
 }
 
 //Left hand rule

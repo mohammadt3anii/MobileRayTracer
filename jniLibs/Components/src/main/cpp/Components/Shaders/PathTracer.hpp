@@ -17,6 +17,7 @@ namespace Components {
 	using MobileRT::Intersection;
 	using MobileRT::Ray;
 	using MobileRT::Scene;
+	using MobileRT::Vector3D;
     class PathTracer final : public MobileRT::Shader {
     private:
       std::unique_ptr<Sampler> samplerRay_ {};
@@ -27,6 +28,8 @@ namespace Components {
 			bool shade(RGB *rgb,
 								 Intersection intersection,
 								 Ray &&ray) const noexcept final;
+
+			Vector3D getCosineSampleHemisphere (Vector3D normal) const noexcept;
 
 		public:
         explicit PathTracer(Scene &&scene,

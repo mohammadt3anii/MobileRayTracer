@@ -7,8 +7,7 @@
 using MobileRT::RegularGrid;
 
 RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
-                          const int gridSize,
-                          const int gridShift) :
+                          const int gridSize, const int gridShift) :
   spheres_ {
     std::vector<std::vector<Sphere *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
   triangles_ {
@@ -17,29 +16,27 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
     std::vector<std::vector<Plane *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
   gridShift_ {gridShift},
-  m_Extends (AABB {min, max}),
+  m_Extends (AABB {min, max}),//world boundaries
   // precalculate 1 / size of a cell (for x, y and z)
   m_SR {gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)},
   // precalculate size of a cell (for x, y, and z)
   m_CW {(m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_)}
 {
   LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
-  LOG("SPHERES");
-  addPrimitives<Sphere>(scene->spheres_, this->spheres_);
   LOG("TRIANGLES");
   addPrimitives<Triangle>(scene->triangles_, this->triangles_);
-  LOG("PLANES");
-  addPrimitives<Plane>(scene->planes_, this->planes_);
+  LOG("SPHERES");
+  //addPrimitives<Sphere>(scene->spheres_, this->spheres_);
+  //LOG("PLANES");
+  //addPrimitives<Plane>(scene->planes_, this->planes_);
 }
 
 template<typename T>
 void RegularGrid::addPrimitives
   (std::vector<T> &primitives, std::vector<std::vector<T *>> &grid_primitives) noexcept {
   int index {0};
-  for (std::vector<T *> primitivesBox : grid_primitives) {
-    primitivesBox = std::vector<T *>();
-  }
 
+  // calculate cell width, height and depth
   const float dx {(m_Extends.pointMax_.x_ - m_Extends.pointMin_.x_) / gridSize_};
   const float dy {(m_Extends.pointMax_.y_ - m_Extends.pointMin_.y_) / gridSize_};
   const float dz {(m_Extends.pointMax_.z_ - m_Extends.pointMin_.z_) / gridSize_};
@@ -68,23 +65,25 @@ void RegularGrid::addPrimitives
     z1 = (z1 < 0) ? 0 : z1;
     z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
 
+    //loop over candidate cells
     for (int x {x1}; x < x2; x ++) {
       for (int y {y1}; y < y2; y ++) {
         for (int z {z1}; z < z2; z ++) {
           // construct aabb for current cell
           const size_t idx {
-            static_cast<size_t>(x) + static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
-            static_cast<size_t>(z) * static_cast<size_t>(gridSize_) *
-            static_cast<size_t>(gridSize_)};
+            static_cast<size_t>(x) +
+            static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
+            static_cast<size_t>(z) * static_cast<size_t>(gridSize_) * static_cast<size_t>(gridSize_)};
           const Point3D pos {m_Extends.pointMin_.x_ + x * dx,
                              m_Extends.pointMin_.y_ + y * dy,
                              m_Extends.pointMin_.z_ + z * dz};
           const AABB cell {pos, Point3D {dx, dy, dz}};
-          LOG("index = ", index);
-          LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
+          //LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
           // do an accurate aabb / primitive intersection test
           if (primitive.intersect(cell)) {
             grid_primitives[idx].emplace_back(&primitive);
+            LOG("add idx = ", idx);
+            LOG("add index = ", index);
           }
         }
       }
@@ -93,10 +92,10 @@ void RegularGrid::addPrimitives
 }
 
 bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) const noexcept {
-  const bool intersectedSpheres {intersect<Sphere> (this -> spheres_, intersection, ray)};
   const bool intersectedTriangles {intersect<Triangle> (this -> triangles_, intersection, ray)};
-  const bool intersectedPlanes {intersect<Plane> (this -> planes_, intersection, ray)};
-  return intersectedSpheres || intersectedTriangles || intersectedPlanes;
+  const bool intersectedSpheres {intersect<Sphere> (this -> spheres_, intersection, ray)};
+  //const bool intersectedPlanes {intersect<Plane> (this -> planes_, intersection, ray)};
+  return intersectedTriangles || intersectedSpheres;
 }
 
 template<typename T>
@@ -173,12 +172,16 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
 
   // start stepping
   // trace primary ray
+  //size_t index {0};
   while (true) {
     const size_t index {static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) +
                         (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))};
     std::vector<T *> list {primitives[index]};
+    if (list.size() > 0) {
+      LOG("intersect index = ", index, " size = ", list.size());
+    }
 
-    for (auto *pr : list) {
+    for (const auto *const pr : list) {
       bool result {false};
       // if (pr->GetLastRayID() != a_Ray.GetID()) {
       result = pr->intersect(intersection, ray);
@@ -222,13 +225,14 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
   }
 
   testloop:
+  //index = 0;
   while (true) {
     const size_t index {static_cast<size_t>(X) +
                         (static_cast<size_t>(Y) << static_cast<size_t>(gridShift_)) +
                         (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))};
     std::vector<T *> list {primitives[index]};
 
-    for (auto *pr : list) {
+    for (auto *const pr : list) {
       bool result {false};
       // if (pr->GetLastRayID() != a_Ray.GetID()) {
       result = pr->intersect(intersection, ray);

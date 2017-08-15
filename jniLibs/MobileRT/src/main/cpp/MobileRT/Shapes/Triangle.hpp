@@ -47,6 +47,7 @@ namespace MobileRT {
 			float getZ() const noexcept;
 
 			AABB getAABB() const noexcept;
+			
 			bool intersect (AABB box) const noexcept;
     };
 }//namespace MobileRT
