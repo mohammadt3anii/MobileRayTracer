@@ -207,7 +207,7 @@ public final class MainActivity extends Activity {
         pickerSamplesLight_.setWrapSelectorWheel(true);
         pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] accelerators = {"No Accelerator", "RegularGrid"};
+        final String[] accelerators = {"None", "RegGrid"};
         pickerAccelerator_ = (NumberPicker) findViewById(R.id.pickerAccelerator);
         if (pickerAccelerator_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");

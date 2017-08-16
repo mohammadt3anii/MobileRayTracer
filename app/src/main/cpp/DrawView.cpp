@@ -43,17 +43,20 @@ void thread_work (void *const dstPixels, const int numThreads) noexcept {
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
-  JNIEnv *const /*env*/,
-  jobject /*thiz*/
+  JNIEnv *const env,
+  jobject /*thiz*/,
+  jobject dstBitmap
 ) noexcept {
-    thread_->join();
-    delete thread_;
-    delete renderer_;
+  thread_->join();
+  delete thread_;
+  delete renderer_;
 
   working_ = State::IDLE;
   LOG("WORKING = IDLE");
   timeFrame_ = 0;
   fps_ = 0.0f;
+
+  AndroidBitmap_unlockPixels(env, dstBitmap);
 }
 
 extern "C"
@@ -254,7 +257,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
   jint const nThreads) noexcept {
   void *dstPixels {nullptr};
   AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
-  AndroidBitmap_unlockPixels(env, dstBitmap);
   working_ = State::BUSY;
   LOG("WORKING = BUSY");
   thread_ = new std::thread(thread_work, dstPixels, nThreads);

@@ -4,6 +4,7 @@
 //
 
 #include "Triangle.hpp"
+#include <limits>
 
 using MobileRT::AABB;
 using MobileRT::Triangle;
@@ -89,14 +90,28 @@ AABB Triangle::getAABB() const noexcept {
 bool Triangle::intersect (const AABB box) const noexcept {
   std::function<bool (Point3D orig, Vector3D vec)> intersectRayAABB {
     [&](Point3D orig, Vector3D vec)->bool {
-      float tmin {(box.pointMin_.x_ - orig.x_) / vec.x_};
-      float tmax {(box.pointMax_.x_ - orig.x_) / vec.x_};
+      float tmin {(box.pointMin_.x_ - orig.x_)};
+      float tmax {(box.pointMax_.x_ - orig.x_)};
+      if (vec.x_ != 0) {
+        tmin /= vec.x_;
+        tmax /= vec.x_;
+      } else {
+        tmin = tmin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+        tmax = tmax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+      }
 
       if (tmin > tmax) {
         std::swap(tmin, tmax);
       }
-      float tymin {(box.pointMin_.y_ - orig.y_) / vec.y_};
-      float tymax {(box.pointMax_.y_ - orig.y_) / vec.y_};
+      float tymin {(box.pointMin_.y_ - orig.y_)};
+      float tymax {(box.pointMax_.y_ - orig.y_)};
+      if (vec.y_ != 0) {
+        tymin /= vec.y_;
+        tymax /= vec.y_;
+      } else {
+        tymin = tymin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+        tymax = tymax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+      }
 
       if (tymin > tymax) {
         std::swap(tymin, tymax);
@@ -113,8 +128,16 @@ bool Triangle::intersect (const AABB box) const noexcept {
       if (tymax < tmax) {
         tmax = tymax;
       }
-      float tzmin {(box.pointMin_.z_ - orig.z_) / vec.z_};
-      float tzmax {(box.pointMax_.z_ - orig.z_) / vec.z_};
+      float tzmin {(box.pointMin_.z_ - orig.z_)};
+      float tzmax {(box.pointMax_.z_ - orig.z_)};
+      if (vec.z_ != 0) {
+        tzmin /= vec.z_;
+        tzmax /= vec.z_;
+      } else {
+        tzmin = tzmin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+        tzmax = tzmax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+      }
+
 
       if (tzmin > tzmax) {
         std::swap(tzmin, tzmax);

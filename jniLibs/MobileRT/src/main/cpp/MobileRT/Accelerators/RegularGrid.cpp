@@ -177,9 +177,9 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
     const size_t index {static_cast<size_t>(X) + (static_cast<size_t>(Y) << gridShift_) +
                         (static_cast<size_t>(Z) << (static_cast<size_t>(gridShift_) * 2))};
     std::vector<T *> list {primitives[index]};
-    if (list.size() > 0) {
+    /*if (!list.empty()) {
       LOG("intersect index = ", index, " size = ", list.size());
-    }
+    }*/
 
     for (const auto *const pr : list) {
       bool result {false};

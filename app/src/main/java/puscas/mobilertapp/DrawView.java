@@ -83,6 +83,17 @@ public class DrawView extends GLSurfaceView {
         sampleT_ = ", 0";
     }
 
+    void updatePrint () {
+        fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
+        fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
+        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
+        timeT_ = String.format(Locale.US, "[%.2fs] ",
+                (SystemClock.elapsedRealtime() - start_) / 1000.0f);
+        stageT_ = " " + Stage.values()[stage_];
+        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
+        sampleT_ = ", " + getSample();
+    }
+
     void setView(final TextView textView) {
         textView_ = textView;
         printText();
@@ -98,7 +109,7 @@ public class DrawView extends GLSurfaceView {
         }
     }
 
-    native void finish();
+    native void finish(Bitmap bitmap);
 
     private native void stopRender();
 
@@ -125,11 +136,10 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         period_ = 250L;
         renderTask_ = new DrawView.RenderTask();
+        renderTask_.execute();
         buttonRender_.setText(R.string.stop);
         start_ = SystemClock.elapsedRealtime();
         DrawView.renderIntoBitmap(bitmap_, numThreads_);
-        scheduler_ = Executors.newSingleThreadScheduledExecutor();
-        renderTask_.execute();
         //this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
@@ -196,14 +206,7 @@ public class DrawView extends GLSurfaceView {
                 scheduler_.shutdown();
             }
             FPS();
-            fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
-            fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
-            timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
-            timeT_ = String.format(Locale.US, "[%.2fs] ",
-                    (SystemClock.elapsedRealtime() - start_) / 1000.0f);
-            stageT_ = " " + Stage.values()[stage_];
-            allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
-            sampleT_ = ", " + getSample();
+            updatePrint();
             publishProgress();
         };
 
@@ -233,11 +236,13 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         protected final void onPostExecute(final Void result) {
-            requestRender();
+            stage_ = isWorking();
+            updatePrint();
             printText();
             renderTask_.cancel(true);
-            finish();
+            finish(bitmap_);
             buttonRender_.setText(R.string.render);
+            requestRender();
         }
 
         final class TouchTracker {

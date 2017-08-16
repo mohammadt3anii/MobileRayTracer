@@ -44,7 +44,8 @@ static void thread_work(void *dstPixels, int numThreads) noexcept;
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv *env,
-        jobject thiz
+        jobject thiz,
+        jobject dstBitmap
 ) noexcept;
 
 extern "C"

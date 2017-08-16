@@ -24,7 +24,7 @@ namespace Components {
 
 		public:
     explicit DepthMap (Scene &&scene, const Point3D &&maxPoint,
-                       const Accelerator accelerator) noexcept;
+                       Accelerator accelerator) noexcept;
 
 			DepthMap(const DepthMap &depthMap) noexcept = delete;
 
