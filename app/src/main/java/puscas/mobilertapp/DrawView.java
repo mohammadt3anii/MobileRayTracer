@@ -52,7 +52,7 @@ public class DrawView extends GLSurfaceView {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native void initialize(final int scene, final int shader, final int width, final int height, final int sampler, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
+    static native void initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
     static native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -133,11 +133,11 @@ public class DrawView extends GLSurfaceView {
         //this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
-    void createScene(final int scene, final int shader, final int numThreads, final int sampler,
+    void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
                      final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText) {
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        DrawView.initialize(scene, shader, width, height, sampler, samplesPixel, samplesLight, objFile, matText);
+        DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;

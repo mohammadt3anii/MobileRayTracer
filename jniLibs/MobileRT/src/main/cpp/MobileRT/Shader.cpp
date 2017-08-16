@@ -9,8 +9,10 @@ using MobileRT::Ray;
 using MobileRT::RGB;
 using MobileRT::Shader;
 
-Shader::Shader (Scene &&scene, const unsigned samplesLight) noexcept :
+Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator accelerator) noexcept
+  :
   scene_ {std::move (scene)},
+  accelerator_ {accelerator},
   samplesLight_ {samplesLight}
 {
   this->scene_.triangles_.shrink_to_fit();
@@ -68,10 +70,17 @@ Shader::~Shader () noexcept {
 }
 
 bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) const noexcept {
-  //if (regularGrid_.intersect (intersection, ray)) {
-  if (this->scene_.trace (intersection, ray) >= 0) {// compute radiance
-    //intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
-		return shade(rgb, *intersection, std::move(ray)); 
-	}
-	return false;
+  switch (accelerator_) {
+    case Accelerator::REGULAR_GRID:
+      if (this->regularGrid_.intersect (intersection, ray)) {
+        intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
+        return shade (rgb, *intersection, std::move (ray));
+      }
+      return false;
+    case Accelerator::NONE:
+      if (this->scene_.trace (intersection, ray) >= 0) {
+        return shade (rgb, *intersection, std::move (ray));
+      }
+  }
+  return false;
 }

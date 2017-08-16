@@ -26,7 +26,7 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
   LOG("TRIANGLES");
   addPrimitives<Triangle>(scene->triangles_, this->triangles_);
   LOG("SPHERES");
-  //addPrimitives<Sphere>(scene->spheres_, this->spheres_);
+  addPrimitives<Sphere> (scene->spheres_, this->spheres_);
   //LOG("PLANES");
   //addPrimitives<Plane>(scene->planes_, this->planes_);
 }

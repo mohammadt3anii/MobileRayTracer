@@ -33,10 +33,10 @@ namespace Components {
 
 		public:
         explicit PathTracer(Scene &&scene,
-														std::unique_ptr<Sampler> &&samplerRay,
-														std::unique_ptr<Sampler> &&samplerLight,
-														std::unique_ptr<Sampler> &&samplerRussianRoulette,
-														unsigned samplesLight) noexcept;
+                            std::unique_ptr<Sampler> &&samplerRay,
+                            std::unique_ptr<Sampler> &&samplerLight,
+                            std::unique_ptr<Sampler> &&samplerRussianRoulette,
+                            unsigned samplesLight, Accelerator accelerator) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;
 

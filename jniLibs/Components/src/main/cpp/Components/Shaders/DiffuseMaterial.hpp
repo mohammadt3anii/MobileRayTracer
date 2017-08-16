@@ -19,7 +19,7 @@ namespace Components {
                 Ray &&ray) const noexcept final;
 
     public:
-    explicit DiffuseMaterial(Scene &&scene) noexcept;
+    explicit DiffuseMaterial (Scene &&scene, const Accelerator accelerator) noexcept;
 
     DiffuseMaterial(const DiffuseMaterial &diffuseMaterial) noexcept = delete;
 

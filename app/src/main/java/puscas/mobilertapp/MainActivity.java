@@ -32,7 +32,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerScene_;
     private NumberPicker pickerShader_;
     private NumberPicker pickerThreads_;
-    private NumberPicker pickerSampler_;
+    private NumberPicker pickerAccelerator_;
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
@@ -207,17 +207,17 @@ public final class MainActivity extends Activity {
         pickerSamplesLight_.setWrapSelectorWheel(true);
         pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final String[] samplers = {"Stratified", "HaltonSeq"};
-        pickerSampler_ = (NumberPicker) findViewById(R.id.pickerSampler);
-        if (pickerSampler_ == null) {
+        final String[] accelerators = {"No Accelerator", "RegularGrid"};
+        pickerAccelerator_ = (NumberPicker) findViewById(R.id.pickerAccelerator);
+        if (pickerAccelerator_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
         }
-        pickerSampler_.setMinValue(0);
-        pickerSampler_.setMaxValue(samplers.length - 1);
-        pickerSampler_.setDisplayedValues(samplers);
-        pickerSampler_.setWrapSelectorWheel(true);
-        pickerSampler_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerAccelerator_.setMinValue(0);
+        pickerAccelerator_.setMaxValue(accelerators.length - 1);
+        pickerAccelerator_.setDisplayedValues(accelerators);
+        pickerAccelerator_.setWrapSelectorWheel(true);
+        pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
         if (pickerThreads_ == null) {
@@ -265,7 +265,7 @@ public final class MainActivity extends Activity {
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
                         pickerThreads_.getValue(),
-                        pickerSampler_.getValue(),
+                        pickerAccelerator_.getValue(),
                         Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
                                 [pickerSamplesPixel_.getValue() - 1]
                         ),

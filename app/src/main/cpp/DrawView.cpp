@@ -84,7 +84,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   jint const shader,
   jint const width,
   jint const height,
-  jint const sampler,
+  jint const accelerator,
   jint const samplesPixel,
   jint const samplesLight,
   jstring objFile,
@@ -168,27 +168,18 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           45.0f * hfovFactor, 45.0f * vfovFactor);
         break;
     }
-    switch (sampler) {
-      case 1:
-        if (samplesPixel > 1) {
-          //samplerPixel = std::make_unique<Components::HaltonSeq> ();
-          samplerPixel = std::make_unique<Components::StaticHaltonSeq> ();
-        } else {
-          samplerPixel = std::make_unique<Components::Constant> (0.5f);
-        }
-        break;
-
-      default:
-        if (samplesPixel > 1) {
-          samplerPixel = std::make_unique<Components::Stratified> ();
-        } else {
-          samplerPixel = std::make_unique<Components::Constant> (0.5f);
-        }
-        break;
+    if (samplesPixel > 1) {
+      //samplerPixel = std::make_unique<Components::HaltonSeq> ();
+      //samplerPixel = std::make_unique<Components::Stratified> ();
+      samplerPixel = std::make_unique<Components::StaticHaltonSeq> ();
+    } else {
+      samplerPixel = std::make_unique<Components::Constant> (0.5f);
     }
     switch (shader) {
       case 1: {
-        shader_ = std::make_unique<Components::Whitted> (std::move (scene_), samplesLight);
+        shader_ = std::make_unique<Components::Whitted> (std::move (scene_), samplesLight,
+                                                         MobileRT::Shader::Accelerator (
+                                                           accelerator));
         break;
       }
 
@@ -213,23 +204,30 @@ void Java_puscas_mobilertapp_DrawView_initialize(
 
         shader_ = std::make_unique<Components::PathTracer> (
           std::move (scene_), std::move (samplerRay), std::move (samplerLight),
-          std::move (samplerRussianRoulette), samplesLight);
+          std::move (samplerRussianRoulette), samplesLight,
+          MobileRT::Shader::Accelerator (accelerator));
         break;
       }
 
       case 3: {
         shader_ = std::make_unique<Components::DepthMap> (std::move (scene_),
-                                                          MobileRT::Point3D (1, 1, 1));
+                                                          MobileRT::Point3D (1, 1, 1),
+                                                          MobileRT::Shader::Accelerator (
+                                                            accelerator));
         break;
       }
 
       case 4: {
-        shader_ = std::make_unique<Components::DiffuseMaterial> (std::move (scene_));
+        shader_ = std::make_unique<Components::DiffuseMaterial> (std::move (scene_),
+                                                                 MobileRT::Shader::Accelerator (
+                                                                   accelerator));
         break;
       }
 
       default: {
-        shader_ = std::make_unique<Components::NoShadows> (std::move (scene_), samplesLight);
+        shader_ = std::make_unique<Components::NoShadows> (std::move (scene_), samplesLight,
+                                                           MobileRT::Shader::Accelerator (
+                                                             accelerator));
         break;
       }
     }

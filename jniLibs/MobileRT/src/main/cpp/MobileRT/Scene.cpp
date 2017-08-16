@@ -92,7 +92,7 @@ unsigned Scene::getInstances () noexcept {
 }
 
 void Scene::resetSampling() noexcept {
-  for (Light *light : this->lights_) {
+  for (Light *const light : this->lights_) {
     light->resetSampling ();
   }
 }

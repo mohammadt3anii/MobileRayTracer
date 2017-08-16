@@ -18,8 +18,8 @@ PathTracer::PathTracer(Scene &&scene,
                        std::unique_ptr<Sampler> &&samplerRay,
                        std::unique_ptr<Sampler> &&samplerLight,
                        std::unique_ptr<Sampler> &&samplerRussianRoulette,
-                       const unsigned samplesLight) noexcept :
-  Shader {std::move (scene), samplesLight},
+                       const unsigned samplesLight, const Accelerator accelerator) noexcept :
+  Shader {std::move (scene), samplesLight, accelerator},
   samplerRay_ {std::move (samplerRay)},
   samplerLight_ {std::move (samplerLight)},
   samplerRussianRoulette_ {std::move (samplerRussianRoulette)} {

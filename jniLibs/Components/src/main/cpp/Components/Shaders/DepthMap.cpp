@@ -11,8 +11,9 @@ using MobileRT::Intersection;
 using MobileRT::Ray;
 using MobileRT::Scene;
 
-DepthMap::DepthMap (Scene &&scene, const Point3D &&maxPoint) noexcept :
-  Shader {std::move (scene)},
+DepthMap::DepthMap (Scene &&scene, const Point3D &&maxPoint, const Accelerator accelerator) noexcept
+  :
+  Shader {std::move (scene), 0, accelerator},
   maxPoint_ {maxPoint}
 {
 }

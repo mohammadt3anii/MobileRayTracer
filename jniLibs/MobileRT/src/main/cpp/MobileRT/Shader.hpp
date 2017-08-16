@@ -14,10 +14,16 @@
 #include <utility>
 
 namespace MobileRT {
-    class Shader {
+  class Shader {
     public:
-		Scene scene_;
-		RegularGrid regularGrid_;
+    Scene scene_;
+    RegularGrid regularGrid_;
+    enum Accelerator {
+      NONE = 0,
+      REGULAR_GRID
+    };
+    private:
+    const Accelerator accelerator_ {};
 
     protected:
 			const unsigned samplesLight_ {};
@@ -25,13 +31,12 @@ namespace MobileRT {
     protected:
 			virtual bool shade (RGB *rgb, Intersection intersection,
                           Ray &&ray) const noexcept = 0;
-
-      private:
+    private:
       template<typename T>
       void getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max);
 
 		public:
-			explicit Shader (Scene &&scene, unsigned samplesLight = 0) noexcept;
+    explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;
 
 			Shader(const Shader &shader) noexcept = delete;
 
@@ -43,13 +48,12 @@ namespace MobileRT {
 
 			Shader &operator=(Shader &&shader) noexcept = delete;
 
-			//ray trace and verifies if intersects primitives
 			bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept;
 
       int traceTouch(Intersection *intersection, Ray &&ray) const noexcept;
 
 			virtual void resetSampling() noexcept = 0;
-    };
+  };
 }//namespace MobileRT
 
 #endif //MOBILERT_SHADER_HPP
