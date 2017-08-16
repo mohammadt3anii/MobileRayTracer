@@ -105,7 +105,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   LOG("WORKING = IDLE");
   width_ = width;
   height_ = height;
-  const float ratio {static_cast<float>(height) / static_cast<float>(width)};
+  const float ratio {
+    width > height ? static_cast<float>(width) / height : static_cast<float>(height) / width};
+  const float hfovFactor {width > height ? ratio : 1.0f};
+  const float vfovFactor {width < height ? ratio : 1.0f};
   renderer_ = nullptr;
 
 
@@ -120,7 +123,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D{0.0f, 0.0f, - 3.4f},
           MobileRT::Point3D{0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
-          45.0f, 45.0f * ratio);
+          45.0f * hfovFactor, 45.0f * vfovFactor);
         scene_ = cornellBoxScene (std::move (scene_));
         break;
 
@@ -129,12 +132,12 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D{0.0f, 1.0f, - 10.0f},
           MobileRT::Point3D{0.0f, 1.0f, 7.0f},
           MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
-          10.0f, 10.0f);
+          10.0f * hfovFactor, 10.0f * vfovFactor);
         /*camera = std::make_unique<Components::Perspective>(
           MobileRT::Point3D(0.0f, 0.5f, 1.0f),
           MobileRT::Point3D(0.0f, 0.0f, 7.0f),
           MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
-          60.0f, 60.0f * ratio);*/
+          60.0f * hfovFactor, 60.0f * vfovFactor);*/
         scene_ = spheresScene (std::move (scene_));
         break;
 
@@ -143,7 +146,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D {0.0f, 0.0f, -3.4f},
           MobileRT::Point3D {0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-          45.0f, 45.0f * ratio);
+          45.0f * hfovFactor, 45.0f * vfovFactor);
         scene_ = cornellBoxScene2 (std::move (scene_));
         break;
 
@@ -152,7 +155,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D {0.0f, 0.5f, 1.0f},
           MobileRT::Point3D {0.0f, 0.0f, 7.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-          60.0f, 60.0f * ratio);
+          60.0f * hfovFactor, 60.0f * vfovFactor);
         scene_ = spheresScene2 (std::move (scene_));
         break;
 
@@ -162,7 +165,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D {0.0f, 0.5f, 3.0f},
           MobileRT::Point3D {0.0f, 0.5f, -1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-          45.0f, 45.0f * ratio);
+          45.0f * hfovFactor, 45.0f * vfovFactor);
         break;
     }
     switch (sampler) {
