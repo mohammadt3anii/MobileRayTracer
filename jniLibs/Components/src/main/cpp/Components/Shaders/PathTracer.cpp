@@ -60,116 +60,112 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
     intersection.normal_ :// entering the object
     intersection.symNormal_};// We have to reverse the normal now
 
-    // shadowed direct lighting - only for diffuse materials
-    //Ld = Ld (p->Wr)
-    if (kD.hasColor()) {
-      const uint64_t sizeLights {scene_.lights_.size ()};
-        if (sizeLights > 0) {
-          const unsigned samplesLight {this->samplesLight_};
-          Intersection intersectLight {};
-            //direct light
-          for (unsigned i {0}; i < samplesLight; i++) {
-            const float randomNumber {samplerLight_->getSample ()};
-                //PDF = 1 / sizeLights
-            const unsigned chosenLight {
-              static_cast<unsigned> (std::floor (
-                          randomNumber * sizeLights * 0.99999f))};
-            Light &light (*scene_.lights_[chosenLight]);
-                //calculates vector starting in intersection to the light
-            const Point3D lightPosition {light.getPosition ()};
-            Vector3D vectorToLight {lightPosition, intersection.point_};
-                //distance from intersection to the light (and normalize it)
-            const float distanceToLight {vectorToLight.normalize ()};
-                //x*x + y*y + z*z
-            const float cosNormalLight {shadingNormal.dotProduct (vectorToLight)};
-                if (cosNormalLight > 0.0f) {
-                    //shadow ray->orig=intersection, dir=light
-                  Ray shadowRay {vectorToLight, intersection.point_, rayDepth + 1};
-                    //intersection between shadow ray and the closest primitive
-                    //if there are no primitives between intersection and the light
-                    intersectLight.length_ = distanceToLight;
-                    if (!scene_.shadowTrace(&intersectLight, std::move(shadowRay))) {
-                        //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
-                      Ld.addMult ({light.radiance_.Le_}, cosNormalLight);
-                    }
-                }
+  // shadowed direct lighting - only for diffuse materials
+  //Ld = Ld (p->Wr)
+  if (kD.hasColor ()) {
+    const uint64_t sizeLights {scene_.lights_.size ()};
+    if (sizeLights > 0) {
+      const unsigned samplesLight {this->samplesLight_};
+      Intersection intersectLight {};
+      //direct light
+      for (unsigned i {0}; i < samplesLight; i++) {
+        const float randomNumber {samplerLight_->getSample ()};
+        //PDF = 1 / sizeLights
+        const unsigned chosenLight {
+          static_cast<unsigned> (std::floor (
+            randomNumber * sizeLights * 0.99999f))};
+        Light &light (*scene_.lights_[chosenLight]);
+        //calculates vector starting in intersection to the light
+        const Point3D lightPosition {light.getPosition ()};
+        Vector3D vectorToLight {lightPosition, intersection.point_};
+        //distance from intersection to the light (and normalize it)
+        const float distanceToLight {vectorToLight.normalize ()};
+        //x*x + y*y + z*z
+        const float cosNormalLight {shadingNormal.dotProduct (vectorToLight)};
+        if (cosNormalLight > 0.0f) {
+          //shadow ray->orig=intersection, dir=light
+          Ray shadowRay {vectorToLight, intersection.point_, rayDepth + 1};
+          //intersection between shadow ray and the closest primitive
+          //if there are no primitives between intersection and the light
+          intersectLight.length_ = distanceToLight;
+          if (!scene_.shadowTrace (&intersectLight, std::move (shadowRay))) {
+            //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
+            Ld.addMult ({light.radiance_.Le_}, cosNormalLight);
             }
-            Ld *= kD;
-            //Ld *= sizeLights;
-            Ld /= samplesLight;
         }
+        }
+      Ld *= kD;
+      //Ld *= sizeLights;
+      Ld /= samplesLight;
+    }
 
-        //indirect light
-      if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
-        const Vector3D newDirection {getCosineSampleHemisphere (shadingNormal)};
-        Ray normalizedSecundaryRay {newDirection, intersection.point_, rayDepth + 1};
+    //indirect light
+    if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
+      const Vector3D newDirection {getCosineSampleHemisphere (shadingNormal)};
+      Ray normalizedSecundaryRay {newDirection, intersection.point_, rayDepth + 1};
 
-        //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
-            //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
-        RGB LiD_RGB {};
-        Intersection secundaryIntersection {};
-        intersectedLight = rayTrace(&LiD_RGB, &secundaryIntersection, std::move(normalizedSecundaryRay));
-        //PDF = cos(theta) / Pi
-        //cos (theta) = cos(dir, normal)
-        //PDF = cos(dir, normal) / Pi
-        //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
-        //LiD += kD * LiD_RGB * Pi / continue_probability
-        //LiD.addMult(kD, LiD_RGB, Pi);
-        LiD.addMult ({kD, LiD_RGB});
-        if (rayDepth > RayDepthMin) {
-          LiD /= continue_probability;
-        }
-        //if it has Ld and if LiD intersects a light source then LiD = 0
-        if (Ld.hasColor() && intersectedLight) {
-          LiD.reset();
-        }
+      //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
+      //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
+      RGB LiD_RGB {};
+      Intersection secundaryIntersection {};
+      intersectedLight = rayTrace (&LiD_RGB, &secundaryIntersection,
+                                   std::move (normalizedSecundaryRay));
+      //PDF = cos(theta) / Pi
+      //cos (theta) = cos(dir, normal)
+      //PDF = cos(dir, normal) / Pi
+      //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
+      //LiD += kD * LiD_RGB * Pi / continue_probability
+      //LiD.addMult(kD, LiD_RGB, Pi);
+      LiD.addMult ({kD, LiD_RGB});
+      if (rayDepth > RayDepthMin) {
+        LiD /= continue_probability;
+      }
+      //if it has Ld and if LiD intersects a light source then LiD = 0
+      if (Ld.hasColor () && intersectedLight) {
+        LiD.reset ();
       }
     }
+  }
 
-    // specular reflection
-    if (kS.hasColor()) {
-      //PDF = 1 / 2 Pi
-        //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
-      const Vector3D reflectionDir {
-        ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct (ray.direction_)};
-      Ray specularRay {reflectionDir, intersection.point_, rayDepth + 1};
-      RGB LiS_RGB {};
-      Intersection specularInt {};
-        rayTrace(&LiS_RGB, &specularInt, std::move(specularRay));
-      LiS.addMult ({kS, LiS_RGB});
+  // specular reflection
+  if (kS.hasColor ()) {
+    //PDF = 1 / 2 Pi
+    //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
+    const Vector3D reflectionDir {
+      ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct (ray.direction_)};
+    Ray specularRay {reflectionDir, intersection.point_, rayDepth + 1};
+    RGB LiS_RGB {};
+    Intersection specularInt {};
+    rayTrace (&LiS_RGB, &specularInt, std::move (specularRay));
+    LiS.addMult ({kS, LiS_RGB});
+  }
+
+  // specular transmission
+  if (kT.hasColor ()) {
+    //PDF = 1 / 2 Pi
+    Vector3D shadingNormalT {shadingNormal};
+    float refractiveIndice {intersection.material_->refractiveIndice_};
+    if (shadingNormalT.dotProduct (ray.direction_) > 0.0f) {//we are inside the medium
+      shadingNormalT *= -1.0f;//N = N*-1;
+      refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
     }
-
-    // specular transmission
-    if (kT.hasColor()) {
-      //PDF = 1 / 2 Pi
-      Vector3D shadingNormalT {shadingNormal};
-      float refractiveIndice {intersection.material_->refractiveIndice_};
-        if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
-            shadingNormalT *= -1.0f;//N = N*-1;
-            refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
-        }
-        refractiveIndice = 1.0f / refractiveIndice;
-
-      const float cosTheta1 {(shadingNormalT.dotProduct (ray.direction_)) * - 1.0f};
-      const float cosTheta2 {
-        1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1)};
-      Ray transmissionRay {cosTheta2 > 0.0f ? // refraction direction
-                                  //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
-                                  (ray.direction_ * refractiveIndice) +
-                                  (shadingNormalT * (refractiveIndice * cosTheta1 -
-                                                     (std::sqrt(cosTheta2)))) :
-                                  //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                                  ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
-                           intersection.point_,
-                           rayDepth + 1};
-      RGB LiT_RGB {};
-      Intersection transmissionInt {};
-      rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
-      LiT.addMult ({kT, LiT_RGB});
-    }
-	//if (Ld.hasColor()) {LiD.reset();LiS.reset();LiT.reset();}
-  //Ld /= rayDepth;
-	//LiD /= rayDepth;
+    refractiveIndice = 1.0f / refractiveIndice;
+    const float cosTheta1 {(shadingNormalT.dotProduct (ray.direction_)) * -1.0f};
+    const float cosTheta2 {
+      1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1)};
+    Ray transmissionRay {cosTheta2 > 0.0f ? // refraction direction
+                         //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
+                         (ray.direction_ * refractiveIndice) +
+                         (shadingNormalT * (refractiveIndice * cosTheta1 -
+                                            (std::sqrt (cosTheta2)))) :
+                         //rayDir = (ray.d + N*(cost1 * 2)).norm();
+                         ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+                         intersection.point_, rayDepth + 1};
+    RGB LiT_RGB {};
+    Intersection transmissionInt {};
+    rayTrace (&LiT_RGB, &transmissionInt, std::move (transmissionRay));
+    LiT.addMult ({kT, LiT_RGB});
+  }
 
 	*rgb += Ld;
 	*rgb += LiD;

@@ -89,9 +89,10 @@ AABB Triangle::getAABB() const noexcept {
 bool Triangle::intersect (const AABB box) const noexcept {
   std::function<bool (Point3D orig, Vector3D vec)> intersectRayAABB {
     [&](Point3D orig, Vector3D vec)->bool {
-      Vector3D T_1, T_2; // vectors to hold the T-values for every direction
-      float t_near = -FLT_MAX; // maximums defined in float.h
-      float t_far = FLT_MAX;
+      Vector3D T_1 {};
+      Vector3D T_2 {}; // vectors to hold the T-values for every direction
+      float t_near {-FLT_MAX}; // maximums defined in float.h
+      float t_far {FLT_MAX};
       if (vec.x_ == 0) { // ray parallel to planes in this direction
         if ((orig.x_ < box.pointMin_.x_) || (vec.x_ > box.pointMax_.x_)) {
           return false; // parallel AND outside box : no intersection possible

@@ -33,27 +33,28 @@ bool NoShadows::shade (RGB *const rgb, const Intersection intersection, Ray &&ra
             // We have to reverse the normal now
     intersection.symNormal_};
 
-    // direct lighting - only for diffuse materials
-    if (kD.hasColor()) {
-      const uint64_t sizeLights {scene_.lights_.size ()};
-      const unsigned samplesLight {this->samplesLight_};
-      for (unsigned i {0}; i < sizeLights; i++) {
-        Light &light (*scene_.lights_[i]);
-        for (unsigned j {0}; j < samplesLight; j++) {
-          const Point3D lightPosition {light.getPosition ()};
-                //vectorIntersectCameraNormalized = light.position_ - intersection.point_
-          const Vector3D vectorToLightNormalized {
-            lightPosition, intersection.point_, true};
-          const float cos_N_L {shadingNormal.dotProduct (vectorToLightNormalized)};
-                if (cos_N_L > 0.0f) {
-                    //rgb += kD * radLight * cos_N_L;
-                  rgb->addMult ({light.radiance_.Le_}, cos_N_L);
-                }
-            }
+  // direct lighting - only for diffuse materials
+  if (kD.hasColor ()) {
+    const uint64_t sizeLights {scene_.lights_.size ()};
+    const unsigned samplesLight {this->samplesLight_};
+    for (unsigned i {0}; i < sizeLights; i++) {
+      Light &light (*scene_.lights_[i]);
+      for (unsigned j {0}; j < samplesLight; j++) {
+        const Point3D lightPosition {light.getPosition ()};
+        //vectorIntersectCameraNormalized = light.position_ - intersection.point_
+        const Vector3D vectorToLightNormalized {
+          lightPosition, intersection.point_, true};
+        const float cos_N_L {shadingNormal.dotProduct (vectorToLightNormalized)};
+        if (cos_N_L > 0.0f) {
+          //rgb += kD * radLight * cos_N_L;
+          rgb->addMult ({light.radiance_.Le_}, cos_N_L);
         }
-        *rgb *= kD;
-        *rgb /= this->samplesLight_;
-    } // end direct + ambient
+      }
+    }
+    *rgb *= kD;
+    *rgb /= samplesLight;
+    *rgb /= sizeLights;
+  } // end direct + ambient
 
   rgb->addMult ({kD}, 0.1f);//rgb += kD *  0.1f
   return false;
