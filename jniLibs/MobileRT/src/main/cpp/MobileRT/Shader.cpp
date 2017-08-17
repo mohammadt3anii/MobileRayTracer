@@ -15,16 +15,16 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   accelerator_ {accelerator},
   samplesLight_ {samplesLight}
 {
-  this->scene_.triangles_.shrink_to_fit();
-  this->scene_.spheres_.shrink_to_fit();
-  this->scene_.planes_.shrink_to_fit();
+  this->scene_.ptriangles_.shrink_to_fit ();
+  this->scene_.pspheres_.shrink_to_fit ();
+  this->scene_.pplanes_.shrink_to_fit ();
   this->scene_.lights_.shrink_to_fit();
 
   Point3D min {1000.0f, 1000.0f, 1000.0f};
   Point3D max {-1000.0f, -1000.0f, -1000.0f};
-  getSceneBounds<Triangle>(this->scene_.triangles_, &min, &max);
-  getSceneBounds<Sphere>(this->scene_.spheres_, &min, &max);
-  getSceneBounds<Plane>(this->scene_.planes_, &min, &max);
+  getSceneBounds<MobileRT::Primitive<Triangle>> (this->scene_.ptriangles_, &min, &max);
+  getSceneBounds<MobileRT::Primitive<Sphere>> (this->scene_.pspheres_, &min, &max);
+  getSceneBounds<MobileRT::Primitive<Plane>> (this->scene_.pplanes_, &min, &max);
 
   const float offset {1.0f};
   min.x_ -= offset;
@@ -70,17 +70,14 @@ Shader::~Shader () noexcept {
 }
 
 bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) const noexcept {
+  bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID:
-      if (this->regularGrid_.intersect (intersection, ray)) {
-        intersection->material_ = &this->scene_.materials_[static_cast<uint32_t>(0)];
-        return shade (rgb, *intersection, std::move (ray));
-      }
-      return false;
+      intersected = this->regularGrid_.intersect (intersection, ray);
+      break;
+
     case Accelerator::NONE:
-      if (this->scene_.trace (intersection, ray) >= 0) {
-        return shade (rgb, *intersection, std::move (ray));
-      }
+      intersected = (this->scene_.trace (intersection, ray) >= 0);
   }
-  return false;
+  return intersected ? shade (rgb, *intersection, std::move (ray)) : false;
 }

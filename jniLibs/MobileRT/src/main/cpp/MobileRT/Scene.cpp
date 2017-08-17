@@ -11,9 +11,9 @@ using MobileRT::Plane;
 static unsigned counter {0};
 
 Scene::~Scene() noexcept {
-		this->triangles_.clear();
-    this->spheres_.clear();
-		this->planes_.clear();
+  this->ptriangles_.clear ();
+  this->pspheres_.clear ();
+  this->pplanes_.clear ();
 		this->materials_.clear();
   for (Light *const light : this->lights_) {
         delete light;
@@ -37,31 +37,26 @@ int Scene::traceLights (Intersection *const intersection, const Ray ray) const n
 
 template<typename T>
 int Scene::trace (const std::vector<T> &primitives, Intersection *const intersection,
-                  const Ray ray, const int offset, int res) const noexcept {
+                  const Ray ray, int res) const noexcept {
   const unsigned primitivesSize {static_cast<unsigned> (primitives.size ())};
   for (unsigned i {0}; i < primitivesSize; i++) {
     const T &primitive {primitives[static_cast<uint32_t> (i)]};
     if (primitive.intersect(intersection, ray)) {
-      res = static_cast<int>(i) + offset;
+      res = static_cast<int>(i);
     }
   }
   return res;
 }
 
 int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
-  const int sizeTriangles {static_cast<int>(this -> triangles_ . size ())};
-  const int sizeSpheres {static_cast<int>(this -> spheres_ . size ())};
   const int resTriangles {
-    trace<MobileRT::Triangle> (this -> triangles_, intersection, ray, 0, - 1)};
+    trace<MobileRT::Primitive<MobileRT::Triangle>> (this->ptriangles_, intersection, ray, -1)};
   const int resSpheres {
-    trace<MobileRT::Sphere> (this -> spheres_, intersection, ray, sizeTriangles, resTriangles)};
+    trace<MobileRT::Primitive<MobileRT::Sphere>> (this->pspheres_, intersection, ray,
+                                                  resTriangles)};
   const int res {
-    trace<MobileRT::Plane>(this->planes_, intersection, ray, sizeTriangles + sizeSpheres,
-                           resSpheres)};
+    trace<MobileRT::Primitive<MobileRT::Plane>> (this->pplanes_, intersection, ray, resSpheres)};
 
-  if (res >= 0) {//if intersects primitive, get its material
-    intersection->material_ = &materials_[static_cast<uint32_t>(res)];
-  }
   traceLights (intersection, std::move (ray));
 
   return res;
@@ -79,9 +74,12 @@ bool Scene::shadowTrace(const std::vector<T> &primitives, Intersection *const in
 }
 
 bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) const noexcept {
-  const bool intersectedTriangle {shadowTrace<Triangle> (this -> triangles_, intersection, ray)};
-  const bool intersectedSphere {shadowTrace<Sphere> (this -> spheres_, intersection, ray)};
-  const bool intersectedPlane {shadowTrace<Plane> (this->planes_, intersection, std::move (ray))};
+  const bool intersectedTriangle {
+    shadowTrace<MobileRT::Primitive<Triangle>> (this->ptriangles_, intersection, ray)};
+  const bool intersectedSphere {
+    shadowTrace<MobileRT::Primitive<Sphere>> (this->pspheres_, intersection, ray)};
+  const bool intersectedPlane {
+    shadowTrace<MobileRT::Primitive<Plane>> (this->pplanes_, intersection, std::move (ray))};
   return intersectedTriangle || intersectedSphere || intersectedPlane;
 }
 

@@ -8,12 +8,15 @@ using MobileRT::RegularGrid;
 
 RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
                           const int gridSize, const int gridShift) :
-  spheres_ {
-    std::vector<std::vector<Sphere *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
-  triangles_ {
-    std::vector<std::vector<Triangle *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
-  planes_ {
-    std::vector<std::vector<Plane *>> {static_cast<size_t> (gridSize * gridSize * gridSize)}},
+  ptriangles_ {
+    std::vector<std::vector<MobileRT::Primitive<Triangle> *>> {
+      static_cast<size_t> (gridSize * gridSize * gridSize)}},
+  pspheres_ {
+    std::vector<std::vector<MobileRT::Primitive<Sphere> *>> {
+      static_cast<size_t> (gridSize * gridSize * gridSize)}},
+  pplanes_ {
+    std::vector<std::vector<MobileRT::Primitive<Plane> *>> {
+      static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
   gridShift_ {gridShift},
   m_Extends (AABB {min, max}),//world boundaries
@@ -24,11 +27,13 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
 {
   LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
   LOG("TRIANGLES");
-  addPrimitives<Triangle>(scene->triangles_, this->triangles_);
+  //addPrimitives<Triangle>(scene->triangles_, this->triangles_);
+  addPrimitives<MobileRT::Primitive<Triangle>> (scene->ptriangles_, this->ptriangles_);
   LOG("SPHERES");
-  addPrimitives<Sphere> (scene->spheres_, this->spheres_);
-  //LOG("PLANES");
-  //addPrimitives<Plane>(scene->planes_, this->planes_);
+  //addPrimitives<Sphere> (scene->spheres_, this->spheres_);
+  addPrimitives<MobileRT::Primitive<Sphere>> (scene->pspheres_, this->pspheres_);
+  LOG("PLANES");
+  addPrimitives<MobileRT::Primitive<Plane>> (scene->pplanes_, this->pplanes_);
 }
 
 template<typename T>
@@ -92,10 +97,13 @@ void RegularGrid::addPrimitives
 }
 
 bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) const noexcept {
-  const bool intersectedTriangles {intersect<Triangle> (this -> triangles_, intersection, ray)};
-  const bool intersectedSpheres {intersect<Sphere> (this -> spheres_, intersection, ray)};
-  //const bool intersectedPlanes {intersect<Plane> (this -> planes_, intersection, ray)};
-  return intersectedTriangles || intersectedSpheres;
+  const bool intersectedTriangles {
+    intersect<MobileRT::Primitive<Triangle>> (this->ptriangles_, intersection, ray)};
+  const bool intersectedSpheres {
+    intersect<MobileRT::Primitive<Sphere>> (this->pspheres_, intersection, ray)};
+  const bool intersectedPlanes {
+    intersect<MobileRT::Primitive<Plane>> (this->pplanes_, intersection, ray)};
+  return intersectedTriangles || intersectedSpheres || intersectedPlanes;
 }
 
 template<typename T>

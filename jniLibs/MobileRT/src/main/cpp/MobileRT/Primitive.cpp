@@ -4,6 +4,6 @@
 
 #include "Primitive.hpp"
 
+using MobileRT::AABB;
 using MobileRT::Primitive;
-using MobileRT::Material;
 

@@ -217,10 +217,9 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       std::move (shader_), std::move (camera), std::move (samplerPixel),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
       static_cast<unsigned>(samplesPixel)};
-
-    LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
-    LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
-    LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
+    LOG("PTRIANGLES = ", renderer_->shader_->scene_.ptriangles_.size ());
+    LOG("PSPHERES = ", renderer_->shader_->scene_.pspheres_.size ());
+    LOG("PPLANES = ", renderer_->shader_->scene_.pplanes_.size ());
     LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
     LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size ());
   }();
@@ -284,12 +283,12 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
   const MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
   const uint32_t index {static_cast<uint32_t>(primitiveIndex)};
   const MobileRT::Plane plane {
-    MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].getZ ()},
+    MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.pplanes_[index].shape_.getZ ()},
     MobileRT::Vector3D{0.0f, 0.0f, - 1.0f}};
   MobileRT::Intersection intersection {};
   plane.intersect(&intersection, ray);
-  renderer_->shader_->scene_.planes_[index].moveTo(intersection.point_.x_,
-                                                   intersection.point_.y_);
+  renderer_->shader_->scene_.pplanes_[index].shape_.moveTo (intersection.point_.x_,
+                                                            intersection.point_.y_);
 }
 
 extern "C"

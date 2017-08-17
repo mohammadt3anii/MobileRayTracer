@@ -5,6 +5,7 @@
 #ifndef MOBILERT_PRIMITIVE_HPP
 #define MOBILERT_PRIMITIVE_HPP
 
+#include "Accelerators/AABB.hpp"
 #include "Material.hpp"
 
 namespace MobileRT {
@@ -15,6 +16,7 @@ namespace MobileRT {
     public:
     T shape_;
     Material material_;
+
     public:
     Primitive (T shape, Material material) noexcept :
       shape_ {shape},
@@ -22,6 +24,22 @@ namespace MobileRT {
     }
 
     Primitive () noexcept = delete;
+
+    AABB getAABB () const noexcept {
+      return this->shape_.getAABB ();
+    }
+
+    bool intersect (Intersection *const intersection, Ray ray) const noexcept {
+      if (this->shape_.intersect (intersection, ray)) {
+        intersection->material_ = &this->material_;
+        return true;
+      }
+      return false;
+    }
+
+    bool intersect (const AABB box) const noexcept {
+      return this->shape_.intersect (box);
+    }
   };
 }//namespace MobileRT
 
