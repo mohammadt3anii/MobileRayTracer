@@ -27,11 +27,9 @@ public class DrawView extends GLSurfaceView {
     MainRenderer renderer_;
     long start_ = 0L;
     long period_ = 0L;
-    int stage_ = 0;
     float fps_ = 0.0f;
     Button buttonRender_ = null;
     DrawView.RenderTask renderTask_ = null;
-    ScheduledExecutorService scheduler_ = null;
     String stageT_ = null;
     String fpsT_ = null;
     String timeFrameT_ = null;
@@ -74,7 +72,7 @@ public class DrawView extends GLSurfaceView {
         fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
         timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
         timeT_ = String.format(Locale.US, "[%.2fs] ", 0.0f);
-        stageT_ = " " + Stage.values()[stage_];
+        stageT_ = " " + Stage.values()[0];
         allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + " MB";
 
         resolutionT_ = ",R:" + width + " x " + height;
@@ -180,29 +178,30 @@ public class DrawView extends GLSurfaceView {
 
 
     final class RenderTask extends AsyncTask<Void, Void, Void> {
+        final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
         final List<TouchTracker> touches_ = new ArrayList<>(1);
         private final Runnable timer_ = () -> {
             final int touchesSize = touches_.size();
             for (int i = 0; i < touchesSize; i++) {
                 final TouchTracker touch = touches_.get(i);
                 moveTouch(touch.x_, touch.y_, touch.primitiveID_);
-                //System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch (" + touch.x_ + "," + touch.y_ + ")");System.out.flush();
             }
-            stage_ = isWorking();
-            if (stage_ != Stage.BUSY.id_) {
-                scheduler_.shutdown();
-            }
-            requestRender();
             FPS();
             fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
             fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
             timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
             timeT_ = String.format(Locale.US, "[%.2fs] ",
                     (SystemClock.elapsedRealtime() - start_) / 1000.0f);
-            stageT_ = " " + Stage.values()[stage_];
             allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
             sampleT_ = ", " + getSample();
+            final int stage = isWorking();
+            stageT_ = " " + Stage.values()[stage];
             publishProgress();
+            requestRender();
+            if (stage != Stage.BUSY.id_) {
+                finish(bitmap_);
+                scheduler_.shutdown();
+            }
         };
 
         RenderTask() {
@@ -211,7 +210,6 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         protected final Void doInBackground(final Void... params) {
-            scheduler_ = Executors.newSingleThreadScheduledExecutor();
             scheduler_.scheduleAtFixedRate(timer_, 0L, period_, TimeUnit.MILLISECONDS);
             boolean running = true;
             do {
@@ -231,9 +229,7 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         protected final void onPostExecute(final Void result) {
-            renderTask_.cancel(true);
             buttonRender_.setText(R.string.render);
-            finish(bitmap_);
             //requestRender();
         }
 
