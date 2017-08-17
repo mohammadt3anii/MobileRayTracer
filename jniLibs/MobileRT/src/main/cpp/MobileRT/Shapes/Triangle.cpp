@@ -4,7 +4,6 @@
 //
 
 #include "Triangle.hpp"
-#include <limits>
 
 using MobileRT::AABB;
 using MobileRT::Triangle;
@@ -14,7 +13,7 @@ Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D po
   AC_ {pointC - pointA},
   AB_ {pointB - pointA},
   BC_ {pointC - pointB},
-  normal_ {AB_ . crossProduct (AC_)},
+  normal_ {AB_.crossProduct (AC_)},
   pointA_ {pointA},
   pointB_ {pointB},
   pointC_ {pointC}
@@ -90,71 +89,70 @@ AABB Triangle::getAABB() const noexcept {
 bool Triangle::intersect (const AABB box) const noexcept {
   std::function<bool (Point3D orig, Vector3D vec)> intersectRayAABB {
     [&](Point3D orig, Vector3D vec)->bool {
-      float tmin {(box.pointMin_.x_ - orig.x_)};
-      float tmax {(box.pointMax_.x_ - orig.x_)};
-      if (vec.x_ != 0) {
-        tmin /= vec.x_;
-        tmax /= vec.x_;
-      } else {
-        tmin = tmin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
-        tmax = tmax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+      Vector3D T_1, T_2; // vectors to hold the T-values for every direction
+      float t_near = -FLT_MAX; // maximums defined in float.h
+      float t_far = FLT_MAX;
+      if (vec.x_ == 0) { // ray parallel to planes in this direction
+        if ((orig.x_ < box.pointMin_.x_) || (vec.x_ > box.pointMax_.x_)) {
+          return false; // parallel AND outside box : no intersection possible
+        }
+      } else { // ray not parallel to planes in this direction
+        T_1.x_ = (box.pointMin_.x_ - orig.x_) / vec.x_;
+        T_2.x_ = (box.pointMax_.x_ - orig.x_) / vec.x_;
+        if (T_1.x_ > T_2.x_) { // we want T_1 to hold values for intersection with near plane
+          std::swap (T_1, T_2);
+        }
+        if (T_1.x_ > t_near) {
+          t_near = T_1.x_;
+        }
+        if (T_2.x_ < t_far) {
+          t_far = T_2.x_;
+        }
+        if ((t_near > t_far) || (t_far < 0)) {
+          return false;
+        }
       }
-
-      if (tmin > tmax) {
-        std::swap(tmin, tmax);
+      if (vec.y_ == 0) { // ray parallel to planes in this direction
+        if ((orig.y_ < box.pointMin_.y_) || (vec.y_ > box.pointMax_.y_)) {
+          return false; // parallel AND outside box : no intersection possible
+        }
+      } else { // ray not parallel to planes in this direction
+        T_1.y_ = (box.pointMin_.y_ - orig.y_) / vec.y_;
+        T_2.y_ = (box.pointMax_.y_ - orig.y_) / vec.y_;
+        if (T_1.y_ > T_2.y_) { // we want T_1 to hold values for intersection with near plane
+          std::swap (T_1, T_2);
+        }
+        if (T_1.y_ > t_near) {
+          t_near = T_1.y_;
+        }
+        if (T_2.y_ < t_far) {
+          t_far = T_2.y_;
+        }
+        if ((t_near > t_far) || (t_far < 0)) {
+          return false;
+        }
       }
-      float tymin {(box.pointMin_.y_ - orig.y_)};
-      float tymax {(box.pointMax_.y_ - orig.y_)};
-      if (vec.y_ != 0) {
-        tymin /= vec.y_;
-        tymax /= vec.y_;
-      } else {
-        tymin = tymin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
-        tymax = tymax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
+      if (vec.z_ == 0) { // ray parallel to planes in this direction
+        if ((orig.z_ < box.pointMin_.z_) || (vec.z_ > box.pointMax_.z_)) {
+          return false; // parallel AND outside box : no intersection possible
+        }
+      } else { // ray not parallel to planes in this direction
+        T_1.z_ = (box.pointMin_.z_ - orig.z_) / vec.z_;
+        T_2.z_ = (box.pointMax_.z_ - orig.z_) / vec.z_;
+        if (T_1.z_ > T_2.z_) { // we want T_1 to hold values for intersection with near plane
+          std::swap (T_1, T_2);
+        }
+        if (T_1.z_ > t_near) {
+          t_near = T_1.z_;
+        }
+        if (T_2.z_ < t_far) {
+          t_far = T_2.z_;
+        }
+        if ((t_near > t_far) || (t_far < 0)) {
+          return false;
+        }
       }
-
-      if (tymin > tymax) {
-        std::swap(tymin, tymax);
-      }
-
-      if ((tmin > tymax) || (tymin > tmax)) {
-        return false;
-      }
-
-      if (tymin > tmin) {
-        tmin = tymin;
-      }
-
-      if (tymax < tmax) {
-        tmax = tymax;
-      }
-      float tzmin {(box.pointMin_.z_ - orig.z_)};
-      float tzmax {(box.pointMax_.z_ - orig.z_)};
-      if (vec.z_ != 0) {
-        tzmin /= vec.z_;
-        tzmax /= vec.z_;
-      } else {
-        tzmin = tzmin > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
-        tzmax = tzmax > 0? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest();
-      }
-
-
-      if (tzmin > tzmax) {
-        std::swap(tzmin, tzmax);
-      }
-
-      if ((tmin > tzmax) || (tzmin > tmax)) {
-        return false;
-      }
-
-      if (tzmin > tmin) {
-        tmin = tzmin;
-      }
-
-      if (tzmax < tmax) {
-        tmax = tzmax;
-      }
-      return true;
+      return true; // if we made it here, there was an intersection - YAY
     }};
 
     return intersectRayAABB(this->pointA_, this->AB_) ||

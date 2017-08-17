@@ -105,7 +105,7 @@ MobileRT::Scene cornellBoxScene2 (MobileRT::Scene &&scene) noexcept {
   const MobileRT::Material yellowMat {MobileRT::RGB {0.9f, 0.9f, 0.0f}};
   scene.triangles_.emplace_back(
     MobileRT::Point3D {0.5f, -0.5f, 0.99f}, MobileRT::Point3D {-0.5f, -0.5f, 0.99f},
-    MobileRT::Point3D {0.5f, 0.5f, 0.99f});
+    MobileRT::Point3D {0.5f, 0.5f, 1.001f});
   scene.materials_.emplace_back(yellowMat);
 
   // triangle - green
