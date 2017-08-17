@@ -2,6 +2,7 @@ package puscas.mobilertapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Debug;
@@ -83,17 +84,6 @@ public class DrawView extends GLSurfaceView {
         sampleT_ = ", 0";
     }
 
-    void updatePrint () {
-        fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
-        fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
-        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
-        timeT_ = String.format(Locale.US, "[%.2fs] ",
-                (SystemClock.elapsedRealtime() - start_) / 1000.0f);
-        stageT_ = " " + Stage.values()[stage_];
-        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
-        sampleT_ = ", " + getSample();
-    }
-
     void setView(final TextView textView) {
         textView_ = textView;
         printText();
@@ -135,11 +125,11 @@ public class DrawView extends GLSurfaceView {
 
     void startRender() {
         period_ = 250L;
-        renderTask_ = new DrawView.RenderTask();
-        renderTask_.execute();
         buttonRender_.setText(R.string.stop);
+        renderTask_ = new DrawView.RenderTask();
         start_ = SystemClock.elapsedRealtime();
         DrawView.renderIntoBitmap(bitmap_, numThreads_);
+        renderTask_.execute();
         //this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
@@ -153,11 +143,8 @@ public class DrawView extends GLSurfaceView {
         timebase_ = 0.0f;
         resetPrint(width, height, samplesPixel, samplesLight);
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-        setVisibility(View.INVISIBLE);
+        bitmap_.eraseColor(Color.BLACK);
         renderer_.bitmap_ = bitmap_;
-
-        requestRender();
         setVisibility(View.VISIBLE);
     }
 
@@ -194,19 +181,26 @@ public class DrawView extends GLSurfaceView {
     final class RenderTask extends AsyncTask<Void, Void, Void> {
         final List<TouchTracker> touches_ = new ArrayList<>(1);
         private final Runnable timer_ = () -> {
-            int touchesSize = touches_.size();
+            final int touchesSize = touches_.size();
             for (int i = 0; i < touchesSize; i++) {
                 final TouchTracker touch = touches_.get(i);
                 moveTouch(touch.x_, touch.y_, touch.primitiveID_);
                 //System.out.println("[run," + Thread.currentThread().getId() + "]" + "moveTouch (" + touch.x_ + "," + touch.y_ + ")");System.out.flush();
             }
             stage_ = isWorking();
-            requestRender();
             if (stage_ != Stage.BUSY.id_) {
                 scheduler_.shutdown();
             }
+            requestRender();
             FPS();
-            updatePrint();
+            fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
+            fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
+            timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
+            timeT_ = String.format(Locale.US, "[%.2fs] ",
+                    (SystemClock.elapsedRealtime() - start_) / 1000.0f);
+            stageT_ = " " + Stage.values()[stage_];
+            allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
+            sampleT_ = ", " + getSample();
             publishProgress();
         };
 
@@ -236,8 +230,6 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         protected final void onPostExecute(final Void result) {
-            stage_ = isWorking();
-            updatePrint();
             printText();
             renderTask_.cancel(true);
             finish(bitmap_);

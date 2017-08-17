@@ -15,11 +15,11 @@ Scene::~Scene() noexcept {
     this->spheres_.clear();
 		this->planes_.clear();
 		this->materials_.clear();
-    for (Light *light : this->lights_) {
+  for (Light *const light : this->lights_) {
         delete light;
     }
     this->lights_.clear();
-		LOG("SCENE DELETED");
+  LOG("SCENE DELETED");
 }
 
 int Scene::traceLights (Intersection *const intersection, const Ray ray) const noexcept {
