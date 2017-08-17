@@ -231,11 +231,11 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         protected final void onPostExecute(final Void result) {
-            printText();
+            //printText();
             renderTask_.cancel(true);
             finish(bitmap_);
             buttonRender_.setText(R.string.render);
-            requestRender();
+            //requestRender();
         }
 
         final class TouchTracker {

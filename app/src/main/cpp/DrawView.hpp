@@ -37,10 +37,6 @@ enum class State {
   IDLE = 0, BUSY = 1, FINISHED = 2, STOPPED = 3
 };
 
-static void FPS() noexcept;
-
-static void thread_work(void *dstPixels, int numThreads) noexcept;
-
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
         JNIEnv *env,

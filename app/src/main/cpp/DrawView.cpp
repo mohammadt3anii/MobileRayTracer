@@ -25,22 +25,6 @@ static void FPS() noexcept {
   }
 }
 
-void thread_work (void *const dstPixels, const int numThreads) noexcept {
-  int rep {1};
-    do {
-      const std::chrono::steady_clock::time_point start {std::chrono::steady_clock::now ()};
-      renderer_->renderFrame (static_cast<unsigned *>(dstPixels), numThreads);
-        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::steady_clock::now() - start).count();
-        FPS();
-        renderer_->camera_->position_.x_ += 1.0f;
-    } while (working_ != State::STOPPED && rep -- > 1);
-  if (working_ != State::STOPPED) {
-    working_ = State::FINISHED;
-        LOG("WORKING = FINISHED");
-  }
-}
-
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finish(
   JNIEnv *const env,
@@ -256,10 +240,26 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
   jobject dstBitmap,
   jint const nThreads) noexcept {
   void *dstPixels {nullptr};
-  AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
   working_ = State::BUSY;
   LOG("WORKING = BUSY");
-  thread_ = new std::thread(thread_work, dstPixels, nThreads);
+  AndroidBitmap_lockPixels (env, dstBitmap, &dstPixels);
+  thread_ = new std::thread (
+    [] (unsigned *pixels, const int numOfThreads) {
+      int rep {1};
+      do {
+        const std::chrono::steady_clock::time_point start {std::chrono::steady_clock::now ()};
+        renderer_->renderFrame (pixels, numOfThreads);
+        timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds> (
+          std::chrono::steady_clock::now () - start).count ();
+        FPS ();
+        renderer_->camera_->position_.x_ += 1.0f;
+      } while (working_ != State::STOPPED && rep-- > 1);
+      if (working_ != State::STOPPED) {
+        working_ = State::FINISHED;
+        LOG("WORKING = FINISHED");
+      }
+    }, static_cast<unsigned *>(dstPixels), static_cast<int>(nThreads)
+  );
 }
 
 extern "C"
