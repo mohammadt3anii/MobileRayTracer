@@ -35,12 +35,11 @@ void Java_puscas_mobilertapp_DrawView_finish(
   delete thread_;
   delete renderer_;
 
-  working_ = State::IDLE;
-  LOG("WORKING = IDLE");
   timeFrame_ = 0;
   fps_ = 0.0f;
-
   AndroidBitmap_unlockPixels(env, dstBitmap);
+  working_ = State::IDLE;
+  LOG("WORKING = IDLE");
 }
 
 extern "C"
@@ -56,11 +55,9 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
+  renderer_->stopRender();
   working_ = State::STOPPED;
   LOG("WORKING = STOPPED");
-  renderer_->stopRender();
-  //timeFrame_ = 0;
-  //fps_ = 0.0f;
 }
 
 extern "C"
@@ -77,7 +74,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   jstring objFile,
   jstring matText
 ) noexcept {
-    jboolean isCopy (JNI_FALSE);
+  jboolean isCopy (JNI_FALSE);
   const char *obj {(env)->GetStringUTFChars (objFile, &isCopy)};
   const char *mat {(env)->GetStringUTFChars (matText, &isCopy)};
   Components::OBJLoader objLoader {obj, mat};
@@ -88,8 +85,6 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     exit (0);
   }
 
-  working_ = State::IDLE;
-  LOG("WORKING = IDLE");
   width_ = width;
   height_ = height;
   const float ratio {
@@ -239,9 +234,9 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
   jobject /*thiz*/,
   jobject dstBitmap,
   jint const nThreads) noexcept {
-  void *dstPixels {nullptr};
   working_ = State::BUSY;
   LOG("WORKING = BUSY");
+  void *dstPixels {nullptr};
   AndroidBitmap_lockPixels (env, dstBitmap, &dstPixels);
   thread_ = new std::thread (
     [] (unsigned *pixels, const int numOfThreads) {
