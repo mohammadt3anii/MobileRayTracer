@@ -219,6 +219,11 @@ public class DrawView extends GLSurfaceView {
                     e.fillInStackTrace();
                 }
             } while (running);
+            try {
+                Thread.sleep(period_);
+            } catch (final InterruptedException e) {
+                e.fillInStackTrace();
+            }
             return null;
         }
 
@@ -230,7 +235,7 @@ public class DrawView extends GLSurfaceView {
         @Override
         protected final void onPostExecute(final Void result) {
             buttonRender_.setText(R.string.render);
-            //requestRender();
+            requestRender();
         }
 
         final class TouchTracker {
