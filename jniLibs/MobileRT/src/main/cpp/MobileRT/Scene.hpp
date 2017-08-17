@@ -27,7 +27,6 @@ namespace MobileRT {
 			std::vector<Light *> lights_ {std::vector<Light *>{}};
 
     private:
-      int traceLights(Intersection *intersection, Ray ray) const noexcept;
       private:
       template<typename T>
       int trace (const std::vector<T> &primitives, Intersection *intersection, Ray ray,
@@ -48,6 +47,7 @@ namespace MobileRT {
       int trace(Intersection *intersection, Ray ray) const noexcept;
       bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
       static unsigned getInstances () noexcept;
+      int traceLights (Intersection *intersection, Ray ray) const noexcept;
       void resetSampling () noexcept;
     };
 }//namespace MobileRT

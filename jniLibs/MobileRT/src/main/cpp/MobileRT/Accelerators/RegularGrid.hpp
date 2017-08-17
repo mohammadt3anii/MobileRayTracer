@@ -28,6 +28,7 @@ namespace MobileRT {
       AABB m_Extends {};
       Vector3D m_SR {};
       Vector3D m_CW {};
+      Scene *scene_;
 
       private:
       template<typename T>

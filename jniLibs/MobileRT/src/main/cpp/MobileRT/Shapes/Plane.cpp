@@ -46,11 +46,21 @@ float Plane::getZ() const noexcept {
 }
 
 Point3D Plane::getPositionMin() const noexcept {
-    return this->point_;
+  Vector3D right {
+    Vector3D {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_}};
+  //up.normalize();
+  //Vector3D right {this->normal_.crossProduct(up)};
+  right.normalize ();
+  return this->point_ + right * -RayLengthMax;
 }
 
 Point3D Plane::getPositionMax() const noexcept {
-    return this->point_;
+  Vector3D right {
+    Vector3D {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_}};
+  //up.normalize();
+  //Vector3D right {this->normal_.crossProduct(up)};
+  right.normalize ();
+  return this->point_ + right * RayLengthMax;
 }
 
 AABB Plane::getAABB() const noexcept {

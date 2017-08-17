@@ -5,6 +5,7 @@
 #include "RegularGrid.hpp"
 
 using MobileRT::RegularGrid;
+using MobileRT::Primitive;
 
 RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
                           const int gridSize, const int gridShift) :
@@ -23,17 +24,16 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
   // precalculate 1 / size of a cell (for x, y and z)
   m_SR {gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)},
   // precalculate size of a cell (for x, y, and z)
-  m_CW {(m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_)}
+  m_CW {(m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_)},
+  scene_ {scene}
 {
   LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
   LOG("TRIANGLES");
-  //addPrimitives<Triangle>(scene->triangles_, this->triangles_);
-  addPrimitives<MobileRT::Primitive<Triangle>> (scene->ptriangles_, this->ptriangles_);
+  addPrimitives<Primitive<Triangle>> (scene->ptriangles_, this->ptriangles_);
   LOG("SPHERES");
-  //addPrimitives<Sphere> (scene->spheres_, this->spheres_);
-  addPrimitives<MobileRT::Primitive<Sphere>> (scene->pspheres_, this->pspheres_);
+  addPrimitives<Primitive<Sphere>> (scene->pspheres_, this->pspheres_);
   LOG("PLANES");
-  addPrimitives<MobileRT::Primitive<Plane>> (scene->pplanes_, this->pplanes_);
+  addPrimitives<Primitive<Plane>> (scene->pplanes_, this->pplanes_);
 }
 
 template<typename T>
@@ -103,7 +103,8 @@ bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) c
     intersect<MobileRT::Primitive<Sphere>> (this->pspheres_, intersection, ray)};
   const bool intersectedPlanes {
     intersect<MobileRT::Primitive<Plane>> (this->pplanes_, intersection, ray)};
-  return intersectedTriangles || intersectedSpheres || intersectedPlanes;
+  const bool intersectedLights {this->scene_->traceLights (intersection, ray) >= 0};
+  return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedLights;
 }
 
 template<typename T>
