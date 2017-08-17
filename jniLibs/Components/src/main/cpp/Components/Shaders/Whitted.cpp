@@ -45,36 +45,38 @@ bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray)
     intersection.symNormal_};
 
 	// shadowed direct lighting - only for diffuse materials
+  const uint64_t sizeLights {scene_.lights_.size ()};
   if (kD.hasColor ()) {
-    Intersection lightIntersection {};
-    const uint64_t sizeLights {scene_.lights_.size ()};
-    const unsigned samplesLight {this->samplesLight_};
-    for (unsigned i {0}; i < sizeLights; i++) {
-      Light &light (*scene_.lights_[i]);
-      for (unsigned j {0}; j < samplesLight; j++) {
-        const Point3D lightPosition {light.getPosition ()};
-        //calculates vector starting in intersection to the light
-        Vector3D vectorToLight {lightPosition, intersection.point_};
-        //distance from intersection to the light (and normalize it)
-        const float distanceToLight {vectorToLight.normalize ()};
-        const float cos_N_L {shadingNormal.dotProduct (vectorToLight)};
-        if (cos_N_L > 0.0f) {
-          //shadow ray - orig=intersection, dir=light
-          Ray shadowRay {vectorToLight, intersection.point_, rayDepth + 1};
-          lightIntersection.length_ = distanceToLight;
-          //intersection between shadow ray and the closest primitive
-          //if there are no primitives between intersection and the light
-          if (!scene_.shadowTrace (&lightIntersection, std::move (shadowRay))) {
-            //rgb += kD * radLight * cos_N_L;
-            rgb->addMult ({light.radiance_.Le_}, cos_N_L);
+    if (sizeLights > 0) {
+      Intersection lightIntersection {};
+      const unsigned samplesLight {this->samplesLight_};
+      for (unsigned i {0}; i < sizeLights; i++) {
+        Light &light (*scene_.lights_[i]);
+        for (unsigned j {0}; j < samplesLight; j++) {
+          const Point3D lightPosition {light.getPosition ()};
+          //calculates vector starting in intersection to the light
+          Vector3D vectorToLight {lightPosition, intersection.point_};
+          //distance from intersection to the light (and normalize it)
+          const float distanceToLight {vectorToLight.normalize ()};
+          const float cos_N_L {shadingNormal.dotProduct (vectorToLight)};
+          if (cos_N_L > 0.0f) {
+            //shadow ray - orig=intersection, dir=light
+            Ray shadowRay {vectorToLight, intersection.point_, rayDepth + 1};
+            lightIntersection.length_ = distanceToLight;
+            //intersection between shadow ray and the closest primitive
+            //if there are no primitives between intersection and the light
+            if (!scene_.shadowTrace (&lightIntersection, std::move (shadowRay))) {
+              //rgb += kD * radLight * cos_N_L;
+              rgb->addMult ({light.radiance_.Le_}, cos_N_L);
+            }
           }
         }
       }
-		}
-    *rgb *= kD;
-    *rgb /= samplesLight;
-    *rgb /= sizeLights;
-	} // end direct + ambient
+      *rgb *= kD;
+      *rgb /= samplesLight;
+      *rgb /= sizeLights;
+    } // end direct + ambient
+  }
 
 	// specular reflection
   if (kS.hasColor ()) {

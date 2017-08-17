@@ -135,6 +135,7 @@ public class DrawView extends GLSurfaceView {
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
                      final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText) {
+        setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
         DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
@@ -143,7 +144,7 @@ public class DrawView extends GLSurfaceView {
         timebase_ = 0.0f;
         resetPrint(width, height, samplesPixel, samplesLight);
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap_.eraseColor(Color.BLACK);
+        bitmap_.eraseColor(Color.CYAN);
         renderer_.bitmap_ = bitmap_;
         setVisibility(View.VISIBLE);
     }

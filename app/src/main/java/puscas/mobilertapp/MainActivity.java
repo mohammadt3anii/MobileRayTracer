@@ -255,9 +255,6 @@ public final class MainActivity extends Activity {
     }
 
     public void startRender(final View view) {
-        if (view == null) {
-            return;
-        }
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];

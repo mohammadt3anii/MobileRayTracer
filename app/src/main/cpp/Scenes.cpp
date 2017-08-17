@@ -174,27 +174,27 @@ MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept {
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      1.0f,
                                      MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  scene.lights_.emplace_back (new Components::PointLight {lightMat,
+  /*scene.lights_.emplace_back (new Components::PointLight {lightMat,
                                                               MobileRT::Point3D {0.0f, 15.0f,
-                                                                                 4.0f}});
+                                                                                 4.0f}});*/
 
   // create diffuse Materials
-  const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};
+  //const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};
   const MobileRT::Material redMat {MobileRT::RGB {0.9f, 0.0f, 0.0f}};
-  const MobileRT::Material mirrorMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+  /*const MobileRT::Material mirrorMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                       MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};
+  const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};*/
   // create one sphere
   scene.spheres_.emplace_back (MobileRT::Point3D {- 1.0f, 1.0f, 6.0f}, 1.0f);
   scene.materials_.emplace_back(redMat);
-  scene.spheres_.emplace_back (MobileRT::Point3D {1.5f, 2.0f, 7.0f}, 1.0f);
+  /*scene.spheres_.emplace_back (MobileRT::Point3D {1.5f, 2.0f, 7.0f}, 1.0f);
   scene.materials_.emplace_back(mirrorMat);
   scene.spheres_.emplace_back (MobileRT::Point3D {0.0f, 0.5f, 4.5f}, 0.5f);
   scene.materials_.emplace_back(greenMat);
 
   scene.planes_.emplace_back (MobileRT::Point3D {0.0f, 0.0f, 0.0f},
                                   MobileRT::Vector3D {0.0f, 1.0f, 0.0f});
-  scene.materials_.emplace_back(sandMat);
+  scene.materials_.emplace_back(sandMat);*/
   return std::move(scene);
 }
 
