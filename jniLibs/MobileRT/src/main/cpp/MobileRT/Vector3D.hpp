@@ -59,10 +59,12 @@ namespace MobileRT {
 			Vector3D operator-() const noexcept;
 
 			float normalize() noexcept;
+      bool isNull () noexcept;
       static unsigned getInstances () noexcept;
     };
 
   Vector3D operator/ (int value, Vector3D vector) noexcept;
+  Vector3D operator/ (Vector3D vector, int value) noexcept;
 
 }//namespace MobileRT
 

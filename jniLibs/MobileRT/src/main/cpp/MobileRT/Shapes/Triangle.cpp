@@ -9,11 +9,12 @@ using MobileRT::AABB;
 using MobileRT::Triangle;
 using MobileRT::Point3D;
 
-Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D pointC) noexcept :
+Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D pointC,
+                    Vector3D normal) noexcept :
   AC_ {pointC - pointA},
   AB_ {pointB - pointA},
   BC_ {pointC - pointB},
-  normal_ {AB_.crossProduct (AC_)},
+  normal_ {normal.isNull () ? AB_.crossProduct (AC_) : normal},
   pointA_ {pointA},
   pointB_ {pointB},
   pointC_ {pointC}

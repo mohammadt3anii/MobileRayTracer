@@ -25,7 +25,7 @@ public final class MainActivity extends Activity {
 
     private static int pickerScene = 0;
     private static int pickerShader = 0;
-    private static int pickerThreads = 0;
+    private static int pickerThreads = MainActivity.getNumberOfCores();
     private static int pickerAccelerator = 0;
     private static int pickerSamplesPixel = 1;
     private static int pickerSamplesLight = 1;

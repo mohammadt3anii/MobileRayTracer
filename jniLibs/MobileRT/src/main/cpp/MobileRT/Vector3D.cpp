@@ -12,6 +12,10 @@ namespace MobileRT {
   Vector3D operator/ (const int value, const Vector3D vector) noexcept {
     return Vector3D(value / vector.x_, value / vector.y_, value / vector.z_);
   }
+
+  Vector3D operator/ (Vector3D vector, int value) noexcept {
+    return Vector3D (vector.x_ / value, vector.y_ / value, vector.z_ / value);
+  }
 }//namespace MobileRT
 
 float Vector3D::magnitude() const noexcept {
@@ -89,6 +93,10 @@ float Vector3D::normalize() noexcept {
   this->z_ /= len;
   this->magnitude_ = 1.0f;
   return len;
+}
+
+bool Vector3D::isNull () noexcept {
+  return this->x_ == 0 && this->y_ == 0 && this->z_ == 0;
 }
 
 float Vector3D::dotProduct (const Vector3D vector) const noexcept {

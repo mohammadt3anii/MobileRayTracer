@@ -11,7 +11,7 @@
 namespace Components {
   class OBJLoader final : public MobileRT::ObjectLoader {
     private:
-    std::string text_ {};
+    std::string objText_ {};
     std::string materialsText_ {};
     tinyobj::attrib_t attrib_ {};
     std::vector<tinyobj::shape_t> shapes_ {std::vector<tinyobj::shape_t> ()};

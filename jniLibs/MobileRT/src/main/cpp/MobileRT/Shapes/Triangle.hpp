@@ -29,7 +29,7 @@ namespace MobileRT {
 
     public:
 			explicit Triangle (Point3D pointA, Point3D pointB,
-												 Point3D pointC) noexcept;
+												 Point3D pointC, Vector3D normal = Vector3D {}) noexcept;
 
 			Triangle(const Triangle &triangle) noexcept = default;
 
