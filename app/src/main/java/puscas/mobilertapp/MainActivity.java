@@ -127,6 +127,10 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
 
             drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+            drawView_.buttonRender_.setOnLongClickListener((View v) -> {
+                this.recreate();
+                return false;
+            });
             if (drawView_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
