@@ -57,7 +57,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept;
 
 extern "C"
-long Java_puscas_mobilertapp_DrawView_initialize (
+int64_t Java_puscas_mobilertapp_DrawView_initialize (
   JNIEnv *env,
   jobject thiz,
   jint scene,

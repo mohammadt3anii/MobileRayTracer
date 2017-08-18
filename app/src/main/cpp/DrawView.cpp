@@ -61,7 +61,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-long Java_puscas_mobilertapp_DrawView_initialize (
+int64_t Java_puscas_mobilertapp_DrawView_initialize (
   JNIEnv *const env,
   jobject /*thiz*/,
   jint const scene,
@@ -92,7 +92,7 @@ long Java_puscas_mobilertapp_DrawView_initialize (
   const float hfovFactor {width > height ? ratio : 1.0f};
   const float vfovFactor {width < height ? ratio : 1.0f};
   renderer_ = nullptr;
-  long res = [&] () -> long {
+  int64_t res = [&] () -> int64_t {
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
@@ -228,17 +228,18 @@ long Java_puscas_mobilertapp_DrawView_initialize (
       std::move (shader_), std::move (camera), std::move (samplerPixel),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
       static_cast<unsigned>(samplesPixel)};
-    const long triangles {static_cast<long> (renderer_->shader_->scene_.triangles_.size ())};
-    const long spheres {static_cast<long> (renderer_->shader_->scene_.spheres_.size ())};
-    const long planes {static_cast<long> (renderer_->shader_->scene_.planes_.size ())};
-    const long lights {static_cast<long> (renderer_->shader_->scene_.lights_.size ())};
-    const long nPrimitives = triangles + spheres + planes;
+    const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
+    const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
+    const int64_t planes {static_cast<int64_t> (renderer_->shader_->scene_.planes_.size ())};
+    const int64_t lights {static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ())};
+    const int64_t nPrimitives = triangles + spheres + planes;
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
     LOG("PLANES = ", planes);
     LOG("LIGHTS = ", lights);
     return nPrimitives;
   }();
+  LOG("PRIMITIVES = ", res);
   return res;
 }
 

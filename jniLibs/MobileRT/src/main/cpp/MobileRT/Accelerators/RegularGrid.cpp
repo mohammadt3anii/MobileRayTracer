@@ -87,8 +87,7 @@ void RegularGrid::addPrimitives
           // do an accurate aabb / primitive intersection test
           if (primitive.intersect(cell)) {
             grid_primitives[idx].emplace_back(&primitive);
-            LOG("add idx = ", idx);
-            LOG("add index = ", index);
+            //LOG("add idx = ", idx, " index = ", index);
           }
         }
       }

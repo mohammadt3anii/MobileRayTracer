@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
@@ -241,7 +242,7 @@ public final class MainActivity extends Activity {
         for (int i = 0; i < maxSizes; i++) {
             float value = (i + 1.0f) * 0.1f;
             value = Math.round(value * 1000f) / 1000f;
-            sizes[i] = Float.toString(value) + " x";
+            sizes[i] = String.format(Locale.US, "%.2f", value * value) + 'x';
         }
         pickerSizes_ = (NumberPicker) findViewById(R.id.pickerSize);
         if (pickerSizes_ == null) {
