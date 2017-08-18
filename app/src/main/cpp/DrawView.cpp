@@ -61,7 +61,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-void Java_puscas_mobilertapp_DrawView_initialize(
+long Java_puscas_mobilertapp_DrawView_initialize (
   JNIEnv *const env,
   jobject /*thiz*/,
   jint const scene,
@@ -92,9 +92,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
   const float hfovFactor {width > height ? ratio : 1.0f};
   const float vfovFactor {width < height ? ratio : 1.0f};
   renderer_ = nullptr;
-
-
-  [&] ()->void {
+  long res = [&] () -> long {
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
@@ -145,15 +143,23 @@ void Java_puscas_mobilertapp_DrawView_initialize(
         scene_ = spheresScene2 (std::move (scene_));
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
-
-      default:
+      default: {
         objLoader.fillScene (&scene_);
+        const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                           1.0f,
+                                           MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+        scene_.lights_.emplace_back (new Components::PointLight {
+          lightMat, MobileRT::Point3D {0.0f, 1000.0f, 0.0f}});
+        //cornell spheres
+        //camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 0.5f, 3.0f}, MobileRT::Point3D {0.0f, 0.5f, -1.0f}, MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+        //teapot
         camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D {0.0f, 0.5f, 3.0f},
-          MobileRT::Point3D {0.0f, 0.5f, -1.0f},
-          MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-          45.0f * hfovFactor, 45.0f * vfovFactor);
+          MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
+          MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
         maxDist = MobileRT::Point3D {1, 1, 1};
+      }
         break;
     }
     if (samplesPixel > 1) {
@@ -222,13 +228,18 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       std::move (shader_), std::move (camera), std::move (samplerPixel),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
       static_cast<unsigned>(samplesPixel)};
-    LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
-    LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
-    LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
-    LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
+    const long triangles {static_cast<long> (renderer_->shader_->scene_.triangles_.size ())};
+    const long spheres {static_cast<long> (renderer_->shader_->scene_.spheres_.size ())};
+    const long planes {static_cast<long> (renderer_->shader_->scene_.planes_.size ())};
+    const long lights {static_cast<long> (renderer_->shader_->scene_.lights_.size ())};
+    const long nPrimitives = triangles + spheres + planes;
+    LOG("TRIANGLES = ", triangles);
+    LOG("SPHERES = ", spheres);
+    LOG("PLANES = ", planes);
+    LOG("LIGHTS = ", lights);
+    return nPrimitives;
   }();
-
-
+  return res;
 }
 
 extern "C"

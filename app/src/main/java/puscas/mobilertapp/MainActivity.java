@@ -118,7 +118,8 @@ public final class MainActivity extends Activity {
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
-            final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+            //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+            final String obj = "WavefrontOBJs/teapot/teapot";
             objText_ = readTextAsset(obj + ".obj");
             matText_ = readTextAsset(obj + ".mtl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
@@ -225,7 +226,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerThreads_.setMinValue(1);
-        pickerThreads_.setMaxValue(MainActivity.getNumberOfCores() << 1);
+        pickerThreads_.setMaxValue(MainActivity.getNumberOfCores());
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 

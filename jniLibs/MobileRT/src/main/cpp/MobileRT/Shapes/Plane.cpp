@@ -7,6 +7,7 @@
 using MobileRT::AABB;
 using MobileRT::Plane;
 using MobileRT::Point3D;
+using MobileRT::Vector3D;
 
 Plane::Plane (const Point3D point, const Vector3D normal) noexcept :
   normal_ {normal},
@@ -45,22 +46,27 @@ float Plane::getZ() const noexcept {
     return 0.0f;
 }
 
-Point3D Plane::getPositionMin() const noexcept {
-  Vector3D right {
-    Vector3D {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_}};
-  //up.normalize();
+Vector3D Plane::getRightVector () const noexcept {
+  float x {this->normal_.x_ >= 0 ? 1.0f : this->normal_.x_ < 0 ? -1.0f : 0.0f};
+  float y {this->normal_.y_ >= 0 ? 1.0f : this->normal_.y_ < 0 ? -1.0f : 0.0f};
+  float z {this->normal_.z_ >= 0 ? 1.0f : this->normal_.z_ < 0 ? -1.0f : 0.0f};
+  if (x == 0.0f && y == 0.0f && z == 0.0f) {
+    y = 1.0f;
+  }
+  Vector3D up {x, y, z};
+  up.normalize ();
+  Vector3D right {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_};
   //Vector3D right {this->normal_.crossProduct(up)};
   right.normalize ();
-  return this->point_ + right * -RayLengthMax;
+  return right;
+}
+
+Point3D Plane::getPositionMin () const noexcept {
+  return this->point_ + getRightVector () * -RayLengthMax;
 }
 
 Point3D Plane::getPositionMax() const noexcept {
-  Vector3D right {
-    Vector3D {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_}};
-  //up.normalize();
-  //Vector3D right {this->normal_.crossProduct(up)};
-  right.normalize ();
-  return this->point_ + right * RayLengthMax;
+  return this->point_ + getRightVector () * RayLengthMax;
 }
 
 AABB Plane::getAABB() const noexcept {

@@ -19,6 +19,7 @@ namespace MobileRT {
 				Point3D getPositionMin() const noexcept;
 
         Point3D getPositionMax() const noexcept;
+      Vector3D getRightVector () const noexcept;
 
     public:
       explicit Plane (Point3D point, Vector3D normal) noexcept;

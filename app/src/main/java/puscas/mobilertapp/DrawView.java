@@ -37,6 +37,7 @@ public class DrawView extends GLSurfaceView {
     String fpsRenderT_ = null;
     String allocatedT_ = null;
     String sampleT_ = null;
+    String nPrimitivesT_ = null;
     private int numThreads_ = 0;
     private int frame_ = 0;
     private float timebase_ = 0.0f;
@@ -51,7 +52,7 @@ public class DrawView extends GLSurfaceView {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native void initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
+    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
     static native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -67,19 +68,18 @@ public class DrawView extends GLSurfaceView {
 
     private void resetPrint(final int width, final int height,
                             final int samplesPixel, final int samplesLight) {
-        fpsT_ = String.format(Locale.US, "FPS:%.2f ", 0.0f);
+        fpsT_ = String.format(Locale.US, "fps:%.2f", 0.0f);
         fps_ = 0.0f;
         fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
-        timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", 0.0f);
-        timeT_ = String.format(Locale.US, "[%.2fs] ", 0.0f);
+        timeFrameT_ = String.format(Locale.US, ",t:%.2fs", 0.0f);
+        timeT_ = String.format(Locale.US, "[%.2fs]", 0.0f);
         stageT_ = " " + Stage.values()[0];
-        allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + " MB";
-
-        resolutionT_ = ",R:" + width + " x " + height;
-        threadsT_ = ",T:" + numThreads_;
+        allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
+        resolutionT_ = ",r:" + width + 'x' + height;
+        threadsT_ = ",t:" + numThreads_;
         samplesPixelT_ = ",spp:" + samplesPixel;
         samplesLightT_ = ",spl:" + samplesLight;
-        sampleT_ = ", 0";
+        sampleT_ = ",0";
     }
 
     void setView(final TextView textView) {
@@ -136,7 +136,7 @@ public class DrawView extends GLSurfaceView {
         setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
+        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
@@ -160,15 +160,13 @@ public class DrawView extends GLSurfaceView {
 
     void printText() {
         textView_.setText(
-                fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_
-                        + '\n'
-                        + stageT_ + allocatedT_
-                        + timeFrameT_ + timeT_ + sampleT_
+                fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_ + sampleT_ + '\n'
+                        + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_
         );
     }
 
     private enum Stage {
-        IDLE(0), BUSY(1), END(2), STOP(3);
+        idle(0), busy(1), end(2), stop(3);
         final int id_;
 
         Stage(final int id) {
@@ -187,18 +185,18 @@ public class DrawView extends GLSurfaceView {
                 moveTouch(touch.x_, touch.y_, touch.primitiveID_);
             }
             FPS();
-            fpsT_ = String.format(Locale.US, "FPS:%.1f ", getFPS());
+            fpsT_ = String.format(Locale.US, "fps:%.1f", getFPS());
             fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
-            timeFrameT_ = String.format(Locale.US, ", t:%.2fs ", getTimeFrame() / 1000.0f);
-            timeT_ = String.format(Locale.US, "[%.2fs] ",
+            timeFrameT_ = String.format(Locale.US, ",t:%.2fs", getTimeFrame() / 1000.0f);
+            timeT_ = String.format(Locale.US, "[%.2fs]",
                     (SystemClock.elapsedRealtime() - start_) / 1000.0f);
-            allocatedT_ = ", Malloc:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "MB";
-            sampleT_ = ", " + getSample();
+            allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
+            sampleT_ = "," + getSample();
             final int stage = isWorking();
-            stageT_ = " " + Stage.values()[stage];
+            stageT_ = Stage.values()[stage].toString();
             publishProgress();
             requestRender();
-            if (stage != Stage.BUSY.id_) {
+            if (stage != Stage.busy.id_) {
                 finish(bitmap_);
                 scheduler_.shutdown();
             }
@@ -261,7 +259,7 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         public final boolean onTouch(final View view, final MotionEvent motionEvent) {
-            if (isWorking() != Stage.BUSY.id_) {
+            if (isWorking() != Stage.busy.id_) {
                 return false;
             }
             switch (motionEvent.getActionMasked()) {
