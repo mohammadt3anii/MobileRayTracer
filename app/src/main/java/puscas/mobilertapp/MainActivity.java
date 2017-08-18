@@ -231,7 +231,7 @@ public final class MainActivity extends Activity {
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-        final int maxSizes = 10;
+        final int maxSizes = 9;
         final String[] sizes;
         try {
             sizes = new String[maxSizes];
@@ -239,11 +239,12 @@ public final class MainActivity extends Activity {
             e.fillInStackTrace();
             throw e;
         }
-        for (int i = 0; i < maxSizes; i++) {
-            float value = (i + 1.0f) * 0.1f;
-            value = Math.round(value * 1000f) / 1000f;
-            sizes[i] = String.format(Locale.US, "%.2f", value * value) + 'x';
+        sizes[0] = String.format(Locale.US, "%.2f", 0.05f) + 'x';
+        for (int i = 2; i < maxSizes; i++) {
+            final float value = (i + 1.0f) * 0.1f;
+            sizes[i - 1] = String.format(Locale.US, "%.2f", value * value) + 'x';
         }
+        sizes[maxSizes - 1] = String.format(Locale.US, "%.2f", 1.0f) + 'x';
         pickerSizes_ = (NumberPicker) findViewById(R.id.pickerSize);
         if (pickerSizes_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
