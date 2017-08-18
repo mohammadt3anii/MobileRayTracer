@@ -23,6 +23,14 @@ import java.util.regex.Pattern;
 
 public final class MainActivity extends Activity {
 
+    private static int pickerScene = 0;
+    private static int pickerShader = 0;
+    private static int pickerThreads = 0;
+    private static int pickerAccelerator = 0;
+    private static int pickerSamplesPixel = 1;
+    private static int pickerSamplesLight = 1;
+    private static int pickerSizes = 0;
+
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("Components");
@@ -128,6 +136,13 @@ public final class MainActivity extends Activity {
 
             drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
             drawView_.buttonRender_.setOnLongClickListener((View v) -> {
+                MainActivity.pickerSizes = pickerSizes_.getValue();
+                MainActivity.pickerScene = pickerScene_.getValue();
+                MainActivity.pickerShader = pickerShader_.getValue();
+                MainActivity.pickerThreads = pickerThreads_.getValue();
+                MainActivity.pickerAccelerator = pickerAccelerator_.getValue();
+                MainActivity.pickerSamplesPixel = pickerSamplesPixel_.getValue();
+                MainActivity.pickerSamplesLight = pickerSamplesLight_.getValue();
                 this.recreate();
                 return false;
             });
@@ -162,6 +177,7 @@ public final class MainActivity extends Activity {
         pickerScene_.setDisplayedValues(scenes);
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerScene_.setValue(MainActivity.pickerScene);
 
         final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "Diffuse"};
         pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
@@ -174,6 +190,7 @@ public final class MainActivity extends Activity {
         pickerShader_.setDisplayedValues(shaders);
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerShader_.setValue(MainActivity.pickerShader);
 
         final int maxSamplesPixel = 10;
         final String[] samplesPixel = new String[maxSamplesPixel];
@@ -190,6 +207,7 @@ public final class MainActivity extends Activity {
         pickerSamplesPixel_.setDisplayedValues(samplesPixel);
         pickerSamplesPixel_.setWrapSelectorWheel(true);
         pickerSamplesPixel_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerSamplesPixel_.setValue(MainActivity.pickerSamplesPixel);
 
         final int maxSamplesLight = 100;
         final String[] samplesLight;
@@ -212,6 +230,7 @@ public final class MainActivity extends Activity {
         pickerSamplesLight_.setDisplayedValues(samplesLight);
         pickerSamplesLight_.setWrapSelectorWheel(true);
         pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerSamplesLight_.setValue(MainActivity.pickerSamplesLight);
 
         final String[] accelerators = {"None", "RegGrid"};
         pickerAccelerator_ = (NumberPicker) findViewById(R.id.pickerAccelerator);
@@ -224,6 +243,7 @@ public final class MainActivity extends Activity {
         pickerAccelerator_.setDisplayedValues(accelerators);
         pickerAccelerator_.setWrapSelectorWheel(true);
         pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerAccelerator_.setValue(MainActivity.pickerAccelerator);
 
         pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
         if (pickerThreads_ == null) {
@@ -234,6 +254,7 @@ public final class MainActivity extends Activity {
         pickerThreads_.setMaxValue(MainActivity.getNumberOfCores());
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerThreads_.setValue(MainActivity.pickerThreads);
 
         final int maxSizes = 9;
         final String[] sizes;
@@ -259,6 +280,7 @@ public final class MainActivity extends Activity {
         pickerSizes_.setDisplayedValues(sizes);
         pickerSizes_.setWrapSelectorWheel(true);
         pickerSizes_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        pickerSizes_.setValue(MainActivity.pickerSizes);
     }
 
     public void startRender(final View view) {
