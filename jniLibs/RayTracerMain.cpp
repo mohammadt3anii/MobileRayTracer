@@ -194,7 +194,6 @@ int main(int argc, char **argv) noexcept {
     LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
     LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
     LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
-    LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size ());
   }();
   LOG ("threads = ", threads);
   LOG ("shader = ", shader);

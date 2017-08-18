@@ -1,5 +1,5 @@
 //
-// Created by puscas on 17/08/17.
+// Created by Tiago on 17/08/17.
 //
 
 #ifndef MOBILERT_PRIMITIVE_HPP
@@ -20,10 +20,15 @@ namespace MobileRT {
     public:
     Primitive (T shape, Material material) noexcept :
       shape_ {shape},
-      material_ {material} {
+      material_ {std::move (material)} {
     }
 
     Primitive () noexcept = delete;
+    Primitive (const Primitive &primitive) noexcept = default;
+    Primitive (Primitive &&primitive) noexcept = default;
+    ~Primitive () noexcept = default;
+    Primitive &operator= (const Primitive &primitive) noexcept = delete;
+    Primitive &operator= (Primitive &&primitive) noexcept = delete;
 
     AABB getAABB () const noexcept {
       return this->shape_.getAABB ();

@@ -20,10 +20,9 @@
 namespace MobileRT {
     class Scene final {
     public:
-      std::vector<Primitive<Triangle>> ptriangles_ {std::vector<Primitive<Triangle>>{}};
-      std::vector<Primitive<Sphere>> pspheres_ {std::vector<Primitive<Sphere>>{}};
-      std::vector<Primitive<Plane>> pplanes_ {std::vector<Primitive<Plane>>{}};
-			std::vector<Material> materials_ {std::vector<Material>{}};
+      std::vector<Primitive<Triangle>> triangles_ {std::vector<Primitive<Triangle>>{}};
+      std::vector<Primitive<Sphere>> spheres_ {std::vector<Primitive<Sphere>>{}};
+      std::vector<Primitive<Plane>> planes_ {std::vector<Primitive<Plane>>{}};
 			std::vector<Light *> lights_ {std::vector<Light *>{}};
 
     private:

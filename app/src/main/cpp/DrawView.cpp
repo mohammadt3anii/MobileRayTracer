@@ -99,6 +99,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
     std::unique_ptr<MobileRT::Camera> camera {};
+    MobileRT::Point3D maxDist;
     switch (scene) {
       case 0:
         camera = std::make_unique<Components::Perspective> (
@@ -107,6 +108,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
           45.0f * hfovFactor, 45.0f * vfovFactor);
         scene_ = cornellBoxScene (std::move (scene_));
+        maxDist = MobileRT::Point3D {1, 1, 1};
         break;
 
       case 1:
@@ -121,6 +123,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
           60.0f * hfovFactor, 60.0f * vfovFactor);*/
         scene_ = spheresScene (std::move (scene_));
+        maxDist = MobileRT::Point3D {8, 8, 8};
         break;
 
       case 2:
@@ -130,6 +133,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f * hfovFactor, 45.0f * vfovFactor);
         scene_ = cornellBoxScene2 (std::move (scene_));
+        maxDist = MobileRT::Point3D {1, 1, 1};
         break;
 
       case 3:
@@ -139,6 +143,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           60.0f * hfovFactor, 60.0f * vfovFactor);
         scene_ = spheresScene2 (std::move (scene_));
+        maxDist = MobileRT::Point3D {8, 8, 8};
         break;
 
       default:
@@ -148,6 +153,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
           MobileRT::Point3D {0.0f, 0.5f, -1.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
           45.0f * hfovFactor, 45.0f * vfovFactor);
+        maxDist = MobileRT::Point3D {1, 1, 1};
         break;
     }
     if (samplesPixel > 1) {
@@ -192,8 +198,7 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       }
 
       case 3: {
-        shader_ = std::make_unique<Components::DepthMap> (std::move (scene_),
-                                                          MobileRT::Point3D (1, 1, 1),
+        shader_ = std::make_unique<Components::DepthMap> (std::move (scene_), maxDist,
                                                           MobileRT::Shader::Accelerator (
                                                             accelerator));
         break;
@@ -217,11 +222,10 @@ void Java_puscas_mobilertapp_DrawView_initialize(
       std::move (shader_), std::move (camera), std::move (samplerPixel),
       static_cast<unsigned>(width_), static_cast<unsigned>(height_),
       static_cast<unsigned>(samplesPixel)};
-    LOG("PTRIANGLES = ", renderer_->shader_->scene_.ptriangles_.size ());
-    LOG("PSPHERES = ", renderer_->shader_->scene_.pspheres_.size ());
-    LOG("PPLANES = ", renderer_->shader_->scene_.pplanes_.size ());
+    LOG("TRIANGLES = ", renderer_->shader_->scene_.triangles_.size ());
+    LOG("SPHERES = ", renderer_->shader_->scene_.spheres_.size ());
+    LOG("PLANES = ", renderer_->shader_->scene_.planes_.size ());
     LOG("LIGHTS = ", renderer_->shader_->scene_.lights_.size ());
-    LOG("MATERIALS = ", renderer_->shader_->scene_.materials_.size ());
   }();
 
 
@@ -283,12 +287,12 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
   const MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
   const uint32_t index {static_cast<uint32_t>(primitiveIndex)};
   const MobileRT::Plane plane {
-    MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.pplanes_[index].shape_.getZ ()},
+    MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ ()},
     MobileRT::Vector3D{0.0f, 0.0f, - 1.0f}};
   MobileRT::Intersection intersection {};
   plane.intersect(&intersection, ray);
-  renderer_->shader_->scene_.pplanes_[index].shape_.moveTo (intersection.point_.x_,
-                                                            intersection.point_.y_);
+  renderer_->shader_->scene_.planes_[index].shape_.moveTo (intersection.point_.x_,
+                                                           intersection.point_.y_);
 }
 
 extern "C"

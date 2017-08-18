@@ -107,8 +107,8 @@ bool OBJLoader::fillScene (Scene *const scene) noexcept {
                         std::make_unique<Components::MersenneTwister> ()};
                         scene->lights_.emplace_back(new AreaLight(material, std::move(sampler), p1, p2, p3));
                     } else {
-                      scene->ptriangles_.emplace_back (Triangle {vertex1, vertex2, vertex3},
-                                                       material);
+                        scene->triangles_.emplace_back (Triangle {vertex1, vertex2, vertex3},
+                                                        material);
                     }
                 }
             }

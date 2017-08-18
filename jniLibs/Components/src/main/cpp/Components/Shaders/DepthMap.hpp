@@ -23,7 +23,7 @@ namespace Components {
                  Ray &&ray) const noexcept final;
 
 		public:
-    explicit DepthMap (Scene &&scene, const Point3D &&maxPoint,
+    explicit DepthMap (Scene &&scene, Point3D maxPoint,
                        Accelerator accelerator) noexcept;
 
 			DepthMap(const DepthMap &depthMap) noexcept = delete;

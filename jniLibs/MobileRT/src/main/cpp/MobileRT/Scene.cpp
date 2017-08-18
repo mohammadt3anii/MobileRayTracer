@@ -11,10 +11,9 @@ using MobileRT::Plane;
 static unsigned counter {0};
 
 Scene::~Scene() noexcept {
-  this->ptriangles_.clear ();
-  this->pspheres_.clear ();
-  this->pplanes_.clear ();
-		this->materials_.clear();
+  this->triangles_.clear ();
+  this->spheres_.clear ();
+  this->planes_.clear ();
   for (Light *const light : this->lights_) {
         delete light;
     }
@@ -50,12 +49,12 @@ int Scene::trace (const std::vector<T> &primitives, Intersection *const intersec
 
 int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
   const int resTriangles {
-    trace<MobileRT::Primitive<MobileRT::Triangle>> (this->ptriangles_, intersection, ray, -1)};
+    trace<MobileRT::Primitive<MobileRT::Triangle>> (this->triangles_, intersection, ray, -1)};
   const int resSpheres {
-    trace<MobileRT::Primitive<MobileRT::Sphere>> (this->pspheres_, intersection, ray,
+    trace<MobileRT::Primitive<MobileRT::Sphere>> (this->spheres_, intersection, ray,
                                                   resTriangles)};
   const int res {
-    trace<MobileRT::Primitive<MobileRT::Plane>> (this->pplanes_, intersection, ray, resSpheres)};
+    trace<MobileRT::Primitive<MobileRT::Plane>> (this->planes_, intersection, ray, resSpheres)};
 
   traceLights (intersection, std::move (ray));
 
@@ -75,11 +74,11 @@ bool Scene::shadowTrace(const std::vector<T> &primitives, Intersection *const in
 
 bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) const noexcept {
   const bool intersectedTriangle {
-    shadowTrace<MobileRT::Primitive<Triangle>> (this->ptriangles_, intersection, ray)};
+    shadowTrace<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSphere {
-    shadowTrace<MobileRT::Primitive<Sphere>> (this->pspheres_, intersection, ray)};
+    shadowTrace<MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
   const bool intersectedPlane {
-    shadowTrace<MobileRT::Primitive<Plane>> (this->pplanes_, intersection, std::move (ray))};
+    shadowTrace<MobileRT::Primitive<Plane>> (this->planes_, intersection, std::move (ray))};
   return intersectedTriangle || intersectedSphere || intersectedPlane;
 }
 

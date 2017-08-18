@@ -9,13 +9,13 @@ using MobileRT::Primitive;
 
 RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
                           const int gridSize, const int gridShift) :
-  ptriangles_ {
+  triangles_ {
     std::vector<std::vector<MobileRT::Primitive<Triangle> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
-  pspheres_ {
+  spheres_ {
     std::vector<std::vector<MobileRT::Primitive<Sphere> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
-  pplanes_ {
+  planes_ {
     std::vector<std::vector<MobileRT::Primitive<Plane> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
@@ -29,11 +29,11 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
 {
   LOG("scene min=(", m_Extends.pointMin_.x_, ", ", m_Extends.pointMin_.y_, ", ", m_Extends.pointMin_.z_, ") max=(", m_Extends.pointMax_.x_, ", ", m_Extends.pointMax_.y_, ", ", m_Extends.pointMax_.z_, ")");
   LOG("TRIANGLES");
-  addPrimitives<Primitive<Triangle>> (scene->ptriangles_, this->ptriangles_);
+  addPrimitives<Primitive<Triangle>> (scene->triangles_, this->triangles_);
   LOG("SPHERES");
-  addPrimitives<Primitive<Sphere>> (scene->pspheres_, this->pspheres_);
+  addPrimitives<Primitive<Sphere>> (scene->spheres_, this->spheres_);
   LOG("PLANES");
-  addPrimitives<Primitive<Plane>> (scene->pplanes_, this->pplanes_);
+  addPrimitives<Primitive<Plane>> (scene->planes_, this->planes_);
 }
 
 template<typename T>
@@ -98,11 +98,11 @@ void RegularGrid::addPrimitives
 
 bool RegularGrid::intersect (Intersection *const intersection, const Ray &ray) const noexcept {
   const bool intersectedTriangles {
-    intersect<MobileRT::Primitive<Triangle>> (this->ptriangles_, intersection, ray)};
+    intersect<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSpheres {
-    intersect<MobileRT::Primitive<Sphere>> (this->pspheres_, intersection, ray)};
+    intersect<MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
   const bool intersectedPlanes {
-    intersect<MobileRT::Primitive<Plane>> (this->pplanes_, intersection, ray)};
+    intersect<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
   const bool intersectedLights {this->scene_->traceLights (intersection, ray) >= 0};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedLights;
 }
