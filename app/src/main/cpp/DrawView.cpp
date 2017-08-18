@@ -84,15 +84,16 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
   if (! objLoader.isProcessed ()) {
     exit (0);
   }
-
   width_ = width;
   height_ = height;
-  const float ratio {
-    width > height ? static_cast<float>(width) / height : static_cast<float>(height) / width};
-  const float hfovFactor {width > height ? ratio : 1.0f};
-  const float vfovFactor {width < height ? ratio : 1.0f};
-  renderer_ = nullptr;
+
+
   int64_t res = [&] () -> int64_t {
+    renderer_ = nullptr;
+    const float ratio {
+      width_ > height_ ? static_cast<float>(width_) / height_ : static_cast<float>(height_) / width_};
+    const float hfovFactor {width_ > height_ ? ratio : 1.0f};
+    const float vfovFactor {width_ < height_ ? ratio : 1.0f};
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
@@ -240,6 +241,8 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
     LOG("LIGHTS = ", lights);
     return nPrimitives;
   }();
+
+
   LOG("PRIMITIVES = ", res);
   return res;
 }

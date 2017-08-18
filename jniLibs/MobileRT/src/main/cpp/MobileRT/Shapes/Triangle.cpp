@@ -4,6 +4,7 @@
 //
 
 #include "Triangle.hpp"
+#include <float.h>
 
 using MobileRT::AABB;
 using MobileRT::Triangle;
