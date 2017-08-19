@@ -71,6 +71,8 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 	LOG("material = ", Material::getInstances());
 	LOG("intersection = ", Intersection::getInstances());
 	LOG("FINISH");
+	static_cast<void> (ii);
+	static_cast<void> (jj);
 }
 
 void Renderer::stopRender() noexcept {

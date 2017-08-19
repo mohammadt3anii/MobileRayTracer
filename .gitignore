@@ -16,3 +16,5 @@
 **/*.llvmIR
 **/*.dwo
 **/*.data*
+**/*.py
+**/*.callgrind

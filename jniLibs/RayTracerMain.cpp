@@ -213,11 +213,13 @@ int main(int argc, char **argv) noexcept {
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
     LOG("PLANES = ", planes);
-    LOG("LIGHTS = ", lights);
+		LOG("LIGHTS = ", lights);
+		static_cast<void> (lights);
     return nPrimitives;
 	}();
 	
 
+	static_cast<void> (res);
   LOG("threads = ", threads);
   LOG("shader = ", shader);
   LOG("scene = ", scene);
@@ -234,7 +236,7 @@ int main(int argc, char **argv) noexcept {
   delete renderer_;
   std::cout << "Time in secs = ";
   std::cout << omp_get_wtime () - start << std::endl;
-  for (int i (0), j (0); i < width_ * height_ * 4; i += 4, j += 1) {
+  /*for (int i (0), j (0); i < width_ * height_ * 4; i += 4, j += 1) {
     const unsigned color {bitmap[j]};
     buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
     buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
@@ -257,8 +259,8 @@ int main(int argc, char **argv) noexcept {
     }
   ), nullptr);
   auto *check_escape {static_cast<bool (*) (
-    GtkWidget *gtkWidget, GdkEventKey *event, gpointer /*unused*/)>(
-                        [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer /*unused*/) {
+    GtkWidget *gtkWidget, GdkEventKey *event, gpointer)>(
+                        [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer) {
                           if (event -> keyval == GDK_KEY_Escape) {
                             gtk_widget_destroy (gtkWidget);
                             gtk_main_quit ();
@@ -272,6 +274,6 @@ int main(int argc, char **argv) noexcept {
   gtk_container_add (GTK_CONTAINER (window), image);
   gtk_widget_show_all (window);
   gtk_main ();
-  g_object_unref (G_OBJECT (pixbuff));
+  g_object_unref (G_OBJECT (pixbuff));*/
   return argc;
 }

@@ -4,7 +4,7 @@
 //
 
 #include "Triangle.hpp"
-#include <float.h>
+#include <cfloat>
 
 using MobileRT::AABB;
 using MobileRT::Triangle;
@@ -23,21 +23,21 @@ Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D po
 }
 
 bool Triangle::intersect (Intersection *const intersection, const Ray ray) const noexcept {
-  const Vector3D perpendicularVector {ray . direction_, this -> AC_};
-  const float normalizedProjection {this -> AB_ . dotProduct (perpendicularVector)};
+  const Vector3D perpendicularVector {ray.direction_, this->AC_};//cross product
+  const float normalizedProjection {this->AB_.dotProduct (perpendicularVector)};
   if (std::fabs (normalizedProjection) < Epsilon) {
 		return false;
 	}
 
   const float normalizedProjectionInv {1.0f / normalizedProjection};
-  const Vector3D vertexToCamera {ray . origin_, this -> pointA_};
-  const float u {normalizedProjectionInv * vertexToCamera . dotProduct (perpendicularVector)};
+  const Vector3D vectorToCamera {ray.origin_, this->pointA_};
+  const float u {normalizedProjectionInv * vectorToCamera.dotProduct (perpendicularVector)};
   if (u < 0.0f || u > 1.0f) {
-        return false;
+		return false;
 	}
 
-  const Vector3D upPerpendicularVector {vertexToCamera, this -> AB_};//cross product
-  const float v {normalizedProjectionInv * ray . direction_ . dotProduct (upPerpendicularVector)};
+  const Vector3D upPerpendicularVector {vectorToCamera, this->AB_};//cross product
+  const float v {normalizedProjectionInv * ray.direction_.dotProduct (upPerpendicularVector)};
   if (v < 0.0f || (u + v) > 1.0f) {
     return false;
   }
@@ -45,9 +45,9 @@ bool Triangle::intersect (Intersection *const intersection, const Ray ray) const
   // at this stage we can compute t to find out where
   // the intersection point is on the line
   const float distanceToIntersection {
-    normalizedProjectionInv * this -> AC_ . dotProduct (upPerpendicularVector)};
+    normalizedProjectionInv * this->AC_.dotProduct (upPerpendicularVector)};
 
-  if (distanceToIntersection < Epsilon || distanceToIntersection > intersection -> length_) {
+  if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
     return false;
 	}
   intersection->reset (ray.origin_, ray.direction_, distanceToIntersection, this->normal_);
