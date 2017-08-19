@@ -15,19 +15,19 @@ LDFLAGS += -L../third-party/tinyobjloader
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE -fpie $(INCLUDES)
 CXXFLAGS += -Wno-zero-as-null-pointer-constant -Wno-old-style-cast
-CXXFLAGS += -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -static -fopenmp -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
+CXXFLAGS += -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -static -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
 LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS += -Wl,-O3 -Wl,-discard-all -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -flto=full
+LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -flto=full
 
 ifeq ($(S),)
-	CXXFLAGS += -Ofast -DNDEBUG
-	LDFLAGS += -Wl,-s -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden
+	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer 
+	LDFLAGS += -Wl,-s -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
+	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls -fno-omit-frame-pointer
 endif
 
 ifeq ($(S),2)
