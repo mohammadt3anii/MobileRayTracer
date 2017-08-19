@@ -35,13 +35,13 @@ int main(int argc, char **argv) noexcept {
 	const int threads {atoi (argv[1])};
 	const int shader {atoi (argv[2])};
 	const int scene {atoi (argv[3])};
-  int repeats {atoi (argv[4])};
-  const int samplesPixel {atoi (argv[5])};
-	const int samplesLight {atoi (argv[6])};
+  const int samplesPixel {atoi (argv[4])};
+	const int samplesLight {atoi (argv[5])};
   const int width_ {
-    roundDownToMultipleOf (atoi (argv[7]), static_cast<int>(std::sqrt (NumberOfBlocks)))};
+    roundDownToMultipleOf (atoi (argv[6]), static_cast<int>(std::sqrt (NumberOfBlocks)))};
   const int height_ {
-		roundDownToMultipleOf (atoi (argv[8]), static_cast<int>(std::sqrt (NumberOfBlocks)))};
+		roundDownToMultipleOf (atoi (argv[7]), static_cast<int>(std::sqrt (NumberOfBlocks)))};
+	int repeats {1};
 	const int accelerator {0};
   bitmap = new unsigned[static_cast<unsigned>(width_) * static_cast<unsigned>(height_)];
   buffer = new unsigned char[static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 4u];
