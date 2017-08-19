@@ -22,15 +22,20 @@ LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -Wno-padded -Wno-float-equal -flt
 LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -flto=full
 
 ifeq ($(S),)
-	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer 
-	LDFLAGS += -Wl,-s -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all
+	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer
+	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls -fno-omit-frame-pointer
+	CXXFLAGS += -Ofast -DNDEBUG -fno-omit-frame-pointer
+	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
 ifeq ($(S),2)
+	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls -fno-omit-frame-pointer
+endif
+
+ifeq ($(S),3)
 	#CXX := g++
 	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
 	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor #MemorySanitizer, a detector of uninitialized reads. Requires instrumentation of all program code.

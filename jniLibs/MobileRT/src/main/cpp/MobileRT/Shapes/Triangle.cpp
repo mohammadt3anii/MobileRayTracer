@@ -26,7 +26,7 @@ bool Triangle::intersect (Intersection *const intersection, const Ray ray) const
   const Vector3D perpendicularVector {ray . direction_, this -> AC_};
   const float normalizedProjection {this -> AB_ . dotProduct (perpendicularVector)};
   if (std::fabs (normalizedProjection) < Epsilon) {
-        return false;
+		return false;
 	}
 
   const float normalizedProjectionInv {1.0f / normalizedProjection};
