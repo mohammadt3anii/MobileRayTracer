@@ -4,7 +4,6 @@
 
 #include "OBJLoader.hpp"
 #include "../Lights/AreaLight.hpp"
-#include "../Samplers/MersenneTwister.hpp"
 
 using Components::AreaLight;
 using Components::OBJLoader;
@@ -38,7 +37,7 @@ void OBJLoader::process() noexcept {
     isProcessed_ = true;
 }
 
-bool OBJLoader::fillScene (Scene *const scene) noexcept {
+bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept {
     for (auto &shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset {0};
@@ -131,9 +130,7 @@ bool OBJLoader::fillScene (Scene *const scene) noexcept {
                         const Point3D p1 {vx1, vy1, vz1};
                         const Point3D p2 {vx2, vy2, vz2};
                         const Point3D p3 {vx3, vy3, vz3};
-                        std::unique_ptr<MobileRT::Sampler> sampler {
-                        std::make_unique<Components::MersenneTwister> ()};
-                        scene->lights_.emplace_back(new AreaLight(material, std::move(sampler), p1, p2, p3));
+                        scene->lights_.emplace_back(new AreaLight(material, lambda(), p1, p2, p3));
                     } else {
                       scene->triangles_.emplace_back (std::move (triangle), material);
                     }

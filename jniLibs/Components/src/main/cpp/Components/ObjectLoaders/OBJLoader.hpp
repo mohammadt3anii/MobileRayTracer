@@ -6,6 +6,7 @@
 #define COMPONENTS_OBJECTLOADERS_OBJLOADER_HPP
 
 #include "MobileRT/ObjectLoader.hpp"
+#include "MobileRT/Sampler.hpp"
 #include <tinyobjloader/tiny_obj_loader.h>
 
 namespace Components {
@@ -31,8 +32,8 @@ namespace Components {
 				OBJLoader &operator=(OBJLoader &&objLoader) noexcept = delete;
 
         void process() noexcept final;
-
-        bool fillScene(MobileRT::Scene *scene) noexcept final;
+				
+				bool fillScene(MobileRT::Scene *scene, std::function<std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept final;
     };
 }//namespace Components
 

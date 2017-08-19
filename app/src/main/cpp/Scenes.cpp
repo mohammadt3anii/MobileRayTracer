@@ -1,3 +1,7 @@
+#include "Components/Lights/AreaLight.hpp"
+#include "Components/Lights/PointLight.hpp"
+#include "Components/Samplers/MersenneTwister.hpp"
+#include "Components/Samplers/StaticHaltonSeq.hpp"
 #include "Scenes.hpp"
 
 MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
@@ -65,8 +69,11 @@ MobileRT::Scene cornellBoxScene2 (MobileRT::Scene &&scene) noexcept {
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      1.0f,
                                      MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
-    std::make_unique<Components::MersenneTwister> ()};
+  std::unique_ptr<MobileRT::Sampler> samplerPoint1 {std::make_unique<Components::StaticHaltonSeq> ()};
+	//std::unique_ptr<MobileRT::Sampler> samplerPoint1 {std::make_unique<Components::MersenneTwister> ()};
+	std::unique_ptr<MobileRT::Sampler> samplerPoint2 {std::make_unique<Components::StaticHaltonSeq> ()};
+	//std::unique_ptr<MobileRT::Sampler> samplerPoint2 {std::make_unique<Components::MersenneTwister> ()};
+
   scene.lights_.emplace_back (new Components::AreaLight {lightMat,
                                                              std::move (samplerPoint1),
                                                              MobileRT::Point3D {-0.25f, 0.99f,
@@ -76,8 +83,6 @@ MobileRT::Scene cornellBoxScene2 (MobileRT::Scene &&scene) noexcept {
                                                              MobileRT::Point3D {0.25f, 0.99f,
                                                                                 0.25f}});
 
-  std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
-    std::make_unique<Components::MersenneTwister> ()};
   scene.lights_.emplace_back (new Components::AreaLight {lightMat,
                                                              std::move (samplerPoint2),
                                                              MobileRT::Point3D {0.25f, 0.99f,

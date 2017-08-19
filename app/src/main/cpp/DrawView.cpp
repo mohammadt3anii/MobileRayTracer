@@ -11,6 +11,7 @@ static int width_ {0};
 static int height_ {0};
 static float fps_ {0.0f};
 static int64_t timeFrame_ {0};
+static int64_t numberOfLights_ {0};
 
 static void FPS() noexcept {
   static int frame {0};
@@ -145,7 +146,10 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
       default: {
-        objLoader.fillScene (&scene_);
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::HaltonSeq> ();});
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::MersenneTwister> ();});
+        objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticMersenneTwister> ();});
         const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
@@ -233,7 +237,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
     const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
     const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
     const int64_t planes {static_cast<int64_t> (renderer_->shader_->scene_.planes_.size ())};
-    const int64_t lights {static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ())};
+    numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ());
     const int64_t nPrimitives = triangles + spheres + planes;
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
@@ -342,4 +346,12 @@ int Java_puscas_mobilertapp_DrawView_resize(
   jint const size
 ) noexcept {
   return roundDownToMultipleOf (size, static_cast<int>(std::sqrt (NumberOfBlocks)));
+}
+
+extern "C"
+int64_t Java_puscas_mobilertapp_DrawView_getNumberOfLights (
+  JNIEnv *const /*env*/,
+  jobject /*thiz*/
+) noexcept {
+  return numberOfLights_;
 }

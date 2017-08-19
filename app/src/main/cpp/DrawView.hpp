@@ -119,4 +119,10 @@ int Java_puscas_mobilertapp_DrawView_resize(
         jint size
 ) noexcept;
 
+extern "C"
+int64_t Java_puscas_mobilertapp_DrawView_getNumberOfLights (
+  JNIEnv * /*env*/,
+  jobject /*thiz*/
+) noexcept;
+
 #endif //APP_DRAWVIEW_HPP

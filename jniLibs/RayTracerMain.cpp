@@ -60,15 +60,16 @@ int main(int argc, char **argv) noexcept {
   Components::OBJLoader objLoader {ssObj.str ().c_str (), ssMtl.str ().c_str ()};
   objLoader.process();
   LOG("samplesPixel = ", samplesPixel);
-  LOG("samplesLight = ", samplesLight);
+	LOG("samplesLight = ", samplesLight);
+	int64_t numberOfLights_ {0};
 
 
   int64_t res = [&] () -> int64_t {
     renderer_ = nullptr;
     const float ratio {
       width_ > height_ ? static_cast<float>(width_) / height_ : static_cast<float>(height_) / width_};
-		const float hfovFactor {width_ > height_ ? ratio : 1.0f};
-		const float vfovFactor {width_ < height_ ? ratio : 1.0f};
+    const float hfovFactor {width_ > height_ ? ratio : 1.0f};
+    const float vfovFactor {width_ < height_ ? ratio : 1.0f};
     MobileRT::Scene scene_ {};
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
@@ -120,7 +121,10 @@ int main(int argc, char **argv) noexcept {
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
       default: {
-        objLoader.fillScene (&scene_);
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::HaltonSeq> ();});
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::MersenneTwister> ();});
+        objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
+        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticMersenneTwister> ();});
         const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
@@ -208,15 +212,14 @@ int main(int argc, char **argv) noexcept {
     const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
     const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
     const int64_t planes {static_cast<int64_t> (renderer_->shader_->scene_.planes_.size ())};
-    const int64_t lights {static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ())};
+    numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ());
     const int64_t nPrimitives = triangles + spheres + planes;
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
     LOG("PLANES = ", planes);
-		LOG("LIGHTS = ", lights);
-		static_cast<void> (lights);
+    LOG("LIGHTS = ", lights);
     return nPrimitives;
-	}();
+  }();
 	
 
 	static_cast<void> (res);
@@ -236,7 +239,7 @@ int main(int argc, char **argv) noexcept {
   delete renderer_;
   std::cout << "Time in secs = ";
   std::cout << omp_get_wtime () - start << std::endl;
-  /*for (int i (0), j (0); i < width_ * height_ * 4; i += 4, j += 1) {
+  for (int i (0), j (0); i < width_ * height_ * 4; i += 4, j += 1) {
     const unsigned color {bitmap[j]};
     buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
     buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
@@ -274,6 +277,6 @@ int main(int argc, char **argv) noexcept {
   gtk_container_add (GTK_CONTAINER (window), image);
   gtk_widget_show_all (window);
   gtk_main ();
-  g_object_unref (G_OBJECT (pixbuff));*/
+  g_object_unref (G_OBJECT (pixbuff));
   return argc;
 }

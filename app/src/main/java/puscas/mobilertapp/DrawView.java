@@ -111,6 +111,8 @@ public class DrawView extends GLSurfaceView {
 
     native int getSample();
 
+    private native long getNumberOfLights();
+
     private native int resize(int size);
 
     native int isWorking();
@@ -136,7 +138,7 @@ public class DrawView extends GLSurfaceView {
         setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
+        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText) + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
