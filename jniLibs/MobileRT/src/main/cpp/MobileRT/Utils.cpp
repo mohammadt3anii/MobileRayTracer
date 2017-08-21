@@ -5,7 +5,7 @@
 #include "Utils.hpp"
 
 int roundDownToMultipleOf(const int value, const int multiple) noexcept {
-    const int rest(value % multiple);
+  const int rest {value % multiple};
     return rest > 0 ? value - rest : value;
 }
 

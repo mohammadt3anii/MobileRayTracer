@@ -15,7 +15,7 @@
   #include <android/log.h>
 #endif
 
-#define LOG(...) {log(getFileName(__FILE__), ":", __LINE__, ": ", __VA_ARGS__);}
+//#define LOG(...) {log(getFileName(__FILE__), ":", __LINE__, ": ", __VA_ARGS__);}
 
 #ifndef LOG
   #define LOG(...)
@@ -30,7 +30,7 @@ void log (Args &&... args) {
   std::cout << oss.str() << std::endl;
 #else
   __android_log_print (ANDROID_LOG_DEBUG, "LOG", "%s\n", oss.str().c_str());
-  const std::chrono::duration<int, std::milli> time {1};
+  const std::chrono::duration<int, std::micro> time {10};
   std::this_thread::sleep_for(time);
 #endif
 }

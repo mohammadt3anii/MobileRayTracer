@@ -166,6 +166,10 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
                                                             MobileRT::Point3D {0.0f, 0.7f, -1.0f},
                                                             MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
                                                             45.0f * hfovFactor, 45.0f * vfovFactor);
+        /*camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.5f, 0.5f, 2.0f},
+                                                            MobileRT::Point3D {0.5f, 0.5f, -2.0f},
+                                                            MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                                                            45.0f * hfovFactor, 45.0f * vfovFactor);*/
         //teapot
         //camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f}, MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
         maxDist = MobileRT::Point3D {1, 1, 1};

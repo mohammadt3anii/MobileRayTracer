@@ -26,8 +26,7 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   getSceneBounds<MobileRT::Primitive<Sphere>> (this->scene_.spheres_, &min, &max);
   getSceneBounds<MobileRT::Primitive<Plane>> (this->scene_.planes_, &min, &max);
   getSceneBounds<MobileRT::Primitive<Rectangle>> (this->scene_.rectangles_, &min, &max);
-
-  regularGrid_ = RegularGrid {min - 10, max + 10, &scene_, 2, 1};
+  regularGrid_ = RegularGrid {min - 4, max + 4, &scene_, 32};
 }
 
 template<typename T>

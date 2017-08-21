@@ -95,7 +95,7 @@ bool Triangle::intersect (const AABB box) const noexcept {
       float t_near {-RayLengthMax}; // maximums defined in float.h
       float t_far {RayLengthMax};
       if (vec.x_ == 0) { // ray parallel to planes in this direction
-        if ((orig.x_ < box.pointMin_.x_) || (vec.x_ > box.pointMax_.x_)) {
+        if ((orig.x_ < box.pointMin_.x_) || ((orig.x_ + vec.x_) > box.pointMax_.x_)) {
           return false; // parallel AND outside box : no intersection possible
         }
       } else { // ray not parallel to planes in this direction
@@ -115,7 +115,7 @@ bool Triangle::intersect (const AABB box) const noexcept {
         }
       }
       if (vec.y_ == 0) { // ray parallel to planes in this direction
-        if ((orig.y_ < box.pointMin_.y_) || (vec.y_ > box.pointMax_.y_)) {
+        if ((orig.y_ < box.pointMin_.y_) || ((orig.y_ + vec.y_) > box.pointMax_.y_)) {
           return false; // parallel AND outside box : no intersection possible
         }
       } else { // ray not parallel to planes in this direction
@@ -135,7 +135,7 @@ bool Triangle::intersect (const AABB box) const noexcept {
         }
       }
       if (vec.z_ == 0) { // ray parallel to planes in this direction
-        if ((orig.z_ < box.pointMin_.z_) || (vec.z_ > box.pointMax_.z_)) {
+        if ((orig.z_ < box.pointMin_.z_) || ((orig.z_ + vec.z_) > box.pointMax_.z_)) {
           return false; // parallel AND outside box : no intersection possible
         }
       } else { // ray not parallel to planes in this direction

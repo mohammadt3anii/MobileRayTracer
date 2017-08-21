@@ -8,7 +8,7 @@ using MobileRT::RegularGrid;
 using MobileRT::Primitive;
 
 RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
-                          const int gridSize, const int gridShift) :
+                          const int gridSize) :
   triangles_ {
     std::vector<std::vector<MobileRT::Primitive<Triangle> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
@@ -22,7 +22,7 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
     std::vector<std::vector<MobileRT::Primitive<Rectangle> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
-  gridShift_ {gridShift},
+  gridShift_ {bitCounter (static_cast<unsigned>(gridSize)) - 1},
   m_Extends (AABB {min, max}),//world boundaries
   // precalculate 1 / size of a cell (for x, y and z)
   m_SR {gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)},
@@ -49,6 +49,15 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
     std::vector<Primitive<Rectangle>*>& rectangles = this->rectangles_[i];
     LOG("i = ", i, " -> t = ",  triangles.size(), ", s = ", spheres.size(), ", p = ", planes.size(), " , r = ", rectangles.size(), " size = ", this->triangles_.size());
   }
+}
+
+int RegularGrid::bitCounter (unsigned int n) const noexcept {
+  int counter {0};
+  while (n) {
+    counter++;
+    n >>= 1;
+  }
+  return counter;
 }
 
 template<typename T>
@@ -79,23 +88,17 @@ void RegularGrid::addPrimitives
     int x2 {static_cast<int>((bv2.x_ - m_Extends.pointMin_.x_) * dx_reci) + 1};
     x1 = (x1 < 0) ? 0 : x1;
     x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
-    if (sizeX == 0) {
-      x2 = 0;
-    }
+    x2 = sizeX == 0 ? 0 : x2;
     int y1 {static_cast<int>((bv1.y_ - m_Extends.pointMin_.y_) * dy_reci)};
     int y2 {static_cast<int>((bv2.y_ - m_Extends.pointMin_.y_) * dy_reci) + 1};
     y1 = (y1 < 0) ? 0 : y1;
     y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
-    if (sizeY == 0) {
-      y2 = 0;
-    }
+    y2 = sizeY == 0 ? 0 : y2;
     int z1 {static_cast<int>((bv1.z_ - m_Extends.pointMin_.z_) * dz_reci)};
     int z2 {static_cast<int>((bv2.z_ - m_Extends.pointMin_.z_) * dz_reci) + 1};
     z1 = (z1 < 0) ? 0 : z1;
     z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
-    if (sizeZ == 0) {
-      z2 = 0;
-    }
+    z2 = sizeZ == 0 ? 0 : z2;
 
     const int idMin {x1 +
                y1 * gridSize_ +
@@ -125,6 +128,8 @@ void RegularGrid::addPrimitives
           if (intersectedBox) {
             grid_primitives[idx].emplace_back(&primitive);
             //LOG("add idx = ", idx, " index = ", index);
+          } else {
+            LOG("FALHOU");
           }
         }
       }
@@ -151,13 +156,13 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
   bool retval {false};
   // setup 3DDDA (double check reusability of primary ray data)
   const Vector3D cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
-  int X {static_cast<int>(::round(static_cast<double>(cell.x_)))};
-  int Y {static_cast<int>(::round(static_cast<double>(cell.y_)))};
-  int Z {static_cast<int>(::round(static_cast<double>(cell.z_)))};
+  int X {static_cast<int>(cell.x_)};
+  int Y {static_cast<int>(cell.y_)};
+  int Z {static_cast<int>(cell.z_)};
   const bool notInGrid {(X < 0) || (X >= gridSize_) ||
                         (Y < 0) || (Y >= gridSize_) ||
                         (Z < 0) || (Z >= gridSize_)};
-  if (notInGrid) {
+  if (notInGrid && gridSize_ > 1) {
     return false;
   }
 
@@ -222,7 +227,6 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
 
   // start stepping
   // trace primary ray
-  //size_t index {0};
   while (true) {
     const size_t index {
       static_cast<size_t>(X) +
@@ -275,22 +279,17 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
     }
 
   }
-
   testloop:
-  //index = 0;
   while (true) {
     const size_t index {static_cast<size_t>(X) +
                         (static_cast<size_t>(Y) << gridShift_) +
                         (static_cast<size_t>(Z) << (gridShift_ * 2))};
     std::vector<T *> list {primitives[index]};
-
     for (auto *const pr : list) {
       bool result {false};
       // if (pr->GetLastRayID() != a_Ray.GetID()) {
-      result = pr->intersect(intersection, ray);
-      if (result) {
-        retval = result;
-      }
+      result = pr->intersect (intersection, ray);
+      retval |= result;
       // }
     }
     if (tmax.x_ < tmax.y_) {
