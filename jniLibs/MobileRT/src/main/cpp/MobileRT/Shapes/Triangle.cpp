@@ -88,7 +88,7 @@ AABB Triangle::getAABB() const noexcept {
 }
 
 bool Triangle::intersect (const AABB box) const noexcept {
-  std::function<bool (const Point3D orig, const Vector3D vec)> intersectRayAABB {
+  std::function<bool (const Point3D, const Vector3D)> intersectRayAABB {
     [&](const Point3D orig, const Vector3D vec) -> bool {
       Vector3D T_1 {};
       Vector3D T_2 {}; // vectors to hold the T-values for every direction
@@ -155,15 +155,79 @@ bool Triangle::intersect (const AABB box) const noexcept {
         }
       }
       return true; // if we made it here, there was an intersection - YAY
-    }};
+		}};
 
-    const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
-    const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
-    const bool intersectedBC {intersectRayAABB(this->pointB_, this->BC_)};
+		std::function<bool (const Vector3D)> isOverTriangle {
+			[&](const Vector3D vec) -> bool {
+				const Vector3D perpendicularVector {vec, this->AC_};//cross product
+				const float normalizedProjection {this->AB_.dotProduct (perpendicularVector)};
+				return std::fabs (normalizedProjection) < Epsilon;
+			}
+		};
+
+
+
+		/*std::function<bool (const Triangle)> intersectRayAABB {
+			[&](const Triangle triangle) -> bool {
+				double triangleMin, triangleMax;
+				double boxMin, boxMax;
+		
+				// Test the box normals (x-, y- and z-axes)
+				Vector3D boxNormals[3] {
+					Vector3D (1,0,0),
+					Vector3D (0,1,0),
+					Vector3D (0,0,1)
+				};
+				for (int i = 0; i < 3; i++)
+				{
+						Vector3D n = boxNormals[i];
+						Project(triangle.Vertices, boxNormals[i], out triangleMin, out triangleMax);
+						if (triangleMax < box.Start.Coords[i] || triangleMin > box.End.Coords[i])
+								return false; // No intersection possible.
+				}
+		
+				// Test the triangle normal
+				double triangleOffset = triangle.Normal.Dot(triangle.A);
+				Project(box.Vertices, triangle.Normal, out boxMin, out boxMax);
+				if (boxMax < triangleOffset || boxMin > triangleOffset)
+						return false; // No intersection possible.
+		
+				// Test the nine edge cross-products
+				Vector3D[] triangleEdges = Vector3D[3] {
+						//triangle.A.Minus(triangle.B),
+						//triangle.B.Minus(triangle.C),
+						//triangle.C.Minus(triangle.A)
+						this->AB_,
+						this->AC_,
+						this->BC_
+				};
+				for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
+				{
+						// The box normals are the same as it's edge tangents
+						Vecto3D axis = triangleEdges[i].Cross(boxNormals[j]);
+						Project(box.Vertices, axis, out boxMin, out boxMax);
+						Project(triangle.Vertices, axis, out triangleMin, out triangleMax);
+						if (boxMax <= triangleMin || boxMin >= triangleMax)
+								return false; // No intersection possible
+				}
+		
+				// No separating axis found.
+				return true;
+		};*/
+
     const Point3D &min (box.pointMin_);
 		const Point3D &max (box.pointMax_);
 		static_cast<void> (min);
 		static_cast<void> (max);
+		Intersection intersection {};
+		const Vector3D vec {max, min};
+		const Ray ray {vec, min, 1};
+		const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
+    const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
+    const bool intersectedBC {intersectRayAABB(this->pointB_, this->BC_)};
+		const bool intersectedRay {intersect(&intersection, ray)};
+		const bool insideTriangle {isOverTriangle (vec)};
 
-    return intersectedAB || intersectedAC || intersectedBC;
+    return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
 }
