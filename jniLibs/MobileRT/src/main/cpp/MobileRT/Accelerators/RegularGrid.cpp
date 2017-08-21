@@ -121,7 +121,8 @@ void RegularGrid::addPrimitives
           const AABB cell {pos, pos + Vector3D {dx, dy, dz}};
           //LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
           // do an accurate aabb / primitive intersection test
-          if (primitive.intersect(cell)) {
+          const bool intersectedBox {primitive.intersect(cell)};
+          if (intersectedBox) {
             grid_primitives[idx].emplace_back(&primitive);
             //LOG("add idx = ", idx, " index = ", index);
           }
@@ -153,26 +154,11 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
   int X {static_cast<int>(::round(static_cast<double>(cell.x_)))};
   int Y {static_cast<int>(::round(static_cast<double>(cell.y_)))};
   int Z {static_cast<int>(::round(static_cast<double>(cell.z_)))};
-  /*const bool notInGrid {(X < 0) || (X >= gridSize_) ||
+  const bool notInGrid {(X < 0) || (X >= gridSize_) ||
                         (Y < 0) || (Y >= gridSize_) ||
                         (Z < 0) || (Z >= gridSize_)};
   if (notInGrid) {
     return false;
-  }*/
-  if (X < 0) {
-    X = 0;
-  } else if (X >= gridSize_) {
-    X = gridSize_ - 1;
-  }
-  if (Y < 0) {
-    Y = 0;
-  } else if (Y >= gridSize_) {
-    Y = gridSize_ - 1;
-  }
-  if (Z < 0) {
-    Z = 0;
-  } else if (Z >= gridSize_) {
-    Z = gridSize_ - 1;
   }
 
   int stepX, outX;

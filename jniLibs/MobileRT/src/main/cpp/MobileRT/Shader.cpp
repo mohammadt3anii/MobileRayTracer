@@ -18,7 +18,7 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   this->scene_.triangles_.shrink_to_fit ();
   this->scene_.spheres_.shrink_to_fit ();
   this->scene_.planes_.shrink_to_fit ();
-  this->scene_.lights_.shrink_to_fit();
+  this->scene_.lights_.shrink_to_fit ();
 
   Point3D min {RayLengthMax, RayLengthMax, RayLengthMax};
   Point3D max {-RayLengthMax, -RayLengthMax, -RayLengthMax};
@@ -27,7 +27,7 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   getSceneBounds<MobileRT::Primitive<Plane>> (this->scene_.planes_, &min, &max);
   getSceneBounds<MobileRT::Primitive<Rectangle>> (this->scene_.rectangles_, &min, &max);
 
-  regularGrid_ = RegularGrid {min, max, &scene_, 8, 3};
+  regularGrid_ = RegularGrid {min - 10, max + 10, &scene_, 2, 1};
 }
 
 template<typename T>

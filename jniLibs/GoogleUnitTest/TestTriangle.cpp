@@ -45,7 +45,7 @@ TEST_F(TestTriangle, ConstructorVALUES) {
 	ASSERT_EQ(-1, triangle->BC_.y_);
 	ASSERT_EQ(1, triangle->BC_.z_);
 
-	ASSERT_EQ(1, triangle->normal_.x_);
+	ASSERT_FLOAT_EQ(1, triangle->normal_.x_);
 	ASSERT_EQ(0, triangle->normal_.y_);
 	ASSERT_EQ(0, triangle->normal_.z_);
 }
@@ -116,6 +116,42 @@ TEST_F(TestTriangle, intersectBoxInside07) {
 	AABB box {min, max};
 	bool intersected = triangle->intersect(box);
 	ASSERT_EQ(false, intersected);
+}
+
+TEST_F(TestTriangle, intersectBoxInside08) {
+	Triangle triangle2 {
+		MobileRT::Point3D {10.0f, 0.0f, 10.0f},
+		MobileRT::Point3D {0.0f, 0.0f, 10.0f},
+		MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
+	Point3D min {1.25, 1.25, 10};
+	Point3D max {2.5, 2.5, 10};
+	AABB box {min, max};
+	bool intersected = triangle2.intersect(box);
+	ASSERT_EQ(true, intersected);
+}
+
+TEST_F(TestTriangle, intersectBoxInside09) {
+	Triangle triangle2 {
+		MobileRT::Point3D {10.0f, 0.0f, 10.0f},
+		MobileRT::Point3D {0.0f, 0.0f, 10.0f},
+		MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
+	Point3D min {-1, -1, 10};
+	Point3D max {11, 11, 10};
+	AABB box {min, max};
+	bool intersected = triangle2.intersect(box);
+	ASSERT_EQ(true, intersected);
+}
+
+TEST_F(TestTriangle, intersectBoxInside10) {
+	Triangle triangle2 {
+		MobileRT::Point3D {1, 1.59000003, -1.03999996},
+		MobileRT::Point3D {-1.01999998, 1.59000003, -1.03999996},
+		MobileRT::Point3D {-0.990000009, 0, -1.03999996}};
+	Point3D min {-11.0200005, 0.794949531, -11.04};
+	Point3D max {-0.0100002289, 11.5899992, -0.0250005722};
+	AABB box {min, max};
+	bool intersected = triangle2.intersect(box);
+	ASSERT_EQ(true, intersected);
 }
 
 /*TEST_F(TestPoint3D, ConstructorCOPY) {

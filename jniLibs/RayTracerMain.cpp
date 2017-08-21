@@ -217,7 +217,7 @@ int main(int argc, char **argv) noexcept {
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
     LOG("PLANES = ", planes);
-    LOG("LIGHTS = ", lights);
+    LOG("LIGHTS = ", numberOfLights_);
     return nPrimitives;
   }();
 	

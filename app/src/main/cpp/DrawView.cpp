@@ -103,7 +103,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
     switch (scene) {
       case 0:
         camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D{0.0f, 0.0f, - 3.4f},
+          MobileRT::Point3D{0.0f, 0.0f, -3.4f},
           MobileRT::Point3D{0.0f, 0.0f, 1.0f},
           MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
           45.0f * hfovFactor, 45.0f * vfovFactor);
@@ -151,10 +151,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
       default: {
-        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::HaltonSeq> ();});
-        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::MersenneTwister> ();});
         objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
-        //objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticMersenneTwister> ();});
         const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
@@ -176,8 +173,6 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         break;
     }
     if (samplesPixel > 1) {
-      //samplerPixel = std::make_unique<Components::HaltonSeq> ();
-      //samplerPixel = std::make_unique<Components::Stratified> ();
       samplerPixel = std::make_unique<Components::StaticHaltonSeq> ();
     } else {
       samplerPixel = std::make_unique<Components::Constant> (0.5f);
@@ -191,23 +186,12 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
       }
 
       case 2: {
-        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::HaltonSeq>()};
-        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::MersenneTwister>()};
         std::unique_ptr<MobileRT::Sampler> samplerRay {
           std::make_unique<Components::StaticHaltonSeq> ()};
-        //std::unique_ptr<MobileRT::Sampler> samplerRay {std::make_unique<Components::StaticMersenneTwister>()};
-
-        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::HaltonSeq>()};
-        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::MersenneTwister>()};
         std::unique_ptr<MobileRT::Sampler> samplerLight {
           std::make_unique<Components::StaticHaltonSeq> ()};
-        //std::unique_ptr<MobileRT::Sampler> samplerLight {std::make_unique<Components::StaticMersenneTwister>()};
-
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::HaltonSeq>()};
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::MersenneTwister> ()};
         std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {
           std::make_unique<Components::StaticHaltonSeq> ()};
-        //std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {std::make_unique<Components::StaticMersenneTwister> ()};
 
         shader_ = std::make_unique<Components::PathTracer> (
           std::move (scene_), std::move (samplerRay), std::move (samplerLight),

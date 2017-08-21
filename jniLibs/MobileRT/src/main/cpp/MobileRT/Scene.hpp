@@ -28,7 +28,6 @@ namespace MobileRT {
 			std::vector<Light *> lights_ {std::vector<Light *>{}};
 
     private:
-      private:
       template<typename T>
       int trace (const std::vector<T> &primitives, Intersection *intersection, Ray ray,
                  int res) const noexcept;

@@ -110,7 +110,7 @@ void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
           const float r2 {this->samplerPixel_->getSample ()};
           const float deviationU {(r1 - 0.5f) * 2.0f * pixelWidth};
           const float deviationV {(r2 - 0.5f) * 2.0f * pixelHeight};
-          Ray ray {this -> camera_ -> generateRay (u, v, deviationU, deviationV)};
+          Ray ray {this->camera_->generateRay (u, v, deviationU, deviationV)};
 					pixelRGB.reset(); //pixel color without intersection
           intersection.length_ = RayLengthMax;
 					intersection.material_ = nullptr;

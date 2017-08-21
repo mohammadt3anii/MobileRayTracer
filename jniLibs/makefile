@@ -15,15 +15,17 @@ LDFLAGS += -L../third-party/tinyobjloader
 
 CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE -fpie $(INCLUDES)
 CXXFLAGS += -Wno-zero-as-null-pointer-constant -Wno-old-style-cast
-CXXFLAGS += -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -static -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
+CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS := $(shell pkg-config --libs gtk+-2.0) -Wno-padded -Wno-float-equal -flto=full -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
+LDFLAGS := -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv -flto=full
+LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
 
 ifeq ($(S),)
 	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer
 	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
+	CXXFLAGS += -flto=full
+	LDFLAGS += -flto=full
 endif
 
 ifeq ($(S),1)
@@ -63,6 +65,8 @@ ifeq ($(CXX),g++)
 	CXXFLAGS += -finline-limit=150
 	LDFLAGS += -finline-limit=150
 endif
+
+LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
 
 ###############################################################################
 
@@ -144,12 +148,11 @@ GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
 	g++ $(CXXFLAGS) -DNO_ANDROID -std=c++14 -c $< -o $@
 
 gcc:
-	 $(eval CXX := g++)
-	 $(eval CXXFLAGS := $(filter-out -Weverything,$(CXXFLAGS)))
-	 $(eval CXXFLAGS := $(filter-out -ferror-limit=1,$(CXXFLAGS)))
+	 $(eval CXXFLAGS := $(filter-out -flto=full,$(CXXFLAGS)))
+	 $(eval CXXFLAGS := $(filter-out -flto=full,$(LDFLAGS)))
 
 gtest: $(OBJS) $(GTESTOBJS)
-	g++ $(CXXFLAGS) $(GTESTOBJS) $(OBJS) third-party/tiny_obj_loader.o -o $@ -lgtest -lgtest_main -pthread
+	g++ $(CXXFLAGS) $(GTESTOBJS) $(OBJS) third-party/tiny_obj_loader.o -o $@ $(LDFLAGS) -lgtest -lgtest_main -pthread
 	@echo "Compilation Test Units done"
 
 #valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
