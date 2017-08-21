@@ -95,6 +95,14 @@ float Vector3D::normalize() noexcept {
   return len;
 }
 
+Vector3D Vector3D::returnNormalized() const noexcept {
+  const float len {magnitude ()};
+  float x {this->x_ / len};
+  float y {this->y_ / len};
+  float z {this->z_ / len};
+  return Vector3D {x, y, z};
+}
+
 bool Vector3D::isNull () noexcept {
   return this->x_ == 0 && this->y_ == 0 && this->z_ == 0;
 }

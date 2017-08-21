@@ -10,7 +10,7 @@ using MobileRT::Point3D;
 using MobileRT::Vector3D;
 
 Plane::Plane (const Point3D point, const Vector3D normal) noexcept :
-  normal_ {normal},
+  normal_ {normal.returnNormalized()},
   point_ {point}
 {
 }
@@ -47,26 +47,35 @@ float Plane::getZ() const noexcept {
 }
 
 Vector3D Plane::getRightVector () const noexcept {
-  float x {this->normal_.x_ >= 0 ? 1.0f : this->normal_.x_ < 0 ? -1.0f : 0.0f};
-  float y {this->normal_.y_ >= 0 ? 1.0f : this->normal_.y_ < 0 ? -1.0f : 0.0f};
-  float z {this->normal_.z_ >= 0 ? 1.0f : this->normal_.z_ < 0 ? -1.0f : 0.0f};
-  if (x == 0.0f && y == 0.0f && z == 0.0f) {
-    y = 1.0f;
+  const Vector3D up {0, 1, 0};
+  Vector3D right;
+  if (this->normal_.x_ == 1) {
+    right = Vector3D {0, 1, 1};
+  } else if (this->normal_.y_ == 1) {
+    right = Vector3D {1, 0, 1};
+  } else if (this->normal_.z_ == 1) {
+    right = Vector3D {1, 1, 0};
+  } else if (this->normal_.x_ == -1) {
+    right = Vector3D {0, -1, -1};
+  } else if (this->normal_.y_ == -1) {
+    right = Vector3D {-1, 0, -1};
+  } else if (this->normal_.z_ == -1) {
+    right = Vector3D {-1, -1, 0};
   }
-  Vector3D up {x, y, z};
-  up.normalize ();
-  Vector3D right {1.0f - this->normal_.x_, 1.0f - this->normal_.y_, 1.0f - this->normal_.z_};
-  //Vector3D right {this->normal_.crossProduct(up)};
   right.normalize ();
+  float cosAngle {this->normal_.dotProduct(right) / (this->normal_.magnitude_ * right.magnitude_)};
+  if (cosAngle != 0) {
+    LOG("MAL");
+  }
   return right;
 }
 
 Point3D Plane::getPositionMin () const noexcept {
-  return this->point_ + getRightVector () * -RayLengthMax;
+  return this->point_ + getRightVector () * -100.0f;
 }
 
 Point3D Plane::getPositionMax() const noexcept {
-  return this->point_ + getRightVector () * RayLengthMax;
+  return this->point_ + getRightVector () * 100.0f;
 }
 
 AABB Plane::getAABB() const noexcept {

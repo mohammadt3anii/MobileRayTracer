@@ -20,19 +20,13 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   this->scene_.planes_.shrink_to_fit ();
   this->scene_.lights_.shrink_to_fit();
 
-  Point3D min {1000.0f, 1000.0f, 1000.0f};
-  Point3D max {-1000.0f, -1000.0f, -1000.0f};
+  Point3D min {RayLengthMax, RayLengthMax, RayLengthMax};
+  Point3D max {-RayLengthMax, -RayLengthMax, -RayLengthMax};
   getSceneBounds<MobileRT::Primitive<Triangle>> (this->scene_.triangles_, &min, &max);
   getSceneBounds<MobileRT::Primitive<Sphere>> (this->scene_.spheres_, &min, &max);
   getSceneBounds<MobileRT::Primitive<Plane>> (this->scene_.planes_, &min, &max);
+  getSceneBounds<MobileRT::Primitive<Rectangle>> (this->scene_.rectangles_, &min, &max);
 
-  const float offset {1.0f};
-  min.x_ -= offset;
-  min.y_ -= offset;
-  min.z_ -= offset;
-  max.x_ += offset;
-  max.y_ += offset;
-  max.z_ += offset;
   regularGrid_ = RegularGrid {min, max, &scene_, 8, 3};
 }
 
@@ -73,11 +67,12 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
   bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID:
-      intersected = this->regularGrid_.intersect (intersection, ray);
+      intersected = this->regularGrid_.trace (intersection, ray);
       break;
 
     case Accelerator::NONE:
       intersected = (this->scene_.trace (intersection, ray) >= 0);
+      break;
   }
   return intersected ? shade (rgb, *intersection, std::move (ray)) : false;
 }

@@ -23,6 +23,8 @@ namespace MobileRT {
         std::vector<std::vector<Primitive<Sphere> *>> {}};
       std::vector<std::vector<Primitive<Plane> *>> planes_ {
         std::vector<std::vector<Primitive<Plane> *>> {}};
+			std::vector<std::vector<Primitive<Rectangle> *>> rectangles_ {
+				std::vector<std::vector<Primitive<Rectangle> *>> {}};
       int gridSize_ {0};
       int gridShift_ {0};
       AABB m_Extends {};
@@ -53,7 +55,7 @@ namespace MobileRT {
 
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 
-			bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
+			bool trace(Intersection *intersection, const Ray &ray) const noexcept;
     };
 }//namespace MobileRT
 

@@ -14,6 +14,7 @@
 #include "Shapes/Plane.hpp"
 #include "Shapes/Sphere.hpp"
 #include "Shapes/Triangle.hpp"
+#include "Shapes/Rectangle.hpp"
 #include "Utils.hpp"
 #include <vector>
 
@@ -23,6 +24,7 @@ namespace MobileRT {
       std::vector<Primitive<Triangle>> triangles_ {std::vector<Primitive<Triangle>>{}};
       std::vector<Primitive<Sphere>> spheres_ {std::vector<Primitive<Sphere>>{}};
       std::vector<Primitive<Plane>> planes_ {std::vector<Primitive<Plane>>{}};
+      std::vector<Primitive<Rectangle>> rectangles_ {std::vector<Primitive<Rectangle>>{}};
 			std::vector<Light *> lights_ {std::vector<Light *>{}};
 
     private:

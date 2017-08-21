@@ -53,8 +53,11 @@ int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
   const int resSpheres {
     trace<MobileRT::Primitive<MobileRT::Sphere>> (this->spheres_, intersection, ray,
                                                   resTriangles)};
-  const int res {
+  const int resPlanes {
     trace<MobileRT::Primitive<MobileRT::Plane>> (this->planes_, intersection, ray, resSpheres)};
+
+  const int res {
+    trace<MobileRT::Primitive<MobileRT::Rectangle>> (this->rectangles_, intersection, ray, resPlanes)};
 
   traceLights (intersection, std::move (ray));
 

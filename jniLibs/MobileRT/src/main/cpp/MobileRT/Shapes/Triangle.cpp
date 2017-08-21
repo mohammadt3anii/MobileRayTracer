@@ -4,7 +4,6 @@
 //
 
 #include "Triangle.hpp"
-#include <cfloat>
 
 using MobileRT::AABB;
 using MobileRT::Triangle;
@@ -89,12 +88,12 @@ AABB Triangle::getAABB() const noexcept {
 }
 
 bool Triangle::intersect (const AABB box) const noexcept {
-  std::function<bool (Point3D orig, Vector3D vec)> intersectRayAABB {
-    [&](Point3D orig, Vector3D vec)->bool {
+  std::function<bool (const Point3D orig, const Vector3D vec)> intersectRayAABB {
+    [&](const Point3D orig, const Vector3D vec) -> bool {
       Vector3D T_1 {};
       Vector3D T_2 {}; // vectors to hold the T-values for every direction
-      float t_near {-FLT_MAX}; // maximums defined in float.h
-      float t_far {FLT_MAX};
+      float t_near {-RayLengthMax}; // maximums defined in float.h
+      float t_far {RayLengthMax};
       if (vec.x_ == 0) { // ray parallel to planes in this direction
         if ((orig.x_ < box.pointMin_.x_) || (vec.x_ > box.pointMax_.x_)) {
           return false; // parallel AND outside box : no intersection possible
@@ -158,7 +157,13 @@ bool Triangle::intersect (const AABB box) const noexcept {
       return true; // if we made it here, there was an intersection - YAY
     }};
 
-    return intersectRayAABB(this->pointA_, this->AB_) ||
-           intersectRayAABB(this->pointA_, this->AC_) ||
-           intersectRayAABB(this->pointB_, this->BC_);
+    const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
+    const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
+    const bool intersectedBC {intersectRayAABB(this->pointB_, this->BC_)};
+    const Point3D &min (box.pointMin_);
+		const Point3D &max (box.pointMax_);
+		static_cast<void> (min);
+		static_cast<void> (max);
+
+    return intersectedAB || intersectedAC || intersectedBC;
 }

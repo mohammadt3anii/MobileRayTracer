@@ -14,13 +14,15 @@
 namespace MobileRT {
     class Rectangle final {
     private:
-      Vector3D AC_ {};
-      Vector3D AB_ {};
-      Vector3D normal_ {};
       Point3D pointA_ {};
       Point3D pointB_ {};
       Point3D pointC_ {};
       Point3D pointD_ {};
+			Vector3D AC_ {};
+			Vector3D AB_ {};
+			Vector3D BD_ {};
+			Vector3D CD_ {};
+			Vector3D normal_ {};
 
 		private:
         Point3D getPositionMin() const noexcept;
@@ -28,7 +30,7 @@ namespace MobileRT {
         Point3D getPositionMax() const noexcept;
 
     public:
-			explicit Rectangle (Point3D pointA, Point3D pointB, Point3D pointC) noexcept;
+			explicit Rectangle (Point3D pointA, Point3D pointB, Point3D pointC, Point3D pointD) noexcept;
 
 			Rectangle(const Rectangle &rectangle) noexcept = default;
 

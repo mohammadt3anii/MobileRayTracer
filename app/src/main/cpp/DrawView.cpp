@@ -112,11 +112,16 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         break;
 
       case 1:
-        camera = std::make_unique<Components::Orthographic> (
+        camera = std::make_unique<Components::Perspective> (
+          MobileRT::Point3D{4.0f, 4.0f, -8.0f},
+          MobileRT::Point3D{4.0f, 4.0f, 4.0f},
+          MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+          45.0f * hfovFactor, 45.0f * vfovFactor);
+        /*camera = std::make_unique<Components::Orthographic> (
           MobileRT::Point3D{0.0f, 1.0f, - 10.0f},
           MobileRT::Point3D{0.0f, 1.0f, 7.0f},
           MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
-          10.0f * hfovFactor, 10.0f * vfovFactor);
+          10.0f * hfovFactor, 10.0f * vfovFactor);*/
         /*camera = std::make_unique<Components::Perspective>(
           MobileRT::Point3D(0.0f, 0.5f, 1.0f),
           MobileRT::Point3D(0.0f, 0.0f, 7.0f),
@@ -157,6 +162,8 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
                                            MobileRT::RGB {0.9f, 0.9f, 0.9f}};
         scene_.lights_.emplace_back (new Components::PointLight {
           lightMat, MobileRT::Point3D {0.0f, 1000.0f, 0.0f}});
+        scene_.lights_.emplace_back (new Components::PointLight {
+          lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}});
         //cornell spheres
         camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 0.7f, 3.0f},
                                                             MobileRT::Point3D {0.0f, 0.7f, -1.0f},
@@ -237,12 +244,14 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
     const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
     const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
     const int64_t planes {static_cast<int64_t> (renderer_->shader_->scene_.planes_.size ())};
+    const int64_t rectangles {static_cast<int64_t> (renderer_->shader_->scene_.rectangles_.size ())};
     numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ());
-    const int64_t nPrimitives = triangles + spheres + planes;
+    const int64_t nPrimitives = triangles + spheres + planes + rectangles;
     LOG("TRIANGLES = ", triangles);
     LOG("SPHERES = ", spheres);
     LOG("PLANES = ", planes);
-    LOG("LIGHTS = ", lights);
+    LOG("RECTANGLES = ", rectangles);
+    LOG("LIGHTS = ", numberOfLights_);
     return nPrimitives;
   }();
 
