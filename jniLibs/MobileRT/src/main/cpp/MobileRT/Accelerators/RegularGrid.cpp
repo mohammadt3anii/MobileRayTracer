@@ -153,9 +153,7 @@ bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) cons
     intersect<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray, true)};
   const bool intersectedRectangles {
     intersect<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray, true)};
-  const bool intersectedLights {this->scene_->traceLights (intersection, ray)};
-  return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles ||
-         intersectedLights;
+  return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
 }
 
 template<typename T>
