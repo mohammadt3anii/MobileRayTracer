@@ -16,12 +16,12 @@
 namespace MobileRT {
   class Renderer final {
 		public:
-    Camera *const camera_ {};
-    Shader *const shader_ {};
+    std::unique_ptr<Camera> camera_ {};
+    std::unique_ptr<Shader> shader_ {};
 
     private:
-    Sampler *const samplerPixel_ {};
-      std::vector<RGB> accumulate_ {};
+    std::unique_ptr<Sampler> samplerPixel_ {};
+    std::vector<RGB> accumulate_ {};
     unsigned blockSizeX_ {};
     unsigned blockSizeY_ {};
     unsigned sample_ {};

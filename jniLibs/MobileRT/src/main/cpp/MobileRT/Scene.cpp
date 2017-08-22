@@ -14,6 +14,7 @@ Scene::~Scene() noexcept {
   this->triangles_.clear ();
   this->spheres_.clear ();
   this->planes_.clear ();
+  this->rectangles_.clear ();
   for (Light *const light : this->lights_) {
     delete light;
   }

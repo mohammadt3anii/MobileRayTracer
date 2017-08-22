@@ -14,8 +14,8 @@ namespace MobileRT {
   template<class T>
   class Primitive final {
     public:
-    T shape_;
-    Material material_;
+    T shape_ {};
+    const Material material_ {};
     int32_t lastRayID_ {};
 
     public:

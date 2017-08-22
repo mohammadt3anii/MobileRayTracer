@@ -42,13 +42,13 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
   LOG("RECTANGLES = ", this->rectangles_.size());
 
 
-  for(size_t i {0}; i < this->triangles_.size(); i++) {
+  /*for(size_t i {0}; i < this->triangles_.size(); i++) {
     std::vector<Primitive<Triangle>*>& triangles = this->triangles_[i];
     std::vector<Primitive<Sphere>*>& spheres = this->spheres_[i];
     std::vector<Primitive<Plane>*>& planes = this->planes_[i];
     std::vector<Primitive<Rectangle>*>& rectangles = this->rectangles_[i];
     LOG("i = ", i, " -> t = ",  triangles.size(), ", s = ", spheres.size(), ", p = ", planes.size(), " , r = ", rectangles.size(), " size = ", this->triangles_.size());
-  }
+  }*/
 }
 
 int RegularGrid::bitCounter (unsigned int n) const noexcept {
@@ -122,8 +122,6 @@ void RegularGrid::addPrimitives
           if (intersectedBox) {
             grid_primitives[idx].emplace_back(&primitive);
             //LOG("add idx = ", idx, " index = ", index);
-          } else {
-            LOG("FALHOU");
           }
         }
       }

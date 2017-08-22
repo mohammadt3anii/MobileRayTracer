@@ -14,8 +14,7 @@
 #ifndef NO_ANDROID
   #include <android/log.h>
 #endif
-
-//#define LOG(...) {log(getFileName(__FILE__), ":", __LINE__, ": ", __VA_ARGS__);}
+#define LOG(...) {log(getFileName(__FILE__), ":", __LINE__, ": ", __VA_ARGS__);}
 
 #ifndef LOG
   #define LOG(...)
