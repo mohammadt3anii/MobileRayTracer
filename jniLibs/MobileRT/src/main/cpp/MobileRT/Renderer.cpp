@@ -24,7 +24,7 @@ Renderer::Renderer (std::unique_ptr<Shader> &&shader,
   resolution_ {width * height},
   samplesPixel_ {samplesPixel}
 {
-  this->shader_->initializeGrid (camera_->getAABB ());
+  this->shader_->initializeAccelerators (camera_->getAABB ());
 }
 
 void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexcept {

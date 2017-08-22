@@ -21,7 +21,7 @@ Shader::Shader (Scene &&scene, const unsigned samplesLight, const Accelerator ac
   this->scene_.lights_.shrink_to_fit ();
 }
 
-void Shader::initializeGrid (AABB camera) noexcept {
+void Shader::initializeAccelerators (AABB camera) noexcept {
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID: {
       Point3D min {RayLengthMax, RayLengthMax, RayLengthMax};

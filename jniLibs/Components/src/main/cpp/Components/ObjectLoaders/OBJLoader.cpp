@@ -144,5 +144,20 @@ bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<Mob
 }
 
 OBJLoader::~OBJLoader() noexcept {
+  this->objText_.clear ();
+  this->materialsText_.clear ();
+  this->attrib_.normals.clear ();
+  this->attrib_.texcoords.clear ();
+  this->attrib_.vertices.clear ();
+  this->shapes_.clear ();
+  this->materials_.clear ();
+  this->objText_.shrink_to_fit ();
+  this->materialsText_.shrink_to_fit ();
+  this->attrib_.normals.shrink_to_fit ();
+  this->attrib_.texcoords.shrink_to_fit ();
+  this->attrib_.vertices.shrink_to_fit ();
+  this->shapes_.shrink_to_fit ();
+  this->materials_.shrink_to_fit ();
+
 	LOG("OBJLOADER DELETED");
 }

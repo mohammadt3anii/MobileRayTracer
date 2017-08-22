@@ -42,7 +42,7 @@ namespace MobileRT {
     void AABBbounds (AABB box, Point3D *min, Point3D *max);
 
     public:
-    void initializeGrid (AABB camera) noexcept;
+    void initializeAccelerators (AABB camera) noexcept;
 
 		public:
     explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;
