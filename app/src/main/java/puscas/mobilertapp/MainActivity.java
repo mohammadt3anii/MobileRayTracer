@@ -150,9 +150,10 @@ public final class MainActivity extends Activity {
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
             //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
-            final String obj = "WavefrontOBJs/teapot/teapot";
+            //final String obj = "WavefrontOBJs/teapot/teapot";
             //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
             //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
+            final String obj = "WavefrontOBJs/conference/conference";
             objText_ = readTextAsset(obj + ".obj");
             matText_ = readTextAsset(obj + ".mtl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
