@@ -77,9 +77,9 @@ bool Scene::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
   const bool intersectedSpheres {
     shadowTrace<MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
   const bool intersectedPlanes {
-    shadowTrace<MobileRT::Primitive<Plane>> (this->planes_, intersection, std::move (ray))};
+    shadowTrace<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
   const bool intersectedRectangles {
-    shadowTrace<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, std::move (ray))};
+    shadowTrace<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray)};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
 }
 
