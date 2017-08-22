@@ -26,8 +26,8 @@ namespace Components {
 
     private:
 			bool shade(RGB *rgb,
-								 Intersection intersection,
-								 Ray &&ray) const noexcept final;
+                 Intersection intersection,
+                 Ray &&ray) noexcept final;
 
 			Vector3D getCosineSampleHemisphere (Vector3D normal) const noexcept;
 

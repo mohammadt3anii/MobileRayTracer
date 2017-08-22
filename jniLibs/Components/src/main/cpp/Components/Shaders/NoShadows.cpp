@@ -18,7 +18,7 @@ NoShadows::NoShadows (Scene &&scene, const unsigned samplesLight,
   Shader {std::move (scene), samplesLight, accelerator} {
 }
 
-bool NoShadows::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) const noexcept {
+bool NoShadows::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
   const RGB &Le {intersection.material_->Le_};
   const RGB &kD {intersection.material_->Kd_};
   if (Le.hasColor ()) {//stop if it intersects a light source

@@ -29,23 +29,24 @@ namespace MobileRT {
 
     private:
       template<typename T>
-      int trace (const std::vector<T> &primitives, Intersection *intersection, Ray ray,
-                 int res) const noexcept;
+      int trace (std::vector<T> &primitives, Intersection *intersection, Ray ray,
+                 int res) noexcept;
 
       template<typename T>
-      bool shadowTrace(const std::vector<T> &primitives, Intersection *intersection,
-                       Ray ray) const noexcept;
+      bool shadowTrace (std::vector<T> &primitives, Intersection *intersection,
+                        Ray ray) const noexcept;
 
     public:
 			explicit Scene () = default;
+
       Scene (const Scene &scene) noexcept = delete;
       Scene (Scene &&scene) noexcept = default;
       ~Scene () noexcept;
       Scene &operator= (const Scene &scene) noexcept = delete;
       Scene &operator= (Scene &&scene) noexcept = default;
+      int trace (Intersection *intersection, Ray ray) noexcept;
+      bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
 
-      int trace(Intersection *intersection, Ray ray) const noexcept;
-      bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
       static unsigned getInstances () noexcept;
       int traceLights (Intersection *intersection, Ray ray) const noexcept;
       void resetSampling () noexcept;

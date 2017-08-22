@@ -16,6 +16,7 @@ namespace MobileRT {
     public:
     T shape_;
     Material material_;
+    uint32_t lastRayID_ {};
 
     public:
     Primitive (T shape, Material material) noexcept :
@@ -34,7 +35,8 @@ namespace MobileRT {
       return this->shape_.getAABB ();
     }
 
-    bool intersect (Intersection *const intersection, Ray ray) const noexcept {
+    bool intersect (Intersection *const intersection, Ray ray) noexcept {
+      lastRayID_ = ray.id_;
       if (this->shape_.intersect (intersection, ray)) {
         intersection->material_ = &this->material_;
         return true;

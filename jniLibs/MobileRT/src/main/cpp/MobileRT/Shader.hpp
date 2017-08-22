@@ -22,6 +22,7 @@ namespace MobileRT {
       NONE = 0,
       REGULAR_GRID
     };
+
     private:
     const Accelerator accelerator_ {};
 
@@ -30,11 +31,12 @@ namespace MobileRT {
 
     protected:
 			virtual bool shade (RGB *rgb, Intersection intersection,
-                          Ray &&ray) const noexcept = 0;
+                          Ray &&ray) noexcept = 0;
     private:
       template<typename T>
       void getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max);
-    void AABBbounds (const AABB box, Point3D *const min, Point3D *const max);
+    void AABBbounds (AABB box, Point3D *min, Point3D *max);
+
     public:
     void initializeGrid (AABB camera) noexcept;
 
@@ -50,10 +52,8 @@ namespace MobileRT {
 			Shader &operator=(const Shader &shader) noexcept = delete;
 
 			Shader &operator=(Shader &&shader) noexcept = delete;
-
-			bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) const noexcept;
-
-      int traceTouch(Intersection *intersection, Ray &&ray) const noexcept;
+    bool rayTrace (RGB *rgb, Intersection *intersection, Ray &&ray) noexcept;
+    int traceTouch (Intersection *intersection, Ray &&ray) noexcept;
 
 			virtual void resetSampling() noexcept = 0;
   };

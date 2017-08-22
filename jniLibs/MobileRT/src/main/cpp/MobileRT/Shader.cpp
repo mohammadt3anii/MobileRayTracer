@@ -68,7 +68,7 @@ Shader::getSceneBounds (const std::vector<T> primitives, Point3D *const min, Poi
   }
 }
 
-int Shader::traceTouch (Intersection *const intersection, Ray &&ray) const noexcept {
+int Shader::traceTouch (Intersection *const intersection, Ray &&ray) noexcept {
   return this->scene_.trace(intersection, std::move(ray));
 }
 
@@ -76,7 +76,7 @@ Shader::~Shader () noexcept {
 	LOG("SHADER DELETED");
 }
 
-bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) const noexcept {
+bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) noexcept {
   bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID:

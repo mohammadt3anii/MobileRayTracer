@@ -15,6 +15,7 @@ namespace MobileRT {
       const Point3D origin_ {};
       const Vector3D direction_ {};
       const unsigned depth_ {};
+      const unsigned id_ {};
 
     public:
       explicit Ray(Vector3D dir, Point3D origin,

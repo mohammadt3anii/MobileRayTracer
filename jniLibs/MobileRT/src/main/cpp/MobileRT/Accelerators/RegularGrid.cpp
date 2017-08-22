@@ -227,16 +227,13 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
       (static_cast<size_t>(Y) << gridShift_) +
       (static_cast<size_t>(Z) << (gridShift_ * 2))};
     std::vector<T *> list {primitives[index]};
-
-    for (const auto *const pr : list) {
-      bool result {false};
-      // if (pr->GetLastRayID() != a_Ray.GetID()) {
-      result = pr->intersect(intersection, ray);
-      if (result) {
-        retval = result;
-        goto testloop;
+    for (auto *const pr : list) {
+      if (pr->lastRayID_ != ray.id_) {
+        if (pr->intersect (intersection, ray)) {
+          retval = true;
+          goto testloop;
+        }
       }
-      // }
     }
 
     if (tmax.x_ < tmax.y_) {
@@ -277,11 +274,9 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
                         (static_cast<size_t>(Z) << (gridShift_ * 2))};
     std::vector<T *> list {primitives[index]};
     for (auto *const pr : list) {
-      bool result {false};
-      // if (pr->GetLastRayID() != a_Ray.GetID()) {
-      result = pr->intersect (intersection, ray);
-      retval |= result;
-      // }
+      if (pr->lastRayID_ != ray.id_) {
+        retval |= pr->intersect (intersection, ray);
+      }
     }
     if (tmax.x_ < tmax.y_) {
       if (tmax.x_ < tmax.z_) {

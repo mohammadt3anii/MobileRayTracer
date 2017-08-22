@@ -35,11 +35,11 @@ int Scene::traceLights (Intersection *const intersection, const Ray ray) const n
 }
 
 template<typename T>
-int Scene::trace (const std::vector<T> &primitives, Intersection *const intersection,
-                  const Ray ray, int res) const noexcept {
+int Scene::trace (std::vector<T> &primitives, Intersection *const intersection,
+                  const Ray ray, int res) noexcept {
   const unsigned primitivesSize {static_cast<unsigned> (primitives.size ())};
   for (unsigned i {0}; i < primitivesSize; i++) {
-    const T &primitive {primitives[static_cast<uint32_t> (i)]};
+    T &primitive {primitives[static_cast<uint32_t> (i)]};
     if (primitive.intersect(intersection, ray)) {
       res = static_cast<int>(i);
     }
@@ -47,7 +47,7 @@ int Scene::trace (const std::vector<T> &primitives, Intersection *const intersec
   return res;
 }
 
-int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
+int Scene::trace (Intersection *const intersection, Ray ray) noexcept {
   const int resTriangles {
     trace<MobileRT::Primitive<MobileRT::Triangle>> (this->triangles_, intersection, ray, -1)};
   const int resSpheres {
@@ -65,9 +65,9 @@ int Scene::trace(Intersection *const intersection, Ray ray) const noexcept {
 }
 
 template<typename T>
-bool Scene::shadowTrace(const std::vector<T> &primitives, Intersection *const intersection,
-                        const Ray ray) const noexcept {
-  for (const T &primitive : primitives) {
+bool Scene::shadowTrace (std::vector<T> &primitives, Intersection *const intersection,
+                         const Ray ray) const noexcept {
+  for (T &primitive : primitives) {
     if (primitive.intersect(intersection, ray)) {
       return true;
     }
@@ -75,7 +75,7 @@ bool Scene::shadowTrace(const std::vector<T> &primitives, Intersection *const in
   return false;
 }
 
-bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) const noexcept {
+bool Scene::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
   const bool intersectedTriangle {
     shadowTrace<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSphere {

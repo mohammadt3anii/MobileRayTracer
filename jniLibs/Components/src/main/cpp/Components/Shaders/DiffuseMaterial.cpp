@@ -15,7 +15,7 @@ DiffuseMaterial::DiffuseMaterial (Scene &&scene, const Accelerator accelerator) 
 }
 
 bool DiffuseMaterial::shade (RGB *const rgb, const Intersection intersection,
-                             Ray && /*ray*/) const noexcept {
+                             Ray && /*ray*/) noexcept {
   if (intersection.material_ != nullptr) {
     *rgb += intersection.material_->Kd_;
   }
