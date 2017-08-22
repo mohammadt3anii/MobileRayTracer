@@ -50,9 +50,9 @@ const float Epsilon {1.0e-05f};
 const float RayLengthMax {1.0e+30f};
 const float Pi {3.14159265358979323846f};
 const float Pi_4 {0.78539816339744830962f};
-const int RayDepthMin {4};
-const int RayDepthMax {8};
-const int NumberOfBlocks {256};
+const int32_t RayDepthMin {4};
+const int32_t RayDepthMax {8};
+const int32_t NumberOfBlocks {256};
 
 int roundDownToMultipleOf(int value, int multiple) noexcept;
 float haltonSequence (uint32_t index, unsigned base) noexcept;

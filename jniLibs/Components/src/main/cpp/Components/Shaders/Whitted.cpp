@@ -18,7 +18,7 @@ Whitted::Whitted (Scene &&scene, const unsigned samplesLight, Accelerator accele
 }
 
 bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
-  const unsigned rayDepth {ray.depth_};
+  const int32_t rayDepth {ray.depth_};
   if (rayDepth > RayDepthMax) {
 		return false;
 	}

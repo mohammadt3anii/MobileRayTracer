@@ -16,7 +16,7 @@ namespace MobileRT {
     public:
     T shape_;
     Material material_;
-    uint32_t lastRayID_ {};
+    int32_t lastRayID_ {};
 
     public:
     Primitive (T shape, Material material) noexcept :
