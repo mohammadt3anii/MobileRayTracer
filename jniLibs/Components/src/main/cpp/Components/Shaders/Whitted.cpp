@@ -65,7 +65,7 @@ bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray)
             lightIntersection.length_ = distanceToLight;
             //intersection between shadow ray and the closest primitive
             //if there are no primitives between intersection and the light
-            if (!scene_.shadowTrace (&lightIntersection, std::move (shadowRay))) {
+            if (!shadowTrace (&lightIntersection, std::move (shadowRay))) {
               //rgb += kD * radLight * cos_N_L;
               rgb->addMult ({light.radiance_.Le_}, cos_N_L);
             }

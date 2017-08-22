@@ -88,12 +88,12 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
           //intersection between shadow ray and the closest primitive
           //if there are no primitives between intersection and the light
           intersectLight.length_ = distanceToLight;
-          if (!scene_.shadowTrace (&intersectLight, std::move (shadowRay))) {
+          if (!shadowTrace (&intersectLight, std::move (shadowRay))) {
             //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
             Ld.addMult ({light.radiance_.Le_}, cosNormalLight);
-            }
+          }
         }
-        }
+      }
       Ld *= kD;
       //Ld *= sizeLights;
       Ld /= samplesLight;

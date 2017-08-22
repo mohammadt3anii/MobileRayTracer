@@ -5,6 +5,7 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
+#include "Accelerators/KdTree.hpp"
 #include "Accelerators/RegularGrid.hpp"
 #include "Intersection.hpp"
 #include "RGB.hpp"
@@ -18,9 +19,12 @@ namespace MobileRT {
     public:
     Scene scene_;
     RegularGrid regularGrid_;
+    KdTree kDTree_;
+
     enum Accelerator {
       NONE = 0,
-      REGULAR_GRID
+      REGULAR_GRID,
+      KD_TREE
     };
 
     private:
@@ -53,6 +57,7 @@ namespace MobileRT {
 
 			Shader &operator=(Shader &&shader) noexcept = delete;
     bool rayTrace (RGB *rgb, Intersection *intersection, Ray &&ray) noexcept;
+    bool shadowTrace (Intersection *const intersection, Ray &&ray) noexcept;
     int traceTouch (Intersection *intersection, Ray &&ray) noexcept;
 
 			virtual void resetSampling() noexcept = 0;

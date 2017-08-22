@@ -38,7 +38,7 @@ namespace MobileRT {
 
       template<typename T>
       bool intersect(const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
-                     Ray ray) const noexcept;
+                     Ray ray, bool shadowTrace = false) const noexcept;
       int bitCounter (unsigned int n) const noexcept;
       public:
       explicit RegularGrid () = default;
@@ -55,6 +55,7 @@ namespace MobileRT {
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 
 			bool trace(Intersection *intersection, const Ray &ray) const noexcept;
+      bool shadowTrace (Intersection *const intersection, const Ray &ray) const noexcept;
     };
 }//namespace MobileRT
 

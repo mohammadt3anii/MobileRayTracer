@@ -140,13 +140,28 @@ bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) const
     intersect<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
   const bool intersectedRectangles {
     intersect<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray)};
-  const bool intersectedLights {this->scene_->traceLights (intersection, ray) >= 0};
+  const bool intersectedLights {this->scene_->traceLights (intersection, ray)};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles || intersectedLights;
+}
+
+bool RegularGrid::shadowTrace (Intersection *const intersection, const Ray &ray) const noexcept {
+  const bool intersectedTriangles {
+    intersect<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray, true)};
+  const bool intersectedSpheres {
+    intersect<MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray, true)};
+  const bool intersectedPlanes {
+    intersect<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray, true)};
+  const bool intersectedRectangles {
+    intersect<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray, true)};
+  const bool intersectedLights {this->scene_->traceLights (intersection, ray)};
+  return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles ||
+         intersectedLights;
 }
 
 template<typename T>
 bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
-                            Intersection *const intersection, const Ray ray) const noexcept {
+                            Intersection *const intersection, const Ray ray,
+                            const bool shadowTrace) const noexcept {
   bool retval {false};
   // setup 3DDDA (double check reusability of primary ray data)
   const Vector3D cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
@@ -231,7 +246,11 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
       if (pr->lastRayID_ != ray.id_) {
         if (pr->intersect (intersection, ray)) {
           retval = true;
-          goto testloop;
+          if (shadowTrace) {
+            return retval;
+          } else {
+            goto testloop;
+          }
         }
       }
     }

@@ -34,6 +34,10 @@ void Shader::initializeGrid (AABB camera) noexcept {
       regularGrid_ = RegularGrid {min, max, &scene_, 32};
     }
       break;
+    case Accelerator::KD_TREE:
+      kDTree_ = KdTree {};
+      break;
+
     case Accelerator::NONE:
       break;
   }
@@ -76,15 +80,34 @@ Shader::~Shader () noexcept {
 	LOG("SHADER DELETED");
 }
 
+bool Shader::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
+  bool intersected {false};
+  switch (accelerator_) {
+    case Accelerator::REGULAR_GRID:
+      intersected = this->regularGrid_.shadowTrace (intersection, std::move (ray));
+      break;
+    case Accelerator::KD_TREE:
+      intersected = this->kDTree_.shadowTrace (intersection, std::move (ray));
+      break;
+    case Accelerator::NONE:
+      intersected = this->scene_.shadowTrace (intersection, std::move (ray));
+      break;
+  }
+  return intersected;
+}
+
 bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&ray) noexcept {
   bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID:
       intersected = this->regularGrid_.trace (intersection, ray);
       break;
+    case Accelerator::KD_TREE:
+      intersected = this->kDTree_.trace (intersection, ray);
+      break;
 
     case Accelerator::NONE:
-      intersected = (this->scene_.trace (intersection, ray) >= 0);
+      intersected = this->scene_.trace (intersection, ray);
       break;
   }
   return intersected ? shade (rgb, *intersection, std::move (ray)) : false;
