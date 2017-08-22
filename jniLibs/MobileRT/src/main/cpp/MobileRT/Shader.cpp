@@ -72,7 +72,7 @@ Shader::getSceneBounds (const std::vector<T> primitives, Point3D *const min, Poi
   }
 }
 
-int Shader::traceTouch (Intersection *const intersection, Ray &&ray) noexcept {
+bool Shader::traceTouch (Intersection *const intersection, Ray &&ray) noexcept {
   return this->scene_.trace(intersection, std::move(ray));
 }
 

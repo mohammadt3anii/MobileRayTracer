@@ -14,5 +14,6 @@ namespace MobileRT {
     bool trace (Intersection *intersection, const Ray &ray) const noexcept;
     bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
   };
-}
+}//namespace MobileRT
+
 #endif //MOBILERT_ACCELERATORS_KDTREE_HPP

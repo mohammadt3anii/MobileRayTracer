@@ -55,7 +55,7 @@ namespace MobileRT {
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 
 			bool trace(Intersection *intersection, const Ray &ray) const noexcept;
-      bool shadowTrace (Intersection *const intersection, const Ray &ray) const noexcept;
+      bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
     };
 }//namespace MobileRT
 

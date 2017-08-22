@@ -144,7 +144,7 @@ bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) const
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles || intersectedLights;
 }
 
-bool RegularGrid::shadowTrace (Intersection *const intersection, const Ray &ray) const noexcept {
+bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) const noexcept {
   const bool intersectedTriangles {
     intersect<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray, true)};
   const bool intersectedSpheres {
@@ -248,9 +248,8 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
           retval = true;
           if (shadowTrace) {
             return retval;
-          } else {
-            goto testloop;
           }
+          goto testloop;
         }
       }
     }

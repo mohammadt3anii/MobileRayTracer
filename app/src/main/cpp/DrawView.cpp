@@ -283,13 +283,14 @@ extern "C"
 int Java_puscas_mobilertapp_DrawView_traceTouch(
   JNIEnv *const /*env*/,
   jobject /*thiz*/,
-  jfloat const jx,
-  jfloat const jy) noexcept {
-  const float u {static_cast<float> (jx) / width_};
-  const float v {static_cast<float> (jy) / height_};
-  MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
-  MobileRT::Intersection intersection {};
-  const int primitiveID(renderer_->shader_->traceTouch(&intersection, std::move(ray)));
+  jfloat const /*jx*/,
+  jfloat const /*jy*/) noexcept {
+  //const float u {static_cast<float> (jx) / width_};
+  //const float v {static_cast<float> (jy) / height_};
+  //MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
+  //MobileRT::Intersection intersection {};
+  //const int primitiveID {renderer_->shader_->traceTouch(&intersection, std::move(ray))};
+  const int primitiveID {-1};
   return primitiveID;
 }
 
