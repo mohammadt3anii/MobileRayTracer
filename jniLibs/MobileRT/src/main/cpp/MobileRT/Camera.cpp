@@ -30,9 +30,9 @@ float Camera::getBlock (const unsigned sample) noexcept {
   return VALUES.at (current);
 }
 
-AABB Camera::getAABB () noexcept {
-  const Point3D min {};
-  const Point3D max {};
+AABB Camera::getAABB () const noexcept {
+  const Point3D min {position_};
+  const Point3D max {position_};
   return AABB {min, max};
 }
 

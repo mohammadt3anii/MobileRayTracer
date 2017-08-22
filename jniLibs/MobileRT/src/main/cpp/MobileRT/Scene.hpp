@@ -12,9 +12,9 @@
 #include "Primitive.hpp"
 #include "Ray.hpp"
 #include "Shapes/Plane.hpp"
+#include "Shapes/Rectangle.hpp"
 #include "Shapes/Sphere.hpp"
 #include "Shapes/Triangle.hpp"
-#include "Shapes/Rectangle.hpp"
 #include "Utils.hpp"
 #include <vector>
 

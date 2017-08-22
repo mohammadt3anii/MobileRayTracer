@@ -53,7 +53,7 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
 
 int RegularGrid::bitCounter (unsigned int n) const noexcept {
   int counter {0};
-  while (n) {
+  while (n > 0) {
     counter++;
     n >>= 1;
   }
@@ -89,25 +89,19 @@ void RegularGrid::addPrimitives
     x1 = (x1 < 0) ? 0 : x1;
     x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
     x2 = sizeX == 0 ? 0 : x2;
+    x1 = x1 > x2 ? x2 : x1;
     int y1 {static_cast<int>((bv1.y_ - m_Extends.pointMin_.y_) * dy_reci)};
     int y2 {static_cast<int>((bv2.y_ - m_Extends.pointMin_.y_) * dy_reci) + 1};
     y1 = (y1 < 0) ? 0 : y1;
     y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
     y2 = sizeY == 0 ? 0 : y2;
+    y1 = y1 > y2 ? y2 : y1;
     int z1 {static_cast<int>((bv1.z_ - m_Extends.pointMin_.z_) * dz_reci)};
     int z2 {static_cast<int>((bv2.z_ - m_Extends.pointMin_.z_) * dz_reci) + 1};
     z1 = (z1 < 0) ? 0 : z1;
     z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
     z2 = sizeZ == 0 ? 0 : z2;
-
-    const int idMin {x1 +
-               y1 * gridSize_ +
-               z1 * gridSize_ * gridSize_};
-    const int idMax {x2 +
-                y2 * gridSize_ +
-                z2 * gridSize_ * gridSize_};
-    const int idSize {gridSize_ * gridSize_ * gridSize_};
-    LOG("add id = [", idMin, ", ", idMax, "]", " [", idSize, "]");
+    z1 = z1 > z2 ? z2 : z1;
 
     //loop over candidate cells
     for (int x {x1}; x <= x2; x++) {
@@ -233,9 +227,6 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
       (static_cast<size_t>(Y) << gridShift_) +
       (static_cast<size_t>(Z) << (gridShift_ * 2))};
     std::vector<T *> list {primitives[index]};
-    /*if (!list.empty()) {
-      LOG("intersect index = ", index, " size = ", list.size());
-    }*/
 
     for (const auto *const pr : list) {
       bool result {false};
@@ -334,6 +325,5 @@ bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
       }
     }
   }
-
   return retval;
 }

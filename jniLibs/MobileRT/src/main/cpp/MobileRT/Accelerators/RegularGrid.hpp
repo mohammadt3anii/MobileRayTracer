@@ -25,13 +25,12 @@ namespace MobileRT {
         std::vector<std::vector<Primitive<Plane> *>> {}};
 			std::vector<std::vector<Primitive<Rectangle> *>> rectangles_ {
 				std::vector<std::vector<Primitive<Rectangle> *>> {}};
-      int gridSize_ {0};
-      int gridShift_ {0};
+      int gridSize_ {};
+      int gridShift_ {};
       AABB m_Extends {};
       Vector3D m_SR {};
       Vector3D m_CW {};
-      Scene *scene_ {nullptr};
-
+      Scene *scene_ {};
       private:
       template<typename T>
       void addPrimitives
@@ -41,7 +40,6 @@ namespace MobileRT {
       bool intersect(const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
                      Ray ray) const noexcept;
       int bitCounter (unsigned int n) const noexcept;
-
       public:
       explicit RegularGrid () = default;
       explicit RegularGrid (Point3D min, Point3D max, Scene *scene, int gridSize);

@@ -8,6 +8,7 @@
 #include "MobileRT/Camera.hpp"
 
 namespace Components {
+  using MobileRT::AABB;
 	using MobileRT::Point3D;
 	using MobileRT::Vector3D;
 	using MobileRT::Ray;
@@ -34,6 +35,7 @@ namespace Components {
 			Ray generateRay(float u, float v,
 											float deviationU,
 											float deviationV) const noexcept final;
+      AABB getAABB () const noexcept final;
     };
 }//namespace Components
 

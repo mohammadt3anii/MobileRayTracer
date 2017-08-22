@@ -24,6 +24,7 @@ Renderer::Renderer (std::unique_ptr<Shader> &&shader,
   resolution_ {width * height},
   samplesPixel_ {samplesPixel}
 {
+  this->shader_->initializeGrid (camera_->getAABB ());
 }
 
 void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexcept {
@@ -34,6 +35,7 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 	}
 	this->samplerPixel_->resetSampling();
 	this->shader_->resetSampling();
+
   const int numChildren {numThreads - 1};
   std::vector<std::thread> threads {};
 	threads.reserve(static_cast<unsigned>(numChildren));
@@ -45,8 +47,7 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 		thread.join();
 	}
 	threads.clear();
-
-  float max {- 1.0f};
+  float max {-1.0f};
   unsigned ii {0};
   unsigned jj {0};
   for (unsigned i {0}; i < this->height_; i++) {

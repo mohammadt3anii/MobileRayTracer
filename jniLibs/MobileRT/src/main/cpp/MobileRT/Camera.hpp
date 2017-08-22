@@ -28,16 +28,17 @@ namespace MobileRT {
     public:
 			explicit Camera (Point3D position,
 											 Point3D lookAt, Vector3D up) noexcept;
+
       Camera (const Camera &camera) noexcept = delete;
-      Camera (Camera &&camera) noexcept = delete;
-      virtual ~Camera () noexcept;
-      Camera &operator= (const Camera &camera) noexcept = delete;
-      Camera &operator= (Camera &&camera) noexcept = delete;
-      virtual Ray generateRay (float u, float v,
+    Camera (Camera &&camera) noexcept = delete;
+    virtual ~Camera () noexcept;
+    Camera &operator= (const Camera &camera) noexcept = delete;
+    Camera &operator= (Camera &&camera) noexcept = delete;
+    virtual Ray generateRay (float u, float v,
                                float deviationU,
                                float deviationV) const noexcept = 0;
-			float getBlock (unsigned sample) noexcept;
-			AABB getAABB () noexcept;
+    float getBlock (unsigned sample) noexcept;
+    virtual AABB getAABB () const noexcept;
     };
 }//namespace MobileRT
 

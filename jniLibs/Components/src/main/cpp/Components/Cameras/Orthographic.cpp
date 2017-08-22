@@ -5,6 +5,7 @@
 #include "Orthographic.hpp"
 
 using Components::Orthographic;
+using MobileRT::AABB;
 using MobileRT::Point3D;
 using MobileRT::Vector3D;
 using MobileRT::Ray;
@@ -26,4 +27,14 @@ Ray Orthographic::generateRay(const float u, const float v,
               this->position_ +
               this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
               this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1};
+}
+
+AABB Orthographic::getAABB () const noexcept {
+  const Point3D min {this->position_ +
+                     this->right_ * (0.0f - 0.5f) * this->sizeH_ + this->right_ * -0.5f +
+                     this->up_ * (0.5f - 0.0f) * this->sizeV_ + this->up_ * -0.5f};
+  const Point3D max {this->position_ +
+                     this->right_ * (1.0f - 0.5f) * this->sizeH_ + this->right_ * 0.5f +
+                     this->up_ * (0.5f - 1.0f) * this->sizeV_ + this->up_ * 0.5f};
+  return AABB {min, max};
 }

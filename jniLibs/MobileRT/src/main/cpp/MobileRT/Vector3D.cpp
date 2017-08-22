@@ -69,12 +69,11 @@ Vector3D::Vector3D (const Point3D dest, const Point3D orig, const bool /*normali
   z_ {dest.z_ - orig.z_},
   magnitude_ {magnitude ()}
 {
-    this->x_ /= this->magnitude_;
-    this->y_ /= this->magnitude_;
-    this->z_ /= this->magnitude_;
-    this->magnitude_ = 1.0f;
-
-    counter++;
+  this->x_ /= this->magnitude_;
+  this->y_ /= this->magnitude_;
+  this->z_ /= this->magnitude_;
+  this->magnitude_ = 1.0f;
+  counter++;
 }
 
 //cross product
@@ -112,14 +111,13 @@ float Vector3D::dotProduct (const Vector3D vector) const noexcept {
 }
 
 float Vector3D::dotProduct (const Point3D dest, const Point3D orig) const noexcept {
-  return this -> x_ * (dest . x_ - orig . x_) +
+  return this->x_ * (dest.x_ - orig.x_) +
          this->y_ * (dest.y_ - orig.y_) +
-         this -> z_ * (dest . z_ - orig . z_);
+         this->z_ * (dest.z_ - orig.z_);
 }
 
 float Vector3D::squareMagnitude() const noexcept {
-
-  return this -> x_ * this -> x_ + this -> y_ * this -> y_ + this -> z_ * this -> z_;
+  return this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_;
 }
 
 Vector3D Vector3D::crossProduct (const Vector3D vector) const noexcept {

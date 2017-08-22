@@ -34,6 +34,9 @@ namespace MobileRT {
     private:
       template<typename T>
       void getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max);
+    void AABBbounds (const AABB box, Point3D *const min, Point3D *const max);
+    public:
+    void initializeGrid (AABB camera) noexcept;
 
 		public:
     explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;

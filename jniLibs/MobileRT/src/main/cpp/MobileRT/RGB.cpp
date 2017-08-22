@@ -114,7 +114,7 @@ unsigned RGB::getColor () const noexcept {
 }
 
 void RGB::toneMap () noexcept {
-  const float value (1.0f);
+  const float value {1.0f};
   this->R_ = (this->R_ / (this->R_ + value));
   this->G_ = (this->G_ / (this->G_ + value));
   this->B_ = (this->B_ / (this->B_ + value));

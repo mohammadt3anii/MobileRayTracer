@@ -11,26 +11,20 @@
 #include "Ray.hpp"
 
 namespace MobileRT {
-    class Light {
+  class Light {
     public:
       const Material radiance_ {};
 
     public:
       explicit Light (Material radiance) noexcept;
+    Light (const Light &light) noexcept = delete;
+    Light (Light &&light) noexcept = delete;
+    virtual ~Light () noexcept;
+    Light &operator= (const Light &light) noexcept = delete;
+    Light &operator= (Light &&light) noexcept = delete;
+    virtual Point3D getPosition () noexcept = 0;
+    virtual void resetSampling () noexcept = 0;
 
-		Light(const Light &light) noexcept = delete;
-
-		Light(Light &&light) noexcept = delete;
-
-        virtual ~Light() noexcept;
-
-		Light &operator=(const Light &light) noexcept = delete;
-
-		Light &operator=(Light &&light) noexcept = delete;
-
-        virtual Point3D getPosition() noexcept = 0;
-
-        virtual void resetSampling() noexcept = 0;
       virtual bool intersect (Intersection *intersection, Ray ray) const noexcept = 0;
     };
 }//namespace MobileRT

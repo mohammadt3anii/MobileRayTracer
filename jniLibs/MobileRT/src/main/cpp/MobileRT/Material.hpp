@@ -8,7 +8,7 @@
 #include "RGB.hpp"
 
 namespace MobileRT {
-    class Material final {
+  class Material final {
     public:
       const RGB Le_ {};   // auto emission
       const RGB Kd_ {};   // diffuse reflection
@@ -22,10 +22,10 @@ namespace MobileRT {
       Material (const Material &material) noexcept = default;
 
       Material (Material &&material) noexcept = default;
-      ~Material () noexcept = default;
-      Material &operator= (const Material &material) noexcept = delete;
-      Material &operator= (Material &&material) noexcept = delete;
-      static unsigned getInstances () noexcept;
+    ~Material () noexcept = default;
+    Material &operator= (const Material &material) noexcept = delete;
+    Material &operator= (Material &&material) noexcept = delete;
+    static unsigned getInstances () noexcept;
     };
 }//namespace MobileRT
 
