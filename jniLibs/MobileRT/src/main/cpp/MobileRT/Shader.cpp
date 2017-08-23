@@ -31,7 +31,7 @@ void Shader::initializeAccelerators (AABB camera) noexcept {
       getSceneBounds<MobileRT::Primitive<Plane>> (this->scene_.planes_, &min, &max);
       getSceneBounds<MobileRT::Primitive<Rectangle>> (this->scene_.rectangles_, &min, &max);
       AABBbounds (camera, &min, &max);
-      regularGrid_ = RegularGrid {min, max, &scene_, 32};
+      regularGrid_ = RegularGrid {min - Epsilon, max + Epsilon, &scene_, 32};
     }
       break;
     case Accelerator::KD_TREE:
