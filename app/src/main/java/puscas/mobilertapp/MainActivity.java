@@ -149,13 +149,6 @@ public final class MainActivity extends Activity {
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
-            //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
-            //final String obj = "WavefrontOBJs/teapot/teapot";
-            //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
-            //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
-            final String obj = "WavefrontOBJs/conference/conference";
-            objText_ = readTextAsset(obj + ".obj");
-            matText_ = readTextAsset(obj + ".mtl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
 
@@ -304,6 +297,15 @@ public final class MainActivity extends Activity {
     public void startRender(final View view) {
         switch (drawView_.isWorking()) {
             case 0://if ray-tracer is idle
+                if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()] == "OBJ") {
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+                    //final String obj = "WavefrontOBJs/teapot/teapot";
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
+                    final String obj = "WavefrontOBJs/conference/conference";
+                    objText_ = readTextAsset(obj + ".obj");
+                    matText_ = readTextAsset(obj + ".mtl");
+                }
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
                 drawView_.createScene(
                         pickerScene_.getValue(),

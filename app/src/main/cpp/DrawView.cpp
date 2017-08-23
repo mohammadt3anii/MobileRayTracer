@@ -75,16 +75,6 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
   jstring objFile,
   jstring matText
 ) noexcept {
-  jboolean isCopy (JNI_FALSE);
-  const char *obj {(env)->GetStringUTFChars (objFile, &isCopy)};
-  const char *mat {(env)->GetStringUTFChars (matText, &isCopy)};
-  Components::OBJLoader objLoader {obj, mat};
-    env->ReleaseStringUTFChars(objFile, obj);
-    env->ReleaseStringUTFChars(matText, mat);
-    objLoader.process();
-  if (! objLoader.isProcessed ()) {
-    exit (0);
-  }
   width_ = width;
   height_ = height;
 
@@ -151,6 +141,16 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
       default: {
+        jboolean isCopy (JNI_FALSE);
+        const char *obj {(env)->GetStringUTFChars (objFile, &isCopy)};
+        const char *mat {(env)->GetStringUTFChars (matText, &isCopy)};
+        Components::OBJLoader objLoader {obj, mat};
+        env->ReleaseStringUTFChars (objFile, obj);
+        env->ReleaseStringUTFChars (matText, mat);
+        objLoader.process ();
+        if (!objLoader.isProcessed ()) {
+          exit (0);
+        }
         objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
         const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
