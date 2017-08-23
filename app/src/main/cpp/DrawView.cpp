@@ -13,6 +13,43 @@ static float fps_ {0.0f};
 static int64_t timeFrame_ {0};
 static int64_t numberOfLights_ {0};
 
+static std::string
+readTextAsset (JNIEnv *const env, const jobject assetManager, const char *const filename) {
+  AAssetManager *const mgr {AAssetManager_fromJava (env, assetManager)};
+  std::vector<char> buffer {};
+  AAsset *const asset {AAssetManager_open (mgr, filename, AASSET_MODE_STREAMING)};
+
+  //holds size of searched file
+  const off64_t length {AAsset_getLength64 (asset)};
+  //keeps track of remaining bytes to read
+  off64_t remaining {AAsset_getRemainingLength64 (asset)};
+  const size_t Mb {1000 * 1024}; // 1Mb is maximum chunk size for compressed assets
+  size_t currChunk {};
+  buffer.reserve (static_cast<size_t>(length));
+
+  //while we have still some data to read
+  while (remaining != 0) {
+    //set proper size for our next chunk
+    if (remaining >= static_cast<off64_t>(Mb)) {
+      currChunk = Mb;
+    } else {
+      currChunk = static_cast<size_t>(remaining);
+    }
+    char *chunk {new char[currChunk]};
+    //read data chunk
+    if (AAsset_read (asset, chunk, currChunk) > 0) // returns less than 0 on error
+    {
+      //and append it to our vector
+      buffer.insert (buffer.end (), chunk, chunk + currChunk);
+      remaining = AAsset_getRemainingLength64 (asset);
+    }
+    delete[] chunk;
+  }
+  AAsset_close (asset);
+  const std::string res {buffer.begin (), buffer.end ()};
+  return res;
+}
+
 static void FPS() noexcept {
   static int frame {0};
   static std::chrono::steady_clock::time_point timebase_ {};
@@ -73,7 +110,8 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
   jint const samplesPixel,
   jint const samplesLight,
   jstring objFile,
-  jstring matText
+  jstring matFile,
+  jobject assetManager
 ) noexcept {
   width_ = width;
   height_ = height;
@@ -140,34 +178,31 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         scene_ = spheresScene2 (std::move (scene_));
         maxDist = MobileRT::Point3D {8, 8, 8};
         break;
+
       default: {
         jboolean isCopy (JNI_FALSE);
-        const char *obj {(env)->GetStringUTFChars (objFile, &isCopy)};
-        const char *mat {(env)->GetStringUTFChars (matText, &isCopy)};
-        Components::OBJLoader objLoader {obj, mat};
-        env->ReleaseStringUTFChars (objFile, obj);
-        env->ReleaseStringUTFChars (matText, mat);
+        const char *objFileName {(env)->GetStringUTFChars (objFile, &isCopy)};
+        const char *matFileName {(env)->GetStringUTFChars (matFile, &isCopy)};
+        std::string obj {readTextAsset (env, assetManager, objFileName)};
+        std::string mat {readTextAsset (env, assetManager, matFileName)};
+        Components::OBJLoader objLoader {obj.c_str (), mat.c_str ()};
+        env->ReleaseStringUTFChars (objFile, objFileName);
+        env->ReleaseStringUTFChars (matFile, matFileName);
         objLoader.process ();
         if (!objLoader.isProcessed ()) {
           exit (0);
         }
         objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
-        const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+        /*const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            1.0f,
                                            MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-        /*scene_.lights_.emplace_back (new Components::PointLight {
-          lightMat, MobileRT::Point3D {0.0f, 1000.0f, 0.0f}});*/
         scene_.lights_.emplace_back (new Components::PointLight {
           lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}});
         //cornell spheres
         camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 0.7f, 3.0f},
                                                             MobileRT::Point3D {0.0f, 0.7f, -1.0f},
-                                                            MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
-                                                            45.0f * hfovFactor, 45.0f * vfovFactor);
-        /*camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.5f, 0.5f, 2.0f},
-                                                            MobileRT::Point3D {0.5f, 0.5f, -2.0f},
                                                             MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
                                                             45.0f * hfovFactor, 45.0f * vfovFactor);*/
         //teapot
@@ -175,7 +210,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
           MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);*/
         //conference
-        /*camera = std::make_unique<Components::Perspective> (
+        camera = std::make_unique<Components::Perspective> (
           MobileRT::Point3D {730.0f, 600.0f, -950.0f},
           MobileRT::Point3D {400.0f, 300.0f, 0.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
@@ -185,7 +220,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
                                            1.0f,
                                            MobileRT::RGB {0.001f, 0.001f, 0.001f}};
         scene_.lights_.emplace_back (new Components::PointLight {
-          lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});*/
+          lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});
         maxDist = MobileRT::Point3D {1, 1, 1};
       }
         break;

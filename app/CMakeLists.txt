@@ -29,7 +29,7 @@ target_compile_options( DrawView PRIVATE -ftree-vectorize -funroll-loops )
 target_compile_options( DrawView PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full -mfma> )
 
 target_link_libraries( DrawView
-PRIVATE jnigraphics Components --verbose
+PRIVATE android jnigraphics Components --verbose
 general -Wl,-O3
 general -Wl,-discard-all
 general -Wl,-no-undefined

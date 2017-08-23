@@ -76,9 +76,13 @@ public final class MainActivity extends Activity {
             final byte[] buffer = new byte[size];
             stream.read(buffer);
             asset = new String(buffer);
-        } catch (final IOException e) {
+        } catch (final OutOfMemoryError e1) {
+            Log.e("Assets", "Not enough memory for asset  " + filename);
+            Log.e("Assets", e1.getMessage());
+            throw e1;
+        } catch (final IOException e2) {
             Log.e("Assets", "Couldn't read asset " + filename);
-            Log.e("Assets", e.getMessage());
+            Log.e("Assets", e2.getMessage());
         } finally {
             if (stream != null) {
                 try {
@@ -301,10 +305,12 @@ public final class MainActivity extends Activity {
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
-                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
-                    //final String obj = "WavefrontOBJs/conference/conference";
-                    objText_ = readTextAsset(obj + ".obj");
-                    matText_ = readTextAsset(obj + ".mtl");
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
+                    final String obj = "WavefrontOBJs/conference/conference";
+                    //objText_ = readTextAsset(obj + ".obj");
+                    //matText_ = readTextAsset(obj + ".mtl");
+                    objText_ = obj + ".obj";
+                    matText_ = obj + ".mtl";
                 }
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
                 drawView_.createScene(
@@ -321,7 +327,8 @@ public final class MainActivity extends Activity {
                         ),
                         Float.parseFloat(str.substring(0, str.indexOf('x'))),
                         objText_,
-                        matText_
+                        matText_,
+                        getAssets()
                 );
                 drawView_.startRender();
                 break;

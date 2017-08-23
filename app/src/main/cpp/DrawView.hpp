@@ -28,6 +28,8 @@
 #include "MobileRT/Shapes/Sphere.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
 #include "Scenes.hpp"
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 #include <android/bitmap.h>
 #include <android/log.h>
 #include <memory>
@@ -68,7 +70,8 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
   jint samplesPixel,
   jint samplesLight,
   jstring objFile,
-  jstring matText
+  jstring matFile,
+  jobject assetManager
 ) noexcept;
 
 extern "C"

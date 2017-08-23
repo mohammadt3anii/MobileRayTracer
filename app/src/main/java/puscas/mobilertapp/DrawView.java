@@ -1,6 +1,7 @@
 package puscas.mobilertapp;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.opengl.GLSurfaceView;
@@ -52,7 +53,7 @@ public class DrawView extends GLSurfaceView {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
+    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
 
     static native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -134,11 +135,11 @@ public class DrawView extends GLSurfaceView {
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
-                     final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText) {
+                     final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText, final AssetManager assetManager) {
         setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText) + ",l=" + getNumberOfLights();
+        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
