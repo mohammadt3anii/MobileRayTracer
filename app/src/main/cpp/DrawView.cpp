@@ -225,8 +225,28 @@ scene_.lights_.emplace_back (new Components::PointLight {
                                            MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            1.0f,
                                            MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-        scene_.lights_.emplace_back (new Components::PointLight {
-          lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});
+        std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+          std::make_unique<Components::StaticHaltonSeq> ()};
+        std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+          std::make_unique<Components::StaticHaltonSeq> ()};
+        scene_.lights_.emplace_back (new Components::AreaLight {lightMat,
+                                                                std::move (samplerPoint1),
+                                                                MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                   0.0f},
+                                                                MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                   0.0f},
+                                                                MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                   -100.0f}});
+        scene_.lights_.emplace_back (new Components::AreaLight {lightMat,
+                                                                std::move (samplerPoint2),
+                                                                MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                   -100.0f},
+                                                                MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                   -100.0f},
+                                                                MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                   0.0f}});
+        /*scene_.lights_.emplace_back (new Components::PointLight {
+          lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});*/
         maxDist = MobileRT::Point3D {1, 1, 1};
       }
         break;

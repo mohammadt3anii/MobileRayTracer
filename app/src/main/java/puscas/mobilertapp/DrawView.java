@@ -145,7 +145,7 @@ public class DrawView extends GLSurfaceView {
         timebase_ = 0.0f;
         resetPrint(width, height, samplesPixel, samplesLight);
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap_.eraseColor(Color.CYAN);
+        bitmap_.eraseColor(Color.DKGRAY);
         renderer_.bitmap_ = bitmap_;
         setVisibility(View.VISIBLE);
     }
