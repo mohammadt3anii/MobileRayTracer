@@ -40,7 +40,6 @@ general -Wl,-no-undefined
 general -Wl,-gc-sections
 general -Wl,-z,norelro
 general -Wl,-hash-style=sysv
-general -flto=full
 general -fno-rtti
 general -fno-exceptions
 optimized -Wl,-s

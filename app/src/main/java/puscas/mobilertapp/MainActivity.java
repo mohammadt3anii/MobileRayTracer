@@ -46,6 +46,7 @@ public final class MainActivity extends Activity {
             final File[] files = dir.listFiles(new CpuFilter());
             return files.length;
         } catch (final RuntimeException ignored) {
+            Log.e("getNumCoresOldPhones", "Can't get number of cores available!!!");
             return 1;
         }
     }
@@ -266,7 +267,9 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerThreads_.setMinValue(1);
-        pickerThreads_.setMaxValue(MainActivity.getNumberOfCores());
+        final int maxCores = MainActivity.getNumberOfCores();
+        System.out.println("Max cores = " + maxCores);
+        pickerThreads_.setMaxValue(maxCores);
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         pickerThreads_.setValue(pickerThreads);
