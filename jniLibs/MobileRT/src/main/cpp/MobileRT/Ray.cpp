@@ -16,11 +16,12 @@ namespace {
 }//namespace
 
 Ray::Ray(Vector3D dir, Point3D origin,
-         const int32_t depth) noexcept :
+         const int32_t depth, const void *const primitive) noexcept :
   origin_ {origin},
   direction_ {dir},
   depth_ {depth},
-  id_ {getID ()} {
+  id_ {getID ()},
+  primitive_ {primitive} {
     counter++;
 }
 

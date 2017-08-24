@@ -68,9 +68,9 @@ bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<Mob
                 attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1]};
               tinyobj::real_t vz3 {
                 attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2]};
-              Point3D vertex1 {vx1, vy1, vz1};
-                Point3D vertex2 {vx2, vy2, vz2};
-                Point3D vertex3 {vx3, vy3, vz3};
+              Point3D vertex1 {-vx1, vy1, vz1};
+              Point3D vertex2 {-vx2, vy2, vz2};
+              Point3D vertex3 {-vx3, vy3, vz3};
               Vector3D normal {};
               if (!attrib_.normals.empty ()) {
                 tinyobj::real_t nx1 {

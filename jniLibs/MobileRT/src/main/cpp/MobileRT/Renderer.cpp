@@ -115,6 +115,7 @@ void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
 					pixelRGB.reset(); //pixel color without intersection
           intersection.length_ = RayLengthMax;
 					intersection.material_ = nullptr;
+          intersection.primitive_ = nullptr;
 					// LOG("triangles = ", shader_.scene_.triangles_.size());
 					// LOG("spheres = ", shader_.scene_.spheres_.size());
 					// LOG("planes = ", shader_.scene_.planes_.size());

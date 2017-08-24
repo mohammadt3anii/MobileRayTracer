@@ -8,13 +8,15 @@
 using MobileRT::AABB;
 using MobileRT::Triangle;
 using MobileRT::Point3D;
+using MobileRT::Vector3D;
 
 Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D pointC,
                     Vector3D normal) noexcept :
   AC_ {pointC - pointA},
   AB_ {pointB - pointA},
   BC_ {pointC - pointB},
-  normal_ {normal.isNull () ? AB_.crossProduct (AC_) : normal},
+  normal_ {
+    normal.isNull () ? AB_.crossProduct (AC_).returnNormalized () : normal.returnNormalized ()},
   pointA_ {pointA},
   pointB_ {pointB},
   pointC_ {pointC}
@@ -22,6 +24,9 @@ Triangle::Triangle (const Point3D pointA, const Point3D pointB, const Point3D po
 }
 
 bool Triangle::intersect (Intersection *const intersection, const Ray ray) const noexcept {
+  if (ray.primitive_ == this) {
+    return false;
+  }
   const Vector3D perpendicularVector {ray.direction_, this->AC_};//cross product
   const float normalizedProjection {this->AB_.dotProduct (perpendicularVector)};
   if (std::fabs (normalizedProjection) < Epsilon) {
@@ -49,7 +54,7 @@ bool Triangle::intersect (Intersection *const intersection, const Ray ray) const
   if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
     return false;
 	}
-  intersection->reset (ray.origin_, ray.direction_, distanceToIntersection, this->normal_);
+  intersection->reset (ray.origin_, ray.direction_, distanceToIntersection, this->normal_, this);
   return true;
 }
 
@@ -164,57 +169,6 @@ bool Triangle::intersect (const AABB box) const noexcept {
 				return std::fabs (normalizedProjection) < Epsilon;
 			}
 		};
-
-
-
-		/*std::function<bool (const Triangle)> intersectRayAABB {
-			[&](const Triangle triangle) -> bool {
-				double triangleMin, triangleMax;
-				double boxMin, boxMax;
-		
-				// Test the box normals (x-, y- and z-axes)
-				Vector3D boxNormals[3] {
-					Vector3D (1,0,0),
-					Vector3D (0,1,0),
-					Vector3D (0,0,1)
-				};
-				for (int i = 0; i < 3; i++)
-				{
-						Vector3D n = boxNormals[i];
-						Project(triangle.Vertices, boxNormals[i], out triangleMin, out triangleMax);
-						if (triangleMax < box.Start.Coords[i] || triangleMin > box.End.Coords[i])
-								return false; // No intersection possible.
-				}
-		
-				// Test the triangle normal
-				double triangleOffset = triangle.Normal.Dot(triangle.A);
-				Project(box.Vertices, triangle.Normal, out boxMin, out boxMax);
-				if (boxMax < triangleOffset || boxMin > triangleOffset)
-						return false; // No intersection possible.
-		
-				// Test the nine edge cross-products
-				Vector3D[] triangleEdges = Vector3D[3] {
-						//triangle.A.Minus(triangle.B),
-						//triangle.B.Minus(triangle.C),
-						//triangle.C.Minus(triangle.A)
-						this->AB_,
-						this->AC_,
-						this->BC_
-				};
-				for (int i = 0; i < 3; i++)
-				for (int j = 0; j < 3; j++)
-				{
-						// The box normals are the same as it's edge tangents
-						Vecto3D axis = triangleEdges[i].Cross(boxNormals[j]);
-						Project(box.Vertices, axis, out boxMin, out boxMax);
-						Project(triangle.Vertices, axis, out triangleMin, out triangleMax);
-						if (boxMax <= triangleMin || boxMin >= triangleMax)
-								return false; // No intersection possible
-				}
-		
-				// No separating axis found.
-				return true;
-		};*/
 
     const Point3D &min (box.pointMin_);
 		const Point3D &max (box.pointMax_);

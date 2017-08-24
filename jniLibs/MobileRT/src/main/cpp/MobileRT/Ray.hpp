@@ -16,10 +16,11 @@ namespace MobileRT {
       const Vector3D direction_ {};
       const int32_t depth_ {};
       const int32_t id_ {};
+      const void *const primitive_ {};
 
     public:
       explicit Ray(Vector3D dir, Point3D origin,
-                   int32_t depth) noexcept;
+                   int32_t depth, const void *primitive = nullptr) noexcept;
       Ray (const Ray &ray) noexcept = default;
       Ray (Ray &&ray) noexcept = default;
       ~Ray () noexcept = default;
