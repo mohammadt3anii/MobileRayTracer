@@ -14,7 +14,7 @@ static int64_t timeFrame_ {0};
 static int64_t numberOfLights_ {0};
 
 static std::string
-readTextAsset (JNIEnv *const env, const jobject assetManager, const char *const filename) {
+readTextAsset (JNIEnv *const env, jobject assetManager, const char *const filename) {
   AAssetManager *const mgr {AAssetManager_fromJava (env, assetManager)};
   std::vector<char> buffer {};
   AAsset *const asset {AAssetManager_open (mgr, filename, AASSET_MODE_STREAMING)};
@@ -35,15 +35,13 @@ readTextAsset (JNIEnv *const env, const jobject assetManager, const char *const 
     } else {
       currChunk = static_cast<size_t>(remaining);
     }
-    char *chunk {new char[currChunk]};
+    std::vector<char> chunk (currChunk);
     //read data chunk
-    if (AAsset_read (asset, chunk, currChunk) > 0) // returns less than 0 on error
-    {
+    if (AAsset_read (asset, chunk.data (), currChunk) > 0) {// returns less than 0 on error
       //and append it to our vector
-      buffer.insert (buffer.end (), chunk, chunk + currChunk);
+      buffer.insert (buffer.end (), chunk.begin (), chunk.end ());
       remaining = AAsset_getRemainingLength64 (asset);
     }
-    delete[] chunk;
   }
   AAsset_close (asset);
   const std::string res {buffer.begin (), buffer.end ()};
