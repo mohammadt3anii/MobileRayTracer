@@ -48,22 +48,23 @@ float Plane::getZ() const noexcept {
 
 Vector3D Plane::getRightVector () const noexcept {
   const Vector3D up {0, 1, 0};
-  Vector3D right;
-  if (this->normal_.x_ == 1) {
+  Vector3D right {};
+  if (this->normal_.x_ >= 1) {
     right = Vector3D {0, 1, 1};
-  } else if (this->normal_.y_ == 1) {
+  } else if (this->normal_.y_ >= 1) {
     right = Vector3D {1, 0, 1};
-  } else if (this->normal_.z_ == 1) {
+  } else if (this->normal_.z_ >= 1) {
     right = Vector3D {1, 1, 0};
-  } else if (this->normal_.x_ == -1) {
-    right = Vector3D {0, -1, -1};
-  } else if (this->normal_.y_ == -1) {
-    right = Vector3D {-1, 0, -1};
-  } else if (this->normal_.z_ == -1) {
-    right = Vector3D {-1, -1, 0};
+  } else if (this->normal_.x_ <= -1) {
+    right = Vector3D {0, 1, 1};
+  } else if (this->normal_.y_ <= -1) {
+    right = Vector3D {1, 0, 1};
+  } else if (this->normal_.z_ <= -1) {
+    right = Vector3D {1, 1, 0};
   }
   right.normalize ();
-  float cosAngle {this->normal_.dotProduct(right) / (this->normal_.magnitude_ * right.magnitude_)};
+  const float cosAngle {
+    this->normal_.dotProduct (right) / (this->normal_.magnitude_ * right.magnitude_)};
   if (cosAngle != 0) {
     LOG("MAL");
   }
@@ -79,7 +80,8 @@ Point3D Plane::getPositionMax() const noexcept {
 }
 
 AABB Plane::getAABB() const noexcept {
-  return AABB {getPositionMin (), getPositionMax ()};
+  const AABB box {getPositionMin (), getPositionMax ()};
+  return box;
 }
 
 float Plane::distance (const Point3D point) const noexcept {
@@ -99,27 +101,30 @@ float Plane::distance (const Point3D point) const noexcept {
 }
 
 bool Plane::intersect (const AABB box) const noexcept {
-  Point3D positiveVertex {box.pointMin_};
-  Point3D negativeVertex {box.pointMax_};
-  if (this->normal_.x_ >= 0.0f) {
-    positiveVertex.x_ = box.pointMax_.x_;
-  }
-  if (this->normal_.y_ >= 0.0f) {
-    positiveVertex.y_ = box.pointMax_.y_;
-  }
-  if (this->normal_.z_ >= 0.0f) {
-    positiveVertex.z_ = box.pointMax_.z_;
-  }
+  /*Point3D positiveVertex {box.pointMin_};
+  Point3D negativeVertex {box.pointMax_};*/
+  Point3D positiveVertex {box.pointMax_};
+  Point3D negativeVertex {box.pointMin_};
 
-  if (this->normal_.x_ >= 0.0f) {
+  /*if (this->normal_.x_ >= 0.0f) {
+    positiveVertex.x_ = box.pointMax_.x_;
     negativeVertex.x_ = box.pointMin_.x_;
-  }
-  if (this->normal_.y_ >= 0.0f) {
+  } else if (this->normal_.y_ >= 0.0f) {
+    positiveVertex.y_ = box.pointMax_.y_;
     negativeVertex.y_ = box.pointMin_.y_;
-  }
-  if (this->normal_.z_ >= 0.0f) {
+  } else if (this->normal_.z_ >= 0.0f) {
+    positiveVertex.z_ = box.pointMax_.z_;
     negativeVertex.z_ = box.pointMin_.z_;
-  }
+  } else if (this->normal_.x_ < 0.0f) {
+    positiveVertex.x_ = box.pointMin_.x_;
+    negativeVertex.x_ = box.pointMax_.x_;
+  } else if (this->normal_.y_ < 0.0f) {
+    positiveVertex.y_ = box.pointMin_.y_;
+    negativeVertex.y_ = box.pointMax_.y_;
+  } else if (this->normal_.z_ < 0.0f) {
+    positiveVertex.z_ = box.pointMin_.z_;
+    negativeVertex.z_ = box.pointMax_.z_;
+  }*/
 
   const float distanceP {distance (positiveVertex)};
   const float distanceN {distance (negativeVertex)};
