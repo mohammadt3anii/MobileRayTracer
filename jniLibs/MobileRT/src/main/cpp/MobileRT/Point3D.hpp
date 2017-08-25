@@ -15,6 +15,8 @@ namespace MobileRT {
       float x_ {};
       float y_ {};
       float z_ {};
+      public:
+      float cell[3];
 
     private:
 			explicit Point3D (Point3D point, Vector3D vector,

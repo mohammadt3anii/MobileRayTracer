@@ -42,7 +42,7 @@ namespace MobileRT {
       int bitCounter (unsigned int n) const noexcept;
       public:
       explicit RegularGrid () = default;
-      explicit RegularGrid (Point3D min, Point3D max, Scene *scene, int gridSize);
+      explicit RegularGrid (AABB sceneBounds, Scene *scene, int gridSize);
 
 			RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 

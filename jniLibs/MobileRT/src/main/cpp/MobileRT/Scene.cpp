@@ -95,3 +95,24 @@ void Scene::resetSampling() noexcept {
     light->resetSampling ();
   }
 }
+
+void Scene::AABBbounds (const AABB box, Point3D *const min, Point3D *const max) {
+  if (box.pointMin_.x_ < min->x_) {
+    min->x_ = box.pointMin_.x_;
+  }
+  if (box.pointMin_.y_ < min->y_) {
+    min->y_ = box.pointMin_.y_;
+  }
+  if (box.pointMin_.z_ < min->z_) {
+    min->z_ = box.pointMin_.z_;
+  }
+  if (box.pointMax_.x_ > max->x_) {
+    max->x_ = box.pointMax_.x_;
+  }
+  if (box.pointMax_.y_ > max->y_) {
+    max->y_ = box.pointMax_.y_;
+  }
+  if (box.pointMax_.z_ > max->z_) {
+    max->z_ = box.pointMax_.z_;
+  }
+}

@@ -11,6 +11,7 @@
 #include "RGB.hpp"
 #include "Ray.hpp"
 #include "Scene.hpp"
+#include "Utils.hpp"
 #include "Vector3D.hpp"
 #include <utility>
 

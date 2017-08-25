@@ -29,7 +29,9 @@ target_compile_options( MobileRT PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-
 target_compile_options( MobileRT PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )
 
 target_compile_options( MobileRT PRIVATE -std=c++14 -pedantic-errors -Weverything -Wall -Wextra -Wfatal-errors --verbose -Werror -ferror-limit=1 -gsplit-dwarf )
-target_compile_options( MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti )
+target_compile_options( MobileRT PRIVATE -Wno-c++98-compat-pedantic -Wno-padded -fno-exceptions -fno-rtti -Wno-sign-conversion -Wno-sign-compare )
+
+target_compile_options( MobileRT PUBLIC -Wno-old-style-cast )
 
 target_compile_options( MobileRT PRIVATE -Wno-unused-variable -Wno-unused-function -Wno-float-equal -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -ffunction-sections -fdata-sections -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -ftemplate-depth=10000000 )
 target_compile_options( MobileRT PRIVATE -ftree-vectorize -funroll-loops )

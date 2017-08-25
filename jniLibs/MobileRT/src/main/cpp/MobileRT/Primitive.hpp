@@ -11,7 +11,7 @@
 namespace MobileRT {
   using MobileRT::Material;
 
-  template<class T>
+  template<typename T>
   class Primitive final {
     public:
     T shape_ {};

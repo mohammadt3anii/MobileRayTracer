@@ -49,6 +49,19 @@ namespace MobileRT {
 			AABB getAABB() const noexcept;
 			
 			bool intersect (AABB box) const noexcept;
+
+      void CalculateRange (float &a_Pos1, float &a_Pos2, int a_Axis) {
+        //Vector3D pos1 = m_Vertex[0]->GetPos();
+        Point3D pos1 = pointA_;
+        a_Pos1 = pos1.cell[a_Axis];
+        a_Pos2 = pos1.cell[a_Axis];
+        Point3D pos = pointB_;
+        if (pos.cell[a_Axis] < a_Pos1) a_Pos1 = pos.cell[a_Axis];
+        if (pos.cell[a_Axis] > a_Pos2) a_Pos2 = pos.cell[a_Axis];
+        pos = pointC_;
+        if (pos.cell[a_Axis] < a_Pos1) a_Pos1 = pos.cell[a_Axis];
+        if (pos.cell[a_Axis] > a_Pos2) a_Pos2 = pos.cell[a_Axis];
+      }
     };
 }//namespace MobileRT
 

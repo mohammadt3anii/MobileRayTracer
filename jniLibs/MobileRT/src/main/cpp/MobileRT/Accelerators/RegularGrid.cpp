@@ -5,9 +5,10 @@
 #include "RegularGrid.hpp"
 
 using MobileRT::RegularGrid;
+using MobileRT::AABB;
 using MobileRT::Primitive;
 
-RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const scene,
+RegularGrid::RegularGrid (AABB sceneBounds, Scene *const scene,
                           const int gridSize) :
   triangles_ {
     std::vector<std::vector<MobileRT::Primitive<Triangle> *>> {
@@ -23,7 +24,7 @@ RegularGrid::RegularGrid (const Point3D min, const Point3D max, Scene *const sce
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
   gridShift_ {bitCounter (static_cast<unsigned>(gridSize)) - 1},
-  m_Extends (AABB {min, max}),//world boundaries
+  m_Extends (std::move (sceneBounds)),//world boundaries
   // precalculate 1 / size of a cell (for x, y and z)
   m_SR {gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)},
   // precalculate size of a cell (for x, y, and z)

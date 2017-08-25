@@ -49,6 +49,15 @@ namespace MobileRT {
       static unsigned getInstances () noexcept;
       bool traceLights (Intersection *intersection, Ray ray) const noexcept;
       void resetSampling () noexcept;
+      static void AABBbounds (const AABB box, Point3D *const min, Point3D *const max);
+
+      template<typename T>
+      static void
+      getBounds (const std::vector<T> &primitives, Point3D *const min, Point3D *const max) {
+        for (const T &primitive : primitives) {
+          AABBbounds (primitive.getAABB (), min, max);
+        }
+      }
     };
 }//namespace MobileRT
 
