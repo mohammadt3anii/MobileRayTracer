@@ -38,9 +38,9 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
     MobileRT::Point3D {0.0f, 0.0f, 1.0f}, MobileRT::Vector3D {0.0f, 0.0f, -1.0f}}, lightGrayMat);
 
   // front wall - light blue
-  const MobileRT::Material lightBlueMat {MobileRT::RGB (0.0f, 0.9f, 0.9f)};
-  scene.planes_.emplace_back (MobileRT::Plane {
-    MobileRT::Point3D {0.0f, 0.0f, -3.5f}, MobileRT::Vector3D {0.0f, 0.0f, 1.0f}}, lightBlueMat);
+  /*const MobileRT::Material lightBlueMat {MobileRT::RGB (0.0f, 0.9f, 0.9f)};
+   scene.planes_.emplace_back (MobileRT::Plane {
+     MobileRT::Point3D {0.0f, 0.0f, -3.5f}, MobileRT::Vector3D {0.0f, 0.0f, 1.0f}}, lightBlueMat);*/
 
   // floor - white
   scene.planes_.emplace_back (MobileRT::Plane {

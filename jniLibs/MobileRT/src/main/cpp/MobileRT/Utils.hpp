@@ -45,7 +45,7 @@ inline std::string getFileName (const char *const filepath) {
   return std::string {filePath.substr (filePos)};
 }
 
-const float Epsilon {1.0e-06f};
+const float Epsilon {1.0e-05f};
 const float RayLengthMax {1.0e+30f};
 const float Pi {3.14159265358979323846f};
 const float Pi_4 {0.78539816339744830962f};
