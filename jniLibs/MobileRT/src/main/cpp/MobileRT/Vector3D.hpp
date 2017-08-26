@@ -17,6 +17,7 @@ namespace MobileRT {
       float y_ {0.0f};
       float z_ {0.0f};
       float magnitude_ {1.0f};
+      float cell[3];
 
     private:
 			explicit Vector3D (Vector3D vector, float value) noexcept;

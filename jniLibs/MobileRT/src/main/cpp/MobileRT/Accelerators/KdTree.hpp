@@ -8,6 +8,15 @@
 #include "../Scene.hpp"
 
 namespace MobileRT {
+  class KdTreeNode;
+
+  struct kdstack {
+    KdTreeNode *node;
+    float t;
+    Point3D pb;
+    int prev, dummy1, dummy2;
+  };
+
   struct SplitList final {
     float splitpos;
     int n1count, n2count;
@@ -16,7 +25,7 @@ namespace MobileRT {
 
   class ObjectList {
     public:
-    ObjectList () : m_Primitive (0), m_Next (0) {}
+    ObjectList () : m_Primitive (nullptr), m_Next (nullptr) {}
 
     ~ObjectList () { delete m_Next; }
 
@@ -35,38 +44,39 @@ namespace MobileRT {
 
   class KdTreeNode final {
     public:
-    KdTreeNode () : m_Data (6) {}
+    KdTreeNode () : m_Data {nullptr} {}
 
-    void SetAxis (int a_Axis) {
-      m_Data = (m_Data & 0xfffffffc) + static_cast<unsigned long> (a_Axis);
-    }
+    void SetAxis (int a_Axis) { m_Axis = a_Axis; }
 
-    int GetAxis () { return static_cast<int> (m_Data) & 3; }
+    int GetAxis () { return m_Axis; }
 
     void SetSplitPos (float a_Pos) { m_Split = a_Pos; }
 
     float GetSplitPos () { return m_Split; }
 
-    void SetLeft (KdTreeNode *a_Left) { m_Data = (unsigned long) a_Left + (m_Data & 7); }
+    void SetLeft (KdTreeNode *a_Left) { m_left = a_Left; }
 
-    KdTreeNode *GetLeft () { return (KdTreeNode *) (m_Data & 0xfffffff8); }
+    KdTreeNode *GetLeft () { return m_left; }
 
-    KdTreeNode *GetRight () { return ((KdTreeNode *) (m_Data & 0xfffffff8)) + 1; }
+    KdTreeNode *GetRight () { return m_right; }
 
     void Add (Primitive<Triangle> *a_Prim);
 
-    bool IsLeaf () { return ((m_Data & 4) > 0); }
+    bool IsLeaf () { return m_isLeaf; }
 
-    void SetLeaf (bool a_Leaf) { m_Data = (a_Leaf) ? (m_Data | 4) : (m_Data & 0xfffffffb); }
+    void SetLeaf (bool a_Leaf) { m_isLeaf = a_Leaf; }
 
-    ObjectList *GetList () { return (ObjectList *) (m_Data & 0xfffffff8); }
+    ObjectList *GetList () { return m_Data; }
 
-    void SetList (ObjectList *a_List) { m_Data = (unsigned long) a_List + (m_Data & 7); }
+    void SetList (ObjectList *a_List) { m_Data = a_List; }
 
     private:
-    // int m_Flags;
+    int m_Axis;
     float m_Split;
-    unsigned long m_Data;
+    bool m_isLeaf;
+    KdTreeNode *m_left;
+    KdTreeNode *m_right;
+    ObjectList *m_Data;
   };
 
   class MManager {
@@ -77,9 +87,9 @@ namespace MobileRT {
     KdTreeNode *NewKdTreeNodePair ();
     private:
     ObjectList *m_OList;
-    char *m_KdArray, *m_ObjArray;
+    //char *m_KdArray, *m_ObjArray;
     KdTreeNode *m_KdPtr;
-    ObjectList *m_ObjPtr;
+    //ObjectList *m_ObjPtr;
   };
 
   class KdTree final {
@@ -100,8 +110,14 @@ namespace MobileRT {
     private:
     KdTreeNode *m_Root;
     SplitList *m_SList, *m_SPool;
+    AABB sceneBounds_;
+    kdstack *m_Stack;
+    int *m_Mod;
+    int m_Intersections;
+
     public:
     static MManager *s_MManager;
+
     public:
     explicit KdTree () noexcept = default;
     explicit KdTree (AABB sceneBounds, Scene *scene) noexcept;
@@ -111,7 +127,7 @@ namespace MobileRT {
     KdTree &operator= (const KdTree &kDTree) noexcept = delete;
     KdTree &operator= (KdTree &&kDTree) noexcept = default;
     public:
-    bool trace (Intersection *intersection, const Ray &ray) const noexcept;
+    bool trace (Intersection *intersection, const Ray &ray) noexcept;
     bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
   };
 }//namespace MobileRT
