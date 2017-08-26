@@ -14,7 +14,7 @@ namespace MobileRT {
     KdTreeNode *node;
     float t;
     Point3D pb;
-    int prev, dummy1, dummy2;
+    int prev;
   };
 
   struct SplitList final {
@@ -82,14 +82,10 @@ namespace MobileRT {
   class MManager {
     public:
     MManager ();
-    ObjectList *NewObjectList ();
     void FreeObjectList (ObjectList *a_List);
     KdTreeNode *NewKdTreeNodePair ();
-    private:
+    public:
     ObjectList *m_OList;
-    //char *m_KdArray, *m_ObjArray;
-    KdTreeNode *m_KdPtr;
-    //ObjectList *m_ObjPtr;
   };
 
   class KdTree final {
@@ -98,14 +94,12 @@ namespace MobileRT {
 
     KdTreeNode *GetRoot () { return m_Root; }
 
-    void SetRoot (KdTreeNode *a_Root) { m_Root = a_Root; }
-
     // tree generation
     void InsertSplitPos (float a_SplitPos);
     void Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prims);
 
     // memory manager
-    static void SetMemoryManager (MManager *a_MM) { s_MManager = a_MM; }
+    void SetMemoryManager (MManager *a_MM) { m_MManager = a_MM; }
 
     private:
     KdTreeNode *m_Root;
@@ -114,9 +108,8 @@ namespace MobileRT {
     kdstack *m_Stack;
     int *m_Mod;
     int m_Intersections;
-
-    public:
-    static MManager *s_MManager;
+    private:
+    MManager *m_MManager {nullptr};
 
     public:
     explicit KdTree () noexcept = default;
@@ -126,6 +119,7 @@ namespace MobileRT {
     ~KdTree () noexcept = default;
     KdTree &operator= (const KdTree &kDTree) noexcept = delete;
     KdTree &operator= (KdTree &&kDTree) noexcept = default;
+
     public:
     bool trace (Intersection *intersection, const Ray &ray) noexcept;
     bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
