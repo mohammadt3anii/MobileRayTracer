@@ -24,13 +24,13 @@ Renderer::Renderer (std::unique_ptr<Shader> &&shader,
   resolution_ {width * height},
   samplesPixel_ {samplesPixel}
 {
-  this->shader_->initializeAccelerators (camera_->getAABB ());
+  this->shader_->initializeAccelerators (camera_.get ());
 }
 
 void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexcept {
 	LOG("START - resolution = ", resolution_);
 	this->sample_ = 0;
-	for (auto accumulate : this->accumulate_) {
+  for (auto &accumulate : this->accumulate_) {
 		accumulate.reset();
 	}
 	this->samplerPixel_->resetSampling();

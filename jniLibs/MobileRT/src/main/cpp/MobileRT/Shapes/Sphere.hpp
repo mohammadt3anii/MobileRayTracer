@@ -29,8 +29,7 @@ namespace MobileRT {
 			Sphere(Sphere &&sphere) noexcept = default;
 
 			~Sphere() noexcept = default;
-
-			Sphere &operator=(const Sphere &sphere) noexcept = delete;
+			Sphere &operator= (const Sphere &sphere) noexcept = default;
 
 			Sphere &operator=(Sphere &&sphere) noexcept = delete;
 			bool intersect (Intersection *intersection, Ray ray) const noexcept;

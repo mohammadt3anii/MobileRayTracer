@@ -8,23 +8,16 @@
 #include "AABB.hpp"
 #include "../Primitive.hpp"
 #include "../Scene.hpp"
-#include "../Shapes/Plane.hpp"
-#include "../Shapes/Rectangle.hpp"
-#include "../Shapes/Sphere.hpp"
-#include "../Shapes/Triangle.hpp"
 #include <vector>
 
 namespace MobileRT {
+  using MobileRT::Primitive;
     class RegularGrid final {
     private:
-      std::vector<std::vector<Primitive<Triangle> *>> triangles_ {
-        std::vector<std::vector<Primitive<Triangle> *>> {}};
-      std::vector<std::vector<Primitive<Sphere> *>> spheres_ {
-        std::vector<std::vector<Primitive<Sphere> *>> {}};
-      std::vector<std::vector<Primitive<Plane> *>> planes_ {
-        std::vector<std::vector<Primitive<Plane> *>> {}};
-			std::vector<std::vector<Primitive<Rectangle> *>> rectangles_ {
-				std::vector<std::vector<Primitive<Rectangle> *>> {}};
+      std::vector<std::vector<Primitive<Triangle> *>> triangles_;
+      std::vector<std::vector<Primitive<Sphere> *>> spheres_;
+      std::vector<std::vector<Primitive<Plane> *>> planes_;
+      std::vector<std::vector<Primitive<Rectangle> *>> rectangles_;
       int gridSize_ {};
       int gridShift_ {};
       AABB m_Extends {};
@@ -37,12 +30,13 @@ namespace MobileRT {
         (std::vector<T> &primitives, std::vector<std::vector<T *>> &grid_primitives) noexcept;
 
       template<typename T>
-      bool intersect(const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
-                     Ray ray, bool shadowTrace = false) const noexcept;
+      bool intersect (const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
+                      Ray ray, bool shadowTrace = false) noexcept;
+
       int bitCounter (unsigned int n) const noexcept;
       public:
-      explicit RegularGrid () = default;
-      explicit RegularGrid (AABB sceneBounds, Scene *scene, int gridSize);
+      explicit RegularGrid () noexcept = default;
+      explicit RegularGrid (AABB sceneBounds, Scene *scene, int gridSize) noexcept;
 
 			RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 
@@ -53,9 +47,8 @@ namespace MobileRT {
 			RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = delete;
 
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
-
-			bool trace(Intersection *intersection, const Ray &ray) const noexcept;
-      bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
+      bool trace (Intersection *intersection, const Ray &ray) noexcept;
+      bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
     };
 }//namespace MobileRT
 

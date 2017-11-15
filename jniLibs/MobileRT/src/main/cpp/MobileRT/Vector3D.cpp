@@ -10,7 +10,10 @@ static unsigned counter {0};
 
 namespace MobileRT {
   Vector3D operator/ (const int value, const Vector3D vector) noexcept {
-    return Vector3D(value / vector.x_, value / vector.y_, value / vector.z_);
+    const float x {value / vector.x_};
+    const float y {value / vector.y_};
+    const float z {value / vector.z_};
+    return Vector3D {x, y, z};
   }
 
   Vector3D operator/ (Vector3D vector, int value) noexcept {

@@ -11,14 +11,16 @@ static unsigned counter {0};
 Point3D::Point3D(const float x, const float y, const float z) noexcept :
   x_ {x},
   y_ {y},
-  z_ {z} {
+  z_ {z},
+  cell {x, y, z} {
     counter++;
 }
 
 Point3D::Point3D (const Point3D point, const Vector3D vector, const float value) noexcept :
   x_ {vector.x_ * value + point.x_},
   y_ {vector.y_ * value + point.y_},
-  z_ {vector.z_ * value + point.z_} {
+  z_ {vector.z_ * value + point.z_},
+  cell {x_, y_, z_} {
 }
 
 Vector3D Point3D::operator- (const Point3D point) const noexcept {

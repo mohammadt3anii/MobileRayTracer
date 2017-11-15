@@ -19,8 +19,7 @@ namespace MobileRT {
 
     public:
 			explicit AABB () noexcept = default;
-			explicit AABB (Point3D pointMin,
-										 Point3D pointMax) noexcept;
+      explicit AABB (Point3D pointMin, Point3D pointMax) noexcept;
 
 			AABB(const AABB &AABB) noexcept = default;
 
@@ -31,6 +30,7 @@ namespace MobileRT {
 			AABB &operator=(const AABB &AABB) noexcept = default;
 
 			AABB &operator=(AABB &&AABB) noexcept = default;
+      float intersect (Ray ray) const noexcept;
     };
 }//namespace MobileRT
 

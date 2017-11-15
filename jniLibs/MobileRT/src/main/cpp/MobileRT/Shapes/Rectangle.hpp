@@ -37,8 +37,7 @@ namespace MobileRT {
 			Rectangle(Rectangle &&rectangle) noexcept = default;
 
 			~Rectangle() noexcept = default;
-
-			Rectangle &operator=(const Rectangle &rectangle) noexcept = delete;
+      Rectangle &operator= (const Rectangle &rectangle) noexcept = default;
 
 			Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
 			bool intersect (Intersection *intersection, Ray ray) const noexcept;

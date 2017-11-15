@@ -5,11 +5,13 @@
 #ifndef MOBILERT_UTILS_HPP
 #define MOBILERT_UTILS_HPP
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <iostream>
 #include <sstream>
 #include <thread>
+#include <vector>
 
 #ifndef NO_ANDROID
   #include <android/log.h>
@@ -43,6 +45,13 @@ inline std::string getFileName (const char *const filepath) {
 		filePos = 0;
 	}
   return std::string {filePath.substr (filePos)};
+}
+
+template<typename T>
+std::vector<T *> convertVector (std::vector<T> &source) {
+  std::vector<T *> target (source.size ());
+  std::transform (source.begin (), source.end (), target.begin (), [] (T &t) { return &t; });
+  return target;
 }
 
 const float Epsilon {1.0e-05f};

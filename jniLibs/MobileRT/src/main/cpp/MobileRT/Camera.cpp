@@ -46,6 +46,14 @@ Camera::Camera (const Point3D position, const Point3D lookAt, const Vector3D up)
   static_cast<void> (unused);
 }
 
+Camera::Camera (const Camera &camera) noexcept {
+  this->block_.store (camera.block_);
+  this->position_ = camera.position_;
+  this->direction_ = camera.direction_;
+  this->right_ = camera.right_;
+  this->up_ = camera.up_;
+}
+
 Camera::~Camera () noexcept {
 	LOG("CAMERA DELETED");
 }

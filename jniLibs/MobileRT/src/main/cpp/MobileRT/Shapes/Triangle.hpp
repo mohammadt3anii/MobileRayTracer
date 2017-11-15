@@ -14,13 +14,13 @@
 namespace MobileRT {
     class Triangle final {
     public:
-      const Vector3D AC_ {};
-      const Vector3D AB_ {};
-      const Vector3D BC_ {};
-      const Vector3D normal_ {};
-      const Point3D pointA_ {};
-      const Point3D pointB_ {};
-      const Point3D pointC_ {};
+      Vector3D AC_ {};
+      Vector3D AB_ {};
+      Vector3D BC_ {};
+      Vector3D normal_ {};
+      Point3D pointA_ {};
+      Point3D pointB_ {};
+      Point3D pointC_ {};
 
 		private:
 				Point3D getPositionMin() const noexcept;
@@ -36,8 +36,7 @@ namespace MobileRT {
 			Triangle(Triangle &&triangle) noexcept = default;
 
 			~Triangle() noexcept = default;
-
-			Triangle &operator=(const Triangle &triangle) noexcept = delete;
+      Triangle &operator= (const Triangle &triangle) noexcept = default;
 
 			Triangle &operator=(Triangle &&triangle) noexcept = delete;
 			bool intersect (Intersection *intersection, Ray ray) const noexcept;
@@ -45,10 +44,8 @@ namespace MobileRT {
 			void moveTo(float x, float y) noexcept;
 
 			float getZ() const noexcept;
-
-			AABB getAABB() const noexcept;
-			
-			bool intersect (AABB box) const noexcept;
+      MobileRT::AABB getAABB () const noexcept;
+      bool intersect (MobileRT::AABB box) const noexcept;
 
       void CalculateRange (float &a_Pos1, float &a_Pos2, int a_Axis) {
         //Vector3D pos1 = m_Vertex[0]->GetPos();

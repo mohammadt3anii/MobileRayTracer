@@ -193,7 +193,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
         }
         objLoader.fillScene (&scene_, [](){return std::make_unique<Components::StaticHaltonSeq> ();});
         //cornellbox
-        /*camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 0.7f, 3.0f},
+        camera = std::make_unique<Components::Perspective> (MobileRT::Point3D {0.0f, 0.7f, 3.0f},
                                                             MobileRT::Point3D {0.0f, 0.7f, -1.0f},
                                                             MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
                                                             45.0f * hfovFactor, 45.0f * vfovFactor);
@@ -203,7 +203,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
                                    1.0f,
                                    MobileRT::RGB {0.9f, 0.9f, 0.9f}};
 scene_.lights_.emplace_back (new Components::PointLight {
-  lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}});*/
+  lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}});
         //teapot
         /*camera = std::make_unique<Components::Perspective> (
           MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
@@ -216,7 +216,7 @@ scene_.lights_.emplace_back (new Components::PointLight {
         scene_.lights_.emplace_back (new Components::PointLight {
           lightMat, MobileRT::Point3D {0.0f, 900.0f, 0.0f}});*/
         //conference
-        camera = std::make_unique<Components::Perspective> (
+        /*camera = std::make_unique<Components::Perspective> (
           MobileRT::Point3D {-730.0f, 600.0f, -950.0f},
           MobileRT::Point3D {-400.0f, 300.0f, 0.0f},
           MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
@@ -244,7 +244,7 @@ scene_.lights_.emplace_back (new Components::PointLight {
                                                                 MobileRT::Point3D {-400.0f, 500.0f,
                                                                                    -100.0f},
                                                                 MobileRT::Point3D {-400.0f, 500.0f,
-                                                                                   0.0f}});
+                                                                                   0.0f}});*/
         /*scene_.lights_.emplace_back (new Components::PointLight {
           lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});*/
         maxDist = MobileRT::Point3D {1, 1, 1};

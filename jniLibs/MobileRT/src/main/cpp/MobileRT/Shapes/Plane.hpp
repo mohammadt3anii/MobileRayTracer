@@ -29,8 +29,7 @@ namespace MobileRT {
 			Plane(Plane &&plane) noexcept = default;
 
       ~Plane() noexcept = default;
-
-      Plane &operator=(const Plane &plane) noexcept = delete;
+      Plane &operator= (const Plane &plane) noexcept = default;
 
 			Plane &operator=(Plane &&plane) noexcept = delete;
       bool intersect (Intersection *intersection, Ray ray) const noexcept;

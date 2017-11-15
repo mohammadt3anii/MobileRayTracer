@@ -28,8 +28,7 @@ namespace MobileRT {
     public:
 			explicit Camera (Point3D position,
 											 Point3D lookAt, Vector3D up) noexcept;
-
-      Camera (const Camera &camera) noexcept = delete;
+    Camera (const Camera &camera) noexcept;
     Camera (Camera &&camera) noexcept = delete;
     virtual ~Camera () noexcept;
     Camera &operator= (const Camera &camera) noexcept = delete;

@@ -7,6 +7,11 @@
 
 #include "Accelerators/AABB.hpp"
 #include "Material.hpp"
+#include "Ray.hpp"
+#include "Shapes/Plane.hpp"
+#include "Shapes/Rectangle.hpp"
+#include "Shapes/Sphere.hpp"
+#include "Shapes/Triangle.hpp"
 
 namespace MobileRT {
   using MobileRT::Material;
@@ -15,7 +20,7 @@ namespace MobileRT {
   class Primitive final {
     public:
     T shape_ {};
-    const Material material_ {};
+    Material material_ {};
     int32_t lastRayID_ {};
 
     public:
@@ -28,7 +33,7 @@ namespace MobileRT {
     Primitive (const Primitive &primitive) noexcept = default;
     Primitive (Primitive &&primitive) noexcept = default;
     ~Primitive () noexcept = default;
-    Primitive &operator= (const Primitive &primitive) noexcept = delete;
+    Primitive &operator= (const Primitive &primitive) noexcept = default;
     Primitive &operator= (Primitive &&primitive) noexcept = delete;
 
     AABB getAABB () const noexcept {

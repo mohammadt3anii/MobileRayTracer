@@ -9,7 +9,7 @@ using MobileRT::AABB;
 using MobileRT::Primitive;
 
 RegularGrid::RegularGrid (AABB sceneBounds, Scene *const scene,
-                          const int gridSize) :
+                          const int gridSize) noexcept :
   triangles_ {
     std::vector<std::vector<MobileRT::Primitive<Triangle> *>> {
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
@@ -24,7 +24,7 @@ RegularGrid::RegularGrid (AABB sceneBounds, Scene *const scene,
       static_cast<size_t> (gridSize * gridSize * gridSize)}},
   gridSize_ {gridSize},
   gridShift_ {bitCounter (static_cast<unsigned>(gridSize)) - 1},
-  m_Extends (std::move (sceneBounds)),//world boundaries
+  m_Extends (sceneBounds),//world boundaries
   // precalculate 1 / size of a cell (for x, y and z)
   m_SR {gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)},
   // precalculate size of a cell (for x, y, and z)
@@ -130,7 +130,7 @@ void RegularGrid::addPrimitives
   }
 }
 
-bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) const noexcept {
+bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) noexcept {
   const bool intersectedTriangles {
     intersect<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSpheres {
@@ -143,7 +143,7 @@ bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) const
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles || intersectedLights;
 }
 
-bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) const noexcept {
+bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
   const bool intersectedTriangles {
     intersect<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray, true)};
   const bool intersectedSpheres {
@@ -158,7 +158,7 @@ bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) cons
 template<typename T>
 bool RegularGrid::intersect(const std::vector<std::vector<T *>> &primitives,
                             Intersection *const intersection, const Ray ray,
-                            const bool shadowTrace) const noexcept {
+                            const bool shadowTrace) noexcept {
   bool retval {false};
   // setup 3DDDA (double check reusability of primary ray data)
   const Vector3D cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};

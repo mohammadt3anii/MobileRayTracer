@@ -53,9 +53,9 @@ public class DrawView extends GLSurfaceView {
         resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
+    native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
 
-    static native void renderIntoBitmap(final Bitmap image, final int numThreads);
+    native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
     @Override
     public void onPause() {
@@ -65,6 +65,12 @@ public class DrawView extends GLSurfaceView {
     @Override
     public void onResume() {
 
+    }
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
+        return true;
     }
 
     private void resetPrint(final int width, final int height,
@@ -129,9 +135,9 @@ public class DrawView extends GLSurfaceView {
         buttonRender_.setText(R.string.stop);
         renderTask_ = new DrawView.RenderTask();
         start_ = SystemClock.elapsedRealtime();
-        DrawView.renderIntoBitmap(bitmap_, numThreads_);
+        renderIntoBitmap(bitmap_, numThreads_);
         renderTask_.execute();
-        //this.setOnTouchListener(new DrawView.TouchHandler());
+        this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
@@ -139,7 +145,7 @@ public class DrawView extends GLSurfaceView {
         setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        nPrimitivesT_ = ",p=" + DrawView.initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
+        nPrimitivesT_ = ",p=" + initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
         frame_ = 0;
         timebase_ = 0.0f;
@@ -162,10 +168,9 @@ public class DrawView extends GLSurfaceView {
     }
 
     void printText() {
-        textView_.setText(
-                fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_ + sampleT_ + '\n'
-                        + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_
-        );
+        final String aux = fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_ + sampleT_ + '\n'
+                + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_;
+        textView_.setText(aux);
     }
 
     private enum Stage {
@@ -283,7 +288,7 @@ public class DrawView extends GLSurfaceView {
                             + "ACTION_DOWN (" + x + "," + y + ")" + " ID:" + primitiveID);
                             System.out.flush();*/
                 }
-                return true;
+                break;
 
                 case MotionEvent.ACTION_MOVE:
                     final int pointerCount = motionEvent.getPointerCount();
@@ -300,7 +305,7 @@ public class DrawView extends GLSurfaceView {
                          + "ACTION_MOVE (" + touch.x_ + "," + touch.y_ + ")"
                          + " ID:" + touch.primitiveID_);System.out.flush();*/
                     }
-                    return true;
+                    break;
 
                 case MotionEvent.ACTION_POINTER_UP:
                     /*System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" +
@@ -312,20 +317,22 @@ public class DrawView extends GLSurfaceView {
                         return false;
                     }
                     renderTask_.touches_.remove(touchListIndex);
-                    return true;
+                    break;
 
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     /*System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" +
                      "ACTION_CANCEL");System.out.flush();*/
                     renderTask_.touches_.clear();
-                    return true;
+                    break;
 
                 default:
                     /*System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]" +
                      "default");System.out.flush();*/
                     return false;
             }
+            performClick();
+            return true;
         }
     }
 }

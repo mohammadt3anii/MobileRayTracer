@@ -83,7 +83,7 @@ void KdTree::InsertSplitPos (float a_SplitPos) {
   entry->splitpos = a_SplitPos;
   entry->n1count = 0;
   entry->n2count = 0;
-  if (!m_SList) {
+  if (m_SList == nullptr) {
     m_SList = entry;
   } else {
     if (a_SplitPos < m_SList->splitpos) {
@@ -110,7 +110,7 @@ void KdTree::InsertSplitPos (float a_SplitPos) {
 
 void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prims) {
   // recycle used split list nodes
-  if (m_SList) {
+  if (m_SList != nullptr) {
     SplitList *list {m_SList};
     while (list->next) {
       list = list->next;
@@ -136,9 +136,10 @@ void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prim
   float *const eleft {new float[a_Prims]}, *eright {new float[a_Prims]};
   Primitive<Triangle> **parray {new Primitive<Triangle> *[a_Prims]};
   int aidx {0};
-  while (l) {
-    Primitive<Triangle> *p {parray[aidx] = l->GetPrimitive ()};
-    if (!p) {
+  while (l != nullptr) {
+    Primitive<Triangle> *p {l->GetPrimitive ()};
+    parray[aidx] = p;
+    if (p == nullptr) {
       break;
     }
     pright[aidx] = true;
@@ -170,19 +171,19 @@ void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prim
     l = l->GetNext ();
   }
   // determine n1count / n2count for each split position
-  AABB b1, b2, b3 (a_Box), b4 (a_Box);
+  AABB b1 {}, b2 {}, b3 (a_Box), b4 (a_Box);
   SplitList *splist {m_SList};
   const float b3p1 {b3.pointMin_.cell[axis]};
   const float b4p2 {b4.pointMin_.cell[axis] + b4.pointMax_.cell[axis]};
-  while (splist) {
+  while (splist != nullptr) {
     b4.pointMin_.cell[axis] = splist->splitpos;
     b4.pointMax_.cell[axis] = pos2 - splist->splitpos;
     b3.pointMax_.cell[axis] = splist->splitpos - pos1;
-    float b3p2 {b3.pointMin_.cell[axis] + b3.pointMax_.cell[axis]};
-    float b4p1 {b4.pointMin_.cell[axis]};
+    const float b3p2 {b3.pointMin_.cell[axis] + b3.pointMax_.cell[axis]};
+    const float b4p1 {b4.pointMin_.cell[axis]};
     for (int i {0}; i < a_Prims; i++)
       if (pright[i]) {
-        Primitive<Triangle> *p {parray[i]};
+        Primitive<Triangle> *const p {parray[i]};
         if ((eleft[i] <= b3p2) && (eright[i] >= b3p1)) {
           if (p->intersect (b3)) {
             splist->n1count++;
@@ -207,12 +208,12 @@ void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prim
     (a_Box.pointMax_ - a_Box.pointMin_).x_ * (a_Box.pointMax_ - a_Box.pointMin_).y_ +
     (a_Box.pointMax_ - a_Box.pointMin_).z_ * (a_Box.pointMax_ - a_Box.pointMin_).y_};
   // calculate cost for not splitting
-  float Cleaf {a_Prims * 1.0f};
+  const float Cleaf {a_Prims * 1.0f};
   // determine optimal split plane position
   splist = m_SList;
   float lowcost {10000};
   float bestpos {0};
-  while (splist) {
+  while (splist != nullptr) {
     // calculate child node extends
     b4.pointMin_.cell[axis] = splist->splitpos;
     b4.pointMax_.cell[axis] = pos2 - splist->splitpos;
@@ -241,6 +242,7 @@ void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prim
   a_Node->SetSplitPos (bestpos);
   // construct child nodes
   KdTreeNode *const left {m_MManager->NewKdTreeNodePair ()};
+  KdTreeNode *const right {m_MManager->NewKdTreeNodePair ()};
   int n1count {0}, n2count {0}, total {0};
   // assign primitives to both sides
   float b1p1 {b1.pointMin_.cell[axis]};
@@ -250,47 +252,49 @@ void KdTree::Subdivide (KdTreeNode *a_Node, AABB &a_Box, int a_Depth, int a_Prim
   for (int i {0}; i < a_Prims; i++) {
     Primitive<Triangle> *p {parray[i]};
     total++;
-    if ((eleft[i] <= b1p2) && (eright[i] >= b1p1))
+    if ((eleft[i] <= b1p2) && (eright[i] >= b1p1)) {
       if (p->intersect (b1)) {
         left->Add (p);
         n1count++;
       }
-    if ((eleft[i] <= b2p2) && (eright[i] >= b2p1))
+    }
+    if ((eleft[i] <= b2p2) && (eright[i] >= b2p1)) {
       if (p->intersect (b2)) {
-        (left + 1)->Add (p);
+        right->Add (p);
         n2count++;
       }
+    }
   }
   delete[] eleft;
   delete[] eright;
   delete[] parray;
   m_MManager->FreeObjectList (a_Node->GetList ());
   a_Node->SetLeft (left);
+  a_Node->SetRight (right);
   a_Node->SetLeaf (false);
   if (a_Depth < MAXTREEDEPTH) {
     if (n1count > 2) {
       Subdivide (left, b1, a_Depth + 1, n1count);
     }
     if (n2count > 2) {
-      Subdivide (left + 1, b2, a_Depth + 1, n2count);
+      Subdivide (right, b2, a_Depth + 1, n2count);
     }
   }
 }
 
-bool KdTree::shadowTrace (Intersection * /*intersection*/, Ray && /*ray*/) const noexcept {
+bool KdTree::shadowTrace (Intersection * /*intersection*/, Ray && /*ray*/) noexcept {
   return false;
 }
 
 bool KdTree::trace (Intersection *const intersection, const Ray &ray) noexcept {
-  float tnear {0}, tfar {RayLengthMax}, t {};
+  float tnear {0}, tfar {RayLengthMax};
   bool retval {false};
   const Point3D p1 {sceneBounds_.pointMin_};
-  const Point3D p2 {p1 + (sceneBounds_.pointMax_ - sceneBounds_.pointMin_)};
+  const Point3D p2 {sceneBounds_.pointMax_};
   const Vector3D D {ray.direction_};
   const Point3D O {ray.origin_};
-  int i {};
-  for (i = 0; i < 3; i++) {
-    if (D.cell[i] < 0) {
+  for (int i {0}; i < 3; i++) {
+    if (D.x_ < 0) {
       if (O.cell[i] < p1.cell[i]) {
         return false;
       }
@@ -299,30 +303,28 @@ bool KdTree::trace (Intersection *const intersection, const Ray &ray) noexcept {
     }
   }
   // clip ray segment to box
-  for (i = 0; i < 3; i++) {
-    const float pos {O.cell[i] + tfar * D.cell[i]};
-    if (D.cell[i] < 0) {
-      // clip end point
-      if (pos < p1.cell[i]) {
-        tfar = tnear + (tfar - tnear) * ((O.cell[i] - p1.cell[i]) / (O.cell[i] - pos));
-      }
-      // clip start point
-      if (O.cell[i] > p2.cell[i]) {
-        tnear += (tfar - tnear) * ((O.cell[i] - p2.cell[i]) / (tfar * D.cell[i]));
-      }
-    } else {
-      // clip end point
-      if (pos > p2.cell[i]) {
-        tfar = tnear + (tfar - tnear) * ((p2.cell[i] - O.cell[i]) / (pos - O.cell[i]));
-      }
-      // clip start point
-      if (O.cell[i] < p1.cell[i]) {
-        tnear += (tfar - tnear) * ((p1.cell[i] - O.cell[i]) / (tfar * D.cell[i]));
-      }
+  const float pos {O.x_ + tfar * D.x_};
+  if (D.x_ < 0) {
+    // clip end point
+    if (pos < p1.x_) {
+      tfar = tnear + (tfar - tnear) * ((O.x_ - p1.x_) / (O.x_ - pos));
     }
-    if (tnear > tfar) {
-      return false;
+    // clip start point
+    if (O.x_ > p2.x_) {
+      tnear += (tfar - tnear) * ((O.x_ - p2.x_) / (tfar * D.x_));
     }
+  } else {
+    // clip end point
+    if (pos > p2.x_) {
+      tfar = tnear + (tfar - tnear) * ((p2.x_ - O.x_) / (pos - O.x_));
+    }
+    // clip start point
+    if (O.x_ < p1.x_) {
+      tnear += (tfar - tnear) * ((p1.x_ - O.x_) / (tfar * D.x_));
+    }
+  }
+  if (tnear > tfar) {
+    return false;
   }
   // init stack
   int entrypoint {0}, exitpoint {1};
@@ -338,45 +340,114 @@ bool KdTree::trace (Intersection *const intersection, const Ray &ray) noexcept {
   m_Stack[exitpoint].pb = O + D * tfar;
   m_Stack[exitpoint].node = nullptr;
   // traverse kd-tree
-  while (currnode) {
+  while (currnode != nullptr) {
     while (!currnode->IsLeaf ()) {
-      float splitpos {currnode->GetSplitPos ()};
-      int axis {currnode->GetAxis ()};
-      if (m_Stack[entrypoint].pb.cell[axis] <= splitpos) {
-        if (m_Stack[exitpoint].pb.cell[axis] <= splitpos) {
+      const float splitpos {currnode->GetSplitPos ()};
+      {
+        if (m_Stack[entrypoint].pb.x_ <= splitpos) {
+          if (m_Stack[exitpoint].pb.x_ <= splitpos) {
+            currnode = currnode->GetLeft ();
+            continue;
+          }
+          if (m_Stack[exitpoint].pb.x_ == splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
           currnode = currnode->GetLeft ();
-          continue;
+          //farchild = currnode + 1; // GetRight();
+          farchild = currnode->GetRight ();
+        } else {
+          if (m_Stack[exitpoint].pb.x_ > splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
+          farchild = currnode->GetLeft ();
+          //currnode = farchild + 1; // GetRight();
+          currnode = farchild->GetRight ();
         }
-        if (m_Stack[exitpoint].pb.cell[axis] == splitpos) {
-          currnode = currnode->GetRight ();
-          continue;
+        const float t {(splitpos - O.x_) / D.x_};
+        const int tmp {exitpoint++};
+        if (exitpoint == entrypoint) {
+          exitpoint++;
         }
-        currnode = currnode->GetLeft ();
-        farchild = currnode + 1; // GetRight();
-      } else {
-        if (m_Stack[exitpoint].pb.cell[axis] > splitpos) {
-          currnode = currnode->GetRight ();
-          continue;
-        }
-        farchild = currnode->GetLeft ();
-        currnode = farchild + 1; // GetRight();
+        m_Stack[exitpoint].prev = tmp;
+        m_Stack[exitpoint].t = t;
+        m_Stack[exitpoint].node = farchild;
+        m_Stack[exitpoint].pb.x_ = splitpos;
+        m_Stack[exitpoint].pb.y_ = O.y_ + t * D.y_;
+        m_Stack[exitpoint].pb.z_ = O.z_ + t * D.z_;
       }
-      t = (splitpos - O.cell[axis]) / D.cell[axis];
-      int tmp = exitpoint++;
-      if (exitpoint == entrypoint) {
-        exitpoint++;
+      {
+        if (m_Stack[entrypoint].pb.y_ <= splitpos) {
+          if (m_Stack[exitpoint].pb.y_ <= splitpos) {
+            currnode = currnode->GetLeft ();
+            continue;
+          }
+          if (m_Stack[exitpoint].pb.y_ == splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
+          currnode = currnode->GetLeft ();
+          //farchild = currnode + 1; // GetRight();
+          farchild = currnode->GetRight ();
+        } else {
+          if (m_Stack[exitpoint].pb.y_ > splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
+          farchild = currnode->GetLeft ();
+          //currnode = farchild + 1; // GetRight();
+          currnode = farchild->GetRight ();
+        }
+        const float t {(splitpos - O.y_) / D.y_};
+        const int tmp {exitpoint++};
+        if (exitpoint == entrypoint) {
+          exitpoint++;
+        }
+        m_Stack[exitpoint].prev = tmp;
+        m_Stack[exitpoint].t = t;
+        m_Stack[exitpoint].node = farchild;
+        m_Stack[exitpoint].pb.y_ = splitpos;
+        m_Stack[exitpoint].pb.x_ = O.x_ + t * D.x_;
+        m_Stack[exitpoint].pb.z_ = O.z_ + t * D.z_;
       }
-      m_Stack[exitpoint].prev = tmp;
-      m_Stack[exitpoint].t = t;
-      m_Stack[exitpoint].node = farchild;
-      m_Stack[exitpoint].pb.cell[axis] = splitpos;
-      const int nextaxis {m_Mod[axis + 1]};
-      const int prevaxis {m_Mod[axis + 2]};
-      m_Stack[exitpoint].pb.cell[nextaxis] = O.cell[nextaxis] + t * D.cell[nextaxis];
-      m_Stack[exitpoint].pb.cell[prevaxis] = O.cell[prevaxis] + t * D.cell[prevaxis];
+      {
+        if (m_Stack[entrypoint].pb.z_ <= splitpos) {
+          if (m_Stack[exitpoint].pb.z_ <= splitpos) {
+            currnode = currnode->GetLeft ();
+            continue;
+          }
+          if (m_Stack[exitpoint].pb.z_ == splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
+          currnode = currnode->GetLeft ();
+          //farchild = currnode + 1; // GetRight();
+          farchild = currnode->GetRight ();
+        } else {
+          if (m_Stack[exitpoint].pb.z_ > splitpos) {
+            currnode = currnode->GetRight ();
+            continue;
+          }
+          farchild = currnode->GetLeft ();
+          //currnode = farchild + 1; // GetRight();
+          currnode = farchild->GetRight ();
+        }
+        const float t {(splitpos - O.z_) / D.z_};
+        const int tmp {exitpoint++};
+        if (exitpoint == entrypoint) {
+          exitpoint++;
+        }
+        m_Stack[exitpoint].prev = tmp;
+        m_Stack[exitpoint].t = t;
+        m_Stack[exitpoint].node = farchild;
+        m_Stack[exitpoint].pb.z_ = splitpos;
+        m_Stack[exitpoint].pb.x_ = O.x_ + t * D.x_;
+        m_Stack[exitpoint].pb.y_ = O.y_ + t * D.y_;
+      }
     }
-    ObjectList *list = currnode->GetList ();
-    while (list) {
+    ObjectList *list {currnode->GetList ()};
+    while (list != nullptr) {
       Primitive<Triangle> *const pr {list->GetPrimitive ()};
       m_Intersections++;
       if (!pr) {

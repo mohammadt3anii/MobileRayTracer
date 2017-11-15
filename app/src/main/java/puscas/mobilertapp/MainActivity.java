@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -70,9 +69,7 @@ public final class MainActivity extends Activity {
 
     private String readTextAsset(final String filename) {
         String asset = null;
-        InputStream stream = null;
-        try {
-            stream = getAssets().open(filename);
+        try (final InputStream stream = getAssets().open(filename)) {
             final int size = stream.available();
             final byte[] buffer = new byte[size];
             stream.read(buffer);
@@ -84,15 +81,6 @@ public final class MainActivity extends Activity {
         } catch (final IOException e2) {
             Log.e("Assets", "Couldn't read asset " + filename);
             Log.e("Assets", e2.getMessage());
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (final IOException e) {
-                    Log.e("Assets", "Couldn't close asset " + filename);
-                    Log.e("Assets", e.toString());
-                }
-            }
         }
         return asset;
     }
@@ -140,7 +128,7 @@ public final class MainActivity extends Activity {
         final ConfigurationInfo info = am.getDeviceConfigurationInfo();
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2) {
-            drawView_ = (DrawView) findViewById(R.id.drawLayout);
+            drawView_ = findViewById(R.id.drawLayout);
             if (drawView_ == null) {
                 Log.e("DrawView", "DrawView is NULL !!!");
                 System.exit(0);
@@ -157,7 +145,7 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.vertexShaderCode = vertexShader;
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
 
-            drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+            drawView_.buttonRender_ = findViewById(R.id.renderButton);
             drawView_.buttonRender_.setOnLongClickListener((View v) -> {
                 this.recreate();
                 return false;
@@ -166,13 +154,13 @@ public final class MainActivity extends Activity {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
             }
-            final TextView textView = (TextView) findViewById(R.id.timeText);
+            final TextView textView = findViewById(R.id.timeText);
             if (textView == null) {
                 Log.e("TextView", "TextView is NULL !!!");
                 System.exit(0);
             }
             drawView_.setView(textView);
-            drawView_.buttonRender_ = (Button) findViewById(R.id.renderButton);
+            drawView_.buttonRender_ = findViewById(R.id.renderButton);
             if (drawView_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
@@ -182,26 +170,28 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
 
-        final String[] scenes = {"Cornell", "Spheres", "Cornell2", "Spheres2", "OBJ"};
-        pickerScene_ = (NumberPicker) findViewById(R.id.pickerScene);
+        pickerScene_ = findViewById(R.id.pickerScene);
         if (pickerScene_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
         }
+
         pickerScene_.setMinValue(0);
+        final String[] scenes = {"Cornell", "Spheres", "Cornell2", "Spheres2", "OBJ"};
         pickerScene_.setMaxValue(scenes.length - 1);
         pickerScene_.setDisplayedValues(scenes);
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         pickerScene_.setValue(pickerScene);
 
-        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "Diffuse"};
-        pickerShader_ = (NumberPicker) findViewById(R.id.pickerShader);
+        pickerShader_ = findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
         }
+
         pickerShader_.setMinValue(0);
+        final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "Diffuse"};
         pickerShader_.setMaxValue(shaders.length - 1);
         pickerShader_.setDisplayedValues(shaders);
         pickerShader_.setWrapSelectorWheel(true);
@@ -213,7 +203,7 @@ public final class MainActivity extends Activity {
         for (int i = 0; i < maxSamplesPixel; i++) {
             samplesPixel[i] = Integer.toString((i + 1) * (i + 1));
         }
-        pickerSamplesPixel_ = (NumberPicker) findViewById(R.id.pickerSamplesPixel);
+        pickerSamplesPixel_ = findViewById(R.id.pickerSamplesPixel);
         if (pickerSamplesPixel_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
@@ -236,7 +226,7 @@ public final class MainActivity extends Activity {
         for (int i = 0; i < maxSamplesLight; i++) {
             samplesLight[i] = Integer.toString(i + 1);
         }
-        pickerSamplesLight_ = (NumberPicker) findViewById(R.id.pickerSamplesLight);
+        pickerSamplesLight_ = findViewById(R.id.pickerSamplesLight);
         if (pickerSamplesLight_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
@@ -248,27 +238,26 @@ public final class MainActivity extends Activity {
         pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         pickerSamplesLight_.setValue(pickerSamplesLight);
 
-        final String[] accelerators = {"Naive", "RegGrid", "KD-Tree", "Nothing"};
-        pickerAccelerator_ = (NumberPicker) findViewById(R.id.pickerAccelerator);
+        pickerAccelerator_ = findViewById(R.id.pickerAccelerator);
         if (pickerAccelerator_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
         }
         pickerAccelerator_.setMinValue(0);
+        final String[] accelerators = {"Naive", "RegGrid", "KD-Tree", "BVH"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
         pickerAccelerator_.setDisplayedValues(accelerators);
         pickerAccelerator_.setWrapSelectorWheel(true);
         pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         pickerAccelerator_.setValue(pickerAccelerator);
 
-        pickerThreads_ = (NumberPicker) findViewById(R.id.pickerThreads);
+        pickerThreads_ = findViewById(R.id.pickerThreads);
         if (pickerThreads_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
         }
         pickerThreads_.setMinValue(1);
         final int maxCores = MainActivity.getNumberOfCores();
-        System.out.println("Max cores = " + maxCores);
         pickerThreads_.setMaxValue(maxCores);
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
@@ -288,7 +277,7 @@ public final class MainActivity extends Activity {
             sizes[i - 1] = String.format(Locale.US, "%.2f", value * value) + 'x';
         }
         sizes[maxSizes - 1] = String.format(Locale.US, "%.2f", 1.0f) + 'x';
-        pickerSizes_ = (NumberPicker) findViewById(R.id.pickerSize);
+        pickerSizes_ = findViewById(R.id.pickerSize);
         if (pickerSizes_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
             System.exit(0);
@@ -307,12 +296,12 @@ public final class MainActivity extends Activity {
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()] == "OBJ") {
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
+                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
-                    final String obj = "WavefrontOBJs/conference/conference";
+                    //final String obj = "WavefrontOBJs/conference/conference";
                     //objText_ = readTextAsset(obj + ".obj");
                     //matText_ = readTextAsset(obj + ".mtl");
-                    objText_ = obj + ".obj";
+                    objText_ = obj + "2.obj";
                     matText_ = obj + ".mtl";
                 }
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];

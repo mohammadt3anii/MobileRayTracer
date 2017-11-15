@@ -11,16 +11,16 @@ namespace MobileRT {
   class KdTreeNode;
 
   struct kdstack {
-    KdTreeNode *node;
-    float t;
-    Point3D pb;
-    int prev;
+    KdTreeNode *node {nullptr};
+    float t {};
+    Point3D pb {};
+    int prev {};
   };
 
   struct SplitList final {
-    float splitpos;
-    int n1count, n2count;
-    SplitList *next;
+    float splitpos {};
+    int n1count {}, n2count {};
+    SplitList *next {nullptr};
   };
 
   class ObjectList {
@@ -38,8 +38,8 @@ namespace MobileRT {
     ObjectList *GetNext () { return m_Next; }
 
     private:
-    Primitive<Triangle> *m_Primitive;
-    ObjectList *m_Next;
+    Primitive<Triangle> *m_Primitive {nullptr};
+    ObjectList *m_Next {nullptr};
   };
 
   class KdTreeNode final {
@@ -55,6 +55,8 @@ namespace MobileRT {
     float GetSplitPos () { return m_Split; }
 
     void SetLeft (KdTreeNode *a_Left) { m_left = a_Left; }
+
+    void SetRight (KdTreeNode *a_Right) { m_right = a_Right; }
 
     KdTreeNode *GetLeft () { return m_left; }
 
@@ -76,7 +78,7 @@ namespace MobileRT {
     bool m_isLeaf;
     KdTreeNode *m_left;
     KdTreeNode *m_right;
-    ObjectList *m_Data;
+    ObjectList *m_Data {nullptr};
   };
 
   class MManager {
@@ -84,8 +86,9 @@ namespace MobileRT {
     MManager ();
     void FreeObjectList (ObjectList *a_List);
     KdTreeNode *NewKdTreeNodePair ();
+
     public:
-    ObjectList *m_OList;
+    ObjectList *m_OList {nullptr};
   };
 
   class KdTree final {
@@ -102,13 +105,12 @@ namespace MobileRT {
     void SetMemoryManager (MManager *a_MM) { m_MManager = a_MM; }
 
     private:
-    KdTreeNode *m_Root;
-    SplitList *m_SList, *m_SPool;
-    AABB sceneBounds_;
-    kdstack *m_Stack;
-    int *m_Mod;
-    int m_Intersections;
-    private:
+    KdTreeNode *m_Root {nullptr};
+    SplitList *m_SList {nullptr}, *m_SPool {nullptr};
+    AABB sceneBounds_ {};
+    kdstack *m_Stack {nullptr};
+    int *m_Mod {nullptr};
+    int m_Intersections {};
     MManager *m_MManager {nullptr};
 
     public:
@@ -122,7 +124,7 @@ namespace MobileRT {
 
     public:
     bool trace (Intersection *intersection, const Ray &ray) noexcept;
-    bool shadowTrace (Intersection *intersection, Ray &&ray) const noexcept;
+    bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
   };
 }//namespace MobileRT
 

@@ -11,10 +11,6 @@
 #include "Material.hpp"
 #include "Primitive.hpp"
 #include "Ray.hpp"
-#include "Shapes/Plane.hpp"
-#include "Shapes/Rectangle.hpp"
-#include "Shapes/Sphere.hpp"
-#include "Shapes/Triangle.hpp"
 #include "Utils.hpp"
 #include <vector>
 
@@ -34,11 +30,13 @@ namespace MobileRT {
       template<typename T>
       bool shadowTrace (std::vector<T> &primitives, Intersection *intersection,
                         Ray ray) const noexcept;
+      static void AABBbounds (const AABB box, Point3D *const min, Point3D *const max);
 
     public:
 			explicit Scene () = default;
 
       Scene (const Scene &scene) noexcept = delete;
+
       Scene (Scene &&scene) noexcept = default;
       ~Scene () noexcept;
       Scene &operator= (const Scene &scene) noexcept = delete;
@@ -49,13 +47,11 @@ namespace MobileRT {
       static unsigned getInstances () noexcept;
       bool traceLights (Intersection *intersection, Ray ray) const noexcept;
       void resetSampling () noexcept;
-      static void AABBbounds (const AABB box, Point3D *const min, Point3D *const max);
 
       template<typename T>
-      static void
-      getBounds (const std::vector<T> &primitives, Point3D *const min, Point3D *const max) {
-        for (const T &primitive : primitives) {
-          AABBbounds (primitive.getAABB (), min, max);
+      static void getBounds (std::vector<T *> primitives, Point3D *const min, Point3D *const max) {
+        for (T *primitive : primitives) {
+          AABBbounds (primitive->getAABB (), min, max);
         }
       }
     };

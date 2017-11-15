@@ -5,8 +5,10 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
+#include "Accelerators/BVH.hpp"
 #include "Accelerators/KdTree.hpp"
 #include "Accelerators/RegularGrid.hpp"
+#include "Camera.hpp"
 #include "Intersection.hpp"
 #include "RGB.hpp"
 #include "Ray.hpp"
@@ -18,14 +20,15 @@
 namespace MobileRT {
   class Shader {
     public:
-    Scene scene_;
-    RegularGrid regularGrid_;
-    KdTree kDTree_;
-
+    Scene scene_ {};
+    RegularGrid regularGrid_ {};
+    KdTree kDTree_ {};
+    BVH bVH_ {};
     enum Accelerator {
       NONE = 0,
       REGULAR_GRID,
-      KD_TREE
+      KD_TREE,
+      BVH
     };
 
     private:
@@ -37,13 +40,9 @@ namespace MobileRT {
     protected:
 			virtual bool shade (RGB *rgb, Intersection intersection,
                           Ray &&ray) noexcept = 0;
-    private:
-      template<typename T>
-      void getSceneBounds(std::vector<T> primitives, Point3D *min, Point3D *max);
-    void AABBbounds (AABB box, Point3D *min, Point3D *max);
 
     public:
-    void initializeAccelerators (AABB camera) noexcept;
+    void initializeAccelerators (Camera *const camera) noexcept;
 
 		public:
     explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;

@@ -23,10 +23,6 @@
 #include "Components/Shaders/Whitted.hpp"
 #include "MobileRT/Renderer.hpp"
 #include "MobileRT/Scene.hpp"
-#include "MobileRT/Shapes/Plane.hpp"
-#include "MobileRT/Shapes/Rectangle.hpp"
-#include "MobileRT/Shapes/Sphere.hpp"
-#include "MobileRT/Shapes/Triangle.hpp"
 #include "Scenes.hpp"
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>

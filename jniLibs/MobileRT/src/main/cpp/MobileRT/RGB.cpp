@@ -46,7 +46,7 @@ void RGB::addMult (const std::initializer_list<const RGB> rgbs, const float valu
   float red {value};
   float green {value};
   float blue {value};
-  for (auto elem : rgbs) {
+  for (auto &elem : rgbs) {
     red *= elem.R_;
     green *= elem.G_;
     blue *= elem.B_;
@@ -138,4 +138,12 @@ float RGB::getMax () const noexcept {
   return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ / samples_ :
          this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ / samples_ :
          this->B_ / samples_;
+}
+
+RGB &RGB::operator= (const RGB &rgb) noexcept {
+  this->R_ = rgb.R_;
+  this->G_ = rgb.G_;
+  this->B_ = rgb.B_;
+  this->samples_ = rgb.samples_;
+  return *this;
 }
