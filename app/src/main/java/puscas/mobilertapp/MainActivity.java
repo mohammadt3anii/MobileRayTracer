@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSizes_;
     private String objText_;
     private String matText_;
+    private AssetManager am_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -68,8 +70,9 @@ public final class MainActivity extends Activity {
     }
 
     private String readTextAsset(final String filename) {
+        am_ = getAssets();
         String asset = null;
-        try (final InputStream stream = getAssets().open(filename)) {
+        try (final InputStream stream = am_.open(filename)) {
             final int size = stream.available();
             final byte[] buffer = new byte[size];
             stream.read(buffer);
