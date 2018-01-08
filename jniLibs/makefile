@@ -4,7 +4,7 @@
 default: all
 
 EXE := raytracer
-CXX ?= clang++
+CXX := c++
 LD := $(CXX)
 MAKEFLAGS := -j5
 INCLUDES := -I./MobileRT/src/main/cpp
@@ -13,18 +13,19 @@ INCLUDES += -I../third-party
 INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
 LDFLAGS += -L../third-party/tinyobjloader
 
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID -fPIE -fpie $(INCLUDES)
-CXXFLAGS += -Wno-zero-as-null-pointer-constant -Wno-old-style-cast
-CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
+CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID $(INCLUDES)
+CXXFLAGS += -Wno-old-style-cast
+CXXFLAGS += -fpic
+CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS := -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fPIE -fpie -fno-stack-check -march=native -ftree-vectorize
+LDFLAGS := -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
 
 LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
 
 ifeq ($(S),)
 	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer
 	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
-	CXXFLAGS += -flto=full
+	#CXXFLAGS += -flto=full
 	LDFLAGS += -flto=full
 endif
 
@@ -70,16 +71,24 @@ LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
 
 ###############################################################################
 
-SOURCES := $(shell find \
-./Components/src \
-./MobileRT/src \
+SOURCES_APP := $(shell find \
 ../app/src/main/cpp/Scenes.cpp \
 ! -name "DrawView.cpp" \
 -regextype gnu-awk -iname "*.cpp" -print | sort -nr)
-OBJS := $(addsuffix .o,$(basename $(SOURCES)))
-DEPS := $(addsuffix .d,$(basename $(SOURCES)))
-ASSM := $(addsuffix .s,$(basename $(SOURCES)))
-LLVM := $(addsuffix .llvmIR,$(basename $(SOURCES)))
+OBJS_APP := $(addsuffix .o,$(basename $(SOURCES_APP)))
+DEPS_APP := $(addsuffix .d,$(basename $(SOURCES_APP)))
+ASSM_APP := $(addsuffix .s,$(basename $(SOURCES_APP)))
+LLVM_APP := $(addsuffix .llvmIR,$(basename $(SOURCES_APP)))
+
+SOURCES_MOBILERT := $(shell find \
+./Components/src \
+./MobileRT/src \
+-regextype gnu-awk -iname "*.cpp" -print | sort -nr)
+OBJS_MOBILERT := $(addsuffix .o,$(basename $(SOURCES_MOBILERT)))
+DEPS_MOBILERT := $(addsuffix .d,$(basename $(SOURCES_MOBILERT)))
+ASSM_MOBILERT := $(addsuffix .s,$(basename $(SOURCES_MOBILERT)))
+LLVM_MOBILERT := $(addsuffix .llvmIR,$(basename $(SOURCES_MOBILERT)))
+
 GARB := $(shell find \
 ./Components/src \
 ./MobileRT/src \
@@ -107,16 +116,20 @@ GARB := $(shell find \
 %.llvmIR: %.cpp
 	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
 
-$(EXE): $(OBJS) RayTracerMain.o third_party
-	$(LD) $(OBJS) RayTracerMain.o -o $@ $(LDFLAGS) third-party/tiny_obj_loader.o
-	@rm -f $(OBJS) $(DEPS) $(GARB) RayTracerMain.o RayTracerMain.d
-	@echo "Compilation done"
+$(EXE): MobileRT $(OBJS_APP) RayTracerMain.o
+	$(LD) $(OBJS_APP) RayTracerMain.o -o $@ $(LDFLAGS) -lMobileRT
+	@echo "Compilation App done"
 
 clean:
-	@rm -f $(OBJS) $(DEPS) $(GARB) $(ASSM) $(LLVM) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s RayTracerMain.llvmIR
+	@rm -f $(OBJS_MOBILERT) $(DEPS_MOBILERT) $(ASSM_MOBILERT) $(LLVM_MOBILERT)
+	@rm -f $(OBJS_APP) $(DEPS_APP) $(GARB) $(ASSM_APP) $(LLVM_APP) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s RayTracerMain.llvmIR libMobileRT.so
 	@echo "Clean done"
 
 all: $(EXE)
+
+MobileRT: third_party $(OBJS_MOBILERT)
+	$(LD) -shared -o lib$@.so $(OBJS_MOBILERT) third-party/tiny_obj_loader.o $(LDFLAGS)
+	@echo "Compilation MobileRT done"
 
 third_party:
 	$(CXX) $(CXXFLAGS) -c ../third-party/tinyobjloader/tiny_obj_loader.cc -o third-party/tiny_obj_loader.o

@@ -48,8 +48,8 @@ namespace MobileRT {
     BVHNode root {};
     Scene *scene_ {};
     private:
-    void build_recursive (int left_index, int right_index,
-                          BVHNode *node, int depth) noexcept;
+      /*void build_recursive (int left_index, int right_index,
+                            BVHNode *node, int depth) noexcept;*/
     public:
     explicit BVH () noexcept {}
 

@@ -39,7 +39,6 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSizes_;
     private String objText_;
     private String matText_;
-    private AssetManager am_;
 
     private static int getNumCoresOldPhones() {
         try {
@@ -70,13 +69,17 @@ public final class MainActivity extends Activity {
     }
 
     private String readTextAsset(final String filename) {
-        am_ = getAssets();
+        final AssetManager am = getAssets();
         String asset = null;
-        try (final InputStream stream = am_.open(filename)) {
+        try (final InputStream stream = am.open(filename)) {
             final int size = stream.available();
             final byte[] buffer = new byte[size];
-            stream.read(buffer);
-            asset = new String(buffer);
+            final int bytes = stream.read(buffer);
+            if (bytes <= 0) {
+                asset = null;
+            } else {
+                asset = new String(buffer);
+            }
         } catch (final OutOfMemoryError e1) {
             Log.e("Assets", "Not enough memory for asset  " + filename);
             Log.e("Assets", e1.getMessage());
@@ -128,6 +131,7 @@ public final class MainActivity extends Activity {
         }
 
         final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        assert am != null;
         final ConfigurationInfo info = am.getDeviceConfigurationInfo();
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2) {
@@ -148,23 +152,23 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.vertexShaderCode = vertexShader;
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
 
-            drawView_.buttonRender_ = findViewById(R.id.renderButton);
-            drawView_.buttonRender_.setOnLongClickListener((View v) -> {
+            drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
+            drawView_.viewText_.buttonRender_.setOnLongClickListener((View v) -> {
                 this.recreate();
                 return false;
             });
-            if (drawView_.buttonRender_ == null) {
+            if (drawView_.viewText_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
             }
             final TextView textView = findViewById(R.id.timeText);
             if (textView == null) {
-                Log.e("TextView", "TextView is NULL !!!");
+                Log.e("ViewText", "ViewText is NULL !!!");
                 System.exit(0);
             }
             drawView_.setView(textView);
-            drawView_.buttonRender_ = findViewById(R.id.renderButton);
-            if (drawView_.buttonRender_ == null) {
+            drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
+            if (drawView_.viewText_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
             }
@@ -294,9 +298,9 @@ public final class MainActivity extends Activity {
     }
 
     public void startRender(final View view) {
-        switch (drawView_.isWorking()) {
+        switch (drawView_.viewText_.isWorking()) {
             case 0://if ray-tracer is idle
-                if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()] == "OBJ") {
+                if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
                     final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";

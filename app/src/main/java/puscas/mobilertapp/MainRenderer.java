@@ -29,8 +29,6 @@ class MainRenderer implements Renderer {
     String vertexShaderCode = null;
     String fragmentShaderCode = null;
     Bitmap bitmap_ = null;
-    private FloatBuffer floatBufferVertices;
-    private FloatBuffer floatBufferTexture;
 
     private static int loadShader(final int shaderType, final String source) {
         final int shader = GLES20.glCreateShader(shaderType);
@@ -75,13 +73,13 @@ class MainRenderer implements Renderer {
         //Create geometry and texCoords buffers
         final ByteBuffer bbVertices = ByteBuffer.allocateDirect(vertices.length << 2);
         bbVertices.order(ByteOrder.nativeOrder());
-        floatBufferVertices = bbVertices.asFloatBuffer();
+        final FloatBuffer floatBufferVertices = bbVertices.asFloatBuffer();
         floatBufferVertices.put(vertices);
         floatBufferVertices.position(0);
 
         final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length << 2);
         byteBufferTexCoords.order(ByteOrder.nativeOrder());
-        floatBufferTexture = byteBufferTexCoords.asFloatBuffer();
+        final FloatBuffer floatBufferTexture = byteBufferTexCoords.asFloatBuffer();
         floatBufferTexture.put(texCoords);
         floatBufferTexture.position(0);
 

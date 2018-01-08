@@ -47,7 +47,7 @@ float Plane::getZ() const noexcept {
 }
 
 Vector3D Plane::getRightVector () const noexcept {
-  const Vector3D up {0, 1, 0};
+    //const Vector3D up {0, 1, 0};
   Vector3D right {};
   if (this->normal_.x_ >= 1) {
     right = Vector3D {0, 1, 1};
@@ -128,7 +128,7 @@ bool Plane::intersect (const AABB box) const noexcept {
 
   const float distanceP {distance (positiveVertex)};
   const float distanceN {distance (negativeVertex)};
-  const bool res {distanceP <= 0 && distanceN >= 0 ? true : distanceP >= 0 && distanceN <= 0};
+    const bool res{(distanceP <= 0 && distanceN >= 0) || (distanceP >= 0 && distanceN <= 0)};
 
   return res;
 }

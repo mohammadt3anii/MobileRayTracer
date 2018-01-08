@@ -21,7 +21,7 @@ unsigned int BVH::BVHNode::getNObjs () noexcept {
 
 AABB &BVH::BVHNode::getAABB () noexcept {
   return this->bbox;
-};
+}
 
 void BVH::BVHNode::setAABB (AABB bbox_) noexcept {
   this->bbox = bbox_;
@@ -37,7 +37,7 @@ void BVH::BVHNode::makeNode (int left_index_, int n_objs_) noexcept {
   this->n_objs = static_cast<unsigned> (n_objs_);
 }
 
-#define THRESHOLD 1
+//#define THRESHOLD 1
 
 BVH::BVH (AABB sceneBounds, Scene *scene) noexcept :
   scene_ {scene} {
@@ -57,11 +57,11 @@ BVH::BVH (AABB sceneBounds, Scene *scene) noexcept :
   }*/
   //Set world bounding box to root node
   root.setAABB (sceneBounds);
-  build_recursive (0, static_cast<int> (Objs.size ()), &root, 0);
+  //build_recursive (0, static_cast<int> (Objs.size ()), &root, 0);
   LOG ("BVH");
 }
 
-void BVH::build_recursive (const int left_index, const int right_index, BVHNode *const node,
+/*void BVH::build_recursive (const int left_index, const int right_index, BVHNode *const node,
                            const int depth) {
   Point3D min {}, max {};
   Scene::getBounds (node->triangles_, &min, &max);
@@ -89,7 +89,7 @@ void BVH::build_recursive (const int left_index, const int right_index, BVHNode 
   //std::copy(this->scene_->triangles_.begin(), node->triangles_.end(), std::back_inserter(node->triangles_));
   build_recursive (left_index, split_index, leftNode, depth + 1);
   build_recursive (split_index, right_index, rightNode, depth + 1);
-}
+}*/
 
 bool BVH::trace (Intersection *const intersection, const Ray &ray) noexcept {
   bool retVal {false};

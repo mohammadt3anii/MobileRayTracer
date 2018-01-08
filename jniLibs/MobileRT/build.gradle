@@ -2,7 +2,7 @@ apply plugin: "com.android.library"
 android {
     publishNonDefault true
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 16
         //noinspection OldTargetApi
@@ -22,9 +22,15 @@ android {
             jniDebuggable false
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
-
 configurations {
     debug
     release
+}
+
+dependencies {
 }

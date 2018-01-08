@@ -10,7 +10,7 @@ android {
     }
     publishNonDefault true
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 16
         //noinspection OldTargetApi
@@ -48,7 +48,7 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:27.0.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
     debugCompile project(path: ':MobileRT', configuration: 'debug')
     debugCompile project(path: ':Components', configuration: 'debug')
     releaseCompile project(path: ':MobileRT', configuration: 'release')

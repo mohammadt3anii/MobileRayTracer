@@ -5,7 +5,7 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
-#include "Accelerators/BVH.hpp"
+//#include "Accelerators/BVH.hpp"
 #include "Accelerators/KdTree.hpp"
 #include "Accelerators/RegularGrid.hpp"
 #include "Camera.hpp"
@@ -23,7 +23,7 @@ namespace MobileRT {
     Scene scene_ {};
     RegularGrid regularGrid_ {};
     KdTree kDTree_ {};
-    BVH bVH_ {};
+	  //BVH bVH_ {};
     enum Accelerator {
       NONE = 0,
       REGULAR_GRID,

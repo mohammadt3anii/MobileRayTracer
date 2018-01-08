@@ -62,7 +62,7 @@ static void FPS() noexcept {
 }
 
 extern "C"
-void Java_puscas_mobilertapp_DrawView_finish(
+void Java_puscas_mobilertapp_ViewText_finish(
   JNIEnv *const env,
   jobject /*thiz*/,
   jobject dstBitmap
@@ -79,7 +79,7 @@ void Java_puscas_mobilertapp_DrawView_finish(
 }
 
 extern "C"
-State Java_puscas_mobilertapp_DrawView_isWorking (
+State Java_puscas_mobilertapp_ViewText_isWorking(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
@@ -368,7 +368,7 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
 }
 
 extern "C"
-void Java_puscas_mobilertapp_DrawView_moveTouch(
+void Java_puscas_mobilertapp_ViewText_moveTouch(
   JNIEnv *const /*env*/,
   jobject /*thiz*/,
   jfloat const jx,
@@ -389,7 +389,7 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 }
 
 extern "C"
-float Java_puscas_mobilertapp_DrawView_getFPS(
+float Java_puscas_mobilertapp_ViewText_getFPS(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
@@ -397,7 +397,7 @@ float Java_puscas_mobilertapp_DrawView_getFPS(
 }
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
+int64_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {
@@ -405,7 +405,7 @@ int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
 }
 
 extern "C"
-unsigned Java_puscas_mobilertapp_DrawView_getSample (
+unsigned Java_puscas_mobilertapp_ViewText_getSample(
   JNIEnv *const /*env*/,
   jobject /*thiz*/
 ) noexcept {

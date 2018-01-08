@@ -36,14 +36,14 @@ enum class State {
 };
 
 extern "C"
-void Java_puscas_mobilertapp_DrawView_finish(
+void Java_puscas_mobilertapp_ViewText_finish(
         JNIEnv *env,
         jobject thiz,
         jobject dstBitmap
 ) noexcept;
 
 extern "C"
-State Java_puscas_mobilertapp_DrawView_isWorking (
+State Java_puscas_mobilertapp_ViewText_isWorking(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -85,7 +85,7 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
         jfloat jy) noexcept;
 
 extern "C"
-void Java_puscas_mobilertapp_DrawView_moveTouch(
+void Java_puscas_mobilertapp_ViewText_moveTouch(
         JNIEnv *env,
         jobject thiz,
         jfloat jx,
@@ -94,19 +94,19 @@ void Java_puscas_mobilertapp_DrawView_moveTouch(
 ) noexcept;
 
 extern "C"
-float Java_puscas_mobilertapp_DrawView_getFPS(
+float Java_puscas_mobilertapp_ViewText_getFPS(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_getTimeFrame(
+int64_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-unsigned Java_puscas_mobilertapp_DrawView_getSample (
+unsigned Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *env,
         jobject thiz
 ) noexcept;

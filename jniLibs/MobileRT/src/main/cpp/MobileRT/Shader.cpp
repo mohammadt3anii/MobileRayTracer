@@ -4,7 +4,7 @@
 
 #include "Shader.hpp"
 
-using MobileRT::BVH;
+//using MobileRT::BVH;
 using MobileRT::Camera;
 using MobileRT::Intersection;
 using MobileRT::Ray;
@@ -48,7 +48,7 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
       break;
     }
     case Accelerator::BVH: {
-      bVH_ = MobileRT::BVH  {sceneBounds, &scene_};
+      //bVH_ = MobileRT::BVH  {sceneBounds, &scene_};
       break;
     }
     case Accelerator::NONE: {
@@ -77,7 +77,7 @@ bool Shader::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept 
       break;
     }
     case Accelerator::BVH: {
-      intersected = this->bVH_.shadowTrace (intersection, std::move (ray));
+      //intersected = this->bVH_.shadowTrace (intersection, std::move (ray));
       break;
     }
     case Accelerator::NONE: {
@@ -100,7 +100,7 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
       break;
     }
     case Accelerator::BVH: {
-      intersected = this->bVH_.trace (intersection, ray);
+      //intersected = this->bVH_.trace (intersection, ray);
       break;
     }
     case Accelerator::NONE: {
@@ -108,5 +108,5 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
       break;
     }
   }
-  return intersected ? shade (rgb, *intersection, std::move (ray)) : false;
+  return intersected && shade(rgb, *intersection, std::move(ray));
 }

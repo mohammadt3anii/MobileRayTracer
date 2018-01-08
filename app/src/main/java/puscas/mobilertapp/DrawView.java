@@ -5,52 +5,22 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.opengl.GLSurfaceView;
-import android.os.AsyncTask;
-import android.os.Debug;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import puscas.mobilertapp.DrawView.RenderTask.TouchTracker;
-
 public class DrawView extends GLSurfaceView {
-    Bitmap bitmap_ = null;
+    final ViewText viewText_ = new ViewText();
     MainRenderer renderer_;
-    long start_ = 0L;
-    long period_ = 0L;
-    float fps_ = 0.0f;
-    Button buttonRender_ = null;
-    DrawView.RenderTask renderTask_ = null;
-    String stageT_ = null;
-    String fpsT_ = null;
-    String timeFrameT_ = null;
-    String timeT_ = null;
-    String fpsRenderT_ = null;
-    String allocatedT_ = null;
-    String sampleT_ = null;
-    String nPrimitivesT_ = null;
+    private Bitmap bitmap_ = null;
+    private RenderTask renderTask_ = null;
     private int numThreads_ = 0;
-    private int frame_ = 0;
-    private float timebase_ = 0.0f;
-    private TextView textView_ = null;
-    private String resolutionT_ = null;
-    private String threadsT_ = null;
-    private String samplesPixelT_ = null;
-    private String samplesLightT_ = null;
 
     public DrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        resetPrint(getWidth(), getHeight(), 0, 0);
+        viewText_.resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
     native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
@@ -73,56 +43,18 @@ public class DrawView extends GLSurfaceView {
         return true;
     }
 
-    private void resetPrint(final int width, final int height,
-                            final int samplesPixel, final int samplesLight) {
-        fpsT_ = String.format(Locale.US, "fps:%.2f", 0.0f);
-        fps_ = 0.0f;
-        fpsRenderT_ = String.format(Locale.US, "[%.2f]", fps_);
-        timeFrameT_ = String.format(Locale.US, ",t:%.2fs", 0.0f);
-        timeT_ = String.format(Locale.US, "[%.2fs]", 0.0f);
-        stageT_ = " " + Stage.values()[0];
-        allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
-        resolutionT_ = ",r:" + width + 'x' + height;
-        threadsT_ = ",t:" + numThreads_;
-        samplesPixelT_ = ",spp:" + samplesPixel;
-        samplesLightT_ = ",spl:" + samplesLight;
-        sampleT_ = ",0";
-    }
-
     void setView(final TextView textView) {
-        textView_ = textView;
-        printText();
+        viewText_.textView_ = textView;
+        viewText_.printText();
     }
-
-    void FPS() {
-        frame_++;
-        final float time = SystemClock.elapsedRealtime();
-        if ((time - timebase_) > 1000) {
-            fps_ = (frame_ * 1000.0f) / (time - timebase_);
-            timebase_ = time;
-            frame_ = 0;
-        }
-    }
-
-    native void finish(Bitmap bitmap);
 
     private native void stopRender();
 
-    native void moveTouch(final float x, final float y, final int primitiveId);
-
     native int traceTouch(final float x, final float y);
-
-    native float getFPS();
-
-    native long getTimeFrame();
-
-    native int getSample();
 
     private native long getNumberOfLights();
 
     private native int resize(int size);
-
-    native int isWorking();
 
 
     void stopDrawing() {
@@ -131,10 +63,13 @@ public class DrawView extends GLSurfaceView {
     }
 
     void startRender() {
-        period_ = 250L;
-        buttonRender_.setText(R.string.stop);
-        renderTask_ = new DrawView.RenderTask();
-        start_ = SystemClock.elapsedRealtime();
+        viewText_.period_ = 250L;
+        viewText_.buttonRender_.setText(R.string.stop);
+        renderTask_ = new RenderTask(viewText_, bitmap_, () -> {
+            requestRender();
+            return 0;
+        });
+        viewText_.start_ = SystemClock.elapsedRealtime();
         renderIntoBitmap(bitmap_, numThreads_);
         renderTask_.execute();
         this.setOnTouchListener(new DrawView.TouchHandler());
@@ -145,21 +80,19 @@ public class DrawView extends GLSurfaceView {
         setVisibility(View.INVISIBLE);
         final int width = resize(Math.round(getWidth() * size));
         final int height = resize(Math.round(getHeight() * size));
-        nPrimitivesT_ = ",p=" + initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
+        viewText_.nPrimitivesT_ = ",p=" + initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
-        frame_ = 0;
-        timebase_ = 0.0f;
-        resetPrint(width, height, samplesPixel, samplesLight);
+        viewText_.resetPrint(width, height, samplesPixel, samplesLight);
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap_.eraseColor(Color.DKGRAY);
         renderer_.bitmap_ = bitmap_;
         setVisibility(View.VISIBLE);
     }
 
-    int getTouchListIndex(final int pointerID) {
+    private int getTouchListIndex(final int pointerID) {
         final int touchesSize = renderTask_.touches_.size();
         for (int i = 0; i < touchesSize; i++) {
-            final DrawView.RenderTask.TouchTracker thisTouch = renderTask_.touches_.get(i);
+            final TouchTracker thisTouch = renderTask_.touches_.get(i);
             if (pointerID == thisTouch.pointerID_) {
                 return i;
             }
@@ -167,96 +100,12 @@ public class DrawView extends GLSurfaceView {
         return -1;
     }
 
-    void printText() {
-        final String aux = fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_ + sampleT_ + '\n'
-                + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_;
-        textView_.setText(aux);
-    }
-
-    private enum Stage {
+    enum Stage {
         idle(0), busy(1), end(2), stop(3);
         final int id_;
 
         Stage(final int id) {
             this.id_ = id;
-        }
-    }
-
-
-    final class RenderTask extends AsyncTask<Void, Void, Void> {
-        final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
-        final List<TouchTracker> touches_ = new ArrayList<>(1);
-        private final Runnable timer_ = () -> {
-            final int touchesSize = touches_.size();
-            for (int i = 0; i < touchesSize; i++) {
-                final TouchTracker touch = touches_.get(i);
-                moveTouch(touch.x_, touch.y_, touch.primitiveID_);
-            }
-            FPS();
-            fpsT_ = String.format(Locale.US, "fps:%.1f", getFPS());
-            fpsRenderT_ = String.format(Locale.US, "[%.1f]", fps_);
-            timeFrameT_ = String.format(Locale.US, ",t:%.2fs", getTimeFrame() / 1000.0f);
-            timeT_ = String.format(Locale.US, "[%.2fs]",
-                    (SystemClock.elapsedRealtime() - start_) / 1000.0f);
-            allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
-            sampleT_ = "," + getSample();
-            final int stage = isWorking();
-            stageT_ = Stage.values()[stage].toString();
-            publishProgress();
-            requestRender();
-            if (stage != Stage.busy.id_) {
-                finish(bitmap_);
-                scheduler_.shutdown();
-            }
-        };
-
-        RenderTask() {
-            super();
-        }
-
-        @Override
-        protected final Void doInBackground(final Void... params) {
-            scheduler_.scheduleAtFixedRate(timer_, 0L, period_, TimeUnit.MILLISECONDS);
-            boolean running = true;
-            do {
-                try {
-                    running = !scheduler_.awaitTermination(2147483647L, TimeUnit.DAYS);
-                } catch (final InterruptedException e) {
-                    e.fillInStackTrace();
-                }
-            } while (running);
-            try {
-                Thread.sleep(period_);
-            } catch (final InterruptedException e) {
-                e.fillInStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected final void onProgressUpdate(final Void... progress) {
-            printText();
-        }
-
-        @Override
-        protected final void onPostExecute(final Void result) {
-            buttonRender_.setText(R.string.render);
-            requestRender();
-        }
-
-        final class TouchTracker {
-            final int pointerID_;
-            final int primitiveID_;
-            float x_;
-            float y_;
-
-            TouchTracker(final int pointerID, final int primitiveID, final float x, final float y) {
-                super();
-                this.pointerID_ = pointerID;
-                this.primitiveID_ = primitiveID;
-                this.x_ = x;
-                this.y_ = y;
-            }
         }
     }
 
@@ -267,7 +116,7 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         public final boolean onTouch(final View view, final MotionEvent motionEvent) {
-            if (isWorking() != Stage.busy.id_) {
+            if (viewText_.isWorking() != Stage.busy.id_) {
                 return false;
             }
             switch (motionEvent.getActionMasked()) {
@@ -281,7 +130,7 @@ public class DrawView extends GLSurfaceView {
                         return false;
                     }
                     final int pointerID = motionEvent.getPointerId(actionIndex);
-                    final TouchTracker thisTouch = renderTask_.new TouchTracker(
+                    final TouchTracker thisTouch = new TouchTracker(
                             pointerID, primitiveID, x, y);
                     renderTask_.touches_.add(thisTouch);
                     /*System.out.println("[TouchHandler," + Thread.currentThread().getId() + "]"
