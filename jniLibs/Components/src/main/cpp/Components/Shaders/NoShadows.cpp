@@ -4,18 +4,18 @@
 
 #include "NoShadows.hpp"
 
-using Components::NoShadows;
-using MobileRT::Light;
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
+using ::Components::NoShadows;
+using ::MobileRT::Light;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
+using ::MobileRT::RGB;
+using ::MobileRT::Intersection;
+using ::MobileRT::Ray;
+using ::MobileRT::Scene;
 
 NoShadows::NoShadows (Scene &&scene, const unsigned samplesLight,
                       const Accelerator accelerator) noexcept :
-  Shader {std::move (scene), samplesLight, accelerator} {
+  Shader {::std::move (scene), samplesLight, accelerator} {
 }
 
 bool NoShadows::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {

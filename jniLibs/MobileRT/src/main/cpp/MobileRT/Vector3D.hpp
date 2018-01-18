@@ -12,10 +12,15 @@ namespace MobileRT {
     class Point3D;
 
     class Vector3D final {
+
     public:
-      float x_ {0.0f};
-      float y_ {0.0f};
-      float z_ {0.0f};
+			float direction_ [3] {0.0f};
+      float x_ () const noexcept {return direction_[0];}
+      float y_ () const noexcept {return direction_[1];}
+      float z_ () const noexcept {return direction_[2];}
+			void setX (float x) noexcept {direction_[0] = x;}
+      void setY (float y) noexcept {direction_[1] = y;}
+      void setZ (float z) noexcept {direction_[2] = z;}
       float magnitude_ {1.0f};
 
     private:

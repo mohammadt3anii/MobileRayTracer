@@ -4,7 +4,7 @@
 
 #include "Constant.hpp"
 
-using Components::Constant;
+using ::Components::Constant;
 
 Constant::Constant(const float value) noexcept :
   value_(value) {

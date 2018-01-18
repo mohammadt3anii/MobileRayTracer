@@ -4,9 +4,9 @@
 
 #include "Sphere.hpp"
 
-using MobileRT::AABB;
-using MobileRT::Sphere;
-using MobileRT::Point3D;
+using ::MobileRT::AABB;
+using ::MobileRT::Sphere;
+using ::MobileRT::Point3D;
 
 Sphere::Sphere (const Point3D center, const float radius) noexcept :
   center_ {center},
@@ -26,7 +26,7 @@ bool Sphere::intersect (Intersection *const intersection, const Ray ray) const n
   if (discriminant <= 0.0f) { return false; }
 
   //ray intersects the sphere in 2 points
-  const float rootDiscriminant {std::sqrt (discriminant)};
+  const float rootDiscriminant {::std::sqrt (discriminant)};
   const float distanceToIntersection1 {(-B + rootDiscriminant) * 0.5f};
   const float distanceToIntersection2 {(-B - rootDiscriminant) * 0.5f};
   //distance between intersection and camera = smaller root = closer intersection
@@ -44,28 +44,28 @@ bool Sphere::intersect (Intersection *const intersection, const Ray ray) const n
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
-    this->center_.x_ = x;
-    this->center_.y_ = y;
+    this->center_.position_[0] = x;
+    this->center_.position_[1] = y;
 }
 
 float Sphere::getZ() const noexcept {
-    return this->center_.z_;
+    return this->center_.z_();
 }
 
 Point3D Sphere::getPositionMin() const noexcept {
-  const float radius {std::sqrt (this->sq_radius_)};
-  const float x {this->center_.x_ - radius};
-  const float y {this->center_.y_ - radius};
-  const float z {this->center_.z_ - radius};
+  const float radius {::std::sqrt (this->sq_radius_)};
+  const float x {this->center_.x_() - radius};
+  const float y {this->center_.y_() - radius};
+  const float z {this->center_.z_() - radius};
 
   return Point3D {x, y, z};
 }
 
 Point3D Sphere::getPositionMax() const noexcept {
-  const float radius {std::sqrt (this->sq_radius_)};
-  const float x {this->center_.x_ + radius};
-  const float y {this->center_.y_ + radius};
-  const float z {this->center_.z_ + radius};
+  const float radius {::std::sqrt (this->sq_radius_)};
+  const float x {this->center_.x_() + radius};
+  const float y {this->center_.y_() + radius};
+  const float z {this->center_.z_() + radius};
 
   return Point3D {x, y, z};
 }
@@ -78,20 +78,20 @@ bool Sphere::intersect (const AABB box) const noexcept {
   float dmin {0};
   const Point3D v1 {box.pointMin_};
   const Point3D v2 {box.pointMax_};
-	if (center_.x_ < v1.x_) {
-		dmin = dmin + (center_.x_ - v1.x_) * (center_.x_ - v1.x_);
-	} else if (center_.x_ > v2.x_) {
-		dmin = dmin + (center_.x_ - v2.x_) * (center_.x_ - v2.x_);
+	if (center_.x_() < v1.x_()) {
+		dmin = dmin + (center_.x_() - v1.x_()) * (center_.x_() - v1.x_());
+	} else if (center_.x_() > v2.x_()) {
+		dmin = dmin + (center_.x_() - v2.x_()) * (center_.x_() - v2.x_());
 	}
-  if (center_.y_ < v1.y_) {
-		dmin = dmin + (center_.y_ - v1.y_) * (center_.y_ - v1.y_);
-	} else if (center_.y_ > v2.y_) {
-		dmin = dmin + (center_.y_ - v2.y_) * (center_.y_ - v2.y_);
+  if (center_.y_() < v1.y_()) {
+		dmin = dmin + (center_.y_() - v1.y_()) * (center_.y_() - v1.y_());
+	} else if (center_.y_() > v2.y_()) {
+		dmin = dmin + (center_.y_() - v2.y_()) * (center_.y_() - v2.y_());
 	}
-  if (center_.z_ < v1.z_) {
-		dmin = dmin + (center_.z_ - v1.z_) * (center_.z_ - v1.z_);
-	} else if (center_.z_ > v2.z_) {
-		dmin = dmin + (center_.z_ - v2.z_) * (center_.z_ - v2.z_);
+  if (center_.z_() < v1.z_()) {
+		dmin = dmin + (center_.z_() - v1.z_()) * (center_.z_() - v1.z_());
+	} else if (center_.z_() > v2.z_()) {
+		dmin = dmin + (center_.z_() - v2.z_()) * (center_.z_() - v2.z_());
 	}
   const bool res {(dmin <= sq_radius_)};
 	return res;

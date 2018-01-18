@@ -8,7 +8,7 @@
 #include "MobileRT/Sampler.hpp"
 
 namespace Components {
-	class Constant final : public MobileRT::Sampler {
+	class Constant final : public ::MobileRT::Sampler {
     private:
       const float value_ {};
 

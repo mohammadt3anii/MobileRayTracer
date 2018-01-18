@@ -4,12 +4,12 @@
 
 #include "Sampler.hpp"
 
-using MobileRT::Sampler;
+using ::MobileRT::Sampler;
 
 Sampler::Sampler (const unsigned width, const unsigned height,
                   const unsigned samples) noexcept :
-  domainSize_ {(width / (width / static_cast<unsigned>(std::sqrt (NumberOfBlocks)))) *
-               (height / (width / static_cast<unsigned>(std::sqrt (NumberOfBlocks))))},
+  domainSize_ {(width / (width / static_cast<unsigned>(::std::sqrt (NumberOfBlocks)))) *
+               (height / (width / static_cast<unsigned>(::std::sqrt (NumberOfBlocks))))},
   samples_ {samples}
 {
 }

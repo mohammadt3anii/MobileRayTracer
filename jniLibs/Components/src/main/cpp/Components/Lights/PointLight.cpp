@@ -4,14 +4,14 @@
 
 #include "PointLight.hpp"
 
-using Components::PointLight;
-using MobileRT::Material;
-using MobileRT::Point3D;
-using MobileRT::Intersection;
-using MobileRT::Ray;
+using ::Components::PointLight;
+using ::MobileRT::Material;
+using ::MobileRT::Point3D;
+using ::MobileRT::Intersection;
+using ::MobileRT::Ray;
 
 PointLight::PointLight (Material radiance, const Point3D position) noexcept :
-  Light (std::move (radiance)),
+  Light (::std::move (radiance)),
   position_ {position} {
 }
 

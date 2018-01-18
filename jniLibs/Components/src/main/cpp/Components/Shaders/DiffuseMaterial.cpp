@@ -4,14 +4,14 @@
 
 #include "DiffuseMaterial.hpp"
 
-using Components::DiffuseMaterial;
-using MobileRT::Intersection;
-using MobileRT::RGB;
-using MobileRT::Ray;
-using MobileRT::Scene;
+using ::Components::DiffuseMaterial;
+using ::MobileRT::Intersection;
+using ::MobileRT::RGB;
+using ::MobileRT::Ray;
+using ::MobileRT::Scene;
 
 DiffuseMaterial::DiffuseMaterial (Scene &&scene, const Accelerator accelerator) noexcept :
-  Shader {std::move (scene), 0, accelerator} {
+  Shader {::std::move (scene), 0, accelerator} {
 }
 
 bool DiffuseMaterial::shade (RGB *const rgb, const Intersection intersection,

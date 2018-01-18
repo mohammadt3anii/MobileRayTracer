@@ -4,7 +4,7 @@
 
 #include "HaltonSeq.hpp"
 
-using Components::HaltonSeq;
+using ::Components::HaltonSeq;
 
 HaltonSeq::HaltonSeq (const unsigned width, const unsigned height,
                       const unsigned samples) noexcept :
@@ -12,10 +12,10 @@ HaltonSeq::HaltonSeq (const unsigned width, const unsigned height,
 }
 
 float HaltonSeq::getSample (const unsigned sample) noexcept {
-  const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
+  const uint32_t current {this->sample_.fetch_add (1, ::std::memory_order_relaxed)};
   if (current >= (this->domainSize_ * (sample + 1))) {
-    this->sample_.fetch_sub (1, std::memory_order_relaxed);
+    this->sample_.fetch_sub (1, ::std::memory_order_relaxed);
     return 1.0f;
   }
-  return haltonSequence(current - (sample * this->domainSize_), 2);
+  return ::MobileRT::haltonSequence(current - (sample * this->domainSize_), 2);
 }

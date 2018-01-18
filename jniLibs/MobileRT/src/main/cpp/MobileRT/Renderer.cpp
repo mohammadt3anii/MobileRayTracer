@@ -4,19 +4,19 @@
 
 #include "Renderer.hpp"
 
-using MobileRT::Renderer;
+using ::MobileRT::Renderer;
 
-Renderer::Renderer (std::unique_ptr<Shader> &&shader,
-                    std::unique_ptr<Camera> &&camera,
-                    std::unique_ptr<Sampler> &&samplerPixel,
+Renderer::Renderer (::std::unique_ptr<Shader> &&shader,
+                    ::std::unique_ptr<Camera> &&camera,
+                    ::std::unique_ptr<Sampler> &&samplerPixel,
                     const unsigned width, const unsigned height,
                     const unsigned samplesPixel) noexcept :
-  camera_ {std::move (camera)},
-  shader_ {std::move (shader)},
-  samplerPixel_ {std::move (samplerPixel)},
-  accumulate_ {std::vector<RGB> {width * height}},
-  blockSizeX_ {width / static_cast<unsigned>(std::sqrt (NumberOfBlocks))},
-  blockSizeY_ {height / static_cast<unsigned>(std::sqrt (NumberOfBlocks))},
+  camera_ {::std::move (camera)},
+  shader_ {::std::move (shader)},
+  samplerPixel_ {::std::move (samplerPixel)},
+  accumulate_ {::std::vector<RGB> {width * height}},
+  blockSizeX_ {width / static_cast<unsigned>(::std::sqrt (NumberOfBlocks))},
+  blockSizeY_ {height / static_cast<unsigned>(::std::sqrt (NumberOfBlocks))},
   sample_ {0},
   width_ {width},
   height_ {height},
@@ -28,7 +28,6 @@ Renderer::Renderer (std::unique_ptr<Shader> &&shader,
 }
 
 void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexcept {
-	LOG("START - resolution = ", resolution_);
 	this->sample_ = 0;
   for (auto &accumulate : this->accumulate_) {
 		accumulate.reset();
@@ -37,13 +36,13 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 	this->shader_->resetSampling();
 
   const int numChildren {numThreads - 1};
-  std::vector<std::thread> threads {};
+  ::std::vector<::std::thread> threads {};
 	threads.reserve(static_cast<unsigned>(numChildren));
   for (int i {0}; i < numChildren; i ++) {
 		threads.emplace_back(&Renderer::renderScene, this, bitmap, i);
 	}
 	renderScene(bitmap, numChildren);
-	for (std::thread& thread : threads) {
+	for (::std::thread& thread : threads) {
 		thread.join();
 	}
 	threads.clear();
@@ -82,7 +81,7 @@ void Renderer::stopRender() noexcept {
   this->samplerPixel_->stopSampling ();
 }
 
-void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
+void Renderer::renderScene (unsigned *const bitmap, const int /*tid*/) noexcept {
   const float INV_IMG_WIDTH {1.0f / this->width_};
   const float INV_IMG_HEIGHT {1.0f / this->height_};
   const float pixelWidth {0.5f / this->width_};
@@ -119,16 +118,16 @@ void Renderer::renderScene (unsigned *const bitmap, const int tid) noexcept {
 					// LOG("triangles = ", shader_.scene_.triangles_.size());
 					// LOG("spheres = ", shader_.scene_.spheres_.size());
 					// LOG("planes = ", shader_.scene_.planes_.size());
-					this->shader_->rayTrace(&pixelRGB, &intersection, std::move(ray));
+					this->shader_->rayTrace(&pixelRGB, &intersection, ::std::move(ray));
 					this->accumulate_[yWidth + x].addSampleAndCalcAvg(&pixelRGB);
 					bitmap[yWidth + x] = pixelRGB.RGB2Color();
 				}
 			}
 		}
-		if (tid == 0) {
+		/*if (tid == 0) {
 			this->sample_ = sample + 1;
 			LOG("Samples terminados = ", this->sample_);
-		}
+		}*/
 	}
 }
 

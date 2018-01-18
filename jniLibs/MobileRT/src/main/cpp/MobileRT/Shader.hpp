@@ -5,8 +5,7 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
-//#include "Accelerators/BVH.hpp"
-#include "Accelerators/KdTree.hpp"
+#include "Accelerators/BVH.hpp"
 #include "Accelerators/RegularGrid.hpp"
 #include "Camera.hpp"
 #include "Intersection.hpp"
@@ -20,19 +19,18 @@
 namespace MobileRT {
   class Shader {
     public:
-    Scene scene_ {};
-    RegularGrid regularGrid_ {};
-    KdTree kDTree_ {};
-	  //BVH bVH_ {};
-    enum Accelerator {
-      NONE = 0,
-      REGULAR_GRID,
-      KD_TREE,
-      BVH
-    };
+      Scene scene_ {};
+      RegularGrid regularGrid_ {};
+      BVH bVH_ {};
+
+      enum Accelerator {
+        NONE = 0,
+        REGULAR_GRID,
+        BOUNDING_VOLUME_HIERARCHY
+      };
 
     private:
-    const Accelerator accelerator_ {};
+      const Accelerator accelerator_ {};
 
     protected:
 			const unsigned samplesLight_ {};
@@ -42,10 +40,10 @@ namespace MobileRT {
                           Ray &&ray) noexcept = 0;
 
     public:
-    void initializeAccelerators (Camera *const camera) noexcept;
+      void initializeAccelerators (Camera *camera) noexcept;
 
 		public:
-    explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;
+      explicit Shader (Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;
 
 			Shader(const Shader &shader) noexcept = delete;
 
@@ -56,9 +54,12 @@ namespace MobileRT {
 			Shader &operator=(const Shader &shader) noexcept = delete;
 
 			Shader &operator=(Shader &&shader) noexcept = delete;
-    bool rayTrace (RGB *rgb, Intersection *intersection, Ray &&ray) noexcept;
-    bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
-    bool traceTouch (Intersection *intersection, Ray &&ray) noexcept;
+
+      bool rayTrace (RGB *rgb, Intersection *intersection, Ray &&ray) noexcept;
+
+      bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
+
+      bool traceTouch (Intersection *intersection, Ray &&ray) noexcept;
 
 			virtual void resetSampling() noexcept = 0;
   };

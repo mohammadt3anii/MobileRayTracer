@@ -4,10 +4,10 @@
 
 #include "Plane.hpp"
 
-using MobileRT::AABB;
-using MobileRT::Plane;
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
+using ::MobileRT::AABB;
+using ::MobileRT::Plane;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
 
 Plane::Plane (const Point3D point, const Vector3D normal) noexcept :
   normal_ {normal.returnNormalized()},
@@ -19,7 +19,7 @@ bool Plane::intersect (Intersection *const intersection, const Ray ray) const no
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
   const float normalized_projection {this->normal_.dotProduct (ray.direction_)};
-  if (std::fabs (normalized_projection) < Epsilon) {
+  if (::std::fabs (normalized_projection) < Epsilon) {
     return false;
   }
 
@@ -49,17 +49,17 @@ float Plane::getZ() const noexcept {
 Vector3D Plane::getRightVector () const noexcept {
     //const Vector3D up {0, 1, 0};
   Vector3D right {};
-  if (this->normal_.x_ >= 1) {
+  if (this->normal_.x_() >= 1) {
     right = Vector3D {0, 1, 1};
-  } else if (this->normal_.y_ >= 1) {
+  } else if (this->normal_.y_() >= 1) {
     right = Vector3D {1, 0, 1};
-  } else if (this->normal_.z_ >= 1) {
+  } else if (this->normal_.z_() >= 1) {
     right = Vector3D {1, 1, 0};
-  } else if (this->normal_.x_ <= -1) {
+  } else if (this->normal_.x_() <= -1) {
     right = Vector3D {0, 1, 1};
-  } else if (this->normal_.y_ <= -1) {
+  } else if (this->normal_.y_() <= -1) {
     right = Vector3D {1, 0, 1};
-  } else if (this->normal_.z_ <= -1) {
+  } else if (this->normal_.z_() <= -1) {
     right = Vector3D {1, 1, 0};
   }
   right.normalize ();
@@ -91,12 +91,12 @@ float Plane::distance (const Point3D point) const noexcept {
   //x0,y0,z0 = point
   //D = |ax0 + by0 + cz0 + d| / sqrt(a² + b² + c²)
   const float d {
-    normal_.x_ * - point_.x_ + normal_.y_ * - point_.y_ + normal_.z_ * - point_.z_};
+    normal_.x_() * - point_.x_() + normal_.y_() * - point_.y_() + normal_.z_() * - point_.z_()};
   const float numerator {
-    normal_.x_ * point.x_ + normal_.y_ * point.y_ + normal_.z_ * point.z_ + d};
+    normal_.x_() * point.x_() + normal_.y_() * point.y_() + normal_.z_() * point.z_() + d};
   const float denumerator {
-    std::sqrt (
-      normal_.x_ * normal_.x_ + normal_.y_ * normal_.y_ + normal_.z_ * normal_.z_)};
+    ::std::sqrt (
+      normal_.x_() * normal_.x_() + normal_.y_() * normal_.y_() + normal_.z_() * normal_.z_())};
   return numerator / denumerator;
 }
 
@@ -106,18 +106,18 @@ bool Plane::intersect (const AABB box) const noexcept {
   Point3D positiveVertex {box.pointMax_};
   Point3D negativeVertex {box.pointMin_};
 
-  /*if (this->normal_.x_ >= 0.0f) {
-    positiveVertex.x_ = box.pointMax_.x_;
-    negativeVertex.x_ = box.pointMin_.x_;
+  /*if (this->normal_.x_() >= 0.0f) {
+    positiveVertex.x_() = box.pointMax_.x_;
+    negativeVertex.x_() = box.pointMin_.x_;
   } else if (this->normal_.y_ >= 0.0f) {
     positiveVertex.y_ = box.pointMax_.y_;
     negativeVertex.y_ = box.pointMin_.y_;
   } else if (this->normal_.z_ >= 0.0f) {
     positiveVertex.z_ = box.pointMax_.z_;
     negativeVertex.z_ = box.pointMin_.z_;
-  } else if (this->normal_.x_ < 0.0f) {
-    positiveVertex.x_ = box.pointMin_.x_;
-    negativeVertex.x_ = box.pointMax_.x_;
+  } else if (this->normal_.x_() < 0.0f) {
+    positiveVertex.x_() = box.pointMin_.x_;
+    negativeVertex.x_() = box.pointMax_.x_;
   } else if (this->normal_.y_ < 0.0f) {
     positiveVertex.y_ = box.pointMin_.y_;
     negativeVertex.y_ = box.pointMax_.y_;

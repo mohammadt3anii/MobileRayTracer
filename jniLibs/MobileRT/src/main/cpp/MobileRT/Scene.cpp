@@ -4,10 +4,10 @@
 
 #include "Scene.hpp"
 
-using MobileRT::Scene;
-using MobileRT::Triangle;
-using MobileRT::Sphere;
-using MobileRT::Plane;
+using ::MobileRT::Scene;
+using ::MobileRT::Triangle;
+using ::MobileRT::Sphere;
+using ::MobileRT::Plane;
 static unsigned counter {0};
 
 Scene::~Scene() noexcept {
@@ -36,7 +36,7 @@ bool Scene::traceLights (Intersection *const intersection, const Ray ray) const 
 }
 
 template<typename T>
-bool Scene::trace (std::vector<T> &primitives, Intersection *const intersection,
+bool Scene::trace (::std::vector<T> &primitives, Intersection *const intersection,
                    const Ray ray) noexcept {
   bool res {false};
   for (T &primitive : primitives) {
@@ -47,22 +47,22 @@ bool Scene::trace (std::vector<T> &primitives, Intersection *const intersection,
 
 bool Scene::trace (Intersection *const intersection, Ray ray) noexcept {
   const bool intersectedTriangles {
-    trace<MobileRT::Primitive<MobileRT::Triangle>> (this->triangles_, intersection, ray)};
+    trace<::MobileRT::Primitive<::MobileRT::Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSpheres {
-    trace<MobileRT::Primitive<MobileRT::Sphere>> (this->spheres_, intersection, ray)};
+    trace<::MobileRT::Primitive<::MobileRT::Sphere>> (this->spheres_, intersection, ray)};
   const bool intersectedPlanes {
-    trace<MobileRT::Primitive<MobileRT::Plane>> (this->planes_, intersection, ray)};
+    trace<::MobileRT::Primitive<::MobileRT::Plane>> (this->planes_, intersection, ray)};
   const bool intersectedRectangles {
-    trace<MobileRT::Primitive<MobileRT::Rectangle>> (this->rectangles_, intersection, ray)};
+    trace<::MobileRT::Primitive<::MobileRT::Rectangle>> (this->rectangles_, intersection, ray)};
   const bool intersectedLights {
-    traceLights (intersection, std::move (ray))
+    traceLights (intersection, ::std::move (ray))
   };
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles ||
          intersectedLights;
 }
 
 template<typename T>
-bool Scene::shadowTrace (std::vector<T> &primitives, Intersection *const intersection,
+bool Scene::shadowTrace (::std::vector<T> &primitives, Intersection *const intersection,
                          const Ray ray) const noexcept {
   for (T &primitive : primitives) {
     if (primitive.intersect(intersection, ray)) {
@@ -74,13 +74,13 @@ bool Scene::shadowTrace (std::vector<T> &primitives, Intersection *const interse
 
 bool Scene::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
   const bool intersectedTriangles {
-    shadowTrace<MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
+    shadowTrace<::MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
   const bool intersectedSpheres {
-    shadowTrace<MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
+    shadowTrace<::MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
   const bool intersectedPlanes {
-    shadowTrace<MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
+    shadowTrace<::MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
   const bool intersectedRectangles {
-    shadowTrace<MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray)};
+    shadowTrace<::MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray)};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
 }
 
@@ -97,22 +97,22 @@ void Scene::resetSampling() noexcept {
 }
 
 void Scene::AABBbounds (const AABB box, Point3D *const min, Point3D *const max) {
-  if (box.pointMin_.x_ < min->x_) {
-    min->x_ = box.pointMin_.x_;
+  if (box.pointMin_.x_() < min->x_()) {
+    min->setX (box.pointMin_.x_());
   }
-  if (box.pointMin_.y_ < min->y_) {
-    min->y_ = box.pointMin_.y_;
+  if (box.pointMin_.y_() < min->y_()) {
+    min->setY (box.pointMin_.y_());
   }
-  if (box.pointMin_.z_ < min->z_) {
-    min->z_ = box.pointMin_.z_;
+  if (box.pointMin_.z_() < min->z_()) {
+    min->setZ (box.pointMin_.z_());
   }
-  if (box.pointMax_.x_ > max->x_) {
-    max->x_ = box.pointMax_.x_;
+  if (box.pointMax_.x_() > max->x_()) {
+    max->setX (box.pointMax_.x_());
   }
-  if (box.pointMax_.y_ > max->y_) {
-    max->y_ = box.pointMax_.y_;
+  if (box.pointMax_.y_() > max->y_()) {
+    max->setY (box.pointMax_.y_());
   }
-  if (box.pointMax_.z_ > max->z_) {
-    max->z_ = box.pointMax_.z_;
+  if (box.pointMax_.z_() > max->z_()) {
+    max->setZ (box.pointMax_.z_());
   }
 }

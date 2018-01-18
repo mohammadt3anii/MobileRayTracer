@@ -5,6 +5,7 @@
 #ifndef MOBILERT_RGB_HPP
 #define MOBILERT_RGB_HPP
 
+#include <initializer_list>
 #include <mutex>
 
 namespace MobileRT {
@@ -15,7 +16,7 @@ namespace MobileRT {
       float B_ {0.0f};
 
     private:
-      std::mutex mutex_ {};
+      ::std::mutex mutex_ {};
 
     public:
 			unsigned samples_ {0};
@@ -31,10 +32,11 @@ namespace MobileRT {
     ~RGB () noexcept = default;
     RGB &operator= (const RGB &rgb) noexcept;
 
-      RGB &operator= (RGB &&rgb) noexcept = delete;
+    RGB &operator= (RGB &&rgb) noexcept;
+
     bool hasColor () const noexcept;
     void operator+= (RGB rgb) noexcept;
-    void addMult (std::initializer_list<const RGB> rgbs, float value = 1.0f) noexcept;
+    void addMult (::std::initializer_list<const RGB> rgbs, float value = 1.0f) noexcept;
     RGB operator* (float value) const noexcept;
     void operator*= (RGB rgb) noexcept;
     void operator*= (float value) noexcept;

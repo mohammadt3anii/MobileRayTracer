@@ -126,7 +126,7 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
     std::unique_ptr<MobileRT::Sampler> samplerPixel {};
     std::unique_ptr<MobileRT::Shader> shader_ {};
     std::unique_ptr<MobileRT::Camera> camera {};
-    MobileRT::Point3D maxDist;
+    ::MobileRT::Point3D maxDist {::MobileRT::Point3D {0, 0, 0}};
     switch (scene) {
       case 0:
         camera = std::make_unique<Components::Perspective> (
@@ -342,7 +342,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds> (
           std::chrono::steady_clock::now () - start).count ();
         FPS ();
-        renderer_->camera_->position_.x_ += 1.0f;
+        //renderer_->camera_->position_.x_ += 1.0f;
       } while (working_ != State::STOPPED && rep-- > 1);
       if (working_ != State::STOPPED) {
         working_ = State::FINISHED;
@@ -384,8 +384,8 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     MobileRT::Vector3D{0.0f, 0.0f, - 1.0f}};
   MobileRT::Intersection intersection {};
   plane.intersect(&intersection, ray);
-  renderer_->shader_->scene_.planes_[index].shape_.moveTo (intersection.point_.x_,
-                                                           intersection.point_.y_);
+  renderer_->shader_->scene_.planes_[index].shape_.moveTo (intersection.point_.x_(),
+                                                           intersection.point_.y_());
 }
 
 extern "C"
@@ -418,7 +418,7 @@ int Java_puscas_mobilertapp_DrawView_resize(
   jobject /*thiz*/,
   jint const size
 ) noexcept {
-  return roundDownToMultipleOf (size, static_cast<int>(std::sqrt (NumberOfBlocks)));
+  return MobileRT::roundDownToMultipleOf (size, static_cast<int>(std::sqrt (MobileRT::NumberOfBlocks)));
 }
 
 extern "C"

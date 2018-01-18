@@ -8,7 +8,7 @@
 #include "MobileRT/Sampler.hpp"
 
 namespace Components {
-	class Stratified final : public MobileRT::Sampler {
+	class Stratified final : public ::MobileRT::Sampler {
     public:
     explicit Stratified() noexcept = default;
     explicit Stratified (unsigned width, unsigned height,

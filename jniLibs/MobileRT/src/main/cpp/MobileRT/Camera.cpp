@@ -4,27 +4,28 @@
 
 #include "Camera.hpp"
 
-using MobileRT::AABB;
-using MobileRT::Camera;
+using ::MobileRT::AABB;
+using ::MobileRT::Camera;
+using ::MobileRT::NumberOfBlocks;
 
 namespace {
-  std::array<float, NumberOfBlocks> VALUES;
+  ::std::array<float, NumberOfBlocks> VALUES;
 
   bool FillThings () {
-    static std::mt19937 generator (std::random_device{} ());
+    static ::std::mt19937 generator (::std::random_device{} ());
     for (uint32_t i {0}; i < NumberOfBlocks; ++i) {
-      VALUES.at (i) = haltonSequence (i, 2);
+      VALUES.at (i) = ::MobileRT::haltonSequence (i, 2);
     }
-    std::shuffle (VALUES.begin (), VALUES.end (), generator);
+    ::std::shuffle (VALUES.begin (), VALUES.end (), generator);
     return true;
   }
 }//namespace
 
 float Camera::getBlock (const unsigned sample) noexcept {
   const unsigned current {
-    this->block_.fetch_add (1, std::memory_order_relaxed) - NumberOfBlocks * sample};
+    this->block_.fetch_add (1, ::std::memory_order_relaxed) - NumberOfBlocks * sample};
   if (current >= NumberOfBlocks) {
-    this->block_.fetch_sub (1, std::memory_order_relaxed);
+    this->block_.fetch_sub (1, ::std::memory_order_relaxed);
     return 1.0f;
   }
   return VALUES.at (current);

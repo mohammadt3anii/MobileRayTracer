@@ -4,7 +4,7 @@
 
 #include "Stratified.hpp"
 
-using Components::Stratified;
+using ::Components::Stratified;
 
 Stratified::Stratified (const unsigned width, const unsigned height,
                         const unsigned samples) noexcept :
@@ -12,9 +12,9 @@ Stratified::Stratified (const unsigned width, const unsigned height,
 }
 
 float Stratified::getSample (const unsigned sample) noexcept {
-  const uint32_t current {this->sample_.fetch_add (1, std::memory_order_relaxed)};
+  const uint32_t current {this->sample_.fetch_add (1, ::std::memory_order_relaxed)};
   if (current >= (this->domainSize_ * (sample + 1))) {
-    this->sample_.fetch_sub(1, std::memory_order_relaxed);
+    this->sample_.fetch_sub(1, ::std::memory_order_relaxed);
     return 1.0f;
   }
   return static_cast<float> (current - (sample * this->domainSize_)) / this->domainSize_;

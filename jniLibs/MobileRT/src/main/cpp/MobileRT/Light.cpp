@@ -4,7 +4,7 @@
 
 #include "Light.hpp"
 
-using MobileRT::Light;
+using ::MobileRT::Light;
 
 Light::Light (Material radiance) noexcept :
   radiance_ {std::move (radiance)} {

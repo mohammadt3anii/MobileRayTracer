@@ -1,10 +1,10 @@
 #include "../MobileRT/src/main/cpp/MobileRT/Shapes/Plane.hpp"
 #include <gtest/gtest.h>
 
-using MobileRT::AABB;
-using MobileRT::Plane;
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
+using ::MobileRT::AABB;
+using ::MobileRT::Plane;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
 
 class TestPlane : public testing::Test {
 protected:

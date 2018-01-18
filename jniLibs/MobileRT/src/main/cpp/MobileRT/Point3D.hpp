@@ -12,11 +12,13 @@ namespace MobileRT {
 
     class Point3D final {
     public:
-      float x_ {};
-      float y_ {};
-      float z_ {};
-      public:
-      float cell[3];
+      float position_[3] {0.0f};
+      void setX(float x) noexcept {position_[0] = x;}
+      void setY(float y) noexcept {position_[1] = y;}
+      void setZ(float z) noexcept {position_[2] = z;}
+      float x_() const noexcept {return position_[0];}
+      float y_() const noexcept {return position_[1];}
+      float z_() const noexcept {return position_[2];}
 
     private:
 			explicit Point3D (Point3D point, Vector3D vector,

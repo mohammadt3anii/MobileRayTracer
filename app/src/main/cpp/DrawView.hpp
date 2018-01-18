@@ -23,7 +23,7 @@
 #include "Components/Shaders/Whitted.hpp"
 #include "MobileRT/Renderer.hpp"
 #include "MobileRT/Scene.hpp"
-#include "Scenes.hpp"
+#include "../../../../jniLibs/Scenes.hpp"
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <android/bitmap.h>

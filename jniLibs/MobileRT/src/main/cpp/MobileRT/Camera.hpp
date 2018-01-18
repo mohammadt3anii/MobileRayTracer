@@ -14,10 +14,10 @@
 #include <random>
 
 namespace MobileRT {
-  using MobileRT::AABB;
+  using ::MobileRT::AABB;
   class Camera {
     protected:
-      std::atomic<unsigned> block_ {0};
+      ::std::atomic<unsigned> block_ {0};
 
     public:
       Point3D position_ {};

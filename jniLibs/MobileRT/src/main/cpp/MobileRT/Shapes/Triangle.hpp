@@ -36,37 +36,20 @@ namespace MobileRT {
 			Triangle(Triangle &&triangle) noexcept = default;
 
 			~Triangle() noexcept = default;
+      
       Triangle &operator= (const Triangle &triangle) noexcept = default;
 
-			Triangle &operator=(Triangle &&triangle) noexcept = delete;
+			Triangle &operator=(Triangle &&triangle) noexcept = default;
+
 			bool intersect (Intersection *intersection, Ray ray) const noexcept;
 
 			void moveTo(float x, float y) noexcept;
 
 			float getZ() const noexcept;
-      MobileRT::AABB getAABB () const noexcept;
-      bool intersect (MobileRT::AABB box) const noexcept;
 
-      void CalculateRange (float &a_Pos1, float &a_Pos2, int a_Axis) {
-        //Vector3D pos1 = m_Vertex[0]->GetPos();
-        Point3D pos1 {this->pointA_};
-        a_Pos1 = pos1.cell[a_Axis];
-        a_Pos2 = pos1.cell[a_Axis];
-        Point3D pos {this->pointB_};
-        if (pos.cell[a_Axis] < a_Pos1) {
-          a_Pos1 = pos.cell[a_Axis];
-        }
-        if (pos.cell[a_Axis] > a_Pos2) {
-          a_Pos2 = pos.cell[a_Axis];
-        }
-        pos = this->pointC_;
-        if (pos.cell[a_Axis] < a_Pos1) {
-          a_Pos1 = pos.cell[a_Axis];
-        }
-        if (pos.cell[a_Axis] > a_Pos2) {
-          a_Pos2 = pos.cell[a_Axis];
-        }
-      }
+      ::MobileRT::AABB getAABB () const noexcept;
+
+      bool intersect (::MobileRT::AABB box) const noexcept;
     };
 }//namespace MobileRT
 

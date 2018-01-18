@@ -12,20 +12,20 @@
 #include <memory>
 
 namespace Components {
-	using MobileRT::Material;
-	using MobileRT::Sampler;
-	using MobileRT::Point3D;
-	using MobileRT::Ray;
-	using MobileRT::Intersection;
-	using MobileRT::Triangle;
-	class AreaLight final : public MobileRT::Light {
+	using ::MobileRT::Material;
+	using ::MobileRT::Sampler;
+	using ::MobileRT::Point3D;
+	using ::MobileRT::Ray;
+	using ::MobileRT::Intersection;
+	using ::MobileRT::Triangle;
+	class AreaLight final : public ::MobileRT::Light {
     private:
 			Triangle triangle_;
-    	std::unique_ptr<Sampler> samplerPointLight_ {};
+    	::std::unique_ptr<Sampler> samplerPointLight_ {};
 
     public:
     	explicit AreaLight (Material radiance,
-                        std::unique_ptr<Sampler> &&samplerPointLight,
+                        ::std::unique_ptr<Sampler> &&samplerPointLight,
                         Point3D pointA,
                         Point3D pointB,
                         Point3D pointC) noexcept;

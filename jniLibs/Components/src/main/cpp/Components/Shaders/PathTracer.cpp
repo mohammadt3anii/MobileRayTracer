@@ -4,32 +4,32 @@
 
 #include "PathTracer.hpp"
 
-using Components::PathTracer;
-using MobileRT::Light;
-using MobileRT::Vector3D;
-using MobileRT::Point3D;
-using MobileRT::Sampler;
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
+using ::Components::PathTracer;
+using ::MobileRT::Light;
+using ::MobileRT::Vector3D;
+using ::MobileRT::Point3D;
+using ::MobileRT::Sampler;
+using ::MobileRT::RGB;
+using ::MobileRT::Intersection;
+using ::MobileRT::Ray;
+using ::MobileRT::Scene;
 
 PathTracer::PathTracer(Scene &&scene,
-                       std::unique_ptr<Sampler> &&samplerRay,
-                       std::unique_ptr<Sampler> &&samplerLight,
-                       std::unique_ptr<Sampler> &&samplerRussianRoulette,
+                       ::std::unique_ptr<Sampler> &&samplerRay,
+                       ::std::unique_ptr<Sampler> &&samplerLight,
+                       ::std::unique_ptr<Sampler> &&samplerRussianRoulette,
                        const unsigned samplesLight, const Accelerator accelerator) noexcept :
-  Shader {std::move (scene), samplesLight, accelerator},
-  samplerRay_ {std::move (samplerRay)},
-  samplerLight_ {std::move (samplerLight)},
-  samplerRussianRoulette_ {std::move (samplerRussianRoulette)} {
+  Shader {::std::move (scene), samplesLight, accelerator},
+  samplerRay_ {::std::move (samplerRay)},
+  samplerLight_ {::std::move (samplerLight)},
+  samplerRussianRoulette_ {::std::move (samplerRussianRoulette)} {
     LOG("samplesLight = ", this->samplesLight_);
 }
 
 //pag 28 slides Monte Carlo
 bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
   const int32_t rayDepth {ray.depth_};
-  if (rayDepth > RayDepthMax || intersection.material_ == nullptr) {
+  if (rayDepth > ::MobileRT::RayDepthMax || intersection.material_ == nullptr) {
 			return false;
   }
 
@@ -72,7 +72,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
         const float randomNumber {samplerLight_->getSample ()};
         //PDF = 1 / sizeLights
         const unsigned chosenLight {
-          static_cast<unsigned> (std::floor (
+          static_cast<unsigned> (::std::floor (
             randomNumber * sizeLights * 0.99999f))};
         Light &light (*scene_.lights_[chosenLight]);
         //calculates vector starting in intersection to the light
@@ -89,7 +89,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
           //if there are no primitives between intersection and the light
           intersectLight.length_ = distanceToLight;
           intersectLight.primitive_ = intersection.primitive_;
-          if (!shadowTrace (&intersectLight, std::move (shadowRay))) {
+          if (!shadowTrace (&intersectLight, ::std::move (shadowRay))) {
             //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
             Ld.addMult ({light.radiance_.Le_}, cosNormalLight);
           }
@@ -101,7 +101,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
     }
 
     //indirect light
-    if (rayDepth <= RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
+    if (rayDepth <= ::MobileRT::RayDepthMin || samplerRussianRoulette_->getSample () > finish_probability) {
       const Vector3D newDirection {getCosineSampleHemisphere (shadingNormal)};
       Ray normalizedSecundaryRay {newDirection, intersection.point_, rayDepth + 1,
                                   intersection.primitive_};
@@ -111,7 +111,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
       RGB LiD_RGB {};
       Intersection secundaryIntersection {intersection.primitive_};
       intersectedLight = rayTrace (&LiD_RGB, &secundaryIntersection,
-                                   std::move (normalizedSecundaryRay));
+                                   ::std::move (normalizedSecundaryRay));
       //PDF = cos(theta) / Pi
       //cos (theta) = cos(dir, normal)
       //PDF = cos(dir, normal) / Pi
@@ -119,7 +119,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
       //LiD += kD * LiD_RGB * Pi / continue_probability
       //LiD.addMult(kD, LiD_RGB, Pi);
       LiD.addMult ({kD, LiD_RGB});
-      if (rayDepth > RayDepthMin) {
+      if (rayDepth > ::MobileRT::RayDepthMin) {
         LiD /= continue_probability;
       }
       //if it has Ld and if LiD intersects a light source then LiD = 0
@@ -138,7 +138,7 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
     Ray specularRay {reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
     RGB LiS_RGB {};
     Intersection specularInt {intersection.primitive_};
-    rayTrace (&LiS_RGB, &specularInt, std::move (specularRay));
+    rayTrace (&LiS_RGB, &specularInt, ::std::move (specularRay));
     LiS.addMult ({kS, LiS_RGB});
   }
 
@@ -159,13 +159,13 @@ bool PathTracer::shade (RGB *const rgb, const Intersection intersection, Ray &&r
                          //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                          (ray.direction_ * refractiveIndice) +
                          (shadingNormalT * (refractiveIndice * cosTheta1 -
-                                            (std::sqrt (cosTheta2)))) :
+                                            (::std::sqrt (cosTheta2)))) :
                          //rayDir = (ray.d + N*(cost1 * 2)).norm();
                          ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
                          intersection.point_, rayDepth + 1, intersection.primitive_};
     RGB LiT_RGB {};
     Intersection transmissionInt {intersection.primitive_};
-    rayTrace (&LiT_RGB, &transmissionInt, std::move (transmissionRay));
+    rayTrace (&LiT_RGB, &transmissionInt, ::std::move (transmissionRay));
     LiT.addMult ({kT, LiT_RGB});
   }
 
@@ -183,17 +183,17 @@ void PathTracer::resetSampling() noexcept {
 }
 
 Vector3D PathTracer::getCosineSampleHemisphere (const Vector3D normal) const noexcept {
-  const float r1 {2.0f * Pi * samplerRay_->getSample ()};
+  const float r1 {2.0f * ::MobileRT::Pi * samplerRay_->getSample ()};
   const float r2 {samplerRay_->getSample ()};
-  const float r2s {std::sqrt (r2)};
-  Vector3D u {std::fabs (normal.x_) > 0.1f ?
+  const float r2s {::std::sqrt (r2)};
+  Vector3D u {::std::fabs (normal.x_()) > 0.1f ?
               Vector3D (0.0f, 1.0f, 0.0f).crossProduct (normal) :
               Vector3D (1.0f, 0.0f, 0.0f).crossProduct (normal)};
   u.normalize();
   const Vector3D v {normal.crossProduct (u)};
-  Vector3D direction {(u * (std::cos (r1) * r2s) +
-                       v * (std::sin (r1) * r2s) +
-                       normal * std::sqrt (1.0f - r2))};
+  Vector3D direction {(u * (::std::cos (r1) * r2s) +
+                       v * (::std::sin (r1) * r2s) +
+                       normal * ::std::sqrt (1.0f - r2))};
   direction.normalize();
   return direction;
 }

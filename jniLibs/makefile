@@ -4,34 +4,43 @@
 default: all
 
 EXE := raytracer
-CXX := c++
+CXX := g++-5
+CXX := clang++-5.0
 LD := $(CXX)
-MAKEFLAGS := -j5
+MAKEFLAGS := -j1
 INCLUDES := -I./MobileRT/src/main/cpp
 INCLUDES += -I./Components/src/main/cpp
-INCLUDES += -I../third-party
-INCLUDES += $(shell pkg-config --cflags gtk+-2.0)
-LDFLAGS += -L../third-party/tinyobjloader
+INCLUDES += -isystem./third-party
+INCLUDES += -isystem./third-party/googletest/googletest/include
+INCLUDES_GTK += $(shell pkg-config --cflags gtk+-2.0)
+INCLUDES_GTK := $(subst -I,-isystem,$(INCLUDES_GTK))
+INCLUDES += $(INCLUDES_GTK)
+LIBRARIES_APP := $(shell pkg-config --libs gtk+-2.0) -pthread
+LIBRARIES_WRAPPER := -fopenmp
+LIBRARIES_MOBILERT := $(shell find ./third-party/**/build/* \
+-regextype gnu-awk -iname "*.a" -printf '-L./%h\n' | uniq)
 
-CXXFLAGS := -std=c++14 -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors -Werror -fno-rtti -fno-exceptions -DNO_ANDROID $(INCLUDES)
+CXXFLAGS := -std=c++14 -DNO_ANDROID $(INCLUDES) -fPIC #-Werror
+CXXFLAGS += -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors
 CXXFLAGS += -Wno-old-style-cast
-CXXFLAGS += -fpic
-CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
+CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS := -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fopenmp -fsingle-precision-constant -funswitch-loops -fno-stack-protector -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fprofile-correction -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
+LDFLAGS := -fPIC -fprofile-correction -fomit-frame-pointer  -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fsingle-precision-constant -funswitch-loops -fno-trapping-math -ffunction-sections -fdata-sections -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
 
-LDFLAGS += -Wl,-O3 -Wl,-no-undefined -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
+LDFLAGS += -Wl,-O3 -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
 
 ifeq ($(S),)
 	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer
-	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
-	#CXXFLAGS += -flto=full
+	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
+	CXXFLAGS += -flto=full
 	LDFLAGS += -flto=full
+	LDFLAGS += -fvisibility=hidden
 endif
 
 ifeq ($(S),1)
 	CXXFLAGS += -Ofast -DNDEBUG -fno-omit-frame-pointer
-	LDFLAGS += -Wl,-build-id=none -fvisibility=hidden -fvisibility-inlines-hidden
+	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden
+	LDFLAGS += -fvisibility=hidden
 endif
 
 ifeq ($(S),2)
@@ -39,7 +48,7 @@ ifeq ($(S),2)
 endif
 
 ifeq ($(S),3)
-	#CXX := g++
+	#CXX := c++
 	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
 	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor #MemorySanitizer, a detector of uninitialized reads. Requires instrumentation of all program code.
 	#SANITIZER := -fsanitize=address #AddressSanitizer, a memory error detector.
@@ -53,120 +62,137 @@ ifeq ($(S),3)
 	SANITIZER_LD := -fsanitize-address-use-after-scope# -ltsan -lasan
 	ASAN_OPTIONS=verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0
 	CXXFLAGS += $(SANITIZER) $(SANITIZER_CXX)
-	LDFLAGS += $(SANITIZER) $(SANITIZER_LD)
+	#LDFLAGS += $(SANITIZER) $(SANITIZER_LD)
 endif
 
-ifeq ($(CXX),clang++)
-  CXXFLAGS += -Weverything -ferror-limit=1 -isystem /usr/include/c++/v1
-	CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
-  LDFLAGS += -lc++
+ifneq (,$(findstring clang,$(CXX)))
+  CXXFLAGS += -isystem /usr/include/c++/v1
+  CXXFLAGS += -Weverything -ferror-limit=1
+  CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
+else
+  CXXFLAGS += -finline-limit=150
+  LDFLAGS += -finline-limit=150
 endif
-
-ifeq ($(CXX),g++)
-	CXXFLAGS += -finline-limit=150
-	LDFLAGS += -finline-limit=150
-endif
-
-LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
 
 ###############################################################################
 
 SOURCES_APP := $(shell find \
-../app/src/main/cpp/Scenes.cpp \
+./RayTracerMain.cpp \
 ! -name "DrawView.cpp" \
--regextype gnu-awk -iname "*.cpp" -print | sort -nr)
+-regextype gnu-awk -iname "*.cpp" -printf '%h/%f\n' | sort -nr)
 OBJS_APP := $(addsuffix .o,$(basename $(SOURCES_APP)))
 DEPS_APP := $(addsuffix .d,$(basename $(SOURCES_APP)))
 ASSM_APP := $(addsuffix .s,$(basename $(SOURCES_APP)))
 LLVM_APP := $(addsuffix .llvmIR,$(basename $(SOURCES_APP)))
 
+SOURCES_WRAPPER := $(shell find \
+./Scenes.cpp \
+./c_wrapper.cpp \
+! -name "DrawView.cpp" \
+-regextype gnu-awk -iname "*.cpp" -printf '%h/%f\n' | sort -nr)
+OBJS_WRAPPER := $(addsuffix .o,$(basename $(SOURCES_WRAPPER)))
+DEPS_WRAPPER := $(addsuffix .d,$(basename $(SOURCES_WRAPPER)))
+ASSM_WRAPPER := $(addsuffix .s,$(basename $(SOURCES_WRAPPER)))
+LLVM_WRAPPER := $(addsuffix .llvmIR,$(basename $(SOURCES_WRAPPER)))
+
 SOURCES_MOBILERT := $(shell find \
 ./Components/src \
 ./MobileRT/src \
--regextype gnu-awk -iname "*.cpp" -print | sort -nr)
+-regextype gnu-awk -iname "*.cpp" -printf '%h/%f\n' | sort -nr)
 OBJS_MOBILERT := $(addsuffix .o,$(basename $(SOURCES_MOBILERT)))
 DEPS_MOBILERT := $(addsuffix .d,$(basename $(SOURCES_MOBILERT)))
 ASSM_MOBILERT := $(addsuffix .s,$(basename $(SOURCES_MOBILERT)))
 LLVM_MOBILERT := $(addsuffix .llvmIR,$(basename $(SOURCES_MOBILERT)))
 
+SOURCES_THIRD_PARTY := ./third-party/tinyobjloader/tiny_obj_loader.cc
+OBJS_THIRD_PARTY := $(addsuffix .o,$(basename $(SOURCES_THIRD_PARTY)))
+DEPS_THIRD_PARTY := $(addsuffix .d,$(basename $(SOURCES_THIRD_PARTY)))
+ASSM_THIRD_PARTY := $(addsuffix .s,$(basename $(SOURCES_THIRD_PARTY)))
+LLVM_THIRD_PARTY := $(addsuffix .llvmIR,$(basename $(SOURCES_THIRD_PARTY)))
+
 GARB := $(shell find \
+./third-party/tinyobjloader \
 ./Components/src \
 ./MobileRT/src \
-../app/src/main/cpp \
 ./RayTracerMain.* \
+./c_wrapper.* \
+./Scenes.* \
 ./GoogleUnitTest \
-./third-party \
--regextype gnu-awk -iname "*.d" -print \
--o -regextype gnu-awk -iname "*.s" -print \
--o -regextype gnu-awk -iname "*.o" -print \
--o -regextype gnu-awk -iname "*.out" -print \
--o -regextype gnu-awk -iname "*.gto" -print \
--o -regextype gnu-awk -iname "*.dwo" -print \
+-regextype gnu-awk -iname "*.d" -printf '%h/%f\n' \
+-o -regextype gnu-awk -iname "*.s" -printf '%h/%f\n' \
+-o -regextype gnu-awk -iname "*.o" -printf '%h/%f\n' \
+-o -regextype gnu-awk -iname "*.out" -printf '%h/%f\n' \
+-o -regextype gnu-awk -iname "*.gto" -printf '%h/%f\n' \
+-o -regextype gnu-awk -iname "*.dwo" -printf '%h/%f\n' \
 )
 
 ###############################################################################
 
-%.o: %.s
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $(basename $<).cpp -o $@
 #	objdump --source $@ > $<
 
 %.s: %.llvmIR
 	$(CXX) $(CXXFLAGS) -S $(basename $<).cpp -o $@
 
-%.llvmIR: %.cpp
+#%.llvmIR: %.cpp
 	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
-
-$(EXE): MobileRT $(OBJS_APP) RayTracerMain.o
-	$(LD) $(OBJS_APP) RayTracerMain.o -o $@ $(LDFLAGS) -lMobileRT
-	@echo "Compilation App done"
-
-clean:
-	@rm -f $(OBJS_MOBILERT) $(DEPS_MOBILERT) $(ASSM_MOBILERT) $(LLVM_MOBILERT)
-	@rm -f $(OBJS_APP) $(DEPS_APP) $(GARB) $(ASSM_APP) $(LLVM_APP) $(EXE) gtest RayTracerMain.o RayTracerMain.d RayTracerMain.s RayTracerMain.llvmIR libMobileRT.so
-	@echo "Clean done"
 
 all: $(EXE)
 
+$(EXE): C_Wrapper MobileRT $(OBJS_APP)
+	$(LD) $(LDFLAGS) -o $@ $(OBJS_APP) $(LIBRARIES_MOBILERT) $(LIBRARIES_APP) -lC_Wrapper -lMobileRT
+	@echo "Compilation App done\n"
+
+C_Wrapper: MobileRT $(OBJS_WRAPPER)
+	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_WRAPPER) $(LIBRARIES_WRAPPER) -lMobileRT
+	@echo "Compilation C_Wrapper done\n"
+
 MobileRT: third_party $(OBJS_MOBILERT)
-	$(LD) -shared -o lib$@.so $(OBJS_MOBILERT) third-party/tiny_obj_loader.o $(LDFLAGS)
-	@echo "Compilation MobileRT done"
+	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY) $(LIBRARIES_MOBILERT) -lc++
+	@echo "Compilation MobileRT done\n"
 
 third_party:
-	$(CXX) $(CXXFLAGS) -c ../third-party/tinyobjloader/tiny_obj_loader.cc -o third-party/tiny_obj_loader.o
+	$(CXX) $(CXXFLAGS) -w -c $(SOURCES_THIRD_PARTY) -o $(OBJS_THIRD_PARTY)
+	@echo "Compilation third-party done\n"
 
-INCLUDES += -I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include
+clean:
+	@rm -f $(OBJS_MOBILERT) $(DEPS_MOBILERT) $(ASSM_MOBILERT) $(LLVM_MOBILERT)
+	@rm -f $(OBJS_WRAPPER) $(DEPS_WRAPPER) $(ASSM_WRAPPER) $(LLVM_WRAPPER)
+	@rm -f $(OBJS_APP) $(DEPS_APP) $(ASSM_APP) $(LLVM_APP)
+	@rm -f $(GARB) $(EXE) gtest libMobileRT.so libC_Wrapper.so
+	@echo "Clean done\n"
+
+GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -printf '%h/%f\n')
+GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
+%.gto: %.cpp
+	$(CXX) $(CXXFLAGS) -c $(basename $<).cpp -o $@
+
+gtest: $(OBJS_MOBILERT) $(GTESTOBJS)
+	$(LD) $(GTESTOBJS) $(OBJS_MOBILERT) -o $@ $(LDFLAGS) $(LIBRARIES_MOBILERT) -lgtest_main -lgtest -lgmock -lgmock_main -lpthread
+	@echo "Compilation Test Units done\n"
+
+
 tidy:
 	clang-tidy-5.0 \
 	-analyze-temporary-dtors \
 	-checks='*,-*llvm-header-guard*' \
 	-header-filter=*.*pp \
 	-system-headers \
+	-extra-arg=-ferror-limit=0 \
 	-p \
 	./*.*pp \
 	./MobileRT/src/main/cpp/*/*.*pp \
 	./MobileRT/src/main/cpp/*/*/*.*pp \
 	./Components/src/main/cpp/*/*/*.*pp \
 	../app/src/main/cpp/*.*pp \
-	-- -std=c++14 -isystem /usr/include/c++/v1 \
+	-- -std=c++14 -isystem/usr/include/c++/v1 \
 	-I./MobileRT/src/main/cpp \
 	-I./Components/src/main/cpp \
-	-I../third-party \
-	-pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 \
-	-I/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include \
+	-isystem./third-party \
+	-pthread -isystem/usr/include/gtk-2.0 -isystem/usr/lib/x86_64-linux-gnu/gtk-2.0/include -isystem/usr/include/gio-unix-2.0/ -isystem/usr/include/atk-1.0 -isystem/usr/include/cairo -isystem/usr/include/pixman-1 -isystem/usr/include/libpng12 -isystem/usr/include/gdk-pixbuf-2.0 -isystem/usr/include/harfbuzz -isystem/usr/include/pango-1.0 -isystem/usr/include/glib-2.0 -isystem/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem/usr/include/freetype2 \
+	-isystem/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include \
 	2>&1 | tee tidy.out
-
-GTESTSRCS := $(shell find ./GoogleUnitTest -regextype gnu-awk -iname "*.cpp" -print)
-GTESTOBJS := $(addsuffix .gto,$(basename $(GTESTSRCS)))
-%.gto: %.cpp third_party
-	g++ $(CXXFLAGS) -DNO_ANDROID -std=c++14 -c $< -o $@
-
-gcc:
-	 $(eval CXXFLAGS := $(filter-out -flto=full,$(CXXFLAGS)))
-	 $(eval CXXFLAGS := $(filter-out -flto=full,$(LDFLAGS)))
-
-gtest: $(OBJS) $(GTESTOBJS)
-	g++ $(CXXFLAGS) $(GTESTOBJS) $(OBJS) third-party/tiny_obj_loader.o -o $@ $(LDFLAGS) -lgtest -lgtest_main -pthread
-	@echo "Compilation Test Units done"
 
 #valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
 

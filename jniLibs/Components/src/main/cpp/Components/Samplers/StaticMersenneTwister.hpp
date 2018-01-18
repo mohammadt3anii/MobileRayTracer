@@ -10,7 +10,7 @@
 #include <random>
 
 namespace Components {
-  class StaticMersenneTwister final : public MobileRT::Sampler {
+  class StaticMersenneTwister final : public ::MobileRT::Sampler {
     public:
     explicit StaticMersenneTwister () noexcept;
     StaticMersenneTwister (const StaticMersenneTwister &random) noexcept = delete;

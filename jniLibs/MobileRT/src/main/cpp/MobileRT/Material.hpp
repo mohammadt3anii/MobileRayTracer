@@ -25,7 +25,7 @@ namespace MobileRT {
       Material (Material &&material) noexcept = default;
     ~Material () noexcept = default;
     Material &operator= (const Material &material) noexcept = default;
-    Material &operator= (Material &&material) noexcept = delete;
+    Material &operator= (Material &&material) noexcept = default;
     static unsigned getInstances () noexcept;
     };
 }//namespace MobileRT

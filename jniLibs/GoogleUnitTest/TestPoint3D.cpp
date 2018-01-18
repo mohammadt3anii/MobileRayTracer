@@ -2,8 +2,8 @@
 #include "../MobileRT/src/main/cpp/MobileRT/Vector3D.hpp"
 #include <gtest/gtest.h>
 
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
 
 class TestPoint3D : public testing::Test {
 protected:
@@ -33,7 +33,7 @@ TEST_F(TestPoint3D, ConstructorCOPY) {
 }
 
 TEST_F(TestPoint3D, ConstructorMOVE) {
-	Point3D point1(std::move(*point));
+	Point3D point1(::std::move(*point));
 
 	ASSERT_EQ(1.0f, point1.x_);
 	ASSERT_EQ(2.0f, point1.y_);

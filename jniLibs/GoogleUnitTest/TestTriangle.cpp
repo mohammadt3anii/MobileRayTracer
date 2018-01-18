@@ -1,9 +1,9 @@
 #include "../MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
 #include <gtest/gtest.h>
 
-using MobileRT::AABB;
-using MobileRT::Point3D;
-using MobileRT::Triangle;
+using ::MobileRT::AABB;
+using ::MobileRT::Point3D;
+using ::MobileRT::Triangle;
 
 class TestTriangle : public testing::Test {
 protected:
@@ -120,9 +120,9 @@ TEST_F(TestTriangle, intersectBoxInside07) {
 
 TEST_F(TestTriangle, intersectBoxInside08) {
 	Triangle triangle2 {
-		MobileRT::Point3D {10.0f, 0.0f, 10.0f},
-		MobileRT::Point3D {0.0f, 0.0f, 10.0f},
-		MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
+		::MobileRT::Point3D {10.0f, 0.0f, 10.0f},
+		::MobileRT::Point3D {0.0f, 0.0f, 10.0f},
+		::MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
 	Point3D min {1.25, 1.25, 10};
 	Point3D max {2.5, 2.5, 10};
 	AABB box {min, max};
@@ -132,9 +132,9 @@ TEST_F(TestTriangle, intersectBoxInside08) {
 
 TEST_F(TestTriangle, intersectBoxInside09) {
 	Triangle triangle2 {
-		MobileRT::Point3D {10.0f, 0.0f, 10.0f},
-		MobileRT::Point3D {0.0f, 0.0f, 10.0f},
-		MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
+		::MobileRT::Point3D {10.0f, 0.0f, 10.0f},
+		::MobileRT::Point3D {0.0f, 0.0f, 10.0f},
+		::MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
 	Point3D min {-1, -1, 10};
 	Point3D max {11, 11, 10};
 	AABB box {min, max};
@@ -144,9 +144,9 @@ TEST_F(TestTriangle, intersectBoxInside09) {
 
 TEST_F(TestTriangle, intersectBoxInside10) {
 	Triangle triangle2 {
-		MobileRT::Point3D {1, 1.59000003, -1.03999996},
-		MobileRT::Point3D {-1.01999998, 1.59000003, -1.03999996},
-		MobileRT::Point3D {-0.990000009, 0, -1.03999996}};
+		::MobileRT::Point3D {1, 1.59000003, -1.03999996},
+		::MobileRT::Point3D {-1.01999998, 1.59000003, -1.03999996},
+		::MobileRT::Point3D {-0.990000009, 0, -1.03999996}};
 	Point3D min {-11.0200005, 0.794949531, -11.04};
 	Point3D max {-0.0100002289, 11.5899992, -0.0250005722};
 	AABB box {min, max};
@@ -163,7 +163,7 @@ TEST_F(TestTriangle, intersectBoxInside10) {
 }
 
 TEST_F(TestPoint3D, ConstructorMOVE) {
-	Point3D point1(std::move(*point));
+	Point3D point1(::std::move(*point));
 
 	ASSERT_EQ(1.0f, point1.x_);
 	ASSERT_EQ(2.0f, point1.y_);

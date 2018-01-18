@@ -8,12 +8,12 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-  using MobileRT::Intersection;
-  using MobileRT::RGB;
-  using MobileRT::Ray;
-  using MobileRT::Scene;
+  using ::MobileRT::Intersection;
+  using ::MobileRT::RGB;
+  using ::MobileRT::Ray;
+  using ::MobileRT::Scene;
 
-  class DiffuseMaterial final : public MobileRT::Shader {
+  class DiffuseMaterial final : public ::MobileRT::Shader {
     private:
     bool shade (RGB *rgb, Intersection intersection,
                 Ray &&ray) noexcept final;

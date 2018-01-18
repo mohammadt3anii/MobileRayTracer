@@ -37,9 +37,11 @@ namespace MobileRT {
 			Rectangle(Rectangle &&rectangle) noexcept = default;
 
 			~Rectangle() noexcept = default;
+			
       Rectangle &operator= (const Rectangle &rectangle) noexcept = default;
 
-			Rectangle &operator=(Rectangle &&rectangle) noexcept = delete;
+			Rectangle &operator=(Rectangle &&rectangle) noexcept = default;
+
 			bool intersect (Intersection *intersection, Ray ray) const noexcept;
 
 			void moveTo(float x, float y) noexcept;
@@ -47,6 +49,7 @@ namespace MobileRT {
 			float getZ() const noexcept;
 
 			AABB getAABB() const noexcept;
+			
 			bool intersect (AABB box) const noexcept;
     };
 }//namespace MobileRT

@@ -14,7 +14,7 @@ set( ANDROID_DISABLE_NO_EXECUTE true )
 set( ANDROID_DISABLE_FORMAT_STRING_CHECKS true )
 set( ANDROID_PIE on )
 
-file( GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp/**.cpp" )
+file( GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp/**.cpp" "${CMAKE_CURRENT_LIST_DIR}/../jniLibs/Scenes.cpp" )
 add_library( DrawView SHARED ${MOBILE_APP_SOURCES} )
 
 target_compile_options( DrawView PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )

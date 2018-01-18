@@ -4,16 +4,16 @@
 
 #include "DepthMap.hpp"
 
-using Components::DepthMap;
-using MobileRT::Point3D;
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
+using ::Components::DepthMap;
+using ::MobileRT::Point3D;
+using ::MobileRT::RGB;
+using ::MobileRT::Intersection;
+using ::MobileRT::Ray;
+using ::MobileRT::Scene;
 
 DepthMap::DepthMap (Scene &&scene, const Point3D maxPoint, const Accelerator accelerator) noexcept
   :
-  Shader {std::move (scene), 0, accelerator},
+  Shader {::std::move (scene), 0, accelerator},
   maxPoint_ {maxPoint}
 {
 }

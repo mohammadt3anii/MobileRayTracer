@@ -3,7 +3,7 @@
 //
 #include "RGB.hpp"
 
-using MobileRT::RGB;
+using ::MobileRT::RGB;
 static unsigned counter {0};
 
 RGB::RGB(const float r, const float g, const float b) noexcept :
@@ -42,7 +42,7 @@ void RGB::operator+= (const RGB rgb) noexcept {
   this->B_ += rgb.B_;
 }
 
-void RGB::addMult (const std::initializer_list<const RGB> rgbs, const float value) noexcept {
+void RGB::addMult (const ::std::initializer_list<const RGB> rgbs, const float value) noexcept {
   float red {value};
   float green {value};
   float blue {value};
@@ -141,6 +141,14 @@ float RGB::getMax () const noexcept {
 }
 
 RGB &RGB::operator= (const RGB &rgb) noexcept {
+  this->R_ = rgb.R_;
+  this->G_ = rgb.G_;
+  this->B_ = rgb.B_;
+  this->samples_ = rgb.samples_;
+  return *this;
+}
+
+RGB &RGB::operator= (RGB &&rgb) noexcept {
   this->R_ = rgb.R_;
   this->G_ = rgb.G_;
   this->B_ = rgb.B_;

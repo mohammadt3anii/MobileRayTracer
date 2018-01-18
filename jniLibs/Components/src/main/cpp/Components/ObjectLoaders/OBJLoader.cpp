@@ -5,13 +5,13 @@
 #include "OBJLoader.hpp"
 #include "../Lights/AreaLight.hpp"
 
-using Components::AreaLight;
-using Components::OBJLoader;
-using MobileRT::Material;
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
-using MobileRT::RGB;
-using MobileRT::Scene;
+using ::Components::AreaLight;
+using ::Components::OBJLoader;
+using ::MobileRT::Material;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
+using ::MobileRT::RGB;
+using ::MobileRT::Scene;
 
 OBJLoader::OBJLoader (const char *const text, const char *const materials) noexcept :
   objText_ {text},
@@ -20,15 +20,15 @@ OBJLoader::OBJLoader (const char *const text, const char *const materials) noexc
 }
 
 void OBJLoader::process() noexcept {
-  std::istringstream objStream {objText_};
-    std::istringstream matStream {materialsText_};
+  ::std::istringstream objStream {objText_};
+    ::std::istringstream matStream {materialsText_};
   tinyobj::MaterialStreamReader matStreamReader {matStream};
-    std::string err {};
+    ::std::string err {};
     bool ret {
       tinyobj::LoadObj (&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
 
     if (!err.empty()) { // `err` may contain warning message.
-        std::cerr << err << std::endl;
+        ::std::cerr << err << ::std::endl;
     }
 
     if (!ret) {
@@ -37,7 +37,7 @@ void OBJLoader::process() noexcept {
     isProcessed_ = true;
 }
 
-bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept {
+bool OBJLoader::fillScene (Scene *const scene, ::std::function<::std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept {
     for (auto &shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset {0};
@@ -97,7 +97,7 @@ bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<Mob
                 normal = (normal1 + normal2 + normal3) / 3;
                 normal.normalize ();
               }
-              Triangle triangle {vertex1, vertex2, vertex3, normal};
+              const Triangle triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
                 const int materialID {shape.mesh.material_ids[f]};
@@ -118,7 +118,7 @@ bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<Mob
                     float e1 {m.emission[0]};
                     float e2 {m.emission[1]};
                     float e3 {m.emission[2]};
-                    const float max {std::max (std::max (e1, e2), e3)};
+                    const float max {::std::max (::std::max (e1, e2), e3)};
 										if (max > 1.0f) {
 											e1 /= max;
 											e2 /= max;
@@ -132,7 +132,7 @@ bool OBJLoader::fillScene (Scene *const scene, std::function<std::unique_ptr<Mob
                         const Point3D p3 {vx3, vy3, vz3};
                         scene->lights_.emplace_back(new AreaLight(material, lambda(), p1, p2, p3));
                     } else {
-                      scene->triangles_.emplace_back (std::move (triangle), material);
+                      scene->triangles_.emplace_back (triangle, material);
                     }
                 }
             }

@@ -12,17 +12,17 @@
 #include <random>
 
 namespace Components {
-	using MobileRT::Sampler;
-	using MobileRT::RGB;
-	using MobileRT::Intersection;
-	using MobileRT::Ray;
-	using MobileRT::Scene;
-	using MobileRT::Vector3D;
-    class PathTracer final : public MobileRT::Shader {
+	using ::MobileRT::Sampler;
+	using ::MobileRT::RGB;
+	using ::MobileRT::Intersection;
+	using ::MobileRT::Ray;
+	using ::MobileRT::Scene;
+	using ::MobileRT::Vector3D;
+    class PathTracer final : public ::MobileRT::Shader {
     private:
-      std::unique_ptr<Sampler> samplerRay_ {};
-      std::unique_ptr<Sampler> samplerLight_ {};
-      std::unique_ptr<Sampler> samplerRussianRoulette_ {};
+      ::std::unique_ptr<Sampler> samplerRay_ {};
+      ::std::unique_ptr<Sampler> samplerLight_ {};
+      ::std::unique_ptr<Sampler> samplerRussianRoulette_ {};
 
     private:
 			bool shade(RGB *rgb,
@@ -33,9 +33,9 @@ namespace Components {
 
 		public:
         explicit PathTracer(Scene &&scene,
-                            std::unique_ptr<Sampler> &&samplerRay,
-                            std::unique_ptr<Sampler> &&samplerLight,
-                            std::unique_ptr<Sampler> &&samplerRussianRoulette,
+                            ::std::unique_ptr<Sampler> &&samplerRay,
+                            ::std::unique_ptr<Sampler> &&samplerLight,
+                            ::std::unique_ptr<Sampler> &&samplerRussianRoulette,
                             unsigned samplesLight, Accelerator accelerator) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;

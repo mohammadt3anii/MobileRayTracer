@@ -14,10 +14,10 @@ namespace MobileRT {
   using MobileRT::Primitive;
     class RegularGrid final {
     private:
-      std::vector<std::vector<Primitive<Triangle> *>> triangles_;
-      std::vector<std::vector<Primitive<Sphere> *>> spheres_;
-      std::vector<std::vector<Primitive<Plane> *>> planes_;
-      std::vector<std::vector<Primitive<Rectangle> *>> rectangles_;
+      ::std::vector<::std::vector<Primitive<Triangle> *>> triangles_;
+      ::std::vector<::std::vector<Primitive<Sphere> *>> spheres_;
+      ::std::vector<::std::vector<Primitive<Plane> *>> planes_;
+      ::std::vector<::std::vector<Primitive<Rectangle> *>> rectangles_;
       int gridSize_ {};
       int gridShift_ {};
       AABB m_Extends {};
@@ -27,10 +27,10 @@ namespace MobileRT {
       private:
       template<typename T>
       void addPrimitives
-        (std::vector<T> &primitives, std::vector<std::vector<T *>> &grid_primitives) noexcept;
+        (::std::vector<T> &primitives, ::std::vector<::std::vector<T *>> &grid_primitives) noexcept;
 
       template<typename T>
-      bool intersect (const std::vector<std::vector<T *>> &primitives, Intersection *intersection,
+      bool intersect (const ::std::vector<::std::vector<T *>> &primitives, Intersection *intersection,
                       Ray ray, bool shadowTrace = false) noexcept;
 
       int bitCounter (unsigned int n) const noexcept;

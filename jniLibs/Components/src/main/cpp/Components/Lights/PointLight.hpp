@@ -8,11 +8,11 @@
 #include "MobileRT/Light.hpp"
 
 namespace Components {
-	using MobileRT::Material;
-	using MobileRT::Point3D;
-	using MobileRT::Intersection;
-	using MobileRT::Ray;
-	class PointLight final : public MobileRT::Light {
+	using ::MobileRT::Material;
+	using ::MobileRT::Point3D;
+	using ::MobileRT::Intersection;
+	using ::MobileRT::Ray;
+	class PointLight final : public ::MobileRT::Light {
     private:
       Point3D position_ {};
 

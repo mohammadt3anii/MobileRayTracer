@@ -9,7 +9,7 @@
 #include <random>
 
 namespace Components {
-	class MersenneTwister final : public MobileRT::Sampler {
+	class MersenneTwister final : public ::MobileRT::Sampler {
 	public:
 		explicit MersenneTwister() noexcept = default;
 

@@ -11,7 +11,7 @@
 #include <random>
 
 namespace Components {
-  class StaticHaltonSeq final : public MobileRT::Sampler {
+  class StaticHaltonSeq final : public ::MobileRT::Sampler {
     public:
     explicit StaticHaltonSeq () noexcept;
     explicit StaticHaltonSeq (unsigned width, unsigned height,

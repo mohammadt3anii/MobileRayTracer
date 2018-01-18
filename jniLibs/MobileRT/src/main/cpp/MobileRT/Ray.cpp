@@ -5,12 +5,12 @@
 #include "Ray.hpp"
 #include <atomic>
 
-using MobileRT::Ray;
+using ::MobileRT::Ray;
 static unsigned counter {0};
 namespace {
   int32_t getID () {
-    static std::atomic<int32_t> id {0};
-    const int32_t current {id.fetch_add (1, std::memory_order_relaxed)};
+    static ::std::atomic<int32_t> id {0};
+    const int32_t current {id.fetch_add (1, ::std::memory_order_relaxed)};
     return current;
   }
 }//namespace

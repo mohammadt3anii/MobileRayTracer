@@ -4,11 +4,11 @@
 
 #include "Orthographic.hpp"
 
-using Components::Orthographic;
-using MobileRT::AABB;
-using MobileRT::Point3D;
-using MobileRT::Vector3D;
-using MobileRT::Ray;
+using ::Components::Orthographic;
+using ::MobileRT::AABB;
+using ::MobileRT::Point3D;
+using ::MobileRT::Vector3D;
+using ::MobileRT::Ray;
 
 Orthographic::Orthographic (const Point3D position, const Point3D lookAt, const Vector3D up,
                             const float sizeH, const float sizeV) noexcept :

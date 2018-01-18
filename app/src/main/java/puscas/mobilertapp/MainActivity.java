@@ -24,8 +24,6 @@ import java.util.regex.Pattern;
 public final class MainActivity extends Activity {
 
     static {
-        System.loadLibrary("MobileRT");
-        System.loadLibrary("Components");
         System.loadLibrary("DrawView");
     }
 

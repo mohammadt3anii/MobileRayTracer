@@ -4,22 +4,22 @@
 
 #include "Whitted.hpp"
 
-using Components::Whitted;
-using MobileRT::Light;
-using MobileRT::Vector3D;
-using MobileRT::Point3D;
-using MobileRT::RGB;
-using MobileRT::Intersection;
-using MobileRT::Ray;
-using MobileRT::Scene;
+using ::Components::Whitted;
+using ::MobileRT::Light;
+using ::MobileRT::Vector3D;
+using ::MobileRT::Point3D;
+using ::MobileRT::RGB;
+using ::MobileRT::Intersection;
+using ::MobileRT::Ray;
+using ::MobileRT::Scene;
 
 Whitted::Whitted (Scene &&scene, const unsigned samplesLight, Accelerator accelerator) noexcept :
-  Shader {std::move (scene), samplesLight, accelerator} {
+  Shader {::std::move (scene), samplesLight, accelerator} {
 }
 
 bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
   const int32_t rayDepth {ray.depth_};
-  if (rayDepth > RayDepthMax) {
+  if (rayDepth > ::MobileRT::RayDepthMax) {
 		return false;
 	}
 
@@ -67,7 +67,7 @@ bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray)
             lightIntersection.primitive_ = intersection.primitive_;
             //intersection between shadow ray and the closest primitive
             //if there are no primitives between intersection and the light
-            if (!shadowTrace (&lightIntersection, std::move (shadowRay))) {
+            if (!shadowTrace (&lightIntersection, ::std::move (shadowRay))) {
               //rgb += kD * radLight * cos_N_L;
               rgb->addMult ({light.radiance_.Le_}, cos_N_L);
             }
@@ -89,7 +89,7 @@ bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray)
     Ray specularRay {reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
     RGB LiS_RGB {};
     Intersection specularInt {intersection.primitive_};
-    rayTrace (&LiS_RGB, &specularInt, std::move (specularRay));
+    rayTrace (&LiS_RGB, &specularInt, ::std::move (specularRay));
     rgb->addMult ({kS, LiS_RGB});
 	}
 
@@ -111,14 +111,14 @@ bool Whitted::shade (RGB *const rgb, const Intersection intersection, Ray &&ray)
                          //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                          (ray.direction_ * refractiveIndice) + (shadingNormalT *
                                                                 (refractiveIndice * cosTheta1 -
-                                                                 (std::sqrt (cosTheta2)))) :
+                                                                 (::std::sqrt (cosTheta2)))) :
                          //rayDir = (ray.d + N*(cost1 * 2)).norm();
                          ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
                          intersection.point_,
                          rayDepth + 1, intersection.primitive_};
     RGB LiT_RGB {};
     Intersection transmissionInt {intersection.primitive_};
-		rayTrace(&LiT_RGB, &transmissionInt, std::move(transmissionRay));
+		rayTrace(&LiT_RGB, &transmissionInt, ::std::move(transmissionRay));
     rgb->addMult ({kT, LiT_RGB});
 	}
   rgb->addMult ({kD}, 0.1f);//rgb += kD *  0.1f

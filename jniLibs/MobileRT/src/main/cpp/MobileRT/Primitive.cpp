@@ -4,4 +4,4 @@
 
 #include "Primitive.hpp"
 
-using MobileRT::Primitive;
+using ::MobileRT::Primitive;

@@ -14,7 +14,7 @@
 #include "Shapes/Triangle.hpp"
 
 namespace MobileRT {
-  using MobileRT::Material;
+  using ::MobileRT::Material;
 
   template<typename T>
   class Primitive final {
@@ -26,7 +26,7 @@ namespace MobileRT {
     public:
     Primitive (T shape, Material material) noexcept :
       shape_ {shape},
-      material_ {std::move (material)} {
+      material_ {::std::move (material)} {
     }
 
     Primitive () noexcept = delete;
@@ -34,7 +34,7 @@ namespace MobileRT {
     Primitive (Primitive &&primitive) noexcept = default;
     ~Primitive () noexcept = default;
     Primitive &operator= (const Primitive &primitive) noexcept = default;
-    Primitive &operator= (Primitive &&primitive) noexcept = delete;
+    Primitive &operator= (Primitive &&primitive) noexcept = default;
 
     AABB getAABB () const noexcept {
       return this->shape_.getAABB ();

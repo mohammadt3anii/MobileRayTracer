@@ -11,7 +11,7 @@
 #include <utility>
 
 namespace Components {
-	class HaltonSeq final : public MobileRT::Sampler {
+	class HaltonSeq final : public ::MobileRT::Sampler {
     public:
 			explicit HaltonSeq() noexcept = default;
     explicit HaltonSeq (unsigned width, unsigned height,

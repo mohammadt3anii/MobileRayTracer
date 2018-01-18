@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
 include( "${CMAKE_CURRENT_LIST_DIR}/../MobileRT/CMakeLists.txt" )
-include( "${CMAKE_CURRENT_LIST_DIR}/../../third-party/tinyobjloader/CMakeLists_Android.txt" )
+include( "${CMAKE_CURRENT_LIST_DIR}/../../jniLibs/third-party/tinyobjloader/CMakeLists_Android.txt" )
 
 set( CMAKE_VERBOSE_MAKEFILE on )
 set( LIBCXX_FORCE_REBUILD true )
@@ -18,7 +18,7 @@ set( ANDROID_PIE on )
 file( GLOB_RECURSE MOBILE_RC_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp/**.cpp" )
 add_library( Components SHARED ${MOBILE_RC_SOURCES} )
 target_include_directories( Components INTERFACE "${CMAKE_CURRENT_LIST_DIR}/src/main/cpp" )
-target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../third-party" )
+target_include_directories( Components PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../third-party" )
 
 target_compile_options( Components PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 target_compile_options( Components PRIVATE $<$<CONFIG:RELEASE>:-Ofast -DNDEBUG> )

@@ -8,21 +8,21 @@
 #include "MobileRT/Camera.hpp"
 
 namespace Components {
-  using MobileRT::AABB;
-	using MobileRT::Point3D;
-	using MobileRT::Vector3D;
-	using MobileRT::Ray;
-    class Orthographic final : public MobileRT::Camera {
+  using ::MobileRT::AABB;
+	using ::MobileRT::Point3D;
+	using ::MobileRT::Vector3D;
+	using ::MobileRT::Ray;
+    class Orthographic final : public ::MobileRT::Camera {
     private:
-      const float sizeH_ {};
-      const float sizeV_ {};
+      float sizeH_ {};
+      float sizeV_ {};
 
     public:
 			explicit Orthographic (Point3D position,
 														 Point3D lookAt, Vector3D up,
 														 float sizeH, float sizeV) noexcept;
 
-			Orthographic(const Orthographic &orthographic) noexcept = delete;
+			Orthographic(const Orthographic &orthographic) noexcept = default;
 
 			Orthographic(Orthographic &&orthographic) noexcept = delete;
 
@@ -35,6 +35,7 @@ namespace Components {
 			Ray generateRay(float u, float v,
 											float deviationU,
 											float deviationV) const noexcept final;
+											
       AABB getAABB () const noexcept final;
     };
 }//namespace Components

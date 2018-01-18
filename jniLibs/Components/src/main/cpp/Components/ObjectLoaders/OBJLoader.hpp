@@ -10,13 +10,13 @@
 #include <tinyobjloader/tiny_obj_loader.h>
 
 namespace Components {
-  class OBJLoader final : public MobileRT::ObjectLoader {
+  class OBJLoader final : public ::MobileRT::ObjectLoader {
     private:
-    std::string objText_ {};
-    std::string materialsText_ {};
+    ::std::string objText_ {};
+    ::std::string materialsText_ {};
     tinyobj::attrib_t attrib_ {};
-    std::vector<tinyobj::shape_t> shapes_ {std::vector<tinyobj::shape_t> ()};
-    std::vector<tinyobj::material_t> materials_ {std::vector<tinyobj::material_t> ()};
+    ::std::vector<tinyobj::shape_t> shapes_ {::std::vector<tinyobj::shape_t> ()};
+    ::std::vector<tinyobj::material_t> materials_ {::std::vector<tinyobj::material_t> ()};
 
     public:
         explicit OBJLoader(const char *text, const char *materials) noexcept;
@@ -33,7 +33,7 @@ namespace Components {
 
         void process() noexcept final;
 				
-				bool fillScene(MobileRT::Scene *scene, std::function<std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept final;
+				bool fillScene(::MobileRT::Scene *scene, ::std::function<::std::unique_ptr<::MobileRT::Sampler> ()> lambda) noexcept final;
     };
 }//namespace Components
 

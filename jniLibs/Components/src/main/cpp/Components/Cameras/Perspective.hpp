@@ -8,13 +8,13 @@
 #include "MobileRT/Camera.hpp"
 
 namespace Components {
-	using MobileRT::Point3D;
-	using MobileRT::Vector3D;
-	using MobileRT::Ray;
-    class Perspective final : public MobileRT::Camera {
+	using ::MobileRT::Point3D;
+	using ::MobileRT::Vector3D;
+	using ::MobileRT::Ray;
+    class Perspective final : public ::MobileRT::Camera {
     private:
-      const float hFov_ {};
-      const float vFov_ {};
+    	float hFov_ {};
+    	float vFov_ {};
 
 		private:
 			float fastArcTan(float value) const noexcept;
@@ -24,15 +24,15 @@ namespace Components {
 														Point3D lookAt, Vector3D up,
 														float hFov, float vFov) noexcept;
 
-			Perspective(const Perspective &perspective) noexcept = delete;
+			Perspective(const Perspective &perspective) noexcept = default;
 
 			Perspective(Perspective &&perspective) noexcept = delete;
 
 			~Perspective() noexcept final = default;
 
-			Perspective &operator=(const Perspective &perspective) const noexcept = delete;
+			Perspective &operator=(const Perspective &perspective) noexcept = delete;
 
-			Perspective &&operator=(Perspective &&perspective) const noexcept = delete;
+			Perspective &operator=(Perspective &&perspective) noexcept = delete;
 
 			Ray generateRay(float u, float v,
 											float deviationU, float deviationV) const noexcept final;

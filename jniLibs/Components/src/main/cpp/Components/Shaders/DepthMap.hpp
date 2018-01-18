@@ -8,12 +8,12 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-	using MobileRT::RGB;
-	using MobileRT::Intersection;
-	using MobileRT::Ray;
-	using MobileRT::Scene;
-	using MobileRT::Point3D;
-	class DepthMap final : public MobileRT::Shader {
+	using ::MobileRT::RGB;
+	using ::MobileRT::Intersection;
+	using ::MobileRT::Ray;
+	using ::MobileRT::Scene;
+	using ::MobileRT::Point3D;
+	class DepthMap final : public ::MobileRT::Shader {
 		private:
     Point3D maxPoint_ {};
 

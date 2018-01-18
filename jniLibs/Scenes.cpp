@@ -161,22 +161,22 @@ MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept {
                                                                                  4.0f}});*/
 
   // create diffuse Materials
-  const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};
-  //const MobileRT::Material redMat {MobileRT::RGB {0.9f, 0.0f, 0.0f}};
+  //const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};
+  const MobileRT::Material redMat {MobileRT::RGB {0.9f, 0.0f, 0.0f}};
   /*const MobileRT::Material mirrorMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                       MobileRT::RGB {0.9f, 0.9f, 0.9f}};*/
   const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};
   // create one sphere
-  /*scene.spheres_.emplace_back (MobileRT::Sphere {
-    MobileRT::Point3D {4.0f, 4.0f, 4.0f}, 4.0f}, redMat);*/
-  scene.triangles_.emplace_back (MobileRT::Triangle {
+  scene.spheres_.emplace_back (MobileRT::Sphere {
+    MobileRT::Point3D {4.0f, 4.0f, 4.0f}, 4.0f}, redMat);
+  /*scene.triangles_.emplace_back (MobileRT::Triangle {
     MobileRT::Point3D {10.0f, 0.0f, 10.0f},
     MobileRT::Point3D {0.0f, 0.0f, 10.0f},
     MobileRT::Point3D {0.0f, 10.0f, 10.0f}}, sandMat);
   scene.triangles_.emplace_back (MobileRT::Triangle {
     MobileRT::Point3D {10.0f, 10.0f, 10.0f},
     MobileRT::Point3D {10.0f, 0.0f, 10.0f},
-    MobileRT::Point3D {0.0f, 10.0f, 10.0f}}, greenMat);
+    MobileRT::Point3D {0.0f, 10.0f, 10.0f}}, greenMat);*/
   /*scene.spheres_.emplace_back (MobileRT::Sphere {
     MobileRT::Point3D {-1.0f, 1.0f, 6.0f}, 1.0f}, redMat);*/
   /*scene.spheres_.emplace_back (MobileRT::Sphere {
