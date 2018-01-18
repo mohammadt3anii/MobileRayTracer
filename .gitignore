@@ -19,5 +19,4 @@
 **/*.py
 **/*.callgrind
 **/*.log
-**/third-party/tinyobjloader
-**/jniLibs/libMobileRT.so
+**/jniLibs/*.so
