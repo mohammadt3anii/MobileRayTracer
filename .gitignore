@@ -19,4 +19,4 @@
 **/*.py
 **/*.callgrind
 **/*.log
-**/jniLibs/*.so
+**/*.so
