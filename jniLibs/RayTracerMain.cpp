@@ -46,7 +46,7 @@ int main(int argc, char **argv) noexcept {
       gtk_main_quit ();
     }
   ), nullptr);
-  auto *check_escape {static_cast<bool (*) (
+  auto *check_escape (static_cast<bool (*) (
     GtkWidget *gtkWidget, GdkEventKey *event, gpointer)>(
                         [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer) {
                           if (event -> keyval == GDK_KEY_Escape) {
@@ -56,7 +56,7 @@ int main(int argc, char **argv) noexcept {
                           }
                           return false;
                         })
-  };
+  );
   gtk_signal_connect (GTK_OBJECT (window), "key_press_event", GTK_SIGNAL_FUNC (check_escape),
                       nullptr);
   gtk_container_add (GTK_CONTAINER (window), image);

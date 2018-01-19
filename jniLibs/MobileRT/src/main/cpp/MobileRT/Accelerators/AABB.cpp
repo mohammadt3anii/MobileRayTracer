@@ -12,7 +12,7 @@ AABB::AABB (const Point3D pointMin, const Point3D pointMax) noexcept :
 }
 
 bool AABB::intersect (Ray ray) const noexcept {
-	float tmin {0.0f};
+	float tmin {::MobileRT::Epsilon};
 	float tmax {::MobileRT::RayLengthMax};
 	for (int axis {0}; axis < 3; axis++) {
 		const float invDir {1.0f / ray.direction_.direction_[axis]};

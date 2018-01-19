@@ -9,11 +9,9 @@ using ::MobileRT::BVH;
 using ::MobileRT::Primitive;
 
 BVH::BVH (AABB sceneBounds, std::vector<MobileRT::Primitive<MobileRT::Sphere>> spheres) noexcept {
-  LOG ("BVH");
-  /*thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
+  thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
   thread_local static ::std::mt19937 gen (::std::random_device {} ());
-  const float randomNumber {uniform_dist (gen)};*/
-  const float randomNumber {0.5f};
+  const float randomNumber {uniform_dist (gen)};
   const int axis {static_cast<int> (3.0f * randomNumber)};
   switch (axis) {
     case 0:
@@ -56,18 +54,6 @@ BVH::BVH (AABB sceneBounds, std::vector<MobileRT::Primitive<MobileRT::Sphere>> s
     leftBox = spheres[0].getAABB();
     rightBox = spheres[0].getAABB();
     spheres_ = spheres;
-  /*} else if (spheres.size() == 2) {
-    leftBegin = spheres.begin();
-    leftEnd = spheres.begin() + 1;
-    rightBegin = spheres.begin() + 1;
-    rightEnd = spheres.end();
-
-    ::std::vector<MobileRT::Primitive<MobileRT::Sphere>> leftVector(leftBegin, leftEnd);
-    ::std::vector<MobileRT::Primitive<MobileRT::Sphere>> rightVector(rightBegin, rightEnd);
-    leftBox = spheres[0].getAABB();
-    rightBox = spheres[1].getAABB();
-    left_ = new BVH(sceneBounds, leftVector);
-    right_ = new BVH(sceneBounds, rightVector);*/
   } else {
     leftBegin = spheres.begin();
     leftEnd = spheres.begin() + spheres.size() / 2;
@@ -78,16 +64,6 @@ BVH::BVH (AABB sceneBounds, std::vector<MobileRT::Primitive<MobileRT::Sphere>> s
     ::std::vector<MobileRT::Primitive<MobileRT::Sphere>> rightVector(rightBegin, rightEnd);
     left_ = new BVH(sceneBounds, leftVector);
     right_ = new BVH(sceneBounds, rightVector);
-    /*for (unsigned i {0}; i < left_->spheres_.size(); i++) {
-      AABB box1 {left_->spheres_[i].getAABB()};
-      leftBox = surroundingBox (leftBox, box1);
-    }
-    left_->box_ = leftBox;
-    for (unsigned i {0}; i < right_->spheres_.size(); i++) {
-      AABB box1 {right_->spheres_[i].getAABB()};
-      rightBox = surroundingBox (rightBox, box1);
-    }
-    right_->box_ = rightBox;*/
     leftBox = left_->box_;
     rightBox = right_->box_;
   }
@@ -98,11 +74,8 @@ bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
   if (box_.intersect(ray)) {
     if (left_ == nullptr || right_ == nullptr) {
       bool res {false};
-      for (MobileRT::Primitive<MobileRT::Sphere>  s : spheres_) {
+      for (MobileRT::Primitive<MobileRT::Sphere> &s : spheres_) {
         res |= s.intersect(intersection, ray);
-      }
-      if (res) {
-        LOG ("BVH::trace res = ", res, " size = ", spheres_.size(), " KD = ", intersection->material_->Kd_.R_, " ", intersection->material_->Kd_.G_, " ", intersection->material_->Kd_.B_);
       }
       return res;
     }

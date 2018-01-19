@@ -88,6 +88,7 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
       intersected = this->bVH_.trace (intersection, ray);
+      intersected |= this->scene_.traceLights (intersection, ray);
       break;
     }
     case Accelerator::NONE: {

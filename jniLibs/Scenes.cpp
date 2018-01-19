@@ -206,20 +206,20 @@ MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
   const MobileRT::Material blueMat {MobileRT::RGB {0.0f, 0.0f, 0.9f}};
   const MobileRT::Material yellowMat {MobileRT::RGB {0.9f, 0.9f, 0.0f},
                                       MobileRT::RGB {0.8f, 0.8f, 0.4f}};
-  const MobileRT::Material mirrorMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+  const MobileRT::Material mirrorMat {MobileRT::RGB {0.2f, 0.2f, 0.2f},
                                       MobileRT::RGB {0.9f, 0.9f, 0.9f}};
   const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};
   // create one sphere
   scene.spheres_.emplace_back (MobileRT::Sphere {
     MobileRT::Point3D {-1.0f, 1.0f, 6.0f}, 1.0f}, redMat);
   scene.spheres_.emplace_back (MobileRT::Sphere {
-    MobileRT::Point3D {-1.0f, 2.0f, 5.0f}, 0.3f}, blueMat);
+    MobileRT::Point3D {-0.5f, 2.0f, 5.0f}, 0.3f}, blueMat);
   scene.spheres_.emplace_back (MobileRT::Sphere {
-    MobileRT::Point3D {1.5f, 2.0f, 7.0f}, 1.0f}, mirrorMat);
+    MobileRT::Point3D {0.0f, 2.0f, 7.0f}, 1.0f}, mirrorMat);
   scene.spheres_.emplace_back (MobileRT::Sphere {
-    MobileRT::Point3D {1.5f, 0.5f, 5.0f}, 0.2f}, yellowMat);
+    MobileRT::Point3D {0.5f, 0.5f, 5.0f}, 0.2f}, yellowMat);
   scene.spheres_.emplace_back (MobileRT::Sphere {
-    MobileRT::Point3D {0.0f, 0.5f, 4.5f}, 0.5f}, greenMat);
+    MobileRT::Point3D {1.0f, 0.5f, 4.5f}, 0.5f}, greenMat);
   scene.planes_.emplace_back (MobileRT::Plane {
     MobileRT::Point3D {0.0f, 0.0f, 0.0f}, MobileRT::Vector3D {0.0f, 1.0f, 0.0f}}, sandMat);
   return std::move(scene);
