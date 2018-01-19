@@ -41,25 +41,25 @@ BVH::BVH (AABB sceneBounds, std::vector<MobileRT::Primitive<MobileRT::Sphere>> s
 
   AABB leftBox {};
   AABB rightBox {};
-  #define SIZE 1
+  leftBegin = spheres.begin();
+  leftEnd = spheres.begin() + spheres.size() / 2;
+  rightBegin = spheres.begin() + spheres.size() / 2;
+  rightEnd = spheres.end();
+  const int SIZE {1};
 
   if (spheres.size() <= SIZE) {
-    leftBegin = spheres.begin();
-    leftEnd = spheres.end();
-    rightBegin = spheres.begin();
-    rightEnd = spheres.end();
-
     left_ = nullptr;
     right_ = nullptr;
-    leftBox = spheres[0].getAABB();
-    rightBox = spheres[0].getAABB();
     spheres_ = spheres;
+    for (unsigned long i {0}; i < spheres.size() / 2; i++) {
+      const AABB box {spheres_[i].getAABB()};
+      leftBox = surroundingBox (leftBox, box);
+    }
+    for (unsigned long i {spheres.size() / 2}; i < spheres_.size(); i++) {	
+      const AABB box {spheres_[i].getAABB()};
+      rightBox = surroundingBox (rightBox, box);
+    }
   } else {
-    leftBegin = spheres.begin();
-    leftEnd = spheres.begin() + spheres.size() / 2;
-    rightBegin = spheres.begin() + spheres.size() / 2;
-    rightEnd = spheres.end();
-
     ::std::vector<MobileRT::Primitive<MobileRT::Sphere>> leftVector(leftBegin, leftEnd);
     ::std::vector<MobileRT::Primitive<MobileRT::Sphere>> rightVector(rightBegin, rightEnd);
     left_ = new BVH(sceneBounds, leftVector);
@@ -77,6 +77,7 @@ bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
       for (MobileRT::Primitive<MobileRT::Sphere> &s : spheres_) {
         res |= s.intersect(intersection, ray);
       }
+      LOG ("size = ", spheres_.size());
       return res;
     }
     const bool hit_left {left_->trace(intersection, ray)};
@@ -87,5 +88,24 @@ bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
 }
 
 bool BVH::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
-  return trace(intersection, ray);
+    if (box_.intersect(ray)) {
+      if (left_ == nullptr || right_ == nullptr) {
+        for (MobileRT::Primitive<MobileRT::Sphere> &s : spheres_) {
+          if (s.intersect(intersection, ray) == true) {
+            return true;
+          }
+        }
+        return false;
+      }
+      const bool hit_left {left_->trace(intersection, ray)};
+      if (hit_left == true) {
+        return true;
+      }
+      const bool hit_right {right_->trace(intersection, ray)};
+      if (hit_right == true) {
+        return true;
+      }
+      return false;
+  }
+  return false;
 }

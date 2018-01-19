@@ -14,6 +14,7 @@ using ::MobileRT::AABB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 namespace MobileRT {
+  //template<typename T> 
   class BVH final {
     public:
       BVH *left_ {nullptr};
