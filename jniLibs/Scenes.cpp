@@ -222,5 +222,6 @@ MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
     MobileRT::Point3D {1.0f, 0.5f, 4.5f}, 0.5f}, greenMat);
   scene.planes_.emplace_back (MobileRT::Plane {
     MobileRT::Point3D {0.0f, 0.0f, 0.0f}, MobileRT::Vector3D {0.0f, 1.0f, 0.0f}}, sandMat);
+  /*scene.rectangles_.emplace_back (MobileRT::Rectangle {MobileRT::Point3D {-2.0f, 0.0f, 0.0f}, MobileRT::Point3D {-2.0f, 0.0f, 10.0f}, MobileRT::Point3D {2.0f, 0.0f, 0.0f}, MobileRT::Point3D {2.0f, 0.0f, 10.0f}}, sandMat);*/
   return std::move(scene);
 }

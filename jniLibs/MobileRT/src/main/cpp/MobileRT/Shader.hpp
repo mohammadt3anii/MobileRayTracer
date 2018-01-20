@@ -21,7 +21,10 @@ namespace MobileRT {
     public:
       Scene scene_ {};
       RegularGrid regularGrid_ {};
-      BVH bVH_ {};
+      BVH<MobileRT::Plane> bvhPlanes_ {};
+      BVH<MobileRT::Rectangle> bvhRectangles_ {};
+      BVH<MobileRT::Sphere> bvhSpheres_ {};
+      BVH<MobileRT::Triangle> bvhTriangles_ {};
 
       enum Accelerator {
         NONE = 0,

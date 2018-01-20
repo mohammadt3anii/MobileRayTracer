@@ -29,13 +29,13 @@ Point3D Point3D::operator+ (const Vector3D vector) const noexcept {
                   this->z_() + vector.z_()};
 }
 
-Point3D Point3D::operator- (float value) const noexcept {
+Point3D Point3D::operator- (const float value) const noexcept {
   return Point3D {this->x_() - value,
                   this->y_() - value,
                   this->z_() - value};
 }
 
-Point3D Point3D::operator+ (float value) const noexcept {
+Point3D Point3D::operator+ (const float value) const noexcept {
   return Point3D {this->x_() + value,
                   this->y_() + value,
                   this->z_() + value};

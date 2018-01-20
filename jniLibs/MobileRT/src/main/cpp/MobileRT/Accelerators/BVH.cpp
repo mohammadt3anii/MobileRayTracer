@@ -3,7 +3,7 @@
 //
 
 #include "BVH.hpp"
-#include <random>
+/*#include <random>
 
 using ::MobileRT::BVH;
 using ::MobileRT::Primitive;
@@ -68,9 +68,9 @@ BVH::BVH (AABB sceneBounds, std::vector<MobileRT::Primitive<MobileRT::Sphere>> s
     rightBox = right_->box_;
   }
   box_ = surroundingBox (leftBox, rightBox);
-}
+}*/
 
-bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
+/*bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
   if (box_.intersect(ray)) {
     if (left_ == nullptr || right_ == nullptr) {
       bool res {false};
@@ -85,9 +85,9 @@ bool BVH::trace (Intersection *intersection, const Ray &ray) noexcept {
     return hit_left || hit_right;
   }
   return false;
-}
+}*/
 
-bool BVH::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
+/*bool BVH::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
     if (box_.intersect(ray)) {
       if (left_ == nullptr || right_ == nullptr) {
         for (MobileRT::Primitive<MobileRT::Sphere> &s : spheres_) {
@@ -108,4 +108,4 @@ bool BVH::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
       return false;
   }
   return false;
-}
+}*/

@@ -43,7 +43,10 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      bVH_ = ::MobileRT::BVH {sceneBounds, scene_.spheres_};
+      bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {sceneBounds, scene_.planes_};
+      bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {sceneBounds, scene_.rectangles_};
+      bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {sceneBounds, scene_.spheres_};
+      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {sceneBounds, scene_.triangles_};
       break;
     }
     case Accelerator::NONE: {
@@ -68,7 +71,10 @@ bool Shader::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept 
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      intersected = this->bVH_.shadowTrace (intersection, ::std::move (ray));
+      intersected = this->bvhPlanes_.shadowTrace (intersection, ray);
+      intersected |= this->bvhRectangles_.shadowTrace (intersection, ray);
+      intersected |= this->bvhSpheres_.shadowTrace (intersection, ray);
+      intersected |= this->bvhTriangles_.shadowTrace (intersection, ray);
       break;
     }
     case Accelerator::NONE: {
@@ -87,7 +93,10 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      intersected = this->bVH_.trace (intersection, ray);
+      intersected = this->bvhPlanes_.trace (intersection, ray);
+      intersected |= this->bvhRectangles_.trace (intersection, ray);
+      intersected |= this->bvhSpheres_.trace (intersection, ray);
+      intersected |= this->bvhTriangles_.trace (intersection, ray);
       intersected |= this->scene_.traceLights (intersection, ray);
       break;
     }

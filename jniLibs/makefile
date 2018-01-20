@@ -30,15 +30,15 @@ LDFLAGS := -fPIC -fprofile-correction -fomit-frame-pointer  -Wno-padded -Wno-flo
 LDFLAGS += -Wl,-O3 -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
 
 ifeq ($(S),)
-	CXXFLAGS += -Ofast -DNDEBUG -fomit-frame-pointer
+	CXXFLAGS += -O3 -Ofast -fno-signed-zeros -freciprocal-math -ffp-contract=fast  -ffast-math -fno-trapping-math -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros
+	CXXFLAGS += -DNDEBUG -fomit-frame-pointer
 	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
-	CXXFLAGS += -flto=full
 	LDFLAGS += -flto=full
 	LDFLAGS += -fvisibility=hidden
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -Ofast -DNDEBUG -fno-omit-frame-pointer
+	CXXFLAGS += -O3 -DNDEBUG -fno-omit-frame-pointer
 	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden
 	LDFLAGS += -fvisibility=hidden
 endif
@@ -66,9 +66,11 @@ ifeq ($(S),3)
 endif
 
 ifneq (,$(findstring clang,$(CXX)))
+	CXXFLAGS += -flto=full
   CXXFLAGS += -isystem /usr/include/c++/v1
   CXXFLAGS += -Weverything -ferror-limit=1
   CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
+	LDFLAGS += -lc++
 else
   CXXFLAGS += -finline-limit=150
   LDFLAGS += -finline-limit=150
@@ -145,11 +147,11 @@ $(EXE): C_Wrapper MobileRT $(OBJS_APP)
 	@echo "Compilation App done\n"
 
 C_Wrapper: MobileRT $(OBJS_WRAPPER)
-	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_WRAPPER) $(LIBRARIES_WRAPPER) -lMobileRT
+	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_WRAPPER) $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY) $(LIBRARIES_WRAPPER) #-lMobileRT
 	@echo "Compilation C_Wrapper done\n"
 
 MobileRT: third_party $(OBJS_MOBILERT)
-	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY) $(LIBRARIES_MOBILERT) -lc++
+	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY) $(LIBRARIES_MOBILERT)
 	@echo "Compilation MobileRT done\n"
 
 third_party:

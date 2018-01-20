@@ -30,13 +30,15 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
 	LOG("width_ = ", width);
 	LOG("height_ = ", height);
 	::MobileRT::Renderer *renderer_ {nullptr};
-	::std::ifstream obj {"../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"};
+	/*::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"};
+  ::std::ifstream mtl {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"};*/
+  ::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.obj"};
+  ::std::ifstream mtl {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.mtl"};
 	::std::string line {};
 	::std::stringstream ssObj {};
 	while (::std::getline (obj, line)) {
 		ssObj << line << ::std::endl;
 	}
-	::std::ifstream mtl {"../app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"};
 	::std::stringstream ssMtl {};
 	while (::std::getline (mtl, line)) {
 		ssMtl << line << ::std::endl;
@@ -195,17 +197,6 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
   numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size ());
   const int64_t nPrimitives = triangles + spheres + planes;
 
-  LOG("start rendering scene");
-	const double start {omp_get_wtime ()};
-	do {
-		renderer_->renderFrame (bitmap, threads);
-		//renderer_->camera_->position_.x_ += 2.0f;
-	} while (repeats-- > 1);
-  const double time {omp_get_wtime () - start};
-  LOG("finished rendering scene");
-
-	delete renderer_;
-
   LOG("TRIANGLES = ", triangles);
   LOG("SPHERES = ", spheres);
   LOG("PLANES = ", planes);
@@ -218,5 +209,17 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
 	LOG("samplesLight = ", samplesLight);
 	LOG("width_ = ", width);
 	LOG("height_ = ", height);
+
+  LOG("Started rendering scene");
+	const double start {omp_get_wtime ()};
+	do {
+		renderer_->renderFrame (bitmap, threads);
+		//renderer_->camera_->position_.x_ += 2.0f;
+	} while (repeats-- > 1);
+  const double time {omp_get_wtime () - start};
+  LOG("Finished rendering scene");
+
+	delete renderer_;
+
   LOG("Time in secs = ", time);
 }

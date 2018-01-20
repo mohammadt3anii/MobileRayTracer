@@ -108,7 +108,7 @@ bool Rectangle::intersect (const AABB box) const noexcept {
     [&](Point3D orig, Vector3D vec)->bool {
       Vector3D T_1 {};
       Vector3D T_2 {}; // vectors to hold the T-values for every direction
-      float t_near {-RayLengthMax}; // maximums defined in float.h
+      float t_near {Epsilon}; // maximums defined in float.h
       float t_far {RayLengthMax};
       if (vec.x_() == 0) { // ray parallel to planes in this direction
         if ((orig.x_() < box.pointMin_.x_()) || (vec.x_() > box.pointMax_.x_())) {
