@@ -32,7 +32,7 @@ namespace MobileRT {
 
 			AABB &operator=(AABB &&AABB) noexcept = default;
 
-      bool intersect (Ray ray) const noexcept;
+      bool intersect (const Ray &ray) const noexcept;
     };
 
     AABB surroundingBox (AABB box1, AABB box2) noexcept;

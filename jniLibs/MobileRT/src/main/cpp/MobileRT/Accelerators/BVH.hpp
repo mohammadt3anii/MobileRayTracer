@@ -15,6 +15,8 @@ using ::MobileRT::AABB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 namespace MobileRT {
+  static unsigned counter {0};
+
   template<typename T>
   class BVH final {
     public:
@@ -26,7 +28,10 @@ namespace MobileRT {
     public:
       explicit BVH () noexcept = default;
 
-      explicit BVH<T> (AABB sceneBounds, std::vector<MobileRT::Primitive<T>> spheres) noexcept {
+      explicit BVH<T> (AABB sceneBounds, std::vector<MobileRT::Primitive<T>> spheres, const unsigned depth) noexcept {
+        if (spheres.size() <= 0) {
+          return;
+        }
         thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
         thread_local static ::std::mt19937 gen (::std::random_device {} ());
         const float randomNumber {uniform_dist (gen)};
@@ -65,7 +70,7 @@ namespace MobileRT {
         rightBegin = spheres.begin() + spheres.size() / 2;
         rightEnd = spheres.end();
 
-        if (spheres.size() <= 1) {
+        if (spheres.size() <= 10 || depth >= 12) {
           left_ = nullptr;
           right_ = nullptr;
           spheres_ = spheres;
@@ -80,12 +85,13 @@ namespace MobileRT {
         } else {
           ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
           ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
-          left_ = new BVH(sceneBounds, leftVector);
-          right_ = new BVH(sceneBounds, rightVector);
+          left_ = new BVH(sceneBounds, leftVector, depth+1);
+          right_ = new BVH(sceneBounds, rightVector, depth+1);
           leftBox = left_->box_;
           rightBox = right_->box_;
         }
         box_ = surroundingBox (leftBox, rightBox);
+        counter++;
       }
 
       BVH (const BVH &bVH) noexcept = delete;
@@ -98,7 +104,7 @@ namespace MobileRT {
 
       BVH &operator= (BVH &&bVH) noexcept = default;
 
-      bool trace (Intersection *intersection, const Ray &ray) noexcept {
+      bool trace (Intersection *const intersection, const Ray &ray) noexcept {
         if (box_.intersect(ray)) {
           if (left_ == nullptr || right_ == nullptr) {
             //return spheres_[0].intersect(intersection, ray);

@@ -43,10 +43,11 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {sceneBounds, scene_.planes_};
-      bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {sceneBounds, scene_.rectangles_};
-      bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {sceneBounds, scene_.spheres_};
-      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {sceneBounds, scene_.triangles_};
+      bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {sceneBounds, scene_.planes_, 1};
+      bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {sceneBounds, scene_.rectangles_, 1};
+      bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {sceneBounds, scene_.spheres_, 1};
+      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {sceneBounds, scene_.triangles_, 1};
+      LOG("Boxes created = ", MobileRT::counter);
       break;
     }
     case Accelerator::NONE: {
