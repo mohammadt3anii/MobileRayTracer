@@ -13,7 +13,6 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 16
-        //noinspection OldTargetApi
         targetSdkVersion 27
         versionCode 1
         android.compileOptions.sourceCompatibility 1.8

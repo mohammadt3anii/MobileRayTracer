@@ -165,7 +165,7 @@ MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept {
   const MobileRT::Material redMat {MobileRT::RGB {0.9f, 0.0f, 0.0f}};
   /*const MobileRT::Material mirrorMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                       MobileRT::RGB {0.9f, 0.9f, 0.9f}};*/
-  const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};
+    //const MobileRT::Material greenMat {MobileRT::RGB {0.0f, 0.9f, 0.0f}};
   // create one sphere
   scene.spheres_.emplace_back (MobileRT::Sphere {
     MobileRT::Point3D {4.0f, 4.0f, 4.0f}, 4.0f}, redMat);

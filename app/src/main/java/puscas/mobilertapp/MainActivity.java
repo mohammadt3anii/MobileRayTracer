@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 public final class MainActivity extends Activity {
 
     static {
+        System.loadLibrary("MobileRT");
+        System.loadLibrary("Components");
         System.loadLibrary("DrawView");
     }
 
@@ -249,7 +251,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerAccelerator_.setMinValue(0);
-        final String[] accelerators = {"Naive", "RegGrid", "KD-Tree", "BVH"};
+        final String[] accelerators = {"Naive", "RegGrid", "BVH", "Nothing"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
         pickerAccelerator_.setDisplayedValues(accelerators);
         pickerAccelerator_.setWrapSelectorWheel(true);

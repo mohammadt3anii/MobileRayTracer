@@ -6,7 +6,7 @@
 
 static State working_ {State::IDLE};
 static MobileRT::Renderer *renderer_ {nullptr};
-static std::thread *thread_ {nullptr};
+static ::std::thread *thread_{nullptr};
 static int width_ {0};
 static int height_ {0};
 static float fps_ {0.0f};
@@ -202,51 +202,51 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize (
                                    MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                    1.0f,
                                    MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-scene_.lights_.emplace_back (new Components::PointLight {
-  lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}});
+          scene_.lights_.emplace_back(::std::make_unique<Components::PointLight>(
+                  lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}));
         //teapot
-        /*camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
-          MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-        const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           1.0f,
-                                           MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-        scene_.lights_.emplace_back (new Components::PointLight {
-          lightMat, MobileRT::Point3D {0.0f, 900.0f, 0.0f}});*/
+          /*camera = std::make_unique<Components::Perspective> (
+            MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
+            MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+          const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             1.0f,
+                                             MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+          scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
+            lightMat, MobileRT::Point3D {0.0f, 900.0f, 0.0f}));*/
         //conference
-        /*camera = std::make_unique<Components::Perspective> (
-          MobileRT::Point3D {-730.0f, 600.0f, -950.0f},
-          MobileRT::Point3D {-400.0f, 300.0f, 0.0f},
-          MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-        const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                           1.0f,
-                                           MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-        std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
-          std::make_unique<Components::StaticHaltonSeq> ()};
-        std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
-          std::make_unique<Components::StaticHaltonSeq> ()};
-        scene_.lights_.emplace_back (new Components::AreaLight {lightMat,
-                                                                std::move (samplerPoint1),
-                                                                MobileRT::Point3D {-400.0f, 500.0f,
-                                                                                   0.0f},
-                                                                MobileRT::Point3D {-500.0f, 500.0f,
-                                                                                   0.0f},
-                                                                MobileRT::Point3D {-500.0f, 500.0f,
-                                                                                   -100.0f}});
-        scene_.lights_.emplace_back (new Components::AreaLight {lightMat,
-                                                                std::move (samplerPoint2),
-                                                                MobileRT::Point3D {-500.0f, 500.0f,
-                                                                                   -100.0f},
-                                                                MobileRT::Point3D {-400.0f, 500.0f,
-                                                                                   -100.0f},
-                                                                MobileRT::Point3D {-400.0f, 500.0f,
-                                                                                   0.0f}});*/
-        /*scene_.lights_.emplace_back (new Components::PointLight {
-          lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}});*/
+          /*camera = std::make_unique<Components::Perspective> (
+            MobileRT::Point3D {-730.0f, 600.0f, -950.0f},
+            MobileRT::Point3D {-400.0f, 300.0f, 0.0f},
+            MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+          const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                                             1.0f,
+                                             MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+          std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+            std::make_unique<Components::StaticHaltonSeq> ()};
+          std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+            std::make_unique<Components::StaticHaltonSeq> ()};
+          scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
+                                                                  std::move (samplerPoint1),
+                                                                  MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                     0.0f},
+                                                                  MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                     0.0f},
+                                                                  MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                     -100.0f}));
+          scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
+                                                                  std::move (samplerPoint2),
+                                                                  MobileRT::Point3D {-500.0f, 500.0f,
+                                                                                     -100.0f},
+                                                                  MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                     -100.0f},
+                                                                  MobileRT::Point3D {-400.0f, 500.0f,
+                                                                                     0.0f}));*/
+          /*scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
+            lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}));*/
         maxDist = MobileRT::Point3D {1, 1, 1};
       }
         break;

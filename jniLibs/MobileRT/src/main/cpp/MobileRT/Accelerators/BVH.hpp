@@ -74,11 +74,11 @@ namespace MobileRT {
           left_ = nullptr;
           right_ = nullptr;
           spheres_ = spheres;
-          for (uint64_t i {0}; i < spheres.size() / 2; i++) {
+            for (uint32_t i{0}; i < spheres.size() / 2; i++) {
             const AABB box {spheres_[i].getAABB()};
             leftBox = surroundingBox (leftBox, box);
           }
-          for (uint64_t i {spheres.size() / 2}; i < spheres_.size(); i++) {	
+            for (uint32_t i{static_cast<uint32_t>(spheres.size()) / 2}; i < spheres_.size(); i++) {
             const AABB box {spheres_[i].getAABB()};
             rightBox = surroundingBox (rightBox, box);
           }
@@ -136,10 +136,7 @@ namespace MobileRT {
           if (left_->trace(intersection, ray)) {
             return true;
           }
-          if (right_->trace(intersection, ray)) {
-            return true;
-          }
-          return false;
+            return right_->trace(intersection, ray);
         }
         return false;
       }
