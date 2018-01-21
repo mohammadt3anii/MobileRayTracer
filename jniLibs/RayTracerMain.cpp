@@ -5,9 +5,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
-static unsigned *bitmap {};
-static unsigned char *buffer {};//RGBA
-
 int main(int argc, char **argv) noexcept {
 	const int threads {atoi (argv[1])};
 	const int shader {atoi (argv[2])};
@@ -18,13 +15,14 @@ int main(int argc, char **argv) noexcept {
   const int height_ {::MobileRT::roundDownToMultipleOf (atoi (argv[7]), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
 	const int accelerator {atoi (argv[8])};
   int repeats {1};
-  bitmap = new unsigned[static_cast<unsigned>(width_) * static_cast<unsigned>(height_)];
-  buffer = new unsigned char[static_cast<unsigned>(width_) * static_cast<unsigned>(height_) * 4u];
+  const unsigned size {static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
+  ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
+  ::std::vector<unsigned> bitmap (size);
 
-  RayTrace (bitmap, width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator);
+  RayTrace (bitmap.data(), width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator);
   
 
-  for (int i (0), j (0); i < width_ * height_ * 4; i += 4, j += 1) {
+  for (size_t i (0), j (0); i < static_cast<size_t>(size * 4); i += 4, j += 1) {
     const unsigned color {bitmap[j]};
     buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
     buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);
@@ -34,15 +32,13 @@ int main(int argc, char **argv) noexcept {
   gtk_init (&argc, &argv);
   GtkWidget *window {gtk_window_new (GTK_WINDOW_TOPLEVEL)};
   GdkPixbuf *pixbuff {
-    gdk_pixbuf_new_from_data (buffer, GDK_COLORSPACE_RGB, TRUE, 8,
+    gdk_pixbuf_new_from_data (buffer.get(), GDK_COLORSPACE_RGB, TRUE, 8,
                               static_cast<int> (width_),
                               static_cast<int> (height_),
                               static_cast<int> (width_ * 4), nullptr, nullptr)};
   GtkWidget *image {gtk_image_new_from_pixbuf (pixbuff)};
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (
     [] () -> void {
-      delete[] bitmap;
-      delete[] buffer;
       gtk_main_quit ();
     }
   ), nullptr);

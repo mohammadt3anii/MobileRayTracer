@@ -11,8 +11,8 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene&& scene) noexcept {
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      1.0f,
                                      MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  scene.lights_.emplace_back (new Components::PointLight {lightMat,
-                                                          MobileRT::Point3D {0.0f, 0.99f, 0.0f}});
+  scene.lights_.emplace_back (std::make_unique<Components::PointLight> (lightMat,
+                                                          MobileRT::Point3D {0.0f, 0.99f, 0.0f}));
 
   // triangle - yellow
   const MobileRT::Material yellowMat {MobileRT::RGB (0.9f, 0.9f, 0.0f)};
@@ -74,25 +74,25 @@ MobileRT::Scene cornellBoxScene2 (MobileRT::Scene &&scene) noexcept {
 	std::unique_ptr<MobileRT::Sampler> samplerPoint2 {std::make_unique<Components::StaticHaltonSeq> ()};
 	//std::unique_ptr<MobileRT::Sampler> samplerPoint2 {std::make_unique<Components::MersenneTwister> ()};
 
-  scene.lights_.emplace_back (new Components::AreaLight {lightMat,
+  scene.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
                                          /*scene.lights_.emplace_back(
-    new Components::PointLight {lightMat,
-                                MobileRT::Point3D {0.70f, 0.99f, 0.0f}});*/                      std::move (samplerPoint1),
+    ::std::make_unique<Components::PointLight> (lightMat,
+                                MobileRT::Point3D {0.70f, 0.99f, 0.0f}));*/                      std::move (samplerPoint1),
                                                              MobileRT::Point3D {-0.25f, 0.99f,
                                                                                 -0.25f},
                                                              MobileRT::Point3D {0.25f, 0.99f,
                                                                                 -0.25f},
                                                              MobileRT::Point3D {0.25f, 0.99f,
-                                                                                0.25f}});
+                                                                                0.25f}));
 
-  scene.lights_.emplace_back (new Components::AreaLight {lightMat,
+  scene.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
                                                              std::move (samplerPoint2),
                                                              MobileRT::Point3D {0.25f, 0.99f,
                                                                                 0.25f},
                                                              MobileRT::Point3D {-0.25f, 0.99f,
                                                                                 0.25f},
                                                              MobileRT::Point3D {-0.25f, 0.99f,
-                                                                                -0.25f}});
+                                                                                -0.25f}));
 
   // triangle - yellow
   const MobileRT::Material yellowMat {MobileRT::RGB {0.9f, 0.9f, 0.0f}};
@@ -156,9 +156,9 @@ MobileRT::Scene spheresScene(MobileRT::Scene&& scene) noexcept {
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      1.0f,
                                      MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  scene.lights_.emplace_back (new Components::PointLight {lightMat,
+  scene.lights_.emplace_back (::std::make_unique<Components::PointLight> (lightMat,
                                                               MobileRT::Point3D {0.0f, 15.0f,
-                                                                                 4.0f}});*/
+                                                                                 4.0f}));*/
 
   // create diffuse Materials
   //const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};
@@ -197,8 +197,8 @@ MobileRT::Scene spheresScene2(MobileRT::Scene&& scene) noexcept {
                                      MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                      1.0f,
                                      MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-  scene.lights_.emplace_back (new Components::PointLight {lightMat,
-                                                          MobileRT::Point3D{0.0f, 15.0f, 4.0f}});
+  scene.lights_.emplace_back (::std::make_unique<Components::PointLight> (lightMat,
+                                                          MobileRT::Point3D{0.0f, 15.0f, 4.0f}));
 
   // create diffuse Materials
   const MobileRT::Material sandMat {MobileRT::RGB {0.914f, 0.723f, 0.531f}};

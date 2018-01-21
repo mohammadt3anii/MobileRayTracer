@@ -20,8 +20,8 @@ namespace MobileRT {
   template<typename T>
   class BVH final {
     public:
-      BVH *left_ {nullptr};
-      BVH *right_ {nullptr};
+      std::unique_ptr<BVH> left_ {nullptr};
+      std::unique_ptr<BVH> right_ {nullptr};
       AABB box_ {};
       std::vector<MobileRT::Primitive<T>> spheres_ {};
 
@@ -56,7 +56,7 @@ namespace MobileRT {
             break;
         }
 
-        typedef typename ::std::vector<MobileRT::Primitive<T>>::const_iterator Iterator;
+        using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
         Iterator leftBegin {};
         Iterator leftEnd {};
 
@@ -74,19 +74,19 @@ namespace MobileRT {
           left_ = nullptr;
           right_ = nullptr;
           spheres_ = spheres;
-          for (unsigned long i {0}; i < spheres.size() / 2; i++) {
+          for (uint64_t i {0}; i < spheres.size() / 2; i++) {
             const AABB box {spheres_[i].getAABB()};
             leftBox = surroundingBox (leftBox, box);
           }
-          for (unsigned long i {spheres.size() / 2}; i < spheres_.size(); i++) {	
+          for (uint64_t i {spheres.size() / 2}; i < spheres_.size(); i++) {	
             const AABB box {spheres_[i].getAABB()};
             rightBox = surroundingBox (rightBox, box);
           }
         } else {
           ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
           ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
-          left_ = new BVH(sceneBounds, leftVector, depth+1);
-          right_ = new BVH(sceneBounds, rightVector, depth+1);
+          left_ = std::make_unique<BVH> (sceneBounds, leftVector, depth+1);
+          right_ = std::make_unique<BVH> (sceneBounds, rightVector, depth+1);
           leftBox = left_->box_;
           rightBox = right_->box_;
         }
@@ -127,18 +127,16 @@ namespace MobileRT {
           if (left_ == nullptr || right_ == nullptr) {
             //return spheres_[0].intersect(intersection, ray);
             for (MobileRT::Primitive<T> &s : spheres_) {
-              if (s.intersect(intersection, ray) == true) {
+              if (s.intersect(intersection, ray)) {
                 return true;
               }
             }
             return false;
           }
-          const bool hit_left {left_->trace(intersection, ray)};
-          if (hit_left == true) {
+          if (left_->trace(intersection, ray)) {
             return true;
           }
-          const bool hit_right {right_->trace(intersection, ray)};
-          if (hit_right == true) {
+          if (right_->trace(intersection, ray)) {
             return true;
           }
           return false;

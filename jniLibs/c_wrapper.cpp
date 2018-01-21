@@ -29,7 +29,7 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
 	LOG("samplesLight = ", samplesLight);
 	LOG("width_ = ", width);
 	LOG("height_ = ", height);
-	::MobileRT::Renderer *renderer_ {nullptr};
+  std::unique_ptr<::MobileRT::Renderer> renderer_ {};
 	/*::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"};
   ::std::ifstream mtl {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"};*/
   ::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.obj"};
@@ -111,8 +111,8 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
                                            ::MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                            1.0f,
                                            ::MobileRT::RGB {0.9f, 0.9f, 0.9f}};
-        scene_.lights_.emplace_back (new ::Components::PointLight {
-          lightMat, ::MobileRT::Point3D {0.0f, 1000.0f, 0.0f}});
+        scene_.lights_.emplace_back (::std::make_unique<::Components::PointLight> (
+          lightMat, ::MobileRT::Point3D {0.0f, 1000.0f, 0.0f}));
         //cornell spheres
         camera = ::std::make_unique<::Components::Perspective> (::MobileRT::Point3D {0.0f, 0.7f, 3.0f},
                                                             ::MobileRT::Point3D {0.0f, 0.7f, -1.0f},
@@ -185,11 +185,13 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
     }
 
   LOG("Started creating Renderer");
-  renderer_ = new ::MobileRT::Renderer {
+  const double startCreating {omp_get_wtime ()};
+  renderer_ = std::make_unique<::MobileRT::Renderer> (
     ::std::move (shader_), ::std::move (camera), ::std::move (samplerPixel),
     static_cast<unsigned>(width), static_cast<unsigned>(height),
-    static_cast<unsigned>(samplesPixel)};
-  LOG("Renderer created");
+    static_cast<unsigned>(samplesPixel));
+  const double timeCreating {omp_get_wtime () - startCreating};
+  LOG("Renderer created = ", timeCreating);
 
 	const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
   const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
@@ -219,7 +221,5 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
   const double time {omp_get_wtime () - start};
   LOG("Finished rendering scene");
 
-	delete renderer_;
-
-  LOG("Time in secs = ", time);
+  LOG("Rendering Time in secs = ", time);
 }

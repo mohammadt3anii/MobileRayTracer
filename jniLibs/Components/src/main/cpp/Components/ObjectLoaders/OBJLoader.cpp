@@ -130,7 +130,7 @@ bool OBJLoader::fillScene (Scene *const scene, ::std::function<::std::unique_ptr
                         const Point3D p1 {vx1, vy1, vz1};
                         const Point3D p2 {vx2, vy2, vz2};
                         const Point3D p3 {vx3, vy3, vz3};
-                        scene->lights_.emplace_back(new AreaLight(material, lambda(), p1, p2, p3));
+                        scene->lights_.emplace_back(::std::make_unique<AreaLight>(material, lambda(), p1, p2, p3));
                     } else {
                       scene->triangles_.emplace_back (triangle, material);
                     }

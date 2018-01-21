@@ -5,6 +5,7 @@
 #ifndef APP_DRAWVIEW_HPP
 #define APP_DRAWVIEW_HPP
 
+#include "../../../../jniLibs/Scenes.hpp"
 #include "Components/Cameras/Orthographic.hpp"
 #include "Components/Cameras/Perspective.hpp"
 #include "Components/Lights/AreaLight.hpp"
@@ -23,7 +24,6 @@
 #include "Components/Shaders/Whitted.hpp"
 #include "MobileRT/Renderer.hpp"
 #include "MobileRT/Scene.hpp"
-#include "../../../../jniLibs/Scenes.hpp"
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <android/bitmap.h>

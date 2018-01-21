@@ -15,9 +15,6 @@ Scene::~Scene() noexcept {
   this->spheres_.clear ();
   this->planes_.clear ();
   this->rectangles_.clear ();
-  for (Light *const light : this->lights_) {
-    delete light;
-  }
   this->lights_.clear ();
   LOG("SCENE DELETED");
 }
@@ -91,7 +88,7 @@ unsigned Scene::getInstances () noexcept {
 }
 
 void Scene::resetSampling() noexcept {
-  for (Light *const light : this->lights_) {
+  for (::std::unique_ptr<Light> &light : this->lights_) {
     light->resetSampling ();
   }
 }
