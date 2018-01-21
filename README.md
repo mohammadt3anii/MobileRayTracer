@@ -11,7 +11,8 @@ Develop UI in JavaScript (maybe with NodeJs)
 
 ### Know bugs:
 Android UI crashes sometimes  
-Time with 4 threads greater than with 1 thread
+Time with 4 threads greater than with 1 thread  
+Can't execute the signed APK in smart phone
 
 ### Other tasks:
 Put a gif with app executing

@@ -3,9 +3,9 @@ android {
     signingConfigs {
         Puscas {
             keyAlias "Puscas"
-            storeFile file("../../../Dropbox/Universidade/DEI/APKs/MobileRayTracer.jks").absoluteFile
-            keyPassword "@puscas99"
-            storePassword "@puscas99"
+            storeFile file("../../../Dropbox/APKs/MobileRayTracer.jks").absoluteFile
+            keyPassword "123456"
+            storePassword "123456"
         }
     }
     publishNonDefault true
