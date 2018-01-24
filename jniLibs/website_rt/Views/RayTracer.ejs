@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Web Ray Tracer</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/Third_Party/gl-matrix-min.js"></script>
+    <script type="text/javascript" src="/Assets/JavaScripts/WebGL.js" defer></script>
+    <script type="text/javascript" src="/Assets/JavaScripts/RayTracer.js" defer></script>
+  </head>
+
+  <%include Partials/Navigation.ejs%>
+
+  <body id="View_RT">
+    <h1>Ray Tracer</h1>
+    <form>
+      <button type="submit">Ray Trace</button>
+    </form>
+    <canvas id="glCanvas" width="640" height="320"></canvas>
+  </body>
+
+</html>

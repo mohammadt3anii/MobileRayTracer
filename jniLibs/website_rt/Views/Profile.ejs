@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="/Assets/Cascading Style Sheets/Styles.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <%include Partials/Navigation.ejs%>
+  
+  <body>
+    <h1>
+      My First Heading
+    </h1>
+
+    <h1>
+      Welcome to the profile of <%= person %>
+      <p><strong>Age: </strong><%= data.age %></p>
+      <p><strong>Job: </strong><%= data.job %></p>
+    </h1>
+
+    <h2>Hobbies<h2/>
+    <u1>
+      <% data.hobbies.forEach(function (item) { %>
+        <li><%= item %></li>
+      <% }); %>
+    </u1>
+
+    <div id="Chat"/>
+
+    <!--script type="text/javascript" src="Assets/JavaScripts/bundle.js"></script-->
+    <link rel="stylesheet" href="Assets/Cascading Style Sheets/Test.css">
+
+  </body>
+</html>
