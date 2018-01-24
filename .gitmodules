@@ -1,7 +1,8 @@
 [submodule "third-party/tinyobjloader"]
-	path = third-party/tinyobjloader
+	path = jniLibs/third-party/tinyobjloader
 	url = https://github.com/syoyo/tinyobjloader.git
+	ignore = dirty
 
 [submodule "third-party/googletest"]
-	path = third-party/googletest
+	path = jniLibs/third-party/googletest
 	url = https://github.com/google/googletest.git
