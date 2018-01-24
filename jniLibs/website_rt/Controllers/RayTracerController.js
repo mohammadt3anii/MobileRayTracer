@@ -11,7 +11,7 @@ const unsigned = ref.types.uint32;
 const UIntArray = arrayType(unsigned);
 
 //void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator) {
-const rayTracer = ffi.Library('./RayTracer/libC_Wrapper', {
+const rayTracer = ffi.Library('../libC_Wrapper', {
   'RayTrace': [ 'void', [ UIntArray, 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int'] ]
 });
 
