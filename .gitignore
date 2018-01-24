@@ -18,6 +18,4 @@
 **/*.data*
 **/*.py
 **/*.callgrind
-**/*.log
-**/*.so
 **/node_modules/**
