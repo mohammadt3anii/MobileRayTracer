@@ -1,30 +1,6 @@
 'use strict';
 
 let colors = [];
-let dataFromServer_;
-
-// Vertex shader program
-const vsSource = `
-  attribute vec4 aVertexPosition;
-  attribute vec2 aTextureCoord;
-  uniform mat4 uModelViewMatrix;
-  uniform mat4 uProjectionMatrix;
-  varying highp vec2 vTextureCoord;
-
-  void main(void) {
-    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-    vTextureCoord = aTextureCoord;
-  }`;
-
-// Fragment shader program
-const fsSource = `
-  varying highp vec2 vTextureCoord;
-  uniform sampler2D uSampler;
-
-  void main(void) {
-    gl_FragColor = texture2D(uSampler, vTextureCoord);
-  }`;
-
 
 // This array defines each face as two triangles, using the
 // indices into the vertex array to specify each triangle's
@@ -42,7 +18,7 @@ const positions = [
   -1.0,  1.0,  1.0,
 ];
 
-const vertexCount = 3;
+const vertexCount = 6;
 
 const textureCoordinates = [
   // Front
@@ -55,12 +31,13 @@ const textureCoordinates = [
 //
 // Start here
 //
-function main(dataFromServer) {
-  console.log('length = ' + dataFromServer.pixelsColor_server.length);
-  for(let i = 0, j = 0; i < dataFromServer.pixelsColor_server.length; i++) {
-    let red = (dataFromServer.pixelsColor_server[i] >> 0) & 0xff;
-    let green = (dataFromServer.pixelsColor_server[i] >> 8) & 0xff;
-    let blue = (dataFromServer.pixelsColor_server[i] >> 16) & 0xff;
+function rayTracerMain() {
+  //console.log('data = ' + g_dataFromServer);
+  //console.log('length = ' + g_dataFromServer.pixelsColor_server.length);
+  for(let i = 0, j = 0; i < g_dataFromServer.pixelsColor_server.length; i++) {
+    let red = (g_dataFromServer.pixelsColor_server[i] >> 0) & 0xff;
+    let green = (g_dataFromServer.pixelsColor_server[i] >> 8) & 0xff;
+    let blue = (g_dataFromServer.pixelsColor_server[i] >> 16) & 0xff;
 
     //console.log('pixel = ' + i + ' rgb = ' + red + ' ' + green + ' ' + blue);
 
@@ -70,16 +47,14 @@ function main(dataFromServer) {
     colors[j++] = 255;
   }
 
-  dataFromServer_ = dataFromServer;
-
   const canvas = document.querySelector('#glcanvas');
   const gl = canvas.getContext('webgl');
   gl.enable(gl.CULL_FACE);
   gl.cullFace(gl.BACK);
 
-  console.log(gl.getParameter(gl.VERSION));
-  console.log(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
-  console.log(gl.getParameter(gl.VENDOR));
+  //console.log(gl.getParameter(gl.VERSION));
+  //console.log(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+  //console.log(gl.getParameter(gl.VENDOR));
 
   // If we don't have a GL context, give up now
 
@@ -90,7 +65,7 @@ function main(dataFromServer) {
 
   // Initialize a shader program; this is where all the lighting
   // for the vertices and so forth is established.
-  const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+  const shaderProgram = initShaderProgram(gl, g_vsSource, g_fsSource);
 
   // Collect all the info needed to use the shader program.
   // Look up which attributes our shader program is using
@@ -190,15 +165,15 @@ function loadTexture(gl) {
   // we'll update the texture with the contents of the image.
   const level = 0;
   const internalFormat = gl.RGBA;
-  const width = dataFromServer_.width;
-  const height = dataFromServer_.height;
+  const width = g_dataFromServer.width;
+  const height = g_dataFromServer.height;
   const border = 0;
   const srcFormat = gl.RGBA;
   const srcType = gl.UNSIGNED_BYTE;
   const pixel = new Uint8Array(colors);
-  console.log('width = ', width);
-  console.log('height = ', height);
-  console.log('pixel = ', pixel);
+  //console.log('width = ', width);
+  //console.log('height = ', height);
+  //console.log('pixel = ', pixel);
   gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
                 width, height, border, srcFormat, srcType,
                 pixel);

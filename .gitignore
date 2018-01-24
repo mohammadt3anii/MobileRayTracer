@@ -20,3 +20,4 @@
 **/*.callgrind
 **/*.log
 **/*.so
+**/node_modules/**

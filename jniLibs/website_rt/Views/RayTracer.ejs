@@ -12,6 +12,36 @@
   <body id="View_RT">
     <h1>Ray Tracer</h1>
     <form>
+      <select id="Scene" required>
+        <option value="-1" disabled="disabled" selected="selected">Select a Scene:</option>
+        <option value="0">Cornell Box 1</option>
+        <option value="1">Spheres 1</option>
+        <option value="2" selected="selected">Cornell Box 2</option>
+        <option value="3">Spheres 2</option>
+        <option value="4">OBJ (super slow!) </option>
+      </select>
+      <select id="Shader" required>
+        <option value="-1" disabled="disabled" selected="selected">Select a Shader:</option>
+        <option value="0">No Shadows</option>
+        <option value="1" selected="selected">Whitted</option>
+        <option value="2">Path Tracing (slow!) </option>
+        <option value="3">DepthMap</option>
+        <option value="4">Diffuse </option>
+      </select>
+      <select id="Resolution" required>
+        <option value="-1" disabled="disabled" selected="selected">Select a Resolution:</option>
+        <option value="128">128 x 128</option>
+        <option value="256">256 x 256</option>
+        <option value="512" selected="selected">512 x 512</option>
+        <option value="1024">1024 x 1024 (slow!) </option>
+        <option value="2048">2048 x 2048 (super slow!) </option>
+      </select>
+      <select id="Accelerator" required>
+        <option value="-1" disabled="disabled" selected="selected">Select a Structure of acceleration:</option>
+        <option value="0">Naive (slow!)</option>
+        <option value="1" selected="selected">Regular Grid</option>
+        <option value="2">Bounding Volume Hierarchy</option>
+      </select>
       <button type="submit">Ray Trace</button>
     </form>
     <canvas id="glCanvas" width="640" height="320"></canvas>
