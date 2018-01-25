@@ -3,16 +3,20 @@
 const bodyParser = require ('body-parser');
 const ref = require('ref');
 const ffi = require('ffi');
-const arrayType = require('ref-array')
+const arrayType = require('ref-array');
 const path = require('path');
 const Threads = require('webworker-threads');
-
+const EventEmitter = require('events');
+const fs = require('fs');
+const rtOutput = fs.createWriteStream('/dev/null', {flags: 'w'}, {fd: 1} );
 const unsigned = ref.types.uint32;
 const UIntArray = arrayType(unsigned);
 
-//void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator) {
+//process.stdout.write = rtOutput.write.bind(rtOutput);
+
+//void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut) {
 const rayTracer = ffi.Library('../libC_Wrapper', {
-  'RayTrace': [ 'void', [ UIntArray, 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int'] ]
+  'RayTrace': [ 'void', [ UIntArray, 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'bool'] ]
 });
 
 const urlEncodedParser = bodyParser.urlencoded({extended: false});
@@ -36,6 +40,13 @@ module.exports = function (expressApp) {
 
   expressApp.get('/raytracer', function(req, resp) {
     resp.render('RayTracer');
+  });
+
+  expressApp.get('/raytracer/render', function(req, resp) {
+    //console.log('3 - 1st pixel green = ', (bitmap[0] >> 8) & 0xFF);
+    console.log('3 - 1st pixel - ' + (bitmap[0]));
+    const sendToClient = {width: width, height: height, pixelsColor_server: bitmap};
+    resp.json(sendToClient);
   });
 
   expressApp.get('/raytracer/shaders/vertexShader', function(req, resp) {
@@ -64,9 +75,14 @@ module.exports = function (expressApp) {
     for(let i = 0; i < bitmap.length; i++) {
       bitmap[i] = 0xFF00FF00;
     }
-    
+
+    console.log('1 - 1st pixel - ' + (bitmap[0]));
+    //console.log('1 - 1st pixel green = ', (bitmap[0] >> 8) & 0xFF);
+
     //void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator) {
-    rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator);
+    rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, false);
+
+    console.log('2 - 1st pixel green = ', (bitmap[0] >> 8) & 0xFF);
 
     //console.log('bitmap = ' + bitmap);
     console.log('size = ' + bitmap.length);
@@ -75,23 +91,17 @@ module.exports = function (expressApp) {
     const sendToClient = {width: width, height: height, pixelsColor_server: bitmap};
     resp.json(sendToClient);
 
-    //rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator);
-    /*var worker = new Threads.SharedWorker(function(){
-      //postMessage("I'm working before postMessage('ali').");
-      rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator);
-      expressApp.get('/raytracer/render', function(req, resp) {
-        const sendToClient = {width: width, height: height, pixelsColor_server: bitmap};
-        resp.json(sendToClient);
-      });
-      /*this.onmessage = function(event) {
-        postMessage('Hi ' + event.data);
+    var worker = new Threads.Worker(function(){
+      this.onmessage = function(data) {
+        console.log('WORKER STARTED');
+        //console.log('WORKER' + JSON.stringify(data));
+        console.log('WORKER - ' + (data.data.param1[0]));
+        //rayTracer.RayTrace(event.bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, false);
         self.close();
+        console.log('WORKER FINISHED');
       };
-    });*/
-    /*worker.onmessage = function(event) {
-      console.log("Worker said : " + event.data);
-    };
-    worker.postMessage('ali');*/
+    });
+    worker.postMessage({param1: bitmap.toJSON()});
     console.log('RESPONDED');
   });
 

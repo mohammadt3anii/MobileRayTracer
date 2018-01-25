@@ -49,9 +49,9 @@ $(document).ready(function(){
 
     $.when(ajaxRequest1(), ajaxRequest2(dataToServer), ajaxRequest3()).done(function(a) {
       window.rayTracerMain();
-      /*setTimeout(function() {
+      setTimeout(function() {
         ajaxRequest4();
-      }, 5000);*/
+      }, 5000);
     });
     return false;
   });
