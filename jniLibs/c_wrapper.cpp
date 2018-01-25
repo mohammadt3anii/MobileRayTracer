@@ -22,9 +22,9 @@
 #include <omp.h>
 
 void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut) {
-  ::std::stringstream ss;
-  ::std::streambuf *old_buf_stdout;
-  ::std::streambuf *old_buf_stderr;
+  ::std::ostringstream ss {""};
+  ::std::streambuf *old_buf_stdout {nullptr};
+  ::std::streambuf *old_buf_stderr {nullptr};
   if (printStdOut == false) {
     old_buf_stdout = ::std::cout.rdbuf(ss.rdbuf());
     old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
@@ -230,4 +230,7 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
   LOG("Finished rendering scene");
 
   LOG("Rendering Time in secs = ", time);
+
+  ::std::cout.rdbuf(old_buf_stdout);
+  ::std::cerr.rdbuf(old_buf_stderr);
 }
