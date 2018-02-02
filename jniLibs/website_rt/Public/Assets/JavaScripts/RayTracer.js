@@ -83,8 +83,9 @@ function ajaxRequest2 (dataToServer) {
       g_dataFromServer = data;
     },
     error: function(error, xhr, ajaxOptions, thrownError) {
+      console.log('ajaxRequest2 error');
       console.log(xhr);
-      console.log(ajaxOptions);
+      //console.log(ajaxOptions);
     }
   });
 }
@@ -108,6 +109,9 @@ function ajaxRequest4 () {
       console.log('ajaxRequest4 done');
       g_dataFromServer = data;
       window.rayTracerMain();
+      setTimeout(function() {
+        ajaxRequest4();
+      }, 5000);
     }
   });
 }

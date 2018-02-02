@@ -19,7 +19,7 @@ int main(int argc, char **argv) noexcept {
   ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
   ::std::vector<unsigned> bitmap (size);
 
-  RayTrace (bitmap.data(), width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, false);
+  RayTrace (bitmap.data(), width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, true, false);
   
 
   for (size_t i (0), j (0); i < static_cast<size_t>(size * 4); i += 4, j += 1) {

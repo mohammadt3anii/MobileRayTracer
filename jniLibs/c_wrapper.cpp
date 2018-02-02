@@ -21,7 +21,7 @@
 #include <fstream>
 #include <omp.h>
 
-void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut) {
+void work_thread (unsigned *const bitmap, const int width, const int height, const int /*stride*/, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, int repeats, const int accelerator, const bool printStdOut) {
   ::std::ostringstream ss {""};
   ::std::streambuf *old_buf_stdout {nullptr};
   ::std::streambuf *old_buf_stderr {nullptr};
@@ -233,4 +233,13 @@ void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int thre
   }
   ::std::cout.rdbuf(old_buf_stdout);
   ::std::cerr.rdbuf(old_buf_stderr);
+}
+
+void RayTrace (unsigned *const bitmap, const int width, const int height, const int stride, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async) {
+  if (async == true) {
+    ::std::thread thread {work_thread, bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut};
+    thread.detach();
+  } else {
+    work_thread (bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut);
+  }
 }

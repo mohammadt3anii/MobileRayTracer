@@ -8,15 +8,16 @@ const path = require('path');
 const Threads = require('webworker-threads');
 const EventEmitter = require('events');
 const fs = require('fs');
+
 const rtOutput = fs.createWriteStream('/dev/null', {flags: 'w'}, {fd: 1} );
 const unsigned = ref.types.uint32;
 const UIntArray = arrayType(unsigned);
 
 //process.stdout.write = rtOutput.write.bind(rtOutput);
 
-//void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut) {
+//void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut, bool async) {
 const rayTracer = ffi.Library('../libC_Wrapper', {
-  'RayTrace': [ 'void', [ UIntArray, 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'bool'] ]
+  'RayTrace': [ 'void', [ UIntArray, 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'bool', 'bool'] ]
 });
 
 const urlEncodedParser = bodyParser.urlencoded({extended: false});
@@ -79,8 +80,8 @@ module.exports = function (expressApp) {
     console.log('1 - 1st pixel - ' + (bitmap[0]));
     //console.log('1 - 1st pixel green = ', (bitmap[0] >> 8) & 0xFF);
 
-    //void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator) {
-    rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, false);
+    //void RayTrace (unsigned* bitmap, int width, int height, int /*stride*/, int threads, int shader, int scene, int samplesPixel, int samplesLight, int repeats, int accelerator, bool printStdOut, bool async) {
+    rayTracer.RayTrace(bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, false, true);
 
     console.log('2 - 1st pixel green = ', (bitmap[0] >> 8) & 0xFF);
 
