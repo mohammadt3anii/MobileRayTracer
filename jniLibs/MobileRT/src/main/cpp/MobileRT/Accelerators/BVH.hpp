@@ -5,31 +5,27 @@
 #ifndef MOBILERT_ACCELERATORS_BVH_HPP
 #define MOBILERT_ACCELERATORS_BVH_HPP
 
-#include "AABB.hpp"
 #include "../Intersection.hpp"
 #include "../Scene.hpp"
+#include "AABB.hpp"
 #include <random>
 
-using ::MobileRT::Scene;
-using ::MobileRT::AABB;
-using ::MobileRT::Intersection;
-using ::MobileRT::Ray;
 namespace MobileRT {
   static unsigned counter {0};
 
   template<typename T>
   class BVH final {
     public:
-      std::unique_ptr<BVH> left_ {nullptr};
-      std::unique_ptr<BVH> right_ {nullptr};
-      AABB box_ {};
-      std::vector<MobileRT::Primitive<T>> spheres_ {};
+      ::std::unique_ptr<BVH> left_ {nullptr};
+      ::std::unique_ptr<BVH> right_ {nullptr};
+      ::MobileRT::AABB box_ {};
+      ::std::vector<MobileRT::Primitive<T>> spheres_ {};
 
     public:
       explicit BVH () noexcept = default;
 
-      explicit BVH<T> (AABB sceneBounds, std::vector<MobileRT::Primitive<T>> spheres, const unsigned depth) noexcept {
-        if (spheres.size() <= 0) {
+      explicit BVH<T> (::MobileRT::AABB sceneBounds, std::vector<MobileRT::Primitive<T>> spheres, const unsigned depth) noexcept {
+        if (spheres.empty()) {
           return;
         }
         thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
@@ -63,8 +59,8 @@ namespace MobileRT {
         Iterator rightBegin {};
         Iterator rightEnd {};
 
-        AABB leftBox {};
-        AABB rightBox {};
+        ::MobileRT::AABB leftBox {};
+        ::MobileRT::AABB rightBox {};
         leftBegin = spheres.begin();
         leftEnd = spheres.begin() + spheres.size() / 2;
         rightBegin = spheres.begin() + spheres.size() / 2;
@@ -75,11 +71,11 @@ namespace MobileRT {
           right_ = nullptr;
           spheres_ = spheres;
             for (uint32_t i{0}; i < spheres.size() / 2; i++) {
-            const AABB box {spheres_[i].getAABB()};
+            const ::MobileRT::AABB box {spheres_[i].getAABB()};
             leftBox = surroundingBox (leftBox, box);
           }
             for (uint32_t i{static_cast<uint32_t>(spheres.size()) / 2}; i < spheres_.size(); i++) {
-            const AABB box {spheres_[i].getAABB()};
+            const ::MobileRT::AABB box {spheres_[i].getAABB()};
             rightBox = surroundingBox (rightBox, box);
           }
         } else {
@@ -104,7 +100,7 @@ namespace MobileRT {
 
       BVH &operator= (BVH &&bVH) noexcept = default;
 
-      bool trace (Intersection *const intersection, const Ray &ray) noexcept {
+      bool trace (::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray) noexcept {
         if (box_.intersect(ray)) {
           if (left_ == nullptr || right_ == nullptr) {
             //return spheres_[0].intersect(intersection, ray);
@@ -122,7 +118,7 @@ namespace MobileRT {
         return false;
       }
 
-      bool shadowTrace (Intersection *intersection, const Ray &ray) noexcept {
+      bool shadowTrace (::MobileRT::Intersection *intersection, const Ray &ray) noexcept {
         if (box_.intersect(ray)) {
           if (left_ == nullptr || right_ == nullptr) {
             //return spheres_[0].intersect(intersection, ray);

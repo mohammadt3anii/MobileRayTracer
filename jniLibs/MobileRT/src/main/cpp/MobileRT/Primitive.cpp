@@ -3,5 +3,3 @@
 //
 
 #include "Primitive.hpp"
-
-using ::MobileRT::Primitive;

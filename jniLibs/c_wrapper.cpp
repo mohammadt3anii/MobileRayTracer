@@ -1,4 +1,4 @@
-#include "c_wrapper.hpp"
+#include "c_wrapper.h"
 #include "Components/Cameras/Orthographic.hpp"
 #include "Components/Cameras/Perspective.hpp"
 #include "Components/Lights/AreaLight.hpp"
@@ -25,7 +25,7 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
   ::std::ostringstream ss {""};
   ::std::streambuf *old_buf_stdout {nullptr};
   ::std::streambuf *old_buf_stderr {nullptr};
-  if (printStdOut == false) {
+  if (!printStdOut) {
     old_buf_stdout = ::std::cout.rdbuf(ss.rdbuf());
     old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
   }
@@ -236,7 +236,7 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
 }
 
 void RayTrace (unsigned *const bitmap, const int width, const int height, const int stride, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async) {
-  if (async == true) {
+  if (async) {
     ::std::thread thread {work_thread, bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut};
     thread.detach();
   } else {

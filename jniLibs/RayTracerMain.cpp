@@ -1,19 +1,22 @@
-#include "c_wrapper.hpp"
+#include "c_wrapper.h"
 #include "MobileRT/Utils.hpp"
 #include <cmath>
-#include <iostream>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <iostream>
 
 int main(int argc, char **argv) noexcept {
-	const int threads {atoi (argv[1])};
-	const int shader {atoi (argv[2])};
-	const int scene {atoi (argv[3])};
-  const int samplesPixel {atoi (argv[4])};
-	const int samplesLight {atoi (argv[5])};
-  const int width_ {::MobileRT::roundDownToMultipleOf (atoi (argv[6]), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
-  const int height_ {::MobileRT::roundDownToMultipleOf (atoi (argv[7]), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
-	const int accelerator {atoi (argv[8])};
+  const int threads {static_cast<int> (strtol (argv[1], nullptr, 0))};
+	const int shader {static_cast<int> (strtol (argv[2], nullptr, 0))};
+	const int scene {static_cast<int> (strtol (argv[3], nullptr, 0))};
+  const int samplesPixel {static_cast<int> (strtol (argv[4], nullptr, 0))};
+	const int samplesLight {static_cast<int> (strtol (argv[5], nullptr, 0))};
+
+  const int width_ {::MobileRT::roundDownToMultipleOf (static_cast<int> (strtol (argv[6], nullptr, 0)), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
+
+  const int height_ {::MobileRT::roundDownToMultipleOf (static_cast<int> (strtol (argv[7], nullptr, 0)), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
+
+	const int accelerator {static_cast<int> (strtol (argv[8], nullptr, 0))};
   int repeats {1};
   const unsigned size {static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
   ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
@@ -22,7 +25,7 @@ int main(int argc, char **argv) noexcept {
   RayTrace (bitmap.data(), width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, true, false);
   
 
-  for (size_t i (0), j (0); i < static_cast<size_t>(size * 4); i += 4, j += 1) {
+  for (size_t i (0), j (0); i < static_cast<size_t>(size) * 4; i += 4, j += 1) {
     const unsigned color {bitmap[j]};
     buffer[i + 0] = static_cast<unsigned char> ((color & 0x000000FF) >> 0);
     buffer[i + 1] = static_cast<unsigned char> ((color & 0x0000FF00) >> 8);

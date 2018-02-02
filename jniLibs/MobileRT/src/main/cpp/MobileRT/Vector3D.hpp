@@ -35,7 +35,7 @@ namespace MobileRT {
 			explicit Vector3D () noexcept = default;
       explicit Vector3D (float x, float y, float z, float magnitude = 0.0f) noexcept;
       explicit Vector3D (Vector3D vector1, Vector3D vector2, float value) noexcept;
-			explicit Vector3D (Point3D dest, Point3D orig, bool) noexcept;
+			explicit Vector3D (Point3D dest, Point3D orig, bool /*normalize*/) noexcept;
 			explicit Vector3D (Point3D dest, Point3D orig) noexcept;
 			explicit Vector3D (Vector3D vector1, Vector3D vector2) noexcept;
 

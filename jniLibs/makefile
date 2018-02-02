@@ -179,21 +179,21 @@ tidy:
 	clang-tidy-5.0 \
 	-analyze-temporary-dtors \
 	-checks='*,-*llvm-header-guard*' \
-	-header-filter=*.*pp \
-	-system-headers \
-	-extra-arg=-ferror-limit=0 \
-	-p \
+	-header-filter='.*' \
+	-p . \
 	./*.*pp \
 	./MobileRT/src/main/cpp/*/*.*pp \
 	./MobileRT/src/main/cpp/*/*/*.*pp \
 	./Components/src/main/cpp/*/*/*.*pp \
-	../app/src/main/cpp/*.*pp \
-	-- -std=c++14 -isystem/usr/include/c++/v1 \
+	-- -std=c++14 -ferror-limit=1 -DNO_ANDROID \
 	-I./MobileRT/src/main/cpp \
 	-I./Components/src/main/cpp \
 	-isystem./third-party \
+	-isystem/usr/include/c++/v1 \
+	-isystem/usr/lib/gcc/x86_64-linux-gnu/5/include \
+	-isystem/usr/include/glib-2.0/gobject \
+	-isystem/usr/include/gtk-2.0/gtk \
 	-pthread -isystem/usr/include/gtk-2.0 -isystem/usr/lib/x86_64-linux-gnu/gtk-2.0/include -isystem/usr/include/gio-unix-2.0/ -isystem/usr/include/atk-1.0 -isystem/usr/include/cairo -isystem/usr/include/pixman-1 -isystem/usr/include/libpng12 -isystem/usr/include/gdk-pixbuf-2.0 -isystem/usr/include/harfbuzz -isystem/usr/include/pango-1.0 -isystem/usr/include/glib-2.0 -isystem/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem/usr/include/freetype2 \
-	-isystem/mnt/D/Linux/Android_SDK/ndk-bundle/sysroot/usr/include \
 	2>&1 | tee tidy.out
 
 #valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes --suppressions=valgrind.suppr --num-callers=500 --trace-children=yes --error-limit=no ./raytracer 5 3 3 0 1 1
