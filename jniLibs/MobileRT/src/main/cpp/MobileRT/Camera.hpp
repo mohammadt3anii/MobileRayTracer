@@ -38,6 +38,7 @@ namespace MobileRT {
                                float deviationV) const noexcept = 0;
     float getBlock (unsigned sample) noexcept;
     virtual AABB getAABB () const noexcept;
+    void resetSampling() noexcept;
     };
 }//namespace MobileRT
 

@@ -21,7 +21,7 @@
 #include <fstream>
 #include <omp.h>
 
-void work_thread (unsigned *const bitmap, const int width, const int height, const int /*stride*/, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, int repeats, const int accelerator, const bool printStdOut) {
+void work_thread (unsigned *const bitmap, const int width, const int height, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, int repeats, const int accelerator, const bool printStdOut, const char*const pathObj, const char*const pathMtl) {
   ::std::ostringstream ss {""};
   ::std::streambuf *old_buf_stdout {nullptr};
   ::std::streambuf *old_buf_stderr {nullptr};
@@ -30,18 +30,22 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
   }
   {
+    LOG("width_ = ", width);
+    LOG("height_ = ", height);
     LOG("threads = ", threads);
     LOG("shader = ", shader);
     LOG("scene = ", scene);
     LOG("samplesPixel = ", samplesPixel);
     LOG("samplesLight = ", samplesLight);
-    LOG("width_ = ", width);
-    LOG("height_ = ", height);
-    std::unique_ptr<::MobileRT::Renderer> renderer_ {};
-    /*::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"};
-    ::std::ifstream mtl {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"};*/
-    ::std::ifstream obj {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.obj"};
-    ::std::ifstream mtl {"/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.mtl"};
+    LOG("repeats = ", repeats);
+    LOG("accelerator = ", accelerator);
+    LOG("printStdOut = ", printStdOut);
+    LOG("pathObj = ", pathObj);
+    LOG("pathMtl = ", pathMtl);
+
+    ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
+    ::std::ifstream obj {pathObj};
+    ::std::ifstream mtl {pathMtl};
     ::std::string line {};
     ::std::stringstream ssObj {};
     while (::std::getline (obj, line)) {
@@ -225,7 +229,7 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     do {
       renderer_->renderFrame (bitmap, threads);
       //renderer_->camera_->position_.x_ += 2.0f;
-    } while (repeats-- > 1);
+    } while (repeats-- > 0);
     const double time {omp_get_wtime () - start};
     LOG("Finished rendering scene");
 
@@ -235,11 +239,11 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
   ::std::cerr.rdbuf(old_buf_stderr);
 }
 
-void RayTrace (unsigned *const bitmap, const int width, const int height, const int stride, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async) {
+void RayTrace (unsigned *const bitmap, const int width, const int height, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async, const char*const pathObj, const char*const pathMtl) {
   if (async) {
-    ::std::thread thread {work_thread, bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut};
+    ::std::thread thread {work_thread, bitmap, width, height, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut, pathObj, pathMtl};
     thread.detach();
   } else {
-    work_thread (bitmap, width, height, stride, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut);
+    work_thread (bitmap, width, height, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut, pathObj, pathMtl);
   }
 }

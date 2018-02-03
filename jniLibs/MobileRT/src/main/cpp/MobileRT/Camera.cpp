@@ -58,3 +58,7 @@ Camera::Camera (const Camera &camera) noexcept {
 Camera::~Camera () noexcept {
 	LOG("CAMERA DELETED");
 }
+
+void Camera::resetSampling() noexcept {
+  this->block_ = 0;
+}

@@ -17,13 +17,17 @@ int main(int argc, char **argv) noexcept {
   const int height_ {::MobileRT::roundDownToMultipleOf (static_cast<int> (strtol (argv[7], nullptr, 0)), static_cast<int>(::std::sqrt (::MobileRT::NumberOfBlocks)))};
 
 	const int accelerator {static_cast<int> (strtol (argv[8], nullptr, 0))};
-  int repeats {1};
+
+  const int repeats {static_cast<int> (strtol (argv[9], nullptr, 0))};
+  const char *const pathObj {argv[10]};
+  const char *const pathMtl {argv[11]};
+
   const unsigned size {static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
   ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
   ::std::vector<unsigned> bitmap (size);
 
-  RayTrace (bitmap.data(), width_, height_, 0, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, true, false);
-  
+  RayTrace (bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, true, false, pathObj, pathMtl);
+
 
   for (size_t i (0), j (0); i < static_cast<size_t>(size) * 4; i += 4, j += 1) {
     const unsigned color {bitmap[j]};

@@ -34,6 +34,7 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 	}
 	this->samplerPixel_->resetSampling();
 	this->shader_->resetSampling();
+  this->camera_->resetSampling();
 
   const int numChildren {numThreads - 1};
   ::std::vector<::std::thread> threads {};
