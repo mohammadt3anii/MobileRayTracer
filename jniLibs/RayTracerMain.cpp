@@ -6,6 +6,11 @@
 #include <iostream>
 
 int main(int argc, char **argv) noexcept {
+  if(argc < 15) {
+    ::std::cerr << "Not enough arguments provided" << ::std::endl;
+    return 1;
+  }
+
   const int threads {static_cast<int> (strtol (argv[1], nullptr, 0))};
 	const int shader {static_cast<int> (strtol (argv[2], nullptr, 0))};
 	const int scene {static_cast<int> (strtol (argv[3], nullptr, 0))};
@@ -22,11 +27,26 @@ int main(int argc, char **argv) noexcept {
   const char *const pathObj {argv[10]};
   const char *const pathMtl {argv[11]};
 
+  ::std::stringstream ssPrintStdOut(argv[12]);
+  ::std::stringstream ssAsync(argv[13]);
+  ::std::stringstream ssShowImage(argv[14]);
+  bool printStdOut, async, showImage;
+  if( !(ssPrintStdOut >> ::std::boolalpha >> printStdOut) ||
+      !(ssAsync >> ::std::boolalpha >> async) ||
+      !(ssShowImage >> ::std::boolalpha >> showImage)) {
+    ::std::cerr << "Incorrect argument provided.\n";
+    return 1;
+  }
+
   const unsigned size {static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
   ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
   ::std::vector<unsigned> bitmap (size);
 
-  RayTrace (bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, true, false, pathObj, pathMtl);
+  RayTrace (bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut, async, pathObj, pathMtl);
+
+  if (!showImage) {
+    return 0;
+  }
 
 
   for (size_t i (0), j (0); i < static_cast<size_t>(size) * 4; i += 4, j += 1) {
