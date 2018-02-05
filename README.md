@@ -1,28 +1,28 @@
-Ray-tracer for Android
+# Ray-tracer for Android
 
 ![alt text](https://github.com/PTPuscas/MobileRayTracer/blob/master/Example.png)
 
-# TODO
+## TODO
 
-## Main tasks
+### Know bugs
 
-Develop SAH
-Develop K-D Tree
-Develop UI in C#
-Develop UI in JavaScript (maybe with NodeJs)
-Rewrite data structures in order to take advantage of cache spatial / temporal locality
+* Android UI **crashes sometimes**
+* Time with 4 threads greater than with 1 thread
+* Can't execute the signed APK in smart phone
 
-## Know bugs
+### Main tasks
 
-Android UI crashes sometimes
-Time with 4 threads greater than with 1 thread
-Can't execute the signed APK in smart phone
+* Develop **SAH**
+* Develop **K-D Tree**
+* Develop UI in C#
+* Develop UI in JavaScript (maybe with NodeJs)
+* Rewrite data structures in order to take advantage of **cache spatial / temporal locality**
 
-## Possible Optimizing tasks
+### Possible Optimizing tasks
 
-Return objects instead of using output parameters (take advantage of RVO)
-Change all methods of classes to functions that receive an object
+* Return objects instead of using output parameters (take advantage of RVO)
+* Change all methods of classes to functions that receive an object
 
-## Other tasks
+### Other tasks
 
-Put a gif with app executing
+* Put a gif with app executing
