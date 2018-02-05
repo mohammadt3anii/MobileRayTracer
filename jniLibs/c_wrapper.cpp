@@ -25,6 +25,8 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
   ::std::ostringstream ss {""};
   ::std::streambuf *old_buf_stdout {nullptr};
   ::std::streambuf *old_buf_stderr {nullptr};
+  double timeRendering {0};
+  double timeCreating {0};
   if (!printStdOut) {
     old_buf_stdout = ::std::cout.rdbuf(ss.rdbuf());
     old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
@@ -49,11 +51,11 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     ::std::string line {};
     ::std::stringstream ssObj {};
     while (::std::getline (obj, line)) {
-      ssObj << line << ::std::endl;
+      ssObj << line << '\n';
     }
     ::std::stringstream ssMtl {};
     while (::std::getline (mtl, line)) {
-      ssMtl << line << ::std::endl;
+      ssMtl << line << '\n';
     }
     ::Components::OBJLoader objLoader {ssObj.str ().c_str (), ssMtl.str ().c_str ()};
     objLoader.process();
@@ -202,7 +204,7 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
       ::std::move (shader_), ::std::move (camera), ::std::move (samplerPixel),
       static_cast<unsigned>(width), static_cast<unsigned>(height),
       static_cast<unsigned>(samplesPixel));
-    const double timeCreating {omp_get_wtime () - startCreating};
+    timeCreating = omp_get_wtime () - startCreating;
     LOG("Renderer created = ", timeCreating);
 
     const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
@@ -230,13 +232,16 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
       renderer_->renderFrame (bitmap, threads);
       //renderer_->camera_->position_.x_ += 2.0f;
     } while (repeats-- > 0);
-    const double time {omp_get_wtime () - start};
+    timeRendering = omp_get_wtime () - start;
     LOG("Finished rendering scene");
-
-    LOG("Rendering Time in secs = ", time);
   }
-  ::std::cout.rdbuf(old_buf_stdout);
-  ::std::cerr.rdbuf(old_buf_stderr);
+  if (!printStdOut) {
+    ::std::cout.rdbuf(old_buf_stdout);
+    ::std::cerr.rdbuf(old_buf_stderr);
+  }
+
+  LOG("Creating Time in secs = ", timeCreating);
+  LOG("Rendering Time in secs = ", timeRendering);
 }
 
 void RayTrace (unsigned *const bitmap, const int width, const int height, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async, const char*const pathObj, const char*const pathMtl) {

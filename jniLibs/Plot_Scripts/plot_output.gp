@@ -25,7 +25,46 @@ eval arrayPush("COLORS", "blue")
 eval arrayPush("COLORS", "purple")
 eval arrayPush("COLORS", "orange")
 eval arrayPush("COLORS", "brown")
-eval arrayPush("COLORS", "white")
+eval arrayPush("COLORS", "royalblue")
+eval arrayPush("COLORS", "goldenrod")
+eval arrayPush("COLORS", "steelblue")
+eval arrayPush("COLORS", "orchid")
+eval arrayPush("COLORS", "aquamarine")
+eval arrayPush("COLORS", "turquoise")
+eval arrayPush("COLORS", "grey")
+eval arrayPush("COLORS", "gold")
+eval arrayPush("COLORS", "navy")
+eval arrayPush("COLORS", "skyblue")
+eval arrayPush("COLORS", "cyan")
+eval arrayPush("COLORS", "magenta")
+eval arrayPush("COLORS", "salmon")
+eval arrayPush("COLORS", "olive")
+eval arrayPush("COLORS", "violet")
+eval arrayPush("COLORS", "plum")
+eval arrayPush("COLORS", "sandybrown")
+eval arrayPush("COLORS", "pink")
+eval arrayPush("COLORS", "bisque")
+eval arrayPush("COLORS", "slategrey")
+eval arrayPush("COLORS", "antiquewhite")
+eval arrayPush("COLORS", "chartreuse")
+eval arrayPush("COLORS", "greenyellow")
+eval arrayPush("COLORS", "gray")
+eval arrayPush("COLORS", "slategray")
+
+eval arrayPush("COLORS", "dark-gray")
+eval arrayPush("COLORS", "dark-grey")
+eval arrayPush("COLORS", "dark-magenta")
+eval arrayPush("COLORS", "dark-cyan")
+eval arrayPush("COLORS", "dark-orange")
+eval arrayPush("COLORS", "dark-spring-green")
+eval arrayPush("COLORS", "dark-red")
+eval arrayPush("COLORS", "dark-chartreuse")
+eval arrayPush("COLORS", "dark-green")
+eval arrayPush("COLORS", "dark-khaki")
+eval arrayPush("COLORS", "dark-goldenrod")
+eval arrayPush("COLORS", "dark-violet")
+eval arrayPush("COLORS", "dark-plum")
+eval arrayPush("COLORS", "dark-olivegreen")
 
 # files to plot
 index = 0
@@ -59,14 +98,16 @@ do for [i=1:files] {
 	Y_max = Fy_max > Y_max? Fy_max : Y_max
 }
 
+Y_tick = (Y_max - Y_min) / 30
+
 # axis labels
 set xlabel '#Threads'
-set xrange [0:0<*]
+set xrange [0 : 0<*]
 set xtics X_min, 1, X_max offset graph 0, graph 0
 
-set ylabel 'Time (ms)'
-set yrange [0:0<*]
-set ytics Y_min, 100, Y_max offset graph 0, graph 0
+set ylabel 'Time (s)'
+set yrange [0 : 0<*]
+set ytics Y_min, Y_tick, Y_max offset graph 0, graph 0
 
 # line definitions
 set linestyle 1 pointtype 7 pointsize 1.0 linetype 3 linewidth 2.5 dashtype 3
@@ -74,5 +115,7 @@ set linestyle 1 pointtype 7 pointsize 1.0 linetype 3 linewidth 2.5 dashtype 3
 # plot
 plot \
 for [i = 1 : files] \
-	name = arrayGet("FILES", i) name using 1:2 title name[11:] \
+	filepath = arrayGet("FILES", i) \
+	name = filepath[strstrt(filepath[0:], "/") + 1 : strstrt(filepath[0:], ".txt") - 1] \
+	filepath using 1:2 title name \
 	with linespoints linestyle 1 linecolor rgb arrayGet("COLORS", i)

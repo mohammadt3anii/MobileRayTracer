@@ -20,3 +20,4 @@
 **/*.callgrind
 **/*.so
 **/node_modules/**
+**/Plot_Graphs/**

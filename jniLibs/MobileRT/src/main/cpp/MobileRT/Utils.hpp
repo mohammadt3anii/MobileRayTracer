@@ -28,7 +28,7 @@ namespace MobileRT {
   void log (Args &&... args) {
     ::std::ostringstream oss {""};
     static_cast<void> (::std::initializer_list<int> {(oss << ::std::move (args), 0)...});
-    oss << ::std::endl;
+    oss << '\n';
   #ifdef NO_ANDROID
     ::std::cout << oss.str();
   #else

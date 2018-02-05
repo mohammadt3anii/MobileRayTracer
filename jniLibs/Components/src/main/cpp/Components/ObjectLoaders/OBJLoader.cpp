@@ -28,7 +28,7 @@ void OBJLoader::process() noexcept {
       tinyobj::LoadObj (&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
 
     if (!err.empty()) { // `err` may contain warning message.
-        ::std::cerr << err << ::std::endl;
+        ::std::cerr << err << '\n';
     }
 
     if (!ret) {

@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) noexcept {
   if(argc < 15) {
-    ::std::cerr << "Not enough arguments provided" << ::std::endl;
+    ::std::cerr << "Not enough arguments provided" << '\n';
     return 1;
   }
 
