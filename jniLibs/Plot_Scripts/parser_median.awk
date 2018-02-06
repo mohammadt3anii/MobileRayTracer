@@ -32,8 +32,6 @@ END {
   }
   if (speedup == 1) {
     timeSingleThread = mc;
-  } else {
-    timeSingleThread = 1;
   }
   #print "time 1 thread: " th ", " timeSingleThread;
 
@@ -52,7 +50,11 @@ END {
       mc = array[ti][mi];
       #print "ODD MEDIAN = " ti ", " mc;
     }
+    timeThread = mc;
+    if (speedup == 1) {
+      timeThread = timeSingleThread / timeThread;
+    }
     #print "nt = " nt ", mi = " mi ", mc = " mc
-    print th ", " mc / timeSingleThread;
+    print th ", " timeThread;
   }
 }

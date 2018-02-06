@@ -89,18 +89,20 @@ function profile {
 }
 
 PARAM1="time"
-PARAM2="draw"
-PARAM3="test"
-PARAM4="exec"
+PARAM2="drawt"
+PARAM3="draws"
+PARAM4="test"
+PARAM5="exec"
 
 for P in ${@}
 do
   mkdir -p ${PLOT_GRAPHS}
   case ${P} in
     ${PARAM1}) profile; sleep 2s ;;
-    ${PARAM2}) bash ${PLOT_SCRIPTS}/plot.sh 1;;
-    ${PARAM3}) awk -f "${PLOT_SCRIPTS}/parser_median.awk" "${PLOT_SCRIPTS}/test.dat"  ;;
-    ${PARAM4}) execute ;;
+    ${PARAM2}) bash ${PLOT_SCRIPTS}/plot.sh 0;;
+    ${PARAM3}) bash ${PLOT_SCRIPTS}/plot.sh 1;;
+    ${PARAM4}) awk -f "${PLOT_SCRIPTS}/parser_median.awk" "${PLOT_SCRIPTS}/test.dat"  ;;
+    ${PARAM5}) execute ;;
     *) echo ""
        echo "Wrong Parameter: ${P}"
        echo "The valid parameters are:"

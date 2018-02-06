@@ -93,7 +93,7 @@ Y_max = 0
 
 do for [i=1:files] {
 	filePath = arrayGet("FILES", i)
-	fileParsed = "< awk -f Plot_Scripts/parser_median.awk " . filePath
+	fileParsed = "< awk -v speedup=" . speedup . " -f Plot_Scripts/parser_median.awk " . filePath
 	stats fileParsed using 1 nooutput name 'Fx_'
 	stats fileParsed using 2 nooutput name 'Fy_'
 
