@@ -34,19 +34,19 @@ namespace MobileRT {
         const int axis {static_cast<int> (3.0f * randomNumber)};
         switch (axis) {
           case 0:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) -> bool {
+            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.x_() < b.getAABB().pointMin_.x_();
             });
             break;
 
           case 1:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) -> bool {
+            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.y_() < b.getAABB().pointMin_.y_();
             });
             break;
 
           default:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) -> bool {
+            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.z_() < b.getAABB().pointMin_.z_();
             });
             break;

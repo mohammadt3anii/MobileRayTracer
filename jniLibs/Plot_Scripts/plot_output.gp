@@ -4,7 +4,7 @@
 reset
 set datafile separator ","
 #set output 'graph.png'
-set terminal wxt size 800, 800 enhanced font "Verdana,8" title "Performance comparation" persist raise ctrl
+set terminal wxt size 1700, 800 enhanced font "Verdana,8" title "Performance comparation" persist raise ctrl
 set key outside
 
 # define axis - remove border on top and right and set color to black
@@ -69,16 +69,20 @@ eval arrayPush("COLORS", "dark-olivegreen")
 # files to plot
 index = 0
 startSep=0
-endSep = startSep + strstrt(f[startSep:], separator)
-fx = f[startSep : endSep - 1]
-eval arrayPush("FILES", fx)
+endSep = startSep + strstrt(filenames[startSep:], separator)
+filePath = filenames[startSep : endSep - 1]
+if (filePath eq "") {
+	print 'filePath: "' . filePath . '" invalid'
+	exit gnuplot
+}
+eval arrayPush("FILES", filePath)
 endSep = endSep + 1
 
 do for [i=2:files] {
 	startSep = endSep
-	endSep = startSep + strstrt(f[startSep:], separator)
-	fx = f[startSep : endSep - 2]
-	eval arrayPush("FILES", fx)
+	endSep = startSep + strstrt(filenames[startSep:], separator)
+	filePath = filenames[startSep : endSep - 2]
+	eval arrayPush("FILES", filePath)
 }
 
 # stats to get min and max values
@@ -88,9 +92,10 @@ Y_min = 0
 Y_max = 0
 
 do for [i=1:files] {
-	file = arrayGet("FILES", i)
-	stats file using 1 nooutput name 'Fx_'
-	stats file using 2 nooutput name 'Fy_'
+	filePath = arrayGet("FILES", i)
+	fileParsed = "< awk -f Plot_Scripts/parser_median.awk " . filePath
+	stats fileParsed using 1 nooutput name 'Fx_'
+	stats fileParsed using 2 nooutput name 'Fy_'
 
 	X_min = Fx_min < X_min? Fx_min : X_min
 	X_max = Fx_max > X_max? Fx_max : X_max
@@ -105,7 +110,14 @@ set xlabel '#Threads'
 set xrange [0 : 0<*]
 set xtics X_min, 1, X_max offset graph 0, graph 0
 
-set ylabel 'Time (s)'
+if (speedup eq "1") {
+	speedup = 1
+	labelY = 'Speed up'
+} else {
+	speedup = 0
+	labelY = 'Time (s)'
+}
+set ylabel labelY
 set yrange [0 : 0<*]
 set ytics Y_min, Y_tick, Y_max offset graph 0, graph 0
 
@@ -115,7 +127,8 @@ set linestyle 1 pointtype 7 pointsize 1.0 linetype 3 linewidth 2.5 dashtype 3
 # plot
 plot \
 for [i = 1 : files] \
-	filepath = arrayGet("FILES", i) \
-	name = filepath[strstrt(filepath[0:], "/") + 1 : strstrt(filepath[0:], ".txt") - 1] \
-	filepath using 1:2 title name \
+	filePath = arrayGet("FILES", i) \
+	name = filePath[strstrt(filePath[0:], "/") + 1 : strstrt(filePath[0:], ".dat") - 1] \
+	file = "< awk -v speedup=" . speedup . " -f Plot_Scripts/parser_median.awk " . filePath \
+	file using 1:2 title name \
 	with linespoints linestyle 1 linecolor rgb arrayGet("COLORS", i)

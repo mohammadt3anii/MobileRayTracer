@@ -52,7 +52,7 @@ namespace MobileRT {
   template<typename T>
   ::std::vector<T *> convertVector (::std::vector<T> &source) {
     ::std::vector<T *> target (source.size ());
-    ::std::transform (source.begin (), source.end (), target.begin (), [] (T &t) { return &t; });
+    ::std::transform (source.begin (), source.end (), target.begin (), [] (T &t) noexcept -> T* { return &t; });
     return target;
   }
 

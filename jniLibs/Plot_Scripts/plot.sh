@@ -26,6 +26,10 @@ do
   ((i++))
 done
 
+SPEEDUP=${1}
 gnuplot \
-  -e "files='${#FILES[@]}'" -e "f='${FILENAMES}" -e "separator='${SEP}'" ${GRAPHS} \
+  -e "files='${#FILES[@]}'" \
+  -e "filenames='${FILENAMES}'" \
+  -e "speedup='${SPEEDUP}'" \
+  -e "separator='${SEP}'" ${GRAPHS} \
   -c ${PLOT_SCRIPTS}/plot_output.gp

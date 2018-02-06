@@ -1,8 +1,7 @@
 BEGIN {
-	FS=" ";
+	FS = " ";
 	n = 0;
 	sum = 0;
-	num = 0;
 }
 
 /Time in secs/{
@@ -17,10 +16,6 @@ BEGIN {
 	}
 	array[n++]=temp;
 	#print $0
-}
-
-/Size/{
-	size = $3;
 }
 
 END {
