@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PLOT_GRAPHS="Plot_Graphs"
-PLOT_SCRIPTS="Plot_Scripts"
 FILES=($(ls ${PLOT_GRAPHS} -I *.gp -I *.awk))
 SEP=","
 

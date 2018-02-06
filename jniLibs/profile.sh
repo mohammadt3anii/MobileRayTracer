@@ -1,7 +1,10 @@
 #!/bin/bash
 
-PLOT_GRAPHS="Plot_Graphs"
 PLOT_SCRIPTS="Plot_Scripts"
+
+if [ -z "${PLOT_GRAPHS}" ]; then
+    PLOT_GRAPHS="Plot_Graphs"
+fi
 
 OBJ="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"
 MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"
@@ -99,8 +102,8 @@ do
   mkdir -p ${PLOT_GRAPHS}
   case ${P} in
     ${PARAM1}) profile; sleep 2s ;;
-    ${PARAM2}) bash ${PLOT_SCRIPTS}/plot.sh 0;;
-    ${PARAM3}) bash ${PLOT_SCRIPTS}/plot.sh 1;;
+    ${PARAM2}) . ${PLOT_SCRIPTS}/plot.sh 0;;
+    ${PARAM3}) . ${PLOT_SCRIPTS}/plot.sh 1;;
     ${PARAM4}) awk -f "${PLOT_SCRIPTS}/parser_median.awk" "${PLOT_SCRIPTS}/test.dat"  ;;
     ${PARAM5}) execute ;;
     *) echo ""
