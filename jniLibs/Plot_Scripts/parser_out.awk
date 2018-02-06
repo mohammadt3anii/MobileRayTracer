@@ -19,6 +19,9 @@ BEGIN {
 }
 
 END {
+	if (n < 1) {
+		exit 1;
+	}
 	sum = 0;
 	for (i = 0; i < n; i++) {
 		sum += array[i];
