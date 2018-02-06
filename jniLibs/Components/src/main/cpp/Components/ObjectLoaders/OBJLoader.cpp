@@ -13,28 +13,28 @@ using ::MobileRT::Vector3D;
 using ::MobileRT::RGB;
 using ::MobileRT::Scene;
 
-OBJLoader::OBJLoader (const char *const text, const char *const materials) noexcept :
-  objText_ {text},
+OBJLoader::OBJLoader (::std::string &&obj, ::std::string &&materials) noexcept :
+  objText_ {obj},
   materialsText_ {materials}
 {
 }
 
 void OBJLoader::process() noexcept {
   ::std::istringstream objStream {objText_};
-    ::std::istringstream matStream {materialsText_};
-  tinyobj::MaterialStreamReader matStreamReader {matStream};
-    ::std::string err {};
-    bool ret {
-      tinyobj::LoadObj (&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
+  ::std::istringstream matStream {materialsText_};
+  ::tinyobj::MaterialStreamReader matStreamReader {matStream};
+  ::std::string err {""};
+  bool ret {
+    ::tinyobj::LoadObj (&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
 
-    if (!err.empty()) { // `err` may contain warning message.
-        ::std::cerr << err << '\n';
-    }
+  if (!err.empty()) {
+      ::std::cerr << err << '\n';
+  }
 
-    if (!ret) {
-        return;
-    }
-    isProcessed_ = true;
+  if (!ret) {
+      return;
+  }
+  isProcessed_ = true;
 }
 
 bool OBJLoader::fillScene (Scene *const scene, ::std::function<::std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept {

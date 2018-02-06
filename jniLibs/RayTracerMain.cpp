@@ -27,13 +27,29 @@ int main(int argc, char **argv) noexcept {
   const char *const pathObj {argv[10]};
   const char *const pathMtl {argv[11]};
 
-  ::std::stringstream ssPrintStdOut(argv[12]);
-  ::std::stringstream ssAsync(argv[13]);
-  ::std::stringstream ssShowImage(argv[14]);
-  bool printStdOut, async, showImage;
-  if( !(ssPrintStdOut >> ::std::boolalpha >> printStdOut) ||
-      !(ssAsync >> ::std::boolalpha >> async) ||
-      !(ssShowImage >> ::std::boolalpha >> showImage)) {
+  ::std::istringstream ssPrintStdOut(argv[12]);
+  ::std::istringstream ssAsync(argv[13]);
+  ::std::istringstream ssShowImage(argv[14]);
+  bool printStdOut {true};
+  bool async {true};
+  bool showImage {true};
+
+  bool tPrint {true};
+  bool tAsync {true};
+  bool tShowImage {true};
+  ssPrintStdOut >> ::std::boolalpha;
+  ssPrintStdOut >> printStdOut;
+  ssAsync >> ::std::boolalpha >> async;
+  ssShowImage >> ::std::boolalpha >> showImage;
+  if (!tAsync) {
+    ::std::cerr << "Incorrect argument provided.\n";
+    return 1;
+  }
+  if (!tPrint) {
+    ::std::cerr << "Incorrect argument provided.\n";
+    return 1;
+  }
+  if (!tShowImage) {
     ::std::cerr << "Incorrect argument provided.\n";
     return 1;
   }
@@ -65,13 +81,13 @@ int main(int argc, char **argv) noexcept {
                               static_cast<int> (width_ * 4), nullptr, nullptr)};
   GtkWidget *image {gtk_image_new_from_pixbuf (pixbuff)};
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (
-    [] () -> void {
+    [] () noexcept -> void {
       gtk_main_quit ();
     }
   ), nullptr);
   auto *check_escape (static_cast<bool (*) (
     GtkWidget *gtkWidget, GdkEventKey *event, gpointer)>(
-                        [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer) {
+                        [] (GtkWidget *gtkWidget, GdkEventKey *event, gpointer) noexcept -> bool {
                           if (event -> keyval == GDK_KEY_Escape) {
                             gtk_widget_destroy (gtkWidget);
                             gtk_main_quit ();

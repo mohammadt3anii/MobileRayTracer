@@ -48,16 +48,18 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
     ::std::ifstream obj {pathObj};
     ::std::ifstream mtl {pathMtl};
-    ::std::string line {};
-    ::std::stringstream ssObj {};
+    ::std::string line {""};
+    ::std::stringstream ssObj {""};
     while (::std::getline (obj, line)) {
       ssObj << line << '\n';
     }
-    ::std::stringstream ssMtl {};
+    ::std::stringstream ssMtl {""};
     while (::std::getline (mtl, line)) {
       ssMtl << line << '\n';
     }
-    ::Components::OBJLoader objLoader {ssObj.str ().c_str (), ssMtl.str ().c_str ()};
+    ::std::string sObj {ssObj.str ()};
+    ::std::string sMtl {ssMtl.str ()};
+    ::Components::OBJLoader objLoader {ssObj.str (), ssMtl.str ()};
     objLoader.process();
     int64_t numberOfLights_ {0};
 
@@ -116,10 +118,10 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
           maxDist = ::MobileRT::Point3D {8, 8, 8};
           break;
         default: {
-          //objLoader.fillScene (&scene_, [](){return ::std::make_unique<::Components::HaltonSeq> ();});
-          //objLoader.fillScene (&scene_, [](){return ::std::make_unique<::Components::MersenneTwister> ();});
-          objLoader.fillScene (&scene_, [](){return ::std::make_unique<::Components::StaticHaltonSeq> ();});
-          //objLoader.fillScene (&scene_, [](){return ::std::make_unique<::Components::StaticMersenneTwister> ();});
+          //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::HaltonSeq> ();});
+          //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::MersenneTwister> ();});
+          objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::StaticHaltonSeq> ();});
+          //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::StaticMersenneTwister> ();});
           const ::MobileRT::Material lightMat {::MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                             ::MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                             ::MobileRT::RGB {0.0f, 0.0f, 0.0f},
