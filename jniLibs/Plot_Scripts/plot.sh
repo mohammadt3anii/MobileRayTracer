@@ -1,12 +1,11 @@
 #!/bin/bash
 
-FILES=($(ls ${PLOT_GRAPHS} -I *.gp -I *.awk))
-SEP=","
+SEP=" "
 
 i=1
-for f in ${FILES[@]}
+for FILE in ${FILES[@]}
 do
-  GRAPH[${i}]="file${i}='${PLOT_GRAPHS}/"${f}"'"
+  GRAPH[${i}]="file${i}='"${FILE}"'"
   ((i++))
 done
 
@@ -20,7 +19,7 @@ done
 i=0
 for f in ${FILES[@]}
 do
-  FILENAMES+="${PLOT_GRAPHS}/${FILES[${i}]}${SEP}"
+  FILENAMES+="${FILES[${i}]}${SEP}"
   ((i++))
 done
 

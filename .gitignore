@@ -20,5 +20,4 @@
 **/*.callgrind
 **/*.so
 **/node_modules/**
-**/Plot_Graphs/**
-**/Plot_Scripts/*.dat
+**/jniLibs/*/*.dat

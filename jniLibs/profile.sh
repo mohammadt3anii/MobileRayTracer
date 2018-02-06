@@ -3,8 +3,13 @@
 PLOT_SCRIPTS="Plot_Scripts"
 
 if [ -z "${PLOT_GRAPHS}" ]; then
-    PLOT_GRAPHS="Plot_Graphs"
+  PLOT_GRAPHS="Plot_Graphs"
 fi
+
+for FOLDER in ${PLOT_GRAPHS[@]}
+do
+  FILES+=($(find ${FOLDER} -type f))
+done
 
 OBJ="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.obj"
 MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"
@@ -26,11 +31,11 @@ SHOWIMAGE="false"
 SEP="-"
 
 THREADS="1 2 3 4"
-REPETITIONS="2"
+REPETITIONS="6"
 
-SHADERS="1 2"
-SCENES="2"
-ACCELERATORS="0 2"
+SHADERS="0 1 2"
+SCENES="0 2 4"
+ACCELERATORS="0 1 2"
 
 function execute {
   THREAD="1"
@@ -50,11 +55,8 @@ function execute {
 
 function profile {
   trap "exit" INT
-  for R in `seq 1 1`;
+  for R in `seq 1 ${REPETITIONS}`;
   do
-    echo ""
-    echo "REPETITION = ${R}"
-    ((R++))
     for THREAD in ${THREADS[@]}
     do
       for SHADER in ${SHADERS[@]}
@@ -64,6 +66,7 @@ function profile {
           for ACC in ${ACCELERATORS[@]}
           do
             echo ""
+            echo "REPETITION = ${R}"
             echo "THREAD = "${THREAD}
             echo "SHADER = "${SHADER}
             echo "SCENE = "${SCENE}
@@ -88,6 +91,7 @@ function profile {
         done
       done
     done
+    ((R++))
   done
 }
 

@@ -42,14 +42,9 @@ eval arrayPush("COLORS", "sandybrown")
 eval arrayPush("COLORS", "pink")
 eval arrayPush("COLORS", "bisque")
 eval arrayPush("COLORS", "slategrey")
-eval arrayPush("COLORS", "antiquewhite")
 eval arrayPush("COLORS", "chartreuse")
-eval arrayPush("COLORS", "greenyellow")
-eval arrayPush("COLORS", "gray")
-eval arrayPush("COLORS", "slategray")
 
-eval arrayPush("COLORS", "dark-gray")
-eval arrayPush("COLORS", "dark-grey")
+eval arrayPush("COLORS", "black")
 eval arrayPush("COLORS", "dark-magenta")
 eval arrayPush("COLORS", "dark-cyan")
 eval arrayPush("COLORS", "dark-orange")
@@ -125,7 +120,7 @@ set linestyle 1 pointtype 7 pointsize 1.0 linetype 3 linewidth 2.5 dashtype 3
 plot \
 for [i = 1 : files] \
 	filePath = arrayGet("FILES", i) \
-	name = filePath[strstrt(filePath[0:], "/") + 1 : strstrt(filePath[0:], ".dat") - 1] \
+	name = filePath[0 : strstrt(filePath[0:], ".dat") - 1] \
 	file = "< awk -v speedup=" . speedup . " -f Plot_Scripts/parser_median.awk " . filePath \
 	file using 1:2 title name \
 	with linespoints linestyle 1 linecolor rgb arrayGet("COLORS", i)
