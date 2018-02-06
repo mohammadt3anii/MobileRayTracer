@@ -46,8 +46,8 @@ function execute {
 }
 
 function profile {
-  R=1
-  while [ ${R} -le ${REPETITIONS} ]
+  trap "exit" INT
+  for R in `seq 1 1`;
   do
     echo ""
     echo "REPETITION = ${R}"

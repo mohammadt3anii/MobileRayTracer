@@ -51,10 +51,12 @@ END {
       #print "ODD MEDIAN = " ti ", " mc;
     }
     timeThread = mc;
-    if (speedup == 1 && timeThread != 0) {
-      timeThread = timeSingleThread / timeThread;
-    } else {
-      timeThread = "ERROR";
+    if (speedup == 1) {
+      if (timeThread != 0) {
+        timeThread = timeSingleThread / timeThread;
+      } else {
+        timeThread = "ERROR";
+      }
     }
     #print "nt = " nt ", mi = " mi ", mc = " mc
     print th ", " timeThread;
