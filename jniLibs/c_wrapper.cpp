@@ -48,7 +48,7 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
     ::std::ifstream obj {pathObj};
     ::std::ifstream mtl {pathMtl};
-    ::std::string line {""};
+    ::std::string line {};
     ::std::stringstream ssObj {""};
     while (::std::getline (obj, line)) {
       ssObj << line << '\n';

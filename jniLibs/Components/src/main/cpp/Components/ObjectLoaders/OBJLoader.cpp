@@ -23,7 +23,7 @@ void OBJLoader::process() noexcept {
   ::std::istringstream objStream {objText_};
   ::std::istringstream matStream {materialsText_};
   ::tinyobj::MaterialStreamReader matStreamReader {matStream};
-  ::std::string err {""};
+  ::std::string err {};
   bool ret {
     ::tinyobj::LoadObj (&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
 
