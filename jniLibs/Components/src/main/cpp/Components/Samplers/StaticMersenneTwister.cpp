@@ -3,6 +3,7 @@
 //
 
 #include "StaticMersenneTwister.hpp"
+#include <array>
 
 using ::Components::StaticMersenneTwister;
 namespace {

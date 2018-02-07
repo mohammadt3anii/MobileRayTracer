@@ -26,7 +26,7 @@ Ray::Ray(Vector3D dir, Point3D origin,
 }
 
 unsigned Ray::getInstances () noexcept {
-  const unsigned res {counter};
+  unsigned res {counter};
   counter = 0;
   return res;
 }

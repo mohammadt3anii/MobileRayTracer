@@ -107,9 +107,9 @@ void RGB::reset (const float r, const float g, const float b, const unsigned sam
 }
 
 unsigned RGB::getColor () const noexcept {
-  const unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
-  const unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
-  const unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
+  unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
+  unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
+  unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
   return ((r * 1000000) + (g * 1000) + b);
 }
 
@@ -122,14 +122,14 @@ void RGB::toneMap () noexcept {
 
 unsigned RGB::RGB2Color () noexcept {
   //toneMap();
-  const unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
-  const unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
-  const unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
+  unsigned r {this->R_ >= 1.0f ? 255u : static_cast<unsigned> (this->R_ * 255u)};
+  unsigned g {this->G_ >= 1.0f ? 255u : static_cast<unsigned> (this->G_ * 255u)};
+  unsigned b {this->B_ >= 1.0f ? 255u : static_cast<unsigned> (this->B_ * 255u)};
   return (0xFF000000u | (b << 16u) | (g << 8u) | r);
 }
 
 unsigned RGB::getInstances () noexcept {
-  const unsigned res {counter};
+  unsigned res {counter};
   counter = 0;
   return res;
 }
@@ -154,4 +154,27 @@ RGB &RGB::operator= (RGB &&rgb) noexcept {
   this->B_ = rgb.B_;
   this->samples_ = rgb.samples_;
   return *this;
+}
+
+//newAvg = ((size - 1) * oldAvg + newNum) / size;
+unsigned RGB::incrementalAvg(const RGB &sample, const unsigned avg, const unsigned numSample) noexcept {
+  //toneMap();
+
+  const unsigned redB4 {avg & 0xFF};
+  const unsigned greenB4 {(avg >> 8) & 0xFF};
+  const unsigned blueB4 {(avg >> 16) & 0xFF};
+
+  const unsigned redSamp {static_cast<unsigned> (sample.R_ * 255u)};
+  const unsigned greenSamp {static_cast<unsigned> (sample.G_ * 255u)};
+  const unsigned blueSamp {static_cast<unsigned> (sample.B_ * 255u)};
+
+  const unsigned redAft {((numSample - 1) * redB4 + redSamp) / numSample};
+  const unsigned greenAft {((numSample - 1) * greenB4 + greenSamp) / numSample};
+  const unsigned blueAft {((numSample - 1) * blueB4 + blueSamp) / numSample};
+
+  unsigned retR {redAft > 255u? 255u : redAft};
+  unsigned retG {greenAft > 255u? 255u : greenAft};
+  unsigned retB {blueAft > 255u? 255u : blueAft};
+
+  return (0xFF000000u | (retB << 16u) | (retG << 8u) | retR);
 }

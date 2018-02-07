@@ -5,7 +5,7 @@
 #include "Utils.hpp"
 
 int ::MobileRT::roundDownToMultipleOf(const int value, const int multiple) noexcept {
-  const int rest {value % multiple};
+  int rest {value % multiple};
   return rest > 1 ? value - rest : value;
 }
 
@@ -35,4 +35,14 @@ void ::MobileRT::escape (void *pointer) noexcept {
 
 void ::MobileRT::clobber () noexcept {
   asm volatile ("" : : : "memory");
+}
+
+float ::MobileRT::incrementalAVG (float num) noexcept {
+  static float avg {0.0f};
+  static int size {0};
+
+  ++size;
+  avg = ((size - 1) * avg + num) / size;
+
+  return avg;
 }

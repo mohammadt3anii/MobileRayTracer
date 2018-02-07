@@ -9,7 +9,6 @@
 #include "Point3D.hpp"
 #include "Ray.hpp"
 #include <algorithm>
-#include <array>
 #include <atomic>
 #include <random>
 

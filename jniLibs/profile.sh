@@ -42,7 +42,8 @@ function execute {
   THREAD="1"
   SHADER="1"
   SCENE="2"
-  ACC="1"
+  ACC="2"
+  PRINT="true"
   SHOWIMAGE="true"
   echo ""
   echo "THREAD = "${THREAD}

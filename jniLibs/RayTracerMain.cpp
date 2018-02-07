@@ -58,6 +58,14 @@ int main(int argc, char **argv) noexcept {
   ::std::unique_ptr<unsigned char[]> buffer {::std::make_unique <unsigned char[]> (size * 4u)};
   ::std::vector<unsigned> bitmap (size);
 
+  float avg {0};
+
+  avg = ::MobileRT::incrementalAVG(1.0f);
+  avg = ::MobileRT::incrementalAVG(2.0f);
+  avg = ::MobileRT::incrementalAVG(3.0f);
+  avg = ::MobileRT::incrementalAVG(4.0f);
+  LOG("AVG = ", avg);
+
   RayTrace (bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight, repeats, accelerator, printStdOut, async, pathObj, pathMtl);
 
   if (!showImage) {

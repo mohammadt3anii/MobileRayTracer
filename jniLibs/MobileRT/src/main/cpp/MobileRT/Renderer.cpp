@@ -14,7 +14,6 @@ Renderer::Renderer (::std::unique_ptr<Shader> &&shader,
   camera_ {::std::move (camera)},
   shader_ {::std::move (shader)},
   samplerPixel_ {::std::move (samplerPixel)},
-  accumulate_ {::std::vector<RGB> {width * height}},
   blockSizeX_ {width / static_cast<unsigned>(::std::sqrt (NumberOfBlocks))},
   blockSizeY_ {height / static_cast<unsigned>(::std::sqrt (NumberOfBlocks))},
   sample_ {0},
@@ -29,9 +28,6 @@ Renderer::Renderer (::std::unique_ptr<Shader> &&shader,
 
 void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexcept {
 	this->sample_ = 0;
-  for (auto &accumulate : this->accumulate_) {
-		accumulate.reset();
-	}
 	this->samplerPixel_->resetSampling();
 	this->shader_->resetSampling();
   this->camera_->resetSampling();
@@ -47,22 +43,6 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 		thread.join();
 	}
 	threads.clear();
-  float max {-1.0f};
-  unsigned ii {0};
-  unsigned jj {0};
-  for (unsigned i {0}; i < this->height_; i++) {
-    for (unsigned j {0}; j < this->width_; j++) {
-      const unsigned pixel {i * this->width_ + j};
-      const float pixelMax {this -> accumulate_[pixel] . getMax ()};
-			if (pixelMax > max) {
-				max = pixelMax;
-				ii = i;
-				jj = j;
-			}
-		}
-	}
-	LOG("max = ", max, ", i = ", ii, ", j = ", jj);
-	LOG("r = ", this->accumulate_[ii*this->width_ + jj].R_, ", g = ", this->accumulate_[ii*this->width_ + jj].G_, ", b = ", this->accumulate_[ii*this->width_ + jj].B_, " , s = ", this->accumulate_[ii*this->width_ + jj].samples_, " , color = ", this->accumulate_[ii*this->width_ + jj].getColor());
 
 	LOG("point3D = ", Point3D::getInstances());
 	LOG("vector3D = ", Vector3D::getInstances());
@@ -72,8 +52,6 @@ void Renderer::renderFrame (unsigned *const bitmap, const int numThreads) noexce
 	LOG("material = ", Material::getInstances());
 	LOG("intersection = ", Intersection::getInstances());
 	LOG("FINISH");
-	static_cast<void> (ii);
-	static_cast<void> (jj);
 }
 
 void Renderer::stopRender() noexcept {
@@ -120,8 +98,7 @@ void Renderer::renderScene (unsigned *const bitmap, const int /*tid*/) noexcept 
 					// LOG("spheres = ", shader_.scene_.spheres_.size());
 					// LOG("planes = ", shader_.scene_.planes_.size());
 					this->shader_->rayTrace(&pixelRGB, &intersection, ::std::move(ray));
-					this->accumulate_[yWidth + x].addSampleAndCalcAvg(&pixelRGB);
-					bitmap[yWidth + x] = pixelRGB.RGB2Color();
+          bitmap[yWidth + x] = RGB::incrementalAvg(pixelRGB, bitmap[yWidth + x], sample+1);
 				}
 			}
 		}

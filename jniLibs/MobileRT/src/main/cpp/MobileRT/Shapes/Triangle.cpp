@@ -177,11 +177,11 @@ bool Triangle::intersect (const AABB box) const noexcept {
 		Intersection intersection {};
 		const Vector3D vec {max, min};
 		const Ray ray {vec, min, 1};
-		const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
-    const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
-    const bool intersectedBC {intersectRayAABB(this->pointB_, this->BC_)};
-		const bool intersectedRay {intersect(&intersection, ray)};
-		const bool insideTriangle {isOverTriangle (vec)};
+		bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
+    bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
+    bool intersectedBC {intersectRayAABB(this->pointB_, this->BC_)};
+		bool intersectedRay {intersect(&intersection, ray)};
+		bool insideTriangle {isOverTriangle (vec)};
 
     return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
 }

@@ -6,7 +6,6 @@
 #define COMPONENTS_SAMPLERS_STATICMERSENNETWISTER_HPP
 
 #include "MobileRT/Sampler.hpp"
-#include <array>
 #include <random>
 
 namespace Components {

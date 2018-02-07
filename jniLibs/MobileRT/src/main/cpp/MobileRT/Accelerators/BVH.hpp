@@ -16,16 +16,16 @@ namespace MobileRT {
   template<typename T>
   class BVH final {
     public:
+      ::MobileRT::AABB box_ {};
       ::std::unique_ptr<BVH> left_ {nullptr};
       ::std::unique_ptr<BVH> right_ {nullptr};
-      ::MobileRT::AABB box_ {};
-      ::std::vector<MobileRT::Primitive<T>> spheres_ {};
+      ::std::vector<MobileRT::Primitive<T>> primitives_ {};
 
     public:
       explicit BVH () noexcept = default;
 
-      explicit BVH<T> (::MobileRT::AABB sceneBounds, std::vector<MobileRT::Primitive<T>> spheres, const unsigned depth) noexcept {
-        if (spheres.empty()) {
+      explicit BVH<T> (::MobileRT::AABB sceneBounds, ::std::vector<MobileRT::Primitive<T>> primitives, const unsigned depth) noexcept {
+        if (primitives.empty()) {
           return;
         }
         thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
@@ -34,19 +34,19 @@ namespace MobileRT {
         const int axis {static_cast<int> (3.0f * randomNumber)};
         switch (axis) {
           case 0:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
+            std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.x_() < b.getAABB().pointMin_.x_();
             });
             break;
 
           case 1:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
+            std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.y_() < b.getAABB().pointMin_.y_();
             });
             break;
 
           default:
-            std::sort(spheres.begin(), spheres.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
+            std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
               return a.getAABB().pointMin_.z_() < b.getAABB().pointMin_.z_();
             });
             break;
@@ -61,21 +61,21 @@ namespace MobileRT {
 
         ::MobileRT::AABB leftBox {};
         ::MobileRT::AABB rightBox {};
-        leftBegin = spheres.begin();
-        leftEnd = spheres.begin() + spheres.size() / 2;
-        rightBegin = spheres.begin() + spheres.size() / 2;
-        rightEnd = spheres.end();
+        leftBegin = primitives.begin();
+        leftEnd = primitives.begin() + primitives.size() / 2;
+        rightBegin = primitives.begin() + primitives.size() / 2;
+        rightEnd = primitives.end();
 
-        if (spheres.size() <= 10 || depth >= 12) {
+        if (primitives.size() <= 10 || depth >= 12) {
           left_ = nullptr;
           right_ = nullptr;
-          spheres_ = spheres;
-            for (uint32_t i{0}; i < spheres.size() / 2; i++) {
-            const ::MobileRT::AABB box {spheres_[i].getAABB()};
+          primitives_ = primitives;
+          for (uint32_t i{0}; i < primitives.size() / 2; i++) {
+            const ::MobileRT::AABB box {primitives_[i].getAABB()};
             leftBox = surroundingBox (leftBox, box);
           }
-            for (uint32_t i{static_cast<uint32_t>(spheres.size()) / 2}; i < spheres_.size(); i++) {
-            const ::MobileRT::AABB box {spheres_[i].getAABB()};
+          for (uint32_t i{static_cast<uint32_t>(primitives.size()) / 2}; i < primitives_.size(); i++) {
+            const ::MobileRT::AABB box {primitives_[i].getAABB()};
             rightBox = surroundingBox (rightBox, box);
           }
         } else {
@@ -103,12 +103,12 @@ namespace MobileRT {
       bool trace (::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray) noexcept {
         if (box_.intersect(ray)) {
           if (left_ == nullptr || right_ == nullptr) {
-            //return spheres_[0].intersect(intersection, ray);
+            //return primitives_[0].intersect(intersection, ray);
             bool res {false};
-            for (MobileRT::Primitive<T> &s : spheres_) {
+            for (MobileRT::Primitive<T> &s : primitives_) {
               res |= s.intersect(intersection, ray);
             }
-            //LOG ("size = ", spheres_.size());
+            //LOG ("size = ", primitives_.size());
             return res;
           }
           const bool hit_left {left_->trace(intersection, ray)};
@@ -121,8 +121,8 @@ namespace MobileRT {
       bool shadowTrace (::MobileRT::Intersection *intersection, const Ray &ray) noexcept {
         if (box_.intersect(ray)) {
           if (left_ == nullptr || right_ == nullptr) {
-            //return spheres_[0].intersect(intersection, ray);
-            for (MobileRT::Primitive<T> &s : spheres_) {
+            //return primitives_[0].intersect(intersection, ray);
+            for (MobileRT::Primitive<T> &s : primitives_) {
               if (s.intersect(intersection, ray)) {
                 return true;
               }

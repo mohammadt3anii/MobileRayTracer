@@ -7,7 +7,6 @@
 
 #include "MobileRT/Sampler.hpp"
 #include <algorithm>
-#include <array>
 #include <random>
 
 namespace Components {

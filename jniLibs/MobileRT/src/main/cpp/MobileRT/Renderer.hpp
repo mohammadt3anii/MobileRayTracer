@@ -21,7 +21,6 @@ namespace MobileRT {
 
     private:
     ::std::unique_ptr<Sampler> samplerPixel_ {};
-    ::std::vector<RGB> accumulate_ {};
     unsigned blockSizeX_ {};
     unsigned blockSizeY_ {};
     unsigned sample_ {};

@@ -42,7 +42,7 @@ Point3D Point3D::operator+ (const float value) const noexcept {
 }
 
 unsigned Point3D::getInstances () noexcept {
-  const unsigned res {counter};
+  unsigned res {counter};
   counter = 0;
   return res;
 }

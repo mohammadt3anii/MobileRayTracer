@@ -43,15 +43,15 @@ bool Scene::trace (::std::vector<T> &primitives, Intersection *const intersectio
 }
 
 bool Scene::trace (Intersection *const intersection, Ray ray) noexcept {
-  const bool intersectedTriangles {
+  bool intersectedTriangles {
     trace<::MobileRT::Primitive<::MobileRT::Triangle>> (this->triangles_, intersection, ray)};
-  const bool intersectedSpheres {
+  bool intersectedSpheres {
     trace<::MobileRT::Primitive<::MobileRT::Sphere>> (this->spheres_, intersection, ray)};
-  const bool intersectedPlanes {
+  bool intersectedPlanes {
     trace<::MobileRT::Primitive<::MobileRT::Plane>> (this->planes_, intersection, ray)};
-  const bool intersectedRectangles {
+  bool intersectedRectangles {
     trace<::MobileRT::Primitive<::MobileRT::Rectangle>> (this->rectangles_, intersection, ray)};
-  const bool intersectedLights {
+  bool intersectedLights {
     traceLights (intersection, ::std::move (ray))
   };
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles ||

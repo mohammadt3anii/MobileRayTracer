@@ -69,6 +69,8 @@ namespace MobileRT {
 
   void escape (void *pointer) noexcept;
   void clobber () noexcept;
+
+  float incrementalAVG (float num) noexcept;
 }//namespace MobileRT
 
 #endif //MOBILERT_UTILS_HPP

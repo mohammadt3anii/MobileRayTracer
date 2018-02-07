@@ -3,6 +3,7 @@
 //
 
 #include "Camera.hpp"
+#include <array>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Camera;

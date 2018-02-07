@@ -3,12 +3,13 @@
 //
 
 #include "StaticHaltonSeq.hpp"
+#include <array>
 
 using ::Components::StaticHaltonSeq;
 namespace {
   const uint32_t MASK {0xFFFFF};
   const uint32_t SIZE {MASK + 1};
-  ::std::array<float, SIZE> VALUES;
+  ::std::array<float, SIZE> VALUES {};
 
   bool FillThings () {
     static ::std::mt19937 generator (::std::random_device{} ());

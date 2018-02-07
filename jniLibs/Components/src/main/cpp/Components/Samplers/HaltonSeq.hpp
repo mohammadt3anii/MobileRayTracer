@@ -6,7 +6,6 @@
 #define COMPONENTS_SAMPLERS_HALTONSEQ_HPP
 
 #include "MobileRT/Sampler.hpp"
-#include <array>
 #include <type_traits>
 #include <utility>
 

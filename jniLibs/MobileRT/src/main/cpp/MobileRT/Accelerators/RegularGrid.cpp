@@ -131,26 +131,26 @@ void RegularGrid::addPrimitives
 }
 
 bool RegularGrid::trace (Intersection *const intersection, const Ray &ray) noexcept {
-  const bool intersectedTriangles {
+  bool intersectedTriangles {
     intersect<::MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray)};
-  const bool intersectedSpheres {
+  bool intersectedSpheres {
     intersect<::MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray)};
-  const bool intersectedPlanes {
+  bool intersectedPlanes {
     intersect<::MobileRT::Primitive<Plane>> (this->planes_, intersection, ray)};
-  const bool intersectedRectangles {
+  bool intersectedRectangles {
     intersect<::MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray)};
-  const bool intersectedLights {this->scene_->traceLights (intersection, ray)};
+  bool intersectedLights {this->scene_->traceLights (intersection, ray)};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles || intersectedLights;
 }
 
 bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept {
-  const bool intersectedTriangles {
+  bool intersectedTriangles {
     intersect<::MobileRT::Primitive<Triangle>> (this->triangles_, intersection, ray, true)};
-  const bool intersectedSpheres {
+  bool intersectedSpheres {
     intersect<::MobileRT::Primitive<Sphere>> (this->spheres_, intersection, ray, true)};
-  const bool intersectedPlanes {
+  bool intersectedPlanes {
     intersect<::MobileRT::Primitive<Plane>> (this->planes_, intersection, ray, true)};
-  const bool intersectedRectangles {
+  bool intersectedRectangles {
     intersect<::MobileRT::Primitive<Rectangle>> (this->rectangles_, intersection, ray, true)};
   return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
 }

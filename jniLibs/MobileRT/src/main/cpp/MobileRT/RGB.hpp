@@ -48,6 +48,7 @@ namespace MobileRT {
     unsigned getColor () const noexcept;
     float getMax () const noexcept;
     static unsigned getInstances () noexcept;
+    static unsigned incrementalAvg(const RGB &sample, unsigned avg, unsigned numSample) noexcept;
     };
 }//namespace MobileRT
 
