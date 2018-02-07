@@ -66,6 +66,9 @@ namespace MobileRT {
 
   int roundDownToMultipleOf(int value, int multiple) noexcept;
   float haltonSequence (uint32_t index, unsigned base) noexcept;
+
+  void escape (void *pointer) noexcept;
+  void clobber () noexcept;
 }//namespace MobileRT
 
 #endif //MOBILERT_UTILS_HPP

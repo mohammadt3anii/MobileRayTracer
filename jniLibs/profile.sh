@@ -5,6 +5,7 @@ PLOT_SCRIPTS="Plot_Scripts"
 if [ -z "${PLOT_GRAPHS}" ]; then
   PLOT_GRAPHS="Plot_Graphs"
 fi
+mkdir -p ${PLOT_GRAPHS}
 
 for FOLDER in ${PLOT_GRAPHS[@]}
 do
@@ -18,7 +19,7 @@ MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/Wavefron
 
 export ASAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0:detect_odr_violation=1"
 
-export LSAN_OPTIONS=${ASAN_OPTIONS}
+export LSAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1"
 
 SPP="1"
 SPL="1"
@@ -30,12 +31,12 @@ ASYNC="false"
 SHOWIMAGE="false"
 SEP="-"
 
-THREADS="1 2 3 4"
-REPETITIONS="6"
+THREADS="1"
+REPETITIONS="10"
 
-SHADERS="0 1 2"
-SCENES="0 2 4"
-ACCELERATORS="0 1 2"
+SHADERS="1 2"
+SCENES="2"
+ACCELERATORS="1 2"
 
 function execute {
   THREAD="1"
@@ -48,9 +49,15 @@ function execute {
   echo "SHADER = "${SHADER}
   echo "SCENE = "${SCENE}
   echo "ACC = "${ACC}
+
+  #perf script report callgrind > perf.callgrind
+  #kcachegrind perf.callgrind
+  #perf stat \
+  #perf record -g --call-graph 'fp' -- \
   ./raytracer \
             ${THREAD} ${SHADER} ${SCENE} ${SPP} ${SPL} ${WIDTH} ${HEIGHT} ${ACC} ${REP} \
             ${OBJ} ${MTL} ${PRINT} ${ASYNC} ${SHOWIMAGE}
+  #perf report -g '' --show-nr-samples --hierarchy
 }
 
 function profile {
@@ -74,18 +81,11 @@ function profile {
 
             PLOT_FILE="SC${SCENE}${SEP}SH${SHADER}${SEP}A${ACC}${SEP}R${WIDTH}x${HEIGHT}"
 
-            #perf script report callgrind > perf.callgrind
-            #kcachegrind perf.callgrind
-            #perf stat
-            #perf record -g --call-graph 'fp' -- \
-
             ./raytracer \
             ${THREAD} ${SHADER} ${SCENE} ${SPP} ${SPL} ${WIDTH} ${HEIGHT} ${ACC} ${REP} \
             ${OBJ} ${MTL} ${PRINT} ${ASYNC} ${SHOWIMAGE} \
             | awk -v threads="${THREAD}" -f ${PLOT_SCRIPTS}/parser_out.awk 2>&1 \
             | tee -a ${PLOT_GRAPHS}/${PLOT_FILE}.dat
-
-            #perf report -g '' --show-nr-samples --hierarchy
 
           done
         done
@@ -103,7 +103,6 @@ PARAM5="exec"
 
 for P in ${@}
 do
-  mkdir -p ${PLOT_GRAPHS}
   case ${P} in
     ${PARAM1}) profile; sleep 2s ;;
     ${PARAM2}) . ${PLOT_SCRIPTS}/plot.sh 0;;
