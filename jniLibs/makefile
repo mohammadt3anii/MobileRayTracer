@@ -13,34 +13,23 @@ INCLUDES += -I./Components/src/main/cpp
 INCLUDES += -isystem./third-party
 INCLUDES += -isystem./third-party/googletest/googletest/include
 INCLUDES_GTK += $(shell pkg-config --cflags gtk+-2.0)
-INCLUDES_GTK := $(subst -I,-isystem,$(INCLUDES_GTK))
-INCLUDES += $(INCLUDES_GTK)
+INCLUDES += $(subst -I,-isystem,$(INCLUDES_GTK))
 LIBRARIES_APP := $(shell pkg-config --libs gtk+-2.0) -pthread
-LIBRARIES_WRAPPER := -fopenmp
 LIBRARIES_MOBILERT := $(shell find ./third-party/**/build/* \
 -regextype gnu-awk -iname "*.a" -printf '-L./%h\n' | uniq)
 
-CXXFLAGS := -std=c++14 -DNO_ANDROID $(INCLUDES) -fPIC #-Werror
+CXXFLAGS := -std=c++14 -fPIC $(INCLUDES) -DNO_ANDROID
 CXXFLAGS += -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors
-CXXFLAGS += -Wno-old-style-cast
-CXXFLAGS += -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fno-trapping-math -ffunction-sections -fdata-sections -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
+CXXFLAGS += -Wno-padded -Wno-float-equal
 
-LDFLAGS := -fPIC -fprofile-correction -fomit-frame-pointer  -Wno-padded -Wno-float-equal -gsplit-dwarf -fno-math-errno -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros -fsingle-precision-constant -funswitch-loops -fno-trapping-math -ffunction-sections -fdata-sections -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-rtti -fno-exceptions -fno-stack-check -march=native -ftree-vectorize
-
-LDFLAGS += -Wl,-O3 -Wl,-gc-sections -Wl,-z,norelro -Wl,-hash-style=sysv
-
-ifeq ($(S),)
-	CXXFLAGS += -O3 -Ofast -fno-signed-zeros -freciprocal-math -ffp-contract=fast  -ffast-math -fno-trapping-math -funsafe-math-optimizations -ffinite-math-only -fno-signed-zeros
-	CXXFLAGS += -DNDEBUG -fomit-frame-pointer
-	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden -Wl,-discard-all -Wl,-s
-	LDFLAGS += -flto=full
-	LDFLAGS += -fvisibility=hidden
+ifeq ($(S),0)
+	CXXFLAGS += -O3 -march=native
+	LDFLAGS += -s -flto=full
 endif
 
 ifeq ($(S),1)
-	CXXFLAGS += -O3 -DNDEBUG -fno-omit-frame-pointer
-	LDFLAGS += -Wl,-build-id=none -fvisibility-inlines-hidden
-	LDFLAGS += -fvisibility=hidden
+	CXXFLAGS += -O3 -march=native -fno-omit-frame-pointer
+	LDFLAGS += -s -flto=full
 endif
 
 ifeq ($(S),2)
@@ -48,32 +37,39 @@ ifeq ($(S),2)
 endif
 
 ifeq ($(S),3)
-	#CXX := c++
-	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls
-	SANITIZER := -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor #MemorySanitizer, a detector of uninitialized reads. Requires instrumentation of all program code.
+	CXXFLAGS += -O3 -march=native
+	LDFLAGS += -s -flto=full
+
+	#SANITIZER := -fsanitize=leak #LeakSanitizer, a run-time memory leak detector.
+	#SANITIZER := -fsanitize=memory #MemorySanitizer, a detector of uninitialized reads.
 	#SANITIZER := -fsanitize=address #AddressSanitizer, a memory error detector.
 	#SANITIZER := -fsanitize=thread #ThreadSanitizer, a data race detector.
-	#SANITIZER := -fsanitize=undefined #UndefinedBehaviorSanitizer, a fast and compatible undefined behavior checker.
+	#SANITIZER := -fsanitize=undefined #UndefinedBehaviorSanitizer
 	#SANITIZER := -fsanitize=dataflow #DataFlowSanitizer, a general data flow analysis.
 	#SANITIZER := -fsanitize=cfi #control flow integrity checks. Requires -flto.
-	#SANITIZER := -fsanitize=safe-stack #safe stack protection against stack-based memory corruption errors.
-	SANITIZER += -fsanitize-recover=address
-	#SANITIZER_CXX := -static-libasan
-	SANITIZER_LD := -fsanitize-address-use-after-scope# -ltsan -lasan
-	ASAN_OPTIONS=verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0
+	#SANITIZER := -fsanitize=safe-stack #safe stack protection
+
+	SANITIZER_CXX := -fsanitize-blacklist=sanitizer_ignore.suppr
+	SANITIZER_CXX += -fsanitize-recover=address
+	#SANITIZER_CXX += -fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor
+	#SANITIZER_CXX += -static-libasan
+
+  SANITIZER_LD := -fsanitize-blacklist=sanitizer_ignore.suppr
+	SANITIZER_LD += -fsanitize-address-use-after-scope
+	#SANITIZER_LD += -ltsan -lasan
+
 	CXXFLAGS += $(SANITIZER) $(SANITIZER_CXX)
-	#LDFLAGS += $(SANITIZER) $(SANITIZER_LD)
+	LDFLAGS += $(SANITIZER) $(SANITIZER_LD)
 endif
 
 ifneq (,$(findstring clang,$(CXX)))
-	CXXFLAGS += -flto=full
+	ifneq (,$(findstring flto,$(LDFLAGS)))
+		CXXFLAGS += -flto=full
+	endif
   CXXFLAGS += -isystem /usr/include/c++/v1
   CXXFLAGS += -Weverything -ferror-limit=1
-  CXXFLAGS += -Wno-deprecated-dynamic-exception-spec -Wno-documentation -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-shift-sign-overflow -Wno-c++98-compat-pedantic
+	CXXFLAGS += -Wno-c++98-compat-pedantic
 	LDFLAGS += -lc++
-else
-  CXXFLAGS += -finline-limit=150
-  LDFLAGS += -finline-limit=150
 endif
 
 ###############################################################################
@@ -134,11 +130,11 @@ GARB := $(shell find \
 	$(CXX) $(CXXFLAGS) -c $(basename $<).cpp -o $@
 #	objdump --source $@ > $<
 
-%.s: %.llvmIR
-	$(CXX) $(CXXFLAGS) -S $(basename $<).cpp -o $@
+#%.s: %.llvmIR
+#	$(CXX) $(CXXFLAGS) -S $(basename $<).cpp -o $@
 
 #%.llvmIR: %.cpp
-	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
+#	$(CXX) $(CXXFLAGS) -S -emit-llvm $< -o $@
 
 all: $(EXE)
 
@@ -147,7 +143,7 @@ $(EXE): C_Wrapper MobileRT $(OBJS_APP)
 	@echo "Compilation App done\n"
 
 C_Wrapper: MobileRT $(OBJS_WRAPPER)
-	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_WRAPPER) $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY) $(LIBRARIES_WRAPPER) #-lMobileRT
+	$(LD) -shared $(LDFLAGS) -o lib$@.so $(OBJS_WRAPPER) $(OBJS_MOBILERT) $(OBJS_THIRD_PARTY)
 	@echo "Compilation C_Wrapper done\n"
 
 MobileRT: third_party $(OBJS_MOBILERT)
