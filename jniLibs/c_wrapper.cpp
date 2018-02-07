@@ -18,15 +18,15 @@
 #include "MobileRT/Renderer.hpp"
 #include "MobileRT/Scene.hpp"
 #include "Scenes.hpp"
+#include <chrono>
 #include <fstream>
-#include <omp.h>
 
 void work_thread (unsigned *const bitmap, const int width, const int height, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, int repeats, const int accelerator, const bool printStdOut, const char*const pathObj, const char*const pathMtl) {
   ::std::ostringstream ss {""};
   ::std::streambuf *old_buf_stdout {nullptr};
   ::std::streambuf *old_buf_stderr {nullptr};
-  double timeRendering {0};
-  double timeCreating {0};
+  ::std::chrono::duration<double> timeCreating {0};
+  ::std::chrono::duration<double> timeRendering {0};
   if (!printStdOut) {
     old_buf_stdout = ::std::cout.rdbuf(ss.rdbuf());
     old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
@@ -201,13 +201,14 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
       }
 
     LOG("Started creating Renderer");
-    const double startCreating {omp_get_wtime ()};
+    const auto startCreating {::std::chrono::system_clock::now()};
     renderer_ = std::make_unique<::MobileRT::Renderer> (
       ::std::move (shader_), ::std::move (camera), ::std::move (samplerPixel),
       static_cast<unsigned>(width), static_cast<unsigned>(height),
       static_cast<unsigned>(samplesPixel));
-    timeCreating = omp_get_wtime () - startCreating;
-    LOG("Renderer created = ", timeCreating);
+    const auto endCreating {std::chrono::system_clock::now()};
+    timeCreating = endCreating - startCreating;
+    LOG("Renderer created = ", timeCreating.count());
 
     const int64_t triangles {static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size ())};
     const int64_t spheres {static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size ())};
@@ -229,12 +230,13 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     LOG("height_ = ", height);
 
     LOG("Started rendering scene");
-    const double start {omp_get_wtime ()};
+    const auto startRendering {::std::chrono::system_clock::now()};
     do {
       renderer_->renderFrame (bitmap, threads);
       //renderer_->camera_->position_.x_ += 2.0f;
     } while (repeats-- > 0);
-    timeRendering = omp_get_wtime () - start;
+    const auto endRendering {std::chrono::system_clock::now()};
+    timeRendering = endRendering - startRendering;
     LOG("Finished rendering scene");
   }
   if (!printStdOut) {
@@ -242,8 +244,8 @@ void work_thread (unsigned *const bitmap, const int width, const int height, con
     ::std::cerr.rdbuf(old_buf_stderr);
   }
 
-  LOG("Creating Time in secs = ", timeCreating);
-  LOG("Rendering Time in secs = ", timeRendering);
+  LOG("Creating Time in secs = ", timeCreating.count());
+  LOG("Rendering Time in secs = ", timeRendering.count());
 }
 
 void RayTrace (unsigned *const bitmap, const int width, const int height, const int threads, const int shader, const int scene, const int samplesPixel, const int samplesLight, const int repeats, const int accelerator, const bool printStdOut, const bool async, const char*const pathObj, const char*const pathMtl) {
