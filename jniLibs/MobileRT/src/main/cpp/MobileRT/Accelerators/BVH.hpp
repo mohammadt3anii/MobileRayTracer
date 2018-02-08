@@ -21,10 +21,13 @@ namespace MobileRT {
       ::std::unique_ptr<BVH> right_ {nullptr};
       ::std::vector<MobileRT::Primitive<T>> primitives_ {};
 
+      #define MAX_DEPTH 999
+      #define MAX_VECTOR 1
+
     public:
       explicit BVH () noexcept = default;
 
-      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>> primitives, const unsigned depth) noexcept {
+      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>> primitives, const unsigned depth = 0) noexcept {
         if (primitives.empty()) {
           return;
         }
@@ -62,7 +65,7 @@ namespace MobileRT {
         const int64_t divide {static_cast<int64_t>(primitives.size()) / 2};
         LOG("depth = ", depth, ", size = ", primitives.size(), ", divide = ", divide);
 
-        if (primitives.size() <= 10 || depth >= 12) {
+        if (primitives.size() <= MAX_VECTOR || depth >= MAX_DEPTH) {
           primitives_ = primitives;
         } else {
           using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
@@ -81,7 +84,7 @@ namespace MobileRT {
       }
 
 
-      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>>&& primitives, const uint64_t depth) noexcept {
+      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>>&& primitives, const unsigned depth, const bool /*unused*/) noexcept {
         if (primitives.empty()) {
           return;
         }

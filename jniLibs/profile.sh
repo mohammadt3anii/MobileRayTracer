@@ -42,7 +42,7 @@ function execute {
   THREAD="1"
   SHADER="1"
   SCENE="4"
-  ACC="1"
+  ACC="2"
   PRINT="true"
   SHOWIMAGE="true"
   echo ""

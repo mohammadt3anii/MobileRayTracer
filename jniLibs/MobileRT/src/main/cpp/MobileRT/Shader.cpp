@@ -3,6 +3,9 @@
 //
 
 #include "Shader.hpp"
+#include "Utils.hpp"
+#include "Vector3D.hpp"
+#include <utility>
 
 using ::MobileRT::BVH;
 using ::MobileRT::Camera;
@@ -44,13 +47,13 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
       LOG("PLANES");
-      bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {std::move(scene_.planes_), 1ul};
+      bvhPlanes_ = ::MobileRT::BVH2<MobileRT::Plane> {std::move(scene_.planes_)};
       LOG("RECTANGLES");
-      bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {std::move(scene_.rectangles_), 1ul};
+      bvhRectangles_ = ::MobileRT::BVH2<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
       LOG("SPHERES");
-      bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {std::move(scene_.spheres_), 1ul};
+      bvhSpheres_ = ::MobileRT::BVH2<MobileRT::Sphere> {std::move(scene_.spheres_)};
       LOG("TRIANGLES");
-      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {std::move(scene_.triangles_), 1ul};
+      bvhTriangles_ = ::MobileRT::BVH2<MobileRT::Triangle> {std::move(scene_.triangles_)};
 
       LOG("Boxes created = ", MobileRT::counter);
       break;
