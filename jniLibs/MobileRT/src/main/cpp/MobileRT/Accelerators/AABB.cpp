@@ -30,6 +30,33 @@ bool AABB::intersect (const Ray &ray) const noexcept {
 	return true;
 }
 
+int AABB::getLongestAxis () const noexcept {
+	const float lengthX {pointMax_.x_() - pointMin_.x_()};
+	const float lengthY {pointMax_.y_() - pointMin_.y_()};
+	const float lengthZ {pointMax_.z_() - pointMin_.z_()};
+
+	int longestAxis {lengthX >= lengthY && lengthX >= lengthZ? 0 :
+										lengthY >= lengthZ && lengthY >= lengthZ? 1 :
+										2
+									};
+
+	return longestAxis;
+}
+
+float AABB::getSurfaceArea() const noexcept {
+	const float lengthX {pointMax_.x_() - pointMin_.x_()};
+	const float lengthY {pointMax_.y_() - pointMin_.y_()};
+	const float lengthZ {pointMax_.z_() - pointMin_.z_()};
+
+	const float bottomTopArea {2 * lengthX * lengthZ};
+	const float sideAreaXY {2 * lengthX * lengthY};
+	const float sideAreaZY {2 * lengthZ * lengthY};
+
+	float surfaceArea {bottomTopArea + sideAreaXY + sideAreaZY};
+
+	return surfaceArea;
+}
+
 namespace MobileRT {
 	AABB surroundingBox (AABB box1, AABB box2) noexcept {
 		Point3D min {

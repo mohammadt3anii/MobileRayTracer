@@ -156,7 +156,7 @@ bool RegularGrid::shadowTrace (Intersection *const intersection, Ray &&ray) noex
 }
 
 template<typename T>
-bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitives,
+bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
                             Intersection *const intersection, const Ray ray,
                             const bool shadowTrace) noexcept {
   bool retval {false};
@@ -238,10 +238,10 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitives,
       static_cast<size_t>(X) +
       (static_cast<size_t>(Y) << gridShift_) +
       (static_cast<size_t>(Z) << (gridShift_ * 2))};
-    ::std::vector<T *> list {primitives[index]};
-    for (auto *const pr : list) {
-      if (pr->lastRayID_ != ray.id_) {
-        if (pr->intersect (intersection, ray)) {
+    ::std::vector<T *> primitivesList {primitivesMatrix[index]};
+    for (auto *const primitive : primitivesList) {
+      if (primitive->lastRayID_ != ray.id_) {
+        if (primitive->intersect (intersection, ray)) {
           retval = true;
           if (shadowTrace) {
             return retval;
@@ -287,10 +287,10 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitives,
     const size_t index {static_cast<size_t>(X) +
                         (static_cast<size_t>(Y) << gridShift_) +
                         (static_cast<size_t>(Z) << (gridShift_ * 2))};
-    ::std::vector<T *> list {primitives[index]};
-    for (auto *const pr : list) {
-      if (pr->lastRayID_ != ray.id_) {
-        retval |= pr->intersect (intersection, ray);
+    ::std::vector<T *> primitivesList {primitivesMatrix[index]};
+    for (auto *const primitive : primitivesList) {
+      if (primitive->lastRayID_ != ray.id_) {
+        retval |= primitive->intersect (intersection, ray);
       }
     }
     if (tmax.x_() < tmax.y_()) {

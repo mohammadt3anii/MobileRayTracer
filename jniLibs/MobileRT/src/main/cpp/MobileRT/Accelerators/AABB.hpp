@@ -33,6 +33,10 @@ namespace MobileRT {
 			AABB &operator=(AABB &&AABB) noexcept = default;
 
       bool intersect (const Ray &ray) const noexcept;
+
+      float getSurfaceArea() const noexcept;
+
+      int getLongestAxis () const noexcept;
     };
 
     AABB surroundingBox (AABB box1, AABB box2) noexcept;

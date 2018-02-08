@@ -24,7 +24,8 @@ namespace MobileRT {
       Vector3D m_SR {};
       Vector3D m_CW {};
       Scene *scene_ {};
-      private:
+
+    private:
       template<typename T>
       void addPrimitives
         (::std::vector<T> &primitives, ::std::vector<::std::vector<T *>> &grid_primitives) noexcept;
@@ -34,8 +35,10 @@ namespace MobileRT {
                       Ray ray, bool shadowTrace = false) noexcept;
 
       int bitCounter (unsigned int n) const noexcept;
-      public:
+
+    public:
       explicit RegularGrid () noexcept = default;
+
       explicit RegularGrid (AABB sceneBounds, Scene *scene, int gridSize) noexcept;
 
 			RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
@@ -47,8 +50,12 @@ namespace MobileRT {
 			RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = delete;
 
 			RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
+
       bool trace (Intersection *intersection, const Ray &ray) noexcept;
+
       bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
+
+      bool traceLights (Intersection *const intersection, const Ray ray) const noexcept;
     };
 }//namespace MobileRT
 

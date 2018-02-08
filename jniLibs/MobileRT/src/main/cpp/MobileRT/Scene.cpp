@@ -11,11 +11,20 @@ using ::MobileRT::Plane;
 static unsigned counter {0};
 
 Scene::~Scene() noexcept {
+  //may not free the memory
   this->triangles_.clear ();
   this->spheres_.clear ();
   this->planes_.clear ();
   this->rectangles_.clear ();
   this->lights_.clear ();
+
+  //force free memory
+  std::vector<MobileRT::Primitive<MobileRT::Plane>> ().swap(planes_);
+  std::vector<MobileRT::Primitive<MobileRT::Rectangle>> ().swap(rectangles_);
+  std::vector<MobileRT::Primitive<MobileRT::Sphere>> ().swap(spheres_);
+  std::vector<MobileRT::Primitive<MobileRT::Triangle>> ().swap(triangles_);
+  std::vector<::std::unique_ptr<Light>> ().swap(lights_);
+
   LOG("SCENE DELETED");
 }
 
