@@ -47,17 +47,32 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
       LOG("PLANES");
-      bvhPlanes_ = ::MobileRT::BVH2<MobileRT::Plane> {std::move(scene_.planes_)};
+      bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {std::move(scene_.planes_)};
       LOG("RECTANGLES");
-      bvhRectangles_ = ::MobileRT::BVH2<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
+      bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
       LOG("SPHERES");
-      bvhSpheres_ = ::MobileRT::BVH2<MobileRT::Sphere> {std::move(scene_.spheres_)};
+      bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {std::move(scene_.spheres_)};
       LOG("TRIANGLES");
-      bvhTriangles_ = ::MobileRT::BVH2<MobileRT::Triangle> {std::move(scene_.triangles_)};
+      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {std::move(scene_.triangles_), false};
 
       LOG("Boxes created = ", MobileRT::counter);
       break;
     }
+
+    case Accelerator::BVH2: {
+      LOG("PLANES");
+      bvhPlanes2_ = ::MobileRT::BVH2<MobileRT::Plane> {std::move(scene_.planes_)};
+      LOG("RECTANGLES");
+      bvhRectangles2_ = ::MobileRT::BVH2<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
+      LOG("SPHERES");
+      bvhSpheres2_ = ::MobileRT::BVH2<MobileRT::Sphere> {std::move(scene_.spheres_)};
+      LOG("TRIANGLES");
+      bvhTriangles2_ = ::MobileRT::BVH2<MobileRT::Triangle> {std::move(scene_.triangles_)};
+
+      LOG("Boxes created = ", MobileRT::counter);
+      break;
+    }
+
     case Accelerator::NONE: {
       break;
     }
@@ -76,14 +91,21 @@ bool Shader::shadowTrace (Intersection *const intersection, Ray &&ray) noexcept 
   bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID: {
-      intersected = this->regularGrid_.shadowTrace (intersection, ::std::move (ray));
+      intersected |= this->regularGrid_.shadowTrace (intersection, ::std::move (ray));
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      intersected = this->bvhPlanes_.shadowTrace (intersection, ray);
+      intersected |= this->bvhPlanes_.shadowTrace (intersection, ray);
       intersected |= this->bvhRectangles_.shadowTrace (intersection, ray);
       intersected |= this->bvhSpheres_.shadowTrace (intersection, ray);
       intersected |= this->bvhTriangles_.shadowTrace (intersection, ray);
+      break;
+    }
+    case Accelerator::BVH2: {
+      intersected |= this->bvhPlanes2_.shadowTrace (intersection, ray);
+      intersected |= this->bvhRectangles2_.shadowTrace (intersection, ray);
+      intersected |= this->bvhSpheres2_.shadowTrace (intersection, ray);
+      intersected |= this->bvhTriangles2_.shadowTrace (intersection, ray);
       break;
     }
     case Accelerator::NONE: {
@@ -98,19 +120,27 @@ bool Shader::rayTrace (RGB *const rgb, Intersection *const intersection, Ray &&r
   bool intersected {false};
   switch (accelerator_) {
     case Accelerator::REGULAR_GRID: {
-      intersected = this->regularGrid_.trace (intersection, ray);
+      intersected |= this->regularGrid_.trace (intersection, ray);
       break;
     }
     case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-      intersected = this->bvhPlanes_.trace (intersection, ray);
+      intersected |= this->bvhPlanes_.trace (intersection, ray);
       intersected |= this->bvhRectangles_.trace (intersection, ray);
       intersected |= this->bvhSpheres_.trace (intersection, ray);
       intersected |= this->bvhTriangles_.trace (intersection, ray);
       intersected |= this->scene_.traceLights (intersection, ray);
       break;
     }
+    case Accelerator::BVH2: {
+      intersected |= this->bvhPlanes2_.trace (intersection, ray);
+      intersected |= this->bvhRectangles2_.trace (intersection, ray);
+      intersected |= this->bvhSpheres2_.trace (intersection, ray);
+      intersected |= this->bvhTriangles2_.trace (intersection, ray);
+      intersected |= this->scene_.traceLights (intersection, ray);
+      break;
+    }
     case Accelerator::NONE: {
-      intersected = this->scene_.trace (intersection, ray);
+      intersected |= this->scene_.trace (intersection, ray);
       break;
     }
   }

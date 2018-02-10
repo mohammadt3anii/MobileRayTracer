@@ -80,7 +80,7 @@ Point3D Plane::getPositionMax() const noexcept {
 }
 
 AABB Plane::getAABB() const noexcept {
-  const AABB box {getPositionMin (), getPositionMax ()};
+  const AABB box {getPositionMin () - Epsilon, getPositionMax () + Epsilon};
   return box;
 }
 

@@ -16,6 +16,8 @@ OBJ="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/Wavefron
 MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Sphere.mtl"
 #OBJ="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.obj"
 #MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/conference/conference.mtl"
+#OBJ="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Empty-CO2.obj"
+#MTL="/mnt/D/Android_Studio_Projects/MobileRayTracer/app/src/main/assets/WavefrontOBJs/CornellBox/CornellBox-Empty-CO.mtl"
 
 export ASAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0:detect_odr_violation=1"
 
@@ -23,8 +25,8 @@ export LSAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_stri
 
 SPP="1"
 SPL="1"
-WIDTH="800"
-HEIGHT="800"
+WIDTH="900"
+HEIGHT="900"
 REP="1"
 PRINT="false"
 ASYNC="false"
@@ -42,7 +44,7 @@ function execute {
   THREAD="1"
   SHADER="1"
   SCENE="4"
-  ACC="2"
+  ACC="1"
   PRINT="true"
   SHOWIMAGE="true"
   echo ""

@@ -19,15 +19,22 @@ namespace MobileRT {
     public:
       Scene scene_ {};
       RegularGrid regularGrid_ {};
-      BVH2<MobileRT::Plane> bvhPlanes_ {};
-      BVH2<MobileRT::Rectangle> bvhRectangles_ {};
-      BVH2<MobileRT::Sphere> bvhSpheres_ {};
-      BVH2<MobileRT::Triangle> bvhTriangles_ {};
+
+      BVH<MobileRT::Plane> bvhPlanes_ {};
+      BVH<MobileRT::Rectangle> bvhRectangles_ {};
+      BVH<MobileRT::Sphere> bvhSpheres_ {};
+      BVH<MobileRT::Triangle> bvhTriangles_ {};
+
+      BVH2<MobileRT::Plane> bvhPlanes2_ {};
+      BVH2<MobileRT::Rectangle> bvhRectangles2_ {};
+      BVH2<MobileRT::Sphere> bvhSpheres2_ {};
+      BVH2<MobileRT::Triangle> bvhTriangles2_ {};
 
       enum Accelerator {
         NONE = 0,
         REGULAR_GRID,
-        BOUNDING_VOLUME_HIERARCHY
+        BOUNDING_VOLUME_HIERARCHY,
+        BVH2
       };
 
     private:

@@ -88,8 +88,9 @@ Point3D Triangle::getPositionMax() const noexcept {
   return Point3D (x, y, z);
 }
 
+//TODO: Fix this method (it may be wrong)
 AABB Triangle::getAABB() const noexcept {
-  return AABB {getPositionMin (), getPositionMax ()};
+  return AABB {getPositionMin () - Epsilon, getPositionMax () + Epsilon};
 }
 
 bool Triangle::intersect (const AABB box) const noexcept {

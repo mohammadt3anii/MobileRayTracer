@@ -63,7 +63,7 @@ namespace MobileRT {
         }
 
         const int64_t divide {static_cast<int64_t>(primitives.size()) / 2};
-        LOG("depth = ", depth, ", size = ", primitives.size(), ", divide = ", divide);
+        //LOG("depth = ", depth, ", size = ", primitives.size(), ", divide = ", divide);
 
         if (primitives.size() <= MAX_VECTOR || depth >= MAX_DEPTH) {
           primitives_ = primitives;
@@ -147,7 +147,7 @@ namespace MobileRT {
             }
           }
         }
-        LOG("depth = ", depth, ", size = ", primitives.size(), ", min_SAH_idx = ", min_SAH_idx);
+        //LOG("depth = ", depth, ", size = ", primitives.size(), ", min_SAH_idx = ", min_SAH_idx);
 
         //0 primitives to left || 0 primitives to right
         if (min_SAH_idx == 0 || min_SAH_idx == N - 2) {
