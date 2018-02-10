@@ -138,9 +138,9 @@ namespace MobileRT {
           return;
         }
         uint64_t numberPrimitives {primitives.size()};
-        uint64_t maxDepth {};
-        uint64_t maxNodes {};
-        for (maxDepth = 1; maxNodes * 2 < numberPrimitives; ) {
+        uint64_t maxDepth {0};
+        uint64_t maxNodes {1};
+        while (maxNodes * 2 < numberPrimitives) {
           maxDepth++;
           maxNodes = 1 << maxDepth;
         }

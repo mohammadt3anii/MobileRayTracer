@@ -33,7 +33,7 @@ ifeq ($(S),1)
 endif
 
 ifeq ($(S),2)
-	CXXFLAGS += -O0 -g -fno-optimize-sibling-calls -fno-omit-frame-pointer
+	CXXFLAGS += -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer
 endif
 
 ifeq ($(S),3)

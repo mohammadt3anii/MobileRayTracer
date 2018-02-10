@@ -56,7 +56,7 @@ namespace MobileRT {
     return target;
   }
 
-  const float Epsilon {1.0e-05f};
+  const float Epsilon {1.0e-04f};
   const float RayLengthMax {1.0e+30f};
   const float Pi {3.14159265358979323846f};
   const float Pi_4 {0.78539816339744830962f};

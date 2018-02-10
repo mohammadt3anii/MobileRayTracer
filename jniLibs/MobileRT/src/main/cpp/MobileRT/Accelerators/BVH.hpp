@@ -73,7 +73,7 @@ namespace MobileRT {
           boxes.emplace_back(primitives.at(i).getAABB());
         }
 
-        //const int64_t min_SAH_idx {static_cast<int64_t>(primitives.size()) / 2};
+        //const uint64_t min_SAH_idx {static_cast<int64_t>(primitives.size()) / 2};
         uint64_t min_SAH_idx {0};
         {
           std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
@@ -104,7 +104,7 @@ namespace MobileRT {
         //LOG("depth = ", depth, ", size = ", primitives.size(), ", min_SAH_idx = ", min_SAH_idx);
 
         //0 primitives to left || 0 primitives to right
-        if (min_SAH_idx == 0 || min_SAH_idx == static_cast<int64_t>(N) - 2
+        if (min_SAH_idx == 0 || min_SAH_idx == N - 2
           || primitives.size() <= 10 || depth >= 12
         ) {
           primitives_ = primitives;
