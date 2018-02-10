@@ -11,7 +11,6 @@
 #include <random>
 
 namespace MobileRT {
-  static unsigned counter {0};
 
   template<typename T>
   class BVH final {
@@ -21,79 +20,33 @@ namespace MobileRT {
       ::std::unique_ptr<BVH> right_ {nullptr};
       ::std::vector<MobileRT::Primitive<T>> primitives_ {};
 
-      #define MAX_DEPTH 999
-      #define MAX_VECTOR 1
-
     public:
       explicit BVH () noexcept = default;
 
-      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>> primitives, const unsigned depth = 0) noexcept {
-        if (primitives.empty()) {
-          return;
-        }
-
-        for (uint64_t i {0}; i < primitives.size(); i++) {
-          AABB new_box {primitives.at(i).getAABB()};
-          box_ = surroundingBox(new_box, box_);
-        }
-
-        /*static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
-        static ::std::mt19937 gen (::std::random_device {} ());
-        const float randomNumber {uniform_dist (gen)};
-        const int axis {static_cast<int> (3.0f * randomNumber)};*/
-        const int axis {box_.getLongestAxis()};
-        switch (axis) {
-          case 0:
-            ::std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
-              return a.getAABB().pointMin_.x_() < b.getAABB().pointMin_.x_();
-            });
-            break;
-
-          case 1:
-            ::std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
-              return a.getAABB().pointMin_.y_() < b.getAABB().pointMin_.y_();
-            });
-            break;
-
-          default:
-            ::std::sort(primitives.begin(), primitives.end(), [](const MobileRT::Primitive<T>&a, MobileRT::Primitive<T>& b) noexcept -> bool {
-              return a.getAABB().pointMin_.z_() < b.getAABB().pointMin_.z_();
-            });
-            break;
-        }
-
-        const int64_t divide {static_cast<int64_t>(primitives.size()) / 2};
-        //LOG("depth = ", depth, ", size = ", primitives.size(), ", divide = ", divide);
-
-        if (primitives.size() <= MAX_VECTOR || depth >= MAX_DEPTH) {
-          primitives_ = primitives;
-        } else {
-          using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
-          Iterator leftBegin {primitives.begin()};
-          Iterator leftEnd {primitives.begin() + divide};
-          Iterator rightBegin {primitives.begin() + divide};
-          Iterator rightEnd {primitives.end()};
-
-          ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
-          ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
-
-          left_ = std::make_unique<BVH> (leftVector, depth + 1);
-          right_ = std::make_unique<BVH> (rightVector, depth + 1);
-        }
-        counter++;
-      }
-
-
-      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>>&& primitives, const unsigned depth, const bool /*unused*/) noexcept {
+      explicit BVH<T> (::std::vector<MobileRT::Primitive<T>>&& primitives, const unsigned depth = 0) noexcept {
         if (primitives.empty()) {
           return;
         }
         const uint64_t N {primitives.size()};
 
+        AABB current_box {
+          Point3D {
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max()},
+          Point3D {
+            std::numeric_limits<float>::lowest(),
+            std::numeric_limits<float>::lowest(),
+            std::numeric_limits<float>::lowest()}};
+        for (uint64_t i {0}; i < primitives.size(); i++) {
+          const AABB new_box {primitives.at(i).getAABB()};
+          current_box = surroundingBox(new_box, current_box);
+        }
         for (uint64_t i {0}; i < N; i++) {
           const AABB new_box {primitives.at(i).getAABB()};
           box_ = surroundingBox(new_box, box_);
         }
+
         const int axis {box_.getLongestAxis()};
         switch (axis) {
           case 0:
@@ -120,6 +73,7 @@ namespace MobileRT {
           boxes.emplace_back(primitives.at(i).getAABB());
         }
 
+        //const int64_t min_SAH_idx {static_cast<int64_t>(primitives.size()) / 2};
         uint64_t min_SAH_idx {0};
         {
           std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
@@ -150,7 +104,9 @@ namespace MobileRT {
         //LOG("depth = ", depth, ", size = ", primitives.size(), ", min_SAH_idx = ", min_SAH_idx);
 
         //0 primitives to left || 0 primitives to right
-        if (min_SAH_idx == 0 || min_SAH_idx == N - 2) {
+        if (min_SAH_idx == 0 || min_SAH_idx == static_cast<int64_t>(N) - 2
+          || primitives.size() <= 10 || depth >= 12
+        ) {
           primitives_ = primitives;
         } else {
           using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
@@ -165,8 +121,6 @@ namespace MobileRT {
           left_ = std::make_unique<BVH> (std::move(leftVector), depth + 1);
           right_ = std::make_unique<BVH> (std::move(rightVector), depth + 1);
         }
-
-        counter++;
       }
 
       BVH (const BVH &bVH) noexcept = delete;

@@ -41,10 +41,10 @@ SCENES="2"
 ACCELERATORS="1 2"
 
 function execute {
-  THREAD="1"
+  THREAD="4"
   SHADER="1"
   SCENE="4"
-  ACC="1"
+  ACC="2"
   PRINT="true"
   SHOWIMAGE="true"
   echo ""

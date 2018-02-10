@@ -88,7 +88,7 @@ Point3D Triangle::getPositionMax() const noexcept {
   return Point3D (x, y, z);
 }
 
-//TODO: Fix this method (it may be wrong)
+//TODO (Puscas): Fix this method (it may be wrong)
 AABB Triangle::getAABB() const noexcept {
   return AABB {getPositionMin () - Epsilon, getPositionMax () + Epsilon};
 }

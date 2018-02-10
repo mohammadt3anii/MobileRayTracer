@@ -53,9 +53,7 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
       LOG("SPHERES");
       bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {std::move(scene_.spheres_)};
       LOG("TRIANGLES");
-      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {std::move(scene_.triangles_), false};
-
-      LOG("Boxes created = ", MobileRT::counter);
+      bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {std::move(scene_.triangles_)};
       break;
     }
 
@@ -68,8 +66,6 @@ void Shader::initializeAccelerators (Camera *const camera) noexcept {
       bvhSpheres2_ = ::MobileRT::BVH2<MobileRT::Sphere> {std::move(scene_.spheres_)};
       LOG("TRIANGLES");
       bvhTriangles2_ = ::MobileRT::BVH2<MobileRT::Triangle> {std::move(scene_.triangles_)};
-
-      LOG("Boxes created = ", MobileRT::counter);
       break;
     }
 

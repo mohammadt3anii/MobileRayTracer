@@ -36,7 +36,7 @@ int AABB::getLongestAxis () const noexcept {
 	const float lengthZ {pointMax_.z_() - pointMin_.z_()};
 
 	int longestAxis {lengthX >= lengthY && lengthX >= lengthZ? 0 :
-										lengthY >= lengthZ && lengthY >= lengthZ? 1 :
+										lengthY >= lengthX && lengthY >= lengthZ? 1 :
 										2
 									};
 

@@ -31,7 +31,7 @@ namespace MobileRT {
         (::std::vector<T> &primitives, ::std::vector<::std::vector<T *>> &grid_primitives) noexcept;
 
       template<typename T>
-      bool intersect (const ::std::vector<::std::vector<T *>> &primitives, Intersection *intersection,
+      bool intersect (const ::std::vector<::std::vector<T *>> &primitivesMatrix, Intersection *intersection,
                       Ray ray, bool shadowTrace = false) noexcept;
 
       int bitCounter (unsigned int n) const noexcept;
@@ -55,7 +55,7 @@ namespace MobileRT {
 
       bool shadowTrace (Intersection *intersection, Ray &&ray) noexcept;
 
-      bool traceLights (Intersection *const intersection, const Ray ray) const noexcept;
+      bool traceLights (Intersection *intersection, Ray ray) const noexcept;
     };
 }//namespace MobileRT
 

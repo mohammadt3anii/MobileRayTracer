@@ -11,7 +11,6 @@
 #include <random>
 
 namespace MobileRT {
-  static unsigned counter2 {0};
 
   template<typename T>
   class BVH2 final {
@@ -21,11 +20,8 @@ namespace MobileRT {
       ::std::vector<::MobileRT::AABB> boxes_ {};
       ::std::vector<::std::vector<MobileRT::Primitive<T>>> primitives_ {};
 
-      #define MAX_DEPTH 999
-      #define MAX_VECTOR 1
-
     private:
-      AABB build(::std::vector<MobileRT::Primitive<T>> primitives, const unsigned depth = 0, const uint64_t currentNodeId = 0) noexcept {
+      AABB build(::std::vector<MobileRT::Primitive<T>>&& primitives, const unsigned depth, const uint64_t currentNodeId) noexcept {
         if (primitives.empty()) {
           if (depth == 0) {
             boxes_.emplace_back(AABB{});
@@ -38,10 +34,16 @@ namespace MobileRT {
         numberDepth_ = depth > numberDepth_? depth : numberDepth_;
 
         AABB current_box {
-          Point3D {RayLengthMax, RayLengthMax, RayLengthMax},
-          Point3D {-RayLengthMax, -RayLengthMax, -RayLengthMax}};
+          Point3D {
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max()},
+          Point3D {
+            std::numeric_limits<float>::lowest(),
+            std::numeric_limits<float>::lowest(),
+            std::numeric_limits<float>::lowest()}};
         for (uint64_t i {0}; i < primitives.size(); i++) {
-          AABB new_box {primitives.at(i).getAABB()};
+          const AABB new_box {primitives.at(i).getAABB()};
           current_box = surroundingBox(new_box, current_box);
         }
 
@@ -67,6 +69,33 @@ namespace MobileRT {
         }
 
         int64_t divide {static_cast<int64_t>(primitives.size()) / 2};
+        /*uint64_t divide {0};
+        {
+          std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
+          AABB left_box {};
+          for (uint64_t i {0}; i < N - 1; i++) {
+            left_box = surroundingBox(left_box, boxes.at(i));
+            left_area.insert(left_area.end(), left_box.getSurfaceArea());
+          }
+
+          std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
+          AABB right_box {};
+          for (uint64_t i {N - 1}; i > 0; i--) {
+            right_box = surroundingBox(right_box, boxes.at(i));
+            right_area.insert(right_area.begin(), right_box.getSurfaceArea());
+          }
+
+          float min_SAH {std::numeric_limits<float>::max()};
+          for (uint64_t i {0}; i < N - 1; i++) {
+            const float SAH_left {i * left_area.at(i)};
+            const float SAH_right {(N - i - 1) * right_area.at(i)};
+            const float SAH {SAH_left + SAH_right};
+            if (SAH < min_SAH) {
+              divide = i;
+              min_SAH = SAH;
+            }
+          }
+        }*/
         divide = primitives.size() % 2 == 0? divide : divide + 1;
 
         const uint64_t aux {static_cast<uint64_t>(1 << depth)};
@@ -89,12 +118,11 @@ namespace MobileRT {
           ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
           ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
-          AABB leftBox {build (leftVector, depth + 1, left)};
-          AABB rightBox {build (rightVector, depth + 1, right)};
+          AABB leftBox {build (std::move(leftVector), depth + 1, left)};
+          AABB rightBox {build (std::move(rightVector), depth + 1, right)};
           current_box = surroundingBox(leftBox, rightBox);
         }
         boxes_.at(currentNodeId) = current_box;
-        counter2++;
         return current_box;
       }
 
@@ -123,7 +151,7 @@ namespace MobileRT {
         //LOG ("maxNodes = ", maxNodes);
         boxes_.resize(maxNodes);
 
-        build(primitives, depth, currentId);
+        build(std::move(primitives), depth, currentId);
       }
 
       BVH2 (const BVH2 &bVH) noexcept = delete;
@@ -139,7 +167,7 @@ namespace MobileRT {
       bool trace (::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray, const unsigned depth = 0, const uint64_t currentNodeId = 0) noexcept {
         if (boxes_.at(currentNodeId).intersect(ray)) {
           //node at the bottom of tree - no childs
-          const uint64_t aux {static_cast<unsigned long>(1 << depth)};
+          const uint64_t aux {static_cast<uint64_t>(1 << depth)};
           if (depth == numberDepth_) {
             const uint64_t primitiveId {(currentNodeId - (aux - 1))};
             bool res {false};
@@ -160,7 +188,7 @@ namespace MobileRT {
       bool shadowTrace (::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray, const unsigned depth = 0, const uint64_t currentNodeId = 0) noexcept {
         if (boxes_.at(currentNodeId).intersect(ray)) {
           //node at the bottom of tree - no childs
-          const uint64_t aux {static_cast<unsigned long>(1 << depth)};
+          const uint64_t aux {static_cast<uint64_t>(1 << depth)};
           if (depth == numberDepth_) {
             const uint64_t primitiveId {(currentNodeId - (aux - 1))};
             for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
