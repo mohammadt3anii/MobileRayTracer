@@ -27,7 +27,7 @@ namespace MobileRT {
         if (primitives.empty()) {
           return;
         }
-        const uint64_t N {primitives.size()};
+          const uint32_t N{static_cast<uint32_t>(primitives.size())};
 
         AABB current_box {
           Point3D {
@@ -38,11 +38,11 @@ namespace MobileRT {
             std::numeric_limits<float>::lowest(),
             std::numeric_limits<float>::lowest(),
             std::numeric_limits<float>::lowest()}};
-        for (uint64_t i {0}; i < primitives.size(); i++) {
+          for (uint32_t i{0}; i < primitives.size(); i++) {
           const AABB new_box {primitives.at(i).getAABB()};
           current_box = surroundingBox(new_box, current_box);
         }
-        for (uint64_t i {0}; i < N; i++) {
+          for (uint32_t i{0}; i < N; i++) {
           const AABB new_box {primitives.at(i).getAABB()};
           box_ = surroundingBox(new_box, box_);
         }
@@ -69,7 +69,7 @@ namespace MobileRT {
         }
 
         std::vector<AABB> boxes {};
-        for (uint64_t i {0}; i < N; i++) {
+          for (uint32_t i{0}; i < N; i++) {
           boxes.emplace_back(primitives.at(i).getAABB());
         }
 
@@ -78,20 +78,20 @@ namespace MobileRT {
         {
           std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
           AABB left_box {};
-          for (uint64_t i {0}; i < N - 1; i++) {
+            for (uint32_t i{0}; i < N - 1; i++) {
             left_box = surroundingBox(left_box, boxes.at(i));
             left_area.insert(left_area.end(), left_box.getSurfaceArea());
           }
 
           std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
           AABB right_box {};
-          for (uint64_t i {N - 1}; i > 0; i--) {
+            for (uint32_t i{N - 1}; i > 0; i--) {
             right_box = surroundingBox(right_box, boxes.at(i));
             right_area.insert(right_area.begin(), right_box.getSurfaceArea());
           }
 
           float min_SAH {std::numeric_limits<float>::max()};
-          for (uint64_t i {0}; i < N - 1; i++) {
+            for (uint32_t i{0}; i < N - 1; i++) {
             const float SAH_left {i * left_area.at(i)};
             const float SAH_right {(N - i - 1) * right_area.at(i)};
             const float SAH {SAH_left + SAH_right};
@@ -111,8 +111,8 @@ namespace MobileRT {
         } else {
           using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
           Iterator leftBegin {primitives.begin()};
-          Iterator leftEnd {primitives.begin() + static_cast<int64_t>(min_SAH_idx) + 1};
-          Iterator rightBegin {primitives.begin() + static_cast<int64_t>(min_SAH_idx) + 1};
+            Iterator leftEnd{primitives.begin() + static_cast<int32_t>(min_SAH_idx) + 1};
+            Iterator rightBegin{primitives.begin() + static_cast<int32_t>(min_SAH_idx) + 1};
           Iterator rightEnd {primitives.end()};
 
           ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);

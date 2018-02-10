@@ -251,7 +251,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerAccelerator_.setMinValue(0);
-        final String[] accelerators = {"Naive", "RegGrid", "BVH", "Nothing"};
+        final String[] accelerators = {"Naive", "RegGrid", "BVH", "BVH2"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
         pickerAccelerator_.setDisplayedValues(accelerators);
         pickerAccelerator_.setWrapSelectorWheel(true);
@@ -301,14 +301,14 @@ public final class MainActivity extends Activity {
         switch (drawView_.viewText_.isWorking()) {
             case 0://if ray-tracer is idle
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
-                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
                     //final String obj = "WavefrontOBJs/conference/conference";
                     //objText_ = readTextAsset(obj + ".obj");
                     //matText_ = readTextAsset(obj + ".mtl");
-                    objText_ = obj + "2.obj";
+                    objText_ = obj + ".obj";
                     matText_ = obj + ".mtl";
                 }
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
