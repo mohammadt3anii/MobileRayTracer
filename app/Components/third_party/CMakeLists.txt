@@ -1,0 +1,16 @@
+cmake_minimum_required( VERSION 3.6.0 )
+
+if( DEFINED NO_ANDROID )
+	#set( CMAKE_C_COMPILER "clang" CACHE STRING "FORCE THESE FLAGS" FORCE )
+	#set( CMAKE_CXX_COMPILER "clang++" CACHE STRING "FORCE THESE FLAGS" FORCE )
+	
+	#set( CMAKE_CXX_LINKER "/path/to/linker" CACHE STRING "FORCE THESE FLAGS" FORCE )
+	#set( CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_LINKER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>" )
+
+	#set( CMAKE_C_LINK_EXECUTABLE "c:\\MoSync\\bin\\pipe-tool.exe" )
+
+	#set( CMAKE_CXX_FLAGS "-fPIC -std=c++14 -MMD -Weverything" CACHE STRING "FORCE THESE FLAGS" FORCE )
+	#set( CMAKE_SHARED_LINKER_FLAGS "-lc++ -fPIC -std=c++14 -MMD -Weverything" CACHE STRING "FORCE THESE FLAGS" FORCE )
+endif( )
+
+add_subdirectory( tinyobjloader )

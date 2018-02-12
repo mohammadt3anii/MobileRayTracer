@@ -8,7 +8,6 @@ android {
             storePassword "123456"
         }
     }
-    publishNonDefault true
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
@@ -47,9 +46,5 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    debugCompile project(path: ':MobileRT', configuration: 'debug')
-    debugCompile project(path: ':Components', configuration: 'debug')
-    releaseCompile project(path: ':MobileRT', configuration: 'release')
-    releaseCompile project(path: ':Components', configuration: 'release')
+    implementation 'com.android.support:appcompat-v7:27.0.2'
 }

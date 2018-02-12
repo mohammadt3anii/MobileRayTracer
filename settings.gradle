@@ -1,7 +1,3 @@
-include ":MobileRT"
-include ":Components"
 include ":app"
 //noinspection GroovyResultOfAssignmentUsed
-project(":MobileRT").projectDir = new File("jniLibs/MobileRT")
 //noinspection GroovyResultOfAssignmentUsed
-project(":Components").projectDir = new File("jniLibs/Components")
