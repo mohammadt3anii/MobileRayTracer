@@ -22,7 +22,6 @@ CXXFLAGS := -std=c++14 -fPIC $(INCLUDES) -DNO_ANDROID
 CXXFLAGS += -Wall -Wpedantic -Wextra -MMD -pedantic -Wfatal-errors
 CXXFLAGS += -Wno-padded -Wno-float-equal
 CXXFLAGS += -fno-exceptions -fno-asynchronous-unwind-tables -fno-rtti
-LDFLAGS += -libsupc++ -libc++abi
 
 ifeq ($(S),0)
 	CXXFLAGS += -O3 -march=native

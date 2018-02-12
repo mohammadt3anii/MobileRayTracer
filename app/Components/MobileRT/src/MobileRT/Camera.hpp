@@ -31,7 +31,7 @@ namespace MobileRT {
 
         Camera(const Camera &camera) noexcept;
 
-        Camera(Camera &&camera) noexcept = default;
+        Camera(Camera &&camera) noexcept = delete;
 
         virtual ~Camera() noexcept;
 

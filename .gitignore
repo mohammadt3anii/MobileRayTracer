@@ -1,11 +1,12 @@
 **/*.iml
 **/local.properties
-**/build
+**/build*
 **/.externalNativeBuild
 **/.idea
 **/.vscode
 **/.fuse*
 **/.gradle
+**/.settings
 **/raytracer
 **/gtest
 **/*.d
@@ -19,5 +20,5 @@
 **/*.py
 **/*.callgrind
 **/*.so
+**/*.dat
 **/node_modules/**
-**/jniLibs/*/*.dat

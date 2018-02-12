@@ -1,4 +1,4 @@
-#include "../MobileRT/src/main/cpp/MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/Shapes/Plane.hpp"
 #include <gtest/gtest.h>
 
 using ::MobileRT::AABB;

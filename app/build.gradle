@@ -16,9 +16,16 @@ android {
         versionCode 1
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
+        externalNativeBuild {
+            cmake {
+                arguments   "-DCMAKE_VERBOSE_MAKEFILE=ON"
+            }
+        }
     }
     externalNativeBuild {
-        cmake { path "CMakeLists.txt" }
+        cmake {
+            path "CMakeLists.txt"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -26,13 +33,11 @@ android {
     }
     buildTypes {
         debug {
-            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
             debuggable true
             jniDebuggable true
         }
         release {
-            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.Puscas
             debuggable false
             jniDebuggable false

@@ -1,7 +1,7 @@
-[submodule "third-party/tinyobjloader"]
+[submodule "third_party/tinyobjloader"]
 	path = app/Components/third_party/tinyobjloader
 	url = https://github.com/syoyo/tinyobjloader.git
 
-[submodule "third-party/googletest"]
-	path = app/Components/third_party/googletest
+[submodule "third_party/googletest"]
+	path = app/Unit_Testing/third_party/googletest
 	url = https://github.com/google/googletest.git

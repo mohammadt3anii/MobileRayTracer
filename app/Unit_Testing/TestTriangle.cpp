@@ -1,4 +1,4 @@
-#include "../MobileRT/src/main/cpp/MobileRT/Shapes/Triangle.hpp"
+#include "MobileRT/Shapes/Triangle.hpp"
 #include <gtest/gtest.h>
 
 using ::MobileRT::AABB;
@@ -21,45 +21,45 @@ protected:
 };
 
 TEST_F(TestTriangle, ConstructorVALUES) {
-	ASSERT_EQ(0, triangle->pointA_.x_);
-	ASSERT_EQ(0, triangle->pointA_.y_);
-	ASSERT_EQ(0, triangle->pointA_.z_);
+	ASSERT_EQ(0, triangle->pointA_.x_());
+	ASSERT_EQ(0, triangle->pointA_.y_());
+	ASSERT_EQ(0, triangle->pointA_.z_());
 
-	ASSERT_EQ(0, triangle->pointB_.x_);
-	ASSERT_EQ(1, triangle->pointB_.y_);
-	ASSERT_EQ(0, triangle->pointB_.z_);
+	ASSERT_EQ(0, triangle->pointB_.x_());
+	ASSERT_EQ(1, triangle->pointB_.y_());
+	ASSERT_EQ(0, triangle->pointB_.z_());
 
-	ASSERT_EQ(0, triangle->pointC_.x_);
-	ASSERT_EQ(0, triangle->pointC_.y_);
-	ASSERT_EQ(1, triangle->pointC_.z_);
+	ASSERT_EQ(0, triangle->pointC_.x_());
+	ASSERT_EQ(0, triangle->pointC_.y_());
+	ASSERT_EQ(1, triangle->pointC_.z_());
 
-	ASSERT_EQ(0, triangle->AC_.x_);
-	ASSERT_EQ(0, triangle->AC_.y_);
-	ASSERT_EQ(1, triangle->AC_.z_);
+	ASSERT_EQ(0, triangle->AC_.x_());
+	ASSERT_EQ(0, triangle->AC_.y_());
+	ASSERT_EQ(1, triangle->AC_.z_());
 
-	ASSERT_EQ(0, triangle->AB_.x_);
-	ASSERT_EQ(1, triangle->AB_.y_);
-	ASSERT_EQ(0, triangle->AB_.z_);
+	ASSERT_EQ(0, triangle->AB_.x_());
+	ASSERT_EQ(1, triangle->AB_.y_());
+	ASSERT_EQ(0, triangle->AB_.z_());
 
-	ASSERT_EQ(0, triangle->BC_.x_);
-	ASSERT_EQ(-1, triangle->BC_.y_);
-	ASSERT_EQ(1, triangle->BC_.z_);
+	ASSERT_EQ(0, triangle->BC_.x_());
+	ASSERT_EQ(-1, triangle->BC_.y_());
+	ASSERT_EQ(1, triangle->BC_.z_());
 
-	ASSERT_FLOAT_EQ(1, triangle->normal_.x_);
-	ASSERT_EQ(0, triangle->normal_.y_);
-	ASSERT_EQ(0, triangle->normal_.z_);
+	ASSERT_FLOAT_EQ(1, triangle->normal_.x_());
+	ASSERT_EQ(0, triangle->normal_.y_());
+	ASSERT_EQ(0, triangle->normal_.z_());
 }
 
 TEST_F(TestTriangle, AABB) {
 	AABB box = triangle->getAABB();
 
-	ASSERT_EQ(0, box.pointMin_.x_);
-	ASSERT_EQ(0, box.pointMin_.y_);
-	ASSERT_EQ(0, box.pointMin_.z_);
+	ASSERT_EQ(0, box.pointMin_.x_());
+	ASSERT_EQ(0, box.pointMin_.y_());
+	ASSERT_EQ(0, box.pointMin_.z_());
 
-	ASSERT_EQ(0, box.pointMax_.x_);
-	ASSERT_EQ(1, box.pointMax_.y_);
-	ASSERT_EQ(1, box.pointMax_.z_);
+	ASSERT_EQ(0, box.pointMax_.x_());
+	ASSERT_EQ(1, box.pointMax_.y_());
+	ASSERT_EQ(1, box.pointMax_.z_());
 }
 
 TEST_F(TestTriangle, intersectBoxInside01) {
