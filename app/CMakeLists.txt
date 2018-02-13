@@ -1,34 +1,49 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
+string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_L )
+if( CMAKE_BUILD_TYPE_L MATCHES debug )
+	if( DEFINED ANDROID )
+		set( CMAKE_DEBUG_POSTFIX "" )
+	else()
+		set( CMAKE_DEBUG_POSTFIX "d" )
+	endif()
+endif()
+
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+
 add_subdirectory( Components )
 add_subdirectory( Unit_Testing )
 
 if( NOT DEFINED ANDROID )
-	if( NOT CMAKE_CXX_FLAGS MATCHES ".*-fPIC.*" )
+	string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_CXX_FLAGS_L )
+	if( NOT CMAKE_CXX_FLAGS_L MATCHES ".*-fpic.*" )
 		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" CACHE STRING "CUSTOM" FORCE )
 	endif()
 endif ()
 
-project( DrawView VERSION 1.0 LANGUAGES CXX )
+project( AppInterface VERSION 1.0.0.0 LANGUAGES CXX )
 
 file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/*.cpp" )
 
-if( NOT DEFINED ANDROID )
+if( DEFINED ANDROID )
+	file( GLOB_RECURSE MOBILE_JNI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/*.cpp" )
+	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_JNI_SOURCES} )
+else ()
 	find_package( GTK2 REQUIRED )
-	file( GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/GTK_Interface/*.cpp" )
-	add_executable( ${PROJECT_NAME} ${SCENES_SOURCES} ${MOBILE_APP_SOURCES} )
-	set( NO_ANDROID "1" )
-elseif ( NOT DEFINED NO_ANDROID )
-	file( GLOB_RECURSE MOBILE_APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/*.cpp" )
-	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_APP_SOURCES} )
+	file( GLOB_RECURSE MOBILE_GTK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/GTK_Interface/*.cpp" )
+	add_executable( ${PROJECT_NAME} ${SCENES_SOURCES} ${MOBILE_GTK_SOURCES} )
 endif()
+
+set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} )
 
 set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Components/src" )
 set( SCENES_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Scenes" )
 
-target_include_directories( Components PUBLIC "${MOBILE_RC_HEADERS}" )
-target_include_directories( Components PUBLIC "${SCENES_HEADERS}" )
-target_include_directories( Components PUBLIC "${MOBILE_APP_SOURCES}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RC_HEADERS}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_APP_SOURCES}" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 
@@ -39,17 +54,17 @@ target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
-if( NOT DEFINED ANDROID )
-  target_compile_definitions( ${PROJECT_NAME} PRIVATE -DNO_ANDROID=1 )
+if( DEFINED ANDROID )
+	target_compile_definitions( ${PROJECT_NAME} PRIVATE -DANDROID=1 )
+	target_link_libraries( ${PROJECT_NAME} PRIVATE android jnigraphics )
+else()
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
 	target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full -w )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" )
-elseif( DEFINED ANDROID )
-	target_link_libraries( ${PROJECT_NAME} PRIVATE android jnigraphics --verbose )
-endif( )
+endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PRIVATE Components tinyobjloader --verbose
+PRIVATE Components tinyobjloader
 general -O3
 general -discard-all
 general -fno-rtti

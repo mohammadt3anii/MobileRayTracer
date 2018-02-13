@@ -40,7 +40,7 @@ TEST_F(TestPlane, IntersectBoxOutsideY) {
 
 TEST_F(TestPlane, IntersectBoxInsideY) {
 	Plane plane (Point3D(0,0,0), Vector3D(0,1,0));
-	AABB box (Point3D(0, -0.5, 0), Point3D(0, 0.5, 0));
+	AABB box (Point3D(0, -0.5f, 0), Point3D(0, 0.5, 0));
 	const bool result (plane.intersect(box));
 	ASSERT_EQ(true, result);
 }
@@ -54,23 +54,23 @@ TEST_F(TestPlane, IntersectBoxOutsideZ) {
 
 TEST_F(TestPlane, IntersectBoxInsideZ) {
 	Plane plane (Point3D(0,0,0), Vector3D(0,0,-1));
-	AABB box (Point3D(0, 0, -1.5), Point3D(0, 1, 2.5));
+	AABB box (Point3D(0, 0, -1.5f), Point3D(0, 1, 2.5));
 	const bool result (plane.intersect(box));
 	ASSERT_EQ(true, result);
 }
 
 TEST_F(TestPlane, IntersectBoxInsideZ2) {
 	Plane plane (Point3D(0,0,0), Vector3D(0,0,1));
-	AABB box (Point3D(0, 0, -1.5), Point3D(0, 1, 2.5));
+	AABB box (Point3D(0, 0, -1.5f), Point3D(0, 1, 2.5));
 	const bool result (plane.intersect(box));
 	ASSERT_EQ(true, result);
 }
 
 TEST_F(TestPlane, DistancePoint) {
 	Plane plane (Point3D(0,0,0), Vector3D(0,0,1));
-	Point3D p(0, 0, -1.5);
+	Point3D p(0, 0, -1.5f);
 	const float result (plane.distance(p));
-	const float expected (-1.5);
+	const float expected (-1.5f);
 	ASSERT_LE(expected, result);
 }
 

@@ -26,7 +26,7 @@ public final class MainActivity extends Activity {
     static {
         System.loadLibrary("MobileRT");
         System.loadLibrary("Components");
-        System.loadLibrary("DrawView");
+        System.loadLibrary("AppInterface");
     }
 
     private DrawView drawView_;

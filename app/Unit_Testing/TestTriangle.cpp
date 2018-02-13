@@ -96,23 +96,23 @@ TEST_F(TestTriangle, intersectBoxInside04) {
 
 TEST_F(TestTriangle, intersectBoxInside05) {
 	Point3D min {-1, -1, -1};
-	Point3D max {0.1, 0.1, 0.1};
+	Point3D max {0.1f, 0.1f, 0.1f};
 	AABB box {min, max};
 	bool intersected = triangle->intersect(box);
 	ASSERT_EQ(true, intersected);
 }
 
 TEST_F(TestTriangle, intersectBoxInside06) {
-	Point3D min {-1, 0.4, 0.4};
-	Point3D max {1, 1.4, 1.4};
+	Point3D min {-1, 0.4f, 0.4f};
+	Point3D max {1, 1.4f, 1.4f};
 	AABB box {min, max};
 	bool intersected = triangle->intersect(box);
 	ASSERT_EQ(true, intersected);
 }
 
 TEST_F(TestTriangle, intersectBoxInside07) {
-	Point3D min {-1, 0.4, 0.7};
-	Point3D max {1, 1.4, 1.4};
+	Point3D min {-1, 0.4f, 0.7f};
+	Point3D max {1, 1.4f, 1.4f};
 	AABB box {min, max};
 	bool intersected = triangle->intersect(box);
 	ASSERT_EQ(false, intersected);
@@ -123,8 +123,8 @@ TEST_F(TestTriangle, intersectBoxInside08) {
 		::MobileRT::Point3D {10.0f, 0.0f, 10.0f},
 		::MobileRT::Point3D {0.0f, 0.0f, 10.0f},
 		::MobileRT::Point3D {0.0f, 10.0f, 10.0f}};
-	Point3D min {1.25, 1.25, 10};
-	Point3D max {2.5, 2.5, 10};
+	Point3D min {1.25f, 1.25f, 10};
+	Point3D max {2.5f, 2.5f, 10};
 	AABB box {min, max};
 	bool intersected = triangle2.intersect(box);
 	ASSERT_EQ(true, intersected);
@@ -144,11 +144,11 @@ TEST_F(TestTriangle, intersectBoxInside09) {
 
 TEST_F(TestTriangle, intersectBoxInside10) {
 	Triangle triangle2 {
-		::MobileRT::Point3D {1, 1.59000003, -1.03999996},
-		::MobileRT::Point3D {-1.01999998, 1.59000003, -1.03999996},
-		::MobileRT::Point3D {-0.990000009, 0, -1.03999996}};
-	Point3D min {-11.0200005, 0.794949531, -11.04};
-	Point3D max {-0.0100002289, 11.5899992, -0.0250005722};
+		::MobileRT::Point3D {1, 1.59000003f, -1.03999996f},
+		::MobileRT::Point3D {-1.01999998f, 1.59000003f, -1.03999996f},
+		::MobileRT::Point3D {-0.990000009f, 0, -1.03999996f}};
+	Point3D min {-11.0200005f, 0.794949531f, -11.04f};
+	Point3D max {-0.0100002289f, 11.5899992f, -0.0250005722f};
 	AABB box {min, max};
 	bool intersected = triangle2.intersect(box);
 	ASSERT_EQ(true, intersected);

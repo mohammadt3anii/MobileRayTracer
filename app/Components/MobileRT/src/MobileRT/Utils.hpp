@@ -13,7 +13,7 @@
 #include <thread>
 #include <vector>
 
-#ifndef NO_ANDROID
+#ifdef ANDROID
 
 #include <android/log.h>
 
@@ -31,12 +31,12 @@ namespace MobileRT {
         ::std::ostringstream oss{""};
         static_cast<void> (::std::initializer_list<int> {(oss << ::std::move(args), 0)...});
         oss << '\n';
-#ifdef NO_ANDROID
-        ::std::cout << oss.str();
-#else
+#ifdef ANDROID
         __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
-        const ::std::chrono::duration<int, ::std::micro> time{10};
-        ::std::this_thread::sleep_for(time);
+        const ::std::chrono::duration<int, ::std::micro> timeToSleep {10};
+        ::std::this_thread::sleep_for(timeToSleep);
+#else
+        ::std::cout << oss.str();
 #endif
     }
 

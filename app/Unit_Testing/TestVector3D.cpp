@@ -11,7 +11,7 @@ protected:
 
 	virtual void SetUp() {
 		vector = new Vector3D(1.0f, 2.0f, 3.0f);
-		const float magnitude (::std::sqrt(1*1 + 2*2 + 3*3));
+		const float magnitude (static_cast<float>(::std::sqrt(1*1 + 2*2 + 3*3)));
 
 		ASSERT_EQ(1.0f, vector->x_());
 		ASSERT_EQ(2.0f, vector->y_());
@@ -65,7 +65,7 @@ TEST_F(TestVector3D, ConstructorPoints) {
 	Point3D point1(3.0f, 2.0f, 1.0f);
 	Point3D point2(1.0f, 2.0f, 3.0f);
 	Vector3D vector1(point1, point2);
-	const float magnitude(::std::sqrt(2*2 + 0*0 + -2*-2));
+	const float magnitude(static_cast<float>(::std::sqrt(2*2 + 0*0 + -2*-2)));
 
 	ASSERT_EQ(3.0f, point1.x_());
 	ASSERT_EQ(2.0f, point1.y_());
@@ -84,7 +84,7 @@ TEST_F(TestVector3D, ConstructorPoints) {
 TEST_F(TestVector3D, ConstructorCrossProduct) {
 	Vector3D vector1(3.0f, 2.0f, 1.0f);
 	Vector3D vector2(*vector, vector1);
-	const float magnitude(::std::sqrt(-4*-4 + 8*8 + -4*-4));
+	const float magnitude(static_cast<float>(::std::sqrt(-4*-4 + 8*8 + -4*-4)));
 
 	ASSERT_EQ(3.0f, vector1.x_());
 	ASSERT_EQ(2.0f, vector1.y_());
