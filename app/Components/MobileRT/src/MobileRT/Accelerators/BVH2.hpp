@@ -113,7 +113,7 @@ namespace MobileRT {
             //LOG("leftChild = ", left, ", rightChild = ", right);
             //LOG("numberPrimitives_ = ", numberPrimitives_, ", boxesSize = ", boxes_.size());
 
-            if (numberPrimitives_ <= static_cast<int64_t>(aux * 2)) {
+            if (numberPrimitives_ <= static_cast<int64_t>(aux) * 2) {
                 primitives_.emplace_back(primitives);
             } else {
                 using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;

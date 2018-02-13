@@ -14,6 +14,7 @@ COMPONENTS_THIRDPARTY="${MOBILERT_DIR}/app/Components/third_party"
 
 GTK_HEADERS=$(pkg-config --cflags gtk+-2.0)
 GTK_HEADERS=${GTK_HEADERS//-I/-isystem}
+GSL_HEADERS="${MOBILERT_DIR}/app/third_party/GSL/include"
 
 if [ -z "${PLOT_GRAPHS}" ]; then
   PLOT_GRAPHS="Plot_Graphs"
@@ -81,8 +82,7 @@ function clangtidy {
 	-analyze-temporary-dtors \
 	-checks='*,-*llvm-header-guard*' \
 	-header-filter='.*' \
-	-p \
-	${MOBILERT_SRCS}/*/*.*pp \
+  ${MOBILERT_SRCS}/*/*.*pp \
   ${MOBILERT_SRCS}/*/*/*.*pp \
   ${COMPONENTS_SRCS}/*/*/*.*pp \
 	${GTK_INTERFACE_SRCS}/*.*pp \
@@ -93,6 +93,7 @@ function clangtidy {
   -I ${GTK_INTERFACE_SRCS} \
   -I ${SCENES_SRCS} \
 	-isystem ${COMPONENTS_THIRDPARTY} \
+  -isystem ${GSL_HEADERS} \
 	-isystem /usr/include/c++/v1 \
 	-isystem /usr/lib/gcc/x86_64-linux-gnu/5/include \
   -isystem /usr/include/glib-2.0/gobject \

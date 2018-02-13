@@ -41,7 +41,7 @@ else()
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PUBLIC atomic PRIVATE
+PUBLIC atomic GSL PRIVATE
 general -O3
 general -discard-all
 general -fno-rtti

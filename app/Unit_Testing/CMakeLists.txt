@@ -1,7 +1,5 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
-add_subdirectory( third_party )
-
 project( GoogleTest VERSION 1.0.0.0 LANGUAGES CXX )
 
 file( GLOB_RECURSE GTEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" )
@@ -12,7 +10,7 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_P
 set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Components/src" )
 set( SCENES_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Scenes" )
 
-target_include_directories( ${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${THIRD_PARTY_HEADERS}/googletest/googletest/include" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "/usr/include/libcxxabi" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )

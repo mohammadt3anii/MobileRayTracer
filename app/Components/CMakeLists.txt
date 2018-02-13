@@ -1,6 +1,5 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
-add_subdirectory( third_party )
 add_subdirectory( MobileRT )
 
 if ( CMAKE_CXX_FLAGS MATCHES "-Wa,--noexecstack" )
@@ -16,7 +15,6 @@ project( Components VERSION 1.0.0.0 LANGUAGES CXX )
 file( GLOB_RECURSE MOBILE_RC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp" )
 set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}" )
 
-set( THIRD_PARTY_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/third_party" )
 set( MOBILE_RT_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/MobileRT/src" )
 
 add_library( ${PROJECT_NAME} SHARED ${MOBILE_RC_SOURCES} )

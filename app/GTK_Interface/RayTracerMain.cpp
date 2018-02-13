@@ -2,6 +2,8 @@
 #include "MobileRT/Utils.hpp"
 #include <cmath>
 #include <gdk/gdkkeysyms.h>
+#include <gsl/gsl>
+#include <gsl/multi_span>
 #include <gtk/gtk.h>
 #include <iostream>
 
@@ -10,32 +12,33 @@ int main(int argc, char **argv) noexcept {
         ::std::cerr << "Not enough arguments provided" << '\n';
         return 1;
     }
+    const gsl::multi_span<char*> args {gsl::multi_span<char*>(argv, argc)};
 
-    const int threads{static_cast<int> (strtol(argv[1], nullptr, 0))};
-    const int shader{static_cast<int> (strtol(argv[2], nullptr, 0))};
-    const int scene{static_cast<int> (strtol(argv[3], nullptr, 0))};
-    const int samplesPixel{static_cast<int> (strtol(argv[4], nullptr, 0))};
-    const int samplesLight{static_cast<int> (strtol(argv[5], nullptr, 0))};
+    const int threads{static_cast<int> (strtol(args[1], nullptr, 0))};
+    const int shader{static_cast<int> (strtol(args[2], nullptr, 0))};
+    const int scene{static_cast<int> (strtol(args[3], nullptr, 0))};
+    const int samplesPixel{static_cast<int> (strtol(args[4], nullptr, 0))};
+    const int samplesLight{static_cast<int> (strtol(args[5], nullptr, 0))};
 
     const int width_{
-            ::MobileRT::roundDownToMultipleOf(static_cast<int> (strtol(argv[6], nullptr, 0)),
+            ::MobileRT::roundDownToMultipleOf(static_cast<int> (strtol(args[6], nullptr, 0)),
                                               static_cast<int>(::std::sqrt(
                                                       ::MobileRT::NumberOfBlocks)))};
 
     const int height_{
-            ::MobileRT::roundDownToMultipleOf(static_cast<int> (strtol(argv[7], nullptr, 0)),
+            ::MobileRT::roundDownToMultipleOf(static_cast<int> (strtol(args[7], nullptr, 0)),
                                               static_cast<int>(::std::sqrt(
                                                       ::MobileRT::NumberOfBlocks)))};
 
-    const int accelerator{static_cast<int> (strtol(argv[8], nullptr, 0))};
+    const int accelerator{static_cast<int> (strtol(args[8], nullptr, 0))};
 
-    const int repeats{static_cast<int> (strtol(argv[9], nullptr, 0))};
-    const char *const pathObj{argv[10]};
-    const char *const pathMtl{argv[11]};
+    const int repeats{static_cast<int> (strtol(args[9], nullptr, 0))};
+    const char *const pathObj{args[10]};
+    const char *const pathMtl{args[11]};
 
-    ::std::istringstream ssPrintStdOut(argv[12]);
-    ::std::istringstream ssAsync(argv[13]);
-    ::std::istringstream ssShowImage(argv[14]);
+    ::std::istringstream ssPrintStdOut(args[12]);
+    ::std::istringstream ssAsync(args[13]);
+    ::std::istringstream ssShowImage(args[14]);
     bool printStdOut{true};
     bool async{true};
     bool showImage{true};

@@ -10,7 +10,7 @@
 namespace MobileRT {
     class Material final {
     public:
-        RGB Le_{};   // auto emission
+        RGB Le_{};   // emission light
         RGB Kd_{};   // diffuse reflection
         RGB Ks_{};   // specular reflection
         RGB Kt_{};   // specular transmission

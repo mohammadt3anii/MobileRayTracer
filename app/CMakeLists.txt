@@ -12,9 +12,11 @@ endif()
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
 
 add_subdirectory( Components )
 add_subdirectory( Unit_Testing )
+add_subdirectory( third_party )
 
 if( NOT DEFINED ANDROID )
 	string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_CXX_FLAGS_L )
@@ -40,10 +42,12 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_P
 
 set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Components/src" )
 set( SCENES_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Scenes" )
+set( GSL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/GSL/include" )
 
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RC_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_APP_SOURCES}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${GSL_HEADERS}" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
 
@@ -64,7 +68,7 @@ else()
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PRIVATE Components tinyobjloader
+PRIVATE Components tinyobjloader GSL
 general -O3
 general -discard-all
 general -fno-rtti
