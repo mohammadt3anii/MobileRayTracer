@@ -33,7 +33,7 @@ target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
-if( NOT DEFINED ANDROID )
+if( NOT DEFINED ANDROID_ABI )
     target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full )
 endif()
 

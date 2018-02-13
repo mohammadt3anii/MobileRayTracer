@@ -1,8 +1,14 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
+get_cmake_property( _variableNames VARIABLES )
+foreach ( _variableName ${_variableNames} )
+  #message( STATUS "${_variableName}=${${_variableName}}" )
+endforeach()
+#message( FATAL_ERROR "ACABOU" )
+
 string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_L )
 if( CMAKE_BUILD_TYPE_L MATCHES debug )
-	if( DEFINED ANDROID )
+	if( DEFINED ANDROID_ABI )
 		set( CMAKE_DEBUG_POSTFIX "" )
 	else()
 		set( CMAKE_DEBUG_POSTFIX "d" )
@@ -18,7 +24,7 @@ add_subdirectory( Components )
 add_subdirectory( Unit_Testing )
 add_subdirectory( third_party )
 
-if( NOT DEFINED ANDROID )
+if( NOT DEFINED ANDROID_ABI )
 	string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_CXX_FLAGS_L )
 	if( NOT CMAKE_CXX_FLAGS_L MATCHES ".*-fpic.*" )
 		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" CACHE STRING "CUSTOM" FORCE )
@@ -29,7 +35,7 @@ project( AppInterface VERSION 1.0.0.0 LANGUAGES CXX )
 
 file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/*.cpp" )
 
-if( DEFINED ANDROID )
+if( DEFINED ANDROID_ABI )
 	file( GLOB_RECURSE MOBILE_JNI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/*.cpp" )
 	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_JNI_SOURCES} )
 else ()
@@ -58,17 +64,18 @@ target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
-if( DEFINED ANDROID )
+if( DEFINED ANDROID_ABI )
 	target_compile_definitions( ${PROJECT_NAME} PRIVATE -DANDROID=1 )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE android jnigraphics )
 else()
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
 	target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full -w )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" )
+	target_link_libraries( ${PROJECT_NAME} PRIVATE GSL)
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PRIVATE Components tinyobjloader GSL
+PRIVATE Components tinyobjloader
 general -O3
 general -discard-all
 general -fno-rtti

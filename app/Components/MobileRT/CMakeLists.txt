@@ -8,12 +8,6 @@ if ( ANDROID_COMPILER_FLAGS MATCHES "-Wa,--noexecstack" )
     #string( REGEX REPLACE "-Wa,--noexecstack" "" ANDROID_COMPILER_FLAGS ${ANDROID_COMPILER_FLAGS} )
 endif ()
 
-get_cmake_property( _variableNames VARIABLES )
-foreach ( _variableName ${_variableNames} )
-    #message( STATUS "${_variableName}=${${_variableName}}" )
-endforeach()
-#message( FATAL_ERROR "ACABOU" )
-
 project( MobileRT VERSION 1.0.0.0 LANGUAGES CXX )
 
 file( GLOB_RECURSE MOBILE_RT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp" )
@@ -33,7 +27,7 @@ target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
 
-if( DEFINED ANDROID )
+if( DEFINED ANDROID_ABI )
     target_link_libraries( ${PROJECT_NAME} PUBLIC log )
 else()
     target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full )
@@ -41,7 +35,7 @@ else()
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PUBLIC atomic GSL PRIVATE
+PUBLIC atomic PRIVATE
 general -O3
 general -discard-all
 general -fno-rtti
