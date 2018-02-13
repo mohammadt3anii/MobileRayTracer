@@ -57,8 +57,6 @@ namespace MobileRT {
         bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
         bool shadowTrace(Intersection *intersection, Ray &&ray) noexcept;
-
-        bool traceLights(Intersection *intersection, Ray ray) const noexcept;
     };
 }//namespace MobileRT
 

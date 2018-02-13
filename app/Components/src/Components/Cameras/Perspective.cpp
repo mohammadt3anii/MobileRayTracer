@@ -11,7 +11,7 @@ using ::MobileRT::Ray;
 
 Perspective::Perspective(const Point3D position, const Point3D lookAt, const Vector3D up,
                          const float hFov, const float vFov) noexcept :
-        Camera{position, lookAt, up},
+        Camera(position, lookAt, up),
         // convert to radians
         hFov_{(hFov * ::MobileRT::Pi) / 180.0f},
         vFov_{(vFov * ::MobileRT::Pi) / 180.0f} {

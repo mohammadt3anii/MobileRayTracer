@@ -167,10 +167,8 @@ namespace MobileRT {
                     }
                     return false;
                 }
-                if (left_->shadowTrace(intersection, ray)) {
-                    return true;
-                }
-                return right_->shadowTrace(intersection, ray);
+                return left_->shadowTrace(intersection, ray) ||
+                       right_->shadowTrace(intersection, ray);
             }
             return false;
         }

@@ -12,7 +12,7 @@ using ::MobileRT::Ray;
 
 Orthographic::Orthographic(const Point3D position, const Point3D lookAt, const Vector3D up,
                            const float sizeH, const float sizeV) noexcept :
-        Camera{position, lookAt, up},
+        Camera(position, lookAt, up),
         sizeH_{sizeH / 2.0f},
         sizeV_{sizeV / 2.0f} {
 }

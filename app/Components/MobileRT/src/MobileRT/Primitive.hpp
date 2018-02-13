@@ -46,11 +46,13 @@ namespace MobileRT {
         }
 
         bool intersect(Intersection *const intersection, Ray ray) noexcept {
-            lastRayID_ = ray.id_;
-            if (this->shape_.intersect(intersection, ray)) {
-                intersection->material_ = &this->material_;
-                return true;
+            if (this->lastRayID_ != ray.id_) {
+                if (this->shape_.intersect(intersection, ray)) {
+                    intersection->material_ = &this->material_;
+                    return true;
+                }
             }
+            lastRayID_ = ray.id_;
             return false;
         }
 

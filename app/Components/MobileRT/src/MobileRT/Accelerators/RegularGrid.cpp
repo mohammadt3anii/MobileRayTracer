@@ -245,14 +245,12 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                 (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            if (primitive->lastRayID_ != ray.id_) {
-                if (primitive->intersect(intersection, ray)) {
-                    retval = true;
-                    if (shadowTrace) {
-                        return retval;
-                    }
-                    goto testloop;
+            if (primitive->intersect(intersection, ray)) {
+                retval = true;
+                if (shadowTrace) {
+                    return retval;
                 }
+                goto testloop;
             }
         }
 
@@ -294,9 +292,7 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                            (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            if (primitive->lastRayID_ != ray.id_) {
-                retval |= primitive->intersect(intersection, ray);
-            }
+            retval |= primitive->intersect(intersection, ray);
         }
         if (tmax.x_() < tmax.y_()) {
             if (tmax.x_() < tmax.z_()) {
