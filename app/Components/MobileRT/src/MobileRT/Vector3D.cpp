@@ -98,9 +98,9 @@ float Vector3D::dotProduct(const Vector3D vector) const noexcept {
 }
 
 float Vector3D::dotProduct(const Point3D dest, const Point3D orig) const noexcept {
-    return this->direction_[0] * (dest.x_() - orig.x_()) +
-           this->direction_[1] * (dest.y_() - orig.y_()) +
-           this->direction_[2] * (dest.z_() - orig.z_());
+    return this->direction_.at(0) * (dest.x_() - orig.x_()) +
+           this->direction_.at(1) * (dest.y_() - orig.y_()) +
+           this->direction_.at(2) * (dest.z_() - orig.z_());
 }
 
 float Vector3D::squareMagnitude() const noexcept {
@@ -119,9 +119,9 @@ Vector3D Vector3D::crossProduct(const Vector3D vector) const noexcept {
 }
 
 void Vector3D::operator*=(const float value) noexcept {
-    this->direction_[0] *= value;
-    this->direction_[1] *= value;
-    this->direction_[2] *= value;
+    this->direction_.at(0) *= value;
+    this->direction_.at(1) *= value;
+    this->direction_.at(2) *= value;
 }
 
 Vector3D Vector3D::operator*(const float value) const noexcept {

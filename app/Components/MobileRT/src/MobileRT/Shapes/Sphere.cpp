@@ -43,8 +43,8 @@ bool Sphere::intersect(Intersection *const intersection, const Ray ray) const no
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
-    this->center_.position_[0] = x;
-    this->center_.position_[1] = y;
+    this->center_.position_.at(0) = x;
+    this->center_.position_.at(1) = y;
 }
 
 float Sphere::getZ() const noexcept {
