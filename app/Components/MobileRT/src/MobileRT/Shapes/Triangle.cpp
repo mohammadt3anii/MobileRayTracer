@@ -103,12 +103,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
                         T_2.x_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.x_() > t_near) {
-                        t_near = T_1.x_();
-                    }
-                    if (T_2.x_() < t_far) {
-                        t_far = T_2.x_();
-                    }
+                    t_near = ::std::max(T_1.x_(), t_near);
+                    t_far = ::std::min(T_2.x_(), t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
@@ -125,12 +121,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
                         T_2.y_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.y_() > t_near) {
-                        t_near = T_1.y_();
-                    }
-                    if (T_2.y_() < t_far) {
-                        t_far = T_2.y_();
-                    }
+                    t_near = ::std::max(T_1.y_(), t_near);
+                    t_far = ::std::min(T_2.y_(), t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
@@ -147,12 +139,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
                         T_2.z_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.z_() > t_near) {
-                        t_near = T_1.z_();
-                    }
-                    if (T_2.z_() < t_far) {
-                        t_far = T_2.z_();
-                    }
+                    t_near = ::std::max(T_1.z_(), t_near);
+                    t_far = ::std::min(T_2.z_(), t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
