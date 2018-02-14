@@ -56,15 +56,15 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             break;
         }
 
-        case Accelerator::BVH2: {
+        case Accelerator::BVH_vector: {
             LOG("PLANES");
-            bvhPlanes2_ = ::MobileRT::BVH2<MobileRT::Plane> {std::move(scene_.planes_)};
+            bvhPlanes2_ = ::MobileRT::BVH_vector<MobileRT::Plane> {std::move(scene_.planes_)};
             LOG("RECTANGLES");
-            bvhRectangles2_ = ::MobileRT::BVH2<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
+            bvhRectangles2_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
             LOG("SPHERES");
-            bvhSpheres2_ = ::MobileRT::BVH2<MobileRT::Sphere> {std::move(scene_.spheres_)};
+            bvhSpheres2_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {std::move(scene_.spheres_)};
             LOG("TRIANGLES");
-            bvhTriangles2_ = ::MobileRT::BVH2<MobileRT::Triangle> {std::move(scene_.triangles_)};
+            bvhTriangles2_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {std::move(scene_.triangles_)};
             break;
         }
 
@@ -96,7 +96,7 @@ bool Shader::shadowTrace(Intersection *const intersection, Ray &&ray) noexcept {
             intersected |= this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
         }
-        case Accelerator::BVH2: {
+        case Accelerator::BVH_vector: {
             intersected |= this->bvhPlanes2_.shadowTrace(intersection, ray);
             intersected |= this->bvhRectangles2_.shadowTrace(intersection, ray);
             intersected |= this->bvhSpheres2_.shadowTrace(intersection, ray);
@@ -126,7 +126,7 @@ bool Shader::rayTrace(RGB *const rgb, Intersection *const intersection, Ray &&ra
             intersected |= this->scene_.traceLights(intersection, ray);
             break;
         }
-        case Accelerator::BVH2: {
+        case Accelerator::BVH_vector: {
             intersected |= this->bvhPlanes2_.trace(intersection, ray);
             intersected |= this->bvhRectangles2_.trace(intersection, ray);
             intersected |= this->bvhSpheres2_.trace(intersection, ray);
