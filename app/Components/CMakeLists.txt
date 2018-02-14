@@ -24,7 +24,7 @@ target_include_directories( ${PROJECT_NAME} PUBLIC "${THIRD_PARTY_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RT_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RC_HEADERS}" )
 
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer> )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE -std=c++14 -pedantic-errors -Weverything -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
 target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-c++98-compat-pedantic -Wno-padded )

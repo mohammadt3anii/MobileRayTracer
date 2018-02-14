@@ -55,7 +55,10 @@ target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_APP_SOURCES}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${GSL_HEADERS}" )
 
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer> )
+
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:-O3 -DNDEBUG -s -ffunction-sections -fdata-sections -Wl,-gc-sections -flto=full -fno-rtti -finline-limit=150 -march=native> )
+#-fno-exceptions
 
 target_compile_options( ${PROJECT_NAME} PRIVATE -std=c++14 -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
 target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-c++98-compat-pedantic -Wno-padded )

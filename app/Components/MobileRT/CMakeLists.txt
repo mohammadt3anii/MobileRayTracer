@@ -17,7 +17,7 @@ add_library( ${PROJECT_NAME} SHARED ${MOBILE_RT_SOURCES} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RT_HEADERS}" )
 
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g -fno-optimize-sibling-calls> )
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer> )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE -std=c++14 -Weverything -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
 target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-c++98-compat-pedantic -Wno-padded )

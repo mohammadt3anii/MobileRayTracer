@@ -106,13 +106,6 @@ namespace MobileRT {
             divide = primitives.size() % 2 == 0 ? divide : divide + 1;
 
             const uint32_t aux{static_cast<uint32_t>(1 << depth)};
-            const uint32_t left{currentNodeId * 2 + 1};
-            const uint32_t right{left + 1};
-
-            //LOG("depth = ", depth, ", currentNodeId = ", currentNodeId,", size = ", primitives.size(), ", divide = ", divide);
-            //LOG("leftChild = ", left, ", rightChild = ", right);
-            //LOG("numberPrimitives_ = ", numberPrimitives_, ", boxesSize = ", boxes_.size());
-
             if (numberPrimitives_ <= static_cast<int64_t>(aux) * 2) {
                 primitives_.emplace_back(primitives);
             } else {
@@ -125,6 +118,8 @@ namespace MobileRT {
                 ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
                 ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
+                const uint32_t left{currentNodeId * 2 + 1};
+                const uint32_t right{left + 1};
                 AABB leftBox{build(std::move(leftVector), depth + 1, left)};
                 AABB rightBox{build(std::move(rightVector), depth + 1, right)};
                 current_box = surroundingBox(leftBox, rightBox);
@@ -161,6 +156,13 @@ namespace MobileRT {
             boxes_.resize(maxNodes);
 
             build(std::move(primitives), depth, currentId);
+
+            for(auto& primitivesList : primitives_) {
+                primitivesList.shrink_to_fit();
+                ::std::vector<MobileRT::Primitive<T>>(primitivesList).swap(primitivesList);
+            }
+            primitives_.shrink_to_fit();
+            ::std::vector<::std::vector<MobileRT::Primitive<T>>>(primitives_).swap(primitives_);
         }
 
         BVH2(const BVH2 &bVH) noexcept = delete;
@@ -211,9 +213,8 @@ namespace MobileRT {
                 }
 
                 const uint32_t left{currentNodeId * 2 + 1};
-                const bool hit_left{shadowTrace(intersection, ray, depth + 1, left)};
-                const bool hit_right{shadowTrace(intersection, ray, depth + 1, left + 1)};
-                return hit_left || hit_right;
+                return  shadowTrace(intersection, ray, depth + 1, left) ||
+                        shadowTrace(intersection, ray, depth + 1, left + 1);
             }
             return false;
         }
