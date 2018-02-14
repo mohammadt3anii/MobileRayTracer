@@ -6,6 +6,7 @@
 #define MOBILERT_VECTOR3D_HPP
 
 #include "Point3D.hpp"
+#include <array>
 #include <cmath>
 
 namespace MobileRT {
@@ -14,19 +15,19 @@ namespace MobileRT {
     class Vector3D final {
 
     public:
-        float direction_[3]{0.0f};
+        ::std::array<float, 3> direction_{};
 
-        float x_() const noexcept { return direction_[0]; }
+        float x_() const noexcept { return direction_.at(0); }
 
-        float y_() const noexcept { return direction_[1]; }
+        float y_() const noexcept { return direction_.at(1); }
 
-        float z_() const noexcept { return direction_[2]; }
+        float z_() const noexcept { return direction_.at(2); }
 
-        void setX(float x) noexcept { direction_[0] = x; }
+        void setX(float x) noexcept { direction_.at(0) = x; }
 
-        void setY(float y) noexcept { direction_[1] = y; }
+        void setY(float y) noexcept { direction_.at(1) = y; }
 
-        void setZ(float z) noexcept { direction_[2] = z; }
+        void setZ(float z) noexcept { direction_.at(2) = z; }
 
         float magnitude_{1.0f};
 

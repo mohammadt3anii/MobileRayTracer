@@ -26,57 +26,57 @@ float Vector3D::magnitude() const noexcept {
 }
 
 Vector3D::Vector3D(const float x, const float y, const float z, const float magnitude) noexcept :
-        direction_{x, y, z},
+        direction_{{x, y, z}},
         magnitude_{magnitude == 0.0f ? Vector3D::magnitude() : magnitude} {
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D vector, const float value) noexcept :
-        direction_{vector.x_() * value, vector.y_() * value, vector.z_() * value},
+        direction_{{vector.x_() * value, vector.y_() * value, vector.z_() * value}},
         magnitude_{magnitude()} {
     counter++;
 }
 
 Vector3D::Vector3D(const Vector3D vector1, const Vector3D vector2, const float value) noexcept :
-        direction_{vector1.x_() - vector2.x_() * value, vector1.y_() - vector2.y_() * value,
-                   vector1.z_() - vector2.z_() * value},
+        direction_{{vector1.x_() - vector2.x_() * value, vector1.y_() - vector2.y_() * value,
+                   vector1.z_() - vector2.z_() * value}},
         magnitude_{magnitude()} {
-    this->direction_[0] /= this->magnitude_;
-    this->direction_[1] /= this->magnitude_;
-    this->direction_[2] /= this->magnitude_;
+    this->direction_.at(0) /= this->magnitude_;
+    this->direction_.at(1) /= this->magnitude_;
+    this->direction_.at(2) /= this->magnitude_;
     this->magnitude_ = 1.0f;
     counter++;
 }
 
 Vector3D::Vector3D(const Point3D dest, const Point3D orig) noexcept :
-        direction_{dest.x_() - orig.x_(), dest.y_() - orig.y_(), dest.z_() - orig.z_()},
+        direction_{{dest.x_() - orig.x_(), dest.y_() - orig.y_(), dest.z_() - orig.z_()}},
         magnitude_{magnitude()} {
     counter++;
 }
 
 Vector3D::Vector3D(const Point3D dest, const Point3D orig, const bool /*normalize*/) noexcept :
-        direction_{dest.x_() - orig.x_(), dest.y_() - orig.y_(), dest.z_() - orig.z_()},
+        direction_{{dest.x_() - orig.x_(), dest.y_() - orig.y_(), dest.z_() - orig.z_()}},
         magnitude_{magnitude()} {
-    this->direction_[0] /= this->magnitude_;
-    this->direction_[1] /= this->magnitude_;
-    this->direction_[2] /= this->magnitude_;
+    this->direction_.at(0) /= this->magnitude_;
+    this->direction_.at(1) /= this->magnitude_;
+    this->direction_.at(2) /= this->magnitude_;
     this->magnitude_ = 1.0f;
     counter++;
 }
 
 //cross product
 Vector3D::Vector3D(const Vector3D vector1, const Vector3D vector2) noexcept :
-        direction_{vector1.y_() * vector2.z_() - vector1.z_() * vector2.y_(),
+        direction_{{vector1.y_() * vector2.z_() - vector1.z_() * vector2.y_(),
                    vector1.z_() * vector2.x_() - vector1.x_() * vector2.z_(),
-                   vector1.x_() * vector2.y_() - vector1.y_() * vector2.x_()},
+                   vector1.x_() * vector2.y_() - vector1.y_() * vector2.x_()}},
         magnitude_{magnitude()} {
 }
 
 float Vector3D::normalize() noexcept {
     const float len{magnitude()};
-    this->direction_[0] /= len;
-    this->direction_[1] /= len;
-    this->direction_[2] /= len;
+    this->direction_.at(0) /= len;
+    this->direction_.at(1) /= len;
+    this->direction_.at(2) /= len;
     this->magnitude_ = 1.0f;
     return len;
 }

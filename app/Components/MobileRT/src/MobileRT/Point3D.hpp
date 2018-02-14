@@ -6,25 +6,26 @@
 #define MOBILERT_POINT3D_HPP
 
 #include "Vector3D.hpp"
+#include <array>
 
 namespace MobileRT {
     class Vector3D;
 
     class Point3D final {
     public:
-        float position_[3]{0.0f};
+        ::std::array<float, 3> position_{};
 
-        void setX(float x) noexcept { position_[0] = x; }
+        void setX(float x) noexcept { position_.at(0) = x; }
 
-        void setY(float y) noexcept { position_[1] = y; }
+        void setY(float y) noexcept { position_.at(1) = y; }
 
-        void setZ(float z) noexcept { position_[2] = z; }
+        void setZ(float z) noexcept { position_.at(2) = z; }
 
-        float x_() const noexcept { return position_[0]; }
+        float x_() const noexcept { return position_.at(0); }
 
-        float y_() const noexcept { return position_[1]; }
+        float y_() const noexcept { return position_.at(1); }
 
-        float z_() const noexcept { return position_[2]; }
+        float z_() const noexcept { return position_.at(2); }
 
     private:
         explicit Point3D(Point3D point, Vector3D vector,

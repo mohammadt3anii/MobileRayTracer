@@ -9,13 +9,14 @@ using ::MobileRT::Vector3D;
 static unsigned counter{0};
 
 Point3D::Point3D(const float x, const float y, const float z) noexcept :
-        position_{x, y, z} {
+    position_{{x, y, z}} {
     counter++;
 }
 
 Point3D::Point3D(const Point3D point, const Vector3D vector, const float value) noexcept :
-        position_{vector.x_() * value + point.x_(), vector.y_() * value + point.y_(),
-                  vector.z_() * value + point.z_()} {
+    position_{{ vector.x_() * value + point.x_(),
+                vector.y_() * value + point.y_(),
+                vector.z_() * value + point.z_()}} {
 }
 
 Vector3D Point3D::operator-(const Point3D point) const noexcept {
