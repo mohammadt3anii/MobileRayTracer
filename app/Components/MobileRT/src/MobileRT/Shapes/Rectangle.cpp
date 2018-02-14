@@ -63,41 +63,23 @@ float Rectangle::getZ() const noexcept {
 }
 
 Point3D Rectangle::getPositionMin() const noexcept {
-    const float x{
-            pointA_.x_() < pointB_.x_() && pointA_.x_() < pointC_.x_() &&
-            pointA_.x_() < pointD_.x_() ? pointA_.x_() :
-            pointB_.x_() < pointC_.x_() && pointB_.x_() < pointD_.x_() ? pointB_.x_() :
-            pointC_.x_() < pointD_.x_() ? pointC_.x_() : pointD_.x_()};
-    const float y{
-            pointA_.y_() < pointB_.y_() && pointA_.y_() < pointC_.y_() &&
-            pointA_.y_() < pointD_.y_() ? pointA_.y_() :
-            pointB_.y_() < pointC_.y_() && pointB_.y_() < pointD_.y_() ? pointB_.y_() :
-            pointC_.y_() < pointD_.y_() ? pointC_.y_() : pointD_.y_()};
-    const float z{
-            pointA_.z_() < pointB_.z_() && pointA_.z_() < pointC_.z_() &&
-            pointA_.z_() < pointD_.z_() ? pointA_.z_() :
-            pointB_.z_() < pointC_.z_() && pointB_.z_() < pointD_.z_() ? pointB_.z_() :
-            pointC_.z_() < pointD_.z_() ? pointC_.z_() : pointD_.z_()};
+    const float x{::std::min(pointA_.x_(), ::std::min(pointB_.x_(),
+        ::std::min(pointC_.x_(), pointD_.x_())))};
+    const float y{::std::min(pointA_.y_(), ::std::min(pointB_.y_(),
+        ::std::min(pointC_.y_(), pointD_.y_())))};
+    const float z{::std::min(pointA_.z_(), ::std::min(pointB_.z_(),
+        ::std::min(pointC_.z_(), pointD_.z_())))};
 
     return Point3D(x, y, z);
 }
 
 Point3D Rectangle::getPositionMax() const noexcept {
-    const float x{
-            pointA_.x_() > pointB_.x_() && pointA_.x_() > pointC_.x_() &&
-            pointA_.x_() > pointD_.x_() ? pointA_.x_() :
-            pointB_.x_() > pointC_.x_() && pointB_.x_() > pointD_.x_() ? pointB_.x_() :
-            pointC_.x_() > pointD_.x_() ? pointC_.x_() : pointD_.x_()};
-    const float y{
-            pointA_.y_() > pointB_.y_() && pointA_.y_() > pointC_.y_() &&
-            pointA_.y_() > pointD_.y_() ? pointA_.y_() :
-            pointB_.y_() > pointC_.y_() && pointB_.y_() > pointD_.y_() ? pointB_.y_() :
-            pointC_.y_() > pointD_.y_() ? pointC_.y_() : pointD_.y_()};
-    const float z{
-            pointA_.z_() > pointB_.z_() && pointA_.z_() > pointC_.z_() &&
-            pointA_.z_() > pointD_.z_() ? pointA_.z_() :
-            pointB_.z_() > pointC_.z_() && pointB_.z_() > pointD_.z_() ? pointB_.z_() :
-            pointC_.z_() > pointD_.z_() ? pointC_.z_() : pointD_.z_()};
+    const float x{::std::max(pointA_.x_(), ::std::max(pointB_.x_(),
+        ::std::max(pointC_.x_(), pointD_.x_())))};
+    const float y{::std::max(pointA_.y_(), ::std::max(pointB_.y_(),
+        ::std::max(pointC_.y_(), pointD_.y_())))};
+    const float z{::std::max(pointA_.z_(), ::std::max(pointB_.z_(),
+        ::std::max(pointC_.z_(), pointD_.z_())))};
 
     return Point3D(x, y, z);
 }
@@ -113,8 +95,8 @@ bool Rectangle::intersect(const AABB box) const noexcept {
             [&](Point3D orig, Vector3D vec) -> bool {
                 Vector3D T_1{};
                 Vector3D T_2{}; // vectors to hold the T-values for every direction
-                float t_near{Epsilon}; // maximums defined in float.h
-                float t_far{RayLengthMax};
+                float t_near{std::numeric_limits<float>::min()};
+                float t_far{std::numeric_limits<float>::max()};
                 if (vec.x_() == 0) { // ray parallel to planes in this direction
                     if ((orig.x_() < box.pointMin_.x_()) || (vec.x_() > box.pointMax_.x_())) {
                         return false; // parallel AND outside box : no intersection possible
@@ -126,12 +108,9 @@ bool Rectangle::intersect(const AABB box) const noexcept {
                         T_2.x_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.x_() > t_near) {
-                        t_near = T_1.x_();
-                    }
-                    if (T_2.x_() < t_far) {
-                        t_far = T_2.x_();
-                    }
+                    t_near = ::std::max(T_1.x_(), t_near);
+                    t_far = ::std::min(T_2.x_(), t_far);
+
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
@@ -147,12 +126,8 @@ bool Rectangle::intersect(const AABB box) const noexcept {
                         T_2.y_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.y_() > t_near) {
-                        t_near = T_1.y_();
-                    }
-                    if (T_2.y_() < t_far) {
-                        t_far = T_2.y_();
-                    }
+                    t_near = ::std::max(T_1.y_(), t_near);
+                    t_far = ::std::min(T_2.y_(), t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
@@ -168,12 +143,8 @@ bool Rectangle::intersect(const AABB box) const noexcept {
                         T_2.z_()) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    if (T_1.z_() > t_near) {
-                        t_near = T_1.z_();
-                    }
-                    if (T_2.z_() < t_far) {
-                        t_far = T_2.z_();
-                    }
+                    t_near = ::std::max(T_1.z_(), t_near);
+                    t_far = ::std::min(T_2.z_(), t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }

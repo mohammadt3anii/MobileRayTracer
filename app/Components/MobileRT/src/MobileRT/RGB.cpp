@@ -1,7 +1,9 @@
 //
 // Created by Tiago on 16-10-2016.
 //
+
 #include "RGB.hpp"
+#include <algorithm>
 
 using ::MobileRT::RGB;
 static unsigned counter{0};
@@ -132,9 +134,7 @@ unsigned RGB::getInstances() noexcept {
 }
 
 float RGB::getMax() const noexcept {
-    return this->R_ >= this->G_ && this->R_ >= this->B_ ? this->R_ / samples_ :
-           this->G_ >= this->R_ && this->G_ >= this->B_ ? this->G_ / samples_ :
-           this->B_ / samples_;
+    return ::std::max(R_, ::std::max(G_, B_)) / samples_;
 }
 
 RGB &RGB::operator=(const RGB &rgb) noexcept {

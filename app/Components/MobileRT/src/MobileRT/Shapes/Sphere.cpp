@@ -29,9 +29,7 @@ bool Sphere::intersect(Intersection *const intersection, const Ray ray) const no
     const float distanceToIntersection1{(-B + rootDiscriminant) * 0.5f};
     const float distanceToIntersection2{(-B - rootDiscriminant) * 0.5f};
     //distance between intersection and camera = smaller root = closer intersection
-    const float distanceToIntersection{
-            distanceToIntersection1 < distanceToIntersection2 ?
-            distanceToIntersection1 : distanceToIntersection2};
+    const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2)};
 
     if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
         return false;

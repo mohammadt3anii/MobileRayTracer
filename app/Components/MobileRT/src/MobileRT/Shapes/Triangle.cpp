@@ -66,31 +66,22 @@ float Triangle::getZ() const noexcept {
 }
 
 Point3D Triangle::getPositionMin() const noexcept {
-    const float x{pointA_.x_() < pointB_.x_() && pointA_.x_() < pointC_.x_() ? pointA_.x_() :
-                  pointB_.x_() < pointC_.x_() ? pointB_.x_() :
-                  pointC_.x_()};
-    const float y{pointA_.y_() < pointB_.y_() && pointA_.y_() < pointC_.y_() ? pointA_.y_() :
-                  pointB_.y_() < pointC_.y_() ? pointB_.y_() :
-                  pointC_.y_()};
-    const float z{pointA_.z_() < pointB_.z_() && pointA_.z_() < pointC_.z_() ? pointA_.z_() :
-                  pointB_.z_() < pointC_.z_() ? pointB_.z_() :
-                  pointC_.z_()};
+    const float x{::std::min(pointA_.x_(), ::std::min(pointB_.x_(), pointC_.x_()))};
+    const float y{::std::min(pointA_.y_(), ::std::min(pointB_.y_(), pointC_.y_()))};
+    const float z{::std::min(pointA_.z_(), ::std::min(pointB_.z_(), pointC_.z_()))};
     return Point3D(x, y, z);
 }
 
 Point3D Triangle::getPositionMax() const noexcept {
-    const float x{pointA_.x_() > pointB_.x_() && pointA_.x_() > pointC_.x_() ? pointA_.x_() :
-                  pointB_.x_() > pointC_.x_() ? pointB_.x_() : pointC_.x_()};
-    const float y{pointA_.y_() > pointB_.y_() && pointA_.y_() > pointC_.y_() ? pointA_.y_() :
-                  pointB_.y_() > pointC_.y_() ? pointB_.y_() : pointC_.y_()};
-    const float z{pointA_.z_() > pointB_.z_() && pointA_.z_() > pointC_.z_() ? pointA_.z_() :
-                  pointB_.z_() > pointC_.z_() ? pointB_.z_() : pointC_.z_()};
+    const float x{::std::max(pointA_.x_(), ::std::max(pointB_.x_(), pointC_.x_()))};
+    const float y{::std::max(pointA_.y_(), ::std::max(pointB_.y_(), pointC_.y_()))};
+    const float z{::std::max(pointA_.z_(), ::std::max(pointB_.z_(), pointC_.z_()))};
     return Point3D(x, y, z);
 }
 
 //TODO (Puscas): Fix this method (it may be wrong)
 AABB Triangle::getAABB() const noexcept {
-    return AABB {getPositionMin() - Epsilon, getPositionMax() + Epsilon};
+    return AABB {getPositionMin() - Epsilon, getPositionMax()};
 }
 
 bool Triangle::intersect(const AABB box) const noexcept {
@@ -98,8 +89,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
             [&](const Point3D orig, const Vector3D vec) -> bool {
                 Vector3D T_1{};
                 Vector3D T_2{}; // vectors to hold the T-values for every direction
-                float t_near{-RayLengthMax}; // maximums defined in float.h
-                float t_far{RayLengthMax};
+                float t_near{std::numeric_limits<float>::min()};
+                float t_far{std::numeric_limits<float>::max()};
                 if (vec.x_() == 0) { // ray parallel to planes in this direction
                     if ((orig.x_() < box.pointMin_.x_()) ||
                         ((orig.x_() + vec.x_()) > box.pointMax_.x_())) {
@@ -179,8 +170,6 @@ bool Triangle::intersect(const AABB box) const noexcept {
 
     const Point3D &min(box.pointMin_);
     const Point3D &max(box.pointMax_);
-    static_cast<void> (min);
-    static_cast<void> (max);
     Intersection intersection{};
     const Vector3D vec{max, min};
     const Ray ray{vec, min, 1};

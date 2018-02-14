@@ -13,7 +13,7 @@ AABB::AABB(const Point3D pointMin, const Point3D pointMax) noexcept :
 }
 
 bool AABB::intersect(const Ray &ray) const noexcept {
-    float tmin{::MobileRT::Epsilon};
+    float tmin{0};
     float tmax{::MobileRT::RayLengthMax};
     for (size_t axis{0}; axis < 3; axis++) {
         const float invDir{1.0f / ray.direction_.direction_.at(axis)};
@@ -22,8 +22,8 @@ bool AABB::intersect(const Ray &ray) const noexcept {
         if (invDir < 0.0f) {
             ::std::swap(t0, t1);
         }
-        tmin = t0 > tmin ? t0 : tmin;
-        tmax = t1 < tmax ? t1 : tmax;
+        tmin = ::std::max(t0, tmin);
+        tmax = ::std::min(t1, tmax);
         if (tmax <= tmin) {
             return false;
         }

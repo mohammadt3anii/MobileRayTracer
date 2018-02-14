@@ -8,6 +8,7 @@
 #include "../Intersection.hpp"
 #include "../Scene.hpp"
 #include "AABB.hpp"
+#include <algorithm>
 #include <random>
 
 namespace MobileRT {
@@ -16,7 +17,7 @@ namespace MobileRT {
     class BVH_vector final {
     public:
         int64_t numberPrimitives_{0};
-        int64_t numberDepth_{0};
+        unsigned numberDepth_{0};
         ::std::vector<::MobileRT::AABB> boxes_{};
         ::std::vector<::std::vector<MobileRT::Primitive<T>>> primitives_{};
 
@@ -108,7 +109,7 @@ namespace MobileRT {
     if (depth == 0) {
         numberPrimitives_ = static_cast<int64_t>(primitives.size());
     }
-    numberDepth_ = depth > numberDepth_ ? depth : numberDepth_;
+    numberDepth_ = ::std::max(depth, numberDepth_);
 
     AABB current_box{
             Point3D {

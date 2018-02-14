@@ -104,7 +104,7 @@ void RegularGrid::addPrimitives
         z1 = (z1 < 0) ? 0 : z1;
         z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
         z2 = sizeZ == 0 ? 0 : z2;
-        z1 = z1 > z2 ? z2 : z1;
+        z1 = ::std::min(z2, z1);
 
         //loop over candidate cells
         for (int x{x1}; x <= x2; x++) {

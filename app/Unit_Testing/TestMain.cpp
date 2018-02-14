@@ -2,9 +2,8 @@
 
 int main(int argc, char **argv) {
 	::testing::GTEST_FLAG(throw_on_failure) = true;
-    ::testing::InitGoogleTest(&argc, argv);
-    int res {RUN_ALL_TESTS()};
-	getchar();
+  ::testing::InitGoogleTest(&argc, argv);
+  const int res {RUN_ALL_TESTS()};
 	return res;
 }
 
