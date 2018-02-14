@@ -20,7 +20,7 @@ target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-c++98-compat-pedantic -Wno-
 
 target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal -Wno-global-constructors -Wno-weak-vtables )
 
-include(CheckCXXCompilerFlag)
+include( CheckCXXCompilerFlag )
 CHECK_CXX_COMPILER_FLAG( "-Wno-zero-as-null-pointer-constant" FLAG__WNO_ZERO_AS_NULL__SUPPORTED )
 
 if( FLAG__WNO_ZERO_AS_NULL__SUPPORTED )
@@ -35,10 +35,7 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME}
 PRIVATE Components gtest
-general -O3
-general -discard-all
-general -fno-rtti
-general -fno-exceptions
-general -flto=full
-optimized -s
+general "${COMMON_LINKER_FLAGS}"
+debug "${COMMON_LINKER_FLAGS_DEBUG}"
+optimized "${COMMON_LINKER_FLAGS_RELEASE}"
 )

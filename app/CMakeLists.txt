@@ -1,11 +1,21 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
+# Remove default flags
+set( CMAKE_CXX_FLAGS "-fPIC" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_CXX_FLAGS_MINSIZEREL "" CACHE STRING "CUSTOM" FORCE )
+set( ANDROID_COMPILER_FLAGS "" CACHE STRING "CUSTOM" FORCE )
+
+# Print all set variables
 get_cmake_property( _variableNames VARIABLES )
 foreach ( _variableName ${_variableNames} )
   #message( STATUS "${_variableName}=${${_variableName}}" )
 endforeach()
 #message( FATAL_ERROR "ACABOU" )
 
+# Add postfix when build type is debug
 string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_L )
 if( CMAKE_BUILD_TYPE_L MATCHES debug )
 	if( DEFINED ANDROID_ABI )
@@ -15,23 +25,47 @@ if( CMAKE_BUILD_TYPE_L MATCHES debug )
 	endif()
 endif()
 
+# Set default lib and bin folders
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+
+# Set common headers
 set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
 
+# Set common flags
+set( COMMON_FLAGS -std=c++14 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
+set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-float-equal -Wno-c++98-compat-pedantic -Wno-padded )
+
+set( COMMON_FLAGS_DEBUG -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer )
+
+set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections -fno-rtti )
+
+# Set common linker flags
+set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions -flto=full )
+
+set( COMMON_LINKER_FLAGS_DEBUG  )
+
+set( COMMON_LINKER_FLAGS_RELEASE -s )
+
+if( NOT DEFINED ANDROID_ABI )
+	set( COMMON_FLAGS "${COMMON_FLAGS}" -flto=full -march=native )
+endif()
+
+# Add sub directories
 add_subdirectory( Components )
 add_subdirectory( Unit_Testing )
 add_subdirectory( third_party )
 
-if( NOT DEFINED ANDROID_ABI )
-	string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_CXX_FLAGS_L )
-	if( NOT CMAKE_CXX_FLAGS_L MATCHES ".*-fpic.*" )
-		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" CACHE STRING "CUSTOM" FORCE )
-	endif()
-endif ()
-
+# Project
 project( AppInterface VERSION 1.0.0.0 LANGUAGES CXX )
+
+include( CheckCXXCompilerFlag )
+CHECK_CXX_COMPILER_FLAG( "-finline-limit=150" FLAG__FINLINE_LIMIT__SUPPORTED )
+
+if( FLAG__FINLINE_LIMIT__SUPPORTED )
+	set( COMMON_FLAGS "${COMMON_FLAGS}" -finline-limit=150 )
+endif()
 
 file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/*.cpp" )
 
@@ -55,15 +89,9 @@ target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_APP_SOURCES}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${GSL_HEADERS}" )
 
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer> )
-
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:-O3 -DNDEBUG -s -ffunction-sections -fdata-sections -Wl,-gc-sections -flto=full -fno-rtti -finline-limit=150 -march=native> )
-#-fno-exceptions
-
-target_compile_options( ${PROJECT_NAME} PRIVATE -std=c++14 -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
-target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-c++98-compat-pedantic -Wno-padded )
-
-target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-float-equal )
+target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
+target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLAGS_RELEASE}> )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
@@ -79,10 +107,7 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME}
 PRIVATE Components tinyobjloader
-general -O3
-general -discard-all
-general -fno-rtti
-general -fno-exceptions
-general -flto=full
-optimized -s
+general "${COMMON_LINKER_FLAGS}"
+debug "${COMMON_LINKER_FLAGS_DEBUG}"
+optimized "${COMMON_LINKER_FLAGS_RELEASE}"
 )
