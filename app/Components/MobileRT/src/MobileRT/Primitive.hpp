@@ -40,46 +40,46 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        bool intersect(Intersection *const intersection, Ray ray) noexcept;
+        bool intersect(Intersection *intersection, Ray ray) noexcept;
 
-        bool intersect(const AABB box) const noexcept;
+        bool intersect(AABB box) const noexcept;
     };
-}//namespace MobileRT
 
 
-
-using MobileRT::Primitive;
-using MobileRT::AABB;
-
-
-template<typename T>
-Primitive<T>::Primitive(T shape, Material material) noexcept :
-                shape_{shape},
-                material_{::std::move(material)} {
-}
-
-template<typename T>
-AABB Primitive<T>::getAABB() const noexcept {
-            return this->shape_.getAABB();
-}
+    using MobileRT::Primitive;
+    using MobileRT::AABB;
 
 
-template<typename T>
-bool Primitive<T>::intersect(Intersection *const intersection, Ray ray) noexcept {
-    if (this->lastRayID_ != ray.id_) {
-        if (this->shape_.intersect(intersection, ray)) {
-            intersection->material_ = &this->material_;
-            return true;
-        }
+    template<typename T>
+    Primitive<T>::Primitive(T shape, Material material) noexcept :
+                    shape_{shape},
+                    material_{::std::move(material)} {
     }
-    lastRayID_ = ray.id_;
-    return false;
-}
 
-template<typename T>
-bool Primitive<T>::intersect(const AABB box) const noexcept {
-    return this->shape_.intersect(box);
-}
+    template<typename T>
+    AABB Primitive<T>::getAABB() const noexcept {
+                return this->shape_.getAABB();
+    }
 
+
+    template<typename T>
+    bool Primitive<T>::intersect(Intersection *const intersection, Ray ray) noexcept {
+        if (this->lastRayID_ != ray.id_) {
+            if (this->shape_.intersect(intersection, ray)) {
+                intersection->material_ = &this->material_;
+                return true;
+            }
+        }
+        lastRayID_ = ray.id_;
+        return false;
+    }
+
+    template<typename T>
+    bool Primitive<T>::intersect(const AABB box) const noexcept {
+        return this->shape_.intersect(box);
+    }
+
+
+}//namespace MobileRT
 
 #endif //MOBILERT_PRIMITIVE_HPP

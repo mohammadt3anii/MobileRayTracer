@@ -10,11 +10,11 @@ MOBILERT_SRCS="${MOBILERT_DIR}/app/Components/MobileRT/src"
 COMPONENTS_SRCS="${MOBILERT_DIR}/app/Components/src"
 GTK_INTERFACE_SRCS="${MOBILERT_DIR}/app/GTK_Interface"
 SCENES_SRCS="${MOBILERT_DIR}/app/Scenes"
-COMPONENTS_THIRDPARTY="${MOBILERT_DIR}/app/Components/third_party"
 
+THIRDPARTY_HEADERS="${MOBILERT_DIR}/app/third_party"
+GSL_HEADERS="${MOBILERT_DIR}/app/third_party/GSL/include"
 GTK_HEADERS=$(pkg-config --cflags gtk+-2.0)
 GTK_HEADERS=${GTK_HEADERS//-I/-isystem}
-GSL_HEADERS="${MOBILERT_DIR}/app/third_party/GSL/include"
 
 if [ -z "${PLOT_GRAPHS}" ]; then
   PLOT_GRAPHS="Plot_Graphs"
@@ -92,7 +92,7 @@ function clangtidy {
   -I ${COMPONENTS_SRCS} \
   -I ${GTK_INTERFACE_SRCS} \
   -I ${SCENES_SRCS} \
-	-isystem ${COMPONENTS_THIRDPARTY} \
+	-isystem ${THIRDPARTY_HEADERS} \
   -isystem ${GSL_HEADERS} \
 	-isystem /usr/include/c++/v1 \
 	-isystem /usr/lib/gcc/x86_64-linux-gnu/5/include \
