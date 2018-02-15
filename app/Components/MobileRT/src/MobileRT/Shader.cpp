@@ -40,11 +40,14 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
     AABB sceneBounds{min - Epsilon, max + Epsilon};
     switch (accelerator_) {
+        case Accelerator::NAIVE: {
+            break;
+        }
         case Accelerator::REGULAR_GRID: {
             regularGrid_ = RegularGrid {sceneBounds, &scene_, 32};
             break;
         }
-        case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
+        case Accelerator::BVH: {
             LOG("PLANES");
             bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {std::move(scene_.planes_)};
             LOG("RECTANGLES");
@@ -67,10 +70,6 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             bvhTriangles2_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {std::move(scene_.triangles_)};
             break;
         }
-
-        case Accelerator::NONE: {
-            break;
-        }
     }
 }
 
@@ -85,11 +84,15 @@ Shader::~Shader() noexcept {
 bool Shader::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
     const float dist {intersection.length_};
     switch (accelerator_) {
+        case Accelerator::NAIVE: {
+            intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
+            break;
+        }
         case Accelerator::REGULAR_GRID: {
             intersection = this->regularGrid_.shadowTrace(intersection, ::std::move(ray));
             break;
         }
-        case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
+        case Accelerator::BVH: {
             intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
             intersection = this->bvhRectangles_.shadowTrace(intersection, ray);
             intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
@@ -103,22 +106,23 @@ bool Shader::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
             intersection = this->bvhTriangles2_.shadowTrace(intersection, ray);
             break;
         }
-        case Accelerator::NONE: {
-            intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
-            break;
-        }
     }
     return intersection.length_ < dist;
 }
 
-bool Shader::rayTrace(RGB *const rgb, Intersection intersection, Ray &&ray) noexcept {
+bool Shader::rayTrace(RGB *rgb, Ray &&ray) noexcept {
+    Intersection intersection {};
     const float dist {intersection.length_};
     switch (accelerator_) {
+        case Accelerator::NAIVE: {
+            intersection = this->scene_.trace(intersection, ray);
+            break;
+        }
         case Accelerator::REGULAR_GRID: {
             intersection = this->regularGrid_.trace(intersection, ray);
             break;
         }
-        case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
+        case Accelerator::BVH: {
             intersection = this->bvhPlanes_.trace(intersection, ray);
             intersection = this->bvhRectangles_.trace(intersection, ray);
             intersection = this->bvhSpheres_.trace(intersection, ray);
@@ -132,10 +136,6 @@ bool Shader::rayTrace(RGB *const rgb, Intersection intersection, Ray &&ray) noex
             intersection = this->bvhSpheres2_.trace(intersection, ray);
             intersection = this->bvhTriangles2_.trace(intersection, ray);
             intersection = this->scene_.traceLights(intersection, ray);
-            break;
-        }
-        case Accelerator::NONE: {
-            intersection = this->scene_.trace(intersection, ray);
             break;
         }
     }

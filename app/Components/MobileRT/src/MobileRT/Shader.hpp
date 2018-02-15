@@ -31,9 +31,9 @@ namespace MobileRT {
         BVH_vector<MobileRT::Triangle> bvhTriangles2_{};
 
         enum Accelerator {
-            NONE = 0,
+            NAIVE = 0,
             REGULAR_GRID,
-            BOUNDING_VOLUME_HIERARCHY,
+            BVH,
             BVH_vector
         };
 
@@ -44,8 +44,7 @@ namespace MobileRT {
         const unsigned samplesLight_{};
 
     protected:
-        virtual bool shade(RGB *rgb, Intersection intersection,
-                           Ray &&ray) noexcept = 0;
+        virtual bool shade(RGB *rgb, Intersection intersection, Ray &&ray) noexcept = 0;
 
     public:
         void initializeAccelerators(Camera *camera) noexcept;
@@ -63,7 +62,7 @@ namespace MobileRT {
 
         Shader &operator=(Shader &&shader) noexcept = delete;
 
-        bool rayTrace(RGB *rgb, Intersection intersection, Ray &&ray) noexcept;
+        bool rayTrace(RGB *rgb, Ray &&ray) noexcept;
 
         bool shadowTrace(Intersection intersection, Ray &&ray) noexcept;
 

@@ -46,12 +46,6 @@ namespace MobileRT {
 
         Intersection &operator=(Intersection &&intersection) noexcept = default;
 
-        void reset(Point3D orig, Vector3D dir, float dist,
-                   Vector3D normal, const void *primitive = nullptr) noexcept;
-
-        void reset(Point3D orig, Vector3D dir, float dist,
-                   Point3D center) noexcept;
-
         static unsigned getInstances() noexcept;
     };
 }//namespace MobileRT

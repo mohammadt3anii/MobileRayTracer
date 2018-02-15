@@ -29,7 +29,7 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
 

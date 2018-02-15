@@ -52,7 +52,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     const float distanceToIntersection{
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
     return Intersection {ray.origin_, ray.direction_, distanceToIntersection, this->normal_, this};

@@ -19,8 +19,7 @@ namespace Components {
         Point3D maxPoint_{};
 
     private:
-        bool shade(RGB *rgb,
-                   Intersection intersection,
+        bool shade(RGB *rgb, Intersection intersection,
                    Ray &&ray) noexcept final;
 
     public:

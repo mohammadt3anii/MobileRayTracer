@@ -26,9 +26,7 @@ namespace Components {
         ::std::unique_ptr<Sampler> samplerRussianRoulette_{};
 
     private:
-        bool shade(RGB *rgb,
-                   Intersection intersection,
-                   Ray &&ray) noexcept final;
+        bool shade(RGB *rgb, Intersection intersection, Ray &&ray) noexcept final;
 
         Vector3D getCosineSampleHemisphere(Vector3D normal) const noexcept;
 

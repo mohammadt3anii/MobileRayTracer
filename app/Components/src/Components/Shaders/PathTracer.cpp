@@ -29,17 +29,15 @@ PathTracer::PathTracer(Scene &&scene,
 //pag 28 slides Monte Carlo
 bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
     const int32_t rayDepth{ray.depth_};
-    if (rayDepth > ::MobileRT::RayDepthMax || intersection.material_ == nullptr) {
+    if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
 
     const RGB &Le{intersection.material_->Le_};
     if (Le.hasColor()) {//stop if it intersects a light source
-        //rgb.add(Le * scene_.lights_.size() * RayDepthMax);
-        *rgb += Le;
+        *rgb = Le;
         return true;
     }
-    bool intersectedLight{false};
     RGB Ld{};
     RGB LiD{};
     RGB LiS{};
@@ -59,6 +57,8 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
             (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
             intersection.normal_ :// entering the object
             intersection.symNormal_};// We have to reverse the normal now
+        
+    bool intersectedLight {false};
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
@@ -110,10 +110,9 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
 
             //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
-            RGB LiD_RGB{};
-            Intersection secundaryIntersection{intersection.primitive_};
-            intersectedLight = rayTrace(&LiD_RGB, secundaryIntersection,
-                                        ::std::move(normalizedSecundaryRay));
+
+            RGB LiD_RGB {};
+            intersectedLight = rayTrace(&LiD_RGB, ::std::move(normalizedSecundaryRay));
             //PDF = cos(theta) / Pi
             //cos (theta) = cos(dir, normal)
             //PDF = cos(dir, normal) / Pi
@@ -124,6 +123,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
             if (rayDepth > ::MobileRT::RayDepthMin) {
                 LiD /= continue_probability;
             }
+
             //if it has Ld and if LiD intersects a light source then LiD = 0
             if (Ld.hasColor() && intersectedLight) {
                 LiD.reset();
@@ -138,9 +138,8 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
         const Vector3D reflectionDir{
                 ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
-        RGB LiS_RGB{};
-        Intersection specularInt{intersection.primitive_};
-        rayTrace(&LiS_RGB, specularInt, ::std::move(specularRay));
+        RGB LiS_RGB {};
+        rayTrace(&LiS_RGB, ::std::move(specularRay));
         LiS.addMult({kS, LiS_RGB});
     }
 
@@ -165,9 +164,8 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
                             //rayDir = (ray.d + N*(cost1 * 2)).norm();
                             ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
                             intersection.point_, rayDepth + 1, intersection.primitive_};
-        RGB LiT_RGB{};
-        Intersection transmissionInt{intersection.primitive_};
-        rayTrace(&LiT_RGB, transmissionInt, ::std::move(transmissionRay));
+        RGB LiT_RGB {};
+        rayTrace(&LiT_RGB, ::std::move(transmissionRay));
         LiT.addMult({kT, LiT_RGB});
     }
 

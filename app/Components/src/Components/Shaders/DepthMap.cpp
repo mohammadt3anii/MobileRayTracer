@@ -21,7 +21,7 @@ bool DepthMap::shade(RGB *const rgb, const Intersection intersection, Ray &&ray)
     const float maxDist{(maxPoint_ - ray.origin_).normalize() * 1.1f};
     const float depth{intersection.length_ >= maxDist ? 0.0f :
                       (maxDist - intersection.length_) / maxDist};
-    *rgb += depth;
+    *rgb = depth;
     return false;
 }
 

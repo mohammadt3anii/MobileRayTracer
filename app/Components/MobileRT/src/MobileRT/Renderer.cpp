@@ -65,8 +65,7 @@ void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
     const float pixelWidth{0.5f / this->width_};
     const float pixelHeight{0.5f / this->height_};
     const unsigned samples{this->samplesPixel_};
-    RGB pixelRGB{};
-    Intersection intersection{};
+    RGB pixelRGB {};
     for (unsigned sample{0}; sample < samples; sample++) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
@@ -89,16 +88,10 @@ void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
                     const float deviationU{(r1 - 0.5f) * 2.0f * pixelWidth};
                     const float deviationV{(r2 - 0.5f) * 2.0f * pixelHeight};
                     Ray ray{this->camera_->generateRay(u, v, deviationU, deviationV)};
-                    pixelRGB.reset(); //pixel color without intersection
-                    intersection.length_ = RayLengthMax;
-                    intersection.material_ = nullptr;
-                    intersection.primitive_ = nullptr;
-                    // LOG("triangles = ", shader_.scene_.triangles_.size());
-                    // LOG("spheres = ", shader_.scene_.spheres_.size());
-                    // LOG("planes = ", shader_.scene_.planes_.size());
-                    this->shader_->rayTrace(&pixelRGB, intersection, ::std::move(ray));
+                    pixelRGB.reset();
+                    this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
                     bitmap[yWidth + x] = RGB::incrementalAvg(pixelRGB, bitmap[yWidth + x],
-                                                             sample + 1);
+                        sample + 1);
                 }
             }
         }

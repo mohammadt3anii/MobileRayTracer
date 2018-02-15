@@ -51,15 +51,13 @@ Intersection Scene::trace(::std::vector<T> &primitives, Intersection intersectio
 
 Intersection Scene::trace(Intersection intersection, Ray ray) noexcept {
     intersection =
-            trace<::MobileRT::Primitive<::MobileRT::Triangle>>(this->triangles_, intersection,
-                                                               ray);
+        trace<::MobileRT::Primitive<::MobileRT::Triangle>>(this->triangles_, intersection, ray);
     intersection =
-            trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
+        trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
     intersection =
-            trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
+        trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
     intersection =
-            trace<::MobileRT::Primitive<::MobileRT::Rectangle>>(this->rectangles_, intersection,
-                                                                ray);
+        trace<::MobileRT::Primitive<::MobileRT::Rectangle>>(this->rectangles_, intersection, ray);
     intersection = traceLights(intersection, ::std::move(ray));
     return intersection;
 }

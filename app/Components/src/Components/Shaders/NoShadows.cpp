@@ -22,7 +22,7 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray &&ray
     const RGB &Le{intersection.material_->Le_};
     const RGB &kD{intersection.material_->Kd_};
     if (Le.hasColor()) {//stop if it intersects a light source
-        *rgb += Le;
+        *rgb = Le;
         return true;
     }
 
