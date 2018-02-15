@@ -301,11 +301,11 @@ public final class MainActivity extends Activity {
         switch (drawView_.viewText_.isWorking()) {
             case 0://if ray-tracer is idle
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
-                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
-                    //final String obj = "WavefrontOBJs/conference/conference";
+                    final String obj = "WavefrontOBJs/conference/conference";
                     //objText_ = readTextAsset(obj + ".obj");
                     //matText_ = readTextAsset(obj + ".mtl");
                     objText_ = obj + ".obj";

@@ -377,11 +377,11 @@ extern "C"
 void Java_puscas_mobilertapp_ViewText_moveTouch(
         JNIEnv *const /*env*/,
         jobject /*thiz*/,
-        jfloat const jx,
-        jfloat const jy,
-        jint const primitiveIndex
+        jfloat const /*jx*/,
+        jfloat const /*jy*/,
+        jint const /*primitiveIndex*/
 ) noexcept {
-    const float u{static_cast<float> (jx) / width_};
+    /*const float u{static_cast<float> (jx) / width_};
     const float v{static_cast<float> (jy) / height_};
     const MobileRT::Ray ray{renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
     const uint32_t index{static_cast<uint32_t>(primitiveIndex)};
@@ -389,9 +389,9 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
             MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             MobileRT::Vector3D{0.0f, 0.0f, -1.0f}};
     MobileRT::Intersection intersection{};
-    plane.intersect(&intersection, ray);
+    plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_.x_(),
-                                                            intersection.point_.y_());
+                                                            intersection.point_.y_());*/
 }
 
 extern "C"
