@@ -68,7 +68,7 @@ namespace MobileRT {
         static unsigned getInstances() noexcept;
 
         static unsigned
-        incrementalAvg(const RGB &sample, unsigned avg, unsigned numSample) noexcept;
+        incrementalAvg(RGB sample, unsigned avg, unsigned numSample) noexcept;
     };
 }//namespace MobileRT
 

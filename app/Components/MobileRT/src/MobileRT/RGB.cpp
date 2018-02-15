@@ -155,7 +155,7 @@ RGB &RGB::operator=(RGB &&rgb) noexcept {
 
 //newAvg = ((size - 1) * oldAvg + newNum) / size;
 unsigned
-RGB::incrementalAvg(const RGB &sample, const unsigned avg, const unsigned numSample) noexcept {
+RGB::incrementalAvg(const RGB sample, const unsigned avg, const unsigned numSample) noexcept {
     //toneMap();
 
     const unsigned redB4{avg & 0xFF};

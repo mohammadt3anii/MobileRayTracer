@@ -45,13 +45,13 @@ namespace MobileRT {
 
         bool trace(
           ::MobileRT::Intersection *intersection,
-          const ::MobileRT::Ray &ray,
+          ::MobileRT::Ray ray,
           unsigned depth = 0,
           uint32_t currentNodeId = 0) noexcept;
 
         bool shadowTrace(
           ::MobileRT::Intersection *intersection,
-          const ::MobileRT::Ray &ray,
+          ::MobileRT::Ray ray,
           unsigned depth = 0,
           uint32_t currentNodeId = 0) noexcept;
     };
@@ -207,7 +207,7 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool BVH_vector<T>::trace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray,
+    bool BVH_vector<T>::trace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray ray,
             const unsigned depth, const uint32_t currentNodeId) noexcept {
     if (intersect(boxes_.at(currentNodeId), ray)) {
         //node at the bottom of tree - no childs
@@ -231,7 +231,7 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool BVH_vector<T>::shadowTrace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray &ray,
+    bool BVH_vector<T>::shadowTrace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray ray,
                     const unsigned depth, const uint32_t currentNodeId) noexcept {
         if (intersect(boxes_.at(currentNodeId), ray)) {
             //node at the bottom of tree - no childs

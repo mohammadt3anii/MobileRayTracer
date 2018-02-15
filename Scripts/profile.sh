@@ -26,10 +26,10 @@ do
   FILES+=($(find ${FOLDER} -type f))
 done
 
-#OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
-#MTL="${OBJS_DIR}/CornellBox/CornellBox-Sphere.mtl"
-OBJ="${OBJS_DIR}/conference/conference.obj"
-MTL="${OBJS_DIR}/conference/conference.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Sphere.mtl"
+#OBJ="${OBJS_DIR}/conference/conference.obj"
+#MTL="${OBJS_DIR}/conference/conference.mtl"
 #OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO2.obj"
 #MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.mtl"
 
@@ -57,10 +57,10 @@ ACCELERATORS="1 2"
 function execute {
   THREAD="4"
   SHADER="1"
-  SCENE="2"
+  SCENE="4"
   ACC="3"
   PRINT="true"
-  SHOWIMAGE="false"
+  SHOWIMAGE="true"
   echo ""
   echo "THREAD = "${THREAD}
   echo "SHADER = "${SHADER}
@@ -70,11 +70,11 @@ function execute {
   #perf script report callgrind > perf.callgrind
   #kcachegrind perf.callgrind
   #perf stat \
-  perf record -g --call-graph 'fp' -- \
+  #perf record -g --call-graph 'fp' -- \
   ${BIN_DIR}/AppInterface \
             ${THREAD} ${SHADER} ${SCENE} ${SPP} ${SPL} ${WIDTH} ${HEIGHT} ${ACC} ${REP} \
             ${OBJ} ${MTL} ${PRINT} ${ASYNC} ${SHOWIMAGE}
-  perf report -g '' --show-nr-samples --hierarchy
+  #perf report -g '' --show-nr-samples --hierarchy
 }
 
 function clangtidy {

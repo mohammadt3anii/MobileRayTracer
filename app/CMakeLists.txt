@@ -37,6 +37,8 @@ set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
 set( COMMON_FLAGS -std=c++14 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
 set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-float-equal -Wno-c++98-compat-pedantic -Wno-padded )
 
+set( COMMON_FLAGS "${COMMON_FLAGS}" -fno-omit-frame-pointer )
+
 set( COMMON_FLAGS_DEBUG -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer )
 
 set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections -fno-rtti )

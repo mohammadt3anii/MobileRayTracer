@@ -122,7 +122,7 @@ void RegularGrid::addPrimitives
                     const AABB cell{pos, pos + Vector3D {dx, dy, dz}};
                     //LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
                     // do an accurate aabb / primitive intersection test
-                    const bool intersectedBox{primitive.intersect(cell)};
+                    const bool intersectedBox{::MobileRT::intersect(primitive, cell)};
                     if (intersectedBox) {
                         grid_primitives[idx].emplace_back(&primitive);
                         //LOG("add idx = ", idx, " index = ", index);
@@ -133,7 +133,7 @@ void RegularGrid::addPrimitives
     }
 }
 
-bool RegularGrid::trace(Intersection *const intersection, const Ray &ray) noexcept {
+bool RegularGrid::trace(Intersection *const intersection, Ray ray) noexcept {
     bool intersectedTriangles{
             intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray)};
     bool intersectedSpheres{
