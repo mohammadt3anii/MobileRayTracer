@@ -63,11 +63,11 @@ namespace MobileRT {
 
         Shader &operator=(Shader &&shader) noexcept = delete;
 
-        bool rayTrace(RGB *rgb, Intersection *intersection, Ray &&ray) noexcept;
+        bool rayTrace(RGB *rgb, Intersection intersection, Ray &&ray) noexcept;
 
-        bool shadowTrace(Intersection *intersection, Ray &&ray) noexcept;
+        bool shadowTrace(Intersection intersection, Ray &&ray) noexcept;
 
-        bool traceTouch(Intersection *intersection, Ray &&ray) noexcept;
+        Intersection traceTouch(Intersection intersection, Ray &&ray) noexcept;
 
         virtual void resetSampling() noexcept = 0;
     };

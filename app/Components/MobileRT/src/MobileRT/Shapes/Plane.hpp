@@ -35,7 +35,7 @@ namespace MobileRT {
 
         Plane &operator=(Plane &&plane) noexcept = default;
 
-        bool intersect(Intersection *intersection, Ray ray) const noexcept;
+        Intersection intersect(Intersection intersection, Ray ray) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 

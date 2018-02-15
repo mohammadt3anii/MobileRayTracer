@@ -5,9 +5,9 @@
 #ifndef MOBILERT_ACCELERATORS_REGULARGRID_HPP
 #define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
+#include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Primitive.hpp"
 #include "MobileRT/Scene.hpp"
-#include "MobileRT/Accelerators/AABB.hpp"
 #include <vector>
 
 namespace MobileRT {
@@ -33,8 +33,8 @@ namespace MobileRT {
                  ::std::vector<::std::vector<T *>> &grid_primitives) noexcept;
 
         template<typename T>
-        bool intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
-                       Intersection *intersection,
+        Intersection intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
+                       Intersection intersection,
                        Ray ray, bool shadowTrace = false) noexcept;
 
         int bitCounter(unsigned int n) const noexcept;
@@ -54,9 +54,9 @@ namespace MobileRT {
 
         RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 
-        bool trace(Intersection *intersection, Ray ray) noexcept;
+        Intersection trace(Intersection intersection, Ray ray) noexcept;
 
-        bool shadowTrace(Intersection *intersection, Ray &&ray) noexcept;
+        Intersection shadowTrace(Intersection intersection, Ray &&ray) noexcept;
     };
 }//namespace MobileRT
 

@@ -8,18 +8,19 @@ using ::MobileRT::AABB;
 using ::MobileRT::Plane;
 using ::MobileRT::Point3D;
 using ::MobileRT::Vector3D;
+using ::MobileRT::Intersection;
 
 Plane::Plane(const Point3D point, const Vector3D normal) noexcept :
         normal_{normal.returnNormalized()},
         point_{point} {
 }
 
-bool Plane::intersect(Intersection *const intersection, const Ray ray) const noexcept {
+Intersection Plane::intersect(Intersection intersection, const Ray ray) const noexcept {
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     const float normalized_projection{this->normal_.dotProduct(ray.direction_)};
     if (::std::fabs(normalized_projection) < Epsilon) {
-        return false;
+        return intersection;
     }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
@@ -28,14 +29,12 @@ bool Plane::intersect(Intersection *const intersection, const Ray ray) const noe
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
-        return false;
+    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+        return intersection;
     }
 
     // if so, then we have an intersection
-    intersection->reset(ray.origin_, ray.direction_, distanceToIntersection,
-                        this->normal_);
-    return true;
+    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, this->normal_};
 }
 
 void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {

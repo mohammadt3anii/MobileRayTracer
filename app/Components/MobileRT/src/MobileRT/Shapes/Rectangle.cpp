@@ -7,6 +7,7 @@
 using ::MobileRT::AABB;
 using ::MobileRT::Rectangle;
 using ::MobileRT::Point3D;
+using ::MobileRT::Intersection;
 
 Rectangle::Rectangle(const Point3D pointA,
                      const Point3D pointB,
@@ -23,24 +24,24 @@ Rectangle::Rectangle(const Point3D pointA,
         normal_{AB_.crossProduct(AC_)} {
 }
 
-bool Rectangle::intersect(Intersection *const intersection, const Ray ray) const noexcept {
+Intersection Rectangle::intersect(Intersection intersection, const Ray ray) const noexcept {
     const Vector3D perpendicularVector{ray.direction_, this->AC_};
     const float normalizedProjection{this->AB_.dotProduct(perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
-        return false;
+        return intersection;
     }
 
     const float normalizedProjectionInv{1.0f / normalizedProjection};
     const Vector3D vertexToCamera{ray.origin_, this->pointA_};
     const float u{normalizedProjectionInv * vertexToCamera.dotProduct(perpendicularVector)};
     if (u < 0.0f || u > 1.0f) {
-        return false;
+        return intersection;
     }
 
     const Vector3D upPerpendicularVector{vertexToCamera, this->AB_};//cross product
     const float v{normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector)};
     if (v < 0.0f || (u + v) > 1.0f) {
-        return false;
+        return intersection;
     }
 
     // at this stage we can compute t to find out where
@@ -48,11 +49,10 @@ bool Rectangle::intersect(Intersection *const intersection, const Ray ray) const
     const float distanceToIntersection{
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
-        return false;
+    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+        return intersection;
     }
-    intersection->reset(ray.origin_, ray.direction_, distanceToIntersection, this->normal_);
-    return true;
+    return Intersection{ray.origin_, ray.direction_, distanceToIntersection, this->normal_};
 }
 
 void Rectangle::moveTo(const float /*x*/, const float /*y*/) noexcept {

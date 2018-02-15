@@ -40,7 +40,7 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        bool intersect(Intersection *intersection, Ray ray) noexcept;
+        Intersection intersect(Intersection intersection, Ray ray) noexcept;
     };
 
 
@@ -61,16 +61,20 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool Primitive<T>::intersect(Intersection *const intersection, const Ray ray) noexcept {
+    Intersection Primitive<T>::intersect(Intersection intersection, const Ray ray) noexcept {
         if (this->lastRayID_ != ray.id_) {
-            if (this->shape_.intersect(intersection, ray)) {
-                intersection->material_ = &this->material_;
-                return true;
+            const float dist {intersection.length_};
+            intersection = this->shape_.intersect(intersection, ray);
+            if (intersection.length_ < dist) {
+                intersection.material_ = &this->material_;
+                return intersection;
             }
         }
         lastRayID_ = ray.id_;
-        return false;
+        return intersection;
     }
+
+
 
     template<typename T>
     bool intersect(Primitive<T> primitive, const AABB box) noexcept {

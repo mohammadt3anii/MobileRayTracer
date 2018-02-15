@@ -7,13 +7,14 @@
 using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
 using ::MobileRT::Point3D;
+using ::MobileRT::Intersection;
 
 Sphere::Sphere(const Point3D center, const float radius) noexcept :
         center_{center},
         sq_radius_{radius * radius} {
 }
 
-bool Sphere::intersect(Intersection *const intersection, const Ray ray) const noexcept {
+Intersection Sphere::intersect(Intersection intersection, const Ray ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const Vector3D centerToOrigin{ray.origin_, this->center_};
 
@@ -22,7 +23,7 @@ bool Sphere::intersect(Intersection *const intersection, const Ray ray) const no
     const float C{centerToOrigin.squareMagnitude() - this->sq_radius_};
     const float discriminant{B * B - 4.0f * C};
     //don't intersect (ignores tangent point of the sphere)
-    if (discriminant <= 0.0f) { return false; }
+    if (discriminant <= 0.0f) { return intersection; }
 
     //ray intersects the sphere in 2 points
     const float rootDiscriminant{::std::sqrt(discriminant)};
@@ -31,13 +32,12 @@ bool Sphere::intersect(Intersection *const intersection, const Ray ray) const no
     //distance between intersection and camera = smaller root = closer intersection
     const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
-        return false;
+    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+        return intersection;
     }
 
     // if so, then we have an intersection
-    intersection->reset(ray.origin_, ray.direction_, distanceToIntersection, this->center_);
-    return true;
+    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, this->center_};
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {

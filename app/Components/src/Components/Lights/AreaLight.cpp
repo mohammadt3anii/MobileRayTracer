@@ -35,10 +35,12 @@ void AreaLight::resetSampling() noexcept {
     samplerPointLight_->resetSampling();
 }
 
-bool AreaLight::intersect(Intersection *const intersection, Ray ray) const noexcept {
-    if (triangle_.intersect(intersection, ::std::move(ray))) {
-        intersection->material_ = &radiance_;
-        return true;
+Intersection AreaLight::intersect(Intersection intersection, Ray ray) const noexcept {
+    const float dist {intersection.length_};
+    intersection = triangle_.intersect(intersection, ::std::move(ray));
+    if (intersection.length_ < dist) {
+        intersection.material_ = &radiance_;
+        return intersection;
     }
-    return false;
+    return intersection;
 }

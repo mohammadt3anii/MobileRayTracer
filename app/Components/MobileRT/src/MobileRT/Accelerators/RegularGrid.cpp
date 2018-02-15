@@ -7,6 +7,7 @@
 using ::MobileRT::RegularGrid;
 using ::MobileRT::AABB;
 using ::MobileRT::Primitive;
+using ::MobileRT::Intersection;
 
 RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
                          const int gridSize) noexcept :
@@ -133,36 +134,35 @@ void RegularGrid::addPrimitives
     }
 }
 
-bool RegularGrid::trace(Intersection *const intersection, Ray ray) noexcept {
-    bool intersectedTriangles{
-            intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray)};
-    bool intersectedSpheres{
-            intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray)};
-    bool intersectedPlanes{
-            intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray)};
-    bool intersectedRectangles{
-            intersect<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray)};
-    bool intersectedLights{this->scene_->traceLights(intersection, ray)};
-    return intersectedTriangles || intersectedSpheres || intersectedPlanes ||
-           intersectedRectangles || intersectedLights;
+Intersection RegularGrid::trace(Intersection intersection, Ray ray) noexcept {
+    intersection =
+            intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray);
+    intersection =
+            intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray);
+    intersection =
+            intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray);
+    intersection =
+            intersect<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray);
+    intersection = this->scene_->traceLights(intersection, ray);
+    return intersection;
 }
 
-bool RegularGrid::shadowTrace(Intersection *const intersection, Ray &&ray) noexcept {
-    bool intersectedTriangles{
-            intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray, true)};
-    bool intersectedSpheres{
-            intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray, true)};
-    bool intersectedPlanes{
-            intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray, true)};
-    bool intersectedRectangles{
+Intersection RegularGrid::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
+    intersection =
+            intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray, true);
+    intersection =
+            intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray, true);
+    intersection =
+            intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray, true);
+    intersection =
             intersect<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray,
-                                                        true)};
-    return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
+                                                        true);
+    return intersection;
 }
 
 template<typename T>
-bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
-                            Intersection *const intersection, const Ray ray,
+Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
+                            Intersection intersection, const Ray ray,
                             const bool shadowTrace) noexcept {
     bool retval{false};
     // setup 3DDDA (double check reusability of primary ray data)
@@ -174,7 +174,7 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                          (Y < 0) || (Y >= gridSize_) ||
                          (Z < 0) || (Z >= gridSize_)};
     if (notInGrid && gridSize_ > 1) {
-        return false;
+        return intersection;
     }
 
     int stepX, outX;
@@ -245,10 +245,12 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                 (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            if (primitive->intersect(intersection, ray)) {
+            const float dist {intersection.length_};
+            intersection = primitive->intersect(intersection, ray);
+            if (intersection.length_ < dist) {
                 retval = true;
                 if (shadowTrace) {
-                    return retval;
+                    return intersection;
                 }
                 goto testloop;
             }
@@ -258,13 +260,13 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
             if (tmax.x_() < tmax.z_()) {
                 X += stepX;
                 if (X == outX) {
-                    return false;
+                    return intersection;
                 }
                 tmax.setX(tmax.x_() + tdelta.x_());
             } else {
                 Z += stepZ;
                 if (Z == outZ) {
-                    return false;
+                    return intersection;
                 }
                 tmax.setZ(tmax.z_() + tdelta.z_());
             }
@@ -272,13 +274,13 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
             if (tmax.y_() < tmax.z_()) {
                 Y += stepY;
                 if (Y == outY) {
-                    return false;
+                    return intersection;
                 }
                 tmax.setY(tmax.y_() + tdelta.y_());
             } else {
                 Z += stepZ;
                 if (Z == outZ) {
-                    return false;
+                    return intersection;
                 }
                 tmax.setZ(tmax.z_() + tdelta.z_());
             }
@@ -292,11 +294,15 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                            (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            retval |= primitive->intersect(intersection, ray);
+            const float dist {intersection.length_};
+            intersection = primitive->intersect(intersection, ray);
+            if (intersection.length_ < dist) {
+                retval = true;
+            }
         }
         if (tmax.x_() < tmax.y_()) {
             if (tmax.x_() < tmax.z_()) {
-                if (intersection->length_ < tmax.x_()) {
+                if (intersection.length_ < tmax.x_()) {
                     break;
                 }
                 X += stepX;
@@ -305,7 +311,7 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                 }
                 tmax.setX(tmax.x_() + tdelta.x_());
             } else {
-                if (intersection->length_ < tmax.z_()) {
+                if (intersection.length_ < tmax.z_()) {
                     break;
                 }
                 Z += stepZ;
@@ -316,7 +322,7 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
             }
         } else {
             if (tmax.y_() < tmax.z_()) {
-                if (intersection->length_ < tmax.y_()) {
+                if (intersection.length_ < tmax.y_()) {
                     break;
                 }
                 Y += stepY;
@@ -325,7 +331,7 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
                 }
                 tmax.setY(tmax.y_() + tdelta.y_());
             } else {
-                if (intersection->length_ < tmax.z_()) {
+                if (intersection.length_ < tmax.z_()) {
                     break;
                 }
                 Z += stepZ;
@@ -336,5 +342,5 @@ bool RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesM
             }
         }
     }
-    return retval;
+    return intersection;
 }

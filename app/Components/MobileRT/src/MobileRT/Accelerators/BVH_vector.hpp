@@ -5,9 +5,9 @@
 #ifndef MOBILERT_ACCELERATORS_BVH_VECTOR_HPP
 #define MOBILERT_ACCELERATORS_BVH_VECTOR_HPP
 
+#include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
-#include "AABB.hpp"
 #include <algorithm>
 #include <random>
 
@@ -43,14 +43,14 @@ namespace MobileRT {
 
         BVH_vector &operator=(BVH_vector &&bVH) noexcept = default;
 
-        bool trace(
-          ::MobileRT::Intersection *intersection,
+        Intersection trace(
+          ::MobileRT::Intersection intersection,
           ::MobileRT::Ray ray,
           unsigned depth = 0,
           uint32_t currentNodeId = 0) noexcept;
 
-        bool shadowTrace(
-          ::MobileRT::Intersection *intersection,
+        Intersection shadowTrace(
+          ::MobileRT::Intersection intersection,
           ::MobileRT::Ray ray,
           unsigned depth = 0,
           uint32_t currentNodeId = 0) noexcept;
@@ -98,8 +98,10 @@ namespace MobileRT {
 
 
     template<typename T>
-    AABB BVH_vector<T>::build(::std::vector<MobileRT::Primitive<T>> &&primitives, const unsigned depth,
-                    const uint32_t currentNodeId) noexcept {
+    AABB BVH_vector<T>::build(
+        ::std::vector<MobileRT::Primitive<T>> &&primitives,
+        const unsigned depth,
+        const uint32_t currentNodeId) noexcept {
     if (primitives.empty()) {
         if (depth == 0) {
             boxes_.emplace_back(AABB{});
@@ -207,50 +209,61 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool BVH_vector<T>::trace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray ray,
-            const unsigned depth, const uint32_t currentNodeId) noexcept {
-    if (intersect(boxes_.at(currentNodeId), ray)) {
-        //node at the bottom of tree - no childs
-        const uint32_t aux{static_cast<uint32_t>(1 << depth)};
-        if (depth == numberDepth_) {
-            const uint32_t primitiveId{(currentNodeId - (aux - 1))};
-            bool res{false};
-            for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
-                res |= primitive.intersect(intersection, ray);
-            }
-            return res;
-        }
-
-        const uint32_t left{currentNodeId * 2 + 1};
-        const bool hit_left{trace(intersection, ray, depth + 1, left)};
-        const bool hit_right{trace(intersection, ray, depth + 1, left + 1)};
-        return hit_left || hit_right;
-    }
-    return false;
-    }
-
-
-    template<typename T>
-    bool BVH_vector<T>::shadowTrace(::MobileRT::Intersection *const intersection, const ::MobileRT::Ray ray,
-                    const unsigned depth, const uint32_t currentNodeId) noexcept {
+    Intersection BVH_vector<T>::trace(
+        ::MobileRT::Intersection intersection,
+        const ::MobileRT::Ray ray,
+        const unsigned depth,
+        const uint32_t currentNodeId) noexcept {
         if (intersect(boxes_.at(currentNodeId), ray)) {
             //node at the bottom of tree - no childs
             const uint32_t aux{static_cast<uint32_t>(1 << depth)};
             if (depth == numberDepth_) {
                 const uint32_t primitiveId{(currentNodeId - (aux - 1))};
                 for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
-                    if (primitive.intersect(intersection, ray)) {
-                        return true;
-                    }
+                    intersection = primitive.intersect(intersection, ray);
                 }
-                return false;
+                return intersection;
             }
 
             const uint32_t left{currentNodeId * 2 + 1};
-            return  shadowTrace(intersection, ray, depth + 1, left) ||
-                    shadowTrace(intersection, ray, depth + 1, left + 1);
+            intersection = trace(intersection, ray, depth + 1, left);
+            intersection = trace(intersection, ray, depth + 1, left + 1);
+            return intersection;
         }
-        return false;
+        return intersection;
+    }
+
+
+    template<typename T>
+    Intersection BVH_vector<T>::shadowTrace(
+        ::MobileRT::Intersection intersection,
+        const ::MobileRT::Ray ray,
+        const unsigned depth,
+        const uint32_t currentNodeId) noexcept {
+        if (intersect(boxes_.at(currentNodeId), ray)) {
+            //node at the bottom of tree - no childs
+            const uint32_t aux{static_cast<uint32_t>(1 << depth)};
+            if (depth == numberDepth_) {
+                const uint32_t primitiveId{(currentNodeId - (aux - 1))};
+                for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
+                    const float dist {intersection.length_};
+                    intersection = primitive.intersect(intersection, ray);
+                    if (intersection.length_ < dist) {
+                        return intersection;
+                    }
+                }
+                return intersection;
+            }
+
+            const uint32_t left{currentNodeId * 2 + 1};
+            const float dist {intersection.length_};
+            intersection = shadowTrace(intersection, ray, depth + 1, left);
+            if (intersection.length_ < dist) {
+                return intersection;
+            }
+            return shadowTrace(intersection, ray, depth + 1, left + 1);
+        }
+        return intersection;
     }
 
 }//namespace MobileRT

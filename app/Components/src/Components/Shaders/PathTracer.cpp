@@ -90,7 +90,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
                     //if there are no primitives between intersection and the light
                     intersectLight.length_ = distanceToLight;
                     intersectLight.primitive_ = intersection.primitive_;
-                    if (!shadowTrace(&intersectLight, ::std::move(shadowRay))) {
+                    if (!shadowTrace(intersectLight, ::std::move(shadowRay))) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                         Ld.addMult({light.radiance_.Le_}, cosNormalLight);
                     }
@@ -112,7 +112,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
             RGB LiD_RGB{};
             Intersection secundaryIntersection{intersection.primitive_};
-            intersectedLight = rayTrace(&LiD_RGB, &secundaryIntersection,
+            intersectedLight = rayTrace(&LiD_RGB, secundaryIntersection,
                                         ::std::move(normalizedSecundaryRay));
             //PDF = cos(theta) / Pi
             //cos (theta) = cos(dir, normal)
@@ -140,7 +140,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         RGB LiS_RGB{};
         Intersection specularInt{intersection.primitive_};
-        rayTrace(&LiS_RGB, &specularInt, ::std::move(specularRay));
+        rayTrace(&LiS_RGB, specularInt, ::std::move(specularRay));
         LiS.addMult({kS, LiS_RGB});
     }
 
@@ -167,7 +167,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
                             intersection.point_, rayDepth + 1, intersection.primitive_};
         RGB LiT_RGB{};
         Intersection transmissionInt{intersection.primitive_};
-        rayTrace(&LiT_RGB, &transmissionInt, ::std::move(transmissionRay));
+        rayTrace(&LiT_RGB, transmissionInt, ::std::move(transmissionRay));
         LiT.addMult({kT, LiT_RGB});
     }
 

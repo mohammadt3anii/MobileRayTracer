@@ -5,9 +5,9 @@
 #ifndef MOBILERT_ACCELERATORS_BVH_HPP
 #define MOBILERT_ACCELERATORS_BVH_HPP
 
+#include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
-#include "AABB.hpp"
 #include <random>
 
 namespace MobileRT {
@@ -36,11 +36,11 @@ namespace MobileRT {
 
         BVH &operator=(BVH &&bVH) noexcept = default;
 
-        bool trace(
-            ::MobileRT::Intersection *intersection,
+        Intersection trace(
+            ::MobileRT::Intersection intersection,
             ::MobileRT::Ray ray) noexcept;
 
-        bool shadowTrace(::MobileRT::Intersection *intersection, Ray ray) noexcept;
+        Intersection shadowTrace(::MobileRT::Intersection intersection, Ray ray) noexcept;
     };
 
 
@@ -157,39 +157,46 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool BVH<T>::trace(
-        ::MobileRT::Intersection *const intersection,
+    Intersection BVH<T>::trace(
+        ::MobileRT::Intersection intersection,
         const ::MobileRT::Ray ray) noexcept {
         if (intersect(box_, ray)) {
             if (left_ == nullptr) {
-                bool res{false};
                 for (MobileRT::Primitive<T> &s : primitives_) {
-                    res |= s.intersect(intersection, ray);
+                    intersection = s.intersect(intersection, ray);
                 }
-                return res;
+                return intersection;
             }
-            const bool hit_left{left_->trace(intersection, ray)};
-            const bool hit_right{right_->trace(intersection, ray)};
-            return hit_left || hit_right;
+            intersection = left_->trace(intersection, ray);
+            intersection = right_->trace(intersection, ray);
+
+            return intersection;
         }
-        return false;
+        return intersection;
     }
 
     template<typename T>
-    bool BVH<T>::shadowTrace(::MobileRT::Intersection *intersection, const Ray ray) noexcept {
+    Intersection BVH<T>::shadowTrace(::MobileRT::Intersection intersection, const Ray ray) noexcept {
         if (intersect(box_, ray)) {
             if (left_ == nullptr) {
                 for (MobileRT::Primitive<T> &s : primitives_) {
-                    if (s.intersect(intersection, ray)) {
-                        return true;
+                    const float dist {intersection.length_};
+                    intersection = s.intersect(intersection, ray);
+                    if (intersection.length_ < dist) {
+                        return intersection;
                     }
                 }
-                return false;
+                return intersection;
             }
-            return left_->shadowTrace(intersection, ray) ||
-                    right_->shadowTrace(intersection, ray);
+
+            const float dist {intersection.length_};
+            intersection = left_->shadowTrace(intersection, ray);
+            if (intersection.length_ < dist) {
+                return intersection;
+            }
+            return right_->shadowTrace(intersection, ray);
         }
-        return false;
+        return intersection;
     }
 
 }//namespace MobileRT

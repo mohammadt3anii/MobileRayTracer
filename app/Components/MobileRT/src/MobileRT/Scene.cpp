@@ -8,6 +8,8 @@ using ::MobileRT::Scene;
 using ::MobileRT::Triangle;
 using ::MobileRT::Sphere;
 using ::MobileRT::Plane;
+using ::MobileRT::Intersection;
+
 static unsigned counter{0};
 
 Scene::~Scene() noexcept {
@@ -28,69 +30,63 @@ Scene::~Scene() noexcept {
     LOG("SCENE DELETED");
 }
 
-bool Scene::traceLights(Intersection *const intersection, const Ray ray) const noexcept {
-    bool res{false};
+Intersection Scene::traceLights(Intersection intersection, const Ray ray) const noexcept {
     const unsigned lightsSize{static_cast<unsigned> (lights_.size())};
     for (unsigned i{0}; i < lightsSize; i++) {
         const Light &light{*this->lights_[static_cast<uint32_t> (i)]};
-        if (light.intersect(intersection, ray)) {
-            res = true;
-        }
+        intersection = light.intersect(intersection, ray);
     }
 
-    return res;
+    return intersection;
 }
 
 template<typename T>
-bool Scene::trace(::std::vector<T> &primitives, Intersection *const intersection,
+Intersection Scene::trace(::std::vector<T> &primitives, Intersection intersection,
                   const Ray ray) noexcept {
-    bool res{false};
     for (T &primitive : primitives) {
-        res |= primitive.intersect(intersection, ray);
+        intersection = primitive.intersect(intersection, ray);
     }
-    return res;
+    return intersection;
 }
 
-bool Scene::trace(Intersection *const intersection, Ray ray) noexcept {
-    bool intersectedTriangles{
+Intersection Scene::trace(Intersection intersection, Ray ray) noexcept {
+    intersection =
             trace<::MobileRT::Primitive<::MobileRT::Triangle>>(this->triangles_, intersection,
-                                                               ray)};
-    bool intersectedSpheres{
-            trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray)};
-    bool intersectedPlanes{
-            trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray)};
-    bool intersectedRectangles{
+                                                               ray);
+    intersection =
+            trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
+    intersection =
+            trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
+    intersection =
             trace<::MobileRT::Primitive<::MobileRT::Rectangle>>(this->rectangles_, intersection,
-                                                                ray)};
-    bool intersectedLights{
-            traceLights(intersection, ::std::move(ray))
-    };
-    return intersectedTriangles || intersectedSpheres || intersectedPlanes ||
-           intersectedRectangles ||
-           intersectedLights;
+                                                                ray);
+    intersection = traceLights(intersection, ::std::move(ray));
+    return intersection;
 }
 
 template<typename T>
-bool Scene::shadowTrace(::std::vector<T> &primitives, Intersection *const intersection,
+Intersection Scene::shadowTrace(::std::vector<T> &primitives, Intersection intersection,
                         const Ray ray) const noexcept {
     for (T &primitive : primitives) {
-        if (primitive.intersect(intersection, ray)) {
-            return true;
+        const float dist {intersection.length_};
+        intersection = primitive.intersect(intersection, ray);
+        if (intersection.length_ < dist) {
+            return intersection;
         }
     }
-    return false;
+    return intersection;
 }
 
-bool Scene::shadowTrace(Intersection *const intersection, Ray &&ray) noexcept {
-    const bool intersectedTriangles{
-            shadowTrace<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray)};
-    const bool intersectedSpheres{
-            shadowTrace<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray)};
-    const bool intersectedPlanes{
-            shadowTrace<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray)};
-    const bool intersectedRectangles{
-            shadowTrace<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray)};
-    return intersectedTriangles || intersectedSpheres || intersectedPlanes || intersectedRectangles;
+Intersection Scene::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
+    intersection =
+            shadowTrace<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray);
+    intersection =
+            shadowTrace<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray);
+    intersection =
+            shadowTrace<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray);
+    intersection =
+            shadowTrace<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray);
+    return intersection;
 }
 
 unsigned Scene::getInstances() noexcept {

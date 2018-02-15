@@ -25,10 +25,10 @@ namespace MobileRT {
 
     private:
         template<typename T>
-        bool trace(::std::vector<T> &primitives, Intersection *intersection, Ray ray) noexcept;
+        Intersection trace(::std::vector<T> &primitives, Intersection intersection, Ray ray) noexcept;
 
         template<typename T>
-        bool shadowTrace(::std::vector<T> &primitives, Intersection *intersection,
+        Intersection shadowTrace(::std::vector<T> &primitives, Intersection intersection,
                          Ray ray) const noexcept;
 
         static void AABBbounds(AABB box, Point3D *min, Point3D *max);
@@ -46,13 +46,13 @@ namespace MobileRT {
 
         Scene &operator=(Scene &&scene) noexcept = default;
 
-        bool trace(Intersection *intersection, Ray ray) noexcept;
+        Intersection trace(Intersection intersection, Ray ray) noexcept;
 
-        bool shadowTrace(Intersection *intersection, Ray &&ray) noexcept;
+        Intersection shadowTrace(Intersection intersection, Ray &&ray) noexcept;
 
         static unsigned getInstances() noexcept;
 
-        bool traceLights(Intersection *intersection, Ray ray) const noexcept;
+        Intersection traceLights(Intersection intersection, Ray ray) const noexcept;
 
         void resetSampling() noexcept;
 

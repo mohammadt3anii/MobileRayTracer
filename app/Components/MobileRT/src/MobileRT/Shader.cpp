@@ -74,7 +74,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     }
 }
 
-bool Shader::traceTouch(Intersection *const intersection, Ray &&ray) noexcept {
+Intersection Shader::traceTouch(Intersection intersection, Ray &&ray) noexcept {
     return this->scene_.trace(intersection, ::std::move(ray));
 }
 
@@ -82,62 +82,65 @@ Shader::~Shader() noexcept {
     LOG("SHADER DELETED");
 }
 
-bool Shader::shadowTrace(Intersection *const intersection, Ray &&ray) noexcept {
-    bool intersected{false};
+bool Shader::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
+    const float dist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::REGULAR_GRID: {
-            intersected |= this->regularGrid_.shadowTrace(intersection, ::std::move(ray));
+            intersection = this->regularGrid_.shadowTrace(intersection, ::std::move(ray));
             break;
         }
         case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-            intersected |= this->bvhPlanes_.shadowTrace(intersection, ray);
-            intersected |= this->bvhRectangles_.shadowTrace(intersection, ray);
-            intersected |= this->bvhSpheres_.shadowTrace(intersection, ray);
-            intersected |= this->bvhTriangles_.shadowTrace(intersection, ray);
+            intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
+            intersection = this->bvhRectangles_.shadowTrace(intersection, ray);
+            intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
+            intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
         }
         case Accelerator::BVH_vector: {
-            intersected |= this->bvhPlanes2_.shadowTrace(intersection, ray);
-            intersected |= this->bvhRectangles2_.shadowTrace(intersection, ray);
-            intersected |= this->bvhSpheres2_.shadowTrace(intersection, ray);
-            intersected |= this->bvhTriangles2_.shadowTrace(intersection, ray);
+            intersection = this->bvhPlanes2_.shadowTrace(intersection, ray);
+            intersection = this->bvhRectangles2_.shadowTrace(intersection, ray);
+            intersection = this->bvhSpheres2_.shadowTrace(intersection, ray);
+            intersection = this->bvhTriangles2_.shadowTrace(intersection, ray);
             break;
         }
         case Accelerator::NONE: {
-            intersected = this->scene_.shadowTrace(intersection, ::std::move(ray));
+            intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
             break;
         }
     }
-    return intersected;
+    return intersection.length_ < dist;
 }
 
-bool Shader::rayTrace(RGB *const rgb, Intersection *const intersection, Ray &&ray) noexcept {
-    bool intersected{false};
+bool Shader::rayTrace(RGB *const rgb, Intersection intersection, Ray &&ray) noexcept {
+    const float dist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::REGULAR_GRID: {
-            intersected |= this->regularGrid_.trace(intersection, ray);
+            intersection = this->regularGrid_.trace(intersection, ray);
             break;
         }
         case Accelerator::BOUNDING_VOLUME_HIERARCHY: {
-            intersected |= this->bvhPlanes_.trace(intersection, ray);
-            intersected |= this->bvhRectangles_.trace(intersection, ray);
-            intersected |= this->bvhSpheres_.trace(intersection, ray);
-            intersected |= this->bvhTriangles_.trace(intersection, ray);
-            intersected |= this->scene_.traceLights(intersection, ray);
+            intersection = this->bvhPlanes_.trace(intersection, ray);
+            intersection = this->bvhRectangles_.trace(intersection, ray);
+            intersection = this->bvhSpheres_.trace(intersection, ray);
+            intersection = this->bvhTriangles_.trace(intersection, ray);
+            intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
         case Accelerator::BVH_vector: {
-            intersected |= this->bvhPlanes2_.trace(intersection, ray);
-            intersected |= this->bvhRectangles2_.trace(intersection, ray);
-            intersected |= this->bvhSpheres2_.trace(intersection, ray);
-            intersected |= this->bvhTriangles2_.trace(intersection, ray);
-            intersected |= this->scene_.traceLights(intersection, ray);
+            intersection = this->bvhPlanes2_.trace(intersection, ray);
+            intersection = this->bvhRectangles2_.trace(intersection, ray);
+            intersection = this->bvhSpheres2_.trace(intersection, ray);
+            intersection = this->bvhTriangles2_.trace(intersection, ray);
+            intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
         case Accelerator::NONE: {
-            intersected |= this->scene_.trace(intersection, ray);
+            intersection = this->scene_.trace(intersection, ray);
             break;
         }
     }
-    return intersected && shade(rgb, *intersection, ::std::move(ray));
+    if (intersection.length_ < dist) {
+        return shade(rgb, intersection, ::std::move(ray));
+    }
+    return false;
 }

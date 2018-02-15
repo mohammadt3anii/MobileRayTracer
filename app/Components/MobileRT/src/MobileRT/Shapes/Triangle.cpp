@@ -9,6 +9,7 @@ using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
 using ::MobileRT::Point3D;
 using ::MobileRT::Vector3D;
+using ::MobileRT::Intersection;
 
 Triangle::Triangle(const Point3D pointA, const Point3D pointB, const Point3D pointC,
                    Vector3D normal) noexcept :
@@ -23,27 +24,27 @@ Triangle::Triangle(const Point3D pointA, const Point3D pointB, const Point3D poi
         pointC_{pointC} {
 }
 
-bool Triangle::intersect(Intersection *const intersection, const Ray ray) const noexcept {
+Intersection Triangle::intersect(Intersection intersection, const Ray ray) const noexcept {
     if (ray.primitive_ == this) {
-        return false;
+        return intersection;
     }
     const Vector3D perpendicularVector{ray.direction_, this->AC_};//cross product
     const float normalizedProjection{this->AB_.dotProduct(perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
-        return false;
+        return intersection;
     }
 
     const float normalizedProjectionInv{1.0f / normalizedProjection};
     const Vector3D vectorToCamera{ray.origin_, this->pointA_};
     const float u{normalizedProjectionInv * vectorToCamera.dotProduct(perpendicularVector)};
     if (u < 0.0f || u > 1.0f) {
-        return false;
+        return intersection;
     }
 
     const Vector3D upPerpendicularVector{vectorToCamera, this->AB_};//cross product
     const float v{normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector)};
     if (v < 0.0f || (u + v) > 1.0f) {
-        return false;
+        return intersection;
     }
 
     // at this stage we can compute t to find out where
@@ -51,11 +52,10 @@ bool Triangle::intersect(Intersection *const intersection, const Ray ray) const 
     const float distanceToIntersection{
             normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection->length_) {
-        return false;
+    if (distanceToIntersection < Epsilon || distanceToIntersection > intersection.length_) {
+        return intersection;
     }
-    intersection->reset(ray.origin_, ray.direction_, distanceToIntersection, this->normal_, this);
-    return true;
+    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, this->normal_, this};
 }
 
 void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -164,8 +164,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
     bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
     bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
     bool intersectedBC{intersectRayAABB(this->pointB_, this->BC_)};
-    bool intersectedRay{intersect(&intersection, ray)};
+    intersection = intersect(intersection, ray);
     bool insideTriangle{isOverTriangle(vec)};
 
-    return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
+    return intersectedAB || intersectedAC || intersectedBC || /*intersectedRay ||*/ insideTriangle;
 }

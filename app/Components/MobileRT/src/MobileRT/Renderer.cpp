@@ -96,7 +96,7 @@ void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
                     // LOG("triangles = ", shader_.scene_.triangles_.size());
                     // LOG("spheres = ", shader_.scene_.spheres_.size());
                     // LOG("planes = ", shader_.scene_.planes_.size());
-                    this->shader_->rayTrace(&pixelRGB, &intersection, ::std::move(ray));
+                    this->shader_->rayTrace(&pixelRGB, intersection, ::std::move(ray));
                     bitmap[yWidth + x] = RGB::incrementalAvg(pixelRGB, bitmap[yWidth + x],
                                                              sample + 1);
                 }

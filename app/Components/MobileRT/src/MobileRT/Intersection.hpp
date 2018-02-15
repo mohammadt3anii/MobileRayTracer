@@ -25,6 +25,17 @@ namespace MobileRT {
 
         explicit Intersection(const void *primitive) noexcept;
 
+        explicit Intersection(Point3D orig,
+                    Vector3D dir,
+                    float dist,
+                    Point3D center) noexcept;
+
+        explicit Intersection(Point3D orig,
+                         Vector3D dir,
+                         float dist,
+                         Vector3D normal,
+                         const void *primitive = nullptr) noexcept;
+
         Intersection(const Intersection &intersection) noexcept = default;
 
         Intersection(Intersection &&intersection) noexcept = default;
@@ -33,7 +44,7 @@ namespace MobileRT {
 
         Intersection &operator=(const Intersection &intersection) noexcept = delete;
 
-        Intersection &operator=(Intersection &&intersection) noexcept = delete;
+        Intersection &operator=(Intersection &&intersection) noexcept = default;
 
         void reset(Point3D orig, Vector3D dir, float dist,
                    Vector3D normal, const void *primitive = nullptr) noexcept;
