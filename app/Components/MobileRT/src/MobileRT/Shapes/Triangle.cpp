@@ -15,13 +15,11 @@ Triangle::Triangle(const Point3D pointA, const Point3D pointB, const Point3D poi
                    Vector3D normal) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
-        BC_{pointC - pointB},
         normal_{
                 normal.isNull() ? AB_.crossProduct(AC_).returnNormalized()
                                 : normal.returnNormalized()},
-        pointA_{pointA},
-        pointB_{pointB},
-        pointC_{pointC} {
+        pointA_{pointA}
+{
 }
 
 Intersection Triangle::intersect(Intersection intersection, const Ray ray) const noexcept {
@@ -66,16 +64,20 @@ float Triangle::getZ() const noexcept {
 }
 
 Point3D Triangle::getPositionMin() const noexcept {
-    const float x{::std::min(pointA_.x_(), ::std::min(pointB_.x_(), pointC_.x_()))};
-    const float y{::std::min(pointA_.y_(), ::std::min(pointB_.y_(), pointC_.y_()))};
-    const float z{::std::min(pointA_.z_(), ::std::min(pointB_.z_(), pointC_.z_()))};
+    Point3D pointB {pointA_ + AB_};
+    Point3D pointC {pointA_ + AC_};
+    const float x{::std::min(pointA_.x_(), ::std::min(pointB.x_(), pointC.x_()))};
+    const float y{::std::min(pointA_.y_(), ::std::min(pointB.y_(), pointC.y_()))};
+    const float z{::std::min(pointA_.z_(), ::std::min(pointB.z_(), pointC.z_()))};
     return Point3D(x, y, z);
 }
 
 Point3D Triangle::getPositionMax() const noexcept {
-    const float x{::std::max(pointA_.x_(), ::std::max(pointB_.x_(), pointC_.x_()))};
-    const float y{::std::max(pointA_.y_(), ::std::max(pointB_.y_(), pointC_.y_()))};
-    const float z{::std::max(pointA_.z_(), ::std::max(pointB_.z_(), pointC_.z_()))};
+    Point3D pointB {pointA_ + AB_};
+    Point3D pointC {pointA_ + AC_};
+    const float x{::std::max(pointA_.x_(), ::std::max(pointB.x_(), pointC.x_()))};
+    const float y{::std::max(pointA_.y_(), ::std::max(pointB.y_(), pointC.y_()))};
+    const float z{::std::max(pointA_.z_(), ::std::max(pointB.z_(), pointC.z_()))};
     return Point3D(x, y, z);
 }
 
@@ -163,9 +165,13 @@ bool Triangle::intersect(const AABB box) const noexcept {
     const Ray ray{vec, min, 1};
     bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
     bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
-    bool intersectedBC{intersectRayAABB(this->pointB_, this->BC_)};
+    Point3D pointB {pointA_ + AB_};
+    Point3D pointC {pointA_ + AC_};
+    bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
+    const float dist {intersection.length_};
     intersection = intersect(intersection, ray);
+    bool intersectedRay {intersection.length_ < dist};
     bool insideTriangle{isOverTriangle(vec)};
 
-    return intersectedAB || intersectedAC || intersectedBC || /*intersectedRay ||*/ insideTriangle;
+    return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
 }

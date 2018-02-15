@@ -16,12 +16,6 @@ namespace MobileRT {
         float B_{0.0f};
 
     private:
-        ::std::mutex mutex_{};
-
-    public:
-        unsigned samples_{0};
-
-    private:
         void toneMap() noexcept;
 
     public:
@@ -59,7 +53,7 @@ namespace MobileRT {
 
         void addSampleAndCalcAvg(RGB *sample) noexcept;
 
-        void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f, unsigned samples = 0) noexcept;
+        void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f) noexcept;
 
         unsigned RGB2Color() noexcept;
 

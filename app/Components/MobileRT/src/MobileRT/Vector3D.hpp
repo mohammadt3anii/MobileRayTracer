@@ -17,6 +17,8 @@ namespace MobileRT {
     public:
         ::std::array<float, 3> direction_{};
 
+        float magnitude_{1.0f};
+
         float x_() const noexcept { return direction_.at(0); }
 
         float y_() const noexcept { return direction_.at(1); }
@@ -28,8 +30,6 @@ namespace MobileRT {
         void setY(float y) noexcept { direction_.at(1) = y; }
 
         void setZ(float z) noexcept { direction_.at(2) = z; }
-
-        float magnitude_{1.0f};
 
     private:
         explicit Vector3D(Vector3D vector, float value) noexcept;

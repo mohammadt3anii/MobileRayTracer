@@ -16,11 +16,8 @@ namespace MobileRT {
     public:
         Vector3D AC_{};
         Vector3D AB_{};
-        Vector3D BC_{};
         Vector3D normal_{};
         Point3D pointA_{};
-        Point3D pointB_{};
-        Point3D pointC_{};
 
     private:
         Point3D getPositionMin() const noexcept;

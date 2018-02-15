@@ -25,13 +25,15 @@ TEST_F(TestTriangle, ConstructorVALUES) {
 	ASSERT_EQ(0, triangle->pointA_.y_());
 	ASSERT_EQ(0, triangle->pointA_.z_());
 
-	ASSERT_EQ(0, triangle->pointB_.x_());
-	ASSERT_EQ(1, triangle->pointB_.y_());
-	ASSERT_EQ(0, triangle->pointB_.z_());
+	Point3D pointB {triangle->pointA_ + triangle->AB_};
+	Point3D pointC {triangle->pointA_ + triangle->AC_};
+	ASSERT_EQ(0, pointB.x_());
+	ASSERT_EQ(1, pointB.y_());
+	ASSERT_EQ(0, pointB.z_());
 
-	ASSERT_EQ(0, triangle->pointC_.x_());
-	ASSERT_EQ(0, triangle->pointC_.y_());
-	ASSERT_EQ(1, triangle->pointC_.z_());
+	ASSERT_EQ(0, pointC.x_());
+	ASSERT_EQ(0, pointC.y_());
+	ASSERT_EQ(1, pointC.z_());
 
 	ASSERT_EQ(0, triangle->AC_.x_());
 	ASSERT_EQ(0, triangle->AC_.y_());
@@ -41,9 +43,10 @@ TEST_F(TestTriangle, ConstructorVALUES) {
 	ASSERT_EQ(1, triangle->AB_.y_());
 	ASSERT_EQ(0, triangle->AB_.z_());
 
-	ASSERT_EQ(0, triangle->BC_.x_());
-	ASSERT_EQ(-1, triangle->BC_.y_());
-	ASSERT_EQ(1, triangle->BC_.z_());
+	MobileRT::Vector3D bc {pointC - pointB};
+	ASSERT_EQ(0, bc.x_());
+	ASSERT_EQ(-1, bc.y_());
+	ASSERT_EQ(1, bc.z_());
 
 	ASSERT_FLOAT_EQ(1, triangle->normal_.x_());
 	ASSERT_EQ(0, triangle->normal_.y_());

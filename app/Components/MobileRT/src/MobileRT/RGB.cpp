@@ -18,16 +18,16 @@ RGB::RGB(const float r, const float g, const float b) noexcept :
 RGB::RGB(const RGB &rgb) noexcept :
         R_{rgb.R_},
         G_{rgb.G_},
-        B_{rgb.B_},
-        samples_{rgb.samples_} {
+        B_{rgb.B_}
+{
     counter++;
 }
 
 RGB::RGB(RGB &&rgb) noexcept :
         R_{rgb.R_},
         G_{rgb.G_},
-        B_{rgb.B_},
-        samples_{rgb.samples_} {
+        B_{rgb.B_}
+{
     counter++;
 }
 
@@ -83,26 +83,10 @@ void RGB::operator/=(const float value) noexcept {
     this->B_ /= value;
 }
 
-void RGB::addSampleAndCalcAvg(RGB *const sample) noexcept {
-    this->mutex_.lock();
-    this->R_ += sample->R_;
-    this->G_ += sample->G_;
-    this->B_ += sample->B_;
-    sample->samples_ = ++this->samples_;
-    sample->R_ = this->R_;
-    sample->G_ = this->G_;
-    sample->B_ = this->B_;
-    this->mutex_.unlock();
-    sample->R_ /= sample->samples_;
-    sample->G_ /= sample->samples_;
-    sample->B_ /= sample->samples_;
-}
-
-void RGB::reset(const float r, const float g, const float b, const unsigned samples) noexcept {
+void RGB::reset(const float r, const float g, const float b) noexcept {
     this->R_ = r;
     this->G_ = g;
     this->B_ = b;
-    this->samples_ = samples;
 }
 
 unsigned RGB::getColor() const noexcept {
@@ -134,14 +118,13 @@ unsigned RGB::getInstances() noexcept {
 }
 
 float RGB::getMax() const noexcept {
-    return ::std::max(R_, ::std::max(G_, B_)) / samples_;
+    return ::std::max(R_, ::std::max(G_, B_));
 }
 
 RGB &RGB::operator=(const RGB &rgb) noexcept {
     this->R_ = rgb.R_;
     this->G_ = rgb.G_;
     this->B_ = rgb.B_;
-    this->samples_ = rgb.samples_;
     return *this;
 }
 
@@ -156,13 +139,11 @@ RGB &RGB::operator=(RGB &&rgb) noexcept {
     this->R_ = rgb.R_;
     this->G_ = rgb.G_;
     this->B_ = rgb.B_;
-    this->samples_ = rgb.samples_;
     return *this;
 }
 
 //newAvg = ((size - 1) * oldAvg + newNum) / size;
-unsigned
-RGB::incrementalAvg(const RGB sample, const unsigned avg, const unsigned numSample) noexcept {
+unsigned RGB::incrementalAvg(const RGB sample, const unsigned avg, const unsigned numSample) noexcept {
     //toneMap();
 
     const unsigned redB4{avg & 0xFF};
