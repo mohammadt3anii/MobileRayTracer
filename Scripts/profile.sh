@@ -57,10 +57,10 @@ ACCELERATORS="1 2"
 function execute {
   THREAD="4"
   SHADER="1"
-  SCENE="4"
+  SCENE="2"
   ACC="3"
   PRINT="true"
-  SHOWIMAGE="true"
+  SHOWIMAGE="false"
   echo ""
   echo "THREAD = "${THREAD}
   echo "SHADER = "${SHADER}
@@ -70,11 +70,11 @@ function execute {
   #perf script report callgrind > perf.callgrind
   #kcachegrind perf.callgrind
   #perf stat \
-  #perf record -g --call-graph 'fp' -- \
+  perf record -g --call-graph 'fp' -- \
   ${BIN_DIR}/AppInterface \
             ${THREAD} ${SHADER} ${SCENE} ${SPP} ${SPL} ${WIDTH} ${HEIGHT} ${ACC} ${REP} \
             ${OBJ} ${MTL} ${PRINT} ${ASYNC} ${SHOWIMAGE}
-  #perf report -g '' --show-nr-samples --hierarchy
+  perf report -g '' --show-nr-samples --hierarchy
 }
 
 function clangtidy {

@@ -12,23 +12,23 @@ AABB::AABB(const Point3D pointMin, const Point3D pointMax) noexcept :
         pointMin_{pointMin}, pointMax_{pointMax} {
 }
 
-bool AABB::intersect(const Ray &ray) const noexcept {
-    float tmin{0};
-    float tmax{::MobileRT::RayLengthMax};
-    for (size_t axis{0}; axis < 3; axis++) {
+bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
+    float t1 {(box.pointMin_.x_() - ray.origin_.x_())/ray.direction_.x_()};
+    float t2 {(box.pointMax_.x_() - ray.origin_.x_())/ray.direction_.x_()};
+ 
+    float tmin {::std::min(t1, t2)};
+    float tmax {::std::max(t1, t2)};
+ 
+    for (size_t axis {1}; axis < 3; ++axis) {
         const float invDir{1.0f / ray.direction_.direction_.at(axis)};
-        float t0{(pointMin_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir};
-        float t1{(pointMax_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir};
-        if (invDir < 0.0f) {
-            ::std::swap(t0, t1);
-        }
-        tmin = ::std::max(t0, tmin);
-        tmax = ::std::min(t1, tmax);
-        if (tmax <= tmin) {
-            return false;
-        }
+        t1 = (box.pointMin_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir;
+        t2 = (box.pointMax_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir;
+ 
+        tmin = ::std::max(tmin, ::std::min(t1, t2));
+        tmax = ::std::min(tmax, ::std::max(t1, t2));
     }
-    return true;
+ 
+    return tmax > ::std::max(tmin, 0.0f);
 }
 
 int AABB::getLongestAxis() const noexcept {

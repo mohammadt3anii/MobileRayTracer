@@ -160,7 +160,7 @@ namespace MobileRT {
     bool BVH<T>::trace(
         ::MobileRT::Intersection *const intersection,
         const ::MobileRT::Ray &ray) noexcept {
-        if (box_.intersect(ray)) {
+        if (intersect(box_, ray)) {
             if (left_ == nullptr) {
                 bool res{false};
                 for (MobileRT::Primitive<T> &s : primitives_) {
@@ -177,7 +177,7 @@ namespace MobileRT {
 
     template<typename T>
     bool BVH<T>::shadowTrace(::MobileRT::Intersection *intersection, const Ray &ray) noexcept {
-        if (box_.intersect(ray)) {
+        if (intersect(box_, ray)) {
             if (left_ == nullptr) {
                 for (MobileRT::Primitive<T> &s : primitives_) {
                     if (s.intersect(intersection, ray)) {
