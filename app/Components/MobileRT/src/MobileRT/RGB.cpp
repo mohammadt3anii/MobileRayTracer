@@ -145,6 +145,13 @@ RGB &RGB::operator=(const RGB &rgb) noexcept {
     return *this;
 }
 
+RGB &RGB::operator=(const float value) noexcept {
+    this->R_ = value;
+    this->G_ = value;
+    this->B_ = value;
+    return *this;
+}
+
 RGB &RGB::operator=(RGB &&rgb) noexcept {
     this->R_ = rgb.R_;
     this->G_ = rgb.G_;

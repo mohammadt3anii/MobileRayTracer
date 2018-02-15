@@ -28,8 +28,8 @@ done
 
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Sphere.mtl"
-#OBJ="${OBJS_DIR}/conference/conference.obj"
-#MTL="${OBJS_DIR}/conference/conference.mtl"
+OBJ="${OBJS_DIR}/conference/conference.obj"
+MTL="${OBJS_DIR}/conference/conference.mtl"
 #OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO2.obj"
 #MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.mtl"
 

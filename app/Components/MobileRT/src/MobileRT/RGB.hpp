@@ -39,6 +39,8 @@ namespace MobileRT {
 
         RGB &operator=(RGB &&rgb) noexcept;
 
+        RGB &operator=(float value) noexcept;
+
         bool hasColor() const noexcept;
 
         void operator+=(RGB rgb) noexcept;
