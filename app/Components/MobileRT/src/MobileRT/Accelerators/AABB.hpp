@@ -5,9 +5,9 @@
 #ifndef MOBILERT_ACCELERATORS_AABB_HPP
 #define MOBILERT_ACCELERATORS_AABB_HPP
 
-#include "../Intersection.hpp"
-#include "../Material.hpp"
-#include "../Ray.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Material.hpp"
+#include "MobileRT/Ray.hpp"
 #include <vector>
 
 namespace MobileRT {

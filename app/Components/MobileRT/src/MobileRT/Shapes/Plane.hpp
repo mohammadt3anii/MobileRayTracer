@@ -5,9 +5,9 @@
 #ifndef MOBILERT_SHAPES_PLANE_HPP
 #define MOBILERT_SHAPES_PLANE_HPP
 
-#include "../Accelerators/AABB.hpp"
-#include "../Intersection.hpp"
-#include "../Ray.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Ray.hpp"
 
 namespace MobileRT {
     class Plane final {

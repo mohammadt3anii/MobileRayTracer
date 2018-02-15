@@ -5,8 +5,8 @@
 #ifndef MOBILERT_ACCELERATORS_BVH_VECTOR_HPP
 #define MOBILERT_ACCELERATORS_BVH_VECTOR_HPP
 
-#include "../Intersection.hpp"
-#include "../Scene.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Scene.hpp"
 #include "AABB.hpp"
 #include <algorithm>
 #include <random>

@@ -3,7 +3,7 @@
 //
 
 #include "AABB.hpp"
-#include "../Utils.hpp"
+#include "MobileRT/Utils.hpp"
 
 using ::MobileRT::AABB;
 using ::MobileRT::Ray;

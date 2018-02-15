@@ -5,10 +5,10 @@
 #ifndef MOBILERT_SHAPES_SPHERE_HPP
 #define MOBILERT_SHAPES_SPHERE_HPP
 
-#include "../Accelerators/AABB.hpp"
-#include "../Intersection.hpp"
-#include "../Point3D.hpp"
-#include "../Ray.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Point3D.hpp"
+#include "MobileRT/Ray.hpp"
 
 namespace MobileRT {
     class Sphere final {

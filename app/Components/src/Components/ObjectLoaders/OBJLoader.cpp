@@ -3,7 +3,7 @@
 //
 
 #include "OBJLoader.hpp"
-#include "../Lights/AreaLight.hpp"
+#include "Components/Lights/AreaLight.hpp"
 
 using ::Components::AreaLight;
 using ::Components::OBJLoader;

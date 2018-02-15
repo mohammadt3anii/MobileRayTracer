@@ -5,11 +5,11 @@
 #ifndef MOBILERT_SHAPES_RECTANGLE_HPP
 #define MOBILERT_SHAPES_RECTANGLE_HPP
 
-#include "../Accelerators/AABB.hpp"
-#include "../Intersection.hpp"
-#include "../Point3D.hpp"
-#include "../Ray.hpp"
-#include "../Vector3D.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Point3D.hpp"
+#include "MobileRT/Ray.hpp"
+#include "MobileRT/Vector3D.hpp"
 
 namespace MobileRT {
     class Rectangle final {

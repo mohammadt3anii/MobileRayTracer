@@ -5,9 +5,9 @@
 #ifndef MOBILERT_ACCELERATORS_REGULARGRID_HPP
 #define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
-#include "../Primitive.hpp"
-#include "../Scene.hpp"
-#include "AABB.hpp"
+#include "MobileRT/Primitive.hpp"
+#include "MobileRT/Scene.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
 #include <vector>
 
 namespace MobileRT {
