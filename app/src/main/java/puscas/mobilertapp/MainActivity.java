@@ -385,7 +385,6 @@ public final class MainActivity extends Activity {
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
                 final int width = Integer.parseInt(str.substring(0, str.indexOf('x')));
                 final int height = Integer.parseInt(str.substring(str.indexOf('x') + 1, str.length()));
-                System.out.println("r = " + width + "x" + height);
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),

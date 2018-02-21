@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class DrawView extends GLSurfaceView {
 
     static native int resize(int size);
 
-    static private native void finishRender();
+    static native void finishRender();
 
     static private int calledByJNI_static() {
         //System.out.println("JNI1 CALLED THIS");
@@ -76,24 +75,15 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         viewText_.period_ = 250L;
         viewText_.buttonRender_.setText(R.string.stop);
-        renderTask_ = new RenderTask(viewText_, () -> {
-            DrawView.finishRender();
-            try {
-                Thread.sleep(viewText_.period_);
-            } catch (Exception e) {
-                Log.e("Exception", e.getMessage());
-                System.exit(1);
-            }
-            setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-            requestRender();
-        });
         viewText_.start_ = SystemClock.elapsedRealtime();
-        renderTask_.execute();
-        this.setOnTouchListener(new DrawView.TouchHandler());
         viewText_.printText();
 
-        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
+
+        renderTask_ = new RenderTask(viewText_, this::requestRender);
+        renderTask_.execute();
+
+        this.setOnTouchListener(new DrawView.TouchHandler());
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,

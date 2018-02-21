@@ -16,6 +16,8 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
     final List<TouchTracker> touches_ = new ArrayList<>(1);
     private final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
     private ViewText viewText_ = null;
+    private Runnable updateRender_ = null;
+
     private final Runnable timer_ = () -> {
         final int touchesSize = touches_.size();
         for (int i = 0; i < touchesSize; i++) {
@@ -33,17 +35,17 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
         viewText_.sampleT_ = "," + ViewText.getSample();
         final int stage = ViewText.isWorking();
         viewText_.stageT_ = DrawView.Stage.values()[stage].toString();
+        updateRender_.run();
+        publishProgress();
         if (stage != DrawView.Stage.busy.id_) {
             scheduler_.shutdownNow();
         }
-        publishProgress();
     };
-    private Runnable func_ = null;
 
-    RenderTask(final ViewText viewText, final Runnable func) {
+    RenderTask(final ViewText viewText, final Runnable updateRender) {
         super();
         viewText_ = viewText;
-        func_ = func;
+        updateRender_ = updateRender;
     }
 
     @Override
@@ -70,6 +72,7 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
     protected final void onPostExecute(final Void result) {
         viewText_.printText();
         viewText_.buttonRender_.setText(R.string.render);
-        func_.run();
+        DrawView.finishRender();
+        updateRender_.run();
     }
 }
