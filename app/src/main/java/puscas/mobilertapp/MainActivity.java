@@ -117,10 +117,6 @@ public final class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         drawView_.onResume();
-
-        final int width = drawView_.getVerticalScrollbarWidth();
-        final int height = drawView_.getHeight();
-        System.out.println("r2 = " + width + " x " + height);
     }
 
     private boolean checkGL20Support() {
@@ -298,7 +294,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerAccelerator_.setMinValue(0);
-        final String[] accelerators = {"Naive", "RegGrid", "BVH", "BVH2"};
+        final String[] accelerators = {"Naive", "RegGrid", "BVH", "BVH_vec"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
         pickerAccelerator_.setWrapSelectorWheel(true);
         pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
@@ -372,11 +368,11 @@ public final class MainActivity extends Activity {
             case 2:
             case 3://if ray-tracer is idle
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
-                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
-                    //final String obj = "WavefrontOBJs/conference/conference";
+                    final String obj = "WavefrontOBJs/conference/conference";
                     //objText_ = readTextAsset(obj + ".obj");
                     //matText_ = readTextAsset(obj + ".mtl");
                     objText_ = obj + ".obj";
