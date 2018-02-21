@@ -3,18 +3,17 @@ package puscas.mobilertapp;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 public class DrawView extends GLSurfaceView {
     final ViewText viewText_ = new ViewText();
-    MainRenderer renderer_;
-    private Bitmap bitmap_ = null;
+    MainRenderer renderer_ = null;
     private RenderTask renderTask_ = null;
     private int numThreads_ = 0;
 
@@ -23,18 +22,33 @@ public class DrawView extends GLSurfaceView {
         viewText_.resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
+    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
 
-    native void renderIntoBitmap(final Bitmap image, final int numThreads);
+    static private native void renderIntoBitmap(final Bitmap image, final int numThreads);
+
+    static private native void stopRender();
+
+    static native int traceTouch(final float x, final float y);
+
+    static private native long getNumberOfLights();
+
+    static native int resize(int size);
+
+    static private native void finishRender();
+
+    static private int calledByJNI_static() {
+        //System.out.println("JNI1 CALLED THIS");
+        return 0;
+    }
 
     @Override
     public void onPause() {
-
+        super.onPause();
     }
 
     @Override
     public void onResume() {
-
+        super.onResume();
     }
 
     @Override
@@ -48,13 +62,10 @@ public class DrawView extends GLSurfaceView {
         viewText_.printText();
     }
 
-    private native void stopRender();
-
-    native int traceTouch(final float x, final float y);
-
-    private native long getNumberOfLights();
-
-    private native int resize(int size);
+    private int calledByJNI() {
+        //System.out.println("JNI2 CALLED THIS");
+        return 0;
+    }
 
 
     void stopDrawing() {
@@ -65,27 +76,37 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         viewText_.period_ = 250L;
         viewText_.buttonRender_.setText(R.string.stop);
-        renderTask_ = new RenderTask(viewText_, bitmap_, () -> {
+        renderTask_ = new RenderTask(viewText_, () -> {
+            DrawView.finishRender();
+            try {
+                Thread.sleep(viewText_.period_);
+            } catch (Exception e) {
+                Log.e("Exception", e.getMessage());
+                System.exit(1);
+            }
+            setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             requestRender();
-            return 0;
         });
         viewText_.start_ = SystemClock.elapsedRealtime();
-        renderIntoBitmap(bitmap_, numThreads_);
         renderTask_.execute();
         this.setOnTouchListener(new DrawView.TouchHandler());
+        viewText_.printText();
+
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
-                     final int samplesPixel, final int samplesLight, final float size, final String objFile, final String matText, final AssetManager assetManager) {
-        setVisibility(View.INVISIBLE);
-        final int width = resize(Math.round(getWidth() * size));
-        final int height = resize(Math.round(getHeight() * size));
-        viewText_.nPrimitivesT_ = ",p=" + initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager) + ",l=" + getNumberOfLights();
+                     final int samplesPixel, final int samplesLight, final int width, final int height,
+                     final String objFile, final String matText, final AssetManager assetManager) {
+        final long numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager);
+        viewText_.threadsT_ = ",t:" + numThreads;
+        viewText_.nPrimitivesT_ = ",p=" + numberPrimitives + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
         viewText_.resetPrint(width, height, samplesPixel, samplesLight);
-        bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap_.eraseColor(Color.DKGRAY);
-        renderer_.bitmap_ = bitmap_;
+
+        setVisibility(View.INVISIBLE);
+        renderer_.bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         setVisibility(View.VISIBLE);
     }
 
@@ -116,7 +137,7 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         public final boolean onTouch(final View view, final MotionEvent motionEvent) {
-            if (viewText_.isWorking() != Stage.busy.id_) {
+            if (ViewText.isWorking() != Stage.busy.id_) {
                 return false;
             }
             switch (motionEvent.getActionMasked()) {

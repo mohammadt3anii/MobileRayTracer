@@ -3,15 +3,53 @@
 //
 
 #include "DrawView.hpp"
+#include <android/bitmap.h>
+#include <mutex>
 
-static State working_{State::IDLE};
-static MobileRT::Renderer *renderer_{nullptr};
+static ::State working_{State::IDLE};
+static ::MobileRT::Renderer *renderer_{nullptr};
+static ::JavaVM *javaVM_{nullptr};
 static ::std::thread *thread_{nullptr};
+static ::std::mutex mutex_{};
 static int width_{0};
 static int height_{0};
 static float fps_{0.0f};
-static int64_t timeFrame_{0};
-static int64_t numberOfLights_{0};
+static long long timeFrame_{0};
+static long long numberOfLights_{0};
+
+extern "C"
+jint JNI_OnLoad(JavaVM *const jvm, void */*reserved*/) {
+    LOG("JNI_OnLoad");
+    javaVM_ = jvm;
+
+    JNIEnv *jniENV{nullptr};
+    const int gotJVM{javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
+    if (gotJVM != JNI_OK) {
+        LOG("ERROR gotJVM");
+        exit(1);
+    }
+
+    jclass drawViewClass{jniENV->FindClass("puscas/mobilertapp/DrawView")};
+    if (drawViewClass == nullptr) {
+        LOG("ERROR findDrawViewClass");
+        exit(1);
+    }
+    jmethodID drawViewMethodId{
+            jniENV->GetStaticMethodID(drawViewClass, "calledByJNI_static", "()I")};
+    if (drawViewMethodId == nullptr) {
+        LOG("ERROR drawViewMethodId");
+        exit(1);
+    }
+    const int result{jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
+    LOG("result = ", result);
+
+    return JNI_VERSION_1_6;
+}
+
+extern "C"
+void JNI_OnUnload(JavaVM */*vm*/, void */*reserved*/) {
+    LOG("JNI_OnUnload");
+}
 
 static std::string
 readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filename) {
@@ -62,23 +100,6 @@ static void FPS() noexcept {
 }
 
 extern "C"
-void Java_puscas_mobilertapp_ViewText_finish(
-        JNIEnv *const env,
-        jobject /*thiz*/,
-        jobject dstBitmap
-) noexcept {
-    thread_->join();
-    delete thread_;
-    delete renderer_;
-
-    timeFrame_ = 0;
-    fps_ = 0.0f;
-    AndroidBitmap_unlockPixels(env, dstBitmap);
-    working_ = State::IDLE;
-    LOG("WORKING = IDLE");
-}
-
-extern "C"
 State Java_puscas_mobilertapp_ViewText_isWorking(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
@@ -97,7 +118,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_initialize(
+long long Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *const env,
         jobject /*thiz*/,
         jint const scene,
@@ -116,8 +137,10 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize(
     LOG("INITIALIZE");
 
 
-    int64_t res = [&]() -> int64_t {
+    long long res = [=]() -> long long {
+        mutex_.lock();
         renderer_ = nullptr;
+        mutex_.unlock();
         const float ratio{
                 width_ > height_ ? static_cast<float>(width_) / height_ :
                 static_cast<float>(height_) / width_};
@@ -303,59 +326,224 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize(
                 break;
             }
         }
+        mutex_.lock();
         renderer_ = new MobileRT::Renderer{
                 std::move(shader_), std::move(camera), std::move(samplerPixel),
                 static_cast<unsigned>(width_), static_cast<unsigned>(height_),
                 static_cast<unsigned>(samplesPixel)};
-        const int64_t triangles{
-                static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size())};
-        const int64_t spheres{static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size())};
-        const int64_t planes{static_cast<int64_t> (renderer_->shader_->scene_.planes_.size())};
-        const int64_t rectangles{
-                static_cast<int64_t> (renderer_->shader_->scene_.rectangles_.size())};
-        numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size());
-        const int64_t nPrimitives = triangles + spheres + planes + rectangles;
-        LOG("TRIANGLES = ", triangles);
+        mutex_.unlock();
+        const long long triangles{
+                static_cast<long long> (renderer_->shader_->scene_.triangles_.size())};
+        const long long spheres{
+                static_cast<long long> (renderer_->shader_->scene_.spheres_.size())};
+        const long long planes{static_cast<long long> (renderer_->shader_->scene_.planes_.size())};
+        const long long rectangles{
+                static_cast<long long> (renderer_->shader_->scene_.rectangles_.size())};
+        numberOfLights_ = static_cast<long long> (renderer_->shader_->scene_.lights_.size());
+        const long long nPrimitives = triangles + spheres + planes + rectangles;
+        /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
         LOG("PLANES = ", planes);
         LOG("RECTANGLES = ", rectangles);
-        LOG("LIGHTS = ", numberOfLights_);
+        LOG("LIGHTS = ", numberOfLights_);*/
         return nPrimitives;
     }();
 
 
-    LOG("PRIMITIVES = ", res);
+    //LOG("PRIMITIVES = ", res);
     return res;
 }
 
 extern "C"
+void Java_puscas_mobilertapp_DrawView_finishRender(
+        JNIEnv *const /*env*/,
+        jobject /*thiz*/
+) noexcept {
+    if (thread_ != nullptr) {
+        thread_->join();
+        thread_ = nullptr;
+        mutex_.lock();
+        delete renderer_;
+        LOG("DELETED RENDERER");
+        renderer_ = nullptr;
+        mutex_.unlock();
+    }
+    working_ = State::IDLE;
+    LOG("WORKING = IDLE");
+    timeFrame_ = 0;
+    fps_ = 0.0f;
+}
+
+extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/,
-        jobject dstBitmap,
-        jint const nThreads) noexcept {
+        jobject localBitmap,
+        jint const nThreads
+) noexcept {
+    jclass localDrawViewClass{env->FindClass("puscas/mobilertapp/DrawView")};
+    jclass globalDrawViewClass{static_cast<jclass>(env->NewGlobalRef(localDrawViewClass))};
+    jobject globalBitmap{static_cast<jobject>(env->NewGlobalRef(localBitmap))};
+
+    jmethodID drawViewMethodId{
+            env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
+    if (drawViewMethodId == nullptr) {
+        LOG("ERROR drawViewMethodId1");
+        exit(1);
+    }
+    int result{env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
+    LOG("result = ", result);
+
+    drawViewMethodId = env->GetMethodID(globalDrawViewClass, "calledByJNI", "()I");
+    if (drawViewMethodId == nullptr) {
+        LOG("ERROR drawViewMethodId2");
+        exit(1);
+    }
+    jobject resultObj = env->AllocObject(globalDrawViewClass);
+    result = env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId);
+    LOG("result = ", result);
+    result = env->CallIntMethod(resultObj, drawViewMethodId);
+    LOG("result = ", result);
+
+
     working_ = State::BUSY;
     LOG("WORKING = BUSY");
-    void *dstPixels{nullptr};
-    AndroidBitmap_lockPixels(env, dstBitmap, &dstPixels);
-    thread_ = new std::thread(
-            [](unsigned *pixels, const int numOfThreads) {
-                int rep{1};
-                do {
-                    const std::chrono::steady_clock::time_point start{
-                            std::chrono::steady_clock::now()};
-                    renderer_->renderFrame(pixels, numOfThreads);
-                    timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                            std::chrono::steady_clock::now() - start).count();
-                    FPS();
-                    //renderer_->camera_->position_.x_ += 1.0f;
-                } while (working_ != State::STOPPED && rep-- > 1);
-                if (working_ != State::STOPPED) {
-                    working_ = State::FINISHED;
-                    LOG("WORKING = FINISHED");
+
+    auto lambda = [=]() {
+        if (env == nullptr) {
+            LOG("jniEnv = ", env);
+            exit(1);
+        }
+        const int jniError1{
+                javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                                JNI_VERSION_1_6)};
+        int jniThread{JNI_OK};
+        switch (jniError1) {
+            case JNI_OK: {
+                LOG("jniError1 = ", jniError1);
+                break;
+            }
+
+            case JNI_ERR: {
+                LOG("jniError1 = ", jniError1);
+                exit(1);
+            }
+
+            case JNI_EDETACHED: {
+                LOG("jniError1 = ", jniError1);
+                const int attached{
+                        javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+                if (attached != JNI_OK) {
+                    LOG("attached = ", attached);
+                    exit(1);
                 }
-            }, static_cast<unsigned *>(dstPixels), static_cast<int>(nThreads)
-    );
+                jniThread = JNI_EDETACHED;
+                break;
+            }
+
+            case JNI_EVERSION: {
+                LOG("jniError1 = ", jniError1);
+                exit(1);
+            }
+
+            default: {
+                LOG("jniError1 = ", jniError1);
+                exit(1);
+            }
+        }
+
+        if (globalDrawViewClass == nullptr) {
+            LOG("drawViewClass_thread = ", globalDrawViewClass);
+            exit(1);
+        }
+        jmethodID drawViewMethodId_thread{
+                env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
+        if (drawViewMethodId_thread == nullptr) {
+            LOG("drawViewMethodId_thread = ", drawViewMethodId_thread);
+            exit(1);
+        }
+        const int result_thread{
+                env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId_thread)};
+        LOG("result_thread = ", result_thread);
+
+        unsigned *dstPixels{nullptr};
+        int ret1{0};
+        //dstPixels = static_cast<unsigned *>(env->GetDirectBufferAddress(globalByteBuffer));
+        ret1 = AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels));
+        AndroidBitmapInfo info{};
+        const int ret2{AndroidBitmap_getInfo(env, globalBitmap, &info)};
+        if (ret1 != JNI_OK || ret2 != JNI_OK) {
+            LOG("ret1 = ", ret1, ", ret2 = ", ret2);
+            exit(1);
+        }
+
+        const unsigned stride{info.stride};
+        int rep{1};
+        do {
+            const std::chrono::steady_clock::time_point start{
+                    std::chrono::steady_clock::now()};
+            LOG("STARTING RENDERING");
+            LOG("nThreads = ", nThreads);
+            mutex_.lock();
+            if (renderer_ != nullptr) {
+                renderer_->renderFrame(dstPixels, nThreads, stride);
+            }
+            mutex_.unlock();
+            LOG("FINISHED RENDERING");
+            timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::steady_clock::now() - start).count();
+            FPS();
+            //renderer_->camera_->position_.x_ += 1.0f;
+        } while (working_ != State::STOPPED && rep-- > 1);
+        if (working_ != State::STOPPED) {
+            working_ = State::FINISHED;
+            LOG("WORKING = FINISHED");
+        }
+        const int ret3{AndroidBitmap_unlockPixels(env, globalBitmap)};
+        if (ret3 != JNI_OK) {
+            LOG("ret3 = ", ret3);
+            exit(1);
+        }
+        env->DeleteGlobalRef(globalDrawViewClass);
+        env->DeleteGlobalRef(globalBitmap);
+        const int jniError2{javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                                            JNI_VERSION_1_6)};
+        switch (jniError2) {
+            case JNI_OK: {
+                LOG("jniError2 = ", jniError2);
+                if (jniThread == JNI_EDETACHED) {
+                    const int ret4{javaVM_->DetachCurrentThread()};
+                    if (ret4 != JNI_OK) {
+                        LOG("ret4 = ", ret4);
+                    }
+                }
+                break;
+            }
+
+            case JNI_ERR: {
+                LOG("jniError2 = ", jniError2);
+                exit(1);
+            }
+
+            case JNI_EDETACHED: {
+                LOG("jniError2 = ", jniError2);
+                exit(1);
+            }
+
+            case JNI_EVERSION: {
+                LOG("jniError2 = ", jniError2);
+                exit(1);
+            }
+
+            default: {
+                LOG("jniError2 = ", jniError2);
+                exit(1);
+            }
+        }
+    };
+
+    thread_ = new ::std::thread{lambda};
+    //lambda();
 }
 
 extern "C"
@@ -403,7 +591,7 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 }
 
 extern "C"
-int64_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
+long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
@@ -415,7 +603,13 @@ unsigned Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
-    return renderer_->getSample();
+    unsigned res{0};
+    /*mutex_.lock();
+    if (renderer_ != nullptr) {
+        res = renderer_->getSample();
+    }
+    mutex_.unlock();*/
+    return res;
 }
 
 extern "C"
@@ -429,7 +623,7 @@ int Java_puscas_mobilertapp_DrawView_resize(
 }
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+long long Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {

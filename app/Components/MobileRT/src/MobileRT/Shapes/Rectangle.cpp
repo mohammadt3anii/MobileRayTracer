@@ -92,7 +92,7 @@ AABB Rectangle::getAABB() const noexcept {
 
 bool Rectangle::intersect(const AABB box) const noexcept {
     ::std::function<bool(Point3D orig, Vector3D vec)> intersectRayAABB{
-            [&](Point3D orig, Vector3D vec) -> bool {
+            [=](Point3D orig, Vector3D vec) -> bool {
                 Vector3D T_1{};
                 Vector3D T_2{}; // vectors to hold the T-values for every direction
                 float t_near{std::numeric_limits<float>::min()};

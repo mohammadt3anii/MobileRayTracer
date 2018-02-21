@@ -25,7 +25,12 @@ Renderer::Renderer(::std::unique_ptr<Shader> &&shader,
     this->shader_->initializeAccelerators(camera_.get());
 }
 
-void Renderer::renderFrame(unsigned *const bitmap, const int numThreads) noexcept {
+void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
+                           const unsigned stride) noexcept {
+    LOG("numThreads = ", numThreads);
+    const unsigned realWidth{stride / static_cast<unsigned>(sizeof(unsigned))};
+    LOG("realWidth = ", realWidth);
+
     this->sample_ = 0;
     this->samplerPixel_->resetSampling();
     this->shader_->resetSampling();
@@ -34,22 +39,24 @@ void Renderer::renderFrame(unsigned *const bitmap, const int numThreads) noexcep
     const int numChildren{numThreads - 1};
     ::std::vector<::std::thread> threads{};
     threads.reserve(static_cast<unsigned>(numChildren));
+
     for (int i{0}; i < numChildren; i++) {
-        threads.emplace_back(&Renderer::renderScene, this, bitmap, i);
+        threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
     }
-    renderScene(bitmap, numChildren);
+    renderScene(bitmap, numChildren, realWidth);
     for (::std::thread &thread : threads) {
         thread.join();
     }
     threads.clear();
 
-    LOG("point3D = ", Point3D::getInstances());
+    /*LOG("point3D = ", Point3D::getInstances());
     LOG("vector3D = ", Vector3D::getInstances());
     LOG("RGB = ", RGB::getInstances());
     LOG("scene = ", Scene::getInstances());
     LOG("ray = ", Ray::getInstances());
     LOG("material = ", Material::getInstances());
-    LOG("intersection = ", Intersection::getInstances());
+    LOG("intersection = ", Intersection::getInstances());*/
+    LOG("Resolution = ", width_, "x", height_);
     LOG("FINISH");
 }
 
@@ -59,7 +66,10 @@ void Renderer::stopRender() noexcept {
     this->samplerPixel_->stopSampling();
 }
 
-void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
+void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned width) noexcept {
+
+    LOG("width = ", width);
+    LOG("width_ = ", width_);
     const float INV_IMG_WIDTH{1.0f / this->width_};
     const float INV_IMG_HEIGHT{1.0f / this->height_};
     const float pixelWidth{0.5f / this->width_};
@@ -77,7 +87,8 @@ void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
                     ((pixel / this->width_) * this->blockSizeY_) % this->height_};
             const unsigned endY{startY + this->blockSizeY_};
             for (unsigned y{startY}; y < endY; y++) {
-                const unsigned yWidth{y * this->width_};
+                //const unsigned yWidth{y * this->width_};
+                const unsigned yWidth{y * width};
                 const float v{y * INV_IMG_HEIGHT};
                 const unsigned startX{(pixel + yWidth) % this->width_};
                 const unsigned endX{startX + this->blockSizeX_};
@@ -90,15 +101,19 @@ void Renderer::renderScene(unsigned *const bitmap, const int /*tid*/) noexcept {
                     Ray ray{this->camera_->generateRay(u, v, deviationU, deviationV)};
                     pixelRGB.reset();
                     this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
-                    bitmap[yWidth + x] = RGB::incrementalAvg(pixelRGB, bitmap[yWidth + x],
+                    const unsigned pixelIndex{yWidth + x};
+                    if (pixelIndex >= width * height_) {
+                        LOG("PASSOU O LIMITE DA RESOLUÇÃO");
+                    }
+                    bitmap[pixelIndex] = RGB::incrementalAvg(pixelRGB, bitmap[pixelIndex],
                         sample + 1);
                 }
             }
         }
-        /*if (tid == 0) {
+        if (tid == 0) {
             this->sample_ = sample + 1;
             LOG("Samples terminados = ", this->sample_);
-        }*/
+        }
     }
 }
 

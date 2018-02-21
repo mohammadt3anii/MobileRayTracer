@@ -44,7 +44,7 @@ set( COMMON_FLAGS_DEBUG -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-poin
 set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections -fno-rtti )
 
 # Set common linker flags
-set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions -flto=full )
+set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions )
 
 set( COMMON_LINKER_FLAGS_DEBUG  )
 
@@ -52,6 +52,7 @@ set( COMMON_LINKER_FLAGS_RELEASE -s )
 
 if( NOT DEFINED ANDROID_ABI )
 	set( COMMON_FLAGS "${COMMON_FLAGS}" -flto=full -march=native )
+	set( COMMON_LINKER_FLAGS "${COMMON_LINKER_FLAGS}" -flto=full )
 endif()
 
 # Add sub directories

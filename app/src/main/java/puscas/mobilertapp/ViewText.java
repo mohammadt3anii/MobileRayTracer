@@ -1,6 +1,5 @@
 package puscas.mobilertapp;
 
-import android.graphics.Bitmap;
 import android.os.Debug;
 import android.os.SystemClock;
 import android.widget.Button;
@@ -10,10 +9,10 @@ import java.util.Locale;
 
 class ViewText {
     float fps_ = 0.0f;
-    TextView textView_ = null;
-    Button buttonRender_ = null;
     long start_ = 0L;
     long period_ = 0L;
+    TextView textView_ = null;
+    Button buttonRender_ = null;
     String stageT_ = null;
     String fpsT_ = null;
     String timeFrameT_ = null;
@@ -22,10 +21,10 @@ class ViewText {
     String allocatedT_ = null;
     String sampleT_ = null;
     String nPrimitivesT_ = null;
+    String threadsT_ = null;
     private int frame_ = 0;
     private float timebase_ = 0.0f;
     private String resolutionT_ = null;
-    private String threadsT_ = null;
     private String samplesPixelT_ = null;
     private String samplesLightT_ = null;
 
@@ -35,6 +34,16 @@ class ViewText {
         timebase_ = 0.0f;
         fps_ = 0.0f;
     }
+
+    static native float getFPS();
+
+    static native long getTimeFrame();
+
+    static native void moveTouch(final float x, final float y, final int primitiveId);
+
+    static native int getSample();
+
+    static native int isWorking();
 
     void FPS() {
         frame_++;
@@ -61,26 +70,11 @@ class ViewText {
         sampleT_ = ",0";
     }
 
-    private String getText() {
-        return fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ + samplesLightT_ + sampleT_ + '\n'
-                + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_;
-    }
-
     final void printText() {
-        final String aux = getText();
+        final String aux = fpsT_ + fpsRenderT_ + resolutionT_ + threadsT_ + samplesPixelT_ +
+                samplesLightT_ + sampleT_ + '\n'
+                + stageT_ + allocatedT_ + timeFrameT_ + timeT_ + nPrimitivesT_;
         textView_.setText(aux);
     }
-
-    native float getFPS();
-
-    native long getTimeFrame();
-
-    native void finish(Bitmap bitmap);
-
-    native void moveTouch(final float x, final float y, final int primitiveId);
-
-    native int getSample();
-
-    native int isWorking();
 
 }

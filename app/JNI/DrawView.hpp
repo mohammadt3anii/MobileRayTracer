@@ -36,11 +36,10 @@ enum class State {
 };
 
 extern "C"
-void Java_puscas_mobilertapp_ViewText_finish(
-        JNIEnv *env,
-        jobject thiz,
-        jobject dstBitmap
-) noexcept;
+int JNI_OnLoad(JavaVM *pjvm, void *reserved);
+
+extern "C"
+void JNI_OnUnload(JavaVM *vm, void *reserved);
 
 extern "C"
 State Java_puscas_mobilertapp_ViewText_isWorking(
@@ -55,7 +54,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept;
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_initialize(
+long long Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *env,
         jobject thiz,
         jint scene,
@@ -68,6 +67,12 @@ int64_t Java_puscas_mobilertapp_DrawView_initialize(
         jstring objFile,
         jstring matFile,
         jobject assetManager
+) noexcept;
+
+extern "C"
+void Java_puscas_mobilertapp_DrawView_finishRender(
+        JNIEnv *const /*env*/,
+        jobject /*thiz*/
 ) noexcept;
 
 extern "C"
@@ -100,7 +105,7 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 ) noexcept;
 
 extern "C"
-int64_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
+long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -119,7 +124,7 @@ int Java_puscas_mobilertapp_DrawView_resize(
 ) noexcept;
 
 extern "C"
-int64_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+long long Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv * /*env*/,
         jobject /*thiz*/
 ) noexcept;

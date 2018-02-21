@@ -98,7 +98,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                     normal = (normal1 + normal2 + normal3) / 3;
                     normal.normalize();
                 }
-                const Triangle triangle{vertex1, vertex2, vertex3, normal};
+                Triangle triangle{vertex1, vertex2, vertex3, normal};
 
                 // per-face material
                 const int materialID{shape.mesh.material_ids[f]};
@@ -126,7 +126,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         e3 /= max;
                     }
                     const RGB emission{e1, e2, e3};
-                    const Material material{diffuse, specular, transmittance, m.ior, emission};
+                    Material material{diffuse, specular, transmittance, m.ior, emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         const Point3D p1{vx1, vy1, vz1};
                         const Point3D p2{vx2, vy2, vz2};
@@ -134,7 +134,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         scene->lights_.emplace_back(
                                 ::std::make_unique<AreaLight>(material, lambda(), p1, p2, p3));
                     } else {
-                        scene->triangles_.emplace_back(triangle, material);
+                        scene->triangles_.emplace_back(std::move(triangle), std::move(material));
                     }
                 }
             }

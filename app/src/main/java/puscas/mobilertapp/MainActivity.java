@@ -5,12 +5,15 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -21,12 +24,22 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
+
 public final class MainActivity extends Activity {
 
     static {
-        System.loadLibrary("MobileRT");
-        System.loadLibrary("Components");
-        System.loadLibrary("AppInterface");
+        try {
+            System.loadLibrary("MobileRT");
+            System.loadLibrary("Components");
+            System.loadLibrary("AppInterface");
+        } catch (Exception e) {
+            Log.e("LINK ERROR", "WARNING: Could not load native library: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
     private DrawView drawView_;
@@ -41,14 +54,16 @@ public final class MainActivity extends Activity {
     private String matText_;
 
     private static int getNumCoresOldPhones() {
+        int res = 0;
         try {
             final File dir = new File("/sys/devices/system/cpu/");
             final File[] files = dir.listFiles(new CpuFilter());
-            return files.length;
+            res = files.length;
         } catch (final RuntimeException ignored) {
             Log.e("getNumCoresOldPhones", "Can't get number of cores available!!!");
-            return 1;
+            System.exit(1);
         }
+        return res;
     }
 
     private static int getNumberOfCores() {
@@ -87,6 +102,7 @@ public final class MainActivity extends Activity {
         } catch (final IOException e2) {
             Log.e("Assets", "Couldn't read asset " + filename);
             Log.e("Assets", e2.getMessage());
+            System.exit(1);
         }
         return asset;
     }
@@ -101,40 +117,68 @@ public final class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         drawView_.onResume();
+
+        final int width = drawView_.getVerticalScrollbarWidth();
+        final int height = drawView_.getHeight();
+        System.out.println("r2 = " + width + " x " + height);
+    }
+
+    private boolean checkGL20Support() {
+        final EGL10 egl = (EGL10) EGLContext.getEGL();
+        final EGLDisplay display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+
+        final int[] version = new int[2];
+        egl.eglInitialize(display, version);
+
+        final int EGL_OPENGL_ES2_BIT = 4;
+        final int[] configAttribs = {
+                EGL10.EGL_RED_SIZE, 4,
+                EGL10.EGL_GREEN_SIZE, 4,
+                EGL10.EGL_BLUE_SIZE, 4,
+                EGL10.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                EGL10.EGL_NONE
+        };
+
+        final EGLConfig[] configs = new EGLConfig[10];
+        final int[] num_config = new int[1];
+        egl.eglChooseConfig(display, configAttribs, configs, 10, num_config);
+        egl.eglTerminate(display);
+        return num_config[0] > 0;
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int pickerScene = 0;
-        int pickerShader = 0;
-        int pickerThreads = MainActivity.getNumberOfCores();
-        int pickerAccelerator = 0;
-        int pickerSamplesPixel = 1;
-        int pickerSamplesLight = 1;
-        int pickerSizes = 0;
+        int defaultPickerScene = 0;
+        int defaultPickerShader = 0;
+        int defaultPickerThreads = 1;
+        int defaultPickerAccelerator = 0;
+        int defaultPickerSamplesPixel = 1;
+        int defaultPickerSamplesLight = 1;
+        int defaultPickerSizes = 4;
         if (savedInstanceState != null) {
-            pickerScene = savedInstanceState.getInt("pickerScene");
-            pickerShader = savedInstanceState.getInt("pickerShader");
-            pickerThreads = savedInstanceState.getInt("pickerThreads");
-            pickerAccelerator = savedInstanceState.getInt("pickerAccelerator");
-            pickerSamplesPixel = savedInstanceState.getInt("pickerSamplesPixel");
-            pickerSamplesLight = savedInstanceState.getInt("pickerSamplesLight");
-            pickerSizes = savedInstanceState.getInt("pickerSizes");
+            defaultPickerScene = savedInstanceState.getInt("pickerScene");
+            defaultPickerShader = savedInstanceState.getInt("pickerShader");
+            defaultPickerThreads = savedInstanceState.getInt("pickerThreads");
+            defaultPickerAccelerator = savedInstanceState.getInt("pickerAccelerator");
+            defaultPickerSamplesPixel = savedInstanceState.getInt("pickerSamplesPixel");
+            defaultPickerSamplesLight = savedInstanceState.getInt("pickerSamplesLight");
+            defaultPickerSizes = savedInstanceState.getInt("pickerSizes");
         }
 
         try {
             setContentView(R.layout.activity_main);
         } catch (final RuntimeException e) {
-            e.fillInStackTrace();
+            Log.e("RuntimeException", e.getMessage());
+            System.exit(1);
         }
 
         final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         assert am != null;
         final ConfigurationInfo info = am.getDeviceConfigurationInfo();
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
-        if (supportES2) {
+        if (supportES2 && checkGL20Support()) {
             drawView_ = findViewById(R.id.drawLayout);
             if (drawView_ == null) {
                 Log.e("DrawView", "DrawView is NULL !!!");
@@ -147,6 +191,9 @@ public final class MainActivity extends Activity {
             drawView_.renderer_ = renderer;
             drawView_.setRenderer(renderer);
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+            drawView_.renderer_.bitmap_ = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            drawView_.renderer_.bitmap_.eraseColor(Color.DKGRAY);
+            drawView_.setVisibility(View.VISIBLE);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
@@ -186,10 +233,10 @@ public final class MainActivity extends Activity {
         pickerScene_.setMinValue(0);
         final String[] scenes = {"Cornell", "Spheres", "Cornell2", "Spheres2", "OBJ"};
         pickerScene_.setMaxValue(scenes.length - 1);
-        pickerScene_.setDisplayedValues(scenes);
         pickerScene_.setWrapSelectorWheel(true);
         pickerScene_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerScene_.setValue(pickerScene);
+        pickerScene_.setValue(defaultPickerScene);
+        pickerScene_.setDisplayedValues(scenes);
 
         pickerShader_ = findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
@@ -200,10 +247,10 @@ public final class MainActivity extends Activity {
         pickerShader_.setMinValue(0);
         final String[] shaders = {"NoShadows", "Whitted", "PathTracer", "DepthMap", "Diffuse"};
         pickerShader_.setMaxValue(shaders.length - 1);
-        pickerShader_.setDisplayedValues(shaders);
         pickerShader_.setWrapSelectorWheel(true);
         pickerShader_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerShader_.setValue(pickerShader);
+        pickerShader_.setValue(defaultPickerShader);
+        pickerShader_.setDisplayedValues(shaders);
 
         final int maxSamplesPixel = 10;
         final String[] samplesPixel = new String[maxSamplesPixel];
@@ -217,10 +264,10 @@ public final class MainActivity extends Activity {
         }
         pickerSamplesPixel_.setMinValue(1);
         pickerSamplesPixel_.setMaxValue(maxSamplesPixel);
-        pickerSamplesPixel_.setDisplayedValues(samplesPixel);
         pickerSamplesPixel_.setWrapSelectorWheel(true);
         pickerSamplesPixel_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerSamplesPixel_.setValue(pickerSamplesPixel);
+        pickerSamplesPixel_.setValue(defaultPickerSamplesPixel);
+        pickerSamplesPixel_.setDisplayedValues(samplesPixel);
 
         final int maxSamplesLight = 100;
         final String[] samplesLight;
@@ -240,10 +287,10 @@ public final class MainActivity extends Activity {
         }
         pickerSamplesLight_.setMinValue(1);
         pickerSamplesLight_.setMaxValue(maxSamplesLight);
-        pickerSamplesLight_.setDisplayedValues(samplesLight);
         pickerSamplesLight_.setWrapSelectorWheel(true);
         pickerSamplesLight_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerSamplesLight_.setValue(pickerSamplesLight);
+        pickerSamplesLight_.setValue(defaultPickerSamplesLight);
+        pickerSamplesLight_.setDisplayedValues(samplesLight);
 
         pickerAccelerator_ = findViewById(R.id.pickerAccelerator);
         if (pickerAccelerator_ == null) {
@@ -253,10 +300,10 @@ public final class MainActivity extends Activity {
         pickerAccelerator_.setMinValue(0);
         final String[] accelerators = {"Naive", "RegGrid", "BVH", "BVH2"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
-        pickerAccelerator_.setDisplayedValues(accelerators);
         pickerAccelerator_.setWrapSelectorWheel(true);
         pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerAccelerator_.setValue(pickerAccelerator);
+        pickerAccelerator_.setValue(defaultPickerAccelerator);
+        pickerAccelerator_.setDisplayedValues(accelerators);
 
         pickerThreads_ = findViewById(R.id.pickerThreads);
         if (pickerThreads_ == null) {
@@ -268,7 +315,7 @@ public final class MainActivity extends Activity {
         pickerThreads_.setMaxValue(maxCores);
         pickerThreads_.setWrapSelectorWheel(true);
         pickerThreads_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerThreads_.setValue(pickerThreads);
+        pickerThreads_.setValue(defaultPickerThreads);
 
         final int maxSizes = 9;
         final String[] sizes;
@@ -291,27 +338,54 @@ public final class MainActivity extends Activity {
         }
         pickerSizes_.setMinValue(1);
         pickerSizes_.setMaxValue(maxSizes);
-        pickerSizes_.setDisplayedValues(sizes);
         pickerSizes_.setWrapSelectorWheel(true);
         pickerSizes_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        pickerSizes_.setValue(pickerSizes);
+        pickerSizes_.setValue(defaultPickerSizes);
+
+        ViewTreeObserver vto = drawView_.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(() -> {
+            final int width = drawView_.getWidth();
+            final int height = drawView_.getHeight();
+
+            float size = 0.05f;
+            int currentWidth = DrawView.resize(Math.round(width * size));
+            int currentHeight = DrawView.resize(Math.round(height * size));
+            sizes[0] = "" + currentWidth + 'x' + currentHeight;
+            for (int i = 2; i < maxSizes; i++) {
+                size = (i + 1.0f) * 0.1f;
+                currentWidth = DrawView.resize(Math.round(width * size * size));
+                currentHeight = DrawView.resize(Math.round(height * size * size));
+                sizes[i - 1] = "" + currentWidth + 'x' + currentHeight;
+            }
+            size = 1.0f;
+            currentWidth = DrawView.resize(Math.round(width * size * size));
+            currentHeight = DrawView.resize(Math.round(height * size * size));
+            sizes[maxSizes - 1] = "" + currentWidth + 'x' + currentHeight;
+
+            pickerSizes_.setDisplayedValues(sizes);
+        });
     }
 
     public void startRender(final View view) {
-        switch (drawView_.viewText_.isWorking()) {
-            case 0://if ray-tracer is idle
+        switch (ViewText.isWorking()) {
+            case 0:
+            case 2:
+            case 3://if ray-tracer is idle
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
+                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
-                    final String obj = "WavefrontOBJs/conference/conference";
+                    //final String obj = "WavefrontOBJs/conference/conference";
                     //objText_ = readTextAsset(obj + ".obj");
                     //matText_ = readTextAsset(obj + ".mtl");
                     objText_ = obj + ".obj";
                     matText_ = obj + ".mtl";
                 }
                 final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
+                final int width = Integer.parseInt(str.substring(0, str.indexOf('x')));
+                final int height = Integer.parseInt(str.substring(str.indexOf('x') + 1, str.length()));
+                System.out.println("r = " + width + "x" + height);
                 drawView_.createScene(
                         pickerScene_.getValue(),
                         pickerShader_.getValue(),
@@ -324,7 +398,8 @@ public final class MainActivity extends Activity {
                                 pickerSamplesLight_.getDisplayedValues()
                                         [pickerSamplesLight_.getValue() - 1]
                         ),
-                        Float.parseFloat(str.substring(0, str.indexOf('x'))),
+                        width,
+                        height,
                         objText_,
                         matText_,
                         getAssets()

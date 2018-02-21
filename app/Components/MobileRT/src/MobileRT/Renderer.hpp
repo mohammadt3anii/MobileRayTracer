@@ -31,7 +31,7 @@ namespace MobileRT {
         const unsigned samplesPixel_{};
 
     private:
-        void renderScene(unsigned *bitmap, int tid) noexcept;
+        void renderScene(unsigned *bitmap, int tid, unsigned stride) noexcept;
 
     public:
         explicit Renderer(::std::unique_ptr<Shader> &&shader,
@@ -50,7 +50,7 @@ namespace MobileRT {
 
         Renderer &operator=(Renderer &&renderer) noexcept = delete;
 
-        void renderFrame(unsigned *bitmap, int numThreads) noexcept;
+        void renderFrame(unsigned *bitmap, int numThreads, unsigned stride) noexcept;
 
         void stopRender() noexcept;
 

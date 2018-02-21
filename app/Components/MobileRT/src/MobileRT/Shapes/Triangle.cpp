@@ -88,7 +88,7 @@ AABB Triangle::getAABB() const noexcept {
 
 bool Triangle::intersect(const AABB box) const noexcept {
     ::std::function<bool(const Point3D, const Vector3D)> intersectRayAABB{
-            [&](const Point3D orig, const Vector3D vec) -> bool {
+            [=](const Point3D orig, const Vector3D vec) -> bool {
                 Vector3D T_1{};
                 Vector3D T_2{}; // vectors to hold the T-values for every direction
                 float t_near{std::numeric_limits<float>::min()};
@@ -151,7 +151,7 @@ bool Triangle::intersect(const AABB box) const noexcept {
             }};
 
     ::std::function<bool(const Vector3D)> isOverTriangle{
-            [&](const Vector3D vec) -> bool {
+            [=](const Vector3D vec) -> bool {
                 const Vector3D perpendicularVector{vec, this->AC_};//cross product
                 const float normalizedProjection{this->AB_.dotProduct(perpendicularVector)};
                 return ::std::fabs(normalizedProjection) < Epsilon;
