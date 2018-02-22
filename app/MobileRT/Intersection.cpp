@@ -11,32 +11,22 @@ Intersection::Intersection(const void *primitive) noexcept :
         primitive_{primitive} {
 }
 
-Intersection::Intersection(const Point3D orig,
-                         const Vector3D dir,
-                         const float dist,
-                         const Point3D center) noexcept {
-    this->point_.setX(orig.x_() + dir.x_() * dist);
-    this->point_.setY(orig.y_() + dir.y_() * dist);
-    this->point_.setZ(orig.z_() + dir.z_() * dist);
-    this->normal_ = Vector3D(this->point_, center, true);
-    this->symNormal_.setX(-this->normal_.x_());
-    this->symNormal_.setY(-this->normal_.y_());
-    this->symNormal_.setZ(-this->normal_.z_());
+Intersection::Intersection(const glm::vec3 intPoint,
+                         const float dist, const glm::vec3 center) noexcept {
+    this->point_ = intPoint;
+    this->normal_ = glm::normalize(this->point_ - center);
+    this->symNormal_ = -normal_;
     this->length_ = dist;
 }
 
-Intersection::Intersection(const Point3D orig,
-                         const Vector3D dir,
+Intersection::Intersection(const glm::vec3 orig,
+                         const glm::vec3 dir,
                          const float dist,
-                         const Vector3D normal,
+                         const glm::vec3 normal,
                          const void *const primitive) noexcept {
-    this->point_.setX(orig.x_() + dir.x_() * dist);
-    this->point_.setY(orig.y_() + dir.y_() * dist);
-    this->point_.setZ(orig.z_() + dir.z_() * dist);
+    this->point_ = orig + dir * dist;
     this->normal_ = normal;
-    this->symNormal_.setX(-normal.x_());
-    this->symNormal_.setY(-normal.y_());
-    this->symNormal_.setZ(-normal.z_());
+    this->symNormal_ = -normal;
     this->length_ = dist;
     this->primitive_ = primitive;
 }

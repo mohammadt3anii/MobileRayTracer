@@ -5,21 +5,20 @@
 #ifndef MOBILERT_RAY_HPP
 #define MOBILERT_RAY_HPP
 
-#include "Point3D.hpp"
 #include "Utils.hpp"
-#include "Vector3D.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Ray final {
     public:
-        const Point3D origin_{};
-        const Vector3D direction_{};
+        const glm::vec3 origin_ {};
+        const glm::vec3 direction_  {};
         const int32_t depth_{};
-        const int32_t id_{};
-        const void *const primitive_{};
+        const int32_t id_ {};
+        const void *const primitive_ {};
 
     public:
-        explicit Ray(Vector3D dir, Point3D origin,
+        explicit Ray(glm::vec3 dir, glm::vec3 origin,
                      int32_t depth, const void *primitive = nullptr) noexcept;
 
         Ray(const Ray &ray) noexcept = default;

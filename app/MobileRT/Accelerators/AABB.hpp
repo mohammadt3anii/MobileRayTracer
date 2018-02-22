@@ -8,18 +8,19 @@
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Material.hpp"
 #include "MobileRT/Ray.hpp"
+#include <glm/glm.hpp>
 #include <vector>
 
 namespace MobileRT {
     class AABB final {
     public:
-        Point3D pointMin_{};
-        Point3D pointMax_{};
+        glm::vec3 pointMin_{};
+        glm::vec3 pointMax_{};
 
     public:
         explicit AABB() noexcept = default;
 
-        explicit AABB(Point3D pointMin, Point3D pointMax) noexcept;
+        explicit AABB(glm::vec3 pointMin, glm::vec3 pointMax) noexcept;
 
         AABB(const AABB &AABB) noexcept = default;
 

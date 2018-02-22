@@ -3,13 +3,12 @@
 //
 
 #include "Perspective.hpp"
+#include <glm/glm.hpp>
 
 using ::Components::Perspective;
-using ::MobileRT::Point3D;
-using ::MobileRT::Vector3D;
 using ::MobileRT::Ray;
 
-Perspective::Perspective(const Point3D position, const Point3D lookAt, const Vector3D up,
+Perspective::Perspective(const glm::vec3 position, const glm::vec3 lookAt, const glm::vec3 up,
                          const float hFov, const float vFov) noexcept :
         Camera(position, lookAt, up),
         // convert to radians
@@ -23,17 +22,17 @@ Perspective::Perspective(const Point3D position, const Point3D lookAt, const Vec
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-    return Ray {Vector3D {this->position_ +
+    glm::vec3 dest {this->position_ +
                           this->direction_ +
                           (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
-                          (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV)),
-                          this->position_, true},
-                this->position_, 1};
+                          (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV))};
+    return Ray {glm::normalize(dest - position_),
+                    this->position_, 1};
 }
 
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
-    const float absValue{value < 0.0f ? -value : value};
+    const float absValue{::std::abs(value)};
     return ::MobileRT::Pi_4 * value -
            (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
 }

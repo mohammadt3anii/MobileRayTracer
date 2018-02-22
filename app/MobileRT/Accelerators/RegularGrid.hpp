@@ -8,6 +8,7 @@
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Primitive.hpp"
 #include "MobileRT/Scene.hpp"
+#include <glm/glm.hpp>
 #include <vector>
 
 namespace MobileRT {
@@ -22,8 +23,8 @@ namespace MobileRT {
         int gridSize_{};
         int gridShift_{};
         AABB m_Extends{};
-        Vector3D m_SR{};
-        Vector3D m_CW{};
+        glm::vec3 m_SR{};
+        glm::vec3 m_CW{};
         Scene *scene_{};
 
     private:
@@ -56,7 +57,7 @@ namespace MobileRT {
 
         Intersection trace(Intersection intersection, Ray ray) noexcept;
 
-        Intersection shadowTrace(Intersection intersection, Ray &&ray) noexcept;
+        Intersection shadowTrace(Intersection intersection, Ray ray) noexcept;
     };
 }//namespace MobileRT
 

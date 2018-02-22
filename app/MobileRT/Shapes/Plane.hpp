@@ -8,22 +8,23 @@
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Ray.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Plane final {
     private:
-        Vector3D normal_{};    // normal to the plane
-        Point3D point_{};   // point in the plane
+        glm::vec3 normal_{};    // normal to the plane
+        glm::vec3 point_{};   // point in the plane
 
     private:
-        Point3D getPositionMin() const noexcept;
+        glm::vec3 getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept;
+        glm::vec3 getPositionMax() const noexcept;
 
-        Vector3D getRightVector() const noexcept;
+        glm::vec3 getRightVector() const noexcept;
 
     public:
-        explicit Plane(Point3D point, Vector3D normal) noexcept;
+        explicit Plane(glm::vec3 point, glm::vec3 normal) noexcept;
 
         Plane(const Plane &plane) noexcept = default;
 
@@ -43,7 +44,7 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        float distance(Point3D point) const noexcept;
+        float distance(glm::vec3 point) const noexcept;
 
         bool intersect(AABB box) const noexcept;
     };

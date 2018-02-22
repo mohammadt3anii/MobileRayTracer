@@ -7,26 +7,25 @@
 
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
-#include "MobileRT/Point3D.hpp"
 #include "MobileRT/Ray.hpp"
-#include "MobileRT/Vector3D.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Triangle final {
     public:
-        Vector3D AC_{};
-        Vector3D AB_{};
-        Vector3D normal_{};
-        Point3D pointA_{};
+        glm::vec3 AC_ {};
+        glm::vec3 AB_{};
+        glm::vec3 normal_{};
+        glm::vec3 pointA_{};
 
     private:
-        Point3D getPositionMin() const noexcept;
+        glm::vec3 getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept;
+        glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Triangle(Point3D pointA, Point3D pointB,
-                          Point3D pointC, Vector3D normal = Vector3D {}) noexcept;
+        explicit Triangle(glm::vec3 pointA, glm::vec3 pointB,
+                          glm::vec3 pointC, glm::vec3 normal = glm::vec3 {}) noexcept;
 
         Triangle(const Triangle &triangle) noexcept = default;
 

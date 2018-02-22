@@ -6,18 +6,16 @@
 
 using ::Components::PathTracer;
 using ::MobileRT::Light;
-using ::MobileRT::Vector3D;
-using ::MobileRT::Point3D;
 using ::MobileRT::Sampler;
 using ::MobileRT::RGB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-PathTracer::PathTracer(Scene &&scene,
-                       ::std::unique_ptr<Sampler> &&samplerRay,
-                       ::std::unique_ptr<Sampler> &&samplerLight,
-                       ::std::unique_ptr<Sampler> &&samplerRussianRoulette,
+PathTracer::PathTracer(Scene scene,
+                       ::std::unique_ptr<Sampler> samplerRay,
+                       ::std::unique_ptr<Sampler> samplerLight,
+                       ::std::unique_ptr<Sampler> samplerRussianRoulette,
                        const unsigned samplesLight, const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator},
         samplerRay_{::std::move(samplerRay)},
@@ -27,7 +25,7 @@ PathTracer::PathTracer(Scene &&scene,
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
+bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray) noexcept {
     const int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
@@ -53,8 +51,8 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const Vector3D &shadingNormal{
-            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+    const glm::vec3 &shadingNormal{
+            (glm::dot(ray.direction_,intersection.normal_) < 0.0f) ?
             intersection.normal_ :// entering the object
             intersection.symNormal_};// We have to reverse the normal now
         
@@ -76,12 +74,13 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
                                 randomNumber * sizeLights * 0.99999f))};
                 Light &light(*scene_.lights_[chosenLight]);
                 //calculates vector starting in intersection to the light
-                const Point3D lightPosition{light.getPosition()};
-                Vector3D vectorToLight{lightPosition, intersection.point_};
+                const glm::vec3 lightPosition{light.getPosition()};
+                glm::vec3 vectorToLight{lightPosition - intersection.point_};
                 //distance from intersection to the light (and normalize it)
-                const float distanceToLight{vectorToLight.normalize()};
+                const float distanceToLight{glm::length(vectorToLight)};
+                vectorToLight = glm::normalize(vectorToLight);
                 //x*x + y*y + z*z
-                const float cosNormalLight{shadingNormal.dotProduct(vectorToLight)};
+                const float cosNormalLight{glm::dot(shadingNormal, vectorToLight)};
                 if (cosNormalLight > 0.0f) {
                     //shadow ray->orig=intersection, dir=light
                     Ray shadowRay{vectorToLight, intersection.point_, rayDepth + 1,
@@ -104,7 +103,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
         //indirect light
         if (rayDepth <= ::MobileRT::RayDepthMin ||
             samplerRussianRoulette_->getSample() > finish_probability) {
-            const Vector3D newDirection{getCosineSampleHemisphere(shadingNormal)};
+            const glm::vec3 newDirection{getCosineSampleHemisphere(shadingNormal)};
             Ray normalizedSecundaryRay{newDirection, intersection.point_, rayDepth + 1,
                                        intersection.primitive_};
 
@@ -135,8 +134,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
     if (kS.hasColor()) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
-        const Vector3D reflectionDir{
-                ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_)};
+        const glm::vec3 reflectionDir {glm::reflect(ray.direction_, shadingNormal)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         RGB LiS_RGB {};
         rayTrace(&LiS_RGB, ::std::move(specularRay));
@@ -146,23 +144,28 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray &&ra
     // specular transmission
     if (kT.hasColor()) {
         //PDF = 1 / 2 Pi
-        Vector3D shadingNormalT{shadingNormal};
-        float refractiveIndice{intersection.material_->refractiveIndice_};
-        if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {//we are inside the medium
+        glm::vec3 shadingNormalT {shadingNormal};
+        float refractiveIndice {intersection.material_->refractiveIndice_};
+        if (glm::dot(shadingNormalT, ray.direction_) > 0.0f) {//we are inside the medium
             shadingNormalT *= -1.0f;//N = N*-1;
             refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
         }
         refractiveIndice = 1.0f / refractiveIndice;
-        const float cosTheta1{(shadingNormalT.dotProduct(ray.direction_)) * -1.0f};
-        const float cosTheta2{
+        /*const float cosTheta1 {(glm::dot(shadingNormalT, ray.direction_)) * -1.0f};
+        const float cosTheta2 {
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1)};
-        Ray transmissionRay{cosTheta2 > 0.0f ? // refraction direction
+
+        glm::vec3 refractDir {cosTheta2 > 0.0f ? // refraction direction
                             //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                             (ray.direction_ * refractiveIndice) +
                             (shadingNormalT * (refractiveIndice * cosTheta1 -
                                                (::std::sqrt(cosTheta2)))) :
                             //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f)};*/
+
+        glm::vec3 refractDir {glm::refract(ray.direction_, shadingNormalT, refractiveIndice)};
+
+        Ray transmissionRay {refractDir,
                             intersection.point_, rayDepth + 1, intersection.primitive_};
         RGB LiT_RGB {};
         rayTrace(&LiT_RGB, ::std::move(transmissionRay));
@@ -182,18 +185,18 @@ void PathTracer::resetSampling() noexcept {
     this->samplerLight_->resetSampling();
 }
 
-Vector3D PathTracer::getCosineSampleHemisphere(const Vector3D normal) const noexcept {
+glm::vec3 PathTracer::getCosineSampleHemisphere(const glm::vec3 normal) const noexcept {
     const float r1{2.0f * ::MobileRT::Pi * samplerRay_->getSample()};
     const float r2{samplerRay_->getSample()};
     const float r2s{::std::sqrt(r2)};
-    Vector3D u{::std::fabs(normal.x_()) > 0.1f ?
-               Vector3D(0.0f, 1.0f, 0.0f).crossProduct(normal) :
-               Vector3D(1.0f, 0.0f, 0.0f).crossProduct(normal)};
-    u.normalize();
-    const Vector3D v{normal.crossProduct(u)};
-    Vector3D direction{(u * (::std::cos(r1) * r2s) +
+    glm::vec3 u{::std::fabs(normal.x) > 0.1f ?
+               glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), normal) :
+               glm::cross(glm::vec3(1.0f, 0.0f, 0.0f), normal)};
+    u = glm::normalize(u);
+    const glm::vec3 v{glm::cross(normal, u)};
+    glm::vec3 direction{(u * (::std::cos(r1) * r2s) +
                         v * (::std::sin(r1) * r2s) +
                         normal * ::std::sqrt(1.0f - r2))};
-    direction.normalize();
+    direction = glm::normalize(direction);
     return direction;
 }

@@ -6,11 +6,9 @@
 
 using ::Components::Orthographic;
 using ::MobileRT::AABB;
-using ::MobileRT::Point3D;
-using ::MobileRT::Vector3D;
 using ::MobileRT::Ray;
 
-Orthographic::Orthographic(const Point3D position, const Point3D lookAt, const Vector3D up,
+Orthographic::Orthographic(const glm::vec3 position, const glm::vec3 lookAt, const glm::vec3 up,
                            const float sizeH, const float sizeV) noexcept :
         Camera(position, lookAt, up),
         sizeH_{sizeH / 2.0f},
@@ -30,10 +28,10 @@ Ray Orthographic::generateRay(const float u, const float v,
 }
 
 AABB Orthographic::getAABB() const noexcept {
-    const Point3D min{this->position_ +
+    const glm::vec3 min {this->position_ +
                       this->right_ * (0.0f - 0.5f) * this->sizeH_ + this->right_ * -0.5f +
                       this->up_ * (0.5f - 0.0f) * this->sizeV_ + this->up_ * -0.5f};
-    const Point3D max{this->position_ +
+    const glm::vec3 max {this->position_ +
                       this->right_ * (1.0f - 0.5f) * this->sizeH_ + this->right_ * 0.5f +
                       this->up_ * (0.5f - 1.0f) * this->sizeV_ + this->up_ * 0.5f};
     return AABB {min, max};

@@ -34,9 +34,9 @@ namespace MobileRT {
         void renderScene(unsigned *bitmap, int tid, unsigned width) noexcept;
 
     public:
-        explicit Renderer(::std::unique_ptr<Shader> &&shader,
-                          ::std::unique_ptr<Camera> &&camera,
-                          ::std::unique_ptr<Sampler> &&samplerPixel,
+        explicit Renderer(::std::unique_ptr<Shader> shader,
+                          ::std::unique_ptr<Camera> camera,
+                          ::std::unique_ptr<Sampler> samplerPixel,
                           unsigned width, unsigned height,
                           unsigned samplesPixel) noexcept;
 

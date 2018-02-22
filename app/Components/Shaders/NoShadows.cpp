@@ -6,19 +6,17 @@
 
 using ::Components::NoShadows;
 using ::MobileRT::Light;
-using ::MobileRT::Point3D;
-using ::MobileRT::Vector3D;
 using ::MobileRT::RGB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-NoShadows::NoShadows(Scene &&scene, const unsigned samplesLight,
+NoShadows::NoShadows(Scene scene, const unsigned samplesLight,
                      const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 
-bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
+bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray ray) noexcept {
     const RGB &Le{intersection.material_->Le_};
     const RGB &kD{intersection.material_->Kd_};
     if (Le.hasColor()) {//stop if it intersects a light source
@@ -26,8 +24,8 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray &&ray
         return true;
     }
 
-    const Vector3D &shadingNormal{
-            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+    const glm::vec3 &shadingNormal{
+            (glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?
             // entering the object
             intersection.normal_ :
             // We have to reverse the normal now
@@ -41,11 +39,11 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray &&ray
             for (unsigned i{0}; i < sizeLights; i++) {
                 Light &light(*scene_.lights_[i]);
                 for (unsigned j{0}; j < samplesLight; j++) {
-                    const Point3D lightPosition{light.getPosition()};
+                    const glm::vec3 lightPosition{light.getPosition()};
                     //vectorIntersectCameraNormalized = light.position_ - intersection.point_
-                    const Vector3D vectorToLightNormalized{
-                            lightPosition, intersection.point_, true};
-                    const float cos_N_L{shadingNormal.dotProduct(vectorToLightNormalized)};
+                    const glm::vec3 vectorToLightNormalized{
+                            glm::normalize(lightPosition - intersection.point_)};
+                    const float cos_N_L{glm::dot(shadingNormal, vectorToLightNormalized)};
                     if (cos_N_L > 0.0f) {
                         //rgb += kD * radLight * cos_N_L;
                         rgb->addMult({light.radiance_.Le_}, cos_N_L);

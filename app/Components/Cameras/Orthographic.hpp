@@ -9,18 +9,16 @@
 
 namespace Components {
     using ::MobileRT::AABB;
-    using ::MobileRT::Point3D;
-    using ::MobileRT::Vector3D;
     using ::MobileRT::Ray;
 
     class Orthographic final : public ::MobileRT::Camera {
     private:
-        float sizeH_{};
-        float sizeV_{};
+        float sizeH_ {};
+        float sizeV_ {};
 
     public:
-        explicit Orthographic(Point3D position,
-                              Point3D lookAt, Vector3D up,
+        explicit Orthographic(glm::vec3 position,
+                              glm::vec3 lookAt, glm::vec3 up,
                               float sizeH, float sizeV) noexcept;
 
         Orthographic(const Orthographic &orthographic) noexcept = default;

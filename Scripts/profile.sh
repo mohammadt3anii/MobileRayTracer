@@ -13,8 +13,9 @@ SCENES_SRCS="${MOBILERT_DIR}/app/Scenes"
 
 THIRDPARTY_HEADERS="${MOBILERT_DIR}/app/third_party"
 GSL_HEADERS="${MOBILERT_DIR}/app/third_party/GSL/include"
-GTK_HEADERS=$(pkg-config --cflags gtk+-2.0)
-GTK_HEADERS=${GTK_HEADERS//-I/-isystem}
+GLM_HEADERS="${MOBILERT_DIR}/app/third_party/glm"
+GTK_HEADERS="$(pkg-config --cflags gtk+-2.0)"
+GTK_HEADERS="${GTK_HEADERS//-I/-isystem}"
 
 if [ -z "${PLOT_GRAPHS}" ]; then
   PLOT_GRAPHS="Plot_Graphs"
@@ -28,10 +29,8 @@ done
 
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Sphere.mtl"
-#OBJ="${OBJS_DIR}/conference/conference.obj"
-#MTL="${OBJS_DIR}/conference/conference.mtl"
-#OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO2.obj"
-#MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.mtl"
+OBJ="${OBJS_DIR}/conference/conference.obj"
+MTL="${OBJS_DIR}/conference/conference.mtl"
 
 export ASAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0:detect_odr_violation=1"
 
@@ -77,6 +76,8 @@ function execute {
   #perf report -g '' --show-nr-samples --hierarchy
 }
 
+
+
 function clangtidy {
   clang-tidy-5.0 \
 	-analyze-temporary-dtors \
@@ -94,8 +95,8 @@ function clangtidy {
   -I ${SCENES_SRCS} \
 	-isystem ${THIRDPARTY_HEADERS} \
   -isystem ${GSL_HEADERS} \
+  -isystem ${GLM_HEADERS} \
 	-isystem /usr/include/c++/v1 \
-	-isystem /usr/lib/gcc/x86_64-linux-gnu/5/include \
   -isystem /usr/include/glib-2.0/gobject \
   -isystem /usr/include/gtk-2.0/gtk \
 	${GTK_HEADERS} \

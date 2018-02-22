@@ -17,7 +17,6 @@ namespace Components {
     using ::MobileRT::Intersection;
     using ::MobileRT::Ray;
     using ::MobileRT::Scene;
-    using ::MobileRT::Vector3D;
 
     class PathTracer final : public ::MobileRT::Shader {
     private:
@@ -26,15 +25,15 @@ namespace Components {
         ::std::unique_ptr<Sampler> samplerRussianRoulette_{};
 
     private:
-        bool shade(RGB *rgb, Intersection intersection, Ray &&ray) noexcept final;
+        bool shade(RGB *rgb, Intersection intersection, Ray ray) noexcept final;
 
-        Vector3D getCosineSampleHemisphere(Vector3D normal) const noexcept;
+        glm::vec3 getCosineSampleHemisphere(glm::vec3 normal) const noexcept;
 
     public:
-        explicit PathTracer(Scene &&scene,
-                            ::std::unique_ptr<Sampler> &&samplerRay,
-                            ::std::unique_ptr<Sampler> &&samplerLight,
-                            ::std::unique_ptr<Sampler> &&samplerRussianRoulette,
+        explicit PathTracer(Scene scene,
+                            ::std::unique_ptr<Sampler> samplerRay,
+                            ::std::unique_ptr<Sampler> samplerLight,
+                            ::std::unique_ptr<Sampler> samplerRussianRoulette,
                             unsigned samplesLight, Accelerator accelerator) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;

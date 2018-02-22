@@ -14,7 +14,6 @@
 namespace Components {
     using ::MobileRT::Material;
     using ::MobileRT::Sampler;
-    using ::MobileRT::Point3D;
     using ::MobileRT::Ray;
     using ::MobileRT::Intersection;
     using ::MobileRT::Triangle;
@@ -26,10 +25,10 @@ namespace Components {
 
     public:
         explicit AreaLight(Material radiance,
-                           ::std::unique_ptr<Sampler> &&samplerPointLight,
-                           Point3D pointA,
-                           Point3D pointB,
-                           Point3D pointC) noexcept;
+                           ::std::unique_ptr<Sampler> samplerPointLight,
+                           glm::vec3 pointA,
+                           glm::vec3 pointB,
+                           glm::vec3 pointC) noexcept;
 
         AreaLight(const AreaLight &areaLight) noexcept = delete;
 
@@ -41,7 +40,7 @@ namespace Components {
 
         AreaLight &operator=(AreaLight &&areaLight) noexcept = delete;
 
-        Point3D getPosition() noexcept final;
+        glm::vec3 getPosition() noexcept final;
 
         void resetSampling() noexcept final;
 

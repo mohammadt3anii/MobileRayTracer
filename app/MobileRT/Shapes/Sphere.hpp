@@ -7,22 +7,22 @@
 
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
-#include "MobileRT/Point3D.hpp"
 #include "MobileRT/Ray.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Sphere final {
     private:
-        Point3D center_{};
-        float sq_radius_{};
+        glm::vec3 center_ {};
+        float sq_radius_ {};
 
     private:
-        Point3D getPositionMin() const noexcept;
+        glm::vec3 getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept;
+        glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Sphere(Point3D center, float radius) noexcept;
+        explicit Sphere(glm::vec3 center, float radius) noexcept;
 
         Sphere(const Sphere &sphere) noexcept = default;
 

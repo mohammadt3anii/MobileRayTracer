@@ -4,7 +4,7 @@
 
 #include "Shader.hpp"
 #include "Utils.hpp"
-#include "Vector3D.hpp"
+#include <glm/glm.hpp>
 #include <utility>
 
 using ::MobileRT::BVH;
@@ -15,7 +15,7 @@ using ::MobileRT::RGB;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
-Shader::Shader(Scene &&scene, const unsigned samplesLight, const Accelerator accelerator) noexcept
+Shader::Shader(Scene scene, const unsigned samplesLight, const Accelerator accelerator) noexcept
         :
         scene_{::std::move(scene)},
         accelerator_{accelerator},
@@ -27,8 +27,8 @@ Shader::Shader(Scene &&scene, const unsigned samplesLight, const Accelerator acc
 }
 
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
-    Point3D min{RayLengthMax, RayLengthMax, RayLengthMax};
-    Point3D max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
+    glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
+    glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
     ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
     ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
     ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
@@ -73,7 +73,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     }
 }
 
-Intersection Shader::traceTouch(Intersection intersection, Ray &&ray) noexcept {
+Intersection Shader::traceTouch(Intersection intersection, Ray ray) noexcept {
     return this->scene_.trace(intersection, ::std::move(ray));
 }
 
@@ -81,7 +81,7 @@ Shader::~Shader() noexcept {
     LOG("SHADER DELETED");
 }
 
-bool Shader::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
+bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
     const float dist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
@@ -110,7 +110,7 @@ bool Shader::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
     return intersection.length_ < dist;
 }
 
-bool Shader::rayTrace(RGB *rgb, Ray &&ray) noexcept {
+bool Shader::rayTrace(RGB *rgb, Ray ray) noexcept {
     Intersection intersection {};
     const float dist {intersection.length_};
     switch (accelerator_) {

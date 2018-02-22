@@ -9,6 +9,7 @@
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
 #include <algorithm>
+#include <glm/glm.hpp>
 #include <random>
 
 namespace MobileRT {
@@ -22,14 +23,14 @@ namespace MobileRT {
         ::std::vector<::std::vector<MobileRT::Primitive<T>>> primitives_{};
 
     private:
-        AABB build(::std::vector<MobileRT::Primitive<T>> &&primitives, unsigned depth,
+        AABB build(::std::vector<MobileRT::Primitive<T>> primitives, unsigned depth,
                    uint32_t currentNodeId) noexcept;
 
     public:
         explicit BVH_vector() noexcept = default;
 
         explicit BVH_vector<T>(
-            ::std::vector<MobileRT::Primitive<T>> &&primitives,
+            ::std::vector<MobileRT::Primitive<T>> primitives,
             unsigned depth = 0,
             uint32_t currentId = 0) noexcept;
 
@@ -63,7 +64,7 @@ namespace MobileRT {
 
     template<typename T>
     BVH_vector<T>::BVH_vector(
-        ::std::vector<MobileRT::Primitive<T>> &&primitives,
+        ::std::vector<MobileRT::Primitive<T>> primitives,
         const unsigned depth,
         const uint32_t currentId) noexcept {
             if (primitives.empty()) {
@@ -99,7 +100,7 @@ namespace MobileRT {
 
     template<typename T>
     AABB BVH_vector<T>::build(
-        ::std::vector<MobileRT::Primitive<T>> &&primitives,
+        ::std::vector<MobileRT::Primitive<T>> primitives,
         const unsigned depth,
         const uint32_t currentNodeId) noexcept {
     if (primitives.empty()) {
@@ -114,11 +115,11 @@ namespace MobileRT {
     numberDepth_ = ::std::max(depth, numberDepth_);
 
     AABB current_box{
-            Point3D {
+            glm::vec3 {
                     std::numeric_limits<float>::max(),
                     std::numeric_limits<float>::max(),
                     std::numeric_limits<float>::max()},
-            Point3D {
+            glm::vec3 {
                     std::numeric_limits<float>::lowest(),
                     std::numeric_limits<float>::lowest(),
                     std::numeric_limits<float>::lowest()}};
@@ -133,7 +134,7 @@ namespace MobileRT {
             ::std::sort(primitives.begin(), primitives.end(),
                         [](const MobileRT::Primitive<T> &a,
                             MobileRT::Primitive<T> &b) noexcept -> bool {
-                            return a.getAABB().pointMin_.x_() < b.getAABB().pointMin_.x_();
+                            return a.getAABB().pointMin_.x < b.getAABB().pointMin_.x;
                         });
             break;
 
@@ -141,7 +142,7 @@ namespace MobileRT {
             ::std::sort(primitives.begin(), primitives.end(),
                         [](const MobileRT::Primitive<T> &a,
                             MobileRT::Primitive<T> &b) noexcept -> bool {
-                            return a.getAABB().pointMin_.y_() < b.getAABB().pointMin_.y_();
+                            return a.getAABB().pointMin_.y < b.getAABB().pointMin_.y;
                         });
             break;
 
@@ -149,7 +150,7 @@ namespace MobileRT {
             ::std::sort(primitives.begin(), primitives.end(),
                         [](const MobileRT::Primitive<T> &a,
                             MobileRT::Primitive<T> &b) noexcept -> bool {
-                            return a.getAABB().pointMin_.z_() < b.getAABB().pointMin_.z_();
+                            return a.getAABB().pointMin_.z < b.getAABB().pointMin_.z;
                         });
             break;
     }

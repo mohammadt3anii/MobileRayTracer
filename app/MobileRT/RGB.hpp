@@ -23,9 +23,9 @@ namespace MobileRT {
 
         explicit RGB(float r, float g, float b) noexcept;
 
-        RGB(const RGB &rgb) noexcept;
+        RGB(const RGB &rgb) noexcept = default;
 
-        RGB(RGB &&rgb) noexcept;
+        RGB(RGB &&rgb) noexcept = default;
 
         ~RGB() noexcept = default;
 

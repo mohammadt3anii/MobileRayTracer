@@ -151,56 +151,56 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
         std::unique_ptr<MobileRT::Sampler> samplerPixel{};
         std::unique_ptr<MobileRT::Shader> shader_{};
         std::unique_ptr<MobileRT::Camera> camera{};
-        ::MobileRT::Point3D maxDist{::MobileRT::Point3D {0, 0, 0}};
+        ::glm::vec3 maxDist{0, 0, 0};
         switch (scene) {
             case 0:
                 camera = std::make_unique<Components::Perspective>(
-                        MobileRT::Point3D{0.0f, 0.0f, -3.4f},
-                        MobileRT::Point3D{0.0f, 0.0f, 1.0f},
-                        MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3{0.0f, 0.0f, -3.4f},
+                        ::glm::vec3{0.0f, 0.0f, 1.0f},
+                        ::glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene(std::move(scene_));
-                maxDist = MobileRT::Point3D {1, 1, 1};
+                maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 1:
                 camera = std::make_unique<Components::Perspective>(
-                        MobileRT::Point3D{4.0f, 4.0f, -8.0f},
-                        MobileRT::Point3D{4.0f, 4.0f, 4.0f},
-                        MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3{4.0f, 4.0f, -8.0f},
+                        ::glm::vec3{4.0f, 4.0f, 4.0f},
+                        ::glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 /*camera = std::make_unique<Components::Orthographic> (
-                  MobileRT::Point3D{0.0f, 1.0f, - 10.0f},
-                  MobileRT::Point3D{0.0f, 1.0f, 7.0f},
-                  MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+                  ::glm::vec3{0.0f, 1.0f, - 10.0f},
+                  ::glm::vec3{0.0f, 1.0f, 7.0f},
+                  glm::vec3{0.0f, 1.0f, 0.0f},
                   10.0f * hfovFactor, 10.0f * vfovFactor);*/
                 /*camera = std::make_unique<Components::Perspective>(
-                  MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                  MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                  MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                  ::glm::vec3(0.0f, 0.5f, 1.0f),
+                  ::glm::vec3(0.0f, 0.0f, 7.0f),
+                  glm::vec3(0.0f, 1.0f, 0.0f),
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(std::move(scene_));
-                maxDist = MobileRT::Point3D {8, 8, 8};
+                maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
             case 2:
                 camera = std::make_unique<Components::Perspective>(
-                        MobileRT::Point3D {0.0f, 0.0f, -3.4f},
-                        MobileRT::Point3D {0.0f, 0.0f, 1.0f},
-                        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.0f, -3.4f},
+                        ::glm::vec3 {0.0f, 0.0f, 1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene2(std::move(scene_));
-                maxDist = MobileRT::Point3D {1, 1, 1};
+                maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 3:
                 camera = std::make_unique<Components::Perspective>(
-                        MobileRT::Point3D {0.0f, 0.5f, 1.0f},
-                        MobileRT::Point3D {0.0f, 0.0f, 7.0f},
-                        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.5f, 1.0f},
+                        ::glm::vec3 {0.0f, 0.0f, 7.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         60.0f * hfovFactor, 60.0f * vfovFactor);
                 scene_ = spheresScene2(std::move(scene_));
-                maxDist = MobileRT::Point3D {8, 8, 8};
+                maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
             default: {
@@ -220,9 +220,9 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                                     []() { return std::make_unique<Components::StaticHaltonSeq>(); });
                 //cornellbox
                 camera = std::make_unique<Components::Perspective>(
-                        MobileRT::Point3D {0.0f, 0.7f, 3.0f},
-                        MobileRT::Point3D {0.0f, 0.7f, -1.0f},
-                        MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.7f, 3.0f},
+                        ::glm::vec3 {0.0f, 0.7f, -1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 const MobileRT::Material lightMat{MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                   MobileRT::RGB {0.0f, 0.0f, 0.0f},
@@ -230,23 +230,23 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                                                   1.0f,
                                                   MobileRT::RGB {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<Components::PointLight>(
-                        lightMat, MobileRT::Point3D {0.0f, 0.9f, 0.0f}));
+                        lightMat, ::glm::vec3 {0.0f, 0.9f, 0.0f}));
                 //teapot
                 /*camera = std::make_unique<Components::Perspective> (
-                  MobileRT::Point3D {0.0f, 30.0f, -200.0f}, MobileRT::Point3D {0.0f, 30.0f, 100.0f},
-                  MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                  ::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f},
+                  glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
                 const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                    MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                    MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                    1.0f,
                                                    MobileRT::RGB {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
-                  lightMat, MobileRT::Point3D {0.0f, 900.0f, 0.0f}));*/
+                  lightMat, ::glm::vec3 {0.0f, 900.0f, 0.0f}));*/
                 //conference
                 /*camera = std::make_unique<Components::Perspective> (
-                  MobileRT::Point3D {-730.0f, 600.0f, -950.0f},
-                  MobileRT::Point3D {-400.0f, 300.0f, 0.0f},
-                  MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                  ::glm::vec3 {-730.0f, 600.0f, -950.0f},
+                  ::glm::vec3 {-400.0f, 300.0f, 0.0f},
+                  glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
                 const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                    MobileRT::RGB {0.0f, 0.0f, 0.0f},
                                                    MobileRT::RGB {0.0f, 0.0f, 0.0f},
@@ -258,23 +258,23 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                   std::make_unique<Components::StaticHaltonSeq> ()};
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
                                                                         std::move (samplerPoint1),
-                                                                        MobileRT::Point3D {-400.0f, 500.0f,
+                                                                        ::glm::vec3 {-400.0f, 500.0f,
                                                                                            0.0f},
-                                                                        MobileRT::Point3D {-500.0f, 500.0f,
+                                                                        ::glm::vec3 {-500.0f, 500.0f,
                                                                                            0.0f},
-                                                                        MobileRT::Point3D {-500.0f, 500.0f,
+                                                                        ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f}));
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
                                                                         std::move (samplerPoint2),
-                                                                        MobileRT::Point3D {-500.0f, 500.0f,
+                                                                        ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f},
-                                                                        MobileRT::Point3D {-400.0f, 500.0f,
+                                                                        ::glm::vec3 {-400.0f, 500.0f,
                                                                                            -100.0f},
-                                                                        MobileRT::Point3D {-400.0f, 500.0f,
+                                                                        ::glm::vec3 {-400.0f, 500.0f,
                                                                                            0.0f}));*/
                 /*scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
-                  lightMat, MobileRT::Point3D {400.0f, 500.0f, -500.0f}));*/
-                maxDist = MobileRT::Point3D {1, 1, 1};
+                  lightMat, ::glm::vec3 {400.0f, 500.0f, -500.0f}));*/
+                maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;
         }
@@ -479,7 +479,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         }
 
         const unsigned stride{info.stride};
-        int rep{1};
+        int rep {1};
         do {
             const std::chrono::steady_clock::time_point start{
                     std::chrono::steady_clock::now()};
@@ -495,7 +495,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
                     std::chrono::steady_clock::now() - start).count();
             FPS();
             //renderer_->camera_->position_.x_ += 1.0f;
-        } while (working_ != State::STOPPED && rep-- > 1);
+            rep--;
+        } while (working_ != State::STOPPED && rep > 0);
         if (working_ != State::STOPPED) {
             working_ = State::FINISHED;
             LOG("WORKING = FINISHED");
@@ -543,7 +544,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         }
     };
 
-    thread_ = new ::std::thread{lambda};
+    thread_ = new ::std::thread {lambda};
     //lambda();
 }
 
@@ -575,8 +576,8 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     const MobileRT::Ray ray{renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
     const uint32_t index{static_cast<uint32_t>(primitiveIndex)};
     const MobileRT::Plane plane{
-            MobileRT::Point3D{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
-            MobileRT::Vector3D{0.0f, 0.0f, -1.0f}};
+            ::glm::vec3{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
+            glm::vec3 {0.0f, 0.0f, -1.0f}};
     MobileRT::Intersection intersection{};
     plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_.x_(),

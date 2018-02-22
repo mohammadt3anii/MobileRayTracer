@@ -33,17 +33,17 @@ float Camera::getBlock(const unsigned sample) noexcept {
 }
 
 AABB Camera::getAABB() const noexcept {
-    const Point3D min{position_};
-    const Point3D max{position_};
+    const glm::vec3 min{position_};
+    const glm::vec3 max{position_};
     return AABB {min, max};
 }
 
 //Left hand rule
-Camera::Camera(const Point3D position, const Point3D lookAt, const Vector3D up) noexcept :
+Camera::Camera(const glm::vec3 position, const glm::vec3 lookAt, const glm::vec3 up) noexcept :
         position_{position},
-        direction_{Vector3D(lookAt, position, true)},
-        right_{up.crossProduct(direction_)},
-        up_{direction_.crossProduct(right_)} {
+        direction_{glm::normalize(lookAt - position)},
+        right_{glm::cross(up, direction_)},
+        up_{glm::cross(direction_,right_)} {
     static bool unused{FillThings()};
     static_cast<void> (unused);
 }

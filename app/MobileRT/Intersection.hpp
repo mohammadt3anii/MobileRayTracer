@@ -6,16 +6,15 @@
 #define MOBILERT_INTERSECTION_HPP
 
 #include "Material.hpp"
-#include "Point3D.hpp"
 #include "Utils.hpp"
-#include "Vector3D.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Intersection final {
     public:
-        Point3D point_{};   // intersection point
-        Vector3D normal_{};    // intersection normal
-        Vector3D symNormal_{};
+        glm::vec3 point_{};   // intersection point
+        glm::vec3 normal_{};    // intersection normal
+        glm::vec3 symNormal_{};
         const Material *material_{nullptr};// material of the intersected primitive
         float length_{RayLengthMax};// ray length parameter
         const void *primitive_{nullptr};
@@ -25,16 +24,14 @@ namespace MobileRT {
 
         explicit Intersection(const void *primitive) noexcept;
 
-        explicit Intersection(Point3D orig,
-                    Vector3D dir,
-                    float dist,
-                    Point3D center) noexcept;
-
-        explicit Intersection(Point3D orig,
-                         Vector3D dir,
+        explicit Intersection(glm::vec3 orig,
+                         glm::vec3 dir,
                          float dist,
-                         Vector3D normal,
+                         glm::vec3 normal,
                          const void *primitive = nullptr) noexcept;
+
+        Intersection(glm::vec3 intPoint,
+                         float dist, glm::vec3 center) noexcept;
 
         Intersection(const Intersection &intersection) noexcept = default;
 

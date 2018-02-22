@@ -6,16 +6,15 @@
 
 using ::Components::PointLight;
 using ::MobileRT::Material;
-using ::MobileRT::Point3D;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 
-PointLight::PointLight(Material radiance, const Point3D position) noexcept :
+PointLight::PointLight(Material radiance, const glm::vec3 position) noexcept :
         Light(::std::move(radiance)),
         position_{position} {
 }
 
-Point3D PointLight::getPosition() noexcept {
+glm::vec3 PointLight::getPosition() noexcept {
     return this->position_;
 }
 

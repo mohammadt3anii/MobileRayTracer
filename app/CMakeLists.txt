@@ -36,6 +36,7 @@ set( MOBILE_RC_HEADERS "${CMAKE_SOURCE_DIR}" )
 set( SCENES_HEADERS "${CMAKE_SOURCE_DIR}/Scenes" )
 set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
 set( GSL_HEADERS "${CMAKE_SOURCE_DIR}/third_party/GSL/include" )
+set( GLM_HEADERS "${CMAKE_SOURCE_DIR}/third_party/glm" )
 
 # Set common flags
 set( COMMON_FLAGS -std=c++14 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
@@ -92,12 +93,15 @@ target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RC_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_APP_SOURCES}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${GSL_HEADERS}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${GLM_HEADERS}" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLAGS_RELEASE}> )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
+
+target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
 
 if( DEFINED ANDROID_ABI )
 	target_compile_definitions( ${PROJECT_NAME} PRIVATE -DANDROID=1 )

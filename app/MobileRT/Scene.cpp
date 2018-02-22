@@ -75,7 +75,7 @@ Intersection Scene::shadowTrace(::std::vector<T> &primitives, Intersection inter
     return intersection;
 }
 
-Intersection Scene::shadowTrace(Intersection intersection, Ray &&ray) noexcept {
+Intersection Scene::shadowTrace(Intersection intersection, Ray ray) noexcept {
     intersection =
             shadowTrace<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray);
     intersection =
@@ -99,12 +99,8 @@ void Scene::resetSampling() noexcept {
     }
 }
 
-void Scene::AABBbounds(const AABB box, Point3D *const min, Point3D *const max) {
-    min->setX(::std::min(box.pointMin_.x_(), min->x_()));
-    min->setY(::std::min(box.pointMin_.y_(), min->y_()));
-    min->setZ(::std::min(box.pointMin_.z_(), min->z_()));
+void Scene::AABBbounds(const AABB box, glm::vec3 *const min, glm::vec3 *const max) {
+    *min = {::std::min(box.pointMin_.x, min->x), ::std::min(box.pointMin_.y, min->y), ::std::min(box.pointMin_.z, min->z)};
 
-    max->setX(::std::max(box.pointMax_.x_(), max->x_()));
-    max->setY(::std::max(box.pointMax_.y_(), max->y_()));
-    max->setZ(::std::max(box.pointMax_.z_(), max->z_()));
+    *max = {::std::max(box.pointMax_.x, max->x), ::std::max(box.pointMax_.y, max->y), ::std::max(box.pointMax_.z, max->z)};
 }

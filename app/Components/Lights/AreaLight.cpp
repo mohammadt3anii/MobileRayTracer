@@ -7,28 +7,27 @@
 using ::Components::AreaLight;
 using ::MobileRT::Material;
 using ::MobileRT::Sampler;
-using ::MobileRT::Point3D;
 using ::MobileRT::Ray;
 using ::MobileRT::Intersection;
 
 AreaLight::AreaLight(Material radiance,
-                     ::std::unique_ptr<Sampler> &&samplerPointLight,
-                     const Point3D pointA, const Point3D pointB, const Point3D pointC) noexcept :
+                     ::std::unique_ptr<Sampler> samplerPointLight,
+                     const glm::vec3 pointA, const glm::vec3 pointB, const glm::vec3 pointC) noexcept :
         Light(::std::move(radiance)),
         triangle_{pointA, pointB, pointC},
         samplerPointLight_{::std::move(samplerPointLight)} {
 }
 
-Point3D AreaLight::getPosition() noexcept {
+glm::vec3 AreaLight::getPosition() noexcept {
     float R{samplerPointLight_->getSample()};
     float S{samplerPointLight_->getSample()};
     if (R + S >= 1.0f) {
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    return Point3D {triangle_.pointA_.x_() + R * triangle_.AB_.x_() + S * triangle_.AC_.x_(),
-                    triangle_.pointA_.y_() + R * triangle_.AB_.y_() + S * triangle_.AC_.y_(),
-                    triangle_.pointA_.z_() + R * triangle_.AB_.z_() + S * triangle_.AC_.z_()};
+    return glm::vec3 {triangle_.pointA_.x + R * triangle_.AB_.x + S * triangle_.AC_.x,
+                    triangle_.pointA_.y + R * triangle_.AB_.y + S * triangle_.AC_.y,
+                    triangle_.pointA_.z + R * triangle_.AB_.z + S * triangle_.AC_.z};
 }
 
 void AreaLight::resetSampling() noexcept {

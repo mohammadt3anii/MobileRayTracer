@@ -12,6 +12,7 @@
 #include "Primitive.hpp"
 #include "Ray.hpp"
 #include "Utils.hpp"
+#include <glm/glm.hpp>
 #include <vector>
 
 namespace MobileRT {
@@ -31,7 +32,7 @@ namespace MobileRT {
         Intersection shadowTrace(::std::vector<T> &primitives, Intersection intersection,
                          Ray ray) const noexcept;
 
-        static void AABBbounds(AABB box, Point3D *min, Point3D *max);
+        static void AABBbounds(AABB box, glm::vec3 *min, glm::vec3 *max);
 
     public:
         explicit Scene() = default;
@@ -48,7 +49,7 @@ namespace MobileRT {
 
         Intersection trace(Intersection intersection, Ray ray) noexcept;
 
-        Intersection shadowTrace(Intersection intersection, Ray &&ray) noexcept;
+        Intersection shadowTrace(Intersection intersection, Ray ray) noexcept;
 
         static unsigned getInstances() noexcept;
 
@@ -58,7 +59,7 @@ namespace MobileRT {
 
         template<typename T>
         static void
-        getBounds(::std::vector<T *> primitives, Point3D *const min, Point3D *const max) {
+        getBounds(::std::vector<T *> primitives, glm::vec3 *const min, glm::vec3 *const max) {
             for (T *primitive : primitives) {
                 AABBbounds(primitive->getAABB(), min, max);
             }

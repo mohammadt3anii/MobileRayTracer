@@ -6,9 +6,9 @@
 
 using ::MobileRT::Renderer;
 
-Renderer::Renderer(::std::unique_ptr<Shader> &&shader,
-                   ::std::unique_ptr<Camera> &&camera,
-                   ::std::unique_ptr<Sampler> &&samplerPixel,
+Renderer::Renderer(::std::unique_ptr<Shader> shader,
+                   ::std::unique_ptr<Camera> camera,
+                   ::std::unique_ptr<Sampler> samplerPixel,
                    const unsigned width, const unsigned height,
                    const unsigned samplesPixel) noexcept :
         camera_{::std::move(camera)},
@@ -28,8 +28,9 @@ Renderer::Renderer(::std::unique_ptr<Shader> &&shader,
 void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
                            const unsigned stride) noexcept {
     LOG("numThreads = ", numThreads);
-    const unsigned realWidth{stride / static_cast<unsigned>(sizeof(unsigned))};
+    const unsigned realWidth {stride / static_cast<unsigned>(sizeof(unsigned))};
     LOG("realWidth = ", realWidth);
+    LOG("width_ = ", width_);
 
     this->sample_ = 0;
     this->samplerPixel_->resetSampling();
@@ -37,7 +38,7 @@ void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
     this->camera_->resetSampling();
 
     const int numChildren{numThreads - 1};
-    ::std::vector<::std::thread> threads{};
+    ::std::vector<::std::thread> threads {};
     threads.reserve(static_cast<unsigned>(numChildren));
 
     for (int i{0}; i < numChildren; i++) {
@@ -49,9 +50,7 @@ void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
     }
     threads.clear();
 
-    /*LOG("point3D = ", Point3D::getInstances());
-    LOG("vector3D = ", Vector3D::getInstances());
-    LOG("RGB = ", RGB::getInstances());
+    /*LOG("RGB = ", RGB::getInstances());
     LOG("scene = ", Scene::getInstances());
     LOG("ray = ", Ray::getInstances());
     LOG("material = ", Material::getInstances());
@@ -67,9 +66,6 @@ void Renderer::stopRender() noexcept {
 }
 
 void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned width) noexcept {
-
-    LOG("width = ", width);
-    LOG("width_ = ", width_);
     const float INV_IMG_WIDTH{1.0f / this->width_};
     const float INV_IMG_HEIGHT{1.0f / this->height_};
     const float pixelWidth{0.5f / this->width_};

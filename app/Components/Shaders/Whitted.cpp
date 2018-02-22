@@ -6,18 +6,16 @@
 
 using ::Components::Whitted;
 using ::MobileRT::Light;
-using ::MobileRT::Vector3D;
-using ::MobileRT::Point3D;
 using ::MobileRT::RGB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-Whitted::Whitted(Scene &&scene, const unsigned samplesLight, Accelerator accelerator) noexcept :
+Whitted::Whitted(Scene scene, const unsigned samplesLight, Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 
-bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) noexcept {
+bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray ray) noexcept {
     const int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
@@ -37,8 +35,8 @@ bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) 
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const Vector3D &shadingNormal{
-            (ray.direction_.dotProduct(intersection.normal_) < 0.0f) ?
+    const glm::vec3 &shadingNormal{
+            (glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?
             // entering the object
             intersection.normal_ :
             // We have to reverse the normal now
@@ -53,12 +51,13 @@ bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) 
             for (unsigned i{0}; i < sizeLights; i++) {
                 Light &light(*scene_.lights_[i]);
                 for (unsigned j{0}; j < samplesLight; j++) {
-                    const Point3D lightPosition{light.getPosition()};
+                    const glm::vec3 lightPosition{light.getPosition()};
                     //calculates vector starting in intersection to the light
-                    Vector3D vectorToLight{lightPosition, intersection.point_};
+                    glm::vec3 vectorToLight{lightPosition - intersection.point_};
                     //distance from intersection to the light (and normalize it)
-                    const float distanceToLight{vectorToLight.normalize()};
-                    const float cos_N_L{shadingNormal.dotProduct(vectorToLight)};
+                    const float distanceToLight{glm::length(vectorToLight)};
+                    vectorToLight = glm::normalize(vectorToLight);
+                    const float cos_N_L{glm::dot(shadingNormal, vectorToLight)};
                     if (cos_N_L > 0.0f) {
                         //shadow ray - orig=intersection, dir=light
                         Ray shadowRay{vectorToLight, intersection.point_, rayDepth + 1,
@@ -84,8 +83,7 @@ bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) 
     if (kS.hasColor()) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
-        const Vector3D reflectionDir{
-                ray.direction_, shadingNormal, 2.0f * shadingNormal.dotProduct(ray.direction_)};
+        const glm::vec3 reflectionDir {glm::reflect(ray.direction_, shadingNormal)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         RGB LiS_RGB {};
         rayTrace(&LiS_RGB, ::std::move(specularRay));
@@ -95,24 +93,29 @@ bool Whitted::shade(RGB *const rgb, const Intersection intersection, Ray &&ray) 
     // specular transmission
     if (kT.hasColor()) {
         //PDF = 1 / 2 Pi
-        Vector3D shadingNormalT{shadingNormal};
+        glm::vec3 shadingNormalT{shadingNormal};
         float refractiveIndice{intersection.material_->refractiveIndice_};
-        if (shadingNormalT.dotProduct(ray.direction_) > 0.0f) {
+        if (glm::dot(shadingNormalT, ray.direction_) > 0.0f) {
             //we are inside the medium
             shadingNormalT *= -1.0f;                  //N = N*-1;
             refractiveIndice = 1.0f / refractiveIndice; //n = 1 / n;
         }
         refractiveIndice = 1.0f / refractiveIndice;
-        const float cosTheta1{(shadingNormalT.dotProduct(ray.direction_)) * -1.0f};
+        /*const float cosTheta1{(glm::dot(shadingNormalT, ray.direction_)) * -1.0f};
         const float cosTheta2{
                 1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1)};
-        Ray transmissionRay{cosTheta2 > 0.0f ?// refraction direction
+
+        glm::vec3 refractDir {cosTheta2 > 0.0f ?// refraction direction
                             //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
                             (ray.direction_ * refractiveIndice) + (shadingNormalT *
                                                                    (refractiveIndice * cosTheta1 -
                                                                     (::std::sqrt(cosTheta2)))) :
                             //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f),
+                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f)};*/
+
+        glm::vec3 refractDir {glm::refract(ray.direction_, shadingNormalT, refractiveIndice)};
+        
+        Ray transmissionRay{refractDir,
                             intersection.point_,
                             rayDepth + 1, intersection.primitive_};
         RGB LiT_RGB {};

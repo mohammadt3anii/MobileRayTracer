@@ -8,6 +8,7 @@
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
+#include <glm/glm.hpp>
 #include <random>
 
 namespace MobileRT {
@@ -23,7 +24,7 @@ namespace MobileRT {
     public:
         explicit BVH() noexcept = default;
 
-        explicit BVH<T>(::std::vector<MobileRT::Primitive<T>> &&primitives,
+        explicit BVH<T>(::std::vector<MobileRT::Primitive<T>> primitives,
                         unsigned depth = 0) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
@@ -48,7 +49,7 @@ namespace MobileRT {
 
     template<typename T>
     BVH<T>::BVH(
-        ::std::vector<MobileRT::Primitive<T>> &&primitives,
+        ::std::vector<MobileRT::Primitive<T>> primitives,
         const unsigned depth) noexcept {
         if (primitives.empty()) {
             return;
@@ -56,11 +57,11 @@ namespace MobileRT {
         const uint32_t N{static_cast<uint32_t>(primitives.size())};
 
         AABB current_box{
-                Point3D {
+                glm::vec3 {
                         std::numeric_limits<float>::max(),
                         std::numeric_limits<float>::max(),
                         std::numeric_limits<float>::max()},
-                Point3D {
+                glm::vec3 {
                         std::numeric_limits<float>::lowest(),
                         std::numeric_limits<float>::lowest(),
                         std::numeric_limits<float>::lowest()}};
@@ -79,7 +80,7 @@ namespace MobileRT {
                 ::std::sort(primitives.begin(), primitives.end(),
                             [](const MobileRT::Primitive<T> &a,
                                 MobileRT::Primitive<T> &b) noexcept -> bool {
-                                return a.getAABB().pointMin_.x_() < b.getAABB().pointMin_.x_();
+                                return a.getAABB().pointMin_.x < b.getAABB().pointMin_.x;
                             });
                 break;
 
@@ -87,7 +88,7 @@ namespace MobileRT {
                 ::std::sort(primitives.begin(), primitives.end(),
                             [](const MobileRT::Primitive<T> &a,
                                 MobileRT::Primitive<T> &b) noexcept -> bool {
-                                return a.getAABB().pointMin_.y_() < b.getAABB().pointMin_.y_();
+                                return a.getAABB().pointMin_.y < b.getAABB().pointMin_.y;
                             });
                 break;
 
@@ -95,7 +96,7 @@ namespace MobileRT {
                 ::std::sort(primitives.begin(), primitives.end(),
                             [](const MobileRT::Primitive<T> &a,
                                 MobileRT::Primitive<T> &b) noexcept -> bool {
-                                return a.getAABB().pointMin_.z_() < b.getAABB().pointMin_.z_();
+                                return a.getAABB().pointMin_.z < b.getAABB().pointMin_.z;
                             });
                 break;
         }

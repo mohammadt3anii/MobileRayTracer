@@ -8,21 +8,21 @@
 using ::MobileRT::AABB;
 using ::MobileRT::Ray;
 
-AABB::AABB(const Point3D pointMin, const Point3D pointMax) noexcept :
+AABB::AABB(const glm::vec3 pointMin, const glm::vec3 pointMax) noexcept :
         pointMin_{pointMin}, pointMax_{pointMax} {
 }
 
 bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
-    float t1 {(box.pointMin_.x_() - ray.origin_.x_())/ray.direction_.x_()};
-    float t2 {(box.pointMax_.x_() - ray.origin_.x_())/ray.direction_.x_()};
+    float t1 {(box.pointMin_.x - ray.origin_.x)/ray.direction_.x};
+    float t2 {(box.pointMax_.x - ray.origin_.x)/ray.direction_.x};
  
     float tmin {::std::min(t1, t2)};
     float tmax {::std::max(t1, t2)};
  
-    for (size_t axis {1}; axis < 3; ++axis) {
-        const float invDir{1.0f / ray.direction_.direction_.at(axis)};
-        t1 = (box.pointMin_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir;
-        t2 = (box.pointMax_.position_.at(axis) - ray.origin_.position_.at(axis)) * invDir;
+    for (int axis {1}; axis < 3; ++axis) {
+        const float invDir{1.0f / ray.direction_[axis]};
+        t1 = (box.pointMin_[axis] - ray.origin_[axis]) * invDir;
+        t2 = (box.pointMax_[axis] - ray.origin_[axis]) * invDir;
  
         tmin = ::std::max(tmin, ::std::min(t1, t2));
         tmax = ::std::min(tmax, ::std::max(t1, t2));
@@ -32,9 +32,9 @@ bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
 }
 
 int AABB::getLongestAxis() const noexcept {
-    const float lengthX{pointMax_.x_() - pointMin_.x_()};
-    const float lengthY{pointMax_.y_() - pointMin_.y_()};
-    const float lengthZ{pointMax_.z_() - pointMin_.z_()};
+    const float lengthX{pointMax_.x - pointMin_.x};
+    const float lengthY{pointMax_.y - pointMin_.y};
+    const float lengthZ{pointMax_.z - pointMin_.z};
 
     int longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
                     lengthY >= lengthX && lengthY >= lengthZ ? 1 :
@@ -45,9 +45,9 @@ int AABB::getLongestAxis() const noexcept {
 }
 
 float AABB::getSurfaceArea() const noexcept {
-    const float lengthX{pointMax_.x_() - pointMin_.x_()};
-    const float lengthY{pointMax_.y_() - pointMin_.y_()};
-    const float lengthZ{pointMax_.z_() - pointMin_.z_()};
+    const float lengthX{pointMax_.x - pointMin_.x};
+    const float lengthY{pointMax_.y - pointMin_.y};
+    const float lengthZ{pointMax_.z - pointMin_.z};
 
     const float bottomTopArea{2 * lengthX * lengthZ};
     const float sideAreaXY{2 * lengthX * lengthY};
@@ -60,15 +60,15 @@ float AABB::getSurfaceArea() const noexcept {
 
 namespace MobileRT {
     AABB surroundingBox(AABB box1, AABB box2) noexcept {
-        Point3D min{
-                ::std::min(box1.pointMin_.x_(), box2.pointMin_.x_()),
-                ::std::min(box1.pointMin_.y_(), box2.pointMin_.y_()),
-                ::std::min(box1.pointMin_.z_(), box2.pointMin_.z_())};
+        glm::vec3 min{
+                ::std::min(box1.pointMin_.x, box2.pointMin_.x),
+                ::std::min(box1.pointMin_.y, box2.pointMin_.y),
+                ::std::min(box1.pointMin_.z, box2.pointMin_.z)};
 
-        Point3D max{
-                ::std::max(box1.pointMax_.x_(), box2.pointMax_.x_()),
-                ::std::max(box1.pointMax_.y_(), box2.pointMax_.y_()),
-                ::std::max(box1.pointMax_.z_(), box2.pointMax_.z_())};
+        glm::vec3 max{
+                ::std::max(box1.pointMax_.x, box2.pointMax_.x),
+                ::std::max(box1.pointMax_.y, box2.pointMax_.y),
+                ::std::max(box1.pointMax_.z, box2.pointMax_.z)};
         return AABB(min, max);
     }
 }//namespace MobileRT

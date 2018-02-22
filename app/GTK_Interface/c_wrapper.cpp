@@ -76,52 +76,52 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         ::std::unique_ptr<::MobileRT::Sampler> samplerPixel{};
         ::std::unique_ptr<::MobileRT::Shader> shader_{};
         ::std::unique_ptr<::MobileRT::Camera> camera{};
-        ::MobileRT::Point3D maxDist{::MobileRT::Point3D {0, 0, 0}};
+        glm::vec3 maxDist{glm::vec3 {0, 0, 0}};
 
         switch (scene) {
             case 0:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        ::MobileRT::Point3D{0.0f, 0.0f, -3.4f},
-                        ::MobileRT::Point3D{0.0f, 0.0f, 1.0f},
-                        ::MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+                        glm::vec3{0.0f, 0.0f, -3.4f},
+                        glm::vec3{0.0f, 0.0f, 1.0f},
+                        glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene(::std::move(scene_));
-                maxDist = ::MobileRT::Point3D {1, 1, 1};
+                maxDist = glm::vec3 {1, 1, 1};
                 break;
 
             case 1:
                 camera = ::std::make_unique<::Components::Orthographic>(
-                        ::MobileRT::Point3D{0.0f, 1.0f, -10.0f},
-                        ::MobileRT::Point3D{0.0f, 1.0f, 7.0f},
-                        ::MobileRT::Vector3D{0.0f, 1.0f, 0.0f},
+                        glm::vec3{0.0f, 1.0f, -10.0f},
+                        glm::vec3{0.0f, 1.0f, 7.0f},
+                        glm::vec3{0.0f, 1.0f, 0.0f},
                         10.0f * hfovFactor, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<::Components::Perspective>(
-                  ::MobileRT::Point3D(0.0f, 0.5f, 1.0f),
-                  ::MobileRT::Point3D(0.0f, 0.0f, 7.0f),
-                  ::MobileRT::Vector3D(0.0f, 1.0f, 0.0f),
+                  glm::vec3(0.0f, 0.5f, 1.0f),
+                  glm::vec3(0.0f, 0.0f, 7.0f),
+                  glm::vec3(0.0f, 1.0f, 0.0f),
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
-                maxDist = ::MobileRT::Point3D {8, 8, 8};
+                maxDist = glm::vec3 {8, 8, 8};
                 break;
 
             case 2:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        ::MobileRT::Point3D {0.0f, 0.0f, -3.4f},
-                        ::MobileRT::Point3D {0.0f, 0.0f, 1.0f},
-                        ::MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        glm::vec3 {0.0f, 0.0f, -3.4f},
+                        glm::vec3 {0.0f, 0.0f, 1.0f},
+                        glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene2(::std::move(scene_));
-                maxDist = ::MobileRT::Point3D {1, 1, 1};
+                maxDist = glm::vec3 {1, 1, 1};
                 break;
 
             case 3:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        ::MobileRT::Point3D {0.0f, 0.5f, 1.0f},
-                        ::MobileRT::Point3D {0.0f, 0.0f, 7.0f},
-                        ::MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        glm::vec3 {0.0f, 0.5f, 1.0f},
+                        glm::vec3 {0.0f, 0.0f, 7.0f},
+                        glm::vec3 {0.0f, 1.0f, 0.0f},
                         60.0f * hfovFactor, 60.0f * vfovFactor);
                 scene_ = spheresScene2(::std::move(scene_));
-                maxDist = ::MobileRT::Point3D {8, 8, 8};
+                maxDist = glm::vec3 {8, 8, 8};
                 break;
             default: {
                 //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::HaltonSeq> ();});
@@ -135,16 +135,16 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
                                                     1.0f,
                                                     ::MobileRT::RGB {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
-                        lightMat, ::MobileRT::Point3D {0.0f, 1000.0f, 0.0f}));
+                        lightMat, glm::vec3 {0.0f, 1000.0f, 0.0f}));
                 //cornell spheres
                 camera = ::std::make_unique<::Components::Perspective>(
-                        ::MobileRT::Point3D {0.0f, 0.7f, 3.0f},
-                        ::MobileRT::Point3D {0.0f, 0.7f, -1.0f},
-                        ::MobileRT::Vector3D {0.0f, 1.0f, 0.0f},
+                        glm::vec3 {0.0f, 0.7f, 3.0f},
+                        glm::vec3 {0.0f, 0.7f, -1.0f},
+                        glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 //teapot
-                //camera = ::std::make_unique<::Components::Perspective> (::MobileRT::Point3D {0.0f, 30.0f, -200.0f}, ::MobileRT::Point3D {0.0f, 30.0f, 100.0f}, ::MobileRT::Vector3D {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                maxDist = ::MobileRT::Point3D {1, 1, 1};
+                //camera = ::std::make_unique<::Components::Perspective> (glm::vec3 {0.0f, 30.0f, -200.0f}, glm::vec3 {0.0f, 30.0f, 100.0f}, glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                maxDist = glm::vec3 {1, 1, 1};
             }
                 break;
         }
@@ -248,7 +248,8 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         do {
             renderer_->renderFrame(bitmap, threads, width * sizeof(unsigned));
             //renderer_->camera_->position_.x_ += 2.0f;
-        } while (repeats-- > 0);
+            repeats--;
+        } while (repeats > 0);
         const auto endRendering{std::chrono::system_clock::now()};
         timeRendering = endRendering - startRendering;
         LOG("Finished rendering scene");
@@ -267,7 +268,7 @@ void RayTrace(unsigned *const bitmap, const int width, const int height, const i
               const int repeats, const int accelerator, const bool printStdOut, const bool async,
               const char *const pathObj, const char *const pathMtl) {
     if (async) {
-        ::std::thread thread{work_thread, bitmap, width, height, threads, shader, scene,
+        ::std::thread thread {work_thread, bitmap, width, height, threads, shader, scene,
                              samplesPixel, samplesLight, repeats, accelerator, printStdOut, pathObj,
                              pathMtl};
         thread.detach();

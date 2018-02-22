@@ -6,10 +6,10 @@
 #define MOBILERT_CAMERA_HPP
 
 #include "Accelerators/AABB.hpp"
-#include "Point3D.hpp"
 #include "Ray.hpp"
 #include <algorithm>
 #include <atomic>
+#include <glm/glm.hpp>
 #include <random>
 
 namespace MobileRT {
@@ -20,14 +20,14 @@ namespace MobileRT {
         ::std::atomic<unsigned> block_{0};
 
     public:
-        Point3D position_{};
-        Vector3D direction_{};
-        Vector3D right_{};
-        Vector3D up_{};
+        glm::vec3 position_{};
+        glm::vec3 direction_{};
+        glm::vec3 right_{};
+        glm::vec3 up_{};
 
     public:
-        explicit Camera(Point3D position,
-                        Point3D lookAt, Vector3D up) noexcept;
+        explicit Camera(glm::vec3 position,
+                        glm::vec3 lookAt, glm::vec3 up) noexcept;
 
         Camera(const Camera &camera) noexcept;
 

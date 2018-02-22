@@ -15,22 +15,6 @@ RGB::RGB(const float r, const float g, const float b) noexcept :
     counter++;
 }
 
-RGB::RGB(const RGB &rgb) noexcept :
-        R_{rgb.R_},
-        G_{rgb.G_},
-        B_{rgb.B_}
-{
-    counter++;
-}
-
-RGB::RGB(RGB &&rgb) noexcept :
-        R_{rgb.R_},
-        G_{rgb.G_},
-        B_{rgb.B_}
-{
-    counter++;
-}
-
 bool RGB::hasColor() const noexcept {
     return ((this->R_ > 0.0f) || (this->G_ > 0.0f) || (this->B_ > 0.0f));
 }

@@ -6,9 +6,9 @@
 #define MOBILERT_LIGHT_HPP
 
 #include "Intersection.hpp"
-#include "Point3D.hpp"
 #include "RGB.hpp"
 #include "Ray.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Light {
@@ -28,7 +28,7 @@ namespace MobileRT {
 
         Light &operator=(Light &&light) noexcept = delete;
 
-        virtual Point3D getPosition() noexcept = 0;
+        virtual glm::vec3 getPosition() noexcept = 0;
 
         virtual void resetSampling() noexcept = 0;
 

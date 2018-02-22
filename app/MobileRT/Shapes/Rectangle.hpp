@@ -7,30 +7,29 @@
 
 #include "MobileRT/Accelerators/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
-#include "MobileRT/Point3D.hpp"
 #include "MobileRT/Ray.hpp"
-#include "MobileRT/Vector3D.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Rectangle final {
     private:
-        Point3D pointA_{};
-        Point3D pointB_{};
-        Point3D pointC_{};
-        Point3D pointD_{};
-        Vector3D AC_{};
-        Vector3D AB_{};
-        Vector3D BD_{};
-        Vector3D CD_{};
-        Vector3D normal_{};
+        glm::vec3 pointA_{};
+        glm::vec3 pointB_{};
+        glm::vec3 pointC_{};
+        glm::vec3 pointD_{};
+        glm::vec3 AC_{};
+        glm::vec3 AB_{};
+        glm::vec3 BD_{};
+        glm::vec3 CD_{};
+        glm::vec3 normal_{};
 
     private:
-        Point3D getPositionMin() const noexcept;
+        glm::vec3 getPositionMin() const noexcept;
 
-        Point3D getPositionMax() const noexcept;
+        glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Rectangle(Point3D pointA, Point3D pointB, Point3D pointC, Point3D pointD) noexcept;
+        explicit Rectangle(glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC, glm::vec3 pointD) noexcept;
 
         Rectangle(const Rectangle &rectangle) noexcept = default;
 

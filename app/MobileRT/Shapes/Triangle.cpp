@@ -7,17 +7,14 @@
 
 using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
-using ::MobileRT::Point3D;
-using ::MobileRT::Vector3D;
 using ::MobileRT::Intersection;
 
-Triangle::Triangle(const Point3D pointA, const Point3D pointB, const Point3D pointC,
-                   Vector3D normal) noexcept :
+Triangle::Triangle(const glm::vec3 pointA, const glm::vec3 pointB, const glm::vec3 pointC,
+                   glm::vec3 normal) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         normal_{
-                normal.isNull() ? AB_.crossProduct(AC_).returnNormalized()
-                                : normal.returnNormalized()},
+            glm::length(normal) == 0? glm::normalize(glm::cross(AB_, AC_)) : glm::normalize(normal)},
         pointA_{pointA}
 {
 }
@@ -26,34 +23,33 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     if (ray.primitive_ == this) {
         return intersection;
     }
-    const Vector3D perpendicularVector{ray.direction_, this->AC_};//cross product
-    const float normalizedProjection{this->AB_.dotProduct(perpendicularVector)};
+    const glm::vec3 perpendicularVector {glm::cross(ray.direction_, AC_)};
+    const float normalizedProjection {glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 
-    const float normalizedProjectionInv{1.0f / normalizedProjection};
-    const Vector3D vectorToCamera{ray.origin_, this->pointA_};
-    const float u{normalizedProjectionInv * vectorToCamera.dotProduct(perpendicularVector)};
+    const float normalizedProjectionInv {1.0f / normalizedProjection};
+    const glm::vec3 vectorToCamera {ray.origin_.x - pointA_.x, ray.origin_.y - pointA_.y, ray.origin_.z - pointA_.z};
+    const float u {normalizedProjectionInv * glm::dot(vectorToCamera, perpendicularVector)};
     if (u < 0.0f || u > 1.0f) {
         return intersection;
     }
 
-    const Vector3D upPerpendicularVector{vectorToCamera, this->AB_};//cross product
-    const float v{normalizedProjectionInv * ray.direction_.dotProduct(upPerpendicularVector)};
+    const glm::vec3 upPerpendicularVector {glm::cross(vectorToCamera, AB_)};
+    const float v {normalizedProjectionInv * glm::dot (ray.direction_, upPerpendicularVector)};
     if (v < 0.0f || (u + v) > 1.0f) {
         return intersection;
     }
 
     // at this stage we can compute t to find out where
     // the intersection point is on the line
-    const float distanceToIntersection{
-            normalizedProjectionInv * this->AC_.dotProduct(upPerpendicularVector)};
+    const float distanceToIntersection {normalizedProjectionInv * glm::dot(AC_, upPerpendicularVector)};
 
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
-    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, this->normal_, this};
+    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
 }
 
 void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -63,22 +59,22 @@ float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-Point3D Triangle::getPositionMin() const noexcept {
-    Point3D pointB {pointA_ + AB_};
-    Point3D pointC {pointA_ + AC_};
-    const float x{::std::min(pointA_.x_(), ::std::min(pointB.x_(), pointC.x_()))};
-    const float y{::std::min(pointA_.y_(), ::std::min(pointB.y_(), pointC.y_()))};
-    const float z{::std::min(pointA_.z_(), ::std::min(pointB.z_(), pointC.z_()))};
-    return Point3D(x, y, z);
+glm::vec3 Triangle::getPositionMin() const noexcept {
+    const glm::vec3 pointB {pointA_ + AB_};
+    const glm::vec3 pointC {pointA_ + AC_};
+    const float x {::std::min(pointA_.x, ::std::min(pointB.x, pointC.x))};
+    const float y {::std::min(pointA_.y, ::std::min(pointB.y, pointC.y))};
+    const float z {::std::min(pointA_.z, ::std::min(pointB.z, pointC.z))};
+    return glm::vec3(x, y, z);
 }
 
-Point3D Triangle::getPositionMax() const noexcept {
-    Point3D pointB {pointA_ + AB_};
-    Point3D pointC {pointA_ + AC_};
-    const float x{::std::max(pointA_.x_(), ::std::max(pointB.x_(), pointC.x_()))};
-    const float y{::std::max(pointA_.y_(), ::std::max(pointB.y_(), pointC.y_()))};
-    const float z{::std::max(pointA_.z_(), ::std::max(pointB.z_(), pointC.z_()))};
-    return Point3D(x, y, z);
+glm::vec3 Triangle::getPositionMax() const noexcept {
+    const glm::vec3 pointB {pointA_ + AB_};
+    const glm::vec3 pointC {pointA_ + AC_};
+    const float x {::std::max(pointA_.x, ::std::max(pointB.x, pointC.x))};
+    const float y {::std::max(pointA_.y, ::std::max(pointB.y, pointC.y))};
+    const float z {::std::max(pointA_.z, ::std::max(pointB.z, pointC.z))};
+    return glm::vec3(x, y, z);
 }
 
 //TODO (Puscas): Fix this method (it may be wrong)
@@ -87,62 +83,62 @@ AABB Triangle::getAABB() const noexcept {
 }
 
 bool Triangle::intersect(const AABB box) const noexcept {
-    ::std::function<bool(const Point3D, const Vector3D)> intersectRayAABB{
-            [=](const Point3D orig, const Vector3D vec) -> bool {
-                Vector3D T_1{};
-                Vector3D T_2{}; // vectors to hold the T-values for every direction
+    ::std::function<bool(const glm::vec3, const glm::vec3)> intersectRayAABB{
+            [=](const glm::vec3 orig, const glm::vec3 vec) -> bool {
+                glm::vec3 T_1{};
+                glm::vec3 T_2{}; // vectors to hold the T-values for every direction
                 float t_near{std::numeric_limits<float>::min()};
                 float t_far{std::numeric_limits<float>::max()};
-                if (vec.x_() == 0) { // ray parallel to planes in this direction
-                    if ((orig.x_() < box.pointMin_.x_()) ||
-                        ((orig.x_() + vec.x_()) > box.pointMax_.x_())) {
+                if (vec.x == 0) { // ray parallel to planes in this direction
+                    if ((orig.x < box.pointMin_.x) ||
+                        ((orig.x + vec.x) > box.pointMax_.x)) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.setX((box.pointMin_.x_() - orig.x_()) / vec.x_());
-                    T_2.setX((box.pointMax_.x_() - orig.x_()) / vec.x_());
-                    if (T_1.x_() >
-                        T_2.x_()) { // we want T_1 to hold values for intersection with near plane
+                    T_1.x = ((box.pointMin_.x - orig.x) / vec.x);
+                    T_2.x = ((box.pointMax_.x - orig.x) / vec.x);
+                    if (T_1.x >
+                        T_2.x) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.x_(), t_near);
-                    t_far = ::std::min(T_2.x_(), t_far);
+                    t_near = ::std::max(T_1.x, t_near);
+                    t_far = ::std::min(T_2.x, t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
                 }
-                if (vec.y_() == 0) { // ray parallel to planes in this direction
-                    if ((orig.y_() < box.pointMin_.y_()) ||
-                        ((orig.y_() + vec.y_()) > box.pointMax_.y_())) {
+                if (vec.y == 0) { // ray parallel to planes in this direction
+                    if ((orig.y < box.pointMin_.y) ||
+                        ((orig.y + vec.y) > box.pointMax_.y)) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.setY((box.pointMin_.y_() - orig.y_()) / vec.y_());
-                    T_2.setY((box.pointMax_.y_() - orig.y_()) / vec.y_());
-                    if (T_1.y_() >
-                        T_2.y_()) { // we want T_1 to hold values for intersection with near plane
+                    T_1.y = ((box.pointMin_.y - orig.y) / vec.y);
+                    T_2.y = ((box.pointMax_.y - orig.y) / vec.y);
+                    if (T_1.y >
+                        T_2.y) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.y_(), t_near);
-                    t_far = ::std::min(T_2.y_(), t_far);
+                    t_near = ::std::max(T_1.y, t_near);
+                    t_far = ::std::min(T_2.y, t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
                 }
-                if (vec.z_() == 0) { // ray parallel to planes in this direction
-                    if ((orig.z_() < box.pointMin_.z_()) ||
-                        ((orig.z_() + vec.z_()) > box.pointMax_.z_())) {
+                if (vec.z == 0) { // ray parallel to planes in this direction
+                    if ((orig.z < box.pointMin_.z) ||
+                        ((orig.z + vec.z) > box.pointMax_.z)) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.setZ((box.pointMin_.z_() - orig.z_()) / vec.z_());
-                    T_2.setZ((box.pointMax_.z_() - orig.z_()) / vec.z_());
-                    if (T_1.z_() >
-                        T_2.z_()) { // we want T_1 to hold values for intersection with near plane
+                    T_1.z = ((box.pointMin_.z - orig.z) / vec.z);
+                    T_2.z = ((box.pointMax_.z - orig.z) / vec.z);
+                    if (T_1.z >
+                        T_2.z) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.z_(), t_near);
-                    t_far = ::std::min(T_2.z_(), t_far);
+                    t_near = ::std::max(T_1.z, t_near);
+                    t_far = ::std::min(T_2.z, t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
@@ -150,23 +146,23 @@ bool Triangle::intersect(const AABB box) const noexcept {
                 return true; // if we made it here, there was an intersection - YAY
             }};
 
-    ::std::function<bool(const Vector3D)> isOverTriangle{
-            [=](const Vector3D vec) -> bool {
-                const Vector3D perpendicularVector{vec, this->AC_};//cross product
-                const float normalizedProjection{this->AB_.dotProduct(perpendicularVector)};
+    ::std::function<bool(const glm::vec3)> isOverTriangle {
+            [=](const glm::vec3 vec) -> bool {
+                const glm::vec3 perpendicularVector {glm::cross(vec, AC_)};
+                const float normalizedProjection {glm::dot(AB_, perpendicularVector)};
                 return ::std::fabs(normalizedProjection) < Epsilon;
             }
     };
 
-    const Point3D &min(box.pointMin_);
-    const Point3D &max(box.pointMax_);
+    const glm::vec3 &min(box.pointMin_);
+    const glm::vec3 &max(box.pointMax_);
     Intersection intersection{};
-    const Vector3D vec{max, min};
+    const glm::vec3 vec{max - min};
     const Ray ray{vec, min, 1};
     bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
     bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
-    Point3D pointB {pointA_ + AB_};
-    Point3D pointC {pointA_ + AC_};
+    glm::vec3 pointB {pointA_ + AB_};
+    glm::vec3 pointC {pointA_ + AC_};
     bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
     const float dist {intersection.length_};
     intersection = intersect(intersection, ray);

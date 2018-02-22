@@ -44,13 +44,13 @@ namespace MobileRT {
         const unsigned samplesLight_{};
 
     protected:
-        virtual bool shade(RGB *rgb, Intersection intersection, Ray &&ray) noexcept = 0;
+        virtual bool shade(RGB *rgb, Intersection intersection, Ray ray) noexcept = 0;
 
     public:
         void initializeAccelerators(Camera *camera) noexcept;
 
     public:
-        explicit Shader(Scene &&scene, unsigned samplesLight, Accelerator accelerator) noexcept;
+        explicit Shader(Scene scene, unsigned samplesLight, Accelerator accelerator) noexcept;
 
         Shader(const Shader &shader) noexcept = delete;
 
@@ -62,11 +62,11 @@ namespace MobileRT {
 
         Shader &operator=(Shader &&shader) noexcept = delete;
 
-        bool rayTrace(RGB *rgb, Ray &&ray) noexcept;
+        bool rayTrace(RGB *rgb, Ray ray) noexcept;
 
-        bool shadowTrace(Intersection intersection, Ray &&ray) noexcept;
+        bool shadowTrace(Intersection intersection, Ray ray) noexcept;
 
-        Intersection traceTouch(Intersection intersection, Ray &&ray) noexcept;
+        Intersection traceTouch(Intersection intersection, Ray ray) noexcept;
 
         virtual void resetSampling() noexcept = 0;
     };
