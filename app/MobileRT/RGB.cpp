@@ -121,13 +121,6 @@ float RGB::getMax() const noexcept {
     return ::std::max(R_, ::std::max(G_, B_));
 }
 
-RGB &RGB::operator=(const RGB &rgb) noexcept {
-    this->R_ = rgb.R_;
-    this->G_ = rgb.G_;
-    this->B_ = rgb.B_;
-    return *this;
-}
-
 RGB &RGB::operator=(const float value) noexcept {
     this->R_ = value;
     this->G_ = value;

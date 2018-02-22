@@ -31,7 +31,7 @@ namespace MobileRT {
         const unsigned samplesPixel_{};
 
     private:
-        void renderScene(unsigned *bitmap, int tid, unsigned stride) noexcept;
+        void renderScene(unsigned *bitmap, int tid, unsigned width) noexcept;
 
     public:
         explicit Renderer(::std::unique_ptr<Shader> &&shader,

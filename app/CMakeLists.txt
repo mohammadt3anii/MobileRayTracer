@@ -31,7 +31,11 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
 # Set common headers
+set( MOBILE_RT_HEADERS "${CMAKE_SOURCE_DIR}" )
+set( MOBILE_RC_HEADERS "${CMAKE_SOURCE_DIR}" )
+set( SCENES_HEADERS "${CMAKE_SOURCE_DIR}/Scenes" )
 set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
+set( GSL_HEADERS "${CMAKE_SOURCE_DIR}/third_party/GSL/include" )
 
 # Set common flags
 set( COMMON_FLAGS -std=c++14 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
@@ -56,9 +60,10 @@ if( NOT DEFINED ANDROID_ABI )
 endif()
 
 # Add sub directories
+add_subdirectory( MobileRT )
 add_subdirectory( Components )
-add_subdirectory( Unit_Testing )
 add_subdirectory( third_party )
+add_subdirectory( Unit_Testing )
 
 # Project
 project( AppInterface VERSION 1.0.0.0 LANGUAGES CXX )
@@ -70,22 +75,18 @@ if( FLAG__FINLINE_LIMIT__SUPPORTED )
 	set( COMMON_FLAGS "${COMMON_FLAGS}" -finline-limit=150 )
 endif()
 
-file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/*.cpp" )
+file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/**.cpp" )
 
 if( DEFINED ANDROID_ABI )
-	file( GLOB_RECURSE MOBILE_JNI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/*.cpp" )
+	file( GLOB_RECURSE MOBILE_JNI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/**.cpp" )
 	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_JNI_SOURCES} )
 else ()
 	find_package( GTK2 REQUIRED )
-	file( GLOB_RECURSE MOBILE_GTK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/GTK_Interface/*.cpp" )
+	file( GLOB_RECURSE MOBILE_GTK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/GTK_Interface/**.cpp" )
 	add_executable( ${PROJECT_NAME} ${SCENES_SOURCES} ${MOBILE_GTK_SOURCES} )
 endif()
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
-
-set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Components/src" )
-set( SCENES_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Scenes" )
-set( GSL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/GSL/include" )
 
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RC_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${SCENES_HEADERS}" )
@@ -105,7 +106,7 @@ else()
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
 	target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full -w )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" )
-	target_link_libraries( ${PROJECT_NAME} PRIVATE GSL)
+	target_link_libraries( ${PROJECT_NAME} PRIVATE GSL )
 endif()
 
 target_link_libraries( ${PROJECT_NAME}

@@ -35,6 +35,12 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
         m_Extends.pointMin_.z_(), ") max=(", m_Extends.pointMax_.x_(), ", ",
         m_Extends.pointMax_.y_(), ", ", m_Extends.pointMax_.z_(), ")");
 
+    size_t vectorSize{static_cast<size_t>(gridSize * gridSize * gridSize)};
+    triangles_.reserve(vectorSize);
+    spheres_.reserve(vectorSize);
+    planes_.reserve(vectorSize);
+    rectangles_.reserve(vectorSize);
+
     addPrimitives<Primitive<Triangle>>(scene->triangles_, this->triangles_);
     addPrimitives<Primitive<Sphere>>(scene->spheres_, this->spheres_);
     addPrimitives<Primitive<Plane>>(scene->planes_, this->planes_);
@@ -164,7 +170,6 @@ template<typename T>
 Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
                             Intersection intersection, const Ray ray,
                             const bool shadowTrace) noexcept {
-    bool retval{false};
     // setup 3DDDA (double check reusability of primary ray data)
     const Vector3D cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
     int X{static_cast<int>(cell.x_())};
@@ -248,7 +253,6 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
             const float dist {intersection.length_};
             intersection = primitive->intersect(intersection, ray);
             if (intersection.length_ < dist) {
-                retval = true;
                 if (shadowTrace) {
                     return intersection;
                 }
@@ -294,11 +298,7 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
                            (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            const float dist {intersection.length_};
             intersection = primitive->intersect(intersection, ray);
-            if (intersection.length_ < dist) {
-                retval = true;
-            }
         }
         if (tmax.x_() < tmax.y_()) {
             if (tmax.x_() < tmax.z_()) {

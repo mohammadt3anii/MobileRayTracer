@@ -16,7 +16,6 @@
 #ifdef ANDROID
 
 #include <android/log.h>
-
 #endif
 
 namespace MobileRT {
@@ -27,37 +26,12 @@ namespace MobileRT {
 #endif
 
     template<typename ...Args>
-    void log(Args &&... args) {
-        ::std::ostringstream oss{""};
-        static_cast<void> (::std::initializer_list<int> {(oss << ::std::move(args), 0)...});
-        oss << '\n';
-#ifdef ANDROID
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
-        const ::std::chrono::duration<int, ::std::micro> timeToSleep {10};
-        ::std::this_thread::sleep_for(timeToSleep);
-#else
-        ::std::cout << oss.str();
-#endif
-    }
+    void log(Args &&... args) noexcept;
 
-    inline ::std::string getFileName(const char *const filepath) {
-        const ::std::string filePath{filepath};
-        ::std::string::size_type filePos{filePath.rfind('/')};
-        if (filePos != ::std::string::npos) {
-            ++filePos;
-        } else {
-            filePos = 0;
-        }
-        return ::std::string {filePath.substr(filePos)};
-    }
+    inline ::std::string getFileName(const char *filepath) noexcept;
 
     template<typename T>
-    ::std::vector<T *> convertVector(::std::vector<T> &source) {
-        ::std::vector<T *> target(source.size());
-        ::std::transform(source.begin(), source.end(), target.begin(),
-                         [](T &t) noexcept -> T * { return &t; });
-        return target;
-    }
+    ::std::vector<T *> convertVector(::std::vector<T> &source) noexcept;
 
     const float Epsilon{1.0e-04f};
     const float RayLengthMax{1.0e+30f};
@@ -71,11 +45,39 @@ namespace MobileRT {
 
     float haltonSequence(uint32_t index, unsigned base) noexcept;
 
-    void escape(void *pointer) noexcept;
 
-    void clobber() noexcept;
+    template<typename ...Args>
+    void log(Args &&... args) noexcept {
+        ::std::ostringstream oss{""};
+        static_cast<void> (::std::initializer_list<int> {(oss << ::std::move(args), 0)...});
+        oss << '\n';
+#ifdef ANDROID
+        __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
+        const ::std::chrono::duration<int, ::std::micro> timeToSleep {10};
+        ::std::this_thread::sleep_for(timeToSleep);
+#else
+        ::std::cout << oss.str();
+#endif
+    }
 
-    float incrementalAVG(float num) noexcept;
+    ::std::string getFileName(const char *const filepath) noexcept {
+        const ::std::string filePath{filepath};
+        ::std::string::size_type filePos{filePath.rfind('/')};
+        if (filePos != ::std::string::npos) {
+            ++filePos;
+        } else {
+            filePos = 0;
+        }
+        return ::std::string {filePath.substr(filePos)};
+    }
+
+    template<typename T>
+    ::std::vector<T *> convertVector(::std::vector<T> &source) noexcept {
+        ::std::vector<T *> target(source.size());
+        ::std::transform(source.begin(), source.end(), target.begin(),
+                         [](T &t) noexcept -> T * { return &t; });
+        return target;
+    }
 }//namespace MobileRT
 
 #endif //MOBILERT_UTILS_HPP

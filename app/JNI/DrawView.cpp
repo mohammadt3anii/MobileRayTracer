@@ -18,7 +18,7 @@ static long long timeFrame_{0};
 static long long numberOfLights_{0};
 
 extern "C"
-jint JNI_OnLoad(JavaVM *const jvm, void */*reserved*/) {
+int JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
     LOG("JNI_OnLoad");
     javaVM_ = jvm;
 
@@ -47,7 +47,7 @@ jint JNI_OnLoad(JavaVM *const jvm, void */*reserved*/) {
 }
 
 extern "C"
-void JNI_OnUnload(JavaVM */*vm*/, void */*reserved*/) {
+void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
     LOG("JNI_OnUnload");
 }
 
@@ -74,6 +74,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
             currChunk = static_cast<size_t>(remaining);
         }
         std::vector<char> chunk(currChunk);
+        chunk.reserve(currChunk);
         //read data chunk
         if (AAsset_read(asset, chunk.data(), currChunk) > 0) {// returns less than 0 on error
             //and append it to our vector
@@ -376,7 +377,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
-        JNIEnv *env,
+        JNIEnv *const env,
         jobject /*thiz*/,
         jobject localBitmap,
         jint const nThreads

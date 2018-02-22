@@ -21,10 +21,11 @@
 #include <chrono>
 #include <fstream>
 
-void work_thread(unsigned *const bitmap, const int width, const int height, const int threads,
-                 const int shader, const int scene, const int samplesPixel, const int samplesLight,
-                 int repeats, const int accelerator, const bool printStdOut,
-                 const char *const pathObj, const char *const pathMtl) {
+static void
+work_thread(unsigned *const bitmap, const int width, const int height, const int threads,
+            const int shader, const int scene, const int samplesPixel, const int samplesLight,
+            int repeats, const int accelerator, const bool printStdOut,
+            const char *const pathObj, const char *const pathMtl) {
     ::std::ostringstream ss{""};
     ::std::streambuf *old_buf_stdout{nullptr};
     ::std::streambuf *old_buf_stderr{nullptr};
@@ -245,7 +246,7 @@ void work_thread(unsigned *const bitmap, const int width, const int height, cons
         LOG("Started rendering scene");
         const auto startRendering{::std::chrono::system_clock::now()};
         do {
-            renderer_->renderFrame(bitmap, threads);
+            renderer_->renderFrame(bitmap, threads, width * sizeof(unsigned));
             //renderer_->camera_->position_.x_ += 2.0f;
         } while (repeats-- > 0);
         const auto endRendering{std::chrono::system_clock::now()};

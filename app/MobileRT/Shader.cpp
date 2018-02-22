@@ -139,8 +139,5 @@ bool Shader::rayTrace(RGB *rgb, Ray &&ray) noexcept {
             break;
         }
     }
-    if (intersection.length_ < dist) {
-        return shade(rgb, intersection, ::std::move(ray));
-    }
-    return false;
+    return intersection.length_ < dist && shade(rgb, intersection, ::std::move(ray));
 }

@@ -3,7 +3,6 @@
 #include <cmath>
 #include <gdk/gdkkeysyms.h>
 #include <gsl/gsl>
-#include <gsl/multi_span>
 #include <gtk/gtk.h>
 #include <iostream>
 
@@ -12,7 +11,7 @@ int main(int argc, char **argv) noexcept {
         ::std::cerr << "Not enough arguments provided" << '\n';
         return 1;
     }
-    const gsl::multi_span<char*> args {gsl::multi_span<char*>(argv, argc)};
+    const ::gsl::multi_span<char *> args{argv, argc};
 
     const int threads{static_cast<int> (strtol(args[1], nullptr, 0))};
     const int shader{static_cast<int> (strtol(args[2], nullptr, 0))};
@@ -66,6 +65,7 @@ int main(int argc, char **argv) noexcept {
     const unsigned size{static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
     ::std::unique_ptr<unsigned char[]> buffer{::std::make_unique<unsigned char[]>(size * 4u)};
     ::std::vector<unsigned> bitmap(size);
+    bitmap.reserve(size);
 
     /*float avg {0};
     avg = ::MobileRT::incrementalAVG(1.0f);

@@ -39,6 +39,15 @@ void OBJLoader::process() noexcept {
 
 bool OBJLoader::fillScene(Scene *const scene,
                           ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda) noexcept {
+    size_t numberTriangles{0};
+
+    for (auto &shape : shapes_) {
+        for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); f++) {
+            numberTriangles += shape.mesh.num_face_vertices[f] / 3;
+        }
+    }
+    scene->triangles_.reserve(numberTriangles);
+
     for (auto &shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset{0};
@@ -62,6 +71,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 1]};
                 tinyobj::real_t vz2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 2]};
+
                 tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
                 tinyobj::real_t vx3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 0]};
@@ -69,6 +79,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1]};
                 tinyobj::real_t vz3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2]};
+
                 Point3D vertex1{-vx1, vy1, vz1};
                 Point3D vertex2{-vx2, vy2, vz2};
                 Point3D vertex3{-vx3, vy3, vz3};
@@ -80,18 +91,21 @@ bool OBJLoader::fillScene(Scene *const scene,
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 1]};
                     tinyobj::real_t nz1{
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 2]};
+
                     tinyobj::real_t nx2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 0]};
                     tinyobj::real_t ny2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 1]};
                     tinyobj::real_t nz2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 2]};
+
                     tinyobj::real_t nx3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 0]};
                     tinyobj::real_t ny3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 1]};
                     tinyobj::real_t nz3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 2]};
+
                     Vector3D normal1{nx1, ny1, nz1};
                     Vector3D normal2{nx2, ny2, nz2};
                     Vector3D normal3{nx3, ny3, nz3};
@@ -134,7 +148,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         scene->lights_.emplace_back(
                                 ::std::make_unique<AreaLight>(material, lambda(), p1, p2, p3));
                     } else {
-                        scene->triangles_.emplace_back(std::move(triangle), std::move(material));
+                        scene->triangles_.emplace_back(triangle, std::move(material));
                     }
                 }
             }
@@ -153,6 +167,7 @@ OBJLoader::~OBJLoader() noexcept {
     this->attrib_.vertices.clear();
     this->shapes_.clear();
     this->materials_.clear();
+
     this->objText_.shrink_to_fit();
     this->materialsText_.shrink_to_fit();
     this->attrib_.normals.shrink_to_fit();
@@ -160,6 +175,9 @@ OBJLoader::~OBJLoader() noexcept {
     this->attrib_.vertices.shrink_to_fit();
     this->shapes_.shrink_to_fit();
     this->materials_.shrink_to_fit();
+
+    ::std::vector<tinyobj::shape_t>().swap(this->shapes_);
+    ::std::vector<tinyobj::material_t>().swap(this->materials_);
 
     LOG("OBJLOADER DELETED");
 }

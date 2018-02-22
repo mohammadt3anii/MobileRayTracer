@@ -1,13 +1,8 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
-add_subdirectory( MobileRT )
-
 project( Components VERSION 1.0.0.0 LANGUAGES CXX )
 
-file( GLOB_RECURSE MOBILE_RC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp" )
-set( MOBILE_RC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-
-set( MOBILE_RT_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/MobileRT/src" )
+file( GLOB_RECURSE MOBILE_RC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/**.cpp" )
 
 add_library( ${PROJECT_NAME} SHARED ${MOBILE_RC_SOURCES} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )

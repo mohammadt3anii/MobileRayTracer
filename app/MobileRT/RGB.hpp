@@ -29,7 +29,7 @@ namespace MobileRT {
 
         ~RGB() noexcept = default;
 
-        RGB &operator=(const RGB &rgb) noexcept;
+        RGB &operator=(const RGB &rgb) noexcept = default;
 
         RGB &operator=(RGB &&rgb) noexcept;
 
@@ -50,8 +50,6 @@ namespace MobileRT {
         void operator+=(float value) noexcept;
 
         void operator/=(float value) noexcept;
-
-        void addSampleAndCalcAvg(RGB *sample) noexcept;
 
         void reset(float r = 0.0f, float g = 0.0f, float b = 0.0f) noexcept;
 
