@@ -6,8 +6,8 @@ SCRIPTS_DIR="${MOBILERT_DIR}/Scripts"
 PLOT_SCRIPTS_DIR="${SCRIPTS_DIR}/Plot_Scripts"
 OBJS_DIR="${MOBILERT_DIR}/app/src/main/assets/WavefrontOBJs"
 
-MOBILERT_SRCS="${MOBILERT_DIR}/app/Components/MobileRT/src"
-COMPONENTS_SRCS="${MOBILERT_DIR}/app/Components/src"
+MOBILERT_SRCS="${MOBILERT_DIR}/app"
+COMPONENTS_SRCS="${MOBILERT_DIR}/app"
 GTK_INTERFACE_SRCS="${MOBILERT_DIR}/app/GTK_Interface"
 SCENES_SRCS="${MOBILERT_DIR}/app/Scenes"
 
@@ -82,9 +82,9 @@ function clangtidy {
 	-analyze-temporary-dtors \
 	-checks='*,-*llvm-header-guard*' \
 	-header-filter='.*' \
-  ${MOBILERT_SRCS}/*/*.*pp \
-  ${MOBILERT_SRCS}/*/*/*.*pp \
-  ${COMPONENTS_SRCS}/*/*/*.*pp \
+  ${MOBILERT_SRCS}/MobileRT/*.*pp \
+  ${MOBILERT_SRCS}/MobileRT/*/*.*pp \
+  ${COMPONENTS_SRCS}/Components/*/*.*pp \
 	${GTK_INTERFACE_SRCS}/*.*pp \
   ${SCENES_SRCS}/*.*pp \
 	-- -std=c++14 -ferror-limit=1 \
