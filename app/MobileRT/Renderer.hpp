@@ -6,7 +6,6 @@
 #define MOBILERT_RENDERER_HPP
 
 #include "Camera.hpp"
-#include "RGB.hpp"
 #include "Sampler.hpp"
 #include "Shader.hpp"
 #include "Utils.hpp"

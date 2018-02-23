@@ -7,7 +7,6 @@
 using ::Components::PathTracer;
 using ::MobileRT::Light;
 using ::MobileRT::Sampler;
-using ::MobileRT::RGB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
@@ -25,25 +24,25 @@ PathTracer::PathTracer(Scene scene,
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray) noexcept {
+bool PathTracer::shade(glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
     const int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
 
-    const RGB &Le{intersection.material_->Le_};
-    if (Le.hasColor()) {//stop if it intersects a light source
+    const glm::vec3 &Le{intersection.material_->Le_};
+    if (glm::length(Le) > 0) {//stop if it intersects a light source
         *rgb = Le;
         return true;
     }
-    RGB Ld{};
-    RGB LiD{};
-    RGB LiS{};
-    RGB LiT{};
+    glm::vec3 Ld{};
+    glm::vec3 LiD{};
+    glm::vec3 LiS{};
+    glm::vec3 LiT{};
 
-    const RGB &kD(intersection.material_->Kd_);
-    const RGB &kS(intersection.material_->Ks_);
-    const RGB &kT(intersection.material_->Kt_);
+    const glm::vec3 &kD(intersection.material_->Kd_);
+    const glm::vec3 &kS(intersection.material_->Ks_);
+    const glm::vec3 &kT(intersection.material_->Kt_);
     static const float finish_probability{0.5f};
     static const float continue_probability{1.0f - finish_probability};
 
@@ -60,7 +59,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray)
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
-    if (kD.hasColor()) {
+    if (glm::length(kD) > 0) {
         const uint64_t sizeLights{scene_.lights_.size()};
         if (sizeLights > 0) {
             const unsigned samplesLight{this->samplesLight_};
@@ -91,7 +90,7 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray)
                     intersectLight.primitive_ = intersection.primitive_;
                     if (!shadowTrace(intersectLight, ::std::move(shadowRay))) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
-                        Ld.addMult({light.radiance_.Le_}, cosNormalLight);
+                        Ld += light.radiance_.Le_ * cosNormalLight;
                     }
                 }
             }
@@ -110,39 +109,38 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray)
             //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
 
-            RGB LiD_RGB {};
+            glm::vec3 LiD_RGB {};
             intersectedLight = rayTrace(&LiD_RGB, ::std::move(normalizedSecundaryRay));
             //PDF = cos(theta) / Pi
             //cos (theta) = cos(dir, normal)
             //PDF = cos(dir, normal) / Pi
             //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
             //LiD += kD * LiD_RGB * Pi / continue_probability
-            //LiD.addMult(kD, LiD_RGB, Pi);
-            LiD.addMult({kD, LiD_RGB});
+            LiD += kD * LiD_RGB;
             if (rayDepth > ::MobileRT::RayDepthMin) {
                 LiD /= continue_probability;
             }
 
             //if it has Ld and if LiD intersects a light source then LiD = 0
-            if (Ld.hasColor() && intersectedLight) {
-                LiD.reset();
+            if (glm::length(Ld) > 0 && intersectedLight) {
+                LiD = {};
             }
         }
     }
 
     // specular reflection
-    if (kS.hasColor()) {
+    if (glm::length(kS) > 0) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
         const glm::vec3 reflectionDir {glm::reflect(ray.direction_, shadingNormal)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
-        RGB LiS_RGB {};
+        glm::vec3 LiS_RGB {};
         rayTrace(&LiS_RGB, ::std::move(specularRay));
-        LiS.addMult({kS, LiS_RGB});
+        LiS += kS * LiS_RGB;
     }
 
     // specular transmission
-    if (kT.hasColor()) {
+    if (glm::length(kT) > 0) {
         //PDF = 1 / 2 Pi
         glm::vec3 shadingNormalT {shadingNormal};
         float refractiveIndice {intersection.material_->refractiveIndice_};
@@ -151,25 +149,14 @@ bool PathTracer::shade(RGB *const rgb, const Intersection intersection, Ray ray)
             refractiveIndice = 1.0f / refractiveIndice;//n = 1 / n;
         }
         refractiveIndice = 1.0f / refractiveIndice;
-        /*const float cosTheta1 {(glm::dot(shadingNormalT, ray.direction_)) * -1.0f};
-        const float cosTheta2 {
-                1.0f - refractiveIndice * refractiveIndice * (1.0f - cosTheta1 * cosTheta1)};
-
-        glm::vec3 refractDir {cosTheta2 > 0.0f ? // refraction direction
-                            //rayDir = ((ray.d*n) + (N*(n*cost1 - sqrt(cost2)))).norm();
-                            (ray.direction_ * refractiveIndice) +
-                            (shadingNormalT * (refractiveIndice * cosTheta1 -
-                                               (::std::sqrt(cosTheta2)))) :
-                            //rayDir = (ray.d + N*(cost1 * 2)).norm();
-                            ray.direction_ + shadingNormalT * (cosTheta1 * 2.0f)};*/
 
         glm::vec3 refractDir {glm::refract(ray.direction_, shadingNormalT, refractiveIndice)};
 
         Ray transmissionRay {refractDir,
                             intersection.point_, rayDepth + 1, intersection.primitive_};
-        RGB LiT_RGB {};
+        glm::vec3 LiT_RGB {};
         rayTrace(&LiT_RGB, ::std::move(transmissionRay));
-        LiT.addMult({kT, LiT_RGB});
+        LiT += kT * LiT_RGB;
     }
 
     *rgb += Ld;

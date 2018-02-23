@@ -3,10 +3,10 @@
 //
 
 #include "NoShadows.hpp"
+#include <glm/glm.hpp>
 
 using ::Components::NoShadows;
 using ::MobileRT::Light;
-using ::MobileRT::RGB;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
@@ -16,10 +16,10 @@ NoShadows::NoShadows(Scene scene, const unsigned samplesLight,
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 
-bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray ray) noexcept {
-    const RGB &Le{intersection.material_->Le_};
-    const RGB &kD{intersection.material_->Kd_};
-    if (Le.hasColor()) {//stop if it intersects a light source
+bool NoShadows::shade(glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
+    const glm::vec3 &Le{intersection.material_->Le_};
+    const glm::vec3 &kD{intersection.material_->Kd_};
+    if (glm::length(*rgb) > 0) {//stop if it intersects a light source
         *rgb = Le;
         return true;
     }
@@ -32,7 +32,7 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray ray) 
             intersection.symNormal_};
 
     // direct lighting - only for diffuse materials
-    if (kD.hasColor()) {
+    if (glm::length(kD) > 0) {
         const uint64_t sizeLights{scene_.lights_.size()};
         if (sizeLights > 0) {
             const unsigned samplesLight{this->samplesLight_};
@@ -46,7 +46,7 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray ray) 
                     const float cos_N_L{glm::dot(shadingNormal, vectorToLightNormalized)};
                     if (cos_N_L > 0.0f) {
                         //rgb += kD * radLight * cos_N_L;
-                        rgb->addMult({light.radiance_.Le_}, cos_N_L);
+                        *rgb += light.radiance_.Le_ * cos_N_L;
                     }
                 }
             }
@@ -55,8 +55,7 @@ bool NoShadows::shade(RGB *const rgb, const Intersection intersection, Ray ray) 
             *rgb /= sizeLights;
         } // end direct + ambient
     }
-
-    rgb->addMult({kD}, 0.1f);//rgb += kD *  0.1f
+    *rgb += kD * 0.1f;
     return false;
 }
 

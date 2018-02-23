@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
 #include <thread>
@@ -44,6 +45,8 @@ namespace MobileRT {
     int roundDownToMultipleOf(int value, int multiple) noexcept;
 
     float haltonSequence(uint32_t index, unsigned base) noexcept;
+
+    unsigned incrementalAvg(glm::vec3 sample, unsigned avg, unsigned numSample) noexcept;
 
 
     template<typename ...Args>

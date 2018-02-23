@@ -129,11 +129,11 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
                 objLoader.fillScene(&scene_,
                                     []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> { return ::std::make_unique<::Components::StaticHaltonSeq>(); });
                 //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::StaticMersenneTwister> ();});
-                const ::MobileRT::Material lightMat{::MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                    ::MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                    ::MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                const ::MobileRT::Material lightMat{glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                    glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                    glm::vec3 {0.0f, 0.0f, 0.0f},
                                                     1.0f,
-                                                    ::MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+                                                    glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
                         lightMat, glm::vec3 {0.0f, 1000.0f, 0.0f}));
                 //cornell spheres

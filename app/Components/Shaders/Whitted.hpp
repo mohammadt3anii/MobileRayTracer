@@ -8,14 +8,13 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-    using ::MobileRT::RGB;
     using ::MobileRT::Intersection;
     using ::MobileRT::Ray;
     using ::MobileRT::Scene;
 
     class Whitted final : public ::MobileRT::Shader {
     private:
-        bool shade(RGB *rgb, Intersection intersection,
+        bool shade(glm::vec3 *rgb, Intersection intersection,
                    Ray ray) noexcept final;
 
     public:

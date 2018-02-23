@@ -224,22 +224,22 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat{MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                  MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                  MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material lightMat{glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                  glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                  glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   1.0f,
-                                                  MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+                                                  glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<Components::PointLight>(
                         lightMat, ::glm::vec3 {0.0f, 0.9f, 0.0f}));
                 //teapot
                 /*camera = std::make_unique<Components::Perspective> (
                   ::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f},
                   glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                   MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                   MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material lightMat {glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
-                                                   MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+                                                   glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
                   lightMat, ::glm::vec3 {0.0f, 900.0f, 0.0f}));*/
                 //conference
@@ -247,11 +247,11 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                   ::glm::vec3 {-730.0f, 600.0f, -950.0f},
                   ::glm::vec3 {-400.0f, 300.0f, 0.0f},
                   glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                   MobileRT::RGB {0.0f, 0.0f, 0.0f},
-                                                   MobileRT::RGB {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material lightMat {glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
-                                                   MobileRT::RGB {0.9f, 0.9f, 0.9f}};
+                                                   glm::vec3 {0.9f, 0.9f, 0.9f}};
                 std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
                   std::make_unique<Components::StaticHaltonSeq> ()};
                 std::unique_ptr<MobileRT::Sampler> samplerPoint2 {

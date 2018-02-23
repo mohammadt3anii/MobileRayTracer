@@ -5,20 +5,21 @@
 #ifndef MOBILERT_MATERIAL_HPP
 #define MOBILERT_MATERIAL_HPP
 
-#include "RGB.hpp"
+#include <glm/glm.hpp>
 
 namespace MobileRT {
     class Material final {
     public:
-        RGB Le_{};   // emission light
-        RGB Kd_{};   // diffuse reflection
-        RGB Ks_{};   // specular reflection
-        RGB Kt_{};   // specular transmission
+        glm::vec3 Le_{};   // emission light
+        glm::vec3 Kd_{};   // diffuse reflection
+        glm::vec3 Ks_{};   // specular reflection
+        glm::vec3 Kt_{};   // specular transmission
         float refractiveIndice_{};
 
     public:
-        explicit Material(RGB Kd = RGB {}, RGB Ks = RGB {}, RGB Kt = RGB {},
-                          float refractiveIndice = 1.0f, RGB Le = RGB {}) noexcept;
+        explicit Material(
+            glm::vec3 Kd = glm::vec3 {}, glm::vec3 Ks = glm::vec3 {}, glm::vec3 Kt = glm::vec3 {},
+            float refractiveIndice = 1.0f, glm::vec3 Le = glm::vec3 {}) noexcept;
 
         Material(const Material &material) noexcept = default;
 

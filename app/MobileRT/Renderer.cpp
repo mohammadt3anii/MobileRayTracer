@@ -50,8 +50,7 @@ void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
     }
     threads.clear();
 
-    /*LOG("RGB = ", RGB::getInstances());
-    LOG("scene = ", Scene::getInstances());
+    /*LOG("scene = ", Scene::getInstances());
     LOG("ray = ", Ray::getInstances());
     LOG("material = ", Material::getInstances());
     LOG("intersection = ", Intersection::getInstances());*/
@@ -71,7 +70,7 @@ void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned
     const float pixelWidth{0.5f / this->width_};
     const float pixelHeight{0.5f / this->height_};
     const unsigned samples{this->samplesPixel_};
-    RGB pixelRGB {};
+    glm::vec3 pixelRGB {};
     for (unsigned sample{0}; sample < samples; sample++) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
@@ -95,13 +94,13 @@ void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned
                     const float deviationU{(r1 - 0.5f) * 2.0f * pixelWidth};
                     const float deviationV{(r2 - 0.5f) * 2.0f * pixelHeight};
                     Ray ray{this->camera_->generateRay(u, v, deviationU, deviationV)};
-                    pixelRGB.reset();
+                    pixelRGB = {};
                     this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
                     const unsigned pixelIndex{yWidth + x};
                     if (pixelIndex >= width * height_) {
                         LOG("PASSOU O LIMITE DA RESOLUÇÃO");
                     }
-                    bitmap[pixelIndex] = RGB::incrementalAvg(pixelRGB, bitmap[pixelIndex],
+                    bitmap[pixelIndex] = ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex],
                         sample + 1);
                 }
             }

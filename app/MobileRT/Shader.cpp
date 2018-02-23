@@ -11,7 +11,6 @@ using ::MobileRT::BVH;
 using ::MobileRT::Camera;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
-using ::MobileRT::RGB;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
@@ -110,7 +109,7 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
     return intersection.length_ < dist;
 }
 
-bool Shader::rayTrace(RGB *rgb, Ray ray) noexcept {
+bool Shader::rayTrace(glm::vec3 *rgb, Ray ray) noexcept {
     Intersection intersection {};
     const float dist {intersection.length_};
     switch (accelerator_) {

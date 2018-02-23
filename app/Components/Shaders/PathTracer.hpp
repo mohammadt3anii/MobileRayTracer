@@ -13,7 +13,6 @@
 
 namespace Components {
     using ::MobileRT::Sampler;
-    using ::MobileRT::RGB;
     using ::MobileRT::Intersection;
     using ::MobileRT::Ray;
     using ::MobileRT::Scene;
@@ -25,7 +24,7 @@ namespace Components {
         ::std::unique_ptr<Sampler> samplerRussianRoulette_{};
 
     private:
-        bool shade(RGB *rgb, Intersection intersection, Ray ray) noexcept final;
+        bool shade(glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
 
         glm::vec3 getCosineSampleHemisphere(glm::vec3 normal) const noexcept;
 

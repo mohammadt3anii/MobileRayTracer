@@ -6,7 +6,6 @@
 #define MOBILERT_LIGHT_HPP
 
 #include "Intersection.hpp"
-#include "RGB.hpp"
 #include "Ray.hpp"
 #include <glm/glm.hpp>
 

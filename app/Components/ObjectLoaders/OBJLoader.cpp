@@ -8,7 +8,6 @@
 using ::Components::AreaLight;
 using ::Components::OBJLoader;
 using ::MobileRT::Material;
-using ::MobileRT::RGB;
 using ::MobileRT::Scene;
 
 OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
@@ -119,15 +118,15 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};
-                    const RGB diffuse {d1, d2, d3};
+                    const glm::vec3 diffuse {d1, d2, d3};
                     const float s1 {m.specular[0]};
                     const float s2 {m.specular[1]};
                     const float s3 {m.specular[2]};
-                    const RGB specular {s1, s2, s3};
+                    const glm::vec3 specular {s1, s2, s3};
                     const float t1 {m.transmittance[0] * (1.0f - m.dissolve)};
                     const float t2 {m.transmittance[1] * (1.0f - m.dissolve)};
                     const float t3 {m.transmittance[2] * (1.0f - m.dissolve)};
-                    const RGB transmittance {t1, t2, t3};
+                    const glm::vec3 transmittance {t1, t2, t3};
                     float e1 {m.emission[0]};
                     float e2 {m.emission[1]};
                     float e3 {m.emission[2]};
@@ -137,7 +136,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         e2 /= max;
                         e3 /= max;
                     }
-                    const RGB emission {e1, e2, e3};
+                    const glm::vec3 emission {e1, e2, e3};
                     Material material {diffuse, specular, transmittance, m.ior, emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         const glm::vec3 p1 {vx1, vy1, vz1};
