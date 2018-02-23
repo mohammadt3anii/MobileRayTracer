@@ -31,7 +31,8 @@ bool PathTracer::shade(glm::vec3 *const rgb, const Intersection intersection, Ra
     }
 
     const glm::vec3 &Le{intersection.material_->Le_};
-    if (glm::length(Le) > 0) {//stop if it intersects a light source
+    //stop if it intersects a light source
+    if (glm::any(glm::greaterThan(Le, glm::vec3(::MobileRT::Epsilon)))) {
         *rgb = Le;
         return true;
     }
@@ -59,7 +60,7 @@ bool PathTracer::shade(glm::vec3 *const rgb, const Intersection intersection, Ra
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
-    if (glm::length(kD) > 0) {
+    if (glm::any(glm::greaterThan(kD, glm::vec3(::MobileRT::Epsilon)))) {
         const uint64_t sizeLights{scene_.lights_.size()};
         if (sizeLights > 0) {
             const unsigned samplesLight{this->samplesLight_};
@@ -122,14 +123,14 @@ bool PathTracer::shade(glm::vec3 *const rgb, const Intersection intersection, Ra
             }
 
             //if it has Ld and if LiD intersects a light source then LiD = 0
-            if (glm::length(Ld) > 0 && intersectedLight) {
+            if (glm::any(glm::greaterThan(Ld, glm::vec3(::MobileRT::Epsilon))) && intersectedLight) {
                 LiD = {};
             }
         }
     }
 
     // specular reflection
-    if (glm::length(kS) > 0) {
+    if (glm::any(glm::greaterThan(kS, glm::vec3(::MobileRT::Epsilon)))) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
         const glm::vec3 reflectionDir {glm::reflect(ray.direction_, shadingNormal)};
@@ -140,7 +141,7 @@ bool PathTracer::shade(glm::vec3 *const rgb, const Intersection intersection, Ra
     }
 
     // specular transmission
-    if (glm::length(kT) > 0) {
+    if (glm::any(glm::greaterThan(kT, glm::vec3(::MobileRT::Epsilon)))) {
         //PDF = 1 / 2 Pi
         glm::vec3 shadingNormalT {shadingNormal};
         float refractiveIndice {intersection.material_->refractiveIndice_};

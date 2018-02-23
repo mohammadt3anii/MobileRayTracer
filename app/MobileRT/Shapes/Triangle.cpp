@@ -14,7 +14,7 @@ Triangle::Triangle(const glm::vec3 pointA, const glm::vec3 pointB, const glm::ve
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         normal_{
-            glm::length(normal) == 0? glm::normalize(glm::cross(AB_, AC_)) : glm::normalize(normal)},
+            glm::all(glm::lessThan(normal, glm::vec3(::MobileRT::Epsilon)))? glm::normalize(glm::cross(AB_, AC_)) : glm::normalize(normal)},
         pointA_{pointA}
 {
 }
