@@ -50,26 +50,11 @@ float Sphere::getZ() const noexcept {
     return this->center_.z;
 }
 
-::glm::vec3 Sphere::getPositionMin() const noexcept {
-    const float radius {::std::sqrt(this->sq_radius_)};
-    const float x {this->center_.x - radius};
-    const float y {this->center_.y - radius};
-    const float z {this->center_.z - radius};
-
-    return ::glm::vec3 {x, y, z};
-}
-
-::glm::vec3 Sphere::getPositionMax() const noexcept {
-    const float radius {::std::sqrt(this->sq_radius_)};
-    const float x {this->center_.x + radius};
-    const float y {this->center_.y + radius};
-    const float z {this->center_.z + radius};
-
-    return ::glm::vec3 {x, y, z};
-}
-
 AABB Sphere::getAABB() const noexcept {
-    return AABB {getPositionMin(), getPositionMax()};
+    const float radius {::std::sqrt(this->sq_radius_)};
+    const ::glm::vec3 min {this->center_ - radius};
+    const ::glm::vec3 max {this->center_ + radius};
+    return AABB {min, max};
 }
 
 bool Sphere::intersect(const AABB box) const noexcept {

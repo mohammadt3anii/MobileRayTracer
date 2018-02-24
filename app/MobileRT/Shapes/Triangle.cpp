@@ -23,7 +23,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     if (ray.primitive_ == this) {
         return intersection;
     }
-    
+
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
@@ -63,19 +63,15 @@ float Triangle::getZ() const noexcept {
 ::glm::vec3 Triangle::getPositionMin() const noexcept {
     const ::glm::vec3 pointB {pointA_ + AB_};
     const ::glm::vec3 pointC {pointA_ + AC_};
-    const float x {::std::min(pointA_.x, ::std::min(pointB.x, pointC.x))};
-    const float y {::std::min(pointA_.y, ::std::min(pointB.y, pointC.y))};
-    const float z {::std::min(pointA_.z, ::std::min(pointB.z, pointC.z))};
-    return ::glm::vec3(x, y, z);
+    const ::glm::vec3 res {::glm::min(pointA_, ::glm::min(pointB, pointC))};
+    return res;
 }
 
 ::glm::vec3 Triangle::getPositionMax() const noexcept {
     const ::glm::vec3 pointB {pointA_ + AB_};
     const ::glm::vec3 pointC {pointA_ + AC_};
-    const float x {::std::max(pointA_.x, ::std::max(pointB.x, pointC.x))};
-    const float y {::std::max(pointA_.y, ::std::max(pointB.y, pointC.y))};
-    const float z {::std::max(pointA_.z, ::std::max(pointB.z, pointC.z))};
-    return ::glm::vec3(x, y, z);
+    const ::glm::vec3 res {::glm::max(pointA_, ::glm::max(pointB, pointC))};
+    return res;
 }
 
 //TODO (Puscas): Fix this method (it may be wrong)
@@ -88,8 +84,8 @@ bool Triangle::intersect(const AABB box) const noexcept {
             [=](const ::glm::vec3 orig, const ::glm::vec3 vec) -> bool {
                 ::glm::vec3 T_1{};
                 ::glm::vec3 T_2{}; // vectors to hold the T-values for every direction
-                float t_near{std::numeric_limits<float>::min()};
-                float t_far{std::numeric_limits<float>::max()};
+                float t_near{::std::numeric_limits<float>::min()};
+                float t_far{::std::numeric_limits<float>::max()};
                 if (vec.x == 0) { // ray parallel to planes in this direction
                     if ((orig.x < box.pointMin_.x) ||
                         ((orig.x + vec.x) > box.pointMax_.x)) {

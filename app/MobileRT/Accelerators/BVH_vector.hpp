@@ -172,7 +172,7 @@ namespace MobileRT {
         right_area.insert(right_area.begin(), right_box.getSurfaceArea());
         }
 
-        float min_SAH {std::numeric_limits<float>::max()};
+        float min_SAH {::std::numeric_limits<float>::max()};
         for (uint64_t i {0}; i < N - 1; i++) {
         const float SAH_left {i * left_area.at(i)};
         const float SAH_right {(N - i - 1) * right_area.at(i)};

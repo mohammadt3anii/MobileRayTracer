@@ -66,25 +66,13 @@ float Rectangle::getZ() const noexcept {
 }
 
 ::glm::vec3 Rectangle::getPositionMin() const noexcept {
-    const float x {::std::min(pointA_.x, ::std::min(pointB_.x,
-        ::std::min(pointC_.x, pointD_.x)))};
-    const float y {::std::min(pointA_.y, ::std::min(pointB_.y,
-        ::std::min(pointC_.y, pointD_.y)))};
-    const float z {::std::min(pointA_.z, ::std::min(pointB_.z,
-        ::std::min(pointC_.z, pointD_.z)))};
-
-    return ::glm::vec3(x, y, z);
+    const ::glm::vec3 res {::glm::min(pointA_, ::glm::min(pointB_, ::glm::min(pointC_, pointD_))};
+    return res;
 }
 
 ::glm::vec3 Rectangle::getPositionMax() const noexcept {
-    const float x{::std::max(pointA_.x, ::std::max(pointB_.x,
-        ::std::max(pointC_.x, pointD_.x)))};
-    const float y{::std::max(pointA_.y, ::std::max(pointB_.y,
-        ::std::max(pointC_.y, pointD_.y)))};
-    const float z{::std::max(pointA_.z, ::std::max(pointB_.z,
-        ::std::max(pointC_.z, pointD_.z)))};
-
-    return ::glm::vec3(x, y, z);
+    const ::glm::vec3 res {::glm::max(pointA_, ::glm::max(pointB_, ::glm::max(pointC_, pointD_))};
+    return res;
 }
 
 AABB Rectangle::getAABB() const noexcept {
@@ -98,8 +86,8 @@ bool Rectangle::intersect(const AABB box) const noexcept {
             [=](::glm::vec3 orig, ::glm::vec3 vec) -> bool {
                 ::glm::vec3 T_1 {};
                 ::glm::vec3 T_2 {}; // vectors to hold the T-values for every direction
-                float t_near {std::numeric_limits<float>::min()};
-                float t_far {std::numeric_limits<float>::max()};
+                float t_near {::std::numeric_limits<float>::min()};
+                float t_far {::std::numeric_limits<float>::max()};
                 if (vec.x == 0) { // ray parallel to planes in this direction
                     if ((orig.x < box.pointMin_.x) || (vec.x > box.pointMax_.x)) {
                         return false; // parallel AND outside box : no intersection possible

@@ -52,7 +52,7 @@ namespace MobileRT {
     template<typename ...Args>
     void log(Args &&... args) noexcept {
         ::std::ostringstream oss{""};
-        static_cast<void> (::std::initializer_list<int> {(oss << ::std::move(args), 0)...});
+        static_cast<void> (::std::initializer_list<int> {(oss << args, 0)...});
         oss << '\n';
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());

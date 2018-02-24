@@ -73,7 +73,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         ::std::unique_ptr<::MobileRT::Sampler> samplerPixel{};
         ::std::unique_ptr<::MobileRT::Shader> shader_{};
         ::std::unique_ptr<::MobileRT::Camera> camera{};
-        ::glm::vec3 maxDist{::glm::vec3 {0, 0, 0}};
+        ::glm::vec3 maxDist{};
 
         switch (scene) {
             case 0:
@@ -174,8 +174,8 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
                         ::std::make_unique<::Components::StaticHaltonSeq>()};
                 //::std::unique_ptr<::MobileRT::Sampler> samplerLight {::std::make_unique<::Components::StaticMersenneTwister>()};
 
-                //std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {std::make_unique<::Components::HaltonSeq>()};
-                //std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::MersenneTwister> ()};
+                //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::HaltonSeq>()};
+                //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::MersenneTwister> ()};
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
                         ::std::make_unique<::Components::StaticHaltonSeq>()};
                 //::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticMersenneTwister> ()};
@@ -216,7 +216,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<unsigned>(width), static_cast<unsigned>(height),
                 static_cast<unsigned>(samplesPixel));
-        const auto endCreating{std::chrono::system_clock::now()};
+        const auto endCreating{::std::chrono::system_clock::now()};
         timeCreating = endCreating - startCreating;
         LOG("Renderer created = ", timeCreating.count());
 
@@ -247,7 +247,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
             //renderer_->camera_->position_.x_ += 2.0f;
             repeats--;
         } while (repeats > 0);
-        const auto endRendering{std::chrono::system_clock::now()};
+        const auto endRendering{::std::chrono::system_clock::now()};
         timeRendering = endRendering - startRendering;
         LOG("Finished rendering scene");
     }

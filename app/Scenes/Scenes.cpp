@@ -77,10 +77,10 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
             ::std::make_unique<Components::StaticHaltonSeq>()};
-    //::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {std::make_unique<Components::MersenneTwister> ()};
+    //::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {::std::make_unique<Components::MersenneTwister> ()};
     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
             ::std::make_unique<Components::StaticHaltonSeq>()};
-    //::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {std::make_unique<Components::MersenneTwister> ()};
+    //::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {::std::make_unique<Components::MersenneTwister> ()};
 
     scene.lights_.emplace_back(::std::make_unique<Components::AreaLight>(lightMat,
             /*scene.lights_.emplace_back(

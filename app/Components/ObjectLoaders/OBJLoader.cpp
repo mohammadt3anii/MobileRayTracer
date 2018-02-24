@@ -27,10 +27,9 @@ void OBJLoader::process() noexcept {
         ::std::cerr << err << '\n';
     }
 
-    if (!ret) {
-        return;
+    if (ret) {
+        isProcessed_ = true;
     }
-    isProcessed_ = true;
 }
 
 bool OBJLoader::fillScene(Scene *const scene,
@@ -102,18 +101,18 @@ bool OBJLoader::fillScene(Scene *const scene,
                     tinyobj::real_t nz3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 2]};
 
-                    ::glm::vec3 normal1 {nx1, ny1, nz1};
-                    ::glm::vec3 normal2 {nx2, ny2, nz2};
-                    ::glm::vec3 normal3 {nx3, ny3, nz3};
+                    const ::glm::vec3 normal1 {nx1, ny1, nz1};
+                    const ::glm::vec3 normal2 {nx2, ny2, nz2};
+                    const ::glm::vec3 normal3 {nx3, ny3, nz3};
                     normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
                     //normal.normalize();
                 }
-                Triangle triangle {vertex1, vertex2, vertex3, normal};
+                const Triangle triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
                 const int materialID{shape.mesh.material_ids[f]};
                 if (materialID >= 0) {
-                    tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
+                    const tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};

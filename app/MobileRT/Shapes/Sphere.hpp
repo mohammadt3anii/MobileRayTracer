@@ -16,11 +16,6 @@ namespace MobileRT {
         ::glm::vec3 center_ {};
         float sq_radius_ {};
 
-    private:
-        ::glm::vec3 getPositionMin() const noexcept;
-
-        ::glm::vec3 getPositionMax() const noexcept;
-
     public:
         explicit Sphere(::glm::vec3 center, float radius) noexcept;
 

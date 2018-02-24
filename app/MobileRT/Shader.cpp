@@ -48,25 +48,25 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
         }
         case Accelerator::BVH: {
             LOG("PLANES");
-            bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {std::move(scene_.planes_)};
+            bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
             LOG("RECTANGLES");
-            bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
+            bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
             LOG("SPHERES");
-            bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {std::move(scene_.spheres_)};
+            bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
             LOG("TRIANGLES");
-            bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {std::move(scene_.triangles_)};
+            bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
 
         case Accelerator::BVH_vector: {
             LOG("PLANES");
-            bvhPlanes2_ = ::MobileRT::BVH_vector<MobileRT::Plane> {std::move(scene_.planes_)};
+            bvhPlanes2_ = ::MobileRT::BVH_vector<MobileRT::Plane> {::std::move(scene_.planes_)};
             LOG("RECTANGLES");
-            bvhRectangles2_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {std::move(scene_.rectangles_)};
+            bvhRectangles2_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
             LOG("SPHERES");
-            bvhSpheres2_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {std::move(scene_.spheres_)};
+            bvhSpheres2_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {::std::move(scene_.spheres_)};
             LOG("TRIANGLES");
-            bvhTriangles2_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {std::move(scene_.triangles_)};
+            bvhTriangles2_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
     }

@@ -79,9 +79,8 @@ float Plane::getZ() const noexcept {
 
 AABB Plane::getAABB() const noexcept {
     const ::glm::vec3 min {getPositionMin() - Epsilon};
-    const ::glm::vec3 max {getPositionMax() + Epsilon};
-    const AABB box {min, max};
-    return box;
+    const ::glm::vec3 max {getPositionMax()};
+    return AABB {min, max};;
 }
 
 float Plane::distance(const ::glm::vec3 point) const noexcept {
