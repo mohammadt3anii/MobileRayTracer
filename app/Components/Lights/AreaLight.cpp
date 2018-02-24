@@ -25,9 +25,7 @@ AreaLight::AreaLight(Material radiance,
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    return ::glm::vec3 {triangle_.pointA_.x + R * triangle_.AB_.x + S * triangle_.AC_.x,
-                    triangle_.pointA_.y + R * triangle_.AB_.y + S * triangle_.AC_.y,
-                    triangle_.pointA_.z + R * triangle_.AB_.z + S * triangle_.AC_.z};
+    return triangle_.pointA_ + R * triangle_.AB_ + S * triangle_.AC_;
 }
 
 void AreaLight::resetSampling() noexcept {
@@ -35,11 +33,8 @@ void AreaLight::resetSampling() noexcept {
 }
 
 Intersection AreaLight::intersect(Intersection intersection, Ray ray) const noexcept {
-    const float dist {intersection.length_};
+    const float lastDist {intersection.length_};
     intersection = triangle_.intersect(intersection, ::std::move(ray));
-    if (intersection.length_ < dist) {
-        intersection.material_ = &radiance_;
-        return intersection;
-    }
+    intersection.material_ = intersection.length_ < lastDist? &radiance_ : intersection.material_;
     return intersection;
 }

@@ -23,6 +23,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     if (ray.primitive_ == this) {
         return intersection;
     }
+    
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {

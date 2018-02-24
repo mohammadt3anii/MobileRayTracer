@@ -24,6 +24,10 @@ Rectangle::Rectangle(const ::glm::vec3 pointA,
 }
 
 Intersection Rectangle::intersect(Intersection intersection, const Ray ray) const noexcept {
+    if (ray.primitive_ == this) {
+        return intersection;
+    }
+
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, this->AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {

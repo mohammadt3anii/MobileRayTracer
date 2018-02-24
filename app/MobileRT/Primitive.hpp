@@ -63,12 +63,10 @@ namespace MobileRT {
     template<typename T>
     Intersection Primitive<T>::intersect(Intersection intersection, const Ray ray) noexcept {
         if (this->lastRayID_ != ray.id_) {
-            const float dist {intersection.length_};
+            const float lastDist {intersection.length_};
             intersection = this->shape_.intersect(intersection, ray);
-            if (intersection.length_ < dist) {
-                intersection.material_ = &this->material_;
-                return intersection;
-            }
+            intersection.material_ = intersection.length_ < lastDist?
+                &this->material_ : intersection.material_;
         }
         lastRayID_ = ray.id_;
         return intersection;

@@ -14,6 +14,10 @@ Plane::Plane(const ::glm::vec3 point, const ::glm::vec3 normal) noexcept :
 }
 
 Intersection Plane::intersect(Intersection intersection, const Ray ray) const noexcept {
+    if (ray.primitive_ == this) {
+        return intersection;
+    }
+
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};

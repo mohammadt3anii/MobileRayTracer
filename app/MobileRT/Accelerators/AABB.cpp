@@ -36,7 +36,7 @@ int AABB::getLongestAxis() const noexcept {
     const float lengthY{pointMax_.y - pointMin_.y};
     const float lengthZ{pointMax_.z - pointMin_.z};
 
-    int longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
+    const int longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
                     lengthY >= lengthX && lengthY >= lengthZ ? 1 :
                     2
     };
@@ -53,19 +53,19 @@ float AABB::getSurfaceArea() const noexcept {
     const float sideAreaXY{2 * lengthX * lengthY};
     const float sideAreaZY{2 * lengthZ * lengthY};
 
-    float surfaceArea{bottomTopArea + sideAreaXY + sideAreaZY};
+    const float surfaceArea{bottomTopArea + sideAreaXY + sideAreaZY};
 
     return surfaceArea;
 }
 
 namespace MobileRT {
     AABB surroundingBox(AABB box1, AABB box2) noexcept {
-        ::glm::vec3 min{
+        const ::glm::vec3 min{
                 ::std::min(box1.pointMin_.x, box2.pointMin_.x),
                 ::std::min(box1.pointMin_.y, box2.pointMin_.y),
                 ::std::min(box1.pointMin_.z, box2.pointMin_.z)};
 
-        ::glm::vec3 max{
+        const ::glm::vec3 max{
                 ::std::max(box1.pointMax_.x, box2.pointMax_.x),
                 ::std::max(box1.pointMax_.y, box2.pointMax_.y),
                 ::std::max(box1.pointMax_.z, box2.pointMax_.z)};

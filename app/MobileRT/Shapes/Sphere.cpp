@@ -37,11 +37,8 @@ Intersection Sphere::intersect(Intersection intersection, const Ray ray) const n
     }
 
     // if so, then we have an intersection
-    const ::glm::vec3 intPoint {
-        ray.origin_.x + ray.direction_.x * distanceToIntersection,
-        ray.origin_.y + ray.direction_.y * distanceToIntersection,
-        ray.origin_.z + ray.direction_.z * distanceToIntersection};
-    return Intersection {intPoint, distanceToIntersection, center_};
+    const ::glm::vec3 intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
+    return Intersection {intersectionPoint, distanceToIntersection, center_};
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
