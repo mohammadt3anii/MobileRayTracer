@@ -102,10 +102,10 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
         }
 
         case Accelerator::BVH_vector: {
-            intersection = this->bvhPlanes2_.shadowTrace(intersection, ray);
-            intersection = this->bvhRectangles2_.shadowTrace(intersection, ray);
-            intersection = this->bvhSpheres2_.shadowTrace(intersection, ray);
-            intersection = this->bvhTriangles2_.shadowTrace(intersection, ray);
+            intersection = this->bvhPlanesVector_.shadowTrace(intersection, ray);
+            intersection = this->bvhRectanglesVector_.shadowTrace(intersection, ray);
+            intersection = this->bvhSpheresVector_.shadowTrace(intersection, ray);
+            intersection = this->bvhTrianglesVector_.shadowTrace(intersection, ray);
             break;
         }
     }
