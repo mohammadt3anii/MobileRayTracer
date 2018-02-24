@@ -26,7 +26,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
 
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-    if (::std::fabs(normalizedProjection) < Epsilon) {
+    if (::std::abs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 
@@ -147,7 +147,7 @@ bool Triangle::intersect(const AABB box) const noexcept {
             [=](const ::glm::vec3 vec) -> bool {
                 const ::glm::vec3 perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-                return ::std::fabs(normalizedProjection) < Epsilon;
+                return ::std::abs(normalizedProjection) < Epsilon;
             }
     };
 

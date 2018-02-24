@@ -170,7 +170,7 @@ void PathTracer::resetSampling() noexcept {
     const float r1{2.0f * ::MobileRT::Pi * samplerRay_->getSample()};
     const float r2{samplerRay_->getSample()};
     const float r2s{::std::sqrt(r2)};
-    ::glm::vec3 u{::std::fabs(normal.x) > 0.1f ?
+    ::glm::vec3 u{::std::abs(normal.x) > 0.1f ?
                ::glm::cross(::glm::vec3(0.0f, 1.0f, 0.0f), normal) :
                ::glm::cross(::glm::vec3(1.0f, 0.0f, 0.0f), normal)};
     u = ::glm::normalize(u);

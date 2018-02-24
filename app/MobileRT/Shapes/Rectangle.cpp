@@ -30,7 +30,7 @@ Intersection Rectangle::intersect(Intersection intersection, const Ray ray) cons
 
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, this->AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-    if (::std::fabs(normalizedProjection) < Epsilon) {
+    if (::std::abs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 

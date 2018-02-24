@@ -22,7 +22,7 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
     const float normalized_projection {::glm::dot(normal_, ray.direction_)};
-    if (::std::fabs(normalized_projection) < Epsilon) {
+    if (::std::abs(normalized_projection) < Epsilon) {
         return intersection;
     }
 
