@@ -92,7 +92,7 @@ void Scene::resetSampling() noexcept {
 }
 
 void Scene::AABBbounds(const AABB box, ::glm::vec3 *const min, ::glm::vec3 *const max) {
-    *min = {::std::min(box.pointMin_.x, min->x), ::std::min(box.pointMin_.y, min->y), ::std::min(box.pointMin_.z, min->z)};
+    *min = ::glm::min(box.pointMin_, *min);
 
-    *max = {::std::max(box.pointMax_.x, max->x), ::std::max(box.pointMax_.y, max->y), ::std::max(box.pointMax_.z, max->z)};
+    *max = ::glm::max(box.pointMax_, *max);
 }
