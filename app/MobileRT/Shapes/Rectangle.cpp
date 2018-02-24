@@ -66,12 +66,12 @@ float Rectangle::getZ() const noexcept {
 }
 
 ::glm::vec3 Rectangle::getPositionMin() const noexcept {
-    const ::glm::vec3 res {::glm::min(pointA_, ::glm::min(pointB_, ::glm::min(pointC_, pointD_))};
+    const ::glm::vec3 res {::glm::min(pointA_, ::glm::min(pointB_, ::glm::min(pointC_, pointD_)))};
     return res;
 }
 
 ::glm::vec3 Rectangle::getPositionMax() const noexcept {
-    const ::glm::vec3 res {::glm::max(pointA_, ::glm::max(pointB_, ::glm::max(pointC_, pointD_))};
+    const ::glm::vec3 res {::glm::max(pointA_, ::glm::max(pointB_, ::glm::max(pointC_, pointD_)))};
     return res;
 }
 
