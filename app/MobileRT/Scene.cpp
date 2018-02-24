@@ -64,9 +64,9 @@ template<typename T>
 Intersection Scene::shadowTrace(::std::vector<T> &primitives, Intersection intersection,
                         const Ray ray) const noexcept {
     for (T &primitive : primitives) {
-        const float dist {intersection.length_};
+        const float lastDist {intersection.length_};
         intersection = primitive.intersect(intersection, ray);
-        if (intersection.length_ < dist) {
+        if (intersection.length_ < lastDist) {
             return intersection;
         }
     }

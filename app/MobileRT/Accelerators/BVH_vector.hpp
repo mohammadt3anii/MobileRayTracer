@@ -17,7 +17,6 @@ namespace MobileRT {
     template<typename T>
     class BVH_vector final {
     public:
-        int64_t numberPrimitives_{0};
         unsigned numberDepth_{0};
         ::std::vector<::MobileRT::AABB> boxes_{};
         ::std::vector<::std::vector<MobileRT::Primitive<T>>> primitives_{};
@@ -109,8 +108,9 @@ namespace MobileRT {
             }
             return AABB{};
         }
+        static int64_t numberPrimitives {0};
         if (depth == 0) {
-            numberPrimitives_ = static_cast<int64_t>(primitives.size());
+            numberPrimitives = static_cast<int64_t>(primitives.size());
         }
         numberDepth_ = ::std::max(depth, numberDepth_);
 
@@ -165,22 +165,21 @@ namespace MobileRT {
         }*/
         divide = primitives.size() % 2 == 0 ? divide : divide + 1;
 
-        const uint32_t aux{static_cast<uint32_t>(1 << depth)};
-        if (numberPrimitives_ <= static_cast<int64_t>(aux) * 2) {
+        if (numberPrimitives <= (1 << depth) * 2) {
             primitives_.emplace_back(primitives);
         } else {
             using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
-            Iterator leftBegin{primitives.begin()};
-            Iterator leftEnd{primitives.begin() + divide};
-            Iterator rightBegin{primitives.begin() + divide};
-            Iterator rightEnd{primitives.end()};
+            Iterator leftBegin {primitives.begin()};
+            Iterator leftEnd {primitives.begin() + divide};
+            Iterator rightBegin {primitives.begin() + divide};
+            Iterator rightEnd {primitives.end()};
 
             ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
             ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
-            const uint32_t left{currentNodeId * 2 + 1};
-            AABB leftBox{build(std::move(leftVector), depth + 1, left)};
-            AABB rightBox{build(std::move(rightVector), depth + 1, left + 1)};
+            const uint32_t left {currentNodeId * 2 + 1};
+            AABB leftBox {build(std::move(leftVector), depth + 1, left)};
+            AABB rightBox {build(std::move(rightVector), depth + 1, left + 1)};
             current_box = surroundingBox(leftBox, rightBox);
         }
         boxes_.at(currentNodeId) = current_box;
@@ -196,19 +195,17 @@ namespace MobileRT {
         const uint32_t currentNodeId) noexcept {
         if (intersect(boxes_.at(currentNodeId), ray)) {
             //node at the bottom of tree - no childs
-            const uint32_t aux{static_cast<uint32_t>(1 << depth)};
             if (depth == numberDepth_) {
-                const uint32_t primitiveId{(currentNodeId - (aux - 1))};
+                const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
                 for (auto &primitive : primitives_.at(primitiveId)) {
                     intersection = primitive.intersect(intersection, ray);
                 }
                 return intersection;
             }
 
-            const uint32_t left{currentNodeId * 2 + 1};
+            const uint32_t left {currentNodeId * 2 + 1};
             intersection = trace(intersection, ray, depth + 1, left);
-            intersection = trace(intersection, ray, depth + 1, left + 1);
-            return intersection;
+            return trace(intersection, ray, depth + 1, left + 1);
         }
         return intersection;
     }
@@ -222,26 +219,23 @@ namespace MobileRT {
         const uint32_t currentNodeId) noexcept {
         if (intersect(boxes_.at(currentNodeId), ray)) {
             //node at the bottom of tree - no childs
-            const uint32_t aux{static_cast<uint32_t>(1 << depth)};
             if (depth == numberDepth_) {
-                const uint32_t primitiveId{(currentNodeId - (aux - 1))};
+                const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
                 for (auto &primitive : primitives_.at(primitiveId)) {
-                    const float dist {intersection.length_};
+                    const float lastDist {intersection.length_};
                     intersection = primitive.intersect(intersection, ray);
-                    if (intersection.length_ < dist) {
+                    if (intersection.length_ < lastDist) {
                         return intersection;
                     }
                 }
                 return intersection;
             }
 
-            const uint32_t left{currentNodeId * 2 + 1};
-            const float dist {intersection.length_};
+            const uint32_t left {currentNodeId * 2 + 1};
+            const float lastDist {intersection.length_};
             intersection = shadowTrace(intersection, ray, depth + 1, left);
-            if (intersection.length_ < dist) {
-                return intersection;
-            }
-            return shadowTrace(intersection, ray, depth + 1, left + 1);
+            return intersection.length_ < lastDist? intersection :
+                shadowTrace(intersection, ray, depth + 1, left + 1);
         }
         return intersection;
     }

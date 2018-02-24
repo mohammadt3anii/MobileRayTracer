@@ -81,7 +81,7 @@ Shader::~Shader() noexcept {
 }
 
 bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
-    const float dist {intersection.length_};
+    const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
             intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
@@ -109,12 +109,12 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
             break;
         }
     }
-    return intersection.length_ < dist;
+    return intersection.length_ < lastDist;
 }
 
 bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
     Intersection intersection {};
-    const float dist {intersection.length_};
+    const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
             intersection = this->scene_.trace(intersection, ray);
@@ -144,5 +144,5 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
             break;
         }
     }
-    return intersection.length_ < dist && shade(rgb, intersection, ::std::move(ray));
+    return intersection.length_ < lastDist && shade(rgb, intersection, ::std::move(ray));
 }

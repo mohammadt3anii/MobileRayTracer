@@ -161,9 +161,9 @@ bool Triangle::intersect(const AABB box) const noexcept {
     const ::glm::vec3 pointB {pointA_ + AB_};
     const ::glm::vec3 pointC {pointA_ + AC_};
     const bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
-    const float dist {intersection.length_};
+    const float lastDist {intersection.length_};
     intersection = intersect(intersection, ray);
-    const bool intersectedRay {intersection.length_ < dist};
+    const bool intersectedRay {intersection.length_ < lastDist};
     const bool insideTriangle{isOverTriangle(vec)};
 
     return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;

@@ -252,9 +252,9 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
                 (static_cast<size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix[index]};
         for (auto *const primitive : primitivesList) {
-            const float dist {intersection.length_};
+            const float lastDist {intersection.length_};
             intersection = primitive->intersect(intersection, ray);
-            if (intersection.length_ < dist) {
+            if (intersection.length_ < lastDist) {
                 if (shadowTrace) {
                     return intersection;
                 }

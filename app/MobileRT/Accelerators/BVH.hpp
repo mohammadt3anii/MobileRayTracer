@@ -112,7 +112,6 @@ namespace MobileRT {
                 }
             }
         }
-        //LOG("depth = ", depth, ", size = ", primitives.size(), ", min_SAH_idx = ", min_SAH_idx);
 
         //0 primitives to left || 0 primitives to right
         if (min_SAH_idx == 0 || min_SAH_idx == N - 2
@@ -146,9 +145,7 @@ namespace MobileRT {
                 return intersection;
             }
             intersection = left_->trace(intersection, ray);
-            intersection = right_->trace(intersection, ray);
-
-            return intersection;
+            return right_->trace(intersection, ray);
         }
         return intersection;
     }
@@ -158,21 +155,19 @@ namespace MobileRT {
         if (intersect(box_, ray)) {
             if (left_ == nullptr) {
                 for (auto &primitive : primitives_) {
-                    const float dist {intersection.length_};
+                    const float lastDist {intersection.length_};
                     intersection = primitive.intersect(intersection, ray);
-                    if (intersection.length_ < dist) {
+                    if (intersection.length_ < lastDist) {
                         return intersection;
                     }
                 }
                 return intersection;
             }
 
-            const float dist {intersection.length_};
+            const float lastDist {intersection.length_};
             intersection = left_->shadowTrace(intersection, ray);
-            if (intersection.length_ < dist) {
-                return intersection;
-            }
-            return right_->shadowTrace(intersection, ray);
+            return intersection.length_ < lastDist? intersection :
+                right_->shadowTrace(intersection, ray);
         }
         return intersection;
     }
