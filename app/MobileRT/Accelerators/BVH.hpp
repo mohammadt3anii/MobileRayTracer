@@ -37,9 +37,7 @@ namespace MobileRT {
 
         BVH &operator=(BVH &&bVH) noexcept = default;
 
-        Intersection trace(
-            ::MobileRT::Intersection intersection,
-            ::MobileRT::Ray ray) noexcept;
+        Intersection trace(::MobileRT::Intersection intersection, ::MobileRT::Ray ray) noexcept;
 
         Intersection shadowTrace(::MobileRT::Intersection intersection, Ray ray) noexcept;
     };
@@ -74,32 +72,12 @@ namespace MobileRT {
             box_ = surroundingBox(new_box, box_);
         }
 
-        const int axis{box_.getLongestAxis()};
-        switch (axis) {
-            case 0:
-                ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> a,
-                                MobileRT::Primitive<T> b) noexcept -> bool {
-                                return a.getAABB().pointMin_.x < b.getAABB().pointMin_.x;
-                            });
-                break;
-
-            case 1:
-                ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> a,
-                                MobileRT::Primitive<T> b) noexcept -> bool {
-                                return a.getAABB().pointMin_.y < b.getAABB().pointMin_.y;
-                            });
-                break;
-
-            default:
-                ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> a,
-                                MobileRT::Primitive<T> b) noexcept -> bool {
-                                return a.getAABB().pointMin_.z < b.getAABB().pointMin_.z;
-                            });
-                break;
-        }
+        const int axis {box_.getLongestAxis()};
+        ::std::sort(primitives.begin(), primitives.end(),
+            [=](const MobileRT::Primitive<T> a,
+                const MobileRT::Primitive<T> b) noexcept -> bool {
+                return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
+            });
 
         ::std::vector<AABB> boxes{};
         for (uint32_t i{0}; i < N; i++) {
