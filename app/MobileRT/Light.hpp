@@ -27,7 +27,7 @@ namespace MobileRT {
 
         Light &operator=(Light &&light) noexcept = delete;
 
-        virtual glm::vec3 getPosition() noexcept = 0;
+        virtual ::glm::vec3 getPosition() noexcept = 0;
 
         virtual void resetSampling() noexcept = 0;
 

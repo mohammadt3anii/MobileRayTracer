@@ -19,7 +19,7 @@ namespace Components {
         ::std::vector<tinyobj::material_t> materials_{::std::vector<tinyobj::material_t>()};
 
     public:
-        explicit OBJLoader(::std::string obj, ::std::string materials) noexcept;
+        explicit OBJLoader(::std::string &&obj, ::std::string &&materials) noexcept;
 
         OBJLoader(const OBJLoader &objLoader) noexcept = delete;
 

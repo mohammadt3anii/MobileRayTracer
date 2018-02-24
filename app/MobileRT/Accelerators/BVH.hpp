@@ -57,14 +57,14 @@ namespace MobileRT {
         const uint32_t N{static_cast<uint32_t>(primitives.size())};
 
         AABB current_box{
-                glm::vec3 {
-                        std::numeric_limits<float>::max(),
-                        std::numeric_limits<float>::max(),
-                        std::numeric_limits<float>::max()},
-                glm::vec3 {
-                        std::numeric_limits<float>::lowest(),
-                        std::numeric_limits<float>::lowest(),
-                        std::numeric_limits<float>::lowest()}};
+                ::glm::vec3 {
+                        ::std::numeric_limits<float>::max(),
+                        ::std::numeric_limits<float>::max(),
+                        ::std::numeric_limits<float>::max()},
+                ::glm::vec3 {
+                        ::std::numeric_limits<float>::lowest(),
+                        ::std::numeric_limits<float>::lowest(),
+                        ::std::numeric_limits<float>::lowest()}};
         for (uint32_t i{0}; i < primitives.size(); i++) {
             const AABB new_box{primitives.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
@@ -78,30 +78,30 @@ namespace MobileRT {
         switch (axis) {
             case 0:
                 ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> &a,
-                                MobileRT::Primitive<T> &b) noexcept -> bool {
+                            [](const MobileRT::Primitive<T> a,
+                                MobileRT::Primitive<T> b) noexcept -> bool {
                                 return a.getAABB().pointMin_.x < b.getAABB().pointMin_.x;
                             });
                 break;
 
             case 1:
                 ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> &a,
-                                MobileRT::Primitive<T> &b) noexcept -> bool {
+                            [](const MobileRT::Primitive<T> a,
+                                MobileRT::Primitive<T> b) noexcept -> bool {
                                 return a.getAABB().pointMin_.y < b.getAABB().pointMin_.y;
                             });
                 break;
 
             default:
                 ::std::sort(primitives.begin(), primitives.end(),
-                            [](const MobileRT::Primitive<T> &a,
-                                MobileRT::Primitive<T> &b) noexcept -> bool {
+                            [](const MobileRT::Primitive<T> a,
+                                MobileRT::Primitive<T> b) noexcept -> bool {
                                 return a.getAABB().pointMin_.z < b.getAABB().pointMin_.z;
                             });
                 break;
         }
 
-        std::vector<AABB> boxes{};
+        ::std::vector<AABB> boxes{};
         for (uint32_t i{0}; i < N; i++) {
             boxes.emplace_back(primitives.at(i).getAABB());
         }
@@ -109,14 +109,14 @@ namespace MobileRT {
         //const uint64_t min_SAH_idx {static_cast<int64_t>(primitives.size()) / 2};
         uint64_t min_SAH_idx{0};
         {
-            std::vector<float> left_area{boxes.at(0).getSurfaceArea()};
+            ::std::vector<float> left_area{boxes.at(0).getSurfaceArea()};
             AABB left_box{};
             for (uint32_t i{0}; i < N - 1; i++) {
                 left_box = surroundingBox(left_box, boxes.at(i));
                 left_area.insert(left_area.end(), left_box.getSurfaceArea());
             }
 
-            std::vector<float> right_area{boxes.at(N - 1).getSurfaceArea()};
+            ::std::vector<float> right_area{boxes.at(N - 1).getSurfaceArea()};
             AABB right_box{};
             for (uint32_t i{N - 1}; i > 0; i--) {
                 right_box = surroundingBox(right_box, boxes.at(i));
@@ -151,8 +151,8 @@ namespace MobileRT {
             ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
             ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
-            left_ = std::make_unique<BVH>(std::move(leftVector), depth + 1);
-            right_ = std::make_unique<BVH>(std::move(rightVector), depth + 1);
+            left_ = ::std::make_unique<BVH>(std::move(leftVector), depth + 1);
+            right_ = ::std::make_unique<BVH>(std::move(rightVector), depth + 1);
         }
     }
 
@@ -163,8 +163,8 @@ namespace MobileRT {
         const ::MobileRT::Ray ray) noexcept {
         if (intersect(box_, ray)) {
             if (left_ == nullptr) {
-                for (MobileRT::Primitive<T> &s : primitives_) {
-                    intersection = s.intersect(intersection, ray);
+                for (auto &primitive : primitives_) {
+                    intersection = primitive.intersect(intersection, ray);
                 }
                 return intersection;
             }
@@ -180,9 +180,9 @@ namespace MobileRT {
     Intersection BVH<T>::shadowTrace(::MobileRT::Intersection intersection, const Ray ray) noexcept {
         if (intersect(box_, ray)) {
             if (left_ == nullptr) {
-                for (MobileRT::Primitive<T> &s : primitives_) {
+                for (auto &primitive : primitives_) {
                     const float dist {intersection.length_};
-                    intersection = s.intersect(intersection, ray);
+                    intersection = primitive.intersect(intersection, ray);
                     if (intersection.length_ < dist) {
                         return intersection;
                     }

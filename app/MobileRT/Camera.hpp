@@ -20,14 +20,14 @@ namespace MobileRT {
         ::std::atomic<unsigned> block_{0};
 
     public:
-        glm::vec3 position_{};
-        glm::vec3 direction_{};
-        glm::vec3 right_{};
-        glm::vec3 up_{};
+        ::glm::vec3 position_{};
+        ::glm::vec3 direction_{};
+        ::glm::vec3 right_{};
+        ::glm::vec3 up_{};
 
     public:
-        explicit Camera(glm::vec3 position,
-                        glm::vec3 lookAt, glm::vec3 up) noexcept;
+        explicit Camera(::glm::vec3 position,
+                        ::glm::vec3 lookAt, ::glm::vec3 up) noexcept;
 
         Camera(const Camera &camera) noexcept;
 

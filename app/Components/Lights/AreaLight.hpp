@@ -26,9 +26,9 @@ namespace Components {
     public:
         explicit AreaLight(Material radiance,
                            ::std::unique_ptr<Sampler> samplerPointLight,
-                           glm::vec3 pointA,
-                           glm::vec3 pointB,
-                           glm::vec3 pointC) noexcept;
+                           ::glm::vec3 pointA,
+                           ::glm::vec3 pointB,
+                           ::glm::vec3 pointC) noexcept;
 
         AreaLight(const AreaLight &areaLight) noexcept = delete;
 
@@ -40,7 +40,7 @@ namespace Components {
 
         AreaLight &operator=(AreaLight &&areaLight) noexcept = delete;
 
-        glm::vec3 getPosition() noexcept final;
+        ::glm::vec3 getPosition() noexcept final;
 
         void resetSampling() noexcept final;
 

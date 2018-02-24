@@ -14,7 +14,7 @@ namespace Components {
 
     class DiffuseMaterial final : public ::MobileRT::Shader {
     private:
-        bool shade(glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
+        bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
 
     public:
         explicit DiffuseMaterial(Scene scene, Accelerator accelerator) noexcept;

@@ -13,18 +13,18 @@
 namespace MobileRT {
     class Plane final {
     private:
-        glm::vec3 normal_{};    // normal to the plane
-        glm::vec3 point_{};   // point in the plane
+        ::glm::vec3 normal_{};    // normal to the plane
+        ::glm::vec3 point_{};   // point in the plane
 
     private:
-        glm::vec3 getPositionMin() const noexcept;
+        ::glm::vec3 getPositionMin() const noexcept;
 
-        glm::vec3 getPositionMax() const noexcept;
+        ::glm::vec3 getPositionMax() const noexcept;
 
-        glm::vec3 getRightVector() const noexcept;
+        ::glm::vec3 getRightVector() const noexcept;
 
     public:
-        explicit Plane(glm::vec3 point, glm::vec3 normal) noexcept;
+        explicit Plane(::glm::vec3 point, ::glm::vec3 normal) noexcept;
 
         Plane(const Plane &plane) noexcept = default;
 
@@ -44,7 +44,7 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        float distance(glm::vec3 point) const noexcept;
+        float distance(::glm::vec3 point) const noexcept;
 
         bool intersect(AABB box) const noexcept;
     };

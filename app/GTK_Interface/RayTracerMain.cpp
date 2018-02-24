@@ -7,10 +7,7 @@
 #include <iostream>
 
 int main(int argc, char **argv) noexcept {
-    if (argc < 15) {
-        ::std::cerr << "Not enough arguments provided" << '\n';
-        return 1;
-    }
+    assert(argc == 15);
     const ::gsl::multi_span<char *> args{argv, argc};
 
     const int threads{static_cast<int> (strtol(args[1], nullptr, 0))};
@@ -49,30 +46,12 @@ int main(int argc, char **argv) noexcept {
     ssPrintStdOut >> printStdOut;
     ssAsync >> ::std::boolalpha >> async;
     ssShowImage >> ::std::boolalpha >> showImage;
-    if (!tAsync) {
-        ::std::cerr << "Incorrect argument provided.\n";
-        return 1;
-    }
-    if (!tPrint) {
-        ::std::cerr << "Incorrect argument provided.\n";
-        return 1;
-    }
-    if (!tShowImage) {
-        ::std::cerr << "Incorrect argument provided.\n";
-        return 1;
-    }
+    assert(tAsync && tPrint && tShowImage);
 
     const unsigned size{static_cast<unsigned>(width_) * static_cast<unsigned>(height_)};
     ::std::unique_ptr<unsigned char[]> buffer{::std::make_unique<unsigned char[]>(size * 4u)};
     ::std::vector<unsigned> bitmap(size);
     bitmap.reserve(size);
-
-    /*float avg {0};
-    avg = ::MobileRT::incrementalAVG(1.0f);
-    avg = ::MobileRT::incrementalAVG(2.0f);
-    avg = ::MobileRT::incrementalAVG(3.0f);
-    avg = ::MobileRT::incrementalAVG(4.0f);
-    LOG("AVG = ", avg);*/
 
     RayTrace(bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight,
              repeats, accelerator, printStdOut, async, pathObj, pathMtl);

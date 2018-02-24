@@ -13,7 +13,7 @@ DiffuseMaterial::DiffuseMaterial(Scene scene, const Accelerator accelerator) noe
         Shader{::std::move(scene), 0, accelerator} {
 }
 
-bool DiffuseMaterial::shade(glm::vec3 *const rgb, const Intersection intersection, Ray /*ray*/) noexcept {
+bool DiffuseMaterial::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray /*ray*/) noexcept {
     *rgb = intersection.material_->Kd_;
     return false;
 }

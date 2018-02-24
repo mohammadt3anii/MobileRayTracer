@@ -8,19 +8,18 @@ using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
 using ::MobileRT::Intersection;
 
-Sphere::Sphere(const glm::vec3 center, const float radius) noexcept :
+Sphere::Sphere(const ::glm::vec3 center, const float radius) noexcept :
         center_{center},
         sq_radius_{radius * radius} {
 }
 
 Intersection Sphere::intersect(Intersection intersection, const Ray ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const glm::vec3 rayDir {ray.direction_.x, ray.direction_.y, ray.direction_.z};
-    const glm::vec3 centerToOrigin {ray.origin_.x - center_.x, ray.origin_.y - center_.y, ray.origin_.z - center_.z};
+    const ::glm::vec3 centerToOrigin {ray.origin_ - center_};
 
     //A = 1.0 - normalized vectors
-    const float B {2.0f * glm::dot(centerToOrigin, rayDir)};
-    const float squareMagnitude {glm::length(centerToOrigin) * glm::length(centerToOrigin)};
+    const float B {2.0f * ::glm::dot(centerToOrigin, ray.direction_)};
+    const float squareMagnitude {::glm::length(centerToOrigin) * ::glm::length(centerToOrigin)};
     const float C {squareMagnitude - this->sq_radius_};
     const float discriminant {B * B - 4.0f * C};
     //don't intersect (ignores tangent point of the sphere)
@@ -38,7 +37,7 @@ Intersection Sphere::intersect(Intersection intersection, const Ray ray) const n
     }
 
     // if so, then we have an intersection
-    glm::vec3 intPoint {
+    const ::glm::vec3 intPoint {
         ray.origin_.x + ray.direction_.x * distanceToIntersection,
         ray.origin_.y + ray.direction_.y * distanceToIntersection,
         ray.origin_.z + ray.direction_.z * distanceToIntersection};
@@ -54,22 +53,22 @@ float Sphere::getZ() const noexcept {
     return this->center_.z;
 }
 
-glm::vec3 Sphere::getPositionMin() const noexcept {
+::glm::vec3 Sphere::getPositionMin() const noexcept {
     const float radius {::std::sqrt(this->sq_radius_)};
     const float x {this->center_.x - radius};
     const float y {this->center_.y - radius};
     const float z {this->center_.z - radius};
 
-    return glm::vec3 {x, y, z};
+    return ::glm::vec3 {x, y, z};
 }
 
-glm::vec3 Sphere::getPositionMax() const noexcept {
+::glm::vec3 Sphere::getPositionMax() const noexcept {
     const float radius {::std::sqrt(this->sq_radius_)};
     const float x {this->center_.x + radius};
     const float y {this->center_.y + radius};
     const float z {this->center_.z + radius};
 
-    return glm::vec3 {x, y, z};
+    return ::glm::vec3 {x, y, z};
 }
 
 AABB Sphere::getAABB() const noexcept {
@@ -78,8 +77,8 @@ AABB Sphere::getAABB() const noexcept {
 
 bool Sphere::intersect(const AABB box) const noexcept {
     float dmin {0};
-    const glm::vec3 v1 {box.pointMin_};
-    const glm::vec3 v2 {box.pointMax_};
+    const ::glm::vec3 v1 {box.pointMin_};
+    const ::glm::vec3 v2 {box.pointMax_};
     if (center_.x < v1.x) {
         dmin = dmin + (center_.x - v1.x) * (center_.x - v1.x);
     } else if (center_.x > v2.x) {

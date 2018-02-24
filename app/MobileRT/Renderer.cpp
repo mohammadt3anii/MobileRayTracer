@@ -45,15 +45,11 @@ void Renderer::renderFrame(unsigned *const bitmap, const int numThreads,
         threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
     }
     renderScene(bitmap, numChildren, realWidth);
-    for (::std::thread &thread : threads) {
+    for (auto &thread : threads) {
         thread.join();
     }
     threads.clear();
 
-    /*LOG("scene = ", Scene::getInstances());
-    LOG("ray = ", Ray::getInstances());
-    LOG("material = ", Material::getInstances());
-    LOG("intersection = ", Intersection::getInstances());*/
     LOG("Resolution = ", width_, "x", height_);
     LOG("FINISH");
 }
@@ -70,7 +66,7 @@ void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned
     const float pixelWidth{0.5f / this->width_};
     const float pixelHeight{0.5f / this->height_};
     const unsigned samples{this->samplesPixel_};
-    glm::vec3 pixelRGB {};
+    ::glm::vec3 pixelRGB {};
     for (unsigned sample{0}; sample < samples; sample++) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
@@ -97,9 +93,7 @@ void Renderer::renderScene(unsigned *const bitmap, const int tid, const unsigned
                     pixelRGB = {};
                     this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
                     const unsigned pixelIndex{yWidth + x};
-                    if (pixelIndex >= width * height_) {
-                        LOG("PASSOU O LIMITE DA RESOLUÇÃO");
-                    }
+                    assert(pixelIndex < width * height_);
                     bitmap[pixelIndex] = ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex],
                         sample + 1);
                 }

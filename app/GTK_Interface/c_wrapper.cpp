@@ -61,67 +61,64 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         while (::std::getline(mtl, line)) {
             ssMtl << line << '\n';
         }
-        ::std::string sObj{ssObj.str()};
-        ::std::string sMtl{ssMtl.str()};
         ::Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
         objLoader.process();
         int64_t numberOfLights_{0};
 
-        const float ratio{
-                width > height ? static_cast<float>(width) / height : static_cast<float>(height) /
-                                                                      width};
+        const float ratio {
+            ::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
         const float hfovFactor{width > height ? ratio : 1.0f};
         const float vfovFactor{width < height ? ratio : 1.0f};
         ::MobileRT::Scene scene_{};
         ::std::unique_ptr<::MobileRT::Sampler> samplerPixel{};
         ::std::unique_ptr<::MobileRT::Shader> shader_{};
         ::std::unique_ptr<::MobileRT::Camera> camera{};
-        glm::vec3 maxDist{glm::vec3 {0, 0, 0}};
+        ::glm::vec3 maxDist{::glm::vec3 {0, 0, 0}};
 
         switch (scene) {
             case 0:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        glm::vec3{0.0f, 0.0f, -3.4f},
-                        glm::vec3{0.0f, 0.0f, 1.0f},
-                        glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3{0.0f, 0.0f, -3.4f},
+                        ::glm::vec3{0.0f, 0.0f, 1.0f},
+                        ::glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene(::std::move(scene_));
-                maxDist = glm::vec3 {1, 1, 1};
+                maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 1:
                 camera = ::std::make_unique<::Components::Orthographic>(
-                        glm::vec3{0.0f, 1.0f, -10.0f},
-                        glm::vec3{0.0f, 1.0f, 7.0f},
-                        glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3{0.0f, 1.0f, -10.0f},
+                        ::glm::vec3{0.0f, 1.0f, 7.0f},
+                        ::glm::vec3{0.0f, 1.0f, 0.0f},
                         10.0f * hfovFactor, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<::Components::Perspective>(
-                  glm::vec3(0.0f, 0.5f, 1.0f),
-                  glm::vec3(0.0f, 0.0f, 7.0f),
-                  glm::vec3(0.0f, 1.0f, 0.0f),
+                  ::glm::vec3(0.0f, 0.5f, 1.0f),
+                  ::glm::vec3(0.0f, 0.0f, 7.0f),
+                  ::glm::vec3(0.0f, 1.0f, 0.0f),
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
-                maxDist = glm::vec3 {8, 8, 8};
+                maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
             case 2:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        glm::vec3 {0.0f, 0.0f, -3.4f},
-                        glm::vec3 {0.0f, 0.0f, 1.0f},
-                        glm::vec3 {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.0f, -3.4f},
+                        ::glm::vec3 {0.0f, 0.0f, 1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene2(::std::move(scene_));
-                maxDist = glm::vec3 {1, 1, 1};
+                maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 3:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        glm::vec3 {0.0f, 0.5f, 1.0f},
-                        glm::vec3 {0.0f, 0.0f, 7.0f},
-                        glm::vec3 {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.5f, 1.0f},
+                        ::glm::vec3 {0.0f, 0.0f, 7.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         60.0f * hfovFactor, 60.0f * vfovFactor);
                 scene_ = spheresScene2(::std::move(scene_));
-                maxDist = glm::vec3 {8, 8, 8};
+                maxDist = ::glm::vec3 {8, 8, 8};
                 break;
             default: {
                 //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::HaltonSeq> ();});
@@ -129,22 +126,22 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
                 objLoader.fillScene(&scene_,
                                     []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> { return ::std::make_unique<::Components::StaticHaltonSeq>(); });
                 //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::StaticMersenneTwister> ();});
-                const ::MobileRT::Material lightMat{glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                    glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                    glm::vec3 {0.0f, 0.0f, 0.0f},
+                const ::MobileRT::Material lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                     1.0f,
-                                                    glm::vec3 {0.9f, 0.9f, 0.9f}};
+                                                    ::glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
-                        lightMat, glm::vec3 {0.0f, 1000.0f, 0.0f}));
+                        lightMat, ::glm::vec3 {0.0f, 1000.0f, 0.0f}));
                 //cornell spheres
                 camera = ::std::make_unique<::Components::Perspective>(
-                        glm::vec3 {0.0f, 0.7f, 3.0f},
-                        glm::vec3 {0.0f, 0.7f, -1.0f},
-                        glm::vec3 {0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.7f, 3.0f},
+                        ::glm::vec3 {0.0f, 0.7f, -1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 //teapot
-                //camera = ::std::make_unique<::Components::Perspective> (glm::vec3 {0.0f, 30.0f, -200.0f}, glm::vec3 {0.0f, 30.0f, 100.0f}, glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                maxDist = glm::vec3 {1, 1, 1};
+                //camera = ::std::make_unique<::Components::Perspective> (::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;
         }
@@ -215,7 +212,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
 
         LOG("Started creating Renderer");
         const auto startCreating{::std::chrono::system_clock::now()};
-        renderer_ = std::make_unique<::MobileRT::Renderer>(
+        renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<unsigned>(width), static_cast<unsigned>(height),
                 static_cast<unsigned>(samplesPixel));

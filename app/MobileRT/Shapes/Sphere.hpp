@@ -13,16 +13,16 @@
 namespace MobileRT {
     class Sphere final {
     private:
-        glm::vec3 center_ {};
+        ::glm::vec3 center_ {};
         float sq_radius_ {};
 
     private:
-        glm::vec3 getPositionMin() const noexcept;
+        ::glm::vec3 getPositionMin() const noexcept;
 
-        glm::vec3 getPositionMax() const noexcept;
+        ::glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Sphere(glm::vec3 center, float radius) noexcept;
+        explicit Sphere(::glm::vec3 center, float radius) noexcept;
 
         Sphere(const Sphere &sphere) noexcept = default;
 

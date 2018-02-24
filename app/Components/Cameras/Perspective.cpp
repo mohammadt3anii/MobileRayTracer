@@ -8,7 +8,7 @@
 using ::Components::Perspective;
 using ::MobileRT::Ray;
 
-Perspective::Perspective(const glm::vec3 position, const glm::vec3 lookAt, const glm::vec3 up,
+Perspective::Perspective(const ::glm::vec3 position, const ::glm::vec3 lookAt, const ::glm::vec3 up,
                          const float hFov, const float vFov) noexcept :
         Camera(position, lookAt, up),
         // convert to radians
@@ -22,11 +22,11 @@ Perspective::Perspective(const glm::vec3 position, const glm::vec3 lookAt, const
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-    glm::vec3 dest {this->position_ +
+    const ::glm::vec3 dest {this->position_ +
                           this->direction_ +
                           (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
                           (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV))};
-    return Ray {glm::normalize(dest - position_),
+    return Ray {::glm::normalize(dest - position_),
                     this->position_, 1};
 }
 

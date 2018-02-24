@@ -51,7 +51,7 @@ namespace MobileRT {
     template<typename T>
     Primitive<T>::Primitive(T shape, Material material) noexcept :
                     shape_{shape},
-                    material_{::std::move(material)} {
+                    material_{material} {
     }
 
     template<typename T>

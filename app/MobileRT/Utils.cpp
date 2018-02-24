@@ -22,7 +22,7 @@ float ::MobileRT::haltonSequence(uint32_t index, const unsigned base) noexcept {
 }
 
 //newAvg = ((size - 1) * oldAvg + newNum) / size;
-unsigned ::MobileRT::incrementalAvg(const glm::vec3 sample, const unsigned avg, const unsigned numSample) noexcept {
+unsigned ::MobileRT::incrementalAvg(const ::glm::vec3 sample, const unsigned avg, const unsigned numSample) noexcept {
     //toneMap();
 
     const unsigned redB4{avg & 0xFF};
@@ -37,9 +37,9 @@ unsigned ::MobileRT::incrementalAvg(const glm::vec3 sample, const unsigned avg, 
     const unsigned greenAft{((numSample - 1) * greenB4 + greenSamp) / numSample};
     const unsigned blueAft{((numSample - 1) * blueB4 + blueSamp) / numSample};
 
-    unsigned retR{redAft > 255u ? 255u : redAft};
-    unsigned retG{greenAft > 255u ? 255u : greenAft};
-    unsigned retB{blueAft > 255u ? 255u : blueAft};
+    const unsigned retR {::std::min(redAft, 255u)};
+    const unsigned retG {::std::min(greenAft, 255u)};
+    const unsigned retB {::std::min(blueAft, 255u)};
 
     return (0xFF000000u | (retB << 16u) | (retG << 8u) | retR);
 }

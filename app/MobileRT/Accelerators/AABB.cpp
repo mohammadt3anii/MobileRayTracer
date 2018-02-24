@@ -8,7 +8,7 @@
 using ::MobileRT::AABB;
 using ::MobileRT::Ray;
 
-AABB::AABB(const glm::vec3 pointMin, const glm::vec3 pointMax) noexcept :
+AABB::AABB(const ::glm::vec3 pointMin, const ::glm::vec3 pointMax) noexcept :
         pointMin_{pointMin}, pointMax_{pointMax} {
 }
 
@@ -60,12 +60,12 @@ float AABB::getSurfaceArea() const noexcept {
 
 namespace MobileRT {
     AABB surroundingBox(AABB box1, AABB box2) noexcept {
-        glm::vec3 min{
+        ::glm::vec3 min{
                 ::std::min(box1.pointMin_.x, box2.pointMin_.x),
                 ::std::min(box1.pointMin_.y, box2.pointMin_.y),
                 ::std::min(box1.pointMin_.z, box2.pointMin_.z)};
 
-        glm::vec3 max{
+        ::glm::vec3 max{
                 ::std::max(box1.pointMax_.x, box2.pointMax_.x),
                 ::std::max(box1.pointMax_.y, box2.pointMax_.y),
                 ::std::max(box1.pointMax_.z, box2.pointMax_.z)};

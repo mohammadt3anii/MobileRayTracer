@@ -23,8 +23,8 @@ namespace MobileRT {
         int gridSize_{};
         int gridShift_{};
         AABB m_Extends{};
-        glm::vec3 m_SR{};
-        glm::vec3 m_CW{};
+        ::glm::vec3 m_SR{};
+        ::glm::vec3 m_CW{};
         Scene *scene_{};
 
     private:

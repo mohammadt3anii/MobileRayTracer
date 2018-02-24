@@ -9,12 +9,12 @@ using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
 using ::MobileRT::Intersection;
 
-Triangle::Triangle(const glm::vec3 pointA, const glm::vec3 pointB, const glm::vec3 pointC,
-                   glm::vec3 normal) noexcept :
+Triangle::Triangle(const ::glm::vec3 pointA, const ::glm::vec3 pointB, const ::glm::vec3 pointC,
+                   ::glm::vec3 normal) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         normal_{
-            glm::all(glm::lessThan(normal, glm::vec3(::MobileRT::Epsilon)))? glm::normalize(glm::cross(AB_, AC_)) : glm::normalize(normal)},
+            ::glm::all(::glm::lessThan(normal, ::glm::vec3(::MobileRT::Epsilon)))? ::glm::normalize(::glm::cross(AB_, AC_)) : ::glm::normalize(normal)},
         pointA_{pointA}
 {
 }
@@ -23,28 +23,28 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     if (ray.primitive_ == this) {
         return intersection;
     }
-    const glm::vec3 perpendicularVector {glm::cross(ray.direction_, AC_)};
-    const float normalizedProjection {glm::dot(AB_, perpendicularVector)};
+    const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
+    const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 
     const float normalizedProjectionInv {1.0f / normalizedProjection};
-    const glm::vec3 vectorToCamera {ray.origin_.x - pointA_.x, ray.origin_.y - pointA_.y, ray.origin_.z - pointA_.z};
-    const float u {normalizedProjectionInv * glm::dot(vectorToCamera, perpendicularVector)};
+    const ::glm::vec3 vectorToCamera {ray.origin_ - pointA_};
+    const float u {normalizedProjectionInv * ::glm::dot(vectorToCamera, perpendicularVector)};
     if (u < 0.0f || u > 1.0f) {
         return intersection;
     }
 
-    const glm::vec3 upPerpendicularVector {glm::cross(vectorToCamera, AB_)};
-    const float v {normalizedProjectionInv * glm::dot (ray.direction_, upPerpendicularVector)};
+    const ::glm::vec3 upPerpendicularVector {::glm::cross(vectorToCamera, AB_)};
+    const float v {normalizedProjectionInv * ::glm::dot (ray.direction_, upPerpendicularVector)};
     if (v < 0.0f || (u + v) > 1.0f) {
         return intersection;
     }
 
     // at this stage we can compute t to find out where
     // the intersection point is on the line
-    const float distanceToIntersection {normalizedProjectionInv * glm::dot(AC_, upPerpendicularVector)};
+    const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
 
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
@@ -59,22 +59,22 @@ float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-glm::vec3 Triangle::getPositionMin() const noexcept {
-    const glm::vec3 pointB {pointA_ + AB_};
-    const glm::vec3 pointC {pointA_ + AC_};
+::glm::vec3 Triangle::getPositionMin() const noexcept {
+    const ::glm::vec3 pointB {pointA_ + AB_};
+    const ::glm::vec3 pointC {pointA_ + AC_};
     const float x {::std::min(pointA_.x, ::std::min(pointB.x, pointC.x))};
     const float y {::std::min(pointA_.y, ::std::min(pointB.y, pointC.y))};
     const float z {::std::min(pointA_.z, ::std::min(pointB.z, pointC.z))};
-    return glm::vec3(x, y, z);
+    return ::glm::vec3(x, y, z);
 }
 
-glm::vec3 Triangle::getPositionMax() const noexcept {
-    const glm::vec3 pointB {pointA_ + AB_};
-    const glm::vec3 pointC {pointA_ + AC_};
+::glm::vec3 Triangle::getPositionMax() const noexcept {
+    const ::glm::vec3 pointB {pointA_ + AB_};
+    const ::glm::vec3 pointC {pointA_ + AC_};
     const float x {::std::max(pointA_.x, ::std::max(pointB.x, pointC.x))};
     const float y {::std::max(pointA_.y, ::std::max(pointB.y, pointC.y))};
     const float z {::std::max(pointA_.z, ::std::max(pointB.z, pointC.z))};
-    return glm::vec3(x, y, z);
+    return ::glm::vec3(x, y, z);
 }
 
 //TODO (Puscas): Fix this method (it may be wrong)
@@ -83,10 +83,10 @@ AABB Triangle::getAABB() const noexcept {
 }
 
 bool Triangle::intersect(const AABB box) const noexcept {
-    ::std::function<bool(const glm::vec3, const glm::vec3)> intersectRayAABB{
-            [=](const glm::vec3 orig, const glm::vec3 vec) -> bool {
-                glm::vec3 T_1{};
-                glm::vec3 T_2{}; // vectors to hold the T-values for every direction
+    ::std::function<bool(const ::glm::vec3, const ::glm::vec3)> intersectRayAABB{
+            [=](const ::glm::vec3 orig, const ::glm::vec3 vec) -> bool {
+                ::glm::vec3 T_1{};
+                ::glm::vec3 T_2{}; // vectors to hold the T-values for every direction
                 float t_near{std::numeric_limits<float>::min()};
                 float t_far{std::numeric_limits<float>::max()};
                 if (vec.x == 0) { // ray parallel to planes in this direction
@@ -146,28 +146,28 @@ bool Triangle::intersect(const AABB box) const noexcept {
                 return true; // if we made it here, there was an intersection - YAY
             }};
 
-    ::std::function<bool(const glm::vec3)> isOverTriangle {
-            [=](const glm::vec3 vec) -> bool {
-                const glm::vec3 perpendicularVector {glm::cross(vec, AC_)};
-                const float normalizedProjection {glm::dot(AB_, perpendicularVector)};
+    ::std::function<bool(const ::glm::vec3)> isOverTriangle {
+            [=](const ::glm::vec3 vec) -> bool {
+                const ::glm::vec3 perpendicularVector {::glm::cross(vec, AC_)};
+                const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
                 return ::std::fabs(normalizedProjection) < Epsilon;
             }
     };
 
-    const glm::vec3 &min(box.pointMin_);
-    const glm::vec3 &max(box.pointMax_);
+    const ::glm::vec3 &min(box.pointMin_);
+    const ::glm::vec3 &max(box.pointMax_);
     Intersection intersection{};
-    const glm::vec3 vec{max - min};
+    const ::glm::vec3 vec{max - min};
     const Ray ray{vec, min, 1};
-    bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
-    bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
-    glm::vec3 pointB {pointA_ + AB_};
-    glm::vec3 pointC {pointA_ + AC_};
-    bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
+    const bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
+    const bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
+    const ::glm::vec3 pointB {pointA_ + AB_};
+    const ::glm::vec3 pointC {pointA_ + AC_};
+    const bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
     const float dist {intersection.length_};
     intersection = intersect(intersection, ray);
-    bool intersectedRay {intersection.length_ < dist};
-    bool insideTriangle{isOverTriangle(vec)};
+    const bool intersectedRay {intersection.length_ < dist};
+    const bool insideTriangle{isOverTriangle(vec)};
 
     return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
 }

@@ -26,8 +26,8 @@ Shader::Shader(Scene scene, const unsigned samplesLight, const Accelerator accel
 }
 
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
-    glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
-    glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
+    ::glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
+    ::glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
     ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
     ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
     ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
@@ -109,7 +109,7 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
     return intersection.length_ < dist;
 }
 
-bool Shader::rayTrace(glm::vec3 *rgb, Ray ray) noexcept {
+bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
     Intersection intersection {};
     const float dist {intersection.length_};
     switch (accelerator_) {

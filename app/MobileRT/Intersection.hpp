@@ -12,9 +12,9 @@
 namespace MobileRT {
     class Intersection final {
     public:
-        glm::vec3 point_{};   // intersection point
-        glm::vec3 normal_{};    // intersection normal
-        glm::vec3 symNormal_{};
+        ::glm::vec3 point_{};   // intersection point
+        ::glm::vec3 normal_{};    // intersection normal
+        ::glm::vec3 symNormal_{};
         const Material *material_{nullptr};// material of the intersected primitive
         float length_{RayLengthMax};// ray length parameter
         const void *primitive_{nullptr};
@@ -24,14 +24,14 @@ namespace MobileRT {
 
         explicit Intersection(const void *primitive) noexcept;
 
-        explicit Intersection(glm::vec3 orig,
-                         glm::vec3 dir,
+        explicit Intersection(::glm::vec3 orig,
+                         ::glm::vec3 dir,
                          float dist,
-                         glm::vec3 normal,
+                         ::glm::vec3 normal,
                          const void *primitive = nullptr) noexcept;
 
-        Intersection(glm::vec3 intPoint,
-                         float dist, glm::vec3 center) noexcept;
+        Intersection(::glm::vec3 intPoint,
+                         float dist, ::glm::vec3 center) noexcept;
 
         Intersection(const Intersection &intersection) noexcept = default;
 
@@ -42,8 +42,6 @@ namespace MobileRT {
         Intersection &operator=(const Intersection &intersection) noexcept = delete;
 
         Intersection &operator=(Intersection &&intersection) noexcept = default;
-
-        static unsigned getInstances() noexcept;
     };
 }//namespace MobileRT
 

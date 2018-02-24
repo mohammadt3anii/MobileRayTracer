@@ -115,14 +115,14 @@ namespace MobileRT {
     numberDepth_ = ::std::max(depth, numberDepth_);
 
     AABB current_box{
-            glm::vec3 {
-                    std::numeric_limits<float>::max(),
-                    std::numeric_limits<float>::max(),
-                    std::numeric_limits<float>::max()},
-            glm::vec3 {
-                    std::numeric_limits<float>::lowest(),
-                    std::numeric_limits<float>::lowest(),
-                    std::numeric_limits<float>::lowest()}};
+            ::glm::vec3 {
+                    ::std::numeric_limits<float>::max(),
+                    ::std::numeric_limits<float>::max(),
+                    ::std::numeric_limits<float>::max()},
+            ::glm::vec3 {
+                    ::std::numeric_limits<float>::lowest(),
+                    ::std::numeric_limits<float>::lowest(),
+                    ::std::numeric_limits<float>::lowest()}};
     for (uint32_t i{0}; i < primitives.size(); i++) {
         const AABB new_box{primitives.at(i).getAABB()};
         current_box = surroundingBox(new_box, current_box);
@@ -132,24 +132,24 @@ namespace MobileRT {
     switch (axis) {
         case 0:
             ::std::sort(primitives.begin(), primitives.end(),
-                        [](const MobileRT::Primitive<T> &a,
-                            MobileRT::Primitive<T> &b) noexcept -> bool {
+                        [](const MobileRT::Primitive<T> a,
+                            MobileRT::Primitive<T> b) noexcept -> bool {
                             return a.getAABB().pointMin_.x < b.getAABB().pointMin_.x;
                         });
             break;
 
         case 1:
             ::std::sort(primitives.begin(), primitives.end(),
-                        [](const MobileRT::Primitive<T> &a,
-                            MobileRT::Primitive<T> &b) noexcept -> bool {
+                        [](const MobileRT::Primitive<T> a,
+                            MobileRT::Primitive<T> b) noexcept -> bool {
                             return a.getAABB().pointMin_.y < b.getAABB().pointMin_.y;
                         });
             break;
 
         default:
             ::std::sort(primitives.begin(), primitives.end(),
-                        [](const MobileRT::Primitive<T> &a,
-                            MobileRT::Primitive<T> &b) noexcept -> bool {
+                        [](const MobileRT::Primitive<T> a,
+                            MobileRT::Primitive<T> b) noexcept -> bool {
                             return a.getAABB().pointMin_.z < b.getAABB().pointMin_.z;
                         });
             break;
@@ -158,14 +158,14 @@ namespace MobileRT {
     int32_t divide{static_cast<int32_t>(primitives.size()) / 2};
     /*uint64_t divide {0};
     {
-        std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
+        ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
         AABB left_box {};
         for (uint64_t i {0}; i < N - 1; i++) {
         left_box = surroundingBox(left_box, boxes.at(i));
         left_area.insert(left_area.end(), left_box.getSurfaceArea());
         }
 
-        std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
+        ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
         AABB right_box {};
         for (uint64_t i {N - 1}; i > 0; i--) {
         right_box = surroundingBox(right_box, boxes.at(i));
@@ -220,7 +220,7 @@ namespace MobileRT {
             const uint32_t aux{static_cast<uint32_t>(1 << depth)};
             if (depth == numberDepth_) {
                 const uint32_t primitiveId{(currentNodeId - (aux - 1))};
-                for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
+                for (auto &primitive : primitives_.at(primitiveId)) {
                     intersection = primitive.intersect(intersection, ray);
                 }
                 return intersection;
@@ -246,7 +246,7 @@ namespace MobileRT {
             const uint32_t aux{static_cast<uint32_t>(1 << depth)};
             if (depth == numberDepth_) {
                 const uint32_t primitiveId{(currentNodeId - (aux - 1))};
-                for (MobileRT::Primitive<T> &primitive : primitives_.at(primitiveId)) {
+                for (auto &primitive : primitives_.at(primitiveId)) {
                     const float dist {intersection.length_};
                     intersection = primitive.intersect(intersection, ray);
                     if (intersection.length_ < dist) {

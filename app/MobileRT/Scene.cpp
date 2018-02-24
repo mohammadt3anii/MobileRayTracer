@@ -10,8 +10,6 @@ using ::MobileRT::Sphere;
 using ::MobileRT::Plane;
 using ::MobileRT::Intersection;
 
-static unsigned counter{0};
-
 Scene::~Scene() noexcept {
     //may not free the memory
     this->triangles_.clear();
@@ -21,11 +19,11 @@ Scene::~Scene() noexcept {
     this->lights_.clear();
 
     //force free memory
-    std::vector<MobileRT::Primitive<MobileRT::Plane>>().swap(planes_);
-    std::vector<MobileRT::Primitive<MobileRT::Rectangle>>().swap(rectangles_);
-    std::vector<MobileRT::Primitive<MobileRT::Sphere>>().swap(spheres_);
-    std::vector<MobileRT::Primitive<MobileRT::Triangle>>().swap(triangles_);
-    std::vector<::std::unique_ptr<Light>>().swap(lights_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Plane>>().swap(planes_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Rectangle>>().swap(rectangles_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Sphere>>().swap(spheres_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>().swap(triangles_);
+    ::std::vector<::std::unique_ptr<Light>>().swap(lights_);
 
     LOG("SCENE DELETED");
 }
@@ -87,19 +85,13 @@ Intersection Scene::shadowTrace(Intersection intersection, Ray ray) noexcept {
     return intersection;
 }
 
-unsigned Scene::getInstances() noexcept {
-    const unsigned res{counter};
-    counter = 0;
-    return res;
-}
-
 void Scene::resetSampling() noexcept {
-    for (::std::unique_ptr<Light> &light : this->lights_) {
+    for (const auto &light : this->lights_) {
         light->resetSampling();
     }
 }
 
-void Scene::AABBbounds(const AABB box, glm::vec3 *const min, glm::vec3 *const max) {
+void Scene::AABBbounds(const AABB box, ::glm::vec3 *const min, ::glm::vec3 *const max) {
     *min = {::std::min(box.pointMin_.x, min->x), ::std::min(box.pointMin_.y, min->y), ::std::min(box.pointMin_.z, min->z)};
 
     *max = {::std::max(box.pointMax_.x, max->x), ::std::max(box.pointMax_.y, max->y), ::std::max(box.pointMax_.z, max->z)};

@@ -13,19 +13,19 @@
 namespace MobileRT {
     class Triangle final {
     public:
-        glm::vec3 AC_ {};
-        glm::vec3 AB_{};
-        glm::vec3 normal_{};
-        glm::vec3 pointA_{};
+        ::glm::vec3 AC_ {};
+        ::glm::vec3 AB_{};
+        ::glm::vec3 normal_{};
+        ::glm::vec3 pointA_{};
 
     private:
-        glm::vec3 getPositionMin() const noexcept;
+        ::glm::vec3 getPositionMin() const noexcept;
 
-        glm::vec3 getPositionMax() const noexcept;
+        ::glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Triangle(glm::vec3 pointA, glm::vec3 pointB,
-                          glm::vec3 pointC, glm::vec3 normal = glm::vec3 {}) noexcept;
+        explicit Triangle(::glm::vec3 pointA, ::glm::vec3 pointB,
+                          ::glm::vec3 pointC, ::glm::vec3 normal = ::glm::vec3 {}) noexcept;
 
         Triangle(const Triangle &triangle) noexcept = default;
 

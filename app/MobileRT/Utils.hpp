@@ -46,7 +46,7 @@ namespace MobileRT {
 
     float haltonSequence(uint32_t index, unsigned base) noexcept;
 
-    unsigned incrementalAvg(glm::vec3 sample, unsigned avg, unsigned numSample) noexcept;
+    unsigned incrementalAvg(::glm::vec3 sample, unsigned avg, unsigned numSample) noexcept;
 
 
     template<typename ...Args>

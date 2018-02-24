@@ -8,8 +8,8 @@ using ::MobileRT::AABB;
 using ::MobileRT::Plane;
 using ::MobileRT::Intersection;
 
-Plane::Plane(const glm::vec3 point, const glm::vec3 normal) noexcept :
-        normal_{glm::normalize(normal)},
+Plane::Plane(const ::glm::vec3 point, const ::glm::vec3 normal) noexcept :
+        normal_{::glm::normalize(normal)},
         point_{point} {
 }
 
@@ -17,18 +17,15 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
     // is ray parallel or contained in the Plane ??
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
-    const float normalized_projection {glm::dot(normal_, ray.direction_)};
+    const float normalized_projection {::glm::dot(normal_, ray.direction_)};
     if (::std::fabs(normalized_projection) < Epsilon) {
         return intersection;
     }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    /*const float distanceToIntersection{
-            this->normal_.dotProduct(this->point_, ray.origin_) / normalized_projection};*/
-    glm::vec3 rayOrigin {ray.origin_.x, ray.origin_.y, ray.origin_.z};
-    const glm::vec3 vecToOrigin {point_ - rayOrigin};
-    const float distanceToIntersection{
-            glm::dot(normal_, vecToOrigin) / normalized_projection};
+    const ::glm::vec3 vecToOrigin {point_ - ray.origin_};
+    const float distanceToIntersection {
+            ::glm::dot(normal_, vecToOrigin) / normalized_projection};
 
     // is it in front of the eye?
     // is it farther than the ray length ??
@@ -47,51 +44,43 @@ float Plane::getZ() const noexcept {
     return 0.0f;
 }
 
-glm::vec3 Plane::getRightVector() const noexcept {
-    glm::vec3 right {};
+::glm::vec3 Plane::getRightVector() const noexcept {
+    ::glm::vec3 right {};
     if (this->normal_.x >= 1) {
-        right = glm::vec3 {0, 1, 1};
+        right = ::glm::vec3 {0, 1, 1};
     } else if (this->normal_.y >= 1) {
-        right = glm::vec3 {1, 0, 1};
+        right = ::glm::vec3 {1, 0, 1};
     } else if (this->normal_.z >= 1) {
-        right = glm::vec3 {1, 1, 0};
+        right = ::glm::vec3 {1, 1, 0};
     } else if (this->normal_.x <= -1) {
-        right = glm::vec3 {0, 1, 1};
+        right = ::glm::vec3 {0, 1, 1};
     } else if (this->normal_.y <= -1) {
-        right = glm::vec3 {1, 0, 1};
+        right = ::glm::vec3 {1, 0, 1};
     } else if (this->normal_.z <= -1) {
-        right = glm::vec3 {1, 1, 0};
+        right = ::glm::vec3 {1, 1, 0};
     }
-    //right.normalize();
-    right = glm::normalize(right);
-    /*const float cosAngle{
-            this->normal_.dotProduct(right) / (this->normal_.magnitude_ * right.magnitude_)};*/
-    const float cosAngle {
-            glm::dot(this->normal_,right) / (this->normal_.length() * right.length())};
-    if (cosAngle != 0) {
-        LOG("MAL");
-    }
+    right = ::glm::normalize(right);
     return right;
 }
 
-glm::vec3 Plane::getPositionMin() const noexcept {
-    glm::vec3 rightDir {getRightVector()};
+::glm::vec3 Plane::getPositionMin() const noexcept {
+    const ::glm::vec3 rightDir {getRightVector()};
     return this->point_ +  rightDir * -100.0f;
 }
 
-glm::vec3 Plane::getPositionMax() const noexcept {
-    glm::vec3 rightDir {getRightVector()};
+::glm::vec3 Plane::getPositionMax() const noexcept {
+    const ::glm::vec3 rightDir {getRightVector()};
     return this->point_ + rightDir * 100.0f;
 }
 
 AABB Plane::getAABB() const noexcept {
-    glm::vec3 min {getPositionMin() - Epsilon};
-    glm::vec3 max {getPositionMax() + Epsilon};
+    const ::glm::vec3 min {getPositionMin() - Epsilon};
+    const ::glm::vec3 max {getPositionMax() + Epsilon};
     const AABB box {min, max};
     return box;
 }
 
-float Plane::distance(const glm::vec3 point) const noexcept {
+float Plane::distance(const ::glm::vec3 point) const noexcept {
     //Plane Equation
     //a(x-x0)+b(y-y0)+c(z-z0) = 0
     //abc = normal
@@ -110,8 +99,8 @@ float Plane::distance(const glm::vec3 point) const noexcept {
 }
 
 bool Plane::intersect(const AABB box) const noexcept {
-    glm::vec3 positiveVertex {box.pointMax_};
-    glm::vec3 negativeVertex {box.pointMin_};
+    ::glm::vec3 positiveVertex {box.pointMax_};
+    ::glm::vec3 negativeVertex {box.pointMin_};
 
     /*if (this->normal_.x_() >= 0.0f) {
       positiveVertex.x_() = box.pointMax_.x_;

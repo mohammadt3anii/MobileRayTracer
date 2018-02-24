@@ -92,8 +92,8 @@ void RegularGrid::addPrimitives
     for (T &primitive : primitives) {
         index++;
         const AABB bound{primitive.getAABB()};
-        const glm::vec3 bv1{bound.pointMin_};
-        const glm::vec3 bv2{bound.pointMax_};
+        const ::glm::vec3 bv1{bound.pointMin_};
+        const ::glm::vec3 bv2{bound.pointMax_};
 
         // find out which cells could contain the primitive (based on aabb)
         int x1{static_cast<int>((bv1.x - m_Extends.pointMin_.x) * dx_reci)};
@@ -125,10 +125,10 @@ void RegularGrid::addPrimitives
                             static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
                             static_cast<size_t>(z) * static_cast<size_t>(gridSize_) *
                             static_cast<size_t>(gridSize_)};
-                    const glm::vec3 pos{m_Extends.pointMin_.x + x * dx,
+                    const ::glm::vec3 pos{m_Extends.pointMin_.x + x * dx,
                                       m_Extends.pointMin_.y + y * dy,
                                       m_Extends.pointMin_.z + z * dz};
-                    const AABB cell{pos, pos + glm::vec3 {dx, dy, dz}};
+                    const AABB cell{pos, pos + ::glm::vec3 {dx, dy, dz}};
                     //LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
                     // do an accurate aabb / primitive intersection test
                     const bool intersectedBox{::MobileRT::intersect(primitive, cell)};
@@ -173,7 +173,7 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
                             Intersection intersection, const Ray ray,
                             const bool shadowTrace) noexcept {
     // setup 3DDDA (double check reusability of primary ray data)
-    const glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
+    const ::glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
     int X{static_cast<int>(cell.x)};
     int Y{static_cast<int>(cell.y)};
     int Z{static_cast<int>(cell.z)};
@@ -187,7 +187,7 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
     int stepX, outX;
     int stepY, outY;
     int stepZ, outZ;
-    glm::vec3 cb{};
+    ::glm::vec3 cb{};
     if (ray.direction_.x > 0) {
         stepX = 1;
         outX = gridSize_;
@@ -218,7 +218,7 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
         cb.z = (m_Extends.pointMin_.z + Z * m_CW.z);
     }
 
-    glm::vec3 tmax{}, tdelta{};
+    ::glm::vec3 tmax{}, tdelta{};
     if (ray.direction_.x != 0) {
         const float rxr{1.0f / ray.direction_.x};
         tmax.x = ((cb.x - ray.origin_.x) * rxr);

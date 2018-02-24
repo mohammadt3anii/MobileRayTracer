@@ -32,7 +32,7 @@ namespace MobileRT {
         Intersection shadowTrace(::std::vector<T> &primitives, Intersection intersection,
                          Ray ray) const noexcept;
 
-        static void AABBbounds(AABB box, glm::vec3 *min, glm::vec3 *max);
+        static void AABBbounds(AABB box, ::glm::vec3 *min, ::glm::vec3 *max);
 
     public:
         explicit Scene() = default;
@@ -51,16 +51,14 @@ namespace MobileRT {
 
         Intersection shadowTrace(Intersection intersection, Ray ray) noexcept;
 
-        static unsigned getInstances() noexcept;
-
         Intersection traceLights(Intersection intersection, Ray ray) const noexcept;
 
         void resetSampling() noexcept;
 
         template<typename T>
         static void
-        getBounds(::std::vector<T *> primitives, glm::vec3 *const min, glm::vec3 *const max) {
-            for (T *primitive : primitives) {
+        getBounds(::std::vector<T *> primitives, ::glm::vec3 *const min, ::glm::vec3 *const max) {
+            for (const T *const primitive : primitives) {
                 AABBbounds(primitive->getAABB(), min, max);
             }
         }

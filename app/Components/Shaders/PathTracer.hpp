@@ -24,9 +24,9 @@ namespace Components {
         ::std::unique_ptr<Sampler> samplerRussianRoulette_{};
 
     private:
-        bool shade(glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
+        bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
 
-        glm::vec3 getCosineSampleHemisphere(glm::vec3 normal) const noexcept;
+        ::glm::vec3 getCosineSampleHemisphere(::glm::vec3 normal) const noexcept;
 
     public:
         explicit PathTracer(Scene scene,

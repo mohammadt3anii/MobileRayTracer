@@ -14,10 +14,10 @@ namespace Components {
 
     class PointLight final : public ::MobileRT::Light {
     private:
-        glm::vec3 position_{};
+        ::glm::vec3 position_{};
 
     public:
-        explicit PointLight(Material radiance, glm::vec3 position) noexcept;
+        explicit PointLight(Material radiance, ::glm::vec3 position) noexcept;
 
         PointLight(const PointLight &pointLight) noexcept = delete;
 
@@ -29,7 +29,7 @@ namespace Components {
 
         PointLight &operator=(PointLight &&pointLight) noexcept = delete;
 
-        glm::vec3 getPosition() noexcept final;
+        ::glm::vec3 getPosition() noexcept final;
 
         void resetSampling() noexcept final;
 

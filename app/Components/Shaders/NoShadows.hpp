@@ -14,7 +14,7 @@ namespace Components {
 
     class NoShadows final : public ::MobileRT::Shader {
     private:
-        bool shade(glm::vec3 *rgb, Intersection intersection,
+        bool shade(::glm::vec3 *rgb, Intersection intersection,
                    Ray ray) noexcept final;
 
     public:

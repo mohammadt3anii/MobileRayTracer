@@ -19,8 +19,8 @@ namespace Components {
         float fastArcTan(float value) const noexcept;
 
     public:
-        explicit Perspective(glm::vec3 position,
-                             glm::vec3 lookAt, glm::vec3 up,
+        explicit Perspective(::glm::vec3 position,
+                             ::glm::vec3 lookAt, ::glm::vec3 up,
                              float hFov, float vFov) noexcept;
 
         Perspective(const Perspective &perspective) noexcept = default;

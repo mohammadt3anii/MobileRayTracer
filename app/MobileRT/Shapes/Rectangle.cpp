@@ -8,10 +8,10 @@ using ::MobileRT::AABB;
 using ::MobileRT::Rectangle;
 using ::MobileRT::Intersection;
 
-Rectangle::Rectangle(const glm::vec3 pointA,
-                     const glm::vec3 pointB,
-                     const glm::vec3 pointC,
-                     const glm::vec3 pointD) noexcept :
+Rectangle::Rectangle(const ::glm::vec3 pointA,
+                     const ::glm::vec3 pointB,
+                     const ::glm::vec3 pointC,
+                     const ::glm::vec3 pointD) noexcept :
         pointA_{pointA},
         pointB_{pointB},
         pointC_{pointC},
@@ -20,25 +20,25 @@ Rectangle::Rectangle(const glm::vec3 pointA,
         AB_{pointB_ - pointA_},
         BD_{pointD_ - pointB_},
         CD_{pointD_ - pointC_},
-        normal_{glm::cross(AB_, AC_)} {
+        normal_{::glm::cross(AB_, AC_)} {
 }
 
 Intersection Rectangle::intersect(Intersection intersection, const Ray ray) const noexcept {
-    const glm::vec3 perpendicularVector {glm::cross(ray.direction_, this->AC_)};
-    const float normalizedProjection {glm::dot(AB_, perpendicularVector)};
+    const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, this->AC_)};
+    const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
     if (::std::fabs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 
     const float normalizedProjectionInv {1.0f / normalizedProjection};
-    const glm::vec3 vertexToCamera {ray.direction_ - this->pointA_};
-    const float u {normalizedProjectionInv * glm::dot(vertexToCamera, perpendicularVector)};
+    const ::glm::vec3 vertexToCamera {ray.direction_ - this->pointA_};
+    const float u {normalizedProjectionInv * ::glm::dot(vertexToCamera, perpendicularVector)};
     if (u < 0.0f || u > 1.0f) {
         return intersection;
     }
 
-    const glm::vec3 upPerpendicularVector {glm::cross(vertexToCamera, this->AB_)};
-    const float v {normalizedProjectionInv * glm::dot(ray.direction_, upPerpendicularVector)};
+    const ::glm::vec3 upPerpendicularVector {::glm::cross(vertexToCamera, this->AB_)};
+    const float v {normalizedProjectionInv * ::glm::dot(ray.direction_, upPerpendicularVector)};
     if (v < 0.0f || (u + v) > 1.0f) {
         return intersection;
     }
@@ -46,7 +46,7 @@ Intersection Rectangle::intersect(Intersection intersection, const Ray ray) cons
     // at this stage we can compute t to find out where
     // the intersection point is on the line
     const float distanceToIntersection{
-            normalizedProjectionInv * glm::dot(this->AC_, upPerpendicularVector)};
+            normalizedProjectionInv * ::glm::dot(this->AC_, upPerpendicularVector)};
 
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
@@ -61,7 +61,7 @@ float Rectangle::getZ() const noexcept {
     return 0.0f;
 }
 
-glm::vec3 Rectangle::getPositionMin() const noexcept {
+::glm::vec3 Rectangle::getPositionMin() const noexcept {
     const float x {::std::min(pointA_.x, ::std::min(pointB_.x,
         ::std::min(pointC_.x, pointD_.x)))};
     const float y {::std::min(pointA_.y, ::std::min(pointB_.y,
@@ -69,10 +69,10 @@ glm::vec3 Rectangle::getPositionMin() const noexcept {
     const float z {::std::min(pointA_.z, ::std::min(pointB_.z,
         ::std::min(pointC_.z, pointD_.z)))};
 
-    return glm::vec3(x, y, z);
+    return ::glm::vec3(x, y, z);
 }
 
-glm::vec3 Rectangle::getPositionMax() const noexcept {
+::glm::vec3 Rectangle::getPositionMax() const noexcept {
     const float x{::std::max(pointA_.x, ::std::max(pointB_.x,
         ::std::max(pointC_.x, pointD_.x)))};
     const float y{::std::max(pointA_.y, ::std::max(pointB_.y,
@@ -80,20 +80,20 @@ glm::vec3 Rectangle::getPositionMax() const noexcept {
     const float z{::std::max(pointA_.z, ::std::max(pointB_.z,
         ::std::max(pointC_.z, pointD_.z)))};
 
-    return glm::vec3(x, y, z);
+    return ::glm::vec3(x, y, z);
 }
 
 AABB Rectangle::getAABB() const noexcept {
-    glm::vec3 min{getPositionMin()};
-    glm::vec3 max{getPositionMax()};
+    const ::glm::vec3 min{getPositionMin()};
+    const ::glm::vec3 max{getPositionMax()};
     return AABB(min, max);
 }
 
 bool Rectangle::intersect(const AABB box) const noexcept {
-    ::std::function<bool(glm::vec3 orig, glm::vec3 vec)> intersectRayAABB{
-            [=](glm::vec3 orig, glm::vec3 vec) -> bool {
-                glm::vec3 T_1 {};
-                glm::vec3 T_2 {}; // vectors to hold the T-values for every direction
+    ::std::function<bool(const ::glm::vec3 orig, const ::glm::vec3 vec)> intersectRayAABB{
+            [=](::glm::vec3 orig, ::glm::vec3 vec) -> bool {
+                ::glm::vec3 T_1 {};
+                ::glm::vec3 T_2 {}; // vectors to hold the T-values for every direction
                 float t_near {std::numeric_limits<float>::min()};
                 float t_far {std::numeric_limits<float>::max()};
                 if (vec.x == 0) { // ray parallel to planes in this direction

@@ -17,8 +17,8 @@ namespace Components {
         float sizeV_ {};
 
     public:
-        explicit Orthographic(glm::vec3 position,
-                              glm::vec3 lookAt, glm::vec3 up,
+        explicit Orthographic(::glm::vec3 position,
+                              ::glm::vec3 lookAt, ::glm::vec3 up,
                               float sizeH, float sizeV) noexcept;
 
         Orthographic(const Orthographic &orthographic) noexcept = default;

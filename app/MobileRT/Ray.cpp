@@ -6,7 +6,7 @@
 #include <atomic>
 
 using ::MobileRT::Ray;
-static unsigned counter{0};
+
 namespace {
     int32_t getID() {
         static ::std::atomic<int32_t> id{0};
@@ -15,18 +15,11 @@ namespace {
     }
 }//namespace
 
-Ray::Ray(glm::vec3 dir, glm::vec3 origin,
+Ray::Ray(::glm::vec3 dir, ::glm::vec3 origin,
          const int32_t depth, const void *const primitive) noexcept :
         origin_{origin},
         direction_{dir},
         depth_{depth},
         id_{getID()},
         primitive_{primitive} {
-    counter++;
-}
-
-unsigned Ray::getInstances() noexcept {
-    unsigned res{counter};
-    counter = 0;
-    return res;
 }

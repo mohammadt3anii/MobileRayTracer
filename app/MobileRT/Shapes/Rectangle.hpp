@@ -13,23 +13,23 @@
 namespace MobileRT {
     class Rectangle final {
     private:
-        glm::vec3 pointA_{};
-        glm::vec3 pointB_{};
-        glm::vec3 pointC_{};
-        glm::vec3 pointD_{};
-        glm::vec3 AC_{};
-        glm::vec3 AB_{};
-        glm::vec3 BD_{};
-        glm::vec3 CD_{};
-        glm::vec3 normal_{};
+        ::glm::vec3 pointA_{};
+        ::glm::vec3 pointB_{};
+        ::glm::vec3 pointC_{};
+        ::glm::vec3 pointD_{};
+        ::glm::vec3 AC_{};
+        ::glm::vec3 AB_{};
+        ::glm::vec3 BD_{};
+        ::glm::vec3 CD_{};
+        ::glm::vec3 normal_{};
 
     private:
-        glm::vec3 getPositionMin() const noexcept;
+        ::glm::vec3 getPositionMin() const noexcept;
 
-        glm::vec3 getPositionMax() const noexcept;
+        ::glm::vec3 getPositionMax() const noexcept;
 
     public:
-        explicit Rectangle(glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC, glm::vec3 pointD) noexcept;
+        explicit Rectangle(::glm::vec3 pointA, ::glm::vec3 pointB, ::glm::vec3 pointC, ::glm::vec3 pointD) noexcept;
 
         Rectangle(const Rectangle &rectangle) noexcept = default;
 

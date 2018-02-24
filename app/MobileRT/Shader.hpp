@@ -43,7 +43,7 @@ namespace MobileRT {
         const unsigned samplesLight_{};
 
     protected:
-        virtual bool shade(glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept = 0;
+        virtual bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept = 0;
 
     public:
         void initializeAccelerators(Camera *camera) noexcept;
@@ -61,7 +61,7 @@ namespace MobileRT {
 
         Shader &operator=(Shader &&shader) noexcept = delete;
 
-        bool rayTrace(glm::vec3 *rgb, Ray ray) noexcept;
+        bool rayTrace(::glm::vec3 *rgb, Ray ray) noexcept;
 
         bool shadowTrace(Intersection intersection, Ray ray) noexcept;
 

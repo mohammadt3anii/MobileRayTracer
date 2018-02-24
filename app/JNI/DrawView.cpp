@@ -23,25 +23,22 @@ int JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
     javaVM_ = jvm;
 
     JNIEnv *jniENV{nullptr};
-    const int gotJVM{javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
-    if (gotJVM != JNI_OK) {
-        LOG("ERROR gotJVM");
-        exit(1);
+    {
+        const int result {javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
+        assert(result == JNI_OK);
+        static_cast<void> (result);
     }
-
+    assert(jniENV != nullptr);
     jclass drawViewClass{jniENV->FindClass("puscas/mobilertapp/DrawView")};
-    if (drawViewClass == nullptr) {
-        LOG("ERROR findDrawViewClass");
-        exit(1);
-    }
+    assert(drawViewClass != nullptr);
     jmethodID drawViewMethodId{
             jniENV->GetStaticMethodID(drawViewClass, "calledByJNI_static", "()I")};
-    if (drawViewMethodId == nullptr) {
-        LOG("ERROR drawViewMethodId");
-        exit(1);
+    assert(drawViewMethodId != nullptr);
+    {
+        const int result {jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
+        assert(result == JNI_OK);
+        static_cast<void> (result);
     }
-    const int result{jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
-    LOG("result = ", result);
 
     return JNI_VERSION_1_6;
 }
@@ -51,10 +48,10 @@ void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
     LOG("JNI_OnUnload");
 }
 
-static std::string
+static ::std::string
 readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filename) {
     AAssetManager *const mgr{AAssetManager_fromJava(env, assetManager)};
-    std::vector<char> buffer{};
+    ::std::vector<char> buffer{};
     AAsset *const asset{AAssetManager_open(mgr, filename, AASSET_MODE_STREAMING)};
 
     //holds size of searched file
@@ -73,7 +70,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
         } else {
             currChunk = static_cast<size_t>(remaining);
         }
-        std::vector<char> chunk(currChunk);
+        ::std::vector<char> chunk(currChunk);
         chunk.reserve(currChunk);
         //read data chunk
         if (AAsset_read(asset, chunk.data(), currChunk) > 0) {// returns less than 0 on error
@@ -83,18 +80,18 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
         }
     }
     AAsset_close(asset);
-    const std::string res{buffer.begin(), buffer.end()};
+    const ::std::string res{buffer.begin(), buffer.end()};
     return res;
 }
 
 static void FPS() noexcept {
     static int frame{0};
-    static std::chrono::steady_clock::time_point timebase_{};
+    static ::std::chrono::steady_clock::time_point timebase_{};
     frame++;
-    const std::chrono::steady_clock::time_point time{std::chrono::steady_clock::now()};
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
+    const ::std::chrono::steady_clock::time_point time{::std::chrono::steady_clock::now()};
+    if (::std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
         fps_ = (frame * 1000.0f) /
-               (std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count());
+               (::std::chrono::duration_cast<::std::chrono::milliseconds>(time - timebase_).count());
         timebase_ = time;
         frame = 0;
     }
@@ -142,74 +139,73 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
         mutex_.lock();
         renderer_ = nullptr;
         mutex_.unlock();
-        const float ratio{
-                width_ > height_ ? static_cast<float>(width_) / height_ :
-                static_cast<float>(height_) / width_};
+        const float ratio {
+            ::std::max(static_cast<float>(width_) / height_, static_cast<float>(height_) / width_)};
         const float hfovFactor{width_ > height_ ? ratio : 1.0f};
         const float vfovFactor{width_ < height_ ? ratio : 1.0f};
         MobileRT::Scene scene_{};
-        std::unique_ptr<MobileRT::Sampler> samplerPixel{};
-        std::unique_ptr<MobileRT::Shader> shader_{};
-        std::unique_ptr<MobileRT::Camera> camera{};
+        ::std::unique_ptr<MobileRT::Sampler> samplerPixel{};
+        ::std::unique_ptr<MobileRT::Shader> shader_{};
+        ::std::unique_ptr<MobileRT::Camera> camera{};
         ::glm::vec3 maxDist{0, 0, 0};
         switch (scene) {
             case 0:
-                camera = std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3{0.0f, 0.0f, -3.4f},
                         ::glm::vec3{0.0f, 0.0f, 1.0f},
                         ::glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                scene_ = cornellBoxScene(std::move(scene_));
+                scene_ = cornellBoxScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 1:
-                camera = std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3{4.0f, 4.0f, -8.0f},
                         ::glm::vec3{4.0f, 4.0f, 4.0f},
                         ::glm::vec3{0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                /*camera = std::make_unique<Components::Orthographic> (
+                /*camera = ::std::make_unique<Components::Orthographic> (
                   ::glm::vec3{0.0f, 1.0f, - 10.0f},
                   ::glm::vec3{0.0f, 1.0f, 7.0f},
-                  glm::vec3{0.0f, 1.0f, 0.0f},
+                  ::glm::vec3{0.0f, 1.0f, 0.0f},
                   10.0f * hfovFactor, 10.0f * vfovFactor);*/
-                /*camera = std::make_unique<Components::Perspective>(
+                /*camera = ::std::make_unique<Components::Perspective>(
                   ::glm::vec3(0.0f, 0.5f, 1.0f),
                   ::glm::vec3(0.0f, 0.0f, 7.0f),
-                  glm::vec3(0.0f, 1.0f, 0.0f),
+                  ::glm::vec3(0.0f, 1.0f, 0.0f),
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
-                scene_ = spheresScene(std::move(scene_));
+                scene_ = spheresScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
             case 2:
-                camera = std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.0f, -3.4f},
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                scene_ = cornellBoxScene2(std::move(scene_));
+                scene_ = cornellBoxScene2(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
             case 3:
-                camera = std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.5f, 1.0f},
                         ::glm::vec3 {0.0f, 0.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         60.0f * hfovFactor, 60.0f * vfovFactor);
-                scene_ = spheresScene2(std::move(scene_));
+                scene_ = spheresScene2(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
             default: {
-                jboolean isCopy(JNI_FALSE);
-                const char *objFileName{(env)->GetStringUTFChars(objFile, &isCopy)};
-                const char *matFileName{(env)->GetStringUTFChars(matFile, &isCopy)};
-                std::string obj{readTextAsset(env, assetManager, objFileName)};
-                std::string mat{readTextAsset(env, assetManager, matFileName)};
-                Components::OBJLoader objLoader{obj.c_str(), mat.c_str()};
+                jboolean isCopy {JNI_FALSE};
+                const char *objFileName {(env)->GetStringUTFChars(objFile, &isCopy)};
+                const char *matFileName {(env)->GetStringUTFChars(matFile, &isCopy)};
+                ::std::string obj {readTextAsset(env, assetManager, objFileName)};
+                ::std::string mat {readTextAsset(env, assetManager, matFileName)};
+                ::Components::OBJLoader objLoader {::std::move(obj), ::std::move(mat)};
                 env->ReleaseStringUTFChars(objFile, objFileName);
                 env->ReleaseStringUTFChars(matFile, matFileName);
                 objLoader.process();
@@ -217,47 +213,47 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                     exit(0);
                 }
                 objLoader.fillScene(&scene_,
-                                    []() { return std::make_unique<Components::StaticHaltonSeq>(); });
+                                    []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
                 //cornellbox
-                camera = std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat{glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                  glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                  glm::vec3 {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                  ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                  ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   1.0f,
-                                                  glm::vec3 {0.9f, 0.9f, 0.9f}};
+                                                  ::glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back(::std::make_unique<Components::PointLight>(
                         lightMat, ::glm::vec3 {0.0f, 0.9f, 0.0f}));
                 //teapot
-                /*camera = std::make_unique<Components::Perspective> (
+                /*camera = ::std::make_unique<Components::Perspective> (
                   ::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f},
-                  glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                const MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
-                                                   glm::vec3 {0.9f, 0.9f, 0.9f}};
+                                                   ::glm::vec3 {0.9f, 0.9f, 0.9f}};
                 scene_.lights_.emplace_back (::std::make_unique<Components::PointLight> (
                   lightMat, ::glm::vec3 {0.0f, 900.0f, 0.0f}));*/
                 //conference
-                /*camera = std::make_unique<Components::Perspective> (
+                /*camera = ::std::make_unique<Components::Perspective> (
                   ::glm::vec3 {-730.0f, 600.0f, -950.0f},
                   ::glm::vec3 {-400.0f, 300.0f, 0.0f},
-                  glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
-                                                   glm::vec3 {0.0f, 0.0f, 0.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                const MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
-                                                   glm::vec3 {0.9f, 0.9f, 0.9f}};
-                std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
-                  std::make_unique<Components::StaticHaltonSeq> ()};
-                std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
-                  std::make_unique<Components::StaticHaltonSeq> ()};
+                                                   ::glm::vec3 {0.9f, 0.9f, 0.9f}};
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+                  ::std::make_unique<Components::StaticHaltonSeq> ()};
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+                  ::std::make_unique<Components::StaticHaltonSeq> ()};
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
-                                                                        std::move (samplerPoint1),
+                                                                        ::std::move (samplerPoint1),
                                                                         ::glm::vec3 {-400.0f, 500.0f,
                                                                                            0.0f},
                                                                         ::glm::vec3 {-500.0f, 500.0f,
@@ -265,7 +261,7 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                                                                         ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f}));
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
-                                                                        std::move (samplerPoint2),
+                                                                        ::std::move (samplerPoint2),
                                                                         ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f},
                                                                         ::glm::vec3 {-400.0f, 500.0f,
@@ -279,49 +275,49 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                 break;
         }
         if (samplesPixel > 1) {
-            samplerPixel = std::make_unique<Components::StaticHaltonSeq>();
+            samplerPixel = ::std::make_unique<Components::StaticHaltonSeq>();
         } else {
-            samplerPixel = std::make_unique<Components::Constant>(0.5f);
+            samplerPixel = ::std::make_unique<Components::Constant>(0.5f);
         }
         switch (shader) {
             case 1: {
-                shader_ = std::make_unique<Components::Whitted>(std::move(scene_), samplesLight,
+                shader_ = ::std::make_unique<Components::Whitted>(::std::move(scene_), samplesLight,
                                                                 MobileRT::Shader::Accelerator(
                                                                         accelerator));
                 break;
             }
 
             case 2: {
-                std::unique_ptr<MobileRT::Sampler> samplerRay{
-                        std::make_unique<Components::StaticHaltonSeq>()};
-                std::unique_ptr<MobileRT::Sampler> samplerLight{
-                        std::make_unique<Components::StaticHaltonSeq>()};
-                std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
-                        std::make_unique<Components::StaticHaltonSeq>()};
+                ::std::unique_ptr<MobileRT::Sampler> samplerRay{
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                ::std::unique_ptr<MobileRT::Sampler> samplerLight{
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
 
-                shader_ = std::make_unique<Components::PathTracer>(
-                        std::move(scene_), std::move(samplerRay), std::move(samplerLight),
-                        std::move(samplerRussianRoulette), samplesLight,
+                shader_ = ::std::make_unique<Components::PathTracer>(
+                        ::std::move(scene_), ::std::move(samplerRay), ::std::move(samplerLight),
+                        ::std::move(samplerRussianRoulette), samplesLight,
                         MobileRT::Shader::Accelerator(accelerator));
                 break;
             }
 
             case 3: {
-                shader_ = std::make_unique<Components::DepthMap>(std::move(scene_), maxDist,
+                shader_ = ::std::make_unique<Components::DepthMap>(::std::move(scene_), maxDist,
                                                                  MobileRT::Shader::Accelerator(
                                                                          accelerator));
                 break;
             }
 
             case 4: {
-                shader_ = std::make_unique<Components::DiffuseMaterial>(std::move(scene_),
+                shader_ = ::std::make_unique<Components::DiffuseMaterial>(::std::move(scene_),
                                                                         MobileRT::Shader::Accelerator(
                                                                                 accelerator));
                 break;
             }
 
             default: {
-                shader_ = std::make_unique<Components::NoShadows>(std::move(scene_), samplesLight,
+                shader_ = ::std::make_unique<Components::NoShadows>(::std::move(scene_), samplesLight,
                                                                   MobileRT::Shader::Accelerator(
                                                                           accelerator));
                 break;
@@ -329,7 +325,7 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
         }
         mutex_.lock();
         renderer_ = new MobileRT::Renderer{
-                std::move(shader_), std::move(camera), std::move(samplerPixel),
+                ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<unsigned>(width_), static_cast<unsigned>(height_),
                 static_cast<unsigned>(samplesPixel)};
         mutex_.unlock();
@@ -388,101 +384,72 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
     jmethodID drawViewMethodId{
             env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
-    if (drawViewMethodId == nullptr) {
-        LOG("ERROR drawViewMethodId1");
-        exit(1);
+    assert(drawViewMethodId != nullptr);
+    {
+        const int result {env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
+        static_cast<void> (result);
     }
-    int result{env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
-    LOG("result = ", result);
 
     drawViewMethodId = env->GetMethodID(globalDrawViewClass, "calledByJNI", "()I");
-    if (drawViewMethodId == nullptr) {
-        LOG("ERROR drawViewMethodId2");
-        exit(1);
-    }
+    assert(drawViewMethodId != nullptr);
     jobject resultObj = env->AllocObject(globalDrawViewClass);
-    result = env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId);
-    LOG("result = ", result);
-    result = env->CallIntMethod(resultObj, drawViewMethodId);
-    LOG("result = ", result);
+    {
+        const int result {env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId)};
+        assert(result == JNI_OK);
+        static_cast<void> (result);
+    }
 
+    {
+        const int result {env->CallIntMethod(resultObj, drawViewMethodId)};
+        assert(result == JNI_OK);
+        static_cast<void> (result);
+    }
 
     working_ = State::BUSY;
     LOG("WORKING = BUSY");
 
     auto lambda = [=]() {
-        if (env == nullptr) {
-            LOG("jniEnv = ", env);
-            exit(1);
-        }
-        const int jniError1{
+        assert(env != nullptr);
+        const int jniError {
                 javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                 JNI_VERSION_1_6)};
-        int jniThread{JNI_OK};
-        switch (jniError1) {
-            case JNI_OK: {
-                LOG("jniError1 = ", jniError1);
-                break;
-            }
 
-            case JNI_ERR: {
-                LOG("jniError1 = ", jniError1);
-                exit(1);
-            }
-
-            case JNI_EDETACHED: {
-                LOG("jniError1 = ", jniError1);
-                const int attached{
-                        javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
-                if (attached != JNI_OK) {
-                    LOG("attached = ", attached);
-                    exit(1);
-                }
-                jniThread = JNI_EDETACHED;
-                break;
-            }
-
-            case JNI_EVERSION: {
-                LOG("jniError1 = ", jniError1);
-                exit(1);
-            }
-
-            default: {
-                LOG("jniError1 = ", jniError1);
-                exit(1);
-            }
+        assert(jniError == JNI_OK || jniError == JNI_EDETACHED);
+        {
+            const int result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+            assert(result == JNI_OK);
+            static_cast<void> (result);
         }
+        const int jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
 
-        if (globalDrawViewClass == nullptr) {
-            LOG("drawViewClass_thread = ", globalDrawViewClass);
-            exit(1);
-        }
+        assert(globalDrawViewClass != nullptr);
         jmethodID drawViewMethodId_thread{
                 env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
-        if (drawViewMethodId_thread == nullptr) {
-            LOG("drawViewMethodId_thread = ", drawViewMethodId_thread);
-            exit(1);
-        }
+        assert(drawViewMethodId_thread != nullptr);
         const int result_thread{
                 env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId_thread)};
         LOG("result_thread = ", result_thread);
 
         unsigned *dstPixels{nullptr};
-        int ret1{0};
-        //dstPixels = static_cast<unsigned *>(env->GetDirectBufferAddress(globalByteBuffer));
-        ret1 = AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels));
+        {
+            const int ret {AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels))};
+            //dstPixels = static_cast<unsigned *>(env->GetDirectBufferAddress(globalByteBuffer));
+            assert(ret == JNI_OK);
+            LOG("ret = ", ret);
+        }
+
         AndroidBitmapInfo info{};
-        const int ret2{AndroidBitmap_getInfo(env, globalBitmap, &info)};
-        if (ret1 != JNI_OK || ret2 != JNI_OK) {
-            LOG("ret1 = ", ret1, ", ret2 = ", ret2);
-            exit(1);
+        {
+            const int ret {AndroidBitmap_getInfo(env, globalBitmap, &info)};
+            assert(ret == JNI_OK);
+            LOG("ret = ", ret);
         }
 
         const unsigned stride{info.stride};
         int rep {1};
         do {
-            const std::chrono::steady_clock::time_point start{
-                    std::chrono::steady_clock::now()};
+            const ::std::chrono::steady_clock::time_point start{
+                    ::std::chrono::steady_clock::now()};
             LOG("STARTING RENDERING");
             LOG("nThreads = ", nThreads);
             mutex_.lock();
@@ -491,8 +458,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             }
             mutex_.unlock();
             LOG("FINISHED RENDERING");
-            timeFrame_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::steady_clock::now() - start).count();
+            timeFrame_ = ::std::chrono::duration_cast<::std::chrono::milliseconds>(
+                    ::std::chrono::steady_clock::now() - start).count();
             FPS();
             //renderer_->camera_->position_.x_ += 1.0f;
             rep--;
@@ -501,46 +468,24 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             working_ = State::FINISHED;
             LOG("WORKING = FINISHED");
         }
-        const int ret3{AndroidBitmap_unlockPixels(env, globalBitmap)};
-        if (ret3 != JNI_OK) {
-            LOG("ret3 = ", ret3);
-            exit(1);
+        {
+            const int result {AndroidBitmap_unlockPixels(env, globalBitmap)};
+            assert(result == JNI_OK);
+            static_cast<void> (result);
         }
+
         env->DeleteGlobalRef(globalDrawViewClass);
         env->DeleteGlobalRef(globalBitmap);
-        const int jniError2{javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
-                                            JNI_VERSION_1_6)};
-        switch (jniError2) {
-            case JNI_OK: {
-                LOG("jniError2 = ", jniError2);
-                if (jniThread == JNI_EDETACHED) {
-                    const int ret4{javaVM_->DetachCurrentThread()};
-                    if (ret4 != JNI_OK) {
-                        LOG("ret4 = ", ret4);
-                    }
-                }
-                break;
-            }
-
-            case JNI_ERR: {
-                LOG("jniError2 = ", jniError2);
-                exit(1);
-            }
-
-            case JNI_EDETACHED: {
-                LOG("jniError2 = ", jniError2);
-                exit(1);
-            }
-
-            case JNI_EVERSION: {
-                LOG("jniError2 = ", jniError2);
-                exit(1);
-            }
-
-            default: {
-                LOG("jniError2 = ", jniError2);
-                exit(1);
-            }
+        {
+            const int result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                                              JNI_VERSION_1_6)};
+            assert(result == JNI_OK);
+            static_cast<void> (result);
+        }
+        if (jniThread == JNI_EDETACHED) {
+            const int result {javaVM_->DetachCurrentThread()};
+            assert(result == JNI_OK);
+            static_cast<void> (result);
         }
     };
 
@@ -558,7 +503,7 @@ int Java_puscas_mobilertapp_DrawView_traceTouch(
     //const float v {static_cast<float> (jy) / height_};
     //MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
     //MobileRT::Intersection intersection {};
-    //const int primitiveID {renderer_->shader_->traceTouch(&intersection, std::move(ray))};
+    //const int primitiveID {renderer_->shader_->traceTouch(&intersection, ::std::move(ray))};
     const int primitiveID{-1};
     return primitiveID;
 }
@@ -577,7 +522,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     const uint32_t index{static_cast<uint32_t>(primitiveIndex)};
     const MobileRT::Plane plane{
             ::glm::vec3{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
-            glm::vec3 {0.0f, 0.0f, -1.0f}};
+            ::glm::vec3 {0.0f, 0.0f, -1.0f}};
     MobileRT::Intersection intersection{};
     plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_.x_(),
@@ -621,7 +566,7 @@ int Java_puscas_mobilertapp_DrawView_resize(
         jint const size
 ) noexcept {
     return MobileRT::roundDownToMultipleOf(size,
-                                           static_cast<int>(std::sqrt(MobileRT::NumberOfBlocks)));
+                                           static_cast<int>(::std::sqrt(MobileRT::NumberOfBlocks)));
 }
 
 extern "C"

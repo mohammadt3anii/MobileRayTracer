@@ -14,14 +14,14 @@ namespace Components {
 
     class DepthMap final : public ::MobileRT::Shader {
     private:
-        glm::vec3 maxPoint_{};
+        ::glm::vec3 maxPoint_{};
 
     private:
-        bool shade(glm::vec3 *rgb, Intersection intersection,
+        bool shade(::glm::vec3 *rgb, Intersection intersection,
                    Ray ray) noexcept final;
 
     public:
-        explicit DepthMap(Scene scene, glm::vec3 maxPoint,
+        explicit DepthMap(Scene scene, ::glm::vec3 maxPoint,
                           Accelerator accelerator) noexcept;
 
         DepthMap(const DepthMap &depthMap) noexcept = delete;
