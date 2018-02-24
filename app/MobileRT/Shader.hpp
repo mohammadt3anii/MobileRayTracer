@@ -24,10 +24,10 @@ namespace MobileRT {
         BVH<MobileRT::Sphere> bvhSpheres_{};
         BVH<MobileRT::Triangle> bvhTriangles_{};
 
-        BVH_vector<MobileRT::Plane> bvhPlanes2_{};
-        BVH_vector<MobileRT::Rectangle> bvhRectangles2_{};
-        BVH_vector<MobileRT::Sphere> bvhSpheres2_{};
-        BVH_vector<MobileRT::Triangle> bvhTriangles2_{};
+        BVH_vector<MobileRT::Plane> bvhPlanesVector_{};
+        BVH_vector<MobileRT::Rectangle> bvhRectanglesVector_{};
+        BVH_vector<MobileRT::Sphere> bvhSpheresVector_{};
+        BVH_vector<MobileRT::Triangle> bvhTrianglesVector_{};
 
         enum Accelerator {
             NAIVE = 0,

@@ -116,8 +116,7 @@ namespace MobileRT {
 
         //0 primitives to left || 0 primitives to right
         if (min_SAH_idx == 0 || min_SAH_idx == N - 2
-            || primitives.size() <= 10 || depth >= 12
-                ) {
+            || primitives.size() <= 10 || depth >= 12) {
             primitives_ = primitives;
         } else {
             using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;

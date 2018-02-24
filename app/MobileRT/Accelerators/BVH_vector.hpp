@@ -179,9 +179,8 @@ namespace MobileRT {
             ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const uint32_t left{currentNodeId * 2 + 1};
-            const uint32_t right{left + 1};
             AABB leftBox{build(std::move(leftVector), depth + 1, left)};
-            AABB rightBox{build(std::move(rightVector), depth + 1, right)};
+            AABB rightBox{build(std::move(rightVector), depth + 1, left + 1)};
             current_box = surroundingBox(leftBox, rightBox);
         }
         boxes_.at(currentNodeId) = current_box;

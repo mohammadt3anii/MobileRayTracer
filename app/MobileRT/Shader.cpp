@@ -60,13 +60,13 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
 
         case Accelerator::BVH_vector: {
             LOG("PLANES");
-            bvhPlanes2_ = ::MobileRT::BVH_vector<MobileRT::Plane> {::std::move(scene_.planes_)};
+            bvhPlanesVector_ = ::MobileRT::BVH_vector<MobileRT::Plane> {::std::move(scene_.planes_)};
             LOG("RECTANGLES");
-            bvhRectangles2_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
+            bvhRectanglesVector_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
             LOG("SPHERES");
-            bvhSpheres2_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {::std::move(scene_.spheres_)};
+            bvhSpheresVector_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {::std::move(scene_.spheres_)};
             LOG("TRIANGLES");
-            bvhTriangles2_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {::std::move(scene_.triangles_)};
+            bvhTrianglesVector_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
     }
@@ -87,10 +87,12 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
             intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
             break;
         }
+
         case Accelerator::REGULAR_GRID: {
             intersection = this->regularGrid_.shadowTrace(intersection, ::std::move(ray));
             break;
         }
+
         case Accelerator::BVH: {
             intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
             intersection = this->bvhRectangles_.shadowTrace(intersection, ray);
@@ -98,6 +100,7 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
             intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
         }
+
         case Accelerator::BVH_vector: {
             intersection = this->bvhPlanes2_.shadowTrace(intersection, ray);
             intersection = this->bvhRectangles2_.shadowTrace(intersection, ray);
@@ -117,10 +120,12 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
             intersection = this->scene_.trace(intersection, ray);
             break;
         }
+
         case Accelerator::REGULAR_GRID: {
             intersection = this->regularGrid_.trace(intersection, ray);
             break;
         }
+
         case Accelerator::BVH: {
             intersection = this->bvhPlanes_.trace(intersection, ray);
             intersection = this->bvhRectangles_.trace(intersection, ray);
@@ -129,11 +134,12 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
             intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
+
         case Accelerator::BVH_vector: {
-            intersection = this->bvhPlanes2_.trace(intersection, ray);
-            intersection = this->bvhRectangles2_.trace(intersection, ray);
-            intersection = this->bvhSpheres2_.trace(intersection, ray);
-            intersection = this->bvhTriangles2_.trace(intersection, ray);
+            intersection = this->bvhPlanesVector_.trace(intersection, ray);
+            intersection = this->bvhRectanglesVector_.trace(intersection, ray);
+            intersection = this->bvhSpheresVector_.trace(intersection, ray);
+            intersection = this->bvhTrianglesVector_.trace(intersection, ray);
             intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
