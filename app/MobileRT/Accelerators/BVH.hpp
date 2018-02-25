@@ -13,14 +13,11 @@
 #include <random>
 
 namespace MobileRT {
-    struct sLeafNode {
-        unsigned indexOffset_;
-        unsigned numberPrimitives_;
-    };
 
     struct uBVHNode {
         ::MobileRT::AABB box_ {};
-        struct sLeafNode leaf_;
+        unsigned indexOffset_ {0};
+        unsigned numberPrimitives_ {0};
     };
 
     template<typename T>
@@ -29,7 +26,6 @@ namespace MobileRT {
         static const unsigned maxLeafSize {2};
 
     public:
-        unsigned numberDepth_{0};
         ::std::vector<uBVHNode> boxes_{};
         ::std::vector<MobileRT::Primitive<T>> primitives_{};
 
@@ -41,9 +37,7 @@ namespace MobileRT {
         explicit BVH() noexcept = default;
 
         explicit BVH<T>(
-            ::std::vector<MobileRT::Primitive<T>> primitives,
-            unsigned depth = 0,
-            uint32_t currentId = 0) noexcept;
+            ::std::vector<MobileRT::Primitive<T>> primitives) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
 
@@ -57,15 +51,11 @@ namespace MobileRT {
 
         Intersection trace(
           ::MobileRT::Intersection intersection,
-          ::MobileRT::Ray ray,
-          unsigned depth = 0,
-          uint32_t currentNodeId = 0) noexcept;
+          ::MobileRT::Ray ray) noexcept;
 
         Intersection shadowTrace(
           ::MobileRT::Intersection intersection,
-          ::MobileRT::Ray ray,
-          unsigned depth = 0,
-          uint32_t currentNodeId = 0) noexcept;
+          ::MobileRT::Ray ray) noexcept;
     };
 
 
@@ -75,13 +65,9 @@ namespace MobileRT {
 
     template<typename T>
     BVH<T>::BVH(
-        ::std::vector<MobileRT::Primitive<T>> primitives,
-        const unsigned depth,
-        const uint32_t currentId) noexcept {
+        ::std::vector<MobileRT::Primitive<T>> primitives) noexcept {
             if (primitives.empty()) {
-                if (depth == 0) {
-                    boxes_.emplace_back(uBVHNode{});
-                }
+                boxes_.emplace_back(uBVHNode{});
                 return;
             }
             uint32_t numberPrimitives{static_cast<uint32_t>(primitives.size())};
@@ -99,7 +85,7 @@ namespace MobileRT {
             boxes_.resize(maxNodes);
 
             primitives_.reserve(primitives.size());
-            boxes_.at(0) = build(std::move(primitives), depth, currentId);
+            boxes_.at(0) = build(std::move(primitives), 0, 0);
 
             primitives_.shrink_to_fit();
             ::std::vector<MobileRT::Primitive<T>>(primitives_).swap(primitives_);
@@ -121,7 +107,6 @@ namespace MobileRT {
         if (depth == 0) {
             numberPrimitives = static_cast<int64_t>(primitives.size());
         }
-        numberDepth_ = ::std::max(depth, numberDepth_);
 
         AABB current_box{
                 ::glm::vec3 {
@@ -176,8 +161,8 @@ namespace MobileRT {
 
         uBVHNode currentNode {};
         if (numberPrimitives <= (1 << depth) * maxLeafSize) {
-            currentNode.leaf_.indexOffset_ = static_cast<unsigned>(primitives_.size());
-            currentNode.leaf_.numberPrimitives_ = static_cast<unsigned>(primitives.size());
+            currentNode.indexOffset_ = static_cast<unsigned>(primitives_.size());
+            currentNode.numberPrimitives_ = static_cast<unsigned>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
             using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
@@ -200,58 +185,111 @@ namespace MobileRT {
         return currentNode;
     }
 
-
     template<typename T>
     Intersection BVH<T>::trace(
-        ::MobileRT::Intersection intersection,
-        const ::MobileRT::Ray ray,
-        const unsigned depth,
-        const uint32_t currentNodeId) noexcept {
-        uBVHNode node {boxes_.at(currentNodeId)};
-        if (intersect(node.box_, ray)) {
-            if (depth == numberDepth_) {//node at the bottom of tree
-                 for (unsigned i {0}; i < node.leaf_.numberPrimitives_; i++) {
-                    auto& primitive {primitives_.at(node.leaf_.indexOffset_ + i)};
-                    intersection = primitive.intersect(intersection, ray);
+            ::MobileRT::Intersection intersection,
+            const ::MobileRT::Ray ray) noexcept {
+        uBVHNode* node {&boxes_.at(0)};
+        uint32_t id {0};
+        uBVHNode* stack[64];
+        uint32_t stackId[64];
+        uBVHNode** stackPtr = stack;
+        uint32_t* stackPtrId = stackId;
+        *stackPtr++ = nullptr;
+        *stackPtrId++ = 0;
+        do {
+            if (intersect(node->box_, ray)) {
+
+                if (node->numberPrimitives_ != 0) {
+                    for (unsigned i {0}; i < node->numberPrimitives_; i++) {
+                        auto& primitive {primitives_.at(node->indexOffset_ + i)};
+                        intersection = primitive.intersect(intersection, ray);
+                    }
+                    node = *--stackPtr; // pop
+                    id = *--stackPtrId; // pop
+                } else {
+                    const uint32_t left {id * 2 + 1};
+                    uBVHNode* childL {&boxes_.at(left)};
+                    uBVHNode* childR {&boxes_.at(left + 1)};
+
+                    const bool traverseL {intersect(childL->box_, ray)};
+                    const bool traverseR {intersect(childR->box_, ray)};
+
+                    if (!traverseL && !traverseR) {
+                        node = *--stackPtr; // pop
+                        id = *--stackPtrId; // pop
+                    } else {
+                        node = (traverseL) ? childL : childR;
+                        id = (traverseL) ? left : left + 1;
+                        if (traverseL && traverseR) {
+                            *stackPtr++ = childR; // push
+                            *stackPtrId++ = left + 1; // push
+                        }
+                    }
                 }
-                return intersection;
+
+            } else {
+                node = *--stackPtr; // pop
+                id = *--stackPtrId; // pop
             }
 
-            const uint32_t left {currentNodeId * 2 + 1};
-            intersection = trace(intersection, ray, depth + 1, left);
-            return trace(intersection, ray, depth + 1, left + 1);
-        }
+        } while (node != nullptr);
         return intersection;
     }
-
 
     template<typename T>
     Intersection BVH<T>::shadowTrace(
         ::MobileRT::Intersection intersection,
-        const ::MobileRT::Ray ray,
-        const unsigned depth,
-        const uint32_t currentNodeId) noexcept {
-        uBVHNode node {boxes_.at(currentNodeId)};
-        if (intersect(node.box_, ray)) {
-            if (depth == numberDepth_) {//node at the bottom of tree
-                //const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
-                for (unsigned i {0}; i < node.leaf_.numberPrimitives_; i++) {
-                    auto& primitive {primitives_.at(node.leaf_.indexOffset_ + i)};
-                    const float lastDist {intersection.length_};
-                    intersection = primitive.intersect(intersection, ray);
-                    if (intersection.length_ < lastDist) {
-                        return intersection;
+        const ::MobileRT::Ray ray) noexcept {
+        uBVHNode* node {&boxes_.at(0)};
+        uint32_t id {0};
+        uBVHNode* stack[64];
+        uint32_t stackId[64];
+        uBVHNode** stackPtr = stack;
+        uint32_t* stackPtrId = stackId;
+        *stackPtr++ = nullptr;
+        *stackPtrId++ = 0;
+        do {
+            if (intersect(node->box_, ray)) {
+
+                if (node->numberPrimitives_ != 0) {
+                    for (unsigned i {0}; i < node->numberPrimitives_; i++) {
+                        auto& primitive {primitives_.at(node->indexOffset_ + i)};
+                        const float lastDist {intersection.length_};
+                        intersection = primitive.intersect(intersection, ray);
+                        if (intersection.length_ < lastDist) {
+                            return intersection;
+                        }
+                    }
+                    node = *--stackPtr; // pop
+                    id = *--stackPtrId; // pop
+                } else {
+                    const uint32_t left {id * 2 + 1};
+                    uBVHNode* childL {&boxes_.at(left)};
+                    uBVHNode* childR {&boxes_.at(left + 1)};
+
+                    const bool traverseL {intersect(childL->box_, ray)};
+                    const bool traverseR {intersect(childR->box_, ray)};
+
+                    if (!traverseL && !traverseR) {
+                        node = *--stackPtr; // pop
+                        id = *--stackPtrId; // pop
+                    } else {
+                        node = (traverseL) ? childL : childR;
+                        id = (traverseL) ? left : left + 1;
+                        if (traverseL && traverseR) {
+                            *stackPtr++ = childR; // push
+                            *stackPtrId++ = left + 1; // push
+                        }
                     }
                 }
-                return intersection;
+
+            } else {
+                node = *--stackPtr; // pop
+                id = *--stackPtrId; // pop
             }
 
-            const uint32_t left {currentNodeId * 2 + 1};
-            const float lastDist {intersection.length_};
-            intersection = shadowTrace(intersection, ray, depth + 1, left);
-            return intersection.length_ < lastDist? intersection :
-                shadowTrace(intersection, ray, depth + 1, left + 1);
-        }
+        } while (node != nullptr);
         return intersection;
     }
 
