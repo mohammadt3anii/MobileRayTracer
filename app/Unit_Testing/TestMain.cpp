@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-int main(int argc, char **argv) {
+int32_t main(int32_t argc, char **argv) {
 	::testing::GTEST_FLAG(throw_on_failure) = true;
   ::testing::InitGoogleTest(&argc, argv);
-  const int res {RUN_ALL_TESTS()};
+  const int32_t res {RUN_ALL_TESTS()};
 	return res;
 }
 

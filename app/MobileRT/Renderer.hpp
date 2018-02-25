@@ -20,24 +20,24 @@ namespace MobileRT {
 
     private:
         ::std::unique_ptr<Sampler> samplerPixel_{};
-        unsigned blockSizeX_{};
-        unsigned blockSizeY_{};
-        unsigned sample_{};
-        const unsigned width_{};
-        const unsigned height_{};
-        const unsigned domainSize_{};
-        const unsigned resolution_{};
-        const unsigned samplesPixel_{};
+        uint32_t blockSizeX_{};
+        uint32_t blockSizeY_{};
+        uint32_t sample_{};
+        const uint32_t width_{};
+        const uint32_t height_{};
+        const uint32_t domainSize_{};
+        const uint32_t resolution_{};
+        const uint32_t samplesPixel_{};
 
     private:
-        void renderScene(unsigned *bitmap, int tid, unsigned width) noexcept;
+        void renderScene(uint32_t *bitmap, int32_t tid, uint32_t width) noexcept;
 
     public:
         explicit Renderer(::std::unique_ptr<Shader> shader,
                           ::std::unique_ptr<Camera> camera,
                           ::std::unique_ptr<Sampler> samplerPixel,
-                          unsigned width, unsigned height,
-                          unsigned samplesPixel) noexcept;
+                          uint32_t width, uint32_t height,
+                          uint32_t samplesPixel) noexcept;
 
         Renderer(const Renderer &renderer) noexcept = delete;
 
@@ -49,11 +49,11 @@ namespace MobileRT {
 
         Renderer &operator=(Renderer &&renderer) noexcept = delete;
 
-        void renderFrame(unsigned *bitmap, int numThreads, unsigned stride) noexcept;
+        void renderFrame(uint32_t *bitmap, int32_t numThreads, uint32_t stride) noexcept;
 
         void stopRender() noexcept;
 
-        unsigned getSample() const noexcept;
+        uint32_t getSample() const noexcept;
     };
 }//namespace MobileRT
 

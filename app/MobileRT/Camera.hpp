@@ -17,7 +17,7 @@ namespace MobileRT {
 
     class Camera {
     protected:
-        ::std::atomic<unsigned> block_{0};
+        ::std::atomic<uint32_t> block_{0};
 
     public:
         ::glm::vec3 position_{};
@@ -43,7 +43,7 @@ namespace MobileRT {
                                 float deviationU,
                                 float deviationV) const noexcept = 0;
 
-        float getBlock(unsigned sample) noexcept;
+        float getBlock(uint32_t sample) noexcept;
 
         virtual AABB getAABB() const noexcept;
 

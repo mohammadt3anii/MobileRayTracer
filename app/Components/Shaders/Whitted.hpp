@@ -18,7 +18,7 @@ namespace Components {
                    Ray ray) noexcept final;
 
     public:
-        explicit Whitted(Scene scene, unsigned samplesLight, Accelerator accelerator) noexcept;
+        explicit Whitted(Scene scene, uint32_t samplesLight, Accelerator accelerator) noexcept;
 
         Whitted(const Whitted &whitted) noexcept = delete;
 

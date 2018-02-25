@@ -26,7 +26,7 @@ StaticMersenneTwister::StaticMersenneTwister() noexcept {
     static_cast<void> (unused);
 }
 
-float StaticMersenneTwister::getSample(const unsigned /*sample*/) noexcept {
+float StaticMersenneTwister::getSample(const uint32_t /*sample*/) noexcept {
     const uint32_t current{this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
     return VALUES.at(current & MASK);
 }

@@ -22,8 +22,8 @@ namespace {
     }
 }//namespace
 
-float Camera::getBlock(const unsigned sample) noexcept {
-    const unsigned current{
+float Camera::getBlock(const uint32_t sample) noexcept {
+    const uint32_t current{
             this->block_.fetch_add(1, ::std::memory_order_relaxed) - NumberOfBlocks * sample};
     if (current >= NumberOfBlocks) {
         this->block_.fetch_sub(1, ::std::memory_order_relaxed);

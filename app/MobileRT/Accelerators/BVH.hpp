@@ -16,21 +16,21 @@ namespace MobileRT {
 
     struct uBVHNode {
         ::MobileRT::AABB box_ {};
-        unsigned indexOffset_ {0};
-        unsigned numberPrimitives_ {0};
+        uint32_t indexOffset_ {0};
+        uint32_t numberPrimitives_ {0};
     };
 
     template<typename T>
     class BVH final {
     private:
-        static const unsigned maxLeafSize {2};
+        static const uint32_t maxLeafSize {2};
 
     public:
         ::std::vector<uBVHNode> boxes_{};
         ::std::vector<MobileRT::Primitive<T>> primitives_{};
 
     private:
-        uBVHNode build(::std::vector<MobileRT::Primitive<T>> primitives, unsigned depth,
+        uBVHNode build(::std::vector<MobileRT::Primitive<T>> primitives, uint32_t depth,
                    uint32_t currentNodeId) noexcept;
 
     public:
@@ -95,7 +95,7 @@ namespace MobileRT {
     template<typename T>
     uBVHNode BVH<T>::build(
         ::std::vector<MobileRT::Primitive<T>> primitives,
-        const unsigned depth,
+        const uint32_t depth,
         const uint32_t currentNodeId) noexcept {
         if (primitives.empty()) {
             return uBVHNode{};
@@ -121,14 +121,14 @@ namespace MobileRT {
             //boxes.emplace_back(new_box);
         }
 
-        const int axis {current_box.getLongestAxis()};
+        const int32_t axis {current_box.getLongestAxis()};
         ::std::sort(primitives.begin(), primitives.end(),
             [=](const MobileRT::Primitive<T> a,
                 const MobileRT::Primitive<T> b) noexcept -> bool {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
-        uint32_t divide{static_cast<uint32_t>(primitives.size()) / 2};
+        int32_t divide{static_cast<int32_t>(primitives.size()) / 2};
         /*{
             ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
             AABB left_box {};
@@ -160,8 +160,8 @@ namespace MobileRT {
 
         uBVHNode currentNode {};
         if (numberPrimitives <= (1 << depth) * maxLeafSize) {
-            currentNode.indexOffset_ = static_cast<unsigned>(primitives_.size());
-            currentNode.numberPrimitives_ = static_cast<unsigned>(primitives.size());
+            currentNode.indexOffset_ = static_cast<uint32_t>(primitives_.size());
+            currentNode.numberPrimitives_ = static_cast<uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
             using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
@@ -200,7 +200,7 @@ namespace MobileRT {
             if (intersect(node->box_, ray)) {
 
                 if (node->numberPrimitives_ != 0) {
-                    for (unsigned i {0}; i < node->numberPrimitives_; i++) {
+                    for (uint32_t i {0}; i < node->numberPrimitives_; i++) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
@@ -252,7 +252,7 @@ namespace MobileRT {
             if (intersect(node->box_, ray)) {
 
                 if (node->numberPrimitives_ != 0) {
-                    for (unsigned i {0}; i < node->numberPrimitives_; i++) {
+                    for (uint32_t i {0}; i < node->numberPrimitives_; i++) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         const float lastDist {intersection.length_};
                         intersection = primitive.intersect(intersection, ray);

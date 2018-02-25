@@ -14,8 +14,8 @@ namespace Components {
     public:
         explicit HaltonSeq() noexcept = default;
 
-        explicit HaltonSeq(unsigned width, unsigned height,
-                           unsigned samples) noexcept;
+        explicit HaltonSeq(uint32_t width, uint32_t height,
+                           uint32_t samples) noexcept;
 
         HaltonSeq(const HaltonSeq &haltonSeq) noexcept = delete;
 
@@ -27,7 +27,7 @@ namespace Components {
 
         HaltonSeq &operator=(HaltonSeq &&haltonSeq) noexcept = delete;
 
-        float getSample(unsigned sample) noexcept final;
+        float getSample(uint32_t sample) noexcept final;
     };
 }//namespace Components
 

@@ -18,7 +18,7 @@ namespace Components {
                    Ray ray) noexcept final;
 
     public:
-        explicit NoShadows(Scene scene, unsigned samplesLight, Accelerator accelerator) noexcept;
+        explicit NoShadows(Scene scene, uint32_t samplesLight, Accelerator accelerator) noexcept;
 
         NoShadows(const NoShadows &noShadows) noexcept = delete;
 

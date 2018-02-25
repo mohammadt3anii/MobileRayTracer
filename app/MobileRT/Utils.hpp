@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdint>
 #include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
@@ -42,21 +43,21 @@ namespace MobileRT {
     const int32_t RayDepthMax{8};
     const int32_t NumberOfBlocks{256};
 
-    int roundDownToMultipleOf(int value, int multiple) noexcept;
+    int32_t roundDownToMultipleOf(int32_t value, int32_t multiple) noexcept;
 
-    float haltonSequence(uint32_t index, unsigned base) noexcept;
+    float haltonSequence(uint32_t index, uint32_t base) noexcept;
 
-    unsigned incrementalAvg(::glm::vec3 sample, unsigned avg, unsigned numSample) noexcept;
+    uint32_t incrementalAvg(::glm::vec3 sample, uint32_t avg, uint32_t numSample) noexcept;
 
 
     template<typename ...Args>
     void log(Args &&... args) noexcept {
         ::std::ostringstream oss{""};
-        static_cast<void> (::std::initializer_list<int> {(oss << args, 0)...});
+        static_cast<void> (::std::initializer_list<int32_t> {(oss << args, 0)...});
         oss << '\n';
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
-        const ::std::chrono::duration<int, ::std::micro> timeToSleep {10};
+        const ::std::chrono::duration<int32_t, ::std::micro> timeToSleep {10};
         ::std::this_thread::sleep_for(timeToSleep);
 #else
         ::std::cout << oss.str();

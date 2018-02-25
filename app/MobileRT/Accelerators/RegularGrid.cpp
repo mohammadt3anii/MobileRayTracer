@@ -10,7 +10,7 @@ using ::MobileRT::Primitive;
 using ::MobileRT::Intersection;
 
 RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
-                         const int gridSize) noexcept :
+                         const int32_t gridSize) noexcept :
         triangles_{
                 ::std::vector<::std::vector<::MobileRT::Primitive<Triangle> *>> {
                         static_cast<size_t> (gridSize * gridSize * gridSize)}},
@@ -24,7 +24,7 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
                 ::std::vector<::std::vector<::MobileRT::Primitive<Rectangle> *>> {
                         static_cast<size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
-        gridShift_{bitCounter(static_cast<unsigned>(gridSize)) - 1},
+        gridShift_{bitCounter(static_cast<uint32_t>(gridSize)) - 1},
         m_Extends(sceneBounds),//world boundaries
         // precalculate 1 / size of a cell (for x, y and z)
         m_SR{gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_).x,
@@ -62,8 +62,8 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
     }*/
 }
 
-int RegularGrid::bitCounter(unsigned int n) const noexcept {
-    int counter{0};
+int32_t RegularGrid::bitCounter(uint32_t n) const noexcept {
+    int32_t counter{0};
     while (n > 0) {
         counter++;
         n >>= 1;
@@ -75,7 +75,7 @@ template<typename T>
 void RegularGrid::addPrimitives
         (::std::vector<T> &primitives,
          ::std::vector<::std::vector<T *>> &grid_primitives) noexcept {
-    int index{0};
+    int32_t index{0};
 
     // calculate cell width, height and depth
     const float sizeX{m_Extends.pointMax_.x - m_Extends.pointMin_.x};
@@ -96,29 +96,29 @@ void RegularGrid::addPrimitives
         const ::glm::vec3 bv2{bound.pointMax_};
 
         // find out which cells could contain the primitive (based on aabb)
-        int x1{static_cast<int>((bv1.x - m_Extends.pointMin_.x) * dx_reci)};
-        int x2{static_cast<int>((bv2.x - m_Extends.pointMin_.x) * dx_reci) + 1};
+        int32_t x1{static_cast<int32_t>((bv1.x - m_Extends.pointMin_.x) * dx_reci)};
+        int32_t x2{static_cast<int32_t>((bv2.x - m_Extends.pointMin_.x) * dx_reci) + 1};
         x1 = (x1 < 0) ? 0 : x1;
         x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
         x2 = sizeX == 0 ? 0 : x2;
         x1 = x1 > x2 ? x2 : x1;
-        int y1{static_cast<int>((bv1.y - m_Extends.pointMin_.y) * dy_reci)};
-        int y2{static_cast<int>((bv2.y - m_Extends.pointMin_.y) * dy_reci) + 1};
+        int32_t y1{static_cast<int32_t>((bv1.y - m_Extends.pointMin_.y) * dy_reci)};
+        int32_t y2{static_cast<int32_t>((bv2.y - m_Extends.pointMin_.y) * dy_reci) + 1};
         y1 = (y1 < 0) ? 0 : y1;
         y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
         y2 = sizeY == 0 ? 0 : y2;
         y1 = y1 > y2 ? y2 : y1;
-        int z1{static_cast<int>((bv1.z - m_Extends.pointMin_.z) * dz_reci)};
-        int z2{static_cast<int>((bv2.z - m_Extends.pointMin_.z) * dz_reci) + 1};
+        int32_t z1{static_cast<int32_t>((bv1.z - m_Extends.pointMin_.z) * dz_reci)};
+        int32_t z2{static_cast<int32_t>((bv2.z - m_Extends.pointMin_.z) * dz_reci) + 1};
         z1 = (z1 < 0) ? 0 : z1;
         z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
         z2 = sizeZ == 0 ? 0 : z2;
         z1 = ::std::min(z2, z1);
 
         //loop over candidate cells
-        for (int x{x1}; x <= x2; x++) {
-            for (int y{y1}; y <= y2; y++) {
-                for (int z{z1}; z <= z2; z++) {
+        for (int32_t x{x1}; x <= x2; x++) {
+            for (int32_t y{y1}; y <= y2; y++) {
+                for (int32_t z{z1}; z <= z2; z++) {
                     // construct aabb for current cell
                     const size_t idx{
                             static_cast<size_t>(x) +
@@ -174,9 +174,9 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
                             const bool shadowTrace) noexcept {
     // setup 3DDDA (double check reusability of primary ray data)
     const ::glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
-    int X{static_cast<int>(cell.x)};
-    int Y{static_cast<int>(cell.y)};
-    int Z{static_cast<int>(cell.z)};
+    int32_t X{static_cast<int32_t>(cell.x)};
+    int32_t Y{static_cast<int32_t>(cell.y)};
+    int32_t Z{static_cast<int32_t>(cell.z)};
     const bool notInGrid{(X < 0) || (X >= gridSize_) ||
                          (Y < 0) || (Y >= gridSize_) ||
                          (Z < 0) || (Z >= gridSize_)};
@@ -184,9 +184,9 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
         return intersection;
     }
 
-    int stepX, outX;
-    int stepY, outY;
-    int stepZ, outZ;
+    int32_t stepX, outX;
+    int32_t stepY, outY;
+    int32_t stepZ, outZ;
     ::glm::vec3 cb{};
     if (ray.direction_.x > 0) {
         stepX = 1;

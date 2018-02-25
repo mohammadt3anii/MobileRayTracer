@@ -19,8 +19,8 @@ namespace MobileRT {
     public:
         explicit Sampler() noexcept = default;
 
-        explicit Sampler(unsigned width, unsigned height,
-                         unsigned samples) noexcept;
+        explicit Sampler(uint32_t width, uint32_t height,
+                         uint32_t samples) noexcept;
 
         Sampler(const Sampler &sampler) noexcept = delete;
 
@@ -36,7 +36,7 @@ namespace MobileRT {
 
         void stopSampling() noexcept;
 
-        virtual float getSample(unsigned sample) noexcept = 0;
+        virtual float getSample(uint32_t sample) noexcept = 0;
 
         float getSample() noexcept;
     };

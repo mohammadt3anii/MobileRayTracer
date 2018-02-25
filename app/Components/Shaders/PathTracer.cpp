@@ -15,7 +15,7 @@ PathTracer::PathTracer(Scene scene,
                        ::std::unique_ptr<Sampler> samplerRay,
                        ::std::unique_ptr<Sampler> samplerLight,
                        ::std::unique_ptr<Sampler> samplerRussianRoulette,
-                       const unsigned samplesLight, const Accelerator accelerator) noexcept :
+                       const uint32_t samplesLight, const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator},
         samplerRay_{::std::move(samplerRay)},
         samplerLight_{::std::move(samplerLight)},
@@ -63,14 +63,14 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
         const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
-            const unsigned samplesLight{this->samplesLight_};
+            const uint32_t samplesLight{this->samplesLight_};
             Intersection intersectLight{};
             //direct light
-            for (unsigned i{0}; i < samplesLight; i++) {
+            for (uint32_t i{0}; i < samplesLight; i++) {
                 const float randomNumber{samplerLight_->getSample()};
                 //PDF = 1 / sizeLights
-                const unsigned chosenLight{
-                        static_cast<unsigned> (::std::floor(
+                const uint32_t chosenLight{
+                        static_cast<uint32_t> (::std::floor(
                                 randomNumber * sizeLights * 0.99999f))};
                 Light &light(*scene_.lights_[chosenLight]);
                 //calculates vector starting in intersection to the light

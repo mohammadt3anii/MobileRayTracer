@@ -33,7 +33,7 @@ namespace MobileRT {
         const Accelerator accelerator_{};
 
     protected:
-        const unsigned samplesLight_{};
+        const uint32_t samplesLight_{};
 
     protected:
         virtual bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept = 0;
@@ -42,7 +42,7 @@ namespace MobileRT {
         void initializeAccelerators(Camera *camera) noexcept;
 
     public:
-        explicit Shader(Scene scene, unsigned samplesLight, Accelerator accelerator) noexcept;
+        explicit Shader(Scene scene, uint32_t samplesLight, Accelerator accelerator) noexcept;
 
         Shader(const Shader &shader) noexcept = delete;
 

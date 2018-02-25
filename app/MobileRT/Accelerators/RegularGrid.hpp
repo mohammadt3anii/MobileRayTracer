@@ -20,8 +20,8 @@ namespace MobileRT {
         ::std::vector<::std::vector<Primitive<Sphere> *>> spheres_;
         ::std::vector<::std::vector<Primitive<Plane> *>> planes_;
         ::std::vector<::std::vector<Primitive<Rectangle> *>> rectangles_;
-        int gridSize_{};
-        int gridShift_{};
+        int32_t gridSize_{};
+        int32_t gridShift_{};
         AABB m_Extends{};
         ::glm::vec3 m_SR{};
         ::glm::vec3 m_CW{};
@@ -38,12 +38,12 @@ namespace MobileRT {
                        Intersection intersection,
                        Ray ray, bool shadowTrace = false) noexcept;
 
-        int bitCounter(unsigned int n) const noexcept;
+        int32_t bitCounter(uint32_t n) const noexcept;
 
     public:
         explicit RegularGrid() noexcept = default;
 
-        explicit RegularGrid(AABB sceneBounds, Scene *scene, int gridSize) noexcept;
+        explicit RegularGrid(AABB sceneBounds, Scene *scene, int32_t gridSize) noexcept;
 
         RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 

@@ -11,7 +11,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-NoShadows::NoShadows(Scene scene, const unsigned samplesLight,
+NoShadows::NoShadows(Scene scene, const uint32_t samplesLight,
                      const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
@@ -36,10 +36,10 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
         const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
-            const unsigned samplesLight{this->samplesLight_};
-            for (unsigned i{0}; i < sizeLights; i++) {
+            const uint32_t samplesLight{this->samplesLight_};
+            for (uint32_t i{0}; i < sizeLights; i++) {
                 Light &light(*scene_.lights_[i]);
-                for (unsigned j{0}; j < samplesLight; j++) {
+                for (uint32_t j{0}; j < samplesLight; j++) {
                     const ::glm::vec3 lightPosition{light.getPosition()};
                     //vectorIntersectCameraNormalized = light.position_ - intersection.point_
                     const ::glm::vec3 vectorToLightNormalized{

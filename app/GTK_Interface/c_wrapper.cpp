@@ -22,9 +22,9 @@
 #include <fstream>
 
 static void
-work_thread(unsigned *const bitmap, const int width, const int height, const int threads,
-            const int shader, const int scene, const int samplesPixel, const int samplesLight,
-            int repeats, const int accelerator, const bool printStdOut,
+work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, const int32_t threads,
+            const int32_t shader, const int32_t scene, const int32_t samplesPixel, const int32_t samplesLight,
+            int32_t repeats, const int32_t accelerator, const bool printStdOut,
             const char *const pathObj, const char *const pathMtl) {
     ::std::ostringstream ss{""};
     ::std::streambuf *old_buf_stdout{nullptr};
@@ -214,8 +214,8 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         const auto startCreating{::std::chrono::system_clock::now()};
         renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
-                static_cast<unsigned>(width), static_cast<unsigned>(height),
-                static_cast<unsigned>(samplesPixel));
+                static_cast<uint32_t>(width), static_cast<uint32_t>(height),
+                static_cast<uint32_t>(samplesPixel));
         const auto endCreating{::std::chrono::system_clock::now()};
         timeCreating = endCreating - startCreating;
         LOG("Renderer created = ", timeCreating.count());
@@ -243,7 +243,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         LOG("Started rendering scene");
         const auto startRendering{::std::chrono::system_clock::now()};
         do {
-            renderer_->renderFrame(bitmap, threads, width * sizeof(unsigned));
+            renderer_->renderFrame(bitmap, threads, width * sizeof(uint32_t));
             //renderer_->camera_->position_.x_ += 2.0f;
             repeats--;
         } while (repeats > 0);
@@ -260,9 +260,9 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
     LOG("Rendering Time in secs = ", timeRendering.count());
 }
 
-void RayTrace(unsigned *const bitmap, const int width, const int height, const int threads,
-              const int shader, const int scene, const int samplesPixel, const int samplesLight,
-              const int repeats, const int accelerator, const bool printStdOut, const bool async,
+void RayTrace(uint32_t *const bitmap, const int32_t width, const int32_t height, const int32_t threads,
+              const int32_t shader, const int32_t scene, const int32_t samplesPixel, const int32_t samplesLight,
+              const int32_t repeats, const int32_t accelerator, const bool printStdOut, const bool async,
               const char *const pathObj, const char *const pathMtl) {
     if (async) {
         ::std::thread thread {work_thread, bitmap, width, height, threads, shader, scene,

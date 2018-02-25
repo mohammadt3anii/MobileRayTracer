@@ -110,7 +110,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const Triangle triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
-                const int materialID{shape.mesh.material_ids[f]};
+                const int32_t materialID{shape.mesh.material_ids[f]};
                 if (materialID >= 0) {
                     const tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
                     const float d1 {m.diffuse[0]};

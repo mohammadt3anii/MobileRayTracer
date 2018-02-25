@@ -26,14 +26,14 @@ StaticHaltonSeq::StaticHaltonSeq() noexcept {
     static_cast<void> (unused);
 }
 
-StaticHaltonSeq::StaticHaltonSeq(const unsigned width, const unsigned height,
-                                 const unsigned samples) noexcept :
+StaticHaltonSeq::StaticHaltonSeq(const uint32_t width, const uint32_t height,
+                                 const uint32_t samples) noexcept :
         Sampler(width, height, samples) {
     static bool unused{FillThings()};
     static_cast<void> (unused);
 }
 
-float StaticHaltonSeq::getSample(const unsigned /*sample*/) noexcept {
+float StaticHaltonSeq::getSample(const uint32_t /*sample*/) noexcept {
     const uint32_t current{this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
     return VALUES.at(current & MASK);
 }

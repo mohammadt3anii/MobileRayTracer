@@ -10,7 +10,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-Whitted::Whitted(Scene scene, const unsigned samplesLight, Accelerator accelerator) noexcept :
+Whitted::Whitted(Scene scene, const uint32_t samplesLight, Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 
@@ -47,10 +47,10 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
         if (sizeLights > 0) {
             Intersection lightIntersection{};
-            const unsigned samplesLight{this->samplesLight_};
-            for (unsigned i{0}; i < sizeLights; i++) {
+            const uint32_t samplesLight{this->samplesLight_};
+            for (uint32_t i{0}; i < sizeLights; i++) {
                 Light &light(*scene_.lights_[i]);
-                for (unsigned j{0}; j < samplesLight; j++) {
+                for (uint32_t j{0}; j < samplesLight; j++) {
                     const ::glm::vec3 lightPosition{light.getPosition()};
                     //calculates vector starting in intersection to the light
                     ::glm::vec3 vectorToLight{lightPosition - intersection.point_};

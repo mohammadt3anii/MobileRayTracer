@@ -19,7 +19,7 @@ bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
     float tmin {::std::min(t1, t2)};
     float tmax {::std::max(t1, t2)};
 
-    for (int axis {1}; axis < 3; ++axis) {
+    for (int32_t axis {1}; axis < 3; ++axis) {
         const float invDir{1.0f / ray.direction_[axis]};
         t1 = (box.pointMin_[axis] - ray.origin_[axis]) * invDir;
         t2 = (box.pointMax_[axis] - ray.origin_[axis]) * invDir;
@@ -31,12 +31,12 @@ bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
     return tmax > ::std::max(tmin, 0.0f);
 }
 
-int AABB::getLongestAxis() const noexcept {
+int32_t AABB::getLongestAxis() const noexcept {
     const float lengthX{pointMax_.x - pointMin_.x};
     const float lengthY{pointMax_.y - pointMin_.y};
     const float lengthZ{pointMax_.z - pointMin_.z};
 
-    const int longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
+    const int32_t longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
                     lengthY >= lengthX && lengthY >= lengthZ ? 1 :
                     2
     };

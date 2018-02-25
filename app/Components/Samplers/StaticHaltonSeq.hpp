@@ -14,8 +14,8 @@ namespace Components {
     public:
         explicit StaticHaltonSeq() noexcept;
 
-        explicit StaticHaltonSeq(unsigned width, unsigned height,
-                                 unsigned samples) noexcept;
+        explicit StaticHaltonSeq(uint32_t width, uint32_t height,
+                                 uint32_t samples) noexcept;
 
         StaticHaltonSeq(const StaticHaltonSeq &random) noexcept = delete;
 
@@ -27,7 +27,7 @@ namespace Components {
 
         StaticHaltonSeq &operator=(StaticHaltonSeq &&random) noexcept = delete;
 
-        float getSample(unsigned sample) noexcept final;
+        float getSample(uint32_t sample) noexcept final;
     };
 }//namespace Components
 
