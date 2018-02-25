@@ -6,7 +6,6 @@
 #define MOBILERT_SHADER_HPP
 
 #include "Accelerators/BVH.hpp"
-#include "Accelerators/BVH_vector.hpp"
 #include "Accelerators/RegularGrid.hpp"
 #include "Camera.hpp"
 #include "Intersection.hpp"
@@ -24,16 +23,10 @@ namespace MobileRT {
         BVH<MobileRT::Sphere> bvhSpheres_{};
         BVH<MobileRT::Triangle> bvhTriangles_{};
 
-        BVH_vector<MobileRT::Plane> bvhPlanesVector_{};
-        BVH_vector<MobileRT::Rectangle> bvhRectanglesVector_{};
-        BVH_vector<MobileRT::Sphere> bvhSpheresVector_{};
-        BVH_vector<MobileRT::Triangle> bvhTrianglesVector_{};
-
         enum Accelerator {
             NAIVE = 0,
             REGULAR_GRID,
-            BVH,
-            BVH_vector
+            BVH
         };
 
     private:

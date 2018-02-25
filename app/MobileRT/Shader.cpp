@@ -37,7 +37,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
     Scene::getBounds<Primitive<Rectangle>>(rectangles, &min, &max);
     Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
-    AABB sceneBounds{min - Epsilon, max + Epsilon};
+    AABB sceneBounds{min, max};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
             break;
@@ -55,18 +55,6 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
             LOG("TRIANGLES");
             bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {::std::move(scene_.triangles_)};
-            break;
-        }
-
-        case Accelerator::BVH_vector: {
-            LOG("PLANES");
-            bvhPlanesVector_ = ::MobileRT::BVH_vector<MobileRT::Plane> {::std::move(scene_.planes_)};
-            LOG("RECTANGLES");
-            bvhRectanglesVector_ = ::MobileRT::BVH_vector<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
-            LOG("SPHERES");
-            bvhSpheresVector_ = ::MobileRT::BVH_vector<MobileRT::Sphere> {::std::move(scene_.spheres_)};
-            LOG("TRIANGLES");
-            bvhTrianglesVector_ = ::MobileRT::BVH_vector<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
     }
@@ -100,14 +88,6 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
             intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
         }
-
-        case Accelerator::BVH_vector: {
-            intersection = this->bvhPlanesVector_.shadowTrace(intersection, ray);
-            intersection = this->bvhRectanglesVector_.shadowTrace(intersection, ray);
-            intersection = this->bvhSpheresVector_.shadowTrace(intersection, ray);
-            intersection = this->bvhTrianglesVector_.shadowTrace(intersection, ray);
-            break;
-        }
     }
     return intersection.length_ < lastDist;
 }
@@ -131,15 +111,6 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
             intersection = this->bvhRectangles_.trace(intersection, ray);
             intersection = this->bvhSpheres_.trace(intersection, ray);
             intersection = this->bvhTriangles_.trace(intersection, ray);
-            intersection = this->scene_.traceLights(intersection, ray);
-            break;
-        }
-
-        case Accelerator::BVH_vector: {
-            intersection = this->bvhPlanesVector_.trace(intersection, ray);
-            intersection = this->bvhRectanglesVector_.trace(intersection, ray);
-            intersection = this->bvhSpheresVector_.trace(intersection, ray);
-            intersection = this->bvhTrianglesVector_.trace(intersection, ray);
             intersection = this->scene_.traceLights(intersection, ray);
             break;
         }

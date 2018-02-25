@@ -294,7 +294,7 @@ public final class MainActivity extends Activity {
             System.exit(0);
         }
         pickerAccelerator_.setMinValue(0);
-        final String[] accelerators = {"Naive", "RegGrid", "BVH", "BVH_vec"};
+        final String[] accelerators = {"Naive", "RegGrid", "BVH", "None"};
         pickerAccelerator_.setMaxValue(accelerators.length - 1);
         pickerAccelerator_.setWrapSelectorWheel(true);
         pickerAccelerator_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
