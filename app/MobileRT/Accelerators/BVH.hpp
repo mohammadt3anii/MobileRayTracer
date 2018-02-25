@@ -25,6 +25,9 @@ namespace MobileRT {
 
     template<typename T>
     class BVH final {
+    private:
+        static const unsigned maxLeafSize {2};
+
     public:
         unsigned numberDepth_{0};
         ::std::vector<uBVHNode> boxes_{};
@@ -84,7 +87,7 @@ namespace MobileRT {
             uint32_t numberPrimitives{static_cast<uint32_t>(primitives.size())};
             uint32_t maxDepth{0};
             uint32_t maxNodes{1};
-            while (maxNodes * 2 < numberPrimitives) {
+            while (maxNodes * maxLeafSize < numberPrimitives) {
                 maxDepth++;
                 maxNodes = 1u << maxDepth;
             }
@@ -172,7 +175,7 @@ namespace MobileRT {
         divide = primitives.size() % 2 == 0 ? divide : divide + 1;
 
         uBVHNode currentNode {};
-        if (numberPrimitives <= (1 << depth) * 2) {
+        if (numberPrimitives <= (1 << depth) * maxLeafSize) {
             currentNode.leaf_.indexOffset_ = static_cast<unsigned>(primitives_.size());
             currentNode.leaf_.numberPrimitives_ = static_cast<unsigned>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
