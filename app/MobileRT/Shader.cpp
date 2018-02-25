@@ -26,23 +26,23 @@ Shader::Shader(Scene scene, const unsigned samplesLight, const Accelerator accel
 }
 
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
-    ::glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
-    ::glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
-    ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
-    ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
-    ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
-    ::std::vector<Primitive<Rectangle> *> rectangles{convertVector(this->scene_.rectangles_)};
-    Scene::getBounds<Primitive<Triangle>>(triangles, &min, &max);
-    Scene::getBounds<Primitive<Sphere>>(spheres, &min, &max);
-    Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
-    Scene::getBounds<Primitive<Rectangle>>(rectangles, &min, &max);
-    Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
-    AABB sceneBounds{min, max};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
             break;
         }
         case Accelerator::REGULAR_GRID: {
+            ::glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
+            ::glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
+            ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
+            ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
+            ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
+            ::std::vector<Primitive<Rectangle> *> rectangles{convertVector(this->scene_.rectangles_)};
+            Scene::getBounds<Primitive<Triangle>>(triangles, &min, &max);
+            Scene::getBounds<Primitive<Sphere>>(spheres, &min, &max);
+            Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
+            Scene::getBounds<Primitive<Rectangle>>(rectangles, &min, &max);
+            Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
+            AABB sceneBounds{min, max};
             regularGrid_ = RegularGrid {sceneBounds, &scene_, 32};
             break;
         }

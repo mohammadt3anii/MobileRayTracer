@@ -13,16 +13,25 @@
 #include <random>
 
 namespace MobileRT {
+    struct sLeafNode {
+        unsigned indexOffset_;
+        unsigned numberPrimitives_;
+    };
+
+    struct uBVHNode {
+        ::MobileRT::AABB box_ {};
+        struct sLeafNode leaf_;
+    };
 
     template<typename T>
     class BVH final {
     public:
         unsigned numberDepth_{0};
-        ::std::vector<::MobileRT::AABB> boxes_{};
-        ::std::vector<::std::vector<MobileRT::Primitive<T>>> primitives_{};
+        ::std::vector<uBVHNode> boxes_{};
+        ::std::vector<MobileRT::Primitive<T>> primitives_{};
 
     private:
-        AABB build(::std::vector<MobileRT::Primitive<T>> primitives, unsigned depth,
+        uBVHNode build(::std::vector<MobileRT::Primitive<T>> primitives, unsigned depth,
                    uint32_t currentNodeId) noexcept;
 
     public:
@@ -68,7 +77,7 @@ namespace MobileRT {
         const uint32_t currentId) noexcept {
             if (primitives.empty()) {
                 if (depth == 0) {
-                    boxes_.emplace_back(AABB{});
+                    boxes_.emplace_back(uBVHNode{});
                 }
                 return;
             }
@@ -86,27 +95,24 @@ namespace MobileRT {
             //LOG ("maxNodes = ", maxNodes);
             boxes_.resize(maxNodes);
 
-            build(std::move(primitives), depth, currentId);
+            primitives_.reserve(primitives.size());
+            boxes_.at(0) = build(std::move(primitives), depth, currentId);
 
-            for(auto& primitivesList : primitives_) {
-                primitivesList.shrink_to_fit();
-                ::std::vector<MobileRT::Primitive<T>>(primitivesList).swap(primitivesList);
-            }
             primitives_.shrink_to_fit();
-            ::std::vector<::std::vector<MobileRT::Primitive<T>>>(primitives_).swap(primitives_);
+            ::std::vector<MobileRT::Primitive<T>>(primitives_).swap(primitives_);
     }
 
 
     template<typename T>
-    AABB BVH<T>::build(
+    uBVHNode BVH<T>::build(
         ::std::vector<MobileRT::Primitive<T>> primitives,
         const unsigned depth,
         const uint32_t currentNodeId) noexcept {
         if (primitives.empty()) {
             if (depth == 0) {
-                boxes_.emplace_back(AABB{});
+                boxes_.emplace_back(uBVHNode{});
             }
-            return AABB{};
+            return uBVHNode{};
         }
         static int64_t numberPrimitives {0};
         if (depth == 0) {
@@ -165,8 +171,11 @@ namespace MobileRT {
         }*/
         divide = primitives.size() % 2 == 0 ? divide : divide + 1;
 
+        uBVHNode currentNode {};
         if (numberPrimitives <= (1 << depth) * 2) {
-            primitives_.emplace_back(primitives);
+            currentNode.leaf_.indexOffset_ = static_cast<unsigned>(primitives_.size());
+            currentNode.leaf_.numberPrimitives_ = static_cast<unsigned>(primitives.size());
+            primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
             using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
             Iterator leftBegin {primitives.begin()};
@@ -178,12 +187,14 @@ namespace MobileRT {
             ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const uint32_t left {currentNodeId * 2 + 1};
-            AABB leftBox {build(std::move(leftVector), depth + 1, left)};
-            AABB rightBox {build(std::move(rightVector), depth + 1, left + 1)};
-            current_box = surroundingBox(leftBox, rightBox);
+            uBVHNode leftBox {build(std::move(leftVector), depth + 1, left)};
+            uBVHNode rightBox {build(std::move(rightVector), depth + 1, left + 1)};
+            current_box = surroundingBox(leftBox.box_, rightBox.box_);
+            currentNode.box_ = current_box;
         }
-        boxes_.at(currentNodeId) = current_box;
-        return current_box;
+        currentNode.box_ = current_box;
+        boxes_.at(currentNodeId) = currentNode;
+        return currentNode;
     }
 
 
@@ -193,11 +204,11 @@ namespace MobileRT {
         const ::MobileRT::Ray ray,
         const unsigned depth,
         const uint32_t currentNodeId) noexcept {
-        if (intersect(boxes_.at(currentNodeId), ray)) {
-            //node at the bottom of tree - no childs
-            if (depth == numberDepth_) {
-                const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
-                for (auto &primitive : primitives_.at(primitiveId)) {
+        uBVHNode node {boxes_.at(currentNodeId)};
+        if (intersect(node.box_, ray)) {
+            if (depth == numberDepth_) {//node at the bottom of tree
+                 for (unsigned i {0}; i < node.leaf_.numberPrimitives_; i++) {
+                    auto& primitive {primitives_.at(node.leaf_.indexOffset_ + i)};
                     intersection = primitive.intersect(intersection, ray);
                 }
                 return intersection;
@@ -217,11 +228,12 @@ namespace MobileRT {
         const ::MobileRT::Ray ray,
         const unsigned depth,
         const uint32_t currentNodeId) noexcept {
-        if (intersect(boxes_.at(currentNodeId), ray)) {
-            //node at the bottom of tree - no childs
-            if (depth == numberDepth_) {
-                const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
-                for (auto &primitive : primitives_.at(primitiveId)) {
+        uBVHNode node {boxes_.at(currentNodeId)};
+        if (intersect(node.box_, ray)) {
+            if (depth == numberDepth_) {//node at the bottom of tree
+                //const uint32_t primitiveId {currentNodeId - ((1 << depth) - 1)};
+                for (unsigned i {0}; i < node.leaf_.numberPrimitives_; i++) {
+                    auto& primitive {primitives_.at(node.leaf_.indexOffset_ + i)};
                     const float lastDist {intersection.length_};
                     intersection = primitive.intersect(intersection, ray);
                     if (intersection.length_ < lastDist) {
