@@ -22,9 +22,9 @@
 #include <fstream>
 
 static void
-work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, const int32_t threads,
-            const int32_t shader, const int32_t scene, const int32_t samplesPixel, const int32_t samplesLight,
-            int32_t repeats, const int32_t accelerator, const bool printStdOut,
+work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::std::int32_t height, const ::std::int32_t threads,
+            const ::std::int32_t shader, const ::std::int32_t scene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
+            ::std::int32_t repeats, const ::std::int32_t accelerator, const bool printStdOut,
             const char *const pathObj, const char *const pathMtl) {
     ::std::ostringstream ss{""};
     ::std::streambuf *old_buf_stdout{nullptr};
@@ -63,7 +63,7 @@ work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, c
         }
         ::Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
         objLoader.process();
-        int32_t numberOfLights_{0};
+        ::std::int32_t numberOfLights_{0};
 
         const float ratio {
             ::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
@@ -214,18 +214,18 @@ work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, c
         const auto startCreating{::std::chrono::system_clock::now()};
         renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
-                static_cast<uint32_t>(width), static_cast<uint32_t>(height),
-                static_cast<uint32_t>(samplesPixel));
+                static_cast<::std::uint32_t>(width), static_cast<::std::uint32_t>(height),
+                static_cast<::std::uint32_t>(samplesPixel));
         const auto endCreating{::std::chrono::system_clock::now()};
         timeCreating = endCreating - startCreating;
         LOG("Renderer created = ", timeCreating.count());
 
-        const int32_t triangles{
-                static_cast<int32_t> (renderer_->shader_->scene_.triangles_.size())};
-        const int32_t spheres{static_cast<int32_t> (renderer_->shader_->scene_.spheres_.size())};
-        const int32_t planes{static_cast<int32_t> (renderer_->shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<int32_t> (renderer_->shader_->scene_.lights_.size());
-        const int32_t nPrimitives = triangles + spheres + planes;
+        const ::std::int32_t triangles{
+                static_cast<::std::int32_t> (renderer_->shader_->scene_.triangles_.size())};
+        const ::std::int32_t spheres{static_cast<::std::int32_t> (renderer_->shader_->scene_.spheres_.size())};
+        const ::std::int32_t planes{static_cast<::std::int32_t> (renderer_->shader_->scene_.planes_.size())};
+        numberOfLights_ = static_cast<::std::int32_t> (renderer_->shader_->scene_.lights_.size());
+        const ::std::int32_t nPrimitives = triangles + spheres + planes;
 
         LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
@@ -243,7 +243,7 @@ work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, c
         LOG("Started rendering scene");
         const auto startRendering{::std::chrono::system_clock::now()};
         do {
-            renderer_->renderFrame(bitmap, threads, width * sizeof(uint32_t));
+            renderer_->renderFrame(bitmap, threads, width * sizeof(::std::uint32_t));
             //renderer_->camera_->position_.x_ += 2.0f;
             repeats--;
         } while (repeats > 0);
@@ -260,9 +260,9 @@ work_thread(uint32_t *const bitmap, const int32_t width, const int32_t height, c
     LOG("Rendering Time in secs = ", timeRendering.count());
 }
 
-void RayTrace(uint32_t *const bitmap, const int32_t width, const int32_t height, const int32_t threads,
-              const int32_t shader, const int32_t scene, const int32_t samplesPixel, const int32_t samplesLight,
-              const int32_t repeats, const int32_t accelerator, const bool printStdOut, const bool async,
+void RayTrace(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::std::int32_t height, const ::std::int32_t threads,
+              const ::std::int32_t shader, const ::std::int32_t scene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
+              const ::std::int32_t repeats, const ::std::int32_t accelerator, const bool printStdOut, const bool async,
               const char *const pathObj, const char *const pathMtl) {
     if (async) {
         ::std::thread thread {work_thread, bitmap, width, height, threads, shader, scene,

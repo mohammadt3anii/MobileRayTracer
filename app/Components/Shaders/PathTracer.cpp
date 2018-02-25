@@ -15,7 +15,7 @@ PathTracer::PathTracer(Scene scene,
                        ::std::unique_ptr<Sampler> samplerRay,
                        ::std::unique_ptr<Sampler> samplerLight,
                        ::std::unique_ptr<Sampler> samplerRussianRoulette,
-                       const uint32_t samplesLight, const Accelerator accelerator) noexcept :
+                       const ::std::uint32_t samplesLight, const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator},
         samplerRay_{::std::move(samplerRay)},
         samplerLight_{::std::move(samplerLight)},
@@ -25,7 +25,7 @@ PathTracer::PathTracer(Scene scene,
 
 //pag 28 slides Monte Carlo
 bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
-    const int32_t rayDepth{ray.depth_};
+    const ::std::int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
@@ -61,16 +61,16 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
-        const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
+        const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
-            const uint32_t samplesLight{this->samplesLight_};
+            const ::std::uint32_t samplesLight{this->samplesLight_};
             Intersection intersectLight{};
             //direct light
-            for (uint32_t i{0}; i < samplesLight; i++) {
+            for (::std::uint32_t i{0}; i < samplesLight; i++) {
                 const float randomNumber{samplerLight_->getSample()};
                 //PDF = 1 / sizeLights
-                const uint32_t chosenLight{
-                        static_cast<uint32_t> (::std::floor(
+                const ::std::uint32_t chosenLight{
+                        static_cast<::std::uint32_t> (::std::floor(
                                 randomNumber * sizeLights * 0.99999f))};
                 Light &light(*scene_.lights_[chosenLight]);
                 //calculates vector starting in intersection to the light

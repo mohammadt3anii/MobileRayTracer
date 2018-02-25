@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <cstdint>
 #include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
@@ -39,25 +38,25 @@ namespace MobileRT {
     const float RayLengthMax{1.0e+30f};
     const float Pi{3.14159265358979323846f};
     const float Pi_4{0.78539816339744830962f};
-    const int32_t RayDepthMin{4};
-    const int32_t RayDepthMax{8};
-    const int32_t NumberOfBlocks{256};
+    const ::std::int32_t RayDepthMin{4};
+    const ::std::int32_t RayDepthMax{8};
+    const ::std::int32_t NumberOfBlocks{256};
 
-    int32_t roundDownToMultipleOf(int32_t value, int32_t multiple) noexcept;
+    ::std::int32_t roundDownToMultipleOf(::std::int32_t value, ::std::int32_t multiple) noexcept;
 
-    float haltonSequence(uint32_t index, uint32_t base) noexcept;
+    float haltonSequence(::std::uint32_t index, ::std::uint32_t base) noexcept;
 
-    uint32_t incrementalAvg(::glm::vec3 sample, uint32_t avg, uint32_t numSample) noexcept;
+    ::std::uint32_t incrementalAvg(::glm::vec3 sample, ::std::uint32_t avg, ::std::uint32_t numSample) noexcept;
 
 
     template<typename ...Args>
     void log(Args &&... args) noexcept {
         ::std::ostringstream oss{""};
-        static_cast<void> (::std::initializer_list<int32_t> {(oss << args, 0)...});
+        static_cast<void> (::std::initializer_list<::std::int32_t> {(oss << args, 0)...});
         oss << '\n';
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
-        const ::std::chrono::duration<int32_t, ::std::micro> timeToSleep {10};
+        const ::std::chrono::duration<::std::int32_t, ::std::micro> timeToSleep {10};
         ::std::this_thread::sleep_for(timeToSleep);
 #else
         ::std::cout << oss.str();

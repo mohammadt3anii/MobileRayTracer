@@ -10,8 +10,8 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-void RayTrace(uint32_t *bitmap, int32_t width, int32_t height, int32_t threads, int32_t shader, int32_t scene,
-              int32_t samplesPixel, int32_t samplesLight, int32_t repeats, int32_t accelerator, bool printStdOut,
+void RayTrace(::std::uint32_t *bitmap, ::std::int32_t width, ::std::int32_t height, ::std::int32_t threads, ::std::int32_t shader, ::std::int32_t scene,
+              ::std::int32_t samplesPixel, ::std::int32_t samplesLight, ::std::int32_t repeats, ::std::int32_t accelerator, bool printStdOut,
               bool async, const char *pathObj, const char *pathMtl);
 
 #endif // C_WRAPPER_HPP

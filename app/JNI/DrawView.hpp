@@ -36,7 +36,7 @@ enum class State {
 };
 
 extern "C"
-int32_t JNI_OnLoad(JavaVM *pjvm, void *reserved);
+::std::int32_t JNI_OnLoad(JavaVM *pjvm, void *reserved);
 
 extern "C"
 void JNI_OnUnload(JavaVM *vm, void *reserved);
@@ -83,7 +83,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jint nThreads) noexcept;
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
+::std::int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *env,
         jobject thiz,
         jfloat jx,
@@ -111,13 +111,13 @@ long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
 ) noexcept;
 
 extern "C"
-uint32_t Java_puscas_mobilertapp_ViewText_getSample(
+::std::uint32_t Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_resize(
+::std::int32_t Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv *env,
         jobject thiz,
         jint size

@@ -11,20 +11,20 @@ static ::MobileRT::Renderer *renderer_{nullptr};
 static ::JavaVM *javaVM_{nullptr};
 static ::std::thread *thread_{nullptr};
 static ::std::mutex mutex_{};
-static int32_t width_{0};
-static int32_t height_{0};
+static ::std::int32_t width_{0};
+static ::std::int32_t height_{0};
 static float fps_{0.0f};
 static long long timeFrame_{0};
 static long long numberOfLights_{0};
 
 extern "C"
-int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
+::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
     LOG("JNI_OnLoad");
     javaVM_ = jvm;
 
     JNIEnv *jniENV{nullptr};
     {
-        const int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
+        const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
@@ -35,7 +35,7 @@ int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
             jniENV->GetStaticMethodID(drawViewClass, "calledByJNI_static", "()I")};
     assert(drawViewMethodId != nullptr);
     {
-        const int32_t result {jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
+        const ::std::int32_t result {jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
@@ -85,7 +85,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
 }
 
 static void FPS() noexcept {
-    static int32_t frame{0};
+    static ::std::int32_t frame{0};
     static ::std::chrono::steady_clock::time_point timebase_{};
     frame++;
     const ::std::chrono::steady_clock::time_point time{::std::chrono::steady_clock::now()};
@@ -326,8 +326,8 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
         mutex_.lock();
         renderer_ = new MobileRT::Renderer{
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
-                static_cast<uint32_t>(width_), static_cast<uint32_t>(height_),
-                static_cast<uint32_t>(samplesPixel)};
+                static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
+                static_cast<::std::uint32_t>(samplesPixel)};
         mutex_.unlock();
         const long long triangles{
                 static_cast<long long> (renderer_->shader_->scene_.triangles_.size())};
@@ -386,7 +386,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
     assert(drawViewMethodId != nullptr);
     {
-        const int32_t result {env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
+        const ::std::int32_t result {env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
         static_cast<void> (result);
     }
 
@@ -394,13 +394,13 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     assert(drawViewMethodId != nullptr);
     jobject resultObj = env->AllocObject(globalDrawViewClass);
     {
-        const int32_t result {env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId)};
+        const ::std::int32_t result {env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId)};
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
 
     {
-        const int32_t result {env->CallIntMethod(resultObj, drawViewMethodId)};
+        const ::std::int32_t result {env->CallIntMethod(resultObj, drawViewMethodId)};
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
@@ -410,43 +410,43 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
     auto lambda = [=]() {
         assert(env != nullptr);
-        const int32_t jniError {
+        const ::std::int32_t jniError {
                 javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                 JNI_VERSION_1_6)};
 
         assert(jniError == JNI_OK || jniError == JNI_EDETACHED);
         {
-            const int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+            const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
-        const int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
+        const ::std::int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
 
         assert(globalDrawViewClass != nullptr);
         jmethodID drawViewMethodId_thread{
                 env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
         assert(drawViewMethodId_thread != nullptr);
-        const int32_t result_thread{
+        const ::std::int32_t result_thread{
                 env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId_thread)};
         LOG("result_thread = ", result_thread);
 
-        uint32_t *dstPixels{nullptr};
+        ::std::uint32_t *dstPixels{nullptr};
         {
-            const int32_t ret {AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels))};
-            //dstPixels = static_cast<uint32_t *>(env->GetDirectBufferAddress(globalByteBuffer));
+            const ::std::int32_t ret {AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels))};
+            //dstPixels = static_cast<::std::uint32_t *>(env->GetDirectBufferAddress(globalByteBuffer));
             assert(ret == JNI_OK);
             LOG("ret = ", ret);
         }
 
         AndroidBitmapInfo info{};
         {
-            const int32_t ret {AndroidBitmap_getInfo(env, globalBitmap, &info)};
+            const ::std::int32_t ret {AndroidBitmap_getInfo(env, globalBitmap, &info)};
             assert(ret == JNI_OK);
             LOG("ret = ", ret);
         }
 
-        const uint32_t stride{info.stride};
-        int32_t rep {1};
+        const ::std::uint32_t stride{info.stride};
+        ::std::int32_t rep {1};
         do {
             const ::std::chrono::steady_clock::time_point start{
                     ::std::chrono::steady_clock::now()};
@@ -469,7 +469,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             LOG("WORKING = FINISHED");
         }
         {
-            const int32_t result {AndroidBitmap_unlockPixels(env, globalBitmap)};
+            const ::std::int32_t result {AndroidBitmap_unlockPixels(env, globalBitmap)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
@@ -477,13 +477,13 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         env->DeleteGlobalRef(globalDrawViewClass);
         env->DeleteGlobalRef(globalBitmap);
         {
-            const int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+            const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                               JNI_VERSION_1_6)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
         if (jniThread == JNI_EDETACHED) {
-            const int32_t result {javaVM_->DetachCurrentThread()};
+            const ::std::int32_t result {javaVM_->DetachCurrentThread()};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
@@ -494,7 +494,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 }
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
+::std::int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *const /*env*/,
         jobject /*thiz*/,
         jfloat const /*jx*/,
@@ -503,8 +503,8 @@ int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
     //const float v {static_cast<float> (jy) / height_};
     //MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
     //MobileRT::Intersection intersection {};
-    //const int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ::std::move(ray))};
-    const int32_t primitiveID{-1};
+    //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ::std::move(ray))};
+    const ::std::int32_t primitiveID{-1};
     return primitiveID;
 }
 
@@ -519,7 +519,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     /*const float u{static_cast<float> (jx) / width_};
     const float v{static_cast<float> (jy) / height_};
     const MobileRT::Ray ray{renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
-    const uint32_t index{static_cast<uint32_t>(primitiveIndex)};
+    const ::std::uint32_t index{static_cast<::std::uint32_t>(primitiveIndex)};
     const MobileRT::Plane plane{
             ::glm::vec3{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
@@ -546,11 +546,11 @@ long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
 }
 
 extern "C"
-uint32_t Java_puscas_mobilertapp_ViewText_getSample(
+::std::uint32_t Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
-    uint32_t res{0};
+    ::std::uint32_t res{0};
     /*mutex_.lock();
     if (renderer_ != nullptr) {
         res = renderer_->getSample();
@@ -560,13 +560,13 @@ uint32_t Java_puscas_mobilertapp_ViewText_getSample(
 }
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_resize(
+::std::int32_t Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv *const /*env*/,
         jobject /*thiz*/,
         jint const size
 ) noexcept {
     return MobileRT::roundDownToMultipleOf(size,
-                                           static_cast<int32_t>(::std::sqrt(MobileRT::NumberOfBlocks)));
+                                           static_cast<::std::int32_t>(::std::sqrt(MobileRT::NumberOfBlocks)));
 }
 
 extern "C"

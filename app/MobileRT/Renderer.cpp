@@ -9,13 +9,13 @@ using ::MobileRT::Renderer;
 Renderer::Renderer(::std::unique_ptr<Shader> shader,
                    ::std::unique_ptr<Camera> camera,
                    ::std::unique_ptr<Sampler> samplerPixel,
-                   const uint32_t width, const uint32_t height,
-                   const uint32_t samplesPixel) noexcept :
+                   const ::std::uint32_t width, const ::std::uint32_t height,
+                   const ::std::uint32_t samplesPixel) noexcept :
         camera_{::std::move(camera)},
         shader_{::std::move(shader)},
         samplerPixel_{::std::move(samplerPixel)},
-        blockSizeX_{width / static_cast<uint32_t>(::std::sqrt(NumberOfBlocks))},
-        blockSizeY_{height / static_cast<uint32_t>(::std::sqrt(NumberOfBlocks))},
+        blockSizeX_{width / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks))},
+        blockSizeY_{height / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks))},
         sample_{0},
         width_{width},
         height_{height},
@@ -25,10 +25,10 @@ Renderer::Renderer(::std::unique_ptr<Shader> shader,
     this->shader_->initializeAccelerators(camera_.get());
 }
 
-void Renderer::renderFrame(uint32_t *const bitmap, const int32_t numThreads,
-                           const uint32_t stride) noexcept {
+void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t numThreads,
+                           const ::std::uint32_t stride) noexcept {
     LOG("numThreads = ", numThreads);
-    const uint32_t realWidth {stride / static_cast<uint32_t>(sizeof(uint32_t))};
+    const ::std::uint32_t realWidth {stride / static_cast<::std::uint32_t>(sizeof(::std::uint32_t))};
     LOG("realWidth = ", realWidth);
     LOG("width_ = ", width_);
 
@@ -37,11 +37,11 @@ void Renderer::renderFrame(uint32_t *const bitmap, const int32_t numThreads,
     this->shader_->resetSampling();
     this->camera_->resetSampling();
 
-    const int32_t numChildren{numThreads - 1};
+    const ::std::int32_t numChildren{numThreads - 1};
     ::std::vector<::std::thread> threads {};
-    threads.reserve(static_cast<uint32_t>(numChildren));
+    threads.reserve(static_cast<::std::uint32_t>(numChildren));
 
-    for (int32_t i{0}; i < numChildren; i++) {
+    for (::std::int32_t i{0}; i < numChildren; i++) {
         threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
     }
     renderScene(bitmap, numChildren, realWidth);
@@ -60,30 +60,30 @@ void Renderer::stopRender() noexcept {
     this->samplerPixel_->stopSampling();
 }
 
-void Renderer::renderScene(uint32_t *const bitmap, const int32_t tid, const uint32_t width) noexcept {
+void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t tid, const ::std::uint32_t width) noexcept {
     const float INV_IMG_WIDTH{1.0f / this->width_};
     const float INV_IMG_HEIGHT{1.0f / this->height_};
     const float pixelWidth{0.5f / this->width_};
     const float pixelHeight{0.5f / this->height_};
-    const uint32_t samples{this->samplesPixel_};
+    const ::std::uint32_t samples{this->samplesPixel_};
     ::glm::vec3 pixelRGB {};
-    for (uint32_t sample{0}; sample < samples; sample++) {
+    for (::std::uint32_t sample{0}; sample < samples; sample++) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
             if (block >= 1.0f) { break; }
-            const uint32_t pixel{
-                    static_cast<uint32_t>(static_cast<uint32_t>(roundf(block * this->domainSize_)) *
+            const ::std::uint32_t pixel{
+                    static_cast<::std::uint32_t>(static_cast<::std::uint32_t>(roundf(block * this->domainSize_)) *
                                           this->blockSizeX_ % resolution_)};
-            const uint32_t startY{
+            const ::std::uint32_t startY{
                     ((pixel / this->width_) * this->blockSizeY_) % this->height_};
-            const uint32_t endY{startY + this->blockSizeY_};
-            for (uint32_t y{startY}; y < endY; y++) {
-                //const uint32_t yWidth{y * this->width_};
-                const uint32_t yWidth{y * width};
+            const ::std::uint32_t endY{startY + this->blockSizeY_};
+            for (::std::uint32_t y{startY}; y < endY; y++) {
+                //const ::std::uint32_t yWidth{y * this->width_};
+                const ::std::uint32_t yWidth{y * width};
                 const float v{y * INV_IMG_HEIGHT};
-                const uint32_t startX{(pixel + yWidth) % this->width_};
-                const uint32_t endX{startX + this->blockSizeX_};
-                for (uint32_t x{startX}; x < endX; x++) {
+                const ::std::uint32_t startX{(pixel + yWidth) % this->width_};
+                const ::std::uint32_t endX{startX + this->blockSizeX_};
+                for (::std::uint32_t x{startX}; x < endX; x++) {
                     const float u{x * INV_IMG_WIDTH};
                     const float r1{this->samplerPixel_->getSample()};
                     const float r2{this->samplerPixel_->getSample()};
@@ -92,7 +92,7 @@ void Renderer::renderScene(uint32_t *const bitmap, const int32_t tid, const uint
                     Ray ray{this->camera_->generateRay(u, v, deviationU, deviationV)};
                     pixelRGB = {};
                     this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
-                    const uint32_t pixelIndex{yWidth + x};
+                    const ::std::uint32_t pixelIndex{yWidth + x};
                     assert(pixelIndex < width * height_);
                     bitmap[pixelIndex] = ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex],
                         sample + 1);
@@ -106,6 +106,6 @@ void Renderer::renderScene(uint32_t *const bitmap, const int32_t tid, const uint
     }
 }
 
-uint32_t Renderer::getSample() const noexcept {
+::std::uint32_t Renderer::getSample() const noexcept {
     return this->sample_;
 }

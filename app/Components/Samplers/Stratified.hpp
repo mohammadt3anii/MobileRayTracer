@@ -12,8 +12,8 @@ namespace Components {
     public:
         explicit Stratified() noexcept = default;
 
-        explicit Stratified(uint32_t width, uint32_t height,
-                            uint32_t samples) noexcept;
+        explicit Stratified(::std::uint32_t width, ::std::uint32_t height,
+                            ::std::uint32_t samples) noexcept;
 
         Stratified(const Stratified &stratified) noexcept = delete;
 
@@ -25,7 +25,7 @@ namespace Components {
 
         Stratified &operator=(Stratified &&stratified) noexcept = delete;
 
-        float getSample(uint32_t sample) noexcept final;
+        float getSample(::std::uint32_t sample) noexcept final;
     };
 }//namespace Components
 

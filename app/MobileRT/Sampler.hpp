@@ -12,15 +12,15 @@
 namespace MobileRT {
     class Sampler {
     public:
-        ::std::atomic<uint32_t> sample_{0};
-        const uint32_t domainSize_{::std::numeric_limits<uint32_t>::max()};
-        uint32_t samples_{::std::numeric_limits<uint32_t>::max()};
+        ::std::atomic<::std::uint32_t> sample_{0};
+        const ::std::uint32_t domainSize_{::std::numeric_limits<::std::uint32_t>::max()};
+        ::std::uint32_t samples_{::std::numeric_limits<::std::uint32_t>::max()};
 
     public:
         explicit Sampler() noexcept = default;
 
-        explicit Sampler(uint32_t width, uint32_t height,
-                         uint32_t samples) noexcept;
+        explicit Sampler(::std::uint32_t width, ::std::uint32_t height,
+                         ::std::uint32_t samples) noexcept;
 
         Sampler(const Sampler &sampler) noexcept = delete;
 
@@ -36,7 +36,7 @@ namespace MobileRT {
 
         void stopSampling() noexcept;
 
-        virtual float getSample(uint32_t sample) noexcept = 0;
+        virtual float getSample(::std::uint32_t sample) noexcept = 0;
 
         float getSample() noexcept;
     };

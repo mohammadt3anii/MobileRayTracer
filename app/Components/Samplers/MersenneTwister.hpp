@@ -23,7 +23,7 @@ namespace Components {
 
         MersenneTwister &operator=(MersenneTwister &&random) noexcept = delete;
 
-        float getSample(uint32_t sample) noexcept final;
+        float getSample(::std::uint32_t sample) noexcept final;
     };
 }//namespace Components
 

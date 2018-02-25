@@ -14,7 +14,7 @@ using ::MobileRT::Ray;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
-Shader::Shader(Scene scene, const uint32_t samplesLight, const Accelerator accelerator) noexcept
+Shader::Shader(Scene scene, const ::std::uint32_t samplesLight, const Accelerator accelerator) noexcept
         :
         scene_{::std::move(scene)},
         accelerator_{accelerator},

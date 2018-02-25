@@ -6,10 +6,10 @@
 
 using ::MobileRT::Sampler;
 
-Sampler::Sampler(const uint32_t width, const uint32_t height,
-                 const uint32_t samples) noexcept :
-        domainSize_{(width / (width / static_cast<uint32_t>(::std::sqrt(NumberOfBlocks)))) *
-                    (height / (width / static_cast<uint32_t>(::std::sqrt(NumberOfBlocks))))},
+Sampler::Sampler(const ::std::uint32_t width, const ::std::uint32_t height,
+                 const ::std::uint32_t samples) noexcept :
+        domainSize_{(width / (width / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks)))) *
+                    (height / (width / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks))))},
         samples_{samples} {
 }
 

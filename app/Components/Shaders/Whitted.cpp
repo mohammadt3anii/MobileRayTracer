@@ -10,12 +10,12 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-Whitted::Whitted(Scene scene, const uint32_t samplesLight, Accelerator accelerator) noexcept :
+Whitted::Whitted(Scene scene, const ::std::uint32_t samplesLight, Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 
 bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
-    const int32_t rayDepth{ray.depth_};
+    const ::std::int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
@@ -43,14 +43,14 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
             intersection.symNormal_};
 
     // shadowed direct lighting - only for diffuse materials
-    const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
+    const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
         if (sizeLights > 0) {
             Intersection lightIntersection{};
-            const uint32_t samplesLight{this->samplesLight_};
-            for (uint32_t i{0}; i < sizeLights; i++) {
+            const ::std::uint32_t samplesLight{this->samplesLight_};
+            for (::std::uint32_t i{0}; i < sizeLights; i++) {
                 Light &light(*scene_.lights_[i]);
-                for (uint32_t j{0}; j < samplesLight; j++) {
+                for (::std::uint32_t j{0}; j < samplesLight; j++) {
                     const ::glm::vec3 lightPosition{light.getPosition()};
                     //calculates vector starting in intersection to the light
                     ::glm::vec3 vectorToLight{lightPosition - intersection.point_};
