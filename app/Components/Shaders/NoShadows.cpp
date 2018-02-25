@@ -34,7 +34,7 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
 
     // direct lighting - only for diffuse materials
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
-        const uint64_t sizeLights{scene_.lights_.size()};
+        const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
             const unsigned samplesLight{this->samplesLight_};
             for (unsigned i{0}; i < sizeLights; i++) {

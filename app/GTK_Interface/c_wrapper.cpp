@@ -63,7 +63,7 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         }
         ::Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
         objLoader.process();
-        int64_t numberOfLights_{0};
+        int32_t numberOfLights_{0};
 
         const float ratio {
             ::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
@@ -220,12 +220,12 @@ work_thread(unsigned *const bitmap, const int width, const int height, const int
         timeCreating = endCreating - startCreating;
         LOG("Renderer created = ", timeCreating.count());
 
-        const int64_t triangles{
-                static_cast<int64_t> (renderer_->shader_->scene_.triangles_.size())};
-        const int64_t spheres{static_cast<int64_t> (renderer_->shader_->scene_.spheres_.size())};
-        const int64_t planes{static_cast<int64_t> (renderer_->shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<int64_t> (renderer_->shader_->scene_.lights_.size());
-        const int64_t nPrimitives = triangles + spheres + planes;
+        const int32_t triangles{
+                static_cast<int32_t> (renderer_->shader_->scene_.triangles_.size())};
+        const int32_t spheres{static_cast<int32_t> (renderer_->shader_->scene_.spheres_.size())};
+        const int32_t planes{static_cast<int32_t> (renderer_->shader_->scene_.planes_.size())};
+        numberOfLights_ = static_cast<int32_t> (renderer_->shader_->scene_.lights_.size());
+        const int32_t nPrimitives = triangles + spheres + planes;
 
         LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);

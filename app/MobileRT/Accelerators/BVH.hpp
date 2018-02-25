@@ -98,14 +98,11 @@ namespace MobileRT {
         const unsigned depth,
         const uint32_t currentNodeId) noexcept {
         if (primitives.empty()) {
-            if (depth == 0) {
-                boxes_.emplace_back(uBVHNode{});
-            }
             return uBVHNode{};
         }
-        static int64_t numberPrimitives {0};
+        static uint32_t numberPrimitives {0};
         if (depth == 0) {
-            numberPrimitives = static_cast<int64_t>(primitives.size());
+            numberPrimitives = static_cast<uint32_t>(primitives.size());
         }
 
         AABB current_box{
@@ -117,9 +114,11 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
+        //::std::vector<AABB> boxes {};
         for (uint32_t i{0}; i < primitives.size(); i++) {
             const AABB new_box{primitives.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
+            //boxes.emplace_back(new_box);
         }
 
         const int axis {current_box.getLongestAxis()};
@@ -129,25 +128,25 @@ namespace MobileRT {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
-        int32_t divide{static_cast<int32_t>(primitives.size()) / 2};
-        /*uint64_t divide {0};
-        {
+        uint32_t divide{static_cast<uint32_t>(primitives.size()) / 2};
+        /*{
             ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
             AABB left_box {};
-            for (uint64_t i {0}; i < N - 1; i++) {
+            uint32_t N {static_cast<uint32_t>(primitives.size())};
+            for (uint32_t i {0}; i < N - 1; i++) {
                 left_box = surroundingBox(left_box, boxes.at(i));
                 left_area.insert(left_area.end(), left_box.getSurfaceArea());
             }
 
             ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
             AABB right_box {};
-            for (uint64_t i {N - 1}; i > 0; i--) {
+            for (uint32_t i {N - 1}; i > 0; i--) {
                 right_box = surroundingBox(right_box, boxes.at(i));
                 right_area.insert(right_area.begin(), right_box.getSurfaceArea());
             }
 
             float min_SAH {::std::numeric_limits<float>::max()};
-            for (uint64_t i {0}; i < N - 1; i++) {
+            for (uint32_t i {0}; i < N - 1; i++) {
                 const float SAH_left {i * left_area.at(i)};
                 const float SAH_right {(N - i - 1) * right_area.at(i)};
                 const float SAH {SAH_left + SAH_right};

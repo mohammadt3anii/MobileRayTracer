@@ -61,7 +61,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
-        const uint64_t sizeLights{scene_.lights_.size()};
+        const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
             const unsigned samplesLight{this->samplesLight_};
             Intersection intersectLight{};

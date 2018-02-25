@@ -43,7 +43,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
             intersection.symNormal_};
 
     // shadowed direct lighting - only for diffuse materials
-    const uint64_t sizeLights{scene_.lights_.size()};
+    const uint32_t sizeLights{static_cast<uint32_t>(scene_.lights_.size())};
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
         if (sizeLights > 0) {
             Intersection lightIntersection{};
