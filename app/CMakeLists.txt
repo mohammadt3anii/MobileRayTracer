@@ -1,5 +1,12 @@
 cmake_minimum_required( VERSION 3.6.0 )
 
+# Set CMAKE_SYSTEM_NAME
+if( NOT DEFINED ANDROID_ABI )
+  set( CMAKE_SYSTEM_NAME "Linux" )
+else()
+  set( CMAKE_SYSTEM_NAME "Android" )
+endif()
+
 # Remove default flags
 set( CMAKE_CXX_FLAGS "-fPIC" CACHE STRING "CUSTOM" FORCE )
 set( CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "CUSTOM" FORCE )
