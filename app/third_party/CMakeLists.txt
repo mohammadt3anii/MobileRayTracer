@@ -4,6 +4,6 @@ add_subdirectory( glm )
 add_subdirectory( googletest )
 add_subdirectory( tinyobjloader )
 
-if( NOT DEFINED ANDROID_NDK )
+if( NOT DEFINED ANDROID_ABI )
   add_subdirectory( GSL )
 endif()
