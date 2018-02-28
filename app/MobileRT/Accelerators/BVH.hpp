@@ -9,6 +9,7 @@
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
 #include <algorithm>
+#include <array>
 #include <glm/glm.hpp>
 #include <random>
 
@@ -85,7 +86,7 @@ namespace MobileRT {
             boxes_.resize(maxNodes);
 
             primitives_.reserve(primitives.size());
-            boxes_.at(0) = build(std::move(primitives), 0, 0);
+            boxes_.at(0) = build(::std::move(primitives), 0, 0);
 
             primitives_.shrink_to_fit();
             ::std::vector<MobileRT::Primitive<T>>(primitives_).swap(primitives_);
@@ -174,8 +175,8 @@ namespace MobileRT {
             ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const ::std::uint32_t left {currentNodeId * 2 + 1};
-            uBVHNode leftBox {build(std::move(leftVector), depth + 1, left)};
-            uBVHNode rightBox {build(std::move(rightVector), depth + 1, left + 1)};
+            uBVHNode leftBox {build(::std::move(leftVector), depth + 1, left)};
+            uBVHNode rightBox {build(::std::move(rightVector), depth + 1, left + 1)};
             current_box = surroundingBox(leftBox.box_, rightBox.box_);
             currentNode.box_ = current_box;
         }
@@ -190,12 +191,12 @@ namespace MobileRT {
             const ::MobileRT::Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        uBVHNode* stack[64];
-        ::std::uint32_t stackId[64];
-        uBVHNode** stackPtr = stack;
-        ::std::uint32_t* stackPtrId = stackId;
-        *stackPtr++ = nullptr;
-        *stackPtrId++ = 0;
+        ::std::array<uBVHNode*, 64> stack {};
+        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::uint32_t stackPtr {0};
+        ::std::uint32_t stackPtrId {0};
+        stack.at(stackPtr++) = nullptr;
+        stackId.at(stackPtrId++) = 0;
         do {
             if (intersect(node->box_, ray)) {
 
@@ -204,8 +205,8 @@ namespace MobileRT {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
-                    node = *--stackPtr; // pop
-                    id = *--stackPtrId; // pop
+                    node = stack.at(--stackPtr); // pop
+                    id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     uBVHNode* childL {&boxes_.at(left)};
@@ -215,21 +216,21 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = *--stackPtr; // pop
-                        id = *--stackPtrId; // pop
+                        node = stack.at(--stackPtr); // pop
+                        id = stackId.at(--stackPtrId); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            *stackPtr++ = childR; // push
-                            *stackPtrId++ = left + 1; // push
+                            stack.at(stackPtr++) = childR; // push
+                            stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                node = *--stackPtr; // pop
-                id = *--stackPtrId; // pop
+                node = stack.at(--stackPtr); // pop
+                id = stackId.at(--stackPtrId); // pop
             }
 
         } while (node != nullptr);
@@ -242,12 +243,12 @@ namespace MobileRT {
         const ::MobileRT::Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        uBVHNode* stack[64];
-        ::std::uint32_t stackId[64];
-        uBVHNode** stackPtr = stack;
-        ::std::uint32_t* stackPtrId = stackId;
-        *stackPtr++ = nullptr;
-        *stackPtrId++ = 0;
+        ::std::array<uBVHNode*, 64> stack {};
+        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::uint32_t stackPtr {0};
+        ::std::uint32_t stackPtrId {0};
+        stack.at(stackPtr++) = nullptr;
+        stackId.at(stackPtrId++) = 0;
         do {
             if (intersect(node->box_, ray)) {
 
@@ -260,8 +261,8 @@ namespace MobileRT {
                             return intersection;
                         }
                     }
-                    node = *--stackPtr; // pop
-                    id = *--stackPtrId; // pop
+                    node = stack.at(--stackPtr); // pop
+                    id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     uBVHNode* childL {&boxes_.at(left)};
@@ -271,21 +272,21 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = *--stackPtr; // pop
-                        id = *--stackPtrId; // pop
+                        node = stack.at(--stackPtr); // pop
+                        id = stackId.at(--stackPtrId); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            *stackPtr++ = childR; // push
-                            *stackPtrId++ = left + 1; // push
+                            stack.at(stackPtr++) = childR; // push
+                            stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                node = *--stackPtr; // pop
-                id = *--stackPtrId; // pop
+                node = stack.at(--stackPtr); // pop
+                id = stackId.at(--stackPtrId); // pop
             }
 
         } while (node != nullptr);

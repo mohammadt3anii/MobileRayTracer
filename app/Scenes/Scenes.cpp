@@ -12,7 +12,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       1.0f,
                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
-    scene.lights_.emplace_back(std::make_unique<Components::PointLight>(lightMat,
+    scene.lights_.emplace_back(::std::make_unique<Components::PointLight>(lightMat,
                                                                         ::glm::vec3 {0.0f,
                                                                                            0.99f,
                                                                                            0.0f}));

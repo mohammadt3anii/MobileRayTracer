@@ -51,28 +51,28 @@ bool OBJLoader::fillScene(Scene *const scene,
 
             // Loop over vertices in the face.
             for (size_t v{0}; v < fv; v += 3) {
-                tinyobj::index_t idx1(shape.mesh.indices[index_offset + v + 0]);
-                tinyobj::real_t vx1{
+                ::tinyobj::index_t idx1(shape.mesh.indices[index_offset + v + 0]);
+                ::tinyobj::real_t vx1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 0]};
-                tinyobj::real_t vy1{
+                ::tinyobj::real_t vy1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 1]};
-                tinyobj::real_t vz1{
+                ::tinyobj::real_t vz1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
 
-                tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
-                tinyobj::real_t vx2{
+                ::tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
+                ::tinyobj::real_t vx2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 0]};
-                tinyobj::real_t vy2{
+                ::tinyobj::real_t vy2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 1]};
-                tinyobj::real_t vz2{
+                ::tinyobj::real_t vz2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 2]};
 
-                tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
-                tinyobj::real_t vx3{
+                ::tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
+                ::tinyobj::real_t vx3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 0]};
-                tinyobj::real_t vy3{
+                ::tinyobj::real_t vy3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1]};
-                tinyobj::real_t vz3{
+                ::tinyobj::real_t vz3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2]};
 
                 ::glm::vec3 vertex1 {-vx1, vy1, vz1};
@@ -80,25 +80,25 @@ bool OBJLoader::fillScene(Scene *const scene,
                 ::glm::vec3 vertex3 {-vx3, vy3, vz3};
                 ::glm::vec3 normal {};
                 if (!attrib_.normals.empty()) {
-                    tinyobj::real_t nx1{
+                    ::tinyobj::real_t nx1{
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 0]};
-                    tinyobj::real_t ny1{
+                    ::tinyobj::real_t ny1{
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 1]};
-                    tinyobj::real_t nz1{
+                    ::tinyobj::real_t nz1{
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 2]};
 
-                    tinyobj::real_t nx2{
+                    ::tinyobj::real_t nx2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 0]};
-                    tinyobj::real_t ny2{
+                    ::tinyobj::real_t ny2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 1]};
-                    tinyobj::real_t nz2{
+                    ::tinyobj::real_t nz2{
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 2]};
 
-                    tinyobj::real_t nx3{
+                    ::tinyobj::real_t nx3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 0]};
-                    tinyobj::real_t ny3{
+                    ::tinyobj::real_t ny3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 1]};
-                    tinyobj::real_t nz3{
+                    ::tinyobj::real_t nz3{
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 2]};
 
                     const ::glm::vec3 normal1 {nx1, ny1, nz1};
@@ -112,7 +112,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                 // per-face material
                 const ::std::int32_t materialID{shape.mesh.material_ids[f]};
                 if (materialID >= 0) {
-                    const tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
+                    const ::tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};
@@ -171,8 +171,8 @@ OBJLoader::~OBJLoader() noexcept {
     this->shapes_.shrink_to_fit();
     this->materials_.shrink_to_fit();
 
-    ::std::vector<tinyobj::shape_t>().swap(this->shapes_);
-    ::std::vector<tinyobj::material_t>().swap(this->materials_);
+    ::std::vector<::tinyobj::shape_t>().swap(this->shapes_);
+    ::std::vector<::tinyobj::material_t>().swap(this->materials_);
 
     LOG("OBJLOADER DELETED");
 }
