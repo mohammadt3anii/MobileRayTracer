@@ -74,7 +74,7 @@ namespace MobileRT {
             ::std::uint32_t maxDepth{0};
             ::std::uint32_t maxNodes{1};
             while (maxNodes * maxLeafSize < numberPrimitives) {
-                maxDepth++;
+                ++maxDepth;
                 maxNodes = 1u << maxDepth;
             }
             while (maxDepth > 0) {
@@ -115,7 +115,7 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
         //::std::vector<AABB> boxes {};
-        for (::std::uint32_t i{0}; i < primitives.size(); i++) {
+        for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
             const AABB new_box{primitives.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
             //boxes.emplace_back(new_box);
@@ -133,7 +133,7 @@ namespace MobileRT {
             ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
             AABB left_box {};
             ::std::uint32_t N {static_cast<::std::uint32_t>(primitives.size())};
-            for (::std::uint32_t i {0}; i < N - 1; i++) {
+            for (::std::uint32_t i {0}; i < N - 1; ++i) {
                 left_box = surroundingBox(left_box, boxes.at(i));
                 left_area.insert(left_area.end(), left_box.getSurfaceArea());
             }
@@ -146,7 +146,7 @@ namespace MobileRT {
             }
 
             float min_SAH {::std::numeric_limits<float>::max()};
-            for (::std::uint32_t i {0}; i < N - 1; i++) {
+            for (::std::uint32_t i {0}; i < N - 1; ++i) {
                 const float SAH_left {i * left_area.at(i)};
                 const float SAH_right {(N - i - 1) * right_area.at(i)};
                 const float SAH {SAH_left + SAH_right};
@@ -200,7 +200,7 @@ namespace MobileRT {
             if (intersect(node->box_, ray)) {
 
                 if (node->numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; i++) {
+                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
@@ -252,7 +252,7 @@ namespace MobileRT {
             if (intersect(node->box_, ray)) {
 
                 if (node->numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; i++) {
+                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         const float lastDist {intersection.length_};
                         intersection = primitive.intersect(intersection, ray);

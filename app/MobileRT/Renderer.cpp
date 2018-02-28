@@ -41,7 +41,7 @@ void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t n
     ::std::vector<::std::thread> threads {};
     threads.reserve(static_cast<::std::uint32_t>(numChildren));
 
-    for (::std::int32_t i{0}; i < numChildren; i++) {
+    for (::std::int32_t i{0}; i < numChildren; ++i) {
         threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
     }
     renderScene(bitmap, numChildren, realWidth);
@@ -67,7 +67,7 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
     const float pixelHeight{0.5f / this->height_};
     const ::std::uint32_t samples{this->samplesPixel_};
     ::glm::vec3 pixelRGB {};
-    for (::std::uint32_t sample{0}; sample < samples; sample++) {
+    for (::std::uint32_t sample{0}; sample < samples; ++sample) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
             if (block >= 1.0f) { break; }
@@ -77,13 +77,13 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
             const ::std::uint32_t startY{
                     ((pixel / this->width_) * this->blockSizeY_) % this->height_};
             const ::std::uint32_t endY{startY + this->blockSizeY_};
-            for (::std::uint32_t y{startY}; y < endY; y++) {
+            for (::std::uint32_t y{startY}; y < endY; ++y) {
                 //const ::std::uint32_t yWidth{y * this->width_};
                 const ::std::uint32_t yWidth{y * width};
                 const float v{y * INV_IMG_HEIGHT};
                 const ::std::uint32_t startX{(pixel + yWidth) % this->width_};
                 const ::std::uint32_t endX{startX + this->blockSizeX_};
-                for (::std::uint32_t x{startX}; x < endX; x++) {
+                for (::std::uint32_t x{startX}; x < endX; ++x) {
                     const float u{x * INV_IMG_WIDTH};
                     const float r1{this->samplerPixel_->getSample()};
                     const float r2{this->samplerPixel_->getSample()};

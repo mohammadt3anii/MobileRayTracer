@@ -53,7 +53,7 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
     LOG("RECTANGLES = ", this->rectangles_.size());
 
 
-    /*for(size_t i {0}; i < this->triangles_.size(); i++) {
+    /*for(size_t i {0}; i < this->triangles_.size(); ++i) {
       ::std::vector<Primitive<Triangle>*>& triangles = this->triangles_[i];
       ::std::vector<Primitive<Sphere>*>& spheres = this->spheres_[i];
       ::std::vector<Primitive<Plane>*>& planes = this->planes_[i];
@@ -65,7 +65,7 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
 ::std::int32_t RegularGrid::bitCounter(::std::uint32_t n) const noexcept {
     ::std::int32_t counter{0};
     while (n > 0) {
-        counter++;
+        ++counter;
         n >>= 1;
     }
     return counter;
@@ -90,7 +90,7 @@ void RegularGrid::addPrimitives
 
     // store primitives in the grid cells
     for (T &primitive : primitives) {
-        index++;
+        ++index;
         const AABB bound{primitive.getAABB()};
         const ::glm::vec3 bv1{bound.pointMin_};
         const ::glm::vec3 bv2{bound.pointMax_};
@@ -116,9 +116,9 @@ void RegularGrid::addPrimitives
         z1 = ::std::min(z2, z1);
 
         //loop over candidate cells
-        for (::std::int32_t x{x1}; x <= x2; x++) {
-            for (::std::int32_t y{y1}; y <= y2; y++) {
-                for (::std::int32_t z{z1}; z <= z2; z++) {
+        for (::std::int32_t x{x1}; x <= x2; ++x) {
+            for (::std::int32_t y{y1}; y <= y2; ++y) {
+                for (::std::int32_t z{z1}; z <= z2; ++z) {
                     // construct aabb for current cell
                     const size_t idx{
                             static_cast<size_t>(x) +

@@ -37,9 +37,9 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
         const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
             const ::std::uint32_t samplesLight{this->samplesLight_};
-            for (::std::uint32_t i{0}; i < sizeLights; i++) {
+            for (::std::uint32_t i{0}; i < sizeLights; ++i) {
                 Light &light(*scene_.lights_[i]);
-                for (::std::uint32_t j{0}; j < samplesLight; j++) {
+                for (::std::uint32_t j{0}; j < samplesLight; ++j) {
                     const ::glm::vec3 lightPosition{light.getPosition()};
                     //vectorIntersectCameraNormalized = light.position_ - intersection.point_
                     const ::glm::vec3 vectorToLightNormalized{

@@ -87,7 +87,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
 static void FPS() noexcept {
     static ::std::int32_t frame{0};
     static ::std::chrono::steady_clock::time_point timebase_{};
-    frame++;
+    ++frame;
     const ::std::chrono::steady_clock::time_point time{::std::chrono::steady_clock::now()};
     if (::std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
         fps_ = (frame * 1000.0f) /
@@ -136,9 +136,10 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
 
 
     long long res = [=]() -> long long {
-        mutex_.lock();
-        renderer_ = nullptr;
-        mutex_.unlock();
+        {
+            ::std::lock_guard<::std::mutex> lock(mutex_);
+            renderer_ = nullptr;
+        }
         const float ratio {
             ::std::max(static_cast<float>(width_) / height_, static_cast<float>(height_) / width_)};
         const float hfovFactor{width_ > height_ ? ratio : 1.0f};
@@ -323,12 +324,13 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                 break;
             }
         }
-        mutex_.lock();
-        renderer_ = new MobileRT::Renderer{
+        {
+            ::std::lock_guard<::std::mutex> lock(mutex_);
+            renderer_ = new MobileRT::Renderer{
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                 static_cast<::std::uint32_t>(samplesPixel)};
-        mutex_.unlock();
+        }
         const long long triangles{
                 static_cast<long long> (renderer_->shader_->scene_.triangles_.size())};
         const long long spheres{
@@ -359,11 +361,12 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
     if (thread_ != nullptr) {
         thread_->join();
         thread_ = nullptr;
-        mutex_.lock();
-        delete renderer_;
-        LOG("DELETED RENDERER");
-        renderer_ = nullptr;
-        mutex_.unlock();
+        {
+            ::std::lock_guard<::std::mutex> lock(mutex_);
+            delete renderer_;
+            LOG("DELETED RENDERER");
+            renderer_ = nullptr;
+        }
     }
     working_ = State::IDLE;
     LOG("WORKING = IDLE");
@@ -452,11 +455,12 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
                     ::std::chrono::steady_clock::now()};
             LOG("STARTING RENDERING");
             LOG("nThreads = ", nThreads);
-            mutex_.lock();
-            if (renderer_ != nullptr) {
-                renderer_->renderFrame(dstPixels, nThreads, stride);
+            {
+                ::std::lock_guard<::std::mutex> lock(mutex_);
+                if (renderer_ != nullptr) {
+                    renderer_->renderFrame(dstPixels, nThreads, stride);
+                }
             }
-            mutex_.unlock();
             LOG("FINISHED RENDERING");
             timeFrame_ = ::std::chrono::duration_cast<::std::chrono::milliseconds>(
                     ::std::chrono::steady_clock::now() - start).count();
@@ -551,11 +555,12 @@ extern "C"
         jobject /*thiz*/
 ) noexcept {
     ::std::uint32_t res{0};
-    /*mutex_.lock();
-    if (renderer_ != nullptr) {
-        res = renderer_->getSample();
-    }
-    mutex_.unlock();*/
+    /*{
+        ::std::lock_guard<::std::mutex> lock(mutex_);
+        if (renderer_ != nullptr) {
+            res = renderer_->getSample();
+        }
+    }*/
     return res;
 }
 

@@ -66,7 +66,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
             const ::std::uint32_t samplesLight{this->samplesLight_};
             Intersection intersectLight{};
             //direct light
-            for (::std::uint32_t i{0}; i < samplesLight; i++) {
+            for (::std::uint32_t i{0}; i < samplesLight; ++i) {
                 const float randomNumber{samplerLight_->getSample()};
                 //PDF = 1 / sizeLights
                 const ::std::uint32_t chosenLight{

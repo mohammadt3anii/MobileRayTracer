@@ -48,9 +48,9 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
         if (sizeLights > 0) {
             Intersection lightIntersection{};
             const ::std::uint32_t samplesLight{this->samplesLight_};
-            for (::std::uint32_t i{0}; i < sizeLights; i++) {
+            for (::std::uint32_t i{0}; i < sizeLights; ++i) {
                 Light &light(*scene_.lights_[i]);
-                for (::std::uint32_t j{0}; j < samplesLight; j++) {
+                for (::std::uint32_t j{0}; j < samplesLight; ++j) {
                     const ::glm::vec3 lightPosition{light.getPosition()};
                     //calculates vector starting in intersection to the light
                     ::glm::vec3 vectorToLight{lightPosition - intersection.point_};

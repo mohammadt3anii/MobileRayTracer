@@ -37,7 +37,7 @@ bool OBJLoader::fillScene(Scene *const scene,
     size_t numberTriangles{0};
 
     for (const auto &shape : shapes_) {
-        for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); f++) {
+        for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
             numberTriangles += shape.mesh.num_face_vertices[f] / 3;
         }
     }
@@ -46,7 +46,7 @@ bool OBJLoader::fillScene(Scene *const scene,
     for (const auto &shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset{0};
-        for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); f++) {
+        for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
             size_t fv{shape.mesh.num_face_vertices[f]};
 
             // Loop over vertices in the face.
