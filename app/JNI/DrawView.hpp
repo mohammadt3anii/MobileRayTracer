@@ -54,7 +54,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept;
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_initialize(
+int32_t Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *env,
         jobject thiz,
         jint scene,
@@ -105,7 +105,7 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 ) noexcept;
 
 extern "C"
-long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
+int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -124,7 +124,7 @@ extern "C"
 ) noexcept;
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv * /*env*/,
         jobject /*thiz*/
 ) noexcept;

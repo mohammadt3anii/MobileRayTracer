@@ -9,8 +9,8 @@ import java.util.Locale;
 
 class ViewText {
     float fps_ = 0.0f;
-    long start_ = 0L;
-    long period_ = 0L;
+    int start_ = 0;
+    int period_ = 0;
     TextView textView_ = null;
     Button buttonRender_ = null;
     String stageT_ = null;
@@ -37,7 +37,7 @@ class ViewText {
 
     static native float getFPS();
 
-    static native long getTimeFrame();
+    static native int getTimeFrame();
 
     static native void moveTouch(final float x, final float y, final int primitiveId);
 

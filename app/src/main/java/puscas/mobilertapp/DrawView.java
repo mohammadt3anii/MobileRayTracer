@@ -21,7 +21,7 @@ public class DrawView extends GLSurfaceView {
         viewText_.resetPrint(getWidth(), getHeight(), 0, 0);
     }
 
-    static native long initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
+    static native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
 
     static private native void renderIntoBitmap(final Bitmap image, final int numThreads);
 
@@ -29,7 +29,7 @@ public class DrawView extends GLSurfaceView {
 
     static native int traceTouch(final float x, final float y);
 
-    static private native long getNumberOfLights();
+    static private native int getNumberOfLights();
 
     static native int resize(int size);
 
@@ -73,9 +73,9 @@ public class DrawView extends GLSurfaceView {
     }
 
     void startRender() {
-        viewText_.period_ = 250L;
+        viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
-        viewText_.start_ = SystemClock.elapsedRealtime();
+        viewText_.start_ = (int) SystemClock.elapsedRealtime();
         viewText_.printText();
 
         DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
@@ -89,7 +89,7 @@ public class DrawView extends GLSurfaceView {
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
                      final int samplesPixel, final int samplesLight, final int width, final int height,
                      final String objFile, final String matText, final AssetManager assetManager) {
-        final long numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager);
+        final int numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager);
         viewText_.threadsT_ = ",t:" + numThreads;
         viewText_.nPrimitivesT_ = ",p=" + numberPrimitives + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;

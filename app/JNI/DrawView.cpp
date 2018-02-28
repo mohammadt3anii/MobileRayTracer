@@ -14,8 +14,8 @@ static ::std::mutex mutex_{};
 static ::std::int32_t width_{0};
 static ::std::int32_t height_{0};
 static float fps_{0.0f};
-static long long timeFrame_{0};
-static long long numberOfLights_{0};
+static int32_t timeFrame_{0};
+static int32_t numberOfLights_{0};
 
 extern "C"
 ::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
@@ -116,7 +116,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_initialize(
+int32_t Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *const env,
         jobject /*thiz*/,
         jint const scene,
@@ -135,7 +135,7 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
     LOG("INITIALIZE");
 
 
-    long long res = [=]() -> long long {
+    int32_t res = [=]() -> int32_t {
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_ = nullptr;
@@ -331,15 +331,15 @@ long long Java_puscas_mobilertapp_DrawView_initialize(
                 static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                 static_cast<::std::uint32_t>(samplesPixel)};
         }
-        const long long triangles{
-                static_cast<long long> (renderer_->shader_->scene_.triangles_.size())};
-        const long long spheres{
-                static_cast<long long> (renderer_->shader_->scene_.spheres_.size())};
-        const long long planes{static_cast<long long> (renderer_->shader_->scene_.planes_.size())};
-        const long long rectangles{
-                static_cast<long long> (renderer_->shader_->scene_.rectangles_.size())};
-        numberOfLights_ = static_cast<long long> (renderer_->shader_->scene_.lights_.size());
-        const long long nPrimitives = triangles + spheres + planes + rectangles;
+        const int32_t triangles{
+                static_cast<int32_t> (renderer_->shader_->scene_.triangles_.size())};
+        const int32_t spheres{
+                static_cast<int32_t> (renderer_->shader_->scene_.spheres_.size())};
+        const int32_t planes{static_cast<int32_t> (renderer_->shader_->scene_.planes_.size())};
+        const int32_t rectangles{
+                static_cast<int32_t> (renderer_->shader_->scene_.rectangles_.size())};
+        numberOfLights_ = static_cast<int32_t> (renderer_->shader_->scene_.lights_.size());
+        const int32_t nPrimitives = triangles + spheres + planes + rectangles;
         /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
         LOG("PLANES = ", planes);
@@ -462,8 +462,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
                 }
             }
             LOG("FINISHED RENDERING");
-            timeFrame_ = ::std::chrono::duration_cast<::std::chrono::milliseconds>(
-                    ::std::chrono::steady_clock::now() - start).count();
+            timeFrame_ = static_cast<int> (::std::chrono::duration_cast<::std::chrono::milliseconds>(
+                    ::std::chrono::steady_clock::now() - start).count());
             FPS();
             //renderer_->camera_->position_.x_ += 1.0f;
             rep--;
@@ -542,7 +542,7 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 }
 
 extern "C"
-long long Java_puscas_mobilertapp_ViewText_getTimeFrame(
+int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
@@ -575,7 +575,7 @@ extern "C"
 }
 
 extern "C"
-long long Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
