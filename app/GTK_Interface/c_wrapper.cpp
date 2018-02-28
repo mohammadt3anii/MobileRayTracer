@@ -244,7 +244,6 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
         const auto startRendering{::std::chrono::system_clock::now()};
         do {
             renderer_->renderFrame(bitmap, threads, width * sizeof(::std::uint32_t));
-            //renderer_->camera_->position_.x_ += 2.0f;
             repeats--;
         } while (repeats > 0);
         const auto endRendering{::std::chrono::system_clock::now()};

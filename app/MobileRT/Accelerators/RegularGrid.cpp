@@ -27,15 +27,15 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
         gridShift_{bitCounter(static_cast<::std::uint32_t>(gridSize)) - 1},
         m_Extends(sceneBounds),//world boundaries
         // precalculate 1 / size of a cell (for x, y and z)
-        m_SR{gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_).x,
-        gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_).y,
-        gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_).z},
+        m_SR{gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)[0],
+        gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)[1],
+        gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)[2]},
         // precalculate size of a cell (for x, y, and z)
         m_CW{(m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_)},
         scene_{scene} {
-    LOG("scene min=(", m_Extends.pointMin_.x, ", ", m_Extends.pointMin_.y, ", ",
-        m_Extends.pointMin_.z, ") max=(", m_Extends.pointMax_.x, ", ",
-        m_Extends.pointMax_.y, ", ", m_Extends.pointMax_.z, ")");
+    LOG("scene min=(", m_Extends.pointMin_[0], ", ", m_Extends.pointMin_[1], ", ",
+        m_Extends.pointMin_[2], ") max=(", m_Extends.pointMax_[0], ", ",
+        m_Extends.pointMax_[1], ", ", m_Extends.pointMax_[2], ")");
 
     size_t vectorSize{static_cast<size_t>(gridSize * gridSize * gridSize)};
     triangles_.reserve(vectorSize);
@@ -78,9 +78,9 @@ void RegularGrid::addPrimitives
     ::std::int32_t index{0};
 
     // calculate cell width, height and depth
-    const float sizeX{m_Extends.pointMax_.x - m_Extends.pointMin_.x};
-    const float sizeY{m_Extends.pointMax_.y - m_Extends.pointMin_.y};
-    const float sizeZ{m_Extends.pointMax_.z - m_Extends.pointMin_.z};
+    const float sizeX{m_Extends.pointMax_[0] - m_Extends.pointMin_[0]};
+    const float sizeY{m_Extends.pointMax_[1] - m_Extends.pointMin_[1]};
+    const float sizeZ{m_Extends.pointMax_[2] - m_Extends.pointMin_[2]};
     const float dx{sizeX / gridSize_};
     const float dy{sizeY / gridSize_};
     const float dz{sizeZ / gridSize_};
@@ -96,20 +96,20 @@ void RegularGrid::addPrimitives
         const ::glm::vec3 bv2{bound.pointMax_};
 
         // find out which cells could contain the primitive (based on aabb)
-        ::std::int32_t x1{static_cast<::std::int32_t>((bv1.x - m_Extends.pointMin_.x) * dx_reci)};
-        ::std::int32_t x2{static_cast<::std::int32_t>((bv2.x - m_Extends.pointMin_.x) * dx_reci) + 1};
+        ::std::int32_t x1{static_cast<::std::int32_t>((bv1[0] - m_Extends.pointMin_[0]) * dx_reci)};
+        ::std::int32_t x2{static_cast<::std::int32_t>((bv2[0] - m_Extends.pointMin_[0]) * dx_reci) + 1};
         x1 = (x1 < 0) ? 0 : x1;
         x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
         x2 = sizeX == 0 ? 0 : x2;
         x1 = x1 > x2 ? x2 : x1;
-        ::std::int32_t y1{static_cast<::std::int32_t>((bv1.y - m_Extends.pointMin_.y) * dy_reci)};
-        ::std::int32_t y2{static_cast<::std::int32_t>((bv2.y - m_Extends.pointMin_.y) * dy_reci) + 1};
+        ::std::int32_t y1{static_cast<::std::int32_t>((bv1[1] - m_Extends.pointMin_[1]) * dy_reci)};
+        ::std::int32_t y2{static_cast<::std::int32_t>((bv2[1] - m_Extends.pointMin_[1]) * dy_reci) + 1};
         y1 = (y1 < 0) ? 0 : y1;
         y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
         y2 = sizeY == 0 ? 0 : y2;
         y1 = y1 > y2 ? y2 : y1;
-        ::std::int32_t z1{static_cast<::std::int32_t>((bv1.z - m_Extends.pointMin_.z) * dz_reci)};
-        ::std::int32_t z2{static_cast<::std::int32_t>((bv2.z - m_Extends.pointMin_.z) * dz_reci) + 1};
+        ::std::int32_t z1{static_cast<::std::int32_t>((bv1[2] - m_Extends.pointMin_[2]) * dz_reci)};
+        ::std::int32_t z2{static_cast<::std::int32_t>((bv2[2] - m_Extends.pointMin_[2]) * dz_reci) + 1};
         z1 = (z1 < 0) ? 0 : z1;
         z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
         z2 = sizeZ == 0 ? 0 : z2;
@@ -125,11 +125,11 @@ void RegularGrid::addPrimitives
                             static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
                             static_cast<size_t>(z) * static_cast<size_t>(gridSize_) *
                             static_cast<size_t>(gridSize_)};
-                    const ::glm::vec3 pos{m_Extends.pointMin_.x + x * dx,
-                                      m_Extends.pointMin_.y + y * dy,
-                                      m_Extends.pointMin_.z + z * dz};
+                    const ::glm::vec3 pos{m_Extends.pointMin_[0] + x * dx,
+                                      m_Extends.pointMin_[1] + y * dy,
+                                      m_Extends.pointMin_[2] + z * dz};
                     const AABB cell{pos, pos + ::glm::vec3 {dx, dy, dz}};
-                    //LOG("min=(", pos.x_, ", ", pos.y_, ", ", pos.z_, ") max=(", dx, ", ", dy, ",", dz, ")");
+                    //LOG("min=(", pos[0], ", ", pos[1], ", ", pos[2], ") max=(", dx, ", ", dy, ",", dz, ")");
                     // do an accurate aabb / primitive intersection test
                     const bool intersectedBox{::MobileRT::intersect(primitive, cell)};
                     if (intersectedBox) {
@@ -174,9 +174,9 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
                             const bool shadowTrace) noexcept {
     // setup 3DDDA (double check reusability of primary ray data)
     const ::glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
-    ::std::int32_t X{static_cast<::std::int32_t>(cell.x)};
-    ::std::int32_t Y{static_cast<::std::int32_t>(cell.y)};
-    ::std::int32_t Z{static_cast<::std::int32_t>(cell.z)};
+    ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};
+    ::std::int32_t Y{static_cast<::std::int32_t>(cell[1])};
+    ::std::int32_t Z{static_cast<::std::int32_t>(cell[2])};
     const bool notInGrid{(X < 0) || (X >= gridSize_) ||
                          (Y < 0) || (Y >= gridSize_) ||
                          (Z < 0) || (Z >= gridSize_)};
@@ -188,59 +188,59 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
     ::std::int32_t stepY, outY;
     ::std::int32_t stepZ, outZ;
     ::glm::vec3 cb{};
-    if (ray.direction_.x > 0) {
+    if (ray.direction_[0] > 0) {
         stepX = 1;
         outX = gridSize_;
-        cb.x = (m_Extends.pointMin_.x + (X + 1) * m_CW.x);
+        cb[0] = (m_Extends.pointMin_[0] + (X + 1) * m_CW[0]);
     } else {
         stepX = -1;
         outX = -1;
-        cb.x = (m_Extends.pointMin_.x + X * m_CW.x);
+        cb[0] = (m_Extends.pointMin_[0] + X * m_CW[0]);
     }
 
-    if (ray.direction_.y > 0) {
+    if (ray.direction_[1] > 0) {
         stepY = 1;
         outY = gridSize_;
-        cb.y = (m_Extends.pointMin_.y + (Y + 1) * m_CW.y);
+        cb[1] = (m_Extends.pointMin_[1] + (Y + 1) * m_CW[1]);
     } else {
         stepY = -1;
         outY = -1;
-        cb.y = (m_Extends.pointMin_.y + Y * m_CW.y);
+        cb[1] = (m_Extends.pointMin_[1] + Y * m_CW[1]);
     }
 
-    if (ray.direction_.z > 0) {
+    if (ray.direction_[2] > 0) {
         stepZ = 1;
         outZ = gridSize_;
-        cb.z = (m_Extends.pointMin_.z + (Z + 1) * m_CW.z);
+        cb[2] = (m_Extends.pointMin_[2] + (Z + 1) * m_CW[2]);
     } else {
         stepZ = -1;
         outZ = -1;
-        cb.z = (m_Extends.pointMin_.z + Z * m_CW.z);
+        cb[2] = (m_Extends.pointMin_[2] + Z * m_CW[2]);
     }
 
     ::glm::vec3 tmax{}, tdelta{};
-    if (ray.direction_.x != 0) {
-        const float rxr{1.0f / ray.direction_.x};
-        tmax.x = ((cb.x - ray.origin_.x) * rxr);
-        tdelta.x = (m_CW.x * stepX * rxr);
+    if (ray.direction_[0] != 0) {
+        const float rxr{1.0f / ray.direction_[0]};
+        tmax[0] = ((cb[0] - ray.origin_[0]) * rxr);
+        tdelta[0] = (m_CW[0] * stepX * rxr);
     } else {
-        tmax.x = (RayLengthMax);
+        tmax[0] = (RayLengthMax);
     }
 
-    if (ray.direction_.y != 0) {
-        const float ryr{1.0f / ray.direction_.y};
-        tmax.y = ((cb.y - ray.origin_.y) * ryr);
-        tdelta.y = (m_CW.y * stepY * ryr);
+    if (ray.direction_[1] != 0) {
+        const float ryr{1.0f / ray.direction_[1]};
+        tmax[1] = ((cb[1] - ray.origin_[1]) * ryr);
+        tdelta[1] = (m_CW[1] * stepY * ryr);
     } else {
-        tmax.y = (RayLengthMax);
+        tmax[1] = (RayLengthMax);
     }
 
-    if (ray.direction_.z != 0) {
-        const float rzr{1.0f / ray.direction_.z};
-        tmax.z = ((cb.z - ray.origin_.z) * rzr);
-        tdelta.z = (m_CW.z * stepZ * rzr);
+    if (ray.direction_[2] != 0) {
+        const float rzr{1.0f / ray.direction_[2]};
+        tmax[2] = ((cb[2] - ray.origin_[2]) * rzr);
+        tdelta[2] = (m_CW[2] * stepZ * rzr);
     } else {
-        tmax.z = (RayLengthMax);
+        tmax[2] = (RayLengthMax);
     }
 
     // start stepping
@@ -262,33 +262,33 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
             }
         }
 
-        if (tmax.x < tmax.y) {
-            if (tmax.x < tmax.z) {
+        if (tmax[0] < tmax[1]) {
+            if (tmax[0] < tmax[2]) {
                 X += stepX;
                 if (X == outX) {
                     return intersection;
                 }
-                tmax.x = (tmax.x + tdelta.x);
+                tmax[0] = (tmax[0] + tdelta[0]);
             } else {
                 Z += stepZ;
                 if (Z == outZ) {
                     return intersection;
                 }
-                tmax.z = (tmax.z + tdelta.z);
+                tmax[2] = (tmax[2] + tdelta[2]);
             }
         } else {
-            if (tmax.y < tmax.z) {
+            if (tmax[1] < tmax[2]) {
                 Y += stepY;
                 if (Y == outY) {
                     return intersection;
                 }
-                tmax.y = (tmax.y + tdelta.y);
+                tmax[1] = (tmax[1] + tdelta[1]);
             } else {
                 Z += stepZ;
                 if (Z == outZ) {
                     return intersection;
                 }
-                tmax.z = (tmax.z + tdelta.z);
+                tmax[2] = (tmax[2] + tdelta[2]);
             }
         }
 
@@ -302,45 +302,45 @@ Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &pri
         for (auto *const primitive : primitivesList) {
             intersection = primitive->intersect(intersection, ray);
         }
-        if (tmax.x < tmax.y) {
-            if (tmax.x < tmax.z) {
-                if (intersection.length_ < tmax.x) {
+        if (tmax[0] < tmax[1]) {
+            if (tmax[0] < tmax[2]) {
+                if (intersection.length_ < tmax[0]) {
                     break;
                 }
                 X += stepX;
                 if (X == outX) {
                     break;
                 }
-                tmax.x = (tmax.x + tdelta.x);
+                tmax[0] = (tmax[0] + tdelta[0]);
             } else {
-                if (intersection.length_ < tmax.z) {
+                if (intersection.length_ < tmax[2]) {
                     break;
                 }
                 Z += stepZ;
                 if (Z == outZ) {
                     break;
                 }
-                tmax.z = (tmax.z + tdelta.z);
+                tmax[2] = (tmax[2] + tdelta[2]);
             }
         } else {
-            if (tmax.y < tmax.z) {
-                if (intersection.length_ < tmax.y) {
+            if (tmax[1] < tmax[2]) {
+                if (intersection.length_ < tmax[1]) {
                     break;
                 }
                 Y += stepY;
                 if (Y == outY) {
                     break;
                 }
-                tmax.y = (tmax.y + tdelta.y);
+                tmax[1] = (tmax[1] + tdelta[1]);
             } else {
-                if (intersection.length_ < tmax.z) {
+                if (intersection.length_ < tmax[2]) {
                     break;
                 }
                 Z += stepZ;
                 if (Z == outZ) {
                     break;
                 }
-                tmax.z = (tmax.z + tdelta.z);
+                tmax[2] = (tmax[2] + tdelta[2]);
             }
         }
     }

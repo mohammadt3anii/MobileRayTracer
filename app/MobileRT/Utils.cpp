@@ -31,9 +31,9 @@ namespace MobileRT {
         const ::std::uint32_t greenB4{(avg >> 8) & 0xFF};
         const ::std::uint32_t blueB4{(avg >> 16) & 0xFF};
 
-        const ::std::uint32_t redSamp{static_cast<::std::uint32_t> (sample.r * 255u)};
-        const ::std::uint32_t greenSamp{static_cast<::std::uint32_t> (sample.g * 255u)};
-        const ::std::uint32_t blueSamp{static_cast<::std::uint32_t> (sample.b * 255u)};
+        const ::std::uint32_t redSamp{static_cast<::std::uint32_t> (sample[0] * 255u)};
+        const ::std::uint32_t greenSamp{static_cast<::std::uint32_t> (sample[1] * 255u)};
+        const ::std::uint32_t blueSamp{static_cast<::std::uint32_t> (sample[2] * 255u)};
 
         const ::std::uint32_t redAft{((numSample - 1) * redB4 + redSamp) / numSample};
         const ::std::uint32_t greenAft{((numSample - 1) * greenB4 + greenSamp) / numSample};
@@ -45,4 +45,4 @@ namespace MobileRT {
 
         return (0xFF000000u | (retB << 16u) | (retG << 8u) | retR);
     }
-}
+}//namespace MobileRT

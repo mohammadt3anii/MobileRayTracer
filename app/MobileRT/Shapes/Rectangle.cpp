@@ -88,54 +88,54 @@ bool Rectangle::intersect(const AABB box) const noexcept {
                 ::glm::vec3 T_2 {}; // vectors to hold the T-values for every direction
                 float t_near {::std::numeric_limits<float>::min()};
                 float t_far {::std::numeric_limits<float>::max()};
-                if (vec.x == 0) { // ray parallel to planes in this direction
-                    if ((orig.x < box.pointMin_.x) || (vec.x > box.pointMax_.x)) {
+                if (vec[0] == 0) { // ray parallel to planes in this direction
+                    if ((orig[0] < box.pointMin_[0]) || (vec[0] > box.pointMax_[0])) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.x = ((box.pointMin_.x - orig.x) / vec.x);
-                    T_2.x = ((box.pointMax_.x - orig.x) / vec.x);
-                    if (T_1.x >
-                        T_2.x) { // we want T_1 to hold values for intersection with near plane
+                    T_1[0] = ((box.pointMin_[0] - orig[0]) / vec[0]);
+                    T_2[0] = ((box.pointMax_[0] - orig[0]) / vec[0]);
+                    if (T_1[0] >
+                        T_2[0]) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.x, t_near);
-                    t_far = ::std::min(T_2.x, t_far);
+                    t_near = ::std::max(T_1[0], t_near);
+                    t_far = ::std::min(T_2[0], t_far);
 
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
                 }
-                if (vec.y == 0) { // ray parallel to planes in this direction
-                    if ((orig.y < box.pointMin_.y) || (vec.y > box.pointMax_.y)) {
+                if (vec[1] == 0) { // ray parallel to planes in this direction
+                    if ((orig[1] < box.pointMin_[1]) || (vec[1] > box.pointMax_[1])) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.y = ((box.pointMin_.y - orig.y) / vec.y);
-                    T_2.y = ((box.pointMax_.y - orig.y) / vec.y);
-                    if (T_1.y >
-                        T_2.y) { // we want T_1 to hold values for intersection with near plane
+                    T_1[1] = ((box.pointMin_[1] - orig[1]) / vec[1]);
+                    T_2[1] = ((box.pointMax_[1] - orig[1]) / vec[1]);
+                    if (T_1[1] >
+                        T_2[1]) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.y, t_near);
-                    t_far = ::std::min(T_2.y, t_far);
+                    t_near = ::std::max(T_1[1], t_near);
+                    t_far = ::std::min(T_2[1], t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }
                 }
-                if (vec.z == 0) { // ray parallel to planes in this direction
-                    if ((orig.z < box.pointMin_.z) || (vec.z > box.pointMax_.z)) {
+                if (vec[2] == 0) { // ray parallel to planes in this direction
+                    if ((orig[2] < box.pointMin_[2]) || (vec[2] > box.pointMax_[2])) {
                         return false; // parallel AND outside box : no intersection possible
                     }
                 } else { // ray not parallel to planes in this direction
-                    T_1.z = ((box.pointMin_.z - orig.z) / vec.z);
-                    T_2.z = ((box.pointMax_.z - orig.z) / vec.z);
-                    if (T_1.z >
-                        T_2.z) { // we want T_1 to hold values for intersection with near plane
+                    T_1[2] = ((box.pointMin_[2] - orig[2]) / vec[2]);
+                    T_2[2] = ((box.pointMax_[2] - orig[2]) / vec[2]);
+                    if (T_1[2] >
+                        T_2[2]) { // we want T_1 to hold values for intersection with near plane
                         ::std::swap(T_1, T_2);
                     }
-                    t_near = ::std::max(T_1.z, t_near);
-                    t_far = ::std::min(T_2.z, t_far);
+                    t_near = ::std::max(T_1[2], t_near);
+                    t_far = ::std::min(T_2[2], t_far);
                     if ((t_near > t_far) || (t_far < 0)) {
                         return false;
                     }

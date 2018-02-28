@@ -465,7 +465,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             timeFrame_ = static_cast<int> (::std::chrono::duration_cast<::std::chrono::milliseconds>(
                     ::std::chrono::steady_clock::now() - start).count());
             FPS();
-            //renderer_->camera_->position_.x_ += 1.0f;
             rep--;
         } while (working_ != State::STOPPED && rep > 0);
         if (working_ != State::STOPPED) {
@@ -529,8 +528,8 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
     MobileRT::Intersection intersection{};
     plane.intersect(ray);
-    renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_.x_(),
-                                                            intersection.point_.y_());*/
+    renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_[0],
+                                                            intersection.point_[1];*/
 }
 
 extern "C"

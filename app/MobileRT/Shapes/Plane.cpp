@@ -50,17 +50,17 @@ float Plane::getZ() const noexcept {
 
 ::glm::vec3 Plane::getRightVector() const noexcept {
     ::glm::vec3 right {};
-    if (this->normal_.x >= 1) {
+    if (this->normal_[0] >= 1) {
         right = ::glm::vec3 {0, 1, 1};
-    } else if (this->normal_.y >= 1) {
+    } else if (this->normal_[1] >= 1) {
         right = ::glm::vec3 {1, 0, 1};
-    } else if (this->normal_.z >= 1) {
+    } else if (this->normal_[2] >= 1) {
         right = ::glm::vec3 {1, 1, 0};
-    } else if (this->normal_.x <= -1) {
+    } else if (this->normal_[0] <= -1) {
         right = ::glm::vec3 {0, 1, 1};
-    } else if (this->normal_.y <= -1) {
+    } else if (this->normal_[1] <= -1) {
         right = ::glm::vec3 {1, 0, 1};
-    } else if (this->normal_.z <= -1) {
+    } else if (this->normal_[2] <= -1) {
         right = ::glm::vec3 {1, 1, 0};
     }
     right = ::glm::normalize(right);
@@ -90,14 +90,14 @@ float Plane::distance(const ::glm::vec3 point) const noexcept {
     //x0,y0,z0 = point
     //D = |ax0 + by0 + cz0 + d| / sqrt(a² + b² + c²)
     const float d {
-            normal_.x * -point_.x + normal_.y * -point_.y +
-            normal_.z * -point_.z};
+            normal_[0] * -point_[0] + normal_[1] * -point_[1] +
+            normal_[2] * -point_[2]};
     const float numerator {
-            normal_.x * point.x + normal_.y * point.y + normal_.z * point.z + d};
+            normal_[0] * point[0] + normal_[1] * point[1] + normal_[2] * point[2] + d};
     const float denumerator {
             ::std::sqrt(
-                    normal_.x * normal_.x + normal_.y * normal_.y +
-                    normal_.z * normal_.z)};
+                    normal_[0] * normal_[0] + normal_[1] * normal_[1] +
+                    normal_[2] * normal_[2])};
     return numerator / denumerator;
 }
 
@@ -105,24 +105,24 @@ bool Plane::intersect(const AABB box) const noexcept {
     ::glm::vec3 positiveVertex {box.pointMax_};
     ::glm::vec3 negativeVertex {box.pointMin_};
 
-    /*if (this->normal_.x_() >= 0.0f) {
-      positiveVertex.x_() = box.pointMax_.x_;
-      negativeVertex.x_() = box.pointMin_.x_;
-    } else if (this->normal_.y_ >= 0.0f) {
-      positiveVertex.y_ = box.pointMax_.y_;
-      negativeVertex.y_ = box.pointMin_.y_;
-    } else if (this->normal_.z_ >= 0.0f) {
-      positiveVertex.z_ = box.pointMax_.z_;
-      negativeVertex.z_ = box.pointMin_.z_;
-    } else if (this->normal_.x_() < 0.0f) {
-      positiveVertex.x_() = box.pointMin_.x_;
-      negativeVertex.x_() = box.pointMax_.x_;
-    } else if (this->normal_.y_ < 0.0f) {
-      positiveVertex.y_ = box.pointMin_.y_;
-      negativeVertex.y_ = box.pointMax_.y_;
-    } else if (this->normal_.z_ < 0.0f) {
-      positiveVertex.z_ = box.pointMin_.z_;
-      negativeVertex.z_ = box.pointMax_.z_;
+    /*if (this->normal_[0] >= 0.0f) {
+      positiveVertex[0] = box.pointMax_[0];
+      negativeVertex[0] = box.pointMin_[0];
+    } else if (this->normal_[1] >= 0.0f) {
+      positiveVertex[1] = box.pointMax_[1];
+      negativeVertex[1] = box.pointMin_[1];
+    } else if (this->normal_[2] >= 0.0f) {
+      positiveVertex[2] = box.pointMax_[2];
+      negativeVertex[2] = box.pointMin_[2];
+    } else if (this->normal_[0] < 0.0f) {
+      positiveVertex[0] = box.pointMin_[0];
+      negativeVertex[0] = box.pointMax_[0];
+    } else if (this->normal_[1] < 0.0f) {
+      positiveVertex[1] = box.pointMin_[1];
+      negativeVertex[1] = box.pointMax_[1];
+    } else if (this->normal_[2] < 0.0f) {
+      positiveVertex[2] = box.pointMin_[2];
+      negativeVertex[2] = box.pointMax_[2];
     }*/
 
     const float distanceP {distance(positiveVertex)};

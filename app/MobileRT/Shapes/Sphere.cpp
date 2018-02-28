@@ -42,12 +42,12 @@ Intersection Sphere::intersect(Intersection intersection, const Ray ray) const n
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
-    this->center_.x = x;
-    this->center_.y = y;
+    this->center_[0] = x;
+    this->center_[1] = y;
 }
 
 float Sphere::getZ() const noexcept {
-    return this->center_.z;
+    return this->center_[2];
 }
 
 AABB Sphere::getAABB() const noexcept {
@@ -61,20 +61,20 @@ bool Sphere::intersect(const AABB box) const noexcept {
     float dmin {0};
     const ::glm::vec3 v1 {box.pointMin_};
     const ::glm::vec3 v2 {box.pointMax_};
-    if (center_.x < v1.x) {
-        dmin = dmin + (center_.x - v1.x) * (center_.x - v1.x);
-    } else if (center_.x > v2.x) {
-        dmin = dmin + (center_.x - v2.x) * (center_.x - v2.x);
+    if (center_[0] < v1[0]) {
+        dmin = dmin + (center_[0] - v1[0]) * (center_[0] - v1[0]);
+    } else if (center_[0] > v2[0]) {
+        dmin = dmin + (center_[0] - v2[0]) * (center_[0] - v2[0]);
     }
-    if (center_.y < v1.y) {
-        dmin = dmin + (center_.y - v1.y) * (center_.y - v1.y);
-    } else if (center_.y > v2.y) {
-        dmin = dmin + (center_.y - v2.y) * (center_.y - v2.y);
+    if (center_[1] < v1[1]) {
+        dmin = dmin + (center_[1] - v1[1]) * (center_[1] - v1[1]);
+    } else if (center_[1] > v2[1]) {
+        dmin = dmin + (center_[1] - v2[1]) * (center_[1] - v2[1]);
     }
-    if (center_.z < v1.z) {
-        dmin = dmin + (center_.z - v1.z) * (center_.z - v1.z);
-    } else if (center_.z > v2.z) {
-        dmin = dmin + (center_.z - v2.z) * (center_.z - v2.z);
+    if (center_[2] < v1[2]) {
+        dmin = dmin + (center_[2] - v1[2]) * (center_[2] - v1[2]);
+    } else if (center_[2] > v2[2]) {
+        dmin = dmin + (center_[2] - v2[2]) * (center_[2] - v2[2]);
     }
     const bool res {(dmin <= sq_radius_)};
     return res;
