@@ -22,7 +22,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
 
     const ::glm::vec3 &Le{intersection.material_->Le_};
     //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(0)))) {
         *rgb = Le;
         return true;
     }
@@ -44,7 +44,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
 
     // shadowed direct lighting - only for diffuse materials
     const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
-    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
         if (sizeLights > 0) {
             Intersection lightIntersection{};
             const ::std::uint32_t samplesLight{this->samplesLight_};
@@ -80,7 +80,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
     }
 
     // specular reflection
-    if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
         const ::glm::vec3 reflectionDir {::glm::reflect(ray.direction_, shadingNormal)};
@@ -91,7 +91,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
     }
 
     // specular transmission
-    if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
         const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
         const ::glm::vec3 refractDir {::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};

@@ -32,7 +32,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
 
     const ::glm::vec3 &Le{intersection.material_->Le_};
     //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(0)))) {
         *rgb = Le;
         return true;
     }
@@ -60,7 +60,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
-    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
         const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
             const ::std::uint32_t samplesLight{this->samplesLight_};
@@ -123,14 +123,14 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
             }
 
             //if it has Ld and if LiD intersects a light source then LiD = 0
-            if (::glm::any(::glm::greaterThan(Ld, ::glm::vec3(::MobileRT::Epsilon))) && intersectedLight) {
+            if (::glm::any(::glm::greaterThan(Ld, ::glm::vec3(0))) && intersectedLight) {
                 LiD = {};
             }
         }
     }
 
     // specular reflection
-    if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
         //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
         const ::glm::vec3 reflectionDir {::glm::reflect(ray.direction_, shadingNormal)};
@@ -141,7 +141,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     }
 
     // specular transmission
-    if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(::MobileRT::Epsilon)))) {
+    if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
         const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
         const ::glm::vec3 refractDir {::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
