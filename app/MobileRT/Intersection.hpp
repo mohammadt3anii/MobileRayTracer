@@ -5,8 +5,8 @@
 #ifndef MOBILERT_INTERSECTION_HPP
 #define MOBILERT_INTERSECTION_HPP
 
-#include "Material.hpp"
-#include "Utils.hpp"
+#include "MobileRT/Material.hpp"
+#include "MobileRT/Utils.hpp"
 #include <glm/glm.hpp>
 
 namespace MobileRT {

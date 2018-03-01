@@ -12,27 +12,26 @@
 #include <random>
 
 namespace Components {
-    using ::MobileRT::Sampler;
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Ray;
-    using ::MobileRT::Scene;
 
     class PathTracer final : public ::MobileRT::Shader {
     private:
-        ::std::unique_ptr<Sampler> samplerRay_{};
-        ::std::unique_ptr<Sampler> samplerLight_{};
-        ::std::unique_ptr<Sampler> samplerRussianRoulette_{};
+        ::std::unique_ptr<::MobileRT::Sampler> samplerRay_{};
+        ::std::unique_ptr<::MobileRT::Sampler> samplerLight_{};
+        ::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette_{};
 
     private:
-        bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
+        bool shade(
+            ::glm::vec3 *rgb,
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) noexcept final;
 
         ::glm::vec3 getCosineSampleHemisphere(::glm::vec3 normal) const noexcept;
 
     public:
-        explicit PathTracer(Scene scene,
-                            ::std::unique_ptr<Sampler> samplerRay,
-                            ::std::unique_ptr<Sampler> samplerLight,
-                            ::std::unique_ptr<Sampler> samplerRussianRoulette,
+        explicit PathTracer(::MobileRT::Scene scene,
+                            ::std::unique_ptr<::MobileRT::Sampler> samplerRay,
+                            ::std::unique_ptr<::MobileRT::Sampler> samplerLight,
+                            ::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette,
                             ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
 
         PathTracer(const PathTracer &pathTracer) noexcept = delete;

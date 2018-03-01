@@ -5,12 +5,12 @@
 #ifndef MOBILERT_SHADER_HPP
 #define MOBILERT_SHADER_HPP
 
-#include "Accelerators/BVH.hpp"
-#include "Accelerators/RegularGrid.hpp"
-#include "Camera.hpp"
-#include "Intersection.hpp"
-#include "Ray.hpp"
-#include "Scene.hpp"
+#include "MobileRT/Accelerators/BVH.hpp"
+#include "MobileRT/Accelerators/RegularGrid.hpp"
+#include "MobileRT/Camera.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Ray.hpp"
+#include "MobileRT/Scene.hpp"
 
 namespace MobileRT {
     class Shader {
@@ -18,9 +18,9 @@ namespace MobileRT {
         Scene scene_{};
         RegularGrid regularGrid_{};
 
-        BVH<MobileRT::Plane> bvhPlanes_{};
-        BVH<MobileRT::Sphere> bvhSpheres_{};
-        BVH<MobileRT::Triangle> bvhTriangles_{};
+        BVH<Plane> bvhPlanes_{};
+        BVH<Sphere> bvhSpheres_{};
+        BVH<Triangle> bvhTriangles_{};
 
         enum Accelerator {
             NAIVE = 0,

@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Plane.hpp"
+#include "MobileRT/Shapes/Plane.hpp"
 #include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;

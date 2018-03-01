@@ -8,17 +8,19 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Ray;
-    using ::MobileRT::Scene;
 
     class NoShadows final : public ::MobileRT::Shader {
     private:
-        bool shade(::glm::vec3 *rgb, Intersection intersection,
-                   Ray ray) noexcept final;
+        bool shade(
+            ::glm::vec3 *rgb,
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) noexcept final;
 
     public:
-        explicit NoShadows(Scene scene, ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
+        explicit NoShadows(
+            ::MobileRT::Scene scene,
+            ::std::uint32_t samplesLight,
+            Accelerator accelerator) noexcept;
 
         NoShadows(const NoShadows &noShadows) noexcept = delete;
 

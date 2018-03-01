@@ -12,7 +12,6 @@
 #include <vector>
 
 namespace MobileRT {
-    using MobileRT::Primitive;
 
     class RegularGrid final {
     private:

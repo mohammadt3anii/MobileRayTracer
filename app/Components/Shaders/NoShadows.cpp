@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "NoShadows.hpp"
+#include "Components/Shaders/NoShadows.hpp"
 #include <glm/glm.hpp>
 
 using ::Components::NoShadows;

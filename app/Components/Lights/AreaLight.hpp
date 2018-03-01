@@ -12,23 +12,19 @@
 #include <memory>
 
 namespace Components {
-    using ::MobileRT::Material;
-    using ::MobileRT::Sampler;
-    using ::MobileRT::Ray;
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Triangle;
 
     class AreaLight final : public ::MobileRT::Light {
     private:
-        Triangle triangle_;
-        ::std::unique_ptr<Sampler> samplerPointLight_{};
+        ::MobileRT::Triangle triangle_;
+        ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight_{};
 
     public:
-        explicit AreaLight(Material radiance,
-                           ::std::unique_ptr<Sampler> samplerPointLight,
-                           ::glm::vec3 pointA,
-                           ::glm::vec3 pointB,
-                           ::glm::vec3 pointC) noexcept;
+        explicit AreaLight(
+            ::MobileRT::Material radiance,
+            ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight,
+            ::glm::vec3 pointA,
+            ::glm::vec3 pointB,
+            ::glm::vec3 pointC) noexcept;
 
         AreaLight(const AreaLight &areaLight) noexcept = delete;
 
@@ -44,7 +40,9 @@ namespace Components {
 
         void resetSampling() noexcept final;
 
-        Intersection intersect(Intersection intersection, Ray ray) const noexcept final;
+        ::MobileRT::Intersection intersect(
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) const noexcept final;
     };
 }//namespace Components
 

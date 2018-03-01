@@ -2,7 +2,7 @@
 // Created by Tiago on 10-08-2017.
 //
 
-#include "StaticHaltonSeq.hpp"
+#include "Components/Samplers/StaticHaltonSeq.hpp"
 #include <array>
 
 using ::Components::StaticHaltonSeq;

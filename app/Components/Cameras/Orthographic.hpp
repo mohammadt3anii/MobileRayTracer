@@ -8,8 +8,6 @@
 #include "MobileRT/Camera.hpp"
 
 namespace Components {
-    using ::MobileRT::AABB;
-    using ::MobileRT::Ray;
 
     class Orthographic final : public ::MobileRT::Camera {
     private:
@@ -31,11 +29,11 @@ namespace Components {
 
         Orthographic &operator=(Orthographic &&orthographic) noexcept = delete;
 
-        Ray generateRay(float u, float v,
+        ::MobileRT::Ray generateRay(float u, float v,
                         float deviationU,
                         float deviationV) const noexcept final;
 
-        AABB getAABB() const noexcept final;
+        ::MobileRT::AABB getAABB() const noexcept final;
     };
 }//namespace Components
 

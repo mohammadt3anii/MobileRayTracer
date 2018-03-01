@@ -16,7 +16,7 @@
 namespace MobileRT {
 
     struct uBVHNode {
-        ::MobileRT::AABB box_ {};
+        AABB box_ {};
         ::std::uint32_t indexOffset_ {0};
         ::std::uint32_t numberPrimitives_ {0};
     };
@@ -28,17 +28,17 @@ namespace MobileRT {
 
     public:
         ::std::vector<uBVHNode> boxes_{};
-        ::std::vector<MobileRT::Primitive<T>> primitives_{};
+        ::std::vector<Primitive<T>> primitives_{};
 
     private:
-        uBVHNode build(::std::vector<MobileRT::Primitive<T>> primitives, ::std::uint32_t depth,
+        uBVHNode build(::std::vector<Primitive<T>> primitives, ::std::uint32_t depth,
                    ::std::uint32_t currentNodeId) noexcept;
 
     public:
         explicit BVH() noexcept = default;
 
         explicit BVH<T>(
-            ::std::vector<MobileRT::Primitive<T>> primitives) noexcept;
+            ::std::vector<Primitive<T>> primitives) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
 
@@ -51,22 +51,19 @@ namespace MobileRT {
         BVH &operator=(BVH &&bVH) noexcept = default;
 
         Intersection trace(
-          ::MobileRT::Intersection intersection,
-          ::MobileRT::Ray ray) noexcept;
+          Intersection intersection,
+          Ray ray) noexcept;
 
         Intersection shadowTrace(
-          ::MobileRT::Intersection intersection,
-          ::MobileRT::Ray ray) noexcept;
+          Intersection intersection,
+          Ray ray) noexcept;
     };
 
 
 
-    using MobileRT::BVH;
-    using MobileRT::AABB;
-
     template<typename T>
     BVH<T>::BVH(
-        ::std::vector<MobileRT::Primitive<T>> primitives) noexcept {
+        ::std::vector<Primitive<T>> primitives) noexcept {
             if (primitives.empty()) {
                 boxes_.emplace_back(uBVHNode{});
                 return;
@@ -89,13 +86,13 @@ namespace MobileRT {
             boxes_.at(0) = build(::std::move(primitives), 0, 0);
 
             primitives_.shrink_to_fit();
-            ::std::vector<MobileRT::Primitive<T>>(primitives_).swap(primitives_);
+            ::std::vector<Primitive<T>>(primitives_).swap(primitives_);
     }
 
 
     template<typename T>
     uBVHNode BVH<T>::build(
-        ::std::vector<MobileRT::Primitive<T>> primitives,
+        ::std::vector<Primitive<T>> primitives,
         const ::std::uint32_t depth,
         const ::std::uint32_t currentNodeId) noexcept {
         if (primitives.empty()) {
@@ -124,8 +121,8 @@ namespace MobileRT {
 
         const ::std::int32_t axis {current_box.getLongestAxis()};
         ::std::sort(primitives.begin(), primitives.end(),
-            [=](const MobileRT::Primitive<T> a,
-                const MobileRT::Primitive<T> b) noexcept -> bool {
+            [=](const Primitive<T> a,
+                const Primitive<T> b) noexcept -> bool {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
@@ -165,14 +162,14 @@ namespace MobileRT {
             currentNode.numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
-            using Iterator = typename ::std::vector<MobileRT::Primitive<T>>::const_iterator;
+            using Iterator = typename ::std::vector<Primitive<T>>::const_iterator;
             Iterator leftBegin {primitives.begin()};
             Iterator leftEnd {primitives.begin() + divide};
             Iterator rightBegin {primitives.begin() + divide};
             Iterator rightEnd {primitives.end()};
 
-            ::std::vector<MobileRT::Primitive<T>> leftVector(leftBegin, leftEnd);
-            ::std::vector<MobileRT::Primitive<T>> rightVector(rightBegin, rightEnd);
+            ::std::vector<Primitive<T>> leftVector(leftBegin, leftEnd);
+            ::std::vector<Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const ::std::uint32_t left {currentNodeId * 2 + 1};
             uBVHNode leftBox {build(::std::move(leftVector), depth + 1, left)};
@@ -187,8 +184,8 @@ namespace MobileRT {
 
     template<typename T>
     Intersection BVH<T>::trace(
-            ::MobileRT::Intersection intersection,
-            const ::MobileRT::Ray ray) noexcept {
+            Intersection intersection,
+            const Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
         ::std::array<uBVHNode*, 32> stack {};
@@ -243,8 +240,8 @@ namespace MobileRT {
 
     template<typename T>
     Intersection BVH<T>::shadowTrace(
-        ::MobileRT::Intersection intersection,
-        const ::MobileRT::Ray ray) noexcept {
+        Intersection intersection,
+        const Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
         ::std::array<uBVHNode*, 32> stack {};

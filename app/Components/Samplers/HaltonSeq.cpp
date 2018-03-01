@@ -2,7 +2,7 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#include "HaltonSeq.hpp"
+#include "Components/Samplers/HaltonSeq.hpp"
 
 using ::Components::HaltonSeq;
 

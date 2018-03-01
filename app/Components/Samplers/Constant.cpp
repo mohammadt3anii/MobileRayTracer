@@ -2,7 +2,7 @@
 // Created by puscas on 07-04-2017.
 //
 
-#include "Constant.hpp"
+#include "Components/Samplers/Constant.hpp"
 
 using ::Components::Constant;
 

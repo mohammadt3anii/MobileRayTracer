@@ -2,7 +2,7 @@
 // Created by puscas on 30/07/17.
 //
 
-#include "OBJLoader.hpp"
+#include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Lights/AreaLight.hpp"
 
 using ::Components::AreaLight;
@@ -107,7 +107,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                     normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
                     //normal.normalize();
                 }
-                const Triangle triangle {vertex1, vertex2, vertex3, normal};
+                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
                 const ::std::int32_t materialID{shape.mesh.material_ids[f]};

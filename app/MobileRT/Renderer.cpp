@@ -2,7 +2,7 @@
 // Created by Tiago on 09-Feb-17.
 //
 
-#include "Renderer.hpp"
+#include "MobileRT/Renderer.hpp"
 
 using ::MobileRT::Renderer;
 

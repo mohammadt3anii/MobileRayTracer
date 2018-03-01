@@ -3,7 +3,7 @@
 // Uses: Moller and Trumbore
 //
 
-#include "Triangle.hpp"
+#include "MobileRT/Shapes/Triangle.hpp"
 #include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;

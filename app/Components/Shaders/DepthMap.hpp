@@ -8,21 +8,22 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Ray;
-    using ::MobileRT::Scene;
 
     class DepthMap final : public ::MobileRT::Shader {
     private:
         ::glm::vec3 maxPoint_{};
 
     private:
-        bool shade(::glm::vec3 *rgb, Intersection intersection,
-                   Ray ray) noexcept final;
+        bool shade(
+            ::glm::vec3 *rgb,
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) noexcept final;
 
     public:
-        explicit DepthMap(Scene scene, ::glm::vec3 maxPoint,
-                          Accelerator accelerator) noexcept;
+        explicit DepthMap(
+            ::MobileRT::Scene scene,
+            ::glm::vec3 maxPoint,
+            Accelerator accelerator) noexcept;
 
         DepthMap(const DepthMap &depthMap) noexcept = delete;
 

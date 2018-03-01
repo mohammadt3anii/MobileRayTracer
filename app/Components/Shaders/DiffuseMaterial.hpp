@@ -8,16 +8,16 @@
 #include "MobileRT/Shader.hpp"
 
 namespace Components {
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Ray;
-    using ::MobileRT::Scene;
 
     class DiffuseMaterial final : public ::MobileRT::Shader {
     private:
-        bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept final;
+        bool shade(
+            ::glm::vec3 *rgb,
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) noexcept final;
 
     public:
-        explicit DiffuseMaterial(Scene scene, Accelerator accelerator) noexcept;
+        explicit DiffuseMaterial(::MobileRT::Scene scene, Accelerator accelerator) noexcept;
 
         DiffuseMaterial(const DiffuseMaterial &diffuseMaterial) noexcept = delete;
 

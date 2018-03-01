@@ -1,4 +1,4 @@
-#include "c_wrapper.h"
+#include "GTK_Interface/c_wrapper.h"
 #include "MobileRT/Utils.hpp"
 #include <cmath>
 #include <gdk/gdkkeysyms.h>

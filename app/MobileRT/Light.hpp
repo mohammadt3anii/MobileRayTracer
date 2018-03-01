@@ -5,8 +5,8 @@
 #ifndef MOBILERT_LIGHT_HPP
 #define MOBILERT_LIGHT_HPP
 
-#include "Intersection.hpp"
-#include "Ray.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Ray.hpp"
 #include <glm/glm.hpp>
 
 namespace MobileRT {

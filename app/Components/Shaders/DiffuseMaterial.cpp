@@ -2,7 +2,7 @@
 // Created by puscas on 31/07/17.
 //
 
-#include "DiffuseMaterial.hpp"
+#include "Components/Shaders/DiffuseMaterial.hpp"
 
 using ::Components::DiffuseMaterial;
 using ::MobileRT::Intersection;

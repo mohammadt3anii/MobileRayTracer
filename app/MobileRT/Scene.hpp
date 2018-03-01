@@ -5,13 +5,13 @@
 #ifndef MOBILERT_SCENE_HPP
 #define MOBILERT_SCENE_HPP
 
-#include "Accelerators/AABB.hpp"
-#include "Intersection.hpp"
-#include "Light.hpp"
-#include "Material.hpp"
-#include "Primitive.hpp"
-#include "Ray.hpp"
-#include "Utils.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Intersection.hpp"
+#include "MobileRT/Light.hpp"
+#include "MobileRT/Material.hpp"
+#include "MobileRT/Primitive.hpp"
+#include "MobileRT/Ray.hpp"
+#include "MobileRT/Utils.hpp"
 #include <glm/glm.hpp>
 #include <vector>
 

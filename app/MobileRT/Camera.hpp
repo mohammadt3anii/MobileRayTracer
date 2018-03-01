@@ -5,15 +5,14 @@
 #ifndef MOBILERT_CAMERA_HPP
 #define MOBILERT_CAMERA_HPP
 
-#include "Accelerators/AABB.hpp"
-#include "Ray.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Ray.hpp"
 #include <algorithm>
 #include <atomic>
 #include <glm/glm.hpp>
 #include <random>
 
 namespace MobileRT {
-    using ::MobileRT::AABB;
 
     class Camera {
     protected:

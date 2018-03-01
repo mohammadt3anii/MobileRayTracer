@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Scene.hpp"
+#include "MobileRT/Scene.hpp"
 
 using ::MobileRT::Scene;
 using ::MobileRT::Triangle;

@@ -2,7 +2,7 @@
 // Created by Tiago on 23-Jan-17.
 //
 
-#include "Camera.hpp"
+#include "MobileRT/Camera.hpp"
 #include <array>
 
 using ::MobileRT::AABB;

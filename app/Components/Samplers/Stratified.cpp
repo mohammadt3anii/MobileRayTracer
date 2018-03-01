@@ -2,7 +2,7 @@
 // Created by Tiago on 21-11-2016.
 //
 
-#include "Stratified.hpp"
+#include "Components/Samplers/Stratified.hpp"
 
 using ::Components::Stratified;
 

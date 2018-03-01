@@ -2,7 +2,7 @@
 // Created by puscas on 03-03-2017.
 //
 
-#include "AreaLight.hpp"
+#include "Components/Lights/AreaLight.hpp"
 
 using ::Components::AreaLight;
 using ::MobileRT::Material;

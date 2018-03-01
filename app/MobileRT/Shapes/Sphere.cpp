@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Sphere.hpp"
+#include "MobileRT/Shapes/Sphere.hpp"
 
 using ::MobileRT::AABB;
 using ::MobileRT::Sphere;

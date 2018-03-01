@@ -2,7 +2,7 @@
 // Created by Tiago on 22-Jun-17.
 //
 
-#include "Orthographic.hpp"
+#include "Components/Cameras/Orthographic.hpp"
 
 using ::Components::Orthographic;
 using ::MobileRT::AABB;

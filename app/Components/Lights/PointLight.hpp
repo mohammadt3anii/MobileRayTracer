@@ -8,16 +8,13 @@
 #include "MobileRT/Light.hpp"
 
 namespace Components {
-    using ::MobileRT::Material;
-    using ::MobileRT::Intersection;
-    using ::MobileRT::Ray;
 
     class PointLight final : public ::MobileRT::Light {
     private:
         ::glm::vec3 position_{};
 
     public:
-        explicit PointLight(Material radiance, ::glm::vec3 position) noexcept;
+        explicit PointLight(::MobileRT::Material radiance, ::glm::vec3 position) noexcept;
 
         PointLight(const PointLight &pointLight) noexcept = delete;
 
@@ -33,7 +30,9 @@ namespace Components {
 
         void resetSampling() noexcept final;
 
-        Intersection intersect(Intersection intersection, Ray ray) const noexcept final;
+        ::MobileRT::Intersection intersect(
+            ::MobileRT::Intersection intersection,
+            ::MobileRT::Ray ray) const noexcept final;
     };
 }//namespace Components
 

@@ -2,7 +2,7 @@
 // Created by Tiago on 23-Jan-17.
 //
 
-#include "Light.hpp"
+#include "MobileRT/Light.hpp"
 
 using ::MobileRT::Light;
 

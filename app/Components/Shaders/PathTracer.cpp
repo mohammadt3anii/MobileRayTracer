@@ -2,7 +2,7 @@
 // Created by puscas on 20-02-2017.
 //
 
-#include "PathTracer.hpp"
+#include "Components/Shaders/PathTracer.hpp"
 #include <glm/gtc/constants.hpp>
 
 using ::Components::PathTracer;

@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Material.hpp"
+#include "MobileRT/Material.hpp"
 #include <utility>
 
 using ::MobileRT::Material;

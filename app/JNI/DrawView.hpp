@@ -5,7 +5,7 @@
 #ifndef APP_DRAWVIEW_HPP
 #define APP_DRAWVIEW_HPP
 
-#include "Scenes.hpp"
+#include "Scenes/Scenes.hpp"
 #include "Components/Cameras/Orthographic.hpp"
 #include "Components/Cameras/Perspective.hpp"
 #include "Components/Lights/AreaLight.hpp"

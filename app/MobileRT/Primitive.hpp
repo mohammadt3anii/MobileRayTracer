@@ -5,15 +5,14 @@
 #ifndef MOBILERT_PRIMITIVE_HPP
 #define MOBILERT_PRIMITIVE_HPP
 
-#include "Accelerators/AABB.hpp"
-#include "Material.hpp"
-#include "Ray.hpp"
-#include "Shapes/Plane.hpp"
-#include "Shapes/Sphere.hpp"
-#include "Shapes/Triangle.hpp"
+#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Material.hpp"
+#include "MobileRT/Ray.hpp"
+#include "MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/Shapes/Sphere.hpp"
+#include "MobileRT/Shapes/Triangle.hpp"
 
 namespace MobileRT {
-    using ::MobileRT::Material;
 
     template<typename T>
     class Primitive final {
@@ -42,9 +41,6 @@ namespace MobileRT {
         Intersection intersect(Intersection intersection, Ray ray) noexcept;
     };
 
-
-    using MobileRT::Primitive;
-    using MobileRT::AABB;
 
 
     template<typename T>

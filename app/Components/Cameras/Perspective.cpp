@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Perspective.hpp"
+#include "Components/Cameras/Perspective.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 

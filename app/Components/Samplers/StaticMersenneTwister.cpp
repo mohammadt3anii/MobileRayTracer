@@ -2,7 +2,7 @@
 // Created by Tiago on 10-08-2017.
 //
 
-#include "StaticMersenneTwister.hpp"
+#include "Components/Samplers/StaticMersenneTwister.hpp"
 #include <array>
 
 using ::Components::StaticMersenneTwister;

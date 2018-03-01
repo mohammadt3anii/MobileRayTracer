@@ -8,7 +8,6 @@
 #include "MobileRT/Camera.hpp"
 
 namespace Components {
-    using ::MobileRT::Ray;
 
     class Perspective final : public ::MobileRT::Camera {
     private:
@@ -33,7 +32,7 @@ namespace Components {
 
         Perspective &operator=(Perspective &&perspective) noexcept = delete;
 
-        Ray generateRay(float u, float v,
+        ::MobileRT::Ray generateRay(float u, float v,
                         float deviationU, float deviationV) const noexcept final;
     };
 }//namespace Components

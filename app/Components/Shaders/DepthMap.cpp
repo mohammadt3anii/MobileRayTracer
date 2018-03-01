@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "DepthMap.hpp"
+#include "Components/Shaders/DepthMap.hpp"
 
 using ::Components::DepthMap;
 using ::MobileRT::Intersection;

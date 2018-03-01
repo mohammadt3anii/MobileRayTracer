@@ -5,10 +5,10 @@
 #ifndef MOBILERT_RENDERER_HPP
 #define MOBILERT_RENDERER_HPP
 
-#include "Camera.hpp"
-#include "Sampler.hpp"
-#include "Shader.hpp"
-#include "Utils.hpp"
+#include "MobileRT/Camera.hpp"
+#include "MobileRT/Sampler.hpp"
+#include "MobileRT/Shader.hpp"
+#include "MobileRT/Utils.hpp"
 #include <cmath>
 #include <thread>
 

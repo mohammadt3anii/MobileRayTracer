@@ -2,7 +2,7 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Intersection.hpp"
+#include "MobileRT/Intersection.hpp"
 
 using ::MobileRT::Intersection;
 

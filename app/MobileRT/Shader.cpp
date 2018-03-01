@@ -2,8 +2,8 @@
 // Created by Tiago on 16-10-2016.
 //
 
-#include "Shader.hpp"
-#include "Utils.hpp"
+#include "MobileRT/Shader.hpp"
+#include "MobileRT/Utils.hpp"
 #include <glm/glm.hpp>
 #include <utility>
 

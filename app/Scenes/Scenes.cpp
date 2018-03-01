@@ -2,7 +2,7 @@
 #include "Components/Lights/PointLight.hpp"
 #include "Components/Samplers/MersenneTwister.hpp"
 #include "Components/Samplers/StaticHaltonSeq.hpp"
-#include "Scenes.hpp"
+#include "Scenes/Scenes.hpp"
 #include <glm/glm.hpp>
 
 MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
