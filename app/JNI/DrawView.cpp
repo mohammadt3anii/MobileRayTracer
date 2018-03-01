@@ -5,7 +5,6 @@
 #include "DrawView.hpp"
 #include <android/bitmap.h>
 #include <mutex>
-#include <omp.h>
 
 static ::State working_{State::IDLE};
 static ::MobileRT::Renderer *renderer_{nullptr};
