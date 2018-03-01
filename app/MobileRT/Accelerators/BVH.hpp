@@ -191,12 +191,12 @@ namespace MobileRT {
             const ::MobileRT::Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<uBVHNode*, 64> stack {};
-        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::array<uBVHNode*, 32> stack {};
+        ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
-        ::std::uint32_t stackPtrId {0};
-        stack.at(stackPtr++) = nullptr;
-        stackId.at(stackPtrId++) = 0;
+        stack.at(stackPtr) = nullptr;
+        stackId.at(stackPtr) = 0;
+        ++stackPtr;
         do {
             if (intersect(node->box_, ray)) {
 
@@ -205,8 +205,9 @@ namespace MobileRT {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
-                    node = stack.at(--stackPtr); // pop
-                    id = stackId.at(--stackPtrId); // pop
+                    --stackPtr;
+                    node = stack.at(stackPtr); // pop
+                    id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     uBVHNode* childL {&boxes_.at(left)};
@@ -216,21 +217,24 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = stack.at(--stackPtr); // pop
-                        id = stackId.at(--stackPtrId); // pop
+                        --stackPtr;
+                        node = stack.at(stackPtr); // pop
+                        id = stackId.at(stackPtr); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr++) = childR; // push
-                            stackId.at(stackPtrId++) = left + 1; // push
+                            stack.at(stackPtr) = childR; // push
+                            stackId.at(stackPtr) = left + 1; // push
+                            ++stackPtr;
                         }
                     }
                 }
 
             } else {
-                node = stack.at(--stackPtr); // pop
-                id = stackId.at(--stackPtrId); // pop
+                --stackPtr;
+                node = stack.at(stackPtr); // pop
+                id = stackId.at(stackPtr); // pop
             }
 
         } while (node != nullptr);
@@ -243,12 +247,12 @@ namespace MobileRT {
         const ::MobileRT::Ray ray) noexcept {
         uBVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<uBVHNode*, 64> stack {};
-        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::array<uBVHNode*, 32> stack {};
+        ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
-        ::std::uint32_t stackPtrId {0};
-        stack.at(stackPtr++) = nullptr;
-        stackId.at(stackPtrId++) = 0;
+        stack.at(stackPtr) = nullptr;
+        stackId.at(stackPtr) = 0;
+        ++stackPtr;
         do {
             if (intersect(node->box_, ray)) {
 
@@ -261,8 +265,9 @@ namespace MobileRT {
                             return intersection;
                         }
                     }
-                    node = stack.at(--stackPtr); // pop
-                    id = stackId.at(--stackPtrId); // pop
+                    --stackPtr;
+                    node = stack.at(stackPtr); // pop
+                    id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     uBVHNode* childL {&boxes_.at(left)};
@@ -272,21 +277,24 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = stack.at(--stackPtr); // pop
-                        id = stackId.at(--stackPtrId); // pop
+                        --stackPtr;
+                        node = stack.at(stackPtr); // pop
+                        id = stackId.at(stackPtr); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr++) = childR; // push
-                            stackId.at(stackPtrId++) = left + 1; // push
+                            stack.at(stackPtr) = childR; // push
+                            stackId.at(stackPtr) = left + 1; // push
+                            ++stackPtr;
                         }
                     }
                 }
 
             } else {
-                node = stack.at(--stackPtr); // pop
-                id = stackId.at(--stackPtrId); // pop
+                --stackPtr;
+                node = stack.at(stackPtr); // pop
+                id = stackId.at(stackPtr); // pop
             }
 
         } while (node != nullptr);
