@@ -3,6 +3,7 @@
 //
 
 #include "PathTracer.hpp"
+#include <glm/gtc/constants.hpp>
 
 using ::Components::PathTracer;
 using ::MobileRT::Light;
@@ -167,7 +168,7 @@ void PathTracer::resetSampling() noexcept {
 }
 
 ::glm::vec3 PathTracer::getCosineSampleHemisphere(const ::glm::vec3 normal) const noexcept {
-    const float r1{2.0f * ::MobileRT::Pi * samplerRay_->getSample()};
+    const float r1{::glm::two_pi<float>() * samplerRay_->getSample()};
     const float r2{samplerRay_->getSample()};
     const float r2s{::std::sqrt(r2)};
     ::glm::vec3 u{::std::abs(normal[0]) > 0.1f ?

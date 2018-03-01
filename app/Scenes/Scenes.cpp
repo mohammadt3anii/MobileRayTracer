@@ -243,6 +243,5 @@ MobileRT::Scene spheresScene2(MobileRT::Scene scene) noexcept {
             ::glm::vec3 {1.0f, 0.5f, 4.5f}, 0.5f}, greenMat);
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {0.0f, 0.0f, 0.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f}}, sandMat);
-    /*scene.rectangles_.emplace_back (MobileRT::Rectangle {::glm::vec3 {-2.0f, 0.0f, 0.0f}, ::glm::vec3 {-2.0f, 0.0f, 10.0f}, ::glm::vec3 {2.0f, 0.0f, 0.0f}, ::glm::vec3 {2.0f, 0.0f, 10.0f}}, sandMat);*/
     return scene;
 }

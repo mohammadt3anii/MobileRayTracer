@@ -36,11 +36,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
             ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
             ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
-            ::std::vector<Primitive<Rectangle> *> rectangles{convertVector(this->scene_.rectangles_)};
             Scene::getBounds<Primitive<Triangle>>(triangles, &min, &max);
             Scene::getBounds<Primitive<Sphere>>(spheres, &min, &max);
             Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
-            Scene::getBounds<Primitive<Rectangle>>(rectangles, &min, &max);
             Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
             AABB sceneBounds{min, max};
             regularGrid_ = RegularGrid {sceneBounds, &scene_, 32};
@@ -49,8 +47,6 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
         case Accelerator::BVH: {
             LOG("PLANES");
             bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
-            LOG("RECTANGLES");
-            bvhRectangles_ = ::MobileRT::BVH<MobileRT::Rectangle> {::std::move(scene_.rectangles_)};
             LOG("SPHERES");
             bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
             LOG("TRIANGLES");
@@ -83,7 +79,6 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
 
         case Accelerator::BVH: {
             intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
-            intersection = this->bvhRectangles_.shadowTrace(intersection, ray);
             intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
             intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
@@ -108,7 +103,6 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
 
         case Accelerator::BVH: {
             intersection = this->bvhPlanes_.trace(intersection, ray);
-            intersection = this->bvhRectangles_.trace(intersection, ray);
             intersection = this->bvhSpheres_.trace(intersection, ray);
             intersection = this->bvhTriangles_.trace(intersection, ray);
             intersection = this->scene_.traceLights(intersection, ray);

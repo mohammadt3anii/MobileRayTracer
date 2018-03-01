@@ -19,7 +19,6 @@ namespace MobileRT {
         ::std::vector<::std::vector<Primitive<Triangle> *>> triangles_;
         ::std::vector<::std::vector<Primitive<Sphere> *>> spheres_;
         ::std::vector<::std::vector<Primitive<Plane> *>> planes_;
-        ::std::vector<::std::vector<Primitive<Rectangle> *>> rectangles_;
         ::std::int32_t gridSize_{};
         ::std::int32_t gridShift_{};
         AABB m_Extends{};

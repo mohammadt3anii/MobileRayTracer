@@ -15,12 +15,10 @@ Scene::~Scene() noexcept {
     this->triangles_.clear();
     this->spheres_.clear();
     this->planes_.clear();
-    this->rectangles_.clear();
     this->lights_.clear();
 
     //force free memory
     ::std::vector<MobileRT::Primitive<MobileRT::Plane>>().swap(planes_);
-    ::std::vector<MobileRT::Primitive<MobileRT::Rectangle>>().swap(rectangles_);
     ::std::vector<MobileRT::Primitive<MobileRT::Sphere>>().swap(spheres_);
     ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>().swap(triangles_);
     ::std::vector<::std::unique_ptr<Light>>().swap(lights_);
@@ -54,8 +52,6 @@ Intersection Scene::trace(Intersection intersection, Ray ray) noexcept {
         trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
     intersection =
         trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
-    intersection =
-        trace<::MobileRT::Primitive<::MobileRT::Rectangle>>(this->rectangles_, intersection, ray);
     intersection = traceLights(intersection, ::std::move(ray));
     return intersection;
 }
@@ -80,8 +76,6 @@ Intersection Scene::shadowTrace(Intersection intersection, Ray ray) noexcept {
             shadowTrace<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray);
     intersection =
             shadowTrace<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray);
-    intersection =
-            shadowTrace<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray);
     return intersection;
 }
 

@@ -36,8 +36,6 @@ namespace MobileRT {
 
     const float Epsilon{1.0e-04f};
     const float RayLengthMax{1.0e+30f};
-    const float Pi{3.14159265358979323846f};
-    const float Pi_4{0.78539816339744830962f};
     const ::std::int32_t RayDepthMin{4};
     const ::std::int32_t RayDepthMax{8};
     const ::std::int32_t NumberOfBlocks{256};

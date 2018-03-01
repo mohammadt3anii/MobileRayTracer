@@ -9,7 +9,6 @@
 #include "Material.hpp"
 #include "Ray.hpp"
 #include "Shapes/Plane.hpp"
-#include "Shapes/Rectangle.hpp"
 #include "Shapes/Sphere.hpp"
 #include "Shapes/Triangle.hpp"
 

@@ -4,6 +4,7 @@
 //
 
 #include "Triangle.hpp"
+#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
@@ -26,7 +27,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
 
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-    if (::std::abs(normalizedProjection) < Epsilon) {
+    if (::std::abs(normalizedProjection) < ::glm::epsilon<float>()) {
         return intersection;
     }
 
@@ -47,7 +48,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     // the intersection point is on the line
     const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < ::glm::epsilon<float>() || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
     return Intersection {ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
@@ -60,23 +61,13 @@ float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-::glm::vec3 Triangle::getPositionMin() const noexcept {
-    const ::glm::vec3 pointB {pointA_ + AB_};
-    const ::glm::vec3 pointC {pointA_ + AC_};
-    const ::glm::vec3 res {::glm::min(pointA_, ::glm::min(pointB, pointC))};
-    return res;
-}
-
-::glm::vec3 Triangle::getPositionMax() const noexcept {
-    const ::glm::vec3 pointB {pointA_ + AB_};
-    const ::glm::vec3 pointC {pointA_ + AC_};
-    const ::glm::vec3 res {::glm::max(pointA_, ::glm::max(pointB, pointC))};
-    return res;
-}
-
 //TODO (Puscas): Fix this method (it may be wrong)
 AABB Triangle::getAABB() const noexcept {
-    return AABB {getPositionMin() - Epsilon, getPositionMax()};
+    const ::glm::vec3 pointB {pointA_ + AB_};
+    const ::glm::vec3 pointC {pointA_ + AC_};
+    const ::glm::vec3 min {::glm::min(pointA_, ::glm::min(pointB, pointC))};
+    const ::glm::vec3 max {::glm::max(pointA_, ::glm::max(pointB, pointC))};
+    return AABB {min - Epsilon, max};
 }
 
 bool Triangle::intersect(const AABB box) const noexcept {
@@ -147,7 +138,7 @@ bool Triangle::intersect(const AABB box) const noexcept {
             [=](const ::glm::vec3 vec) -> bool {
                 const ::glm::vec3 perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-                return ::std::abs(normalizedProjection) < Epsilon;
+                return ::std::abs(normalizedProjection) < ::glm::epsilon<float>();
             }
     };
 

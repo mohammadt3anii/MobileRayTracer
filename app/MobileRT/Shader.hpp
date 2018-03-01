@@ -19,7 +19,6 @@ namespace MobileRT {
         RegularGrid regularGrid_{};
 
         BVH<MobileRT::Plane> bvhPlanes_{};
-        BVH<MobileRT::Rectangle> bvhRectangles_{};
         BVH<MobileRT::Sphere> bvhSpheres_{};
         BVH<MobileRT::Triangle> bvhTriangles_{};
 

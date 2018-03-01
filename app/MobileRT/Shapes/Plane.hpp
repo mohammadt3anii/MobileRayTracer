@@ -17,10 +17,6 @@ namespace MobileRT {
         ::glm::vec3 point_{};   // point in the plane
 
     private:
-        ::glm::vec3 getPositionMin() const noexcept;
-
-        ::glm::vec3 getPositionMax() const noexcept;
-
         ::glm::vec3 getRightVector() const noexcept;
 
     public:

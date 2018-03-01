@@ -3,6 +3,7 @@
 //
 
 #include "Plane.hpp"
+#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Plane;
@@ -22,7 +23,7 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
     const float normalized_projection {::glm::dot(normal_, ray.direction_)};
-    if (::std::abs(normalized_projection) < Epsilon) {
+    if (::std::abs(normalized_projection) < ::glm::epsilon<float>()) {
         return intersection;
     }
 
@@ -67,19 +68,10 @@ float Plane::getZ() const noexcept {
     return right;
 }
 
-::glm::vec3 Plane::getPositionMin() const noexcept {
-    const ::glm::vec3 rightDir {getRightVector()};
-    return this->point_ +  rightDir * -100.0f;
-}
-
-::glm::vec3 Plane::getPositionMax() const noexcept {
-    const ::glm::vec3 rightDir {getRightVector()};
-    return this->point_ + rightDir * 100.0f;
-}
-
 AABB Plane::getAABB() const noexcept {
-    const ::glm::vec3 min {getPositionMin() - Epsilon};
-    const ::glm::vec3 max {getPositionMax()};
+    const ::glm::vec3 rightDir {getRightVector()};
+    const ::glm::vec3 min {this->point_ + rightDir * -100.0f - Epsilon};
+    const ::glm::vec3 max {this->point_ + rightDir * 100.0f};
     return AABB {min, max};;
 }
 

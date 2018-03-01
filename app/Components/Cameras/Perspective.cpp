@@ -4,6 +4,7 @@
 
 #include "Perspective.hpp"
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 using ::Components::Perspective;
 using ::MobileRT::Ray;
@@ -12,8 +13,8 @@ Perspective::Perspective(const ::glm::vec3 position, const ::glm::vec3 lookAt, c
                          const float hFov, const float vFov) noexcept :
         Camera(position, lookAt, up),
         // convert to radians
-        hFov_{(hFov * ::MobileRT::Pi) / 180.0f},
-        vFov_{(vFov * ::MobileRT::Pi) / 180.0f} {
+        hFov_{(hFov * ::glm::pi<float>()) / 180.0f},
+        vFov_{(vFov * ::glm::pi<float>()) / 180.0f} {
 }
 
 /* u = x / width */
@@ -33,6 +34,6 @@ Ray Perspective::generateRay(const float u, const float v,
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
     const float absValue{::std::abs(value)};
-    return ::MobileRT::Pi_4 * value -
+    return ::glm::quarter_pi<float>() * value -
            (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
 }

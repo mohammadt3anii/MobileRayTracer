@@ -20,9 +20,6 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
         planes_{
                 ::std::vector<::std::vector<::MobileRT::Primitive<Plane> *>> {
                         static_cast<size_t> (gridSize * gridSize * gridSize)}},
-        rectangles_{
-                ::std::vector<::std::vector<::MobileRT::Primitive<Rectangle> *>> {
-                        static_cast<size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
         gridShift_{bitCounter(static_cast<::std::uint32_t>(gridSize)) - 1},
         m_Extends(sceneBounds),//world boundaries
@@ -41,24 +38,20 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
     triangles_.reserve(vectorSize);
     spheres_.reserve(vectorSize);
     planes_.reserve(vectorSize);
-    rectangles_.reserve(vectorSize);
 
     addPrimitives<Primitive<Triangle>>(scene->triangles_, this->triangles_);
     addPrimitives<Primitive<Sphere>>(scene->spheres_, this->spheres_);
     addPrimitives<Primitive<Plane>>(scene->planes_, this->planes_);
-    addPrimitives<Primitive<Rectangle>>(scene->rectangles_, this->rectangles_);
     LOG("TRIANGLES = ", this->triangles_.size());
     LOG("SPHERES = ", this->spheres_.size());
     LOG("PLANES = ", this->planes_.size());
-    LOG("RECTANGLES = ", this->rectangles_.size());
 
 
     /*for(size_t i {0}; i < this->triangles_.size(); ++i) {
       ::std::vector<Primitive<Triangle>*>& triangles = this->triangles_[i];
       ::std::vector<Primitive<Sphere>*>& spheres = this->spheres_[i];
       ::std::vector<Primitive<Plane>*>& planes = this->planes_[i];
-      ::std::vector<Primitive<Rectangle>*>& rectangles = this->rectangles_[i];
-      LOG("i = ", i, " -> t = ",  triangles.size(), ", s = ", spheres.size(), ", p = ", planes.size(), " , r = ", rectangles.size(), " size = ", this->triangles_.size());
+      LOG("i = ", i, " -> t = ",  triangles.size(), ", s = ", spheres.size(), ", p = ", planes.size(), " size = ", this->triangles_.size());
     }*/
 }
 
@@ -149,8 +142,6 @@ Intersection RegularGrid::trace(Intersection intersection, Ray ray) noexcept {
             intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray);
     intersection =
             intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray);
-    intersection =
-            intersect<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray);
     intersection = this->scene_->traceLights(intersection, ray);
     return intersection;
 }
@@ -162,9 +153,6 @@ Intersection RegularGrid::shadowTrace(Intersection intersection, Ray ray) noexce
             intersect<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray, true);
     intersection =
             intersect<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray, true);
-    intersection =
-            intersect<::MobileRT::Primitive<Rectangle>>(this->rectangles_, intersection, ray,
-                                                        true);
     return intersection;
 }
 

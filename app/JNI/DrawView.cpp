@@ -336,14 +336,11 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
         const int32_t spheres{
                 static_cast<int32_t> (renderer_->shader_->scene_.spheres_.size())};
         const int32_t planes{static_cast<int32_t> (renderer_->shader_->scene_.planes_.size())};
-        const int32_t rectangles{
-                static_cast<int32_t> (renderer_->shader_->scene_.rectangles_.size())};
         numberOfLights_ = static_cast<int32_t> (renderer_->shader_->scene_.lights_.size());
-        const int32_t nPrimitives = triangles + spheres + planes + rectangles;
+        const int32_t nPrimitives = triangles + spheres + planes;
         /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
         LOG("PLANES = ", planes);
-        LOG("RECTANGLES = ", rectangles);
         LOG("LIGHTS = ", numberOfLights_);*/
         return nPrimitives;
     }();

@@ -21,7 +21,6 @@ namespace MobileRT {
         ::std::vector<Primitive<Triangle>> triangles_{::std::vector<Primitive<Triangle>>{}};
         ::std::vector<Primitive<Sphere>> spheres_{::std::vector<Primitive<Sphere>>{}};
         ::std::vector<Primitive<Plane>> planes_{::std::vector<Primitive<Plane>>{}};
-        ::std::vector<Primitive<Rectangle>> rectangles_{::std::vector<Primitive<Rectangle>>{}};
         ::std::vector<::std::unique_ptr<Light>> lights_{::std::vector<::std::unique_ptr<Light>>{}};
 
     private:
