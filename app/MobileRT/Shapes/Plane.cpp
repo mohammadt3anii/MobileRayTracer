@@ -3,7 +3,6 @@
 //
 
 #include "MobileRT/Shapes/Plane.hpp"
-#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Plane;
@@ -23,7 +22,7 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
     const float normalized_projection {::glm::dot(normal_, ray.direction_)};
-    if (::std::abs(normalized_projection) < ::glm::epsilon<float>()) {
+    if (::std::abs(normalized_projection) < ::std::numeric_limits<float>::epsilon()) {
         return intersection;
     }
 
@@ -34,7 +33,7 @@ Intersection Plane::intersect(Intersection intersection, const Ray ray) const no
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < ::glm::epsilon<float>() || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
 

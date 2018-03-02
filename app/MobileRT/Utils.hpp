@@ -34,7 +34,6 @@ namespace MobileRT {
     template<typename T>
     ::std::vector<T *> convertVector(::std::vector<T> &source) noexcept;
 
-    const float Epsilon{1.0e-05f};
     const float RayLengthMax{1.0e+30f};
     const ::std::int32_t RayDepthMin{4};
     const ::std::int32_t RayDepthMax{8};

@@ -3,7 +3,6 @@
 //
 
 #include "MobileRT/Shapes/Sphere.hpp"
-#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
@@ -28,11 +27,13 @@ Intersection Sphere::intersect(Intersection intersection, const Ray ray) const n
 
     //ray intersects the sphere in 2 points
     const float rootDiscriminant {::std::sqrt(discriminant)};
-    const float distanceToIntersection1 {(-B + rootDiscriminant) * 0.5f};
-    const float distanceToIntersection2 {(-B - rootDiscriminant) * 0.5f};
+    const float distanceToIntersection1 {-B + rootDiscriminant};
+    const float distanceToIntersection2 {-B - rootDiscriminant};
     //distance between intersection and camera = smaller root = closer intersection
-    const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2)};
+    const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2) * 0.5f};
 
+    const float Epsilon {1.0e-05f};
+    //const float Epsilon {::std::numeric_limits<float>::epsilon() * 10};
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }

@@ -4,7 +4,6 @@
 //
 
 #include "MobileRT/Shapes/Triangle.hpp"
-#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
@@ -27,7 +26,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
 
     const ::glm::vec3 perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-    if (::std::abs(normalizedProjection) < ::glm::epsilon<float>()) {
+    if (::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon()) {
         return intersection;
     }
 
@@ -48,7 +47,7 @@ Intersection Triangle::intersect(Intersection intersection, const Ray ray) const
     // the intersection point is on the line
     const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
 
-    if (distanceToIntersection < ::glm::epsilon<float>() || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
     return Intersection {ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
@@ -137,7 +136,7 @@ bool Triangle::intersect(const AABB box) const noexcept {
             [=](const ::glm::vec3 vec) -> bool {
                 const ::glm::vec3 perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-                return ::std::abs(normalizedProjection) < ::glm::epsilon<float>();
+                return ::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon();
             }
     };
 
