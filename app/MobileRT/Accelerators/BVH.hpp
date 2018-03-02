@@ -194,8 +194,8 @@ namespace MobileRT {
                     id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    uBVHNode* childL {&boxes_.at(left)};
-                    uBVHNode* childR {&boxes_.at(left + 1)};
+                    uBVHNode* const childL {&boxes_.at(left)};
+                    uBVHNode* const childR {&boxes_.at(left + 1)};
 
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};
@@ -254,8 +254,8 @@ namespace MobileRT {
                     id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    uBVHNode* childL {&boxes_.at(left)};
-                    uBVHNode* childR {&boxes_.at(left + 1)};
+                    uBVHNode* const childL {&boxes_.at(left)};
+                    uBVHNode* const childR {&boxes_.at(left + 1)};
 
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};
