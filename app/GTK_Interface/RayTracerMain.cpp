@@ -49,7 +49,7 @@
     assert(tAsync && tPrint && tShowImage);
 
     const ::std::uint32_t size{static_cast<::std::uint32_t>(width_) * static_cast<::std::uint32_t>(height_)};
-    ::std::unique_ptr<uint8_t[]> buffer{::std::make_unique<uint8_t[]>(size * 4u)};
+    ::std::unique_ptr<uint8_t[]> buffer{::std::make_unique<uint8_t[]>(size * 4)};
     ::std::vector<::std::uint32_t> bitmap(size);
     bitmap.reserve(size);
 

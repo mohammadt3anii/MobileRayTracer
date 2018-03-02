@@ -54,8 +54,6 @@ namespace MobileRT {
         oss << '\n';
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
-        const ::std::chrono::duration<::std::int32_t, ::std::micro> timeToSleep {10};
-        ::std::this_thread::sleep_for(timeToSleep);
 #else
         ::std::cout << oss.str();
 #endif

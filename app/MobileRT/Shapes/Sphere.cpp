@@ -3,6 +3,7 @@
 //
 
 #include "MobileRT/Shapes/Sphere.hpp"
+#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Sphere;

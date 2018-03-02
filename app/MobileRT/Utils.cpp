@@ -25,24 +25,22 @@ namespace MobileRT {
 
     //newAvg = ((size - 1) * oldAvg + newNum) / size;
     ::std::uint32_t incrementalAvg(const ::glm::vec3 sample, const ::std::uint32_t avg, const ::std::uint32_t numSample) noexcept {
-        //toneMap();
+        const ::std::uint32_t lastRed{avg & 0xFF};
+        const ::std::uint32_t lastGreen{(avg >> 8) & 0xFF};
+        const ::std::uint32_t lastBlue{(avg >> 16) & 0xFF};
 
-        const ::std::uint32_t redB4{avg & 0xFF};
-        const ::std::uint32_t greenB4{(avg >> 8) & 0xFF};
-        const ::std::uint32_t blueB4{(avg >> 16) & 0xFF};
+        const ::std::uint32_t samplerRed{static_cast<::std::uint32_t> (sample[0] * 255)};
+        const ::std::uint32_t samplerGreen{static_cast<::std::uint32_t> (sample[1] * 255)};
+        const ::std::uint32_t samplerBlue{static_cast<::std::uint32_t> (sample[2] * 255)};
 
-        const ::std::uint32_t redSamp{static_cast<::std::uint32_t> (sample[0] * 255u)};
-        const ::std::uint32_t greenSamp{static_cast<::std::uint32_t> (sample[1] * 255u)};
-        const ::std::uint32_t blueSamp{static_cast<::std::uint32_t> (sample[2] * 255u)};
+        const ::std::uint32_t currentRed{((numSample - 1) * lastRed + samplerRed) / numSample};
+        const ::std::uint32_t currentGreen{((numSample - 1) * lastGreen + samplerGreen) / numSample};
+        const ::std::uint32_t currentBlue{((numSample - 1) * lastBlue + samplerBlue) / numSample};
 
-        const ::std::uint32_t redAft{((numSample - 1) * redB4 + redSamp) / numSample};
-        const ::std::uint32_t greenAft{((numSample - 1) * greenB4 + greenSamp) / numSample};
-        const ::std::uint32_t blueAft{((numSample - 1) * blueB4 + blueSamp) / numSample};
+        const ::std::uint32_t retR {::std::min(currentRed, 255u)};
+        const ::std::uint32_t retG {::std::min(currentGreen, 255u)};
+        const ::std::uint32_t retB {::std::min(currentBlue, 255u)};
 
-        const ::std::uint32_t retR {::std::min(redAft, 255u)};
-        const ::std::uint32_t retG {::std::min(greenAft, 255u)};
-        const ::std::uint32_t retB {::std::min(blueAft, 255u)};
-
-        return (0xFF000000u | (retB << 16u) | (retG << 8u) | retR);
+        return (0xFF000000 | (retB << 16) | (retG << 8) | retR);
     }
 }//namespace MobileRT

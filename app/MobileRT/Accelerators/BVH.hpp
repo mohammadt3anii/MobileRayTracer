@@ -62,31 +62,24 @@ namespace MobileRT {
 
 
     template<typename T>
-    BVH<T>::BVH(
-        ::std::vector<Primitive<T>> primitives) noexcept {
-            if (primitives.empty()) {
-                boxes_.emplace_back(uBVHNode{});
-                return;
-            }
-            ::std::uint32_t numberPrimitives{static_cast<::std::uint32_t>(primitives.size())};
-            ::std::uint32_t maxDepth{0};
-            ::std::uint32_t maxNodes{1};
-            while (maxNodes * maxLeafSize < numberPrimitives) {
-                ++maxDepth;
-                maxNodes = 1u << maxDepth;
-            }
-            while (maxDepth > 0) {
-                maxDepth--;
-                maxNodes += 1 << maxDepth;
-            }
-            //LOG ("maxNodes = ", maxNodes);
-            boxes_.resize(maxNodes);
+    BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
+        if (primitives.empty()) {
+            boxes_.emplace_back(uBVHNode {});
+            return;
+        }
+        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
+        ::std::uint32_t maxDepth {0};
+        ::std::uint32_t maxNodes {1};
+        while (maxNodes * maxLeafSize < numberPrimitives) {
+            ++maxDepth;
+            maxNodes = 1u << maxDepth;
+        }
+        maxNodes = (2u << maxDepth) - 1;
 
-            primitives_.reserve(primitives.size());
-            boxes_.at(0) = build(::std::move(primitives), 0, 0);
+        boxes_.resize(maxNodes);
+        primitives_.reserve(numberPrimitives);
 
-            primitives_.shrink_to_fit();
-            ::std::vector<Primitive<T>>(primitives_).swap(primitives_);
+        build(::std::move(primitives), 0, 0);
     }
 
 
@@ -121,8 +114,7 @@ namespace MobileRT {
 
         const ::std::int32_t axis {current_box.getLongestAxis()};
         ::std::sort(primitives.begin(), primitives.end(),
-            [=](const Primitive<T> a,
-                const Primitive<T> b) noexcept -> bool {
+            [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 

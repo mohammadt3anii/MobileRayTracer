@@ -45,14 +45,6 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
     LOG("TRIANGLES = ", this->triangles_.size());
     LOG("SPHERES = ", this->spheres_.size());
     LOG("PLANES = ", this->planes_.size());
-
-
-    /*for(size_t i {0}; i < this->triangles_.size(); ++i) {
-      ::std::vector<Primitive<Triangle>*>& triangles = this->triangles_[i];
-      ::std::vector<Primitive<Sphere>*>& spheres = this->spheres_[i];
-      ::std::vector<Primitive<Plane>*>& planes = this->planes_[i];
-      LOG("i = ", i, " -> t = ",  triangles.size(), ", s = ", spheres.size(), ", p = ", planes.size(), " size = ", this->triangles_.size());
-    }*/
 }
 
 ::std::int32_t RegularGrid::bitCounter(::std::uint32_t n) const noexcept {
