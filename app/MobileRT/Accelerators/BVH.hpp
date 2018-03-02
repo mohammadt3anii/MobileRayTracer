@@ -189,7 +189,7 @@ namespace MobileRT {
         do {
             if (intersect(node->box_, ray)) {
 
-                if (node->numberPrimitives_ != 0) {
+                if (node->numberPrimitives_ > 0) {
                     for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
@@ -201,6 +201,22 @@ namespace MobileRT {
                     const ::std::uint32_t left {id * 2 + 1};
                     uBVHNode* childL {&boxes_.at(left)};
                     uBVHNode* childR {&boxes_.at(left + 1)};
+
+                    /*for (::std::uint32_t i {0}; i < childL->numberPrimitives_; ++i) {
+                        auto& primitive {primitives_.at(childL->indexOffset_ + i)};
+                        const float blue {primitive.material_.Kd_[2]};
+                        if(blue > 0.7f) {
+                            LOG("b = ", blue);
+                        }
+                    }
+
+                    for (::std::uint32_t i {0}; i < childR->numberPrimitives_; ++i) {
+                        auto& primitive {primitives_.at(childR->indexOffset_ + i)};
+                        const float blue {primitive.material_.Kd_[2]};
+                        if(blue > 0.7f && ray.direction_[0] >= 0.3f) {
+                            LOG("b = ", blue);
+                        }
+                    }*/
 
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};

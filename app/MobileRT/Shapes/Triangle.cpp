@@ -61,13 +61,12 @@ float Triangle::getZ() const noexcept {
     return 0.0f;
 }
 
-//TODO (Puscas): Fix this method (it may be wrong)
 AABB Triangle::getAABB() const noexcept {
     const ::glm::vec3 pointB {pointA_ + AB_};
     const ::glm::vec3 pointC {pointA_ + AC_};
     const ::glm::vec3 min {::glm::min(pointA_, ::glm::min(pointB, pointC))};
     const ::glm::vec3 max {::glm::max(pointA_, ::glm::max(pointB, pointC))};
-    return AABB {min - Epsilon, max};
+    return AABB {min, max};
 }
 
 bool Triangle::intersect(const AABB box) const noexcept {
