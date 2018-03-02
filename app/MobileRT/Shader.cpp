@@ -18,11 +18,8 @@ Shader::Shader(Scene scene, const ::std::uint32_t samplesLight, const Accelerato
         :
         scene_{::std::move(scene)},
         accelerator_{accelerator},
-        samplesLight_{samplesLight} {
-    this->scene_.triangles_.shrink_to_fit();
-    this->scene_.spheres_.shrink_to_fit();
-    this->scene_.planes_.shrink_to_fit();
-    this->scene_.lights_.shrink_to_fit();
+        samplesLight_{samplesLight}
+{
 }
 
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
