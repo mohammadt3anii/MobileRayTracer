@@ -42,11 +42,8 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             break;
         }
         case Accelerator::BVH: {
-            LOG("PLANES");
             bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
-            LOG("SPHERES");
             bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
-            LOG("TRIANGLES");
             bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
@@ -54,7 +51,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
 }
 
 Intersection Shader::traceTouch(Intersection intersection, Ray ray) noexcept {
-    return this->scene_.trace(intersection, ::std::move(ray));
+    return this->scene_.trace(intersection, ray);
 }
 
 Shader::~Shader() noexcept {
@@ -65,12 +62,12 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
     const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            intersection = this->scene_.shadowTrace(intersection, ::std::move(ray));
+            intersection = this->scene_.shadowTrace(intersection, ray);
             break;
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGrid_.shadowTrace(intersection, ::std::move(ray));
+            intersection = this->regularGrid_.shadowTrace(intersection, ray);
             break;
         }
 
@@ -106,5 +103,5 @@ bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
             break;
         }
     }
-    return intersection.length_ < lastDist && shade(rgb, intersection, ::std::move(ray));
+    return intersection.length_ < lastDist && shade(rgb, intersection, ray);
 }

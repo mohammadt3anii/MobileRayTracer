@@ -65,7 +65,6 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
         const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
             const ::std::uint32_t samplesLight{this->samplesLight_};
-            Intersection intersectLight{};
             //direct light
             for (::std::uint32_t i{0}; i < samplesLight; ++i) {
                 const float randomNumber{samplerLight_->getSample()};
@@ -88,9 +87,10 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
                                   intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
+                    Intersection intersectLight{};
                     intersectLight.length_ = distanceToLight;
                     intersectLight.primitive_ = intersection.primitive_;
-                    if (!shadowTrace(intersectLight, ::std::move(shadowRay))) {
+                    if (!shadowTrace(intersectLight, shadowRay)) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                         Ld += light.radiance_.Le_ * cosNormalLight;
                     }
@@ -112,7 +112,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
             //estimator = <F^N>=1/N * ∑(i=0)(N−1) f(Xi) / pdf(Xi)
 
             ::glm::vec3 LiD_RGB {};
-            intersectedLight = rayTrace(&LiD_RGB, ::std::move(normalizedSecundaryRay));
+            intersectedLight = rayTrace(&LiD_RGB, normalizedSecundaryRay);
             //PDF = cos(theta) / Pi
             //cos (theta) = cos(dir, normal)
             //PDF = cos(dir, normal) / Pi
@@ -137,7 +137,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
         const ::glm::vec3 reflectionDir {::glm::reflect(ray.direction_, shadingNormal)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiS_RGB {};
-        rayTrace(&LiS_RGB, ::std::move(specularRay));
+        rayTrace(&LiS_RGB, specularRay);
         LiS += kS * LiS_RGB;
     }
 
@@ -150,7 +150,7 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
         Ray transmissionRay {refractDir,
                             intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};
-        rayTrace(&LiT_RGB, ::std::move(transmissionRay));
+        rayTrace(&LiT_RGB, transmissionRay);
         LiT += kT * LiT_RGB;
     }
 

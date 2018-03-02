@@ -503,7 +503,7 @@ extern "C"
     //const float v {static_cast<float> (jy) / height_};
     //MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
     //MobileRT::Intersection intersection {};
-    //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ::std::move(ray))};
+    //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ray)};
     const ::std::int32_t primitiveID{-1};
     return primitiveID;
 }

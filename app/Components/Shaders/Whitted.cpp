@@ -46,7 +46,6 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
     const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
         if (sizeLights > 0) {
-            Intersection lightIntersection{};
             const ::std::uint32_t samplesLight{this->samplesLight_};
             for (::std::uint32_t i{0}; i < sizeLights; ++i) {
                 Light &light(*scene_.lights_[i]);
@@ -62,11 +61,12 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
                         //shadow ray - orig=intersection, dir=light
                         Ray shadowRay{vectorToLight, intersection.point_, rayDepth + 1,
                                       intersection.primitive_};
+                        Intersection lightIntersection{};
                         lightIntersection.length_ = distanceToLight;
                         lightIntersection.primitive_ = intersection.primitive_;
                         //intersection between shadow ray and the closest primitive
                         //if there are no primitives between intersection and the light
-                        if (!shadowTrace(lightIntersection, ::std::move(shadowRay))) {
+                        if (!shadowTrace(lightIntersection, shadowRay)) {
                             //rgb += kD * radLight * cos_N_L;
                             *rgb += light.radiance_.Le_ * cos_N_L;
                         }
@@ -86,7 +86,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
         const ::glm::vec3 reflectionDir {::glm::reflect(ray.direction_, shadingNormal)};
         Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiS_RGB {};
-        rayTrace(&LiS_RGB, ::std::move(specularRay));
+        rayTrace(&LiS_RGB, specularRay);
         *rgb += kS * LiS_RGB;
     }
 
@@ -100,7 +100,7 @@ bool Whitted::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray
                             intersection.point_,
                             rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};
-        rayTrace(&LiT_RGB, ::std::move(transmissionRay));
+        rayTrace(&LiT_RGB, transmissionRay);
         *rgb += kT * LiT_RGB;
     }
     *rgb += kD *  0.1f;

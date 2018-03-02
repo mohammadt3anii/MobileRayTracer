@@ -52,7 +52,7 @@ Intersection Scene::trace(Intersection intersection, Ray ray) noexcept {
         trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
     intersection =
         trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
-    intersection = traceLights(intersection, ::std::move(ray));
+    intersection = traceLights(intersection, ray);
     return intersection;
 }
 

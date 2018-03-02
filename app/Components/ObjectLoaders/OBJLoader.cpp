@@ -105,7 +105,6 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const ::glm::vec3 normal2 {nx2, ny2, nz2};
                     const ::glm::vec3 normal3 {nx3, ny3, nz3};
                     normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
-                    //normal.normalize();
                 }
                 const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, normal};
 

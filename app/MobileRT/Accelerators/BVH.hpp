@@ -31,7 +31,7 @@ namespace MobileRT {
         ::std::vector<Primitive<T>> primitives_{};
 
     private:
-        uBVHNode build(::std::vector<Primitive<T>> primitives, ::std::uint32_t depth,
+        void build(::std::vector<Primitive<T>> primitives, ::std::uint32_t depth,
                    ::std::uint32_t currentNodeId) noexcept;
 
     public:
@@ -84,12 +84,12 @@ namespace MobileRT {
 
 
     template<typename T>
-    uBVHNode BVH<T>::build(
+    void BVH<T>::build(
         ::std::vector<Primitive<T>> primitives,
         const ::std::uint32_t depth,
         const ::std::uint32_t currentNodeId) noexcept {
         if (primitives.empty()) {
-            return uBVHNode{};
+            return;
         }
         static ::std::uint32_t numberPrimitives {0};
         if (depth == 0) {
@@ -111,6 +111,7 @@ namespace MobileRT {
             current_box = surroundingBox(new_box, current_box);
             //boxes.emplace_back(new_box);
         }
+        boxes_.at(currentNodeId).box_ = current_box;
 
         const ::std::int32_t axis {current_box.getLongestAxis()};
         ::std::sort(primitives.begin(), primitives.end(),
@@ -148,10 +149,9 @@ namespace MobileRT {
         }*/
         divide = primitives.size() % 2 == 0 ? divide : divide + 1;
 
-        uBVHNode currentNode {};
         if (numberPrimitives <= (1 << depth) * maxLeafSize) {
-            currentNode.indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
-            currentNode.numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
+            boxes_.at(currentNodeId).indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
+            boxes_.at(currentNodeId).numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
             using Iterator = typename ::std::vector<Primitive<T>>::const_iterator;
@@ -164,14 +164,9 @@ namespace MobileRT {
             ::std::vector<Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const ::std::uint32_t left {currentNodeId * 2 + 1};
-            uBVHNode leftBox {build(::std::move(leftVector), depth + 1, left)};
-            uBVHNode rightBox {build(::std::move(rightVector), depth + 1, left + 1)};
-            current_box = surroundingBox(leftBox.box_, rightBox.box_);
-            currentNode.box_ = current_box;
+            build(::std::move(leftVector), depth + 1, left);
+            build(::std::move(rightVector), depth + 1, left + 1);
         }
-        currentNode.box_ = current_box;
-        boxes_.at(currentNodeId) = currentNode;
-        return currentNode;
     }
 
     template<typename T>

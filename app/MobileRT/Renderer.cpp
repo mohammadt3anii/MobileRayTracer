@@ -91,7 +91,7 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
                     const float deviationV{(r2 - 0.5f) * 2.0f * pixelHeight};
                     Ray ray{this->camera_->generateRay(u, v, deviationU, deviationV)};
                     pixelRGB = {};
-                    this->shader_->rayTrace(&pixelRGB, ::std::move(ray));
+                    this->shader_->rayTrace(&pixelRGB, ray);
                     const ::std::uint32_t pixelIndex{yWidth + x};
                     assert(pixelIndex < width * height_);
                     bitmap[pixelIndex] = ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex],
