@@ -254,7 +254,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 ::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
                   ::std::make_unique<Components::StaticHaltonSeq> ()};
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
-                                                                        ::std::move (samplerPoint1),
+                                                                        ::std::move(samplerPoint1),
                                                                         ::glm::vec3 {-400.0f, 500.0f,
                                                                                            0.0f},
                                                                         ::glm::vec3 {-500.0f, 500.0f,
@@ -262,7 +262,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                                                                         ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f}));
                 scene_.lights_.emplace_back (::std::make_unique<Components::AreaLight> (lightMat,
-                                                                        ::std::move (samplerPoint2),
+                                                                        ::std::move(samplerPoint2),
                                                                         ::glm::vec3 {-500.0f, 500.0f,
                                                                                            -100.0f},
                                                                         ::glm::vec3 {-400.0f, 500.0f,
