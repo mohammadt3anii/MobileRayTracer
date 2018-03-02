@@ -202,22 +202,6 @@ namespace MobileRT {
                     uBVHNode* childL {&boxes_.at(left)};
                     uBVHNode* childR {&boxes_.at(left + 1)};
 
-                    /*for (::std::uint32_t i {0}; i < childL->numberPrimitives_; ++i) {
-                        auto& primitive {primitives_.at(childL->indexOffset_ + i)};
-                        const float blue {primitive.material_.Kd_[2]};
-                        if(blue > 0.7f) {
-                            LOG("b = ", blue);
-                        }
-                    }
-
-                    for (::std::uint32_t i {0}; i < childR->numberPrimitives_; ++i) {
-                        auto& primitive {primitives_.at(childR->indexOffset_ + i)};
-                        const float blue {primitive.material_.Kd_[2]};
-                        if(blue > 0.7f && ray.direction_[0] >= 0.3f) {
-                            LOG("b = ", blue);
-                        }
-                    }*/
-
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};
 

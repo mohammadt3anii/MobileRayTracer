@@ -33,7 +33,7 @@ Intersection Sphere::intersect(Intersection intersection, const Ray ray) const n
     const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2) * 0.5f};
 
     const float Epsilon {1.0e-05f};
-    //const float Epsilon {::std::numeric_limits<float>::epsilon() * 10};
+    //const float Epsilon {::std::numeric_limits<float>::epsilon()};
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
