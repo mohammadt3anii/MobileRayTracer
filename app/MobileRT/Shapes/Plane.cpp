@@ -72,7 +72,7 @@ AABB Plane::getAABB() const noexcept {
     const ::glm::vec3 rightDir {getRightVector()};
     const ::glm::vec3 min {this->point_ + rightDir * -100.0f - Epsilon};
     const ::glm::vec3 max {this->point_ + rightDir * 100.0f};
-    return AABB {min, max};;
+    return AABB {min, max};
 }
 
 float Plane::distance(const ::glm::vec3 point) const noexcept {
