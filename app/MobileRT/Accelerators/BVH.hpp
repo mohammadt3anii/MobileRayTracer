@@ -15,19 +15,24 @@
 
 namespace MobileRT {
 
-    struct uBVHNode {
+    struct BVHNode {
         AABB box_ {};
         ::std::uint32_t indexOffset_ {0};
         ::std::uint32_t numberPrimitives_ {0};
     };
 
     template<typename T>
+    ::std::uint32_t getSplitIndex_SAH (
+        ::std::vector<AABB> boxes,
+        ::std::vector<Primitive<T>> primitives) noexcept;
+
+    template<typename T>
     class BVH final {
     private:
-        static const ::std::uint32_t maxLeafSize {2};
+        static const ::std::uint32_t maxLeafSize {3};
 
     public:
-        ::std::vector<uBVHNode> boxes_{};
+        ::std::vector<BVHNode> boxes_{};
         ::std::vector<Primitive<T>> primitives_{};
 
     private:
@@ -64,7 +69,7 @@ namespace MobileRT {
     template<typename T>
     BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
         if (primitives.empty()) {
-            boxes_.emplace_back(uBVHNode {});
+            boxes_.emplace_back(BVHNode {});
             return;
         }
         const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
@@ -105,11 +110,11 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
-        //::std::vector<AABB> boxes {};
+        ::std::vector<AABB> boxes {};
         for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
             const AABB new_box{primitives.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
-            //boxes.emplace_back(new_box);
+            boxes.emplace_back(new_box);
         }
         boxes_.at(currentNodeId).box_ = current_box;
 
@@ -119,45 +124,18 @@ namespace MobileRT {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
-        ::std::int32_t divide{static_cast<::std::int32_t>(primitives.size()) / 2};
-        /*{
-            ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
-            AABB left_box {};
-            ::std::uint32_t N {static_cast<::std::uint32_t>(primitives.size())};
-            for (::std::uint32_t i {0}; i < N - 1; ++i) {
-                left_box = surroundingBox(left_box, boxes.at(i));
-                left_area.insert(left_area.end(), left_box.getSurfaceArea());
-            }
+        const ::std::int32_t splitIndex {static_cast<::std::int32_t>(primitives.size()) / 2};
+        //const ::std::int32_t splitIndex {getSplitIndex_SAH<T>(::std::move(boxes), primitives)};
 
-            ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
-            AABB right_box {};
-            for (::std::uint32_t i {N - 1}; i > 0; i--) {
-                right_box = surroundingBox(right_box, boxes.at(i));
-                right_area.insert(right_area.begin(), right_box.getSurfaceArea());
-            }
-
-            float min_SAH {::std::numeric_limits<float>::max()};
-            for (::std::uint32_t i {0}; i < N - 1; ++i) {
-                const float SAH_left {i * left_area.at(i)};
-                const float SAH_right {(N - i - 1) * right_area.at(i)};
-                const float SAH {SAH_left + SAH_right};
-                if (SAH < min_SAH) {
-                    divide = i;
-                    min_SAH = SAH;
-                }
-            }
-        }*/
-        divide = primitives.size() % 2 == 0 ? divide : divide + 1;
-
-        if (numberPrimitives <= (1 << depth) * maxLeafSize) {
+        if (primitives.size() <= maxLeafSize) {
             boxes_.at(currentNodeId).indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
             boxes_.at(currentNodeId).numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
         } else {
             using Iterator = typename ::std::vector<Primitive<T>>::const_iterator;
             Iterator leftBegin {primitives.begin()};
-            Iterator leftEnd {primitives.begin() + divide};
-            Iterator rightBegin {primitives.begin() + divide};
+            Iterator leftEnd {primitives.begin() + splitIndex};
+            Iterator rightBegin {primitives.begin() + splitIndex};
             Iterator rightEnd {primitives.end()};
 
             ::std::vector<Primitive<T>> leftVector(leftBegin, leftEnd);
@@ -173,9 +151,9 @@ namespace MobileRT {
     Intersection BVH<T>::trace(
             Intersection intersection,
             const Ray ray) noexcept {
-        uBVHNode* node {&boxes_.at(0)};
+        BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<uBVHNode*, 32> stack {};
+        ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
         stack.at(stackPtr) = nullptr;
@@ -194,8 +172,8 @@ namespace MobileRT {
                     id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    uBVHNode* const childL {&boxes_.at(left)};
-                    uBVHNode* const childR {&boxes_.at(left + 1)};
+                    BVHNode* const childL {&boxes_.at(left)};
+                    BVHNode* const childR {&boxes_.at(left + 1)};
 
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};
@@ -229,9 +207,9 @@ namespace MobileRT {
     Intersection BVH<T>::shadowTrace(
         Intersection intersection,
         const Ray ray) noexcept {
-        uBVHNode* node {&boxes_.at(0)};
+        BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<uBVHNode*, 32> stack {};
+        ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
         stack.at(stackPtr) = nullptr;
@@ -254,8 +232,8 @@ namespace MobileRT {
                     id = stackId.at(stackPtr); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    uBVHNode* const childL {&boxes_.at(left)};
-                    uBVHNode* const childR {&boxes_.at(left + 1)};
+                    BVHNode* const childL {&boxes_.at(left)};
+                    BVHNode* const childR {&boxes_.at(left + 1)};
 
                     const bool traverseL {intersect(childL->box_, ray)};
                     const bool traverseR {intersect(childR->box_, ray)};
@@ -283,6 +261,39 @@ namespace MobileRT {
 
         } while (node != nullptr);
         return intersection;
+    }
+
+    template<typename T>
+    ::std::uint32_t getSplitIndex_SAH (
+        ::std::vector<AABB> boxes,
+        ::std::vector<Primitive<T>> primitives) noexcept {
+            ::std::uint32_t splitIndex {};
+            ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
+                AABB left_box {};
+                ::std::uint32_t N {static_cast<::std::uint32_t>(primitives.size())};
+                for (::std::uint32_t i {0}; i < N - 1; ++i) {
+                    left_box = surroundingBox(left_box, boxes.at(i));
+                    left_area.insert(left_area.end(), left_box.getSurfaceArea());
+                }
+
+                ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
+                AABB right_box {};
+                for (::std::uint32_t i {N - 1}; i > 0; i--) {
+                    right_box = surroundingBox(right_box, boxes.at(i));
+                    right_area.insert(right_area.begin(), right_box.getSurfaceArea());
+                }
+
+                float min_SAH {::std::numeric_limits<float>::max()};
+                for (::std::uint32_t i {0}; i < N - 1; ++i) {
+                    const float SAH_left {i * left_area.at(i)};
+                    const float SAH_right {(N - i - 1) * right_area.at(i)};
+                    const float SAH {SAH_left + SAH_right};
+                    if (SAH < min_SAH) {
+                        splitIndex = i;
+                        min_SAH = SAH;
+                    }
+                }
+                return splitIndex;
     }
 
 }//namespace MobileRT
