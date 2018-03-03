@@ -17,8 +17,8 @@ NoShadows::NoShadows(Scene scene, const ::std::uint32_t samplesLight,
 }
 
 bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
-    const ::glm::vec3 &Le{intersection.material_->Le_};
-    const ::glm::vec3 &kD{intersection.material_->Kd_};
+    const ::glm::vec3 &Le {intersection.material_->Le_};
+    const ::glm::vec3 &kD {intersection.material_->Kd_};
     //stop if it intersects a light source
     if (::glm::any(::glm::greaterThan(*rgb, ::glm::vec3(0)))) {
         *rgb = Le;
@@ -34,32 +34,27 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
 
     // direct lighting - only for diffuse materials
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
-        const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
+        const ::std::uint32_t sizeLights {
+            static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
-            const ::std::uint32_t samplesLight{this->samplesLight_};
-            for (::std::uint32_t i{0}; i < sizeLights; ++i) {
-                Light &light(*scene_.lights_[i]);
-                for (::std::uint32_t j{0}; j < samplesLight; ++j) {
-                    const ::glm::vec3 lightPosition{light.getPosition()};
-                    //vectorIntersectCameraNormalized = light.position_ - intersection.point_
-                    const ::glm::vec3 vectorToLightNormalized{
-                            ::glm::normalize(lightPosition - intersection.point_)};
-                    const float cos_N_L{::glm::dot(shadingNormal, vectorToLightNormalized)};
-                    if (cos_N_L > 0.0f) {
-                        //rgb += kD * radLight * cos_N_L;
-                        *rgb += light.radiance_.Le_ * cos_N_L;
-                    }
+            const ::std::uint32_t samplesLight {this->samplesLight_};
+            for (::std::uint32_t j {0}; j < samplesLight; ++j) {
+                const ::std::uint32_t chosenLight {getLightIndex()};
+                Light &light(*scene_.lights_[chosenLight]);
+                const ::glm::vec3 lightPosition {light.getPosition()};
+                //vectorIntersectCameraNormalized = light.position_ - intersection.point_
+                const ::glm::vec3 vectorToLightNormalized {
+                        ::glm::normalize(lightPosition - intersection.point_)};
+                const float cos_N_L {::glm::dot(shadingNormal, vectorToLightNormalized)};
+                if (cos_N_L > 0.0f) {
+                    //rgb += kD * radLight * cos_N_L;
+                    *rgb += light.radiance_.Le_ * cos_N_L;
                 }
             }
             *rgb *= kD;
             *rgb /= samplesLight;
-            *rgb /= sizeLights;
-        } // end direct + ambient
+        } // end direct
     }
-    *rgb += kD * 0.1f;
+    *rgb += kD * 0.1f;//ambient light
     return false;
-}
-
-void NoShadows::resetSampling() noexcept {
-    this->scene_.resetSampling();
 }

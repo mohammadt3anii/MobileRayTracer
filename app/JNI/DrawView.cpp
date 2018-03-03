@@ -289,16 +289,11 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
             }
 
             case 2: {
-                ::std::unique_ptr<MobileRT::Sampler> samplerRay{
-                        ::std::make_unique<Components::StaticHaltonSeq>()};
-                ::std::unique_ptr<MobileRT::Sampler> samplerLight{
-                        ::std::make_unique<Components::StaticHaltonSeq>()};
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
                         ::std::make_unique<Components::StaticHaltonSeq>()};
 
                 shader_ = ::std::make_unique<Components::PathTracer>(
-                        ::std::move(scene_), ::std::move(samplerRay), ::std::move(samplerLight),
-                        ::std::move(samplerRussianRoulette), samplesLight,
+                        ::std::move(scene_), ::std::move(samplerRussianRoulette), samplesLight,
                         MobileRT::Shader::Accelerator(accelerator));
                 break;
             }

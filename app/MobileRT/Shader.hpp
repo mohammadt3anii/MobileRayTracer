@@ -10,6 +10,7 @@
 #include "MobileRT/Camera.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Ray.hpp"
+#include "MobileRT/Sampler.hpp"
 #include "MobileRT/Scene.hpp"
 
 namespace MobileRT {
@@ -36,12 +37,16 @@ namespace MobileRT {
 
     protected:
         virtual bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept = 0;
+        ::glm::vec3 getCosineSampleHemisphere(::glm::vec3 normal) const noexcept;
 
     public:
         void initializeAccelerators(Camera *camera) noexcept;
 
     public:
-        explicit Shader(Scene scene, ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
+        explicit Shader(
+            Scene scene,
+            ::std::uint32_t samplesLight,
+            Accelerator accelerator) noexcept;
 
         Shader(const Shader &shader) noexcept = delete;
 
@@ -59,7 +64,9 @@ namespace MobileRT {
 
         Intersection traceTouch(Intersection intersection, Ray ray) noexcept;
 
-        virtual void resetSampling() noexcept = 0;
+        virtual void resetSampling() noexcept;
+
+        ::std::uint32_t getLightIndex ();
     };
 }//namespace MobileRT
 

@@ -31,8 +31,6 @@ namespace Components {
         Whitted &operator=(const Whitted &whitted) noexcept = delete;
 
         Whitted &operator=(Whitted &&whitted) noexcept = delete;
-
-        void resetSampling() noexcept final;
     };
 }//namespace Components
 

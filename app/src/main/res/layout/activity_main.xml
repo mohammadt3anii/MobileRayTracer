@@ -52,7 +52,8 @@
         android:layout_margin="30dp"
         android:onClick="startRender"
         android:text="@string/render"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:textSize="17sp"/>
 
     <puscas.mobilertapp.CustomNumberPicker
         android:id="@+id/pickerSamplesPixel"

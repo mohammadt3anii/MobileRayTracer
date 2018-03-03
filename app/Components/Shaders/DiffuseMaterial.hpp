@@ -28,8 +28,6 @@ namespace Components {
         DiffuseMaterial &operator=(const DiffuseMaterial &diffuseMaterial) noexcept = delete;
 
         DiffuseMaterial &operator=(DiffuseMaterial &&diffuseMaterial) noexcept = delete;
-
-        void resetSampling() noexcept final;
     };
 }//namespace Components
 

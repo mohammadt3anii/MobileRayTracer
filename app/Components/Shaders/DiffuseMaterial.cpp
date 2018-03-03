@@ -14,10 +14,19 @@ DiffuseMaterial::DiffuseMaterial(Scene scene, const Accelerator accelerator) noe
 }
 
 bool DiffuseMaterial::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray /*ray*/) noexcept {
-    *rgb = intersection.material_->Kd_;
-    return false;
-}
+    const ::glm::vec3 &Le {intersection.material_->Le_};
+    const ::glm::vec3 &kD {intersection.material_->Kd_};
+    const ::glm::vec3 &kS {intersection.material_->Ks_};
+    const ::glm::vec3 &kT {intersection.material_->Kt_};
 
-void DiffuseMaterial::resetSampling() noexcept {
-    this->scene_.resetSampling();
+    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
+        *rgb = kD;
+    } else if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(0)))) {
+        *rgb = kS;
+    } else if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(0)))) {
+        *rgb = kT;
+    } else if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(0)))) {
+        *rgb = Le;
+    }
+    return false;
 }

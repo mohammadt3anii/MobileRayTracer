@@ -162,18 +162,6 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
             }
 
             case 2: {
-                //::std::unique_ptr<::MobileRT::Sampler> samplerRay {::std::make_unique<::Components::HaltonSeq>()};
-                //::std::unique_ptr<::MobileRT::Sampler> samplerRay {::std::make_unique<::Components::MersenneTwister>()};
-                ::std::unique_ptr<::MobileRT::Sampler> samplerRay{
-                        ::std::make_unique<::Components::StaticHaltonSeq>()};
-                //::std::unique_ptr<::MobileRT::Sampler> samplerRay {::std::make_unique<::Components::StaticMersenneTwister>()};
-
-                //::std::unique_ptr<::MobileRT::Sampler> samplerLight {::std::make_unique<::Components::HaltonSeq>()};
-                //::std::unique_ptr<::MobileRT::Sampler> samplerLight {::std::make_unique<::Components::MersenneTwister>()};
-                ::std::unique_ptr<::MobileRT::Sampler> samplerLight{
-                        ::std::make_unique<::Components::StaticHaltonSeq>()};
-                //::std::unique_ptr<::MobileRT::Sampler> samplerLight {::std::make_unique<::Components::StaticMersenneTwister>()};
-
                 //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::HaltonSeq>()};
                 //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::MersenneTwister> ()};
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
@@ -181,8 +169,7 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
                 //::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticMersenneTwister> ()};
 
                 shader_ = ::std::make_unique<::Components::PathTracer>(
-                        ::std::move(scene_), ::std::move(samplerRay), ::std::move(samplerLight),
-                        ::std::move(samplerRussianRoulette), samplesLight,
+                        ::std::move(scene_), ::std::move(samplerRussianRoulette), samplesLight,
                         ::MobileRT::Shader::Accelerator(accelerator));
                 break;
             }

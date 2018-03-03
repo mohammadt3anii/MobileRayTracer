@@ -31,8 +31,6 @@ namespace Components {
         NoShadows &operator=(const NoShadows &noShadows) noexcept = delete;
 
         NoShadows &operator=(NoShadows &&noShadows) noexcept = delete;
-
-        void resetSampling() noexcept final;
     };
 }//namespace Components
 

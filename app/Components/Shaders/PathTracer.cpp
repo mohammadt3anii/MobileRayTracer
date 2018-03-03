@@ -13,13 +13,10 @@ using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
 PathTracer::PathTracer(Scene scene,
-                       ::std::unique_ptr<Sampler> samplerRay,
-                       ::std::unique_ptr<Sampler> samplerLight,
                        ::std::unique_ptr<Sampler> samplerRussianRoulette,
-                       const ::std::uint32_t samplesLight, const Accelerator accelerator) noexcept :
+                       const ::std::uint32_t samplesLight,
+                       const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator},
-        samplerRay_{::std::move(samplerRay)},
-        samplerLight_{::std::move(samplerLight)},
         samplerRussianRoulette_{::std::move(samplerRussianRoulette)} {
     LOG("samplesLight = ", this->samplesLight_);
 }
@@ -37,16 +34,16 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
         *rgb = Le;
         return true;
     }
-    ::glm::vec3 Ld{};
-    ::glm::vec3 LiD{};
-    ::glm::vec3 LiS{};
-    ::glm::vec3 LiT{};
+    ::glm::vec3 Ld {};
+    ::glm::vec3 LiD {};
+    ::glm::vec3 LiS {};
+    ::glm::vec3 LiT {};
 
-    const ::glm::vec3 &kD(intersection.material_->Kd_);
-    const ::glm::vec3 &kS(intersection.material_->Ks_);
-    const ::glm::vec3 &kT(intersection.material_->Kt_);
-    const float finish_probability{0.5f};
-    const float continue_probability{1.0f - finish_probability};
+    const ::glm::vec3 &kD {intersection.material_->Kd_};
+    const ::glm::vec3 &kS {intersection.material_->Ks_};
+    const ::glm::vec3 &kT {intersection.material_->Kt_};
+    const float finish_probability {0.5f};
+    const float continue_probability {1.0f - finish_probability};
 
     // the normal always points to outside objects (e.g., spheres)
     // if the cosine between the ray and the normal is less than 0 then
@@ -62,32 +59,30 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     // shadowed direct lighting - only for diffuse materials
     //Ld = Ld (p->Wr)
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
-        const ::std::uint32_t sizeLights{static_cast<::std::uint32_t>(scene_.lights_.size())};
+        const ::std::uint32_t sizeLights {
+            static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {
-            const ::std::uint32_t samplesLight{this->samplesLight_};
+            const ::std::uint32_t samplesLight {this->samplesLight_};
             //direct light
-            for (::std::uint32_t i{0}; i < samplesLight; ++i) {
-                const float randomNumber{samplerLight_->getSample()};
+            for (::std::uint32_t i {0}; i < samplesLight; ++i) {
                 //PDF = 1 / sizeLights
-                const ::std::uint32_t chosenLight{
-                        static_cast<::std::uint32_t> (::std::floor(
-                                randomNumber * sizeLights * 0.99999f))};
+                const ::std::uint32_t chosenLight {getLightIndex()};
                 Light &light(*scene_.lights_[chosenLight]);
                 //calculates vector starting in intersection to the light
-                const ::glm::vec3 lightPosition{light.getPosition()};
-                ::glm::vec3 vectorToLight{lightPosition - intersection.point_};
+                const ::glm::vec3 lightPosition {light.getPosition()};
+                ::glm::vec3 vectorToLight {lightPosition - intersection.point_};
                 //distance from intersection to the light (and normalize it)
-                const float distanceToLight{::glm::length(vectorToLight)};
+                const float distanceToLight {::glm::length(vectorToLight)};
                 vectorToLight = ::glm::normalize(vectorToLight);
                 //x*x + y*y + z*z
-                const float cosNormalLight{::glm::dot(shadingNormal, vectorToLight)};
+                const float cosNormalLight {::glm::dot(shadingNormal, vectorToLight)};
                 if (cosNormalLight > 0.0f) {
                     //shadow ray->orig=intersection, dir=light
-                    Ray shadowRay{vectorToLight, intersection.point_, rayDepth + 1,
-                                  intersection.primitive_};
+                    Ray shadowRay {
+                        vectorToLight, intersection.point_, rayDepth + 1, intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
-                    Intersection intersectLight{};
+                    Intersection intersectLight {};
                     intersectLight.length_ = distanceToLight;
                     intersectLight.primitive_ = intersection.primitive_;
                     if (!shadowTrace(intersectLight, shadowRay)) {
@@ -133,9 +128,10 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     // specular reflection
     if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
-        //reflectionDir = rayDirection - (2 * rayDirection.normal) * normal
-        const ::glm::vec3 reflectionDir {::glm::reflect(ray.direction_, shadingNormal)};
-        Ray specularRay{reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
+        const ::glm::vec3 reflectionDir {
+            ::glm::reflect(ray.direction_, shadingNormal)};
+        Ray specularRay {
+            reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiS_RGB {};
         rayTrace(&LiS_RGB, specularRay);
         LiS += kS * LiS_RGB;
@@ -145,10 +141,10 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
     if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(0)))) {
         //PDF = 1 / 2 Pi
         const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
-        const ::glm::vec3 refractDir {::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
-
-        Ray transmissionRay {refractDir,
-                            intersection.point_, rayDepth + 1, intersection.primitive_};
+        const ::glm::vec3 refractDir {
+            ::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
+        Ray transmissionRay {
+            refractDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};
         rayTrace(&LiT_RGB, transmissionRay);
         LiT += kT * LiT_RGB;
@@ -162,23 +158,6 @@ bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, 
 }
 
 void PathTracer::resetSampling() noexcept {
-    this->scene_.resetSampling();
-    this->samplerRay_->resetSampling();
-    this->samplerLight_->resetSampling();
-}
-
-::glm::vec3 PathTracer::getCosineSampleHemisphere(const ::glm::vec3 normal) const noexcept {
-    const float r1{::glm::two_pi<float>() * samplerRay_->getSample()};
-    const float r2{samplerRay_->getSample()};
-    const float r2s{::std::sqrt(r2)};
-    ::glm::vec3 u{::std::abs(normal[0]) > 0.1f ?
-               ::glm::cross(::glm::vec3(0.0f, 1.0f, 0.0f), normal) :
-               ::glm::cross(::glm::vec3(1.0f, 0.0f, 0.0f), normal)};
-    u = ::glm::normalize(u);
-    const ::glm::vec3 v{::glm::cross(normal, u)};
-    ::glm::vec3 direction{(u * (::std::cos(r1) * r2s) +
-                        v * (::std::sin(r1) * r2s) +
-                        normal * ::std::sqrt(1.0f - r2))};
-    direction = ::glm::normalize(direction);
-    return direction;
+    Shader::resetSampling();
+    this->samplerRussianRoulette_->resetSampling();
 }

@@ -34,8 +34,6 @@ namespace Components {
         DepthMap &operator=(const DepthMap &depthMap) noexcept = delete;
 
         DepthMap &operator=(DepthMap &&depthMap) noexcept = delete;
-
-        void resetSampling() noexcept final;
     };
 }//namespace Components
 

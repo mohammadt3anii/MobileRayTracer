@@ -21,7 +21,3 @@ bool DepthMap::shade(::glm::vec3 *const rgb, const Intersection intersection, Ra
     *rgb = {depth, depth, depth};
     return false;
 }
-
-void DepthMap::resetSampling() noexcept {
-    this->scene_.resetSampling();
-}

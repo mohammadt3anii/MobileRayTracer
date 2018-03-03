@@ -15,8 +15,6 @@ namespace Components {
 
     class PathTracer final : public ::MobileRT::Shader {
     private:
-        ::std::unique_ptr<::MobileRT::Sampler> samplerRay_{};
-        ::std::unique_ptr<::MobileRT::Sampler> samplerLight_{};
         ::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette_{};
 
     private:
@@ -25,12 +23,8 @@ namespace Components {
             ::MobileRT::Intersection intersection,
             ::MobileRT::Ray ray) noexcept final;
 
-        ::glm::vec3 getCosineSampleHemisphere(::glm::vec3 normal) const noexcept;
-
     public:
         explicit PathTracer(::MobileRT::Scene scene,
-                            ::std::unique_ptr<::MobileRT::Sampler> samplerRay,
-                            ::std::unique_ptr<::MobileRT::Sampler> samplerLight,
                             ::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette,
                             ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
 
