@@ -324,6 +324,13 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 break;
             }
         }
+        const int32_t triangles{
+                static_cast<int32_t> (shader_->scene_.triangles_.size())};
+        const int32_t spheres{
+                static_cast<int32_t> (shader_->scene_.spheres_.size())};
+        const int32_t planes{static_cast<int32_t> (shader_->scene_.planes_.size())};
+        numberOfLights_ = static_cast<int32_t> (shader_->scene_.lights_.size());
+        const int32_t nPrimitives = triangles + spheres + planes;
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_ = new MobileRT::Renderer{
@@ -331,13 +338,6 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                 static_cast<::std::uint32_t>(samplesPixel)};
         }
-        const int32_t triangles{
-                static_cast<int32_t> (renderer_->shader_->scene_.triangles_.size())};
-        const int32_t spheres{
-                static_cast<int32_t> (renderer_->shader_->scene_.spheres_.size())};
-        const int32_t planes{static_cast<int32_t> (renderer_->shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<int32_t> (renderer_->shader_->scene_.lights_.size());
-        const int32_t nPrimitives = triangles + spheres + planes;
         /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
         LOG("PLANES = ", planes);

@@ -209,6 +209,11 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
                 break;
             }
         }
+        const ::std::int32_t triangles{static_cast<::std::int32_t> (shader_->scene_.triangles_.size())};
+        const ::std::int32_t spheres{static_cast<::std::int32_t> (shader_->scene_.spheres_.size())};
+        const ::std::int32_t planes{static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
+        numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
+        const ::std::int32_t nPrimitives = triangles + spheres + planes;
 
         LOG("Started creating Renderer");
         const auto startCreating{::std::chrono::system_clock::now()};
@@ -219,13 +224,6 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
         const auto endCreating{::std::chrono::system_clock::now()};
         timeCreating = endCreating - startCreating;
         LOG("Renderer created = ", timeCreating.count());
-
-        const ::std::int32_t triangles{
-                static_cast<::std::int32_t> (renderer_->shader_->scene_.triangles_.size())};
-        const ::std::int32_t spheres{static_cast<::std::int32_t> (renderer_->shader_->scene_.spheres_.size())};
-        const ::std::int32_t planes{static_cast<::std::int32_t> (renderer_->shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<::std::int32_t> (renderer_->shader_->scene_.lights_.size());
-        const ::std::int32_t nPrimitives = triangles + spheres + planes;
 
         LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
