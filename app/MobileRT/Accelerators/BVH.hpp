@@ -111,6 +111,8 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
 
+        //static ::std::int32_t axisCounter {0};
+        //const ::std::int32_t axis {axisCounter++ % 3};
         const ::std::int32_t axis {current_box.getLongestAxis()};
         ::std::sort(primitives.begin(), primitives.end(),
             [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
