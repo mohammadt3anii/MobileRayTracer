@@ -67,24 +67,24 @@ namespace MobileRT {
 
     template<typename T>
     BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
-        if (primitives.empty()) {
-            boxes_.emplace_back(BVHNode {});
-            return;
-        }
-        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
-        ::std::uint32_t maxDepth {0};
-        ::std::uint32_t maxNodes {1};
-        while (maxNodes * maxLeafSize < numberPrimitives) {
-            ++maxDepth;
-            maxNodes = 1u << maxDepth;
-        }
-        maxNodes = (2u << maxDepth) - 1;
+            if (primitives.empty()) {
+                boxes_.emplace_back(BVHNode {});
+                return;
+            }
+            const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
+            ::std::uint32_t maxDepth {0};
+            ::std::uint32_t maxNodes {1};
+            while (maxNodes * maxLeafSize < numberPrimitives) {
+                ++maxDepth;
+                maxNodes = 1u << maxDepth;
+            }
+            maxNodes = (2u << maxDepth) - 1;
 
-        boxes_.resize(maxNodes);
-        //boxes_.resize(numberPrimitives);
-        primitives_.reserve(numberPrimitives);
+            boxes_.resize(maxNodes);
+            //boxes_.resize(numberPrimitives);
+            primitives_.reserve(numberPrimitives);
 
-        build(::std::move(primitives), 0, 0);
+            build(::std::move(primitives), 0, 0);
     }
 
 
@@ -110,6 +110,12 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
+        ::std::vector<AABB> boxes {};
+        for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
+            const AABB new_box{primitives.at(i).getAABB()};
+            current_box = surroundingBox(new_box, current_box);
+            boxes.emplace_back(new_box);
+        }
 
         //static ::std::int32_t axisCounter {0};
         //const ::std::int32_t axis {axisCounter++ % 3};
@@ -119,12 +125,6 @@ namespace MobileRT {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
-        ::std::vector<AABB> boxes {};
-        for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
-            const AABB new_box{primitives.at(i).getAABB()};
-            current_box = surroundingBox(new_box, current_box);
-            boxes.emplace_back(new_box);
-        }
         assert(currentNodeId < boxes_.size());
         boxes_.at(currentNodeId).box_ = current_box;
 
@@ -132,8 +132,7 @@ namespace MobileRT {
         assert(boxes.size() > 0);
         //const ::std::int32_t splitIndex {static_cast<::std::int32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};
 
-        const ::std::uint32_t left {currentNodeId * 2 + 1};
-        if (primitives.size() <= maxLeafSize || left > boxes_.size()) {
+        if (numberPrimitives <= (1 << depth) * maxLeafSize) {
             boxes_.at(currentNodeId).indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
             boxes_.at(currentNodeId).numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
@@ -147,6 +146,7 @@ namespace MobileRT {
             ::std::vector<Primitive<T>> leftVector(leftBegin, leftEnd);
             ::std::vector<Primitive<T>> rightVector(rightBegin, rightEnd);
 
+            const ::std::uint32_t left {currentNodeId * 2 + 1};
             build(::std::move(leftVector), depth + 1, left);
             build(::std::move(rightVector), depth + 1, left + 1);
         }
@@ -161,20 +161,19 @@ namespace MobileRT {
         ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
-        stack.at(stackPtr) = nullptr;
-        stackId.at(stackPtr) = 0;
-        ++stackPtr;
+        ::std::uint32_t stackPtrId {0};
+        stack.at(stackPtr++) = nullptr;
+        stackId.at(stackPtrId++) = 0;
         do {
             if (intersect(node->box_, ray)) {
 
-                if (node->numberPrimitives_ > 0) {
+                if (node->numberPrimitives_ != 0) {
                     for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
                         auto& primitive {primitives_.at(node->indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
-                    --stackPtr;
-                    node = stack.at(stackPtr); // pop
-                    id = stackId.at(stackPtr); // pop
+                    node = stack.at(--stackPtr); // pop
+                    id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     BVHNode* const childL {&boxes_.at(left)};
@@ -184,24 +183,21 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        --stackPtr;
-                        node = stack.at(stackPtr); // pop
-                        id = stackId.at(stackPtr); // pop
+                        node = stack.at(--stackPtr); // pop
+                        id = stackId.at(--stackPtrId); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr) = childR; // push
-                            stackId.at(stackPtr) = left + 1; // push
-                            ++stackPtr;
+                            stack.at(stackPtr++) = childR; // push
+                            stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                --stackPtr;
-                node = stack.at(stackPtr); // pop
-                id = stackId.at(stackPtr); // pop
+                node = stack.at(--stackPtr); // pop
+                id = stackId.at(--stackPtrId); // pop
             }
 
         } while (node != nullptr);
@@ -217,9 +213,9 @@ namespace MobileRT {
         ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtr {0};
-        stack.at(stackPtr) = nullptr;
-        stackId.at(stackPtr) = 0;
-        ++stackPtr;
+        ::std::uint32_t stackPtrId {0};
+        stack.at(stackPtr++) = nullptr;
+        stackId.at(stackPtrId++) = 0;
         do {
             if (intersect(node->box_, ray)) {
 
@@ -232,9 +228,8 @@ namespace MobileRT {
                             return intersection;
                         }
                     }
-                    --stackPtr;
-                    node = stack.at(stackPtr); // pop
-                    id = stackId.at(stackPtr); // pop
+                    node = stack.at(--stackPtr); // pop
+                    id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
                     BVHNode* const childL {&boxes_.at(left)};
@@ -244,24 +239,21 @@ namespace MobileRT {
                     const bool traverseR {intersect(childR->box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        --stackPtr;
-                        node = stack.at(stackPtr); // pop
-                        id = stackId.at(stackPtr); // pop
+                        node = stack.at(--stackPtr); // pop
+                        id = stackId.at(--stackPtrId); // pop
                     } else {
                         node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr) = childR; // push
-                            stackId.at(stackPtr) = left + 1; // push
-                            ++stackPtr;
+                            stack.at(stackPtr++) = childR; // push
+                            stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                --stackPtr;
-                node = stack.at(stackPtr); // pop
-                id = stackId.at(stackPtr); // pop
+                node = stack.at(--stackPtr); // pop
+                id = stackId.at(--stackPtrId); // pop
             }
 
         } while (node != nullptr);
