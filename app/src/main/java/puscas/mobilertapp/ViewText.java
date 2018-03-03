@@ -55,7 +55,7 @@ class ViewText {
         }
     }
 
-    void resetPrint(final int width, final int height,
+    void resetPrint(final int width, final int height, final int numThreads,
                     final int samplesPixel, final int samplesLight) {
         fpsT_ = String.format(Locale.US, "fps:%.2f", 0.0f);
         fpsRenderT_ = String.format(Locale.US, "[%.2f]", 0.0f);
@@ -64,7 +64,7 @@ class ViewText {
         stageT_ = " " + DrawView.Stage.values()[0];
         allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
         resolutionT_ = ",r:" + width + 'x' + height;
-        threadsT_ = ",t:" + 0;
+        threadsT_ = ",t:" + numThreads;
         samplesPixelT_ = ",spp:" + samplesPixel;
         samplesLightT_ = ",spl:" + samplesLight;
         sampleT_ = ",0";

@@ -18,7 +18,7 @@ public class DrawView extends GLSurfaceView {
 
     public DrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        viewText_.resetPrint(getWidth(), getHeight(), 0, 0);
+        viewText_.resetPrint(getWidth(), getHeight(), 0, 0, 0);
     }
 
     static native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
@@ -89,11 +89,10 @@ public class DrawView extends GLSurfaceView {
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
                      final int samplesPixel, final int samplesLight, final int width, final int height,
                      final String objFile, final String matText, final AssetManager assetManager) {
+        viewText_.resetPrint(width, height, numThreads, samplesPixel, samplesLight);
         final int numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager);
-        viewText_.threadsT_ = ",t:" + numThreads;
         viewText_.nPrimitivesT_ = ",p=" + numberPrimitives + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
-        viewText_.resetPrint(width, height, samplesPixel, samplesLight);
 
         setVisibility(View.INVISIBLE);
         renderer_.bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
