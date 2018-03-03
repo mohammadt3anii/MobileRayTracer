@@ -82,6 +82,7 @@ namespace MobileRT {
         maxNodes = (2u << maxDepth) - 1;
 
         boxes_.resize(maxNodes);
+        //boxes_.resize(numberPrimitives);
         primitives_.reserve(numberPrimitives);
 
         build(::std::move(primitives), 0, 0);
@@ -116,6 +117,7 @@ namespace MobileRT {
             current_box = surroundingBox(new_box, current_box);
             boxes.emplace_back(new_box);
         }
+        assert(currentNodeId < boxes_.size());
         boxes_.at(currentNodeId).box_ = current_box;
 
         const ::std::int32_t axis {current_box.getLongestAxis()};
@@ -125,9 +127,10 @@ namespace MobileRT {
             });
 
         const ::std::int32_t splitIndex {static_cast<::std::int32_t>(primitives.size()) / 2};
-        //const ::std::int32_t splitIndex {getSplitIndex_SAH<T>(::std::move(boxes), primitives)};
+        //const ::std::int32_t splitIndex {static_cast<::std::int32_t>(getSplitIndex_SAH<T>(::std::move(boxes), primitives))};
 
-        if (primitives.size() <= maxLeafSize) {
+        const ::std::uint32_t left {currentNodeId * 2 + 1};
+        if (primitives.size() <= maxLeafSize || left > boxes_.size()) {
             boxes_.at(currentNodeId).indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
             boxes_.at(currentNodeId).numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
             primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
@@ -141,7 +144,6 @@ namespace MobileRT {
             ::std::vector<Primitive<T>> leftVector(leftBegin, leftEnd);
             ::std::vector<Primitive<T>> rightVector(rightBegin, rightEnd);
 
-            const ::std::uint32_t left {currentNodeId * 2 + 1};
             build(::std::move(leftVector), depth + 1, left);
             build(::std::move(rightVector), depth + 1, left + 1);
         }
