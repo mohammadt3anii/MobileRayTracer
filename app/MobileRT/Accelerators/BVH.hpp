@@ -23,13 +23,12 @@ namespace MobileRT {
 
     template<typename T>
     ::std::uint32_t getSplitIndex_SAH (
-        ::std::vector<AABB> boxes,
-        ::std::vector<Primitive<T>> primitives) noexcept;
+        ::std::vector<AABB> boxes) noexcept;
 
     template<typename T>
     class BVH final {
     private:
-        static const ::std::uint32_t maxLeafSize {3};
+        static const ::std::uint32_t maxLeafSize {1};
 
     public:
         ::std::vector<BVHNode> boxes_{};
@@ -111,6 +110,13 @@ namespace MobileRT {
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest(),
                         ::std::numeric_limits<float>::lowest()}};
+
+        const ::std::int32_t axis {current_box.getLongestAxis()};
+        ::std::sort(primitives.begin(), primitives.end(),
+            [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
+                return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
+            });
+
         ::std::vector<AABB> boxes {};
         for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
             const AABB new_box{primitives.at(i).getAABB()};
@@ -120,14 +126,9 @@ namespace MobileRT {
         assert(currentNodeId < boxes_.size());
         boxes_.at(currentNodeId).box_ = current_box;
 
-        const ::std::int32_t axis {current_box.getLongestAxis()};
-        ::std::sort(primitives.begin(), primitives.end(),
-            [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
-                return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
-            });
-
         const ::std::int32_t splitIndex {static_cast<::std::int32_t>(primitives.size()) / 2};
-        //const ::std::int32_t splitIndex {static_cast<::std::int32_t>(getSplitIndex_SAH<T>(::std::move(boxes), primitives))};
+        assert(boxes.size() > 0);
+        //const ::std::int32_t splitIndex {static_cast<::std::int32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};
 
         const ::std::uint32_t left {currentNodeId * 2 + 1};
         if (primitives.size() <= maxLeafSize || left > boxes_.size()) {
@@ -267,35 +268,35 @@ namespace MobileRT {
 
     template<typename T>
     ::std::uint32_t getSplitIndex_SAH (
-        ::std::vector<AABB> boxes,
-        ::std::vector<Primitive<T>> primitives) noexcept {
-            ::std::uint32_t splitIndex {};
+        ::std::vector<AABB> boxes) noexcept {
+            const ::std::uint32_t N {static_cast<::std::uint32_t>(boxes.size())};
+
             ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
-                AABB left_box {};
-                ::std::uint32_t N {static_cast<::std::uint32_t>(primitives.size())};
-                for (::std::uint32_t i {0}; i < N - 1; ++i) {
-                    left_box = surroundingBox(left_box, boxes.at(i));
-                    left_area.insert(left_area.end(), left_box.getSurfaceArea());
-                }
+            AABB left_box {};
+            for (::std::uint32_t i {0}; i < N - 1; ++i) {
+                left_box = surroundingBox(left_box, boxes.at(i));
+                left_area.insert(left_area.end(), left_box.getSurfaceArea());
+            }
 
-                ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
-                AABB right_box {};
-                for (::std::uint32_t i {N - 1}; i > 0; i--) {
-                    right_box = surroundingBox(right_box, boxes.at(i));
-                    right_area.insert(right_area.begin(), right_box.getSurfaceArea());
-                }
+            ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
+            AABB right_box {};
+            for (::std::uint32_t i {N - 1}; i > 0; --i) {
+                right_box = surroundingBox(right_box, boxes.at(i));
+                right_area.insert(right_area.begin(), right_box.getSurfaceArea());
+            }
 
-                float min_SAH {::std::numeric_limits<float>::max()};
-                for (::std::uint32_t i {0}; i < N - 1; ++i) {
-                    const float SAH_left {i * left_area.at(i)};
-                    const float SAH_right {(N - i - 1) * right_area.at(i)};
-                    const float SAH {SAH_left + SAH_right};
-                    if (SAH < min_SAH) {
-                        splitIndex = i;
-                        min_SAH = SAH;
-                    }
+            ::std::uint32_t splitIndex {};
+            float min_SAH {::std::numeric_limits<float>::max()};
+            for (::std::uint32_t i {0}; i < N - 1; ++i) {
+                const float SAH_left {i * left_area.at(i)};
+                const float SAH_right {(N - i - 1) * right_area.at(i)};
+                const float SAH {SAH_left + SAH_right};
+                if (SAH < min_SAH) {
+                    splitIndex = i;
+                    min_SAH = SAH;
                 }
-                return splitIndex;
+            }
+            return splitIndex;
     }
 
 }//namespace MobileRT
