@@ -86,27 +86,19 @@ namespace MobileRT {
 
     template<typename T>
     void BVH<T>::build() noexcept {
-        const BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::uint32_t depth {0};
         ::std::uint32_t begin {0};
         ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
 
-        ::std::array<const BVHNode*, 32> stackNode {};
         ::std::array<::std::uint32_t, 32> stackId {};
-        ::std::array<::std::uint32_t, 32> stackDepth {};
         ::std::array<::std::uint32_t, 32> stackBegin {};
         ::std::array<::std::uint32_t, 32> stackEnd {};
 
-        ::std::uint32_t stackNodePtr {0};
         ::std::uint32_t stackPtrId {0};
-        ::std::uint32_t stackDepthId {0};
         ::std::uint32_t stackBeginId {0};
         ::std::uint32_t stackEndId {0};
 
-        stackNode.at(stackNodePtr++) = nullptr;
-        stackId.at(stackPtrId++) = 0;
-        stackDepth.at(stackDepthId++) = 0;
+        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
         stackBegin.at(stackBeginId++) = 0;
         stackEnd.at(stackEndId++) = 0;
         do {
@@ -138,28 +130,20 @@ namespace MobileRT {
                 boxes_.at(id).indexOffset_ = begin;
                 boxes_.at(id).numberPrimitives_ = end - begin;
 
-                node = stackNode.at(--stackNodePtr); // pop
                 id = stackId.at(--stackPtrId); // pop
-                depth = stackDepth.at(--stackDepthId); // pop
                 begin = stackBegin.at(--stackBeginId); // pop
                 end = stackEnd.at(--stackEndId); // pop
             } else {
                 const ::std::uint32_t left {id * 2 + 1};
-                const BVHNode &childL {boxes_.at(left)};
-                const BVHNode &childR {boxes_.at(left + 1)};
 
-                stackNode.at(stackNodePtr++) = &childR; // push
                 stackId.at(stackPtrId++) = left + 1; // push
-                stackDepth.at(stackDepthId++) = depth + 1; // push
                 stackBegin.at(stackBeginId++) = begin + splitIndex; // push
                 stackEnd.at(stackEndId++) = end; // push
 
-                node = &childL;
                 id = left;
-                depth = depth + 1;
                 end = begin + splitIndex;
             }
-        } while(node != nullptr);
+        } while(id != ::std::numeric_limits<::std::uint32_t>::max());
     }
 
     template<typename T>
