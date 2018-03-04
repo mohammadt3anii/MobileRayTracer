@@ -13,7 +13,7 @@ Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
         sq_radius_{radius * radius} {
 }
 
-Intersection Sphere::intersect(Intersection intersection, const Ray &ray) const noexcept {
+Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const ::glm::vec3 centerToOrigin {ray.origin_ - center_};
 

@@ -33,7 +33,7 @@ namespace MobileRT {
 
         Triangle &operator=(Triangle &&triangle) noexcept = default;
 
-        Intersection intersect(Intersection intersection, const Ray &ray) const noexcept;
+        Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 

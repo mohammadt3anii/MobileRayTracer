@@ -13,7 +13,7 @@ Plane::Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept :
         point_{point} {
 }
 
-Intersection Plane::intersect(Intersection intersection, const Ray &ray) const noexcept {
+Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
     if (ray.primitive_ == this) {
         return intersection;
     }

@@ -135,7 +135,8 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
     LOG("INITIALIZE");
 
 
-    int32_t res = [=]() noexcept -> int32_t {
+    int32_t res {
+        [=]() noexcept -> int32_t {
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_ = nullptr;
@@ -338,7 +339,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
         LOG("PLANES = ", planes);
         LOG("LIGHTS = ", numberOfLights_);*/
         return nPrimitives;
-    }();
+    }()};
 
 
     //LOG("PRIMITIVES = ", res);
@@ -403,7 +404,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     working_ = State::BUSY;
     LOG("WORKING = BUSY");
 
-    auto lambda = [=]() noexcept -> void {
+    auto lambda {
+        [=]() noexcept -> void {
         assert(env != nullptr);
         const ::std::int32_t jniError {
                 javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
@@ -482,7 +484,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
-    };
+    }};
 
     thread_ = new ::std::thread {lambda};
     //lambda();
