@@ -55,11 +55,11 @@ namespace MobileRT {
 
         Intersection trace(
           Intersection intersection,
-          Ray ray) noexcept;
+          const Ray &ray) noexcept;
 
         Intersection shadowTrace(
           Intersection intersection,
-          Ray ray) noexcept;
+          const Ray &ray) noexcept;
     };
 
 
@@ -167,7 +167,7 @@ namespace MobileRT {
     template<typename T>
     Intersection BVH<T>::trace(
             Intersection intersection,
-            const Ray ray) noexcept {
+            const Ray &ray) noexcept {
         BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
         ::std::array<BVHNode*, 32> stack {};
@@ -219,7 +219,7 @@ namespace MobileRT {
     template<typename T>
     Intersection BVH<T>::shadowTrace(
         Intersection intersection,
-        const Ray ray) noexcept {
+        const Ray &ray) noexcept {
         BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
         ::std::array<BVHNode*, 32> stack {};

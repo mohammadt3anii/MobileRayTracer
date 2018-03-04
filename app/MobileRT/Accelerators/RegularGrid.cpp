@@ -127,7 +127,7 @@ void RegularGrid::addPrimitives
     }
 }
 
-Intersection RegularGrid::trace(Intersection intersection, Ray ray) noexcept {
+Intersection RegularGrid::trace(Intersection intersection, const Ray &ray) noexcept {
     intersection =
             intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray);
     intersection =
@@ -138,7 +138,7 @@ Intersection RegularGrid::trace(Intersection intersection, Ray ray) noexcept {
     return intersection;
 }
 
-Intersection RegularGrid::shadowTrace(Intersection intersection, Ray ray) noexcept {
+Intersection RegularGrid::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
     intersection =
             intersect<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray, true);
     intersection =
@@ -149,9 +149,10 @@ Intersection RegularGrid::shadowTrace(Intersection intersection, Ray ray) noexce
 }
 
 template<typename T>
-Intersection RegularGrid::intersect(const ::std::vector<::std::vector<T *>> &primitivesMatrix,
-                            Intersection intersection, const Ray ray,
-                            const bool shadowTrace) noexcept {
+Intersection RegularGrid::intersect(
+    const ::std::vector<::std::vector<T *>> &primitivesMatrix,
+    Intersection intersection, const Ray &ray,
+    const bool shadowTrace) noexcept {
     // setup 3DDDA (double check reusability of primary ray data)
     const ::glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
     ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};

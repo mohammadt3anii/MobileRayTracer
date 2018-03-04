@@ -8,12 +8,12 @@ using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
 using ::MobileRT::Intersection;
 
-Sphere::Sphere(const ::glm::vec3 center, const float radius) noexcept :
+Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
         center_{center},
         sq_radius_{radius * radius} {
 }
 
-Intersection Sphere::intersect(Intersection intersection, const Ray ray) const noexcept {
+Intersection Sphere::intersect(Intersection intersection, const Ray &ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const ::glm::vec3 centerToOrigin {ray.origin_ - center_};
 
@@ -59,7 +59,7 @@ AABB Sphere::getAABB() const noexcept {
     return AABB {min, max};
 }
 
-bool Sphere::intersect(const AABB box) const noexcept {
+bool Sphere::intersect(const AABB &box) const noexcept {
     float dmin {0};
     const ::glm::vec3 v1 {box.pointMin_};
     const ::glm::vec3 v2 {box.pointMax_};

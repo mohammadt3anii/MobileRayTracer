@@ -20,7 +20,7 @@ namespace MobileRT {
     public:
         explicit AABB() noexcept = default;
 
-        explicit AABB(::glm::vec3 pointMin, ::glm::vec3 pointMax) noexcept;
+        explicit AABB(const ::glm::vec3 &pointMin, const ::glm::vec3 &pointMax) noexcept;
 
         AABB(const AABB &AABB) noexcept = default;
 
@@ -37,9 +37,9 @@ namespace MobileRT {
         ::std::int32_t getLongestAxis() const noexcept;
     };
 
-    AABB surroundingBox(AABB box1, AABB box2) noexcept;
+    AABB surroundingBox(const AABB &box1, const AABB &box2) noexcept;
 
-    bool intersect(AABB box, Ray ray) noexcept;
+    bool intersect(const AABB &box, const Ray &ray) noexcept;
 }//namespace MobileRT
 
 #endif //MOBILERT_ACCELERATORS_AABB_HPP

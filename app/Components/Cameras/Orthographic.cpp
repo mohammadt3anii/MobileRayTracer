@@ -8,8 +8,9 @@ using ::Components::Orthographic;
 using ::MobileRT::AABB;
 using ::MobileRT::Ray;
 
-Orthographic::Orthographic(const ::glm::vec3 position, const ::glm::vec3 lookAt, const ::glm::vec3 up,
-                           const float sizeH, const float sizeV) noexcept :
+Orthographic::Orthographic(
+    const ::glm::vec3 &position, const ::glm::vec3 &lookAt, const ::glm::vec3 &up,
+    const float sizeH, const float sizeV) noexcept :
         Camera(position, lookAt, up),
         sizeH_{sizeH / 2.0f},
         sizeV_{sizeV / 2.0f} {

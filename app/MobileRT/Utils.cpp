@@ -24,7 +24,10 @@ namespace MobileRT {
     }
 
     //newAvg = ((size - 1) * oldAvg + newNum) / size;
-    ::std::uint32_t incrementalAvg(const ::glm::vec3 sample, const ::std::uint32_t avg, const ::std::uint32_t numSample) noexcept {
+    ::std::uint32_t incrementalAvg(
+        const ::glm::vec3 &sample, const ::std::uint32_t avg,
+        const ::std::uint32_t numSample) noexcept {
+
         const ::std::uint32_t lastRed{avg & 0xFF};
         const ::std::uint32_t lastGreen{(avg >> 8) & 0xFF};
         const ::std::uint32_t lastBlue{(avg >> 16) & 0xFF};

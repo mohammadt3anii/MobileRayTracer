@@ -9,8 +9,9 @@
 using ::Components::Perspective;
 using ::MobileRT::Ray;
 
-Perspective::Perspective(const ::glm::vec3 position, const ::glm::vec3 lookAt, const ::glm::vec3 up,
-                         const float hFov, const float vFov) noexcept :
+Perspective::Perspective(
+    const ::glm::vec3 &position, const ::glm::vec3 &lookAt, const ::glm::vec3 &up,
+    const float hFov, const float vFov) noexcept :
         Camera(position, lookAt, up),
         // convert to radians
         hFov_{(hFov * ::glm::pi<float>()) / 180.0f},

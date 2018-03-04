@@ -9,7 +9,7 @@ using ::MobileRT::Material;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 
-PointLight::PointLight(Material radiance, const ::glm::vec3 position) noexcept :
+PointLight::PointLight(Material radiance, const ::glm::vec3 &position) noexcept :
         Light(radiance),
         position_{position} {
 }
@@ -21,6 +21,6 @@ PointLight::PointLight(Material radiance, const ::glm::vec3 position) noexcept :
 void PointLight::resetSampling() noexcept {
 }
 
-Intersection PointLight::intersect(Intersection intersection, const Ray /*ray*/) const noexcept {
+Intersection PointLight::intersect(Intersection intersection, const Ray &/*ray*/) const noexcept {
     return intersection;
 }

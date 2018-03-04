@@ -22,10 +22,12 @@
 #include <fstream>
 
 static void
-work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::std::int32_t height, const ::std::int32_t threads,
-            const ::std::int32_t shader, const ::std::int32_t scene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
-            ::std::int32_t repeats, const ::std::int32_t accelerator, const bool printStdOut,
-            const char *const pathObj, const char *const pathMtl) {
+work_thread(
+    ::std::uint32_t *const bitmap, const ::std::int32_t width,
+    const ::std::int32_t height, const ::std::int32_t threads,
+    const ::std::int32_t shader, const ::std::int32_t scene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
+    ::std::int32_t repeats, const ::std::int32_t accelerator, const bool printStdOut,
+    const char *const pathObj, const char *const pathMtl) {
     ::std::ostringstream ss{""};
     ::std::streambuf *old_buf_stdout{nullptr};
     ::std::streambuf *old_buf_stderr{nullptr};

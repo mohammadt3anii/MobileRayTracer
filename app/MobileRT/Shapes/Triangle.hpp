@@ -19,8 +19,9 @@ namespace MobileRT {
         ::glm::vec3 pointA_{};
 
     public:
-        explicit Triangle(::glm::vec3 pointA, ::glm::vec3 pointB,
-                          ::glm::vec3 pointC, ::glm::vec3 normal = ::glm::vec3 {}) noexcept;
+        explicit Triangle(
+            const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+            const ::glm::vec3 &normal = ::glm::vec3 {}) noexcept;
 
         Triangle(const Triangle &triangle) noexcept = default;
 
@@ -32,7 +33,7 @@ namespace MobileRT {
 
         Triangle &operator=(Triangle &&triangle) noexcept = default;
 
-        Intersection intersect(Intersection intersection, Ray ray) const noexcept;
+        Intersection intersect(Intersection intersection, const Ray &ray) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 
@@ -40,7 +41,7 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        bool intersect(AABB box) const noexcept;
+        bool intersect(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

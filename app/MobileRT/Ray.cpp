@@ -15,7 +15,7 @@ namespace {
     }
 }//namespace
 
-Ray::Ray(::glm::vec3 dir, ::glm::vec3 origin,
+Ray::Ray(const ::glm::vec3 &dir, const ::glm::vec3 &origin,
          const ::std::int32_t depth, const void *const primitive) noexcept :
         origin_{origin},
         direction_{dir},

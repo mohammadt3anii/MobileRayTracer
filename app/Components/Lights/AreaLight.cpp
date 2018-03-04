@@ -10,9 +10,10 @@ using ::MobileRT::Sampler;
 using ::MobileRT::Ray;
 using ::MobileRT::Intersection;
 
-AreaLight::AreaLight(Material radiance,
-                     ::std::unique_ptr<Sampler> samplerPointLight,
-                     const ::glm::vec3 pointA, const ::glm::vec3 pointB, const ::glm::vec3 pointC) noexcept :
+AreaLight::AreaLight(
+    Material radiance,
+    ::std::unique_ptr<Sampler> samplerPointLight,
+    const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC) noexcept :
         Light(radiance),
         triangle_{pointA, pointB, pointC},
         samplerPointLight_{::std::move(samplerPointLight)} {
@@ -32,7 +33,7 @@ void AreaLight::resetSampling() noexcept {
     samplerPointLight_->resetSampling();
 }
 
-Intersection AreaLight::intersect(Intersection intersection, Ray ray) const noexcept {
+Intersection AreaLight::intersect(Intersection intersection, const Ray &ray) const noexcept {
     const float lastDist {intersection.length_};
     intersection = triangle_.intersect(intersection, ray);
     intersection.material_ = intersection.length_ < lastDist? &radiance_ : intersection.material_;

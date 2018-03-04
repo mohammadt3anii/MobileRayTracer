@@ -8,12 +8,12 @@ using ::MobileRT::AABB;
 using ::MobileRT::Plane;
 using ::MobileRT::Intersection;
 
-Plane::Plane(const ::glm::vec3 point, const ::glm::vec3 normal) noexcept :
+Plane::Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept :
         normal_{::glm::normalize(normal)},
         point_{point} {
 }
 
-Intersection Plane::intersect(Intersection intersection, const Ray ray) const noexcept {
+Intersection Plane::intersect(Intersection intersection, const Ray &ray) const noexcept {
     if (ray.primitive_ == this) {
         return intersection;
     }
@@ -74,7 +74,7 @@ AABB Plane::getAABB() const noexcept {
     return AABB {min, max};
 }
 
-float Plane::distance(const ::glm::vec3 point) const noexcept {
+float Plane::distance(const ::glm::vec3 &point) const noexcept {
     //Plane Equation
     //a(x-x0)+b(y-y0)+c(z-z0) = 0
     //abc = normal
@@ -92,7 +92,7 @@ float Plane::distance(const ::glm::vec3 point) const noexcept {
     return numerator / denumerator;
 }
 
-bool Plane::intersect(const AABB box) const noexcept {
+bool Plane::intersect(const AABB &box) const noexcept {
     ::glm::vec3 positiveVertex {box.pointMax_};
     ::glm::vec3 negativeVertex {box.pointMin_};
 

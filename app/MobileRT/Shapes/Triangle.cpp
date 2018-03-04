@@ -9,8 +9,9 @@ using ::MobileRT::AABB;
 using ::MobileRT::Triangle;
 using ::MobileRT::Intersection;
 
-Triangle::Triangle(const ::glm::vec3 pointA, const ::glm::vec3 pointB, const ::glm::vec3 pointC,
-                   ::glm::vec3 normal) noexcept :
+Triangle::Triangle(
+    const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+    const ::glm::vec3 &normal) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         normal_{
@@ -20,7 +21,7 @@ Triangle::Triangle(const ::glm::vec3 pointA, const ::glm::vec3 pointB, const ::g
 {
 }
 
-Intersection Triangle::intersect(Intersection intersection, const Ray ray) const noexcept {
+Intersection Triangle::intersect(Intersection intersection, const Ray &ray) const noexcept {
     if (ray.primitive_ == this) {
         return intersection;
     }
@@ -69,9 +70,9 @@ AABB Triangle::getAABB() const noexcept {
     return AABB {min, max};
 }
 
-bool Triangle::intersect(const AABB box) const noexcept {
-    ::std::function<bool(const ::glm::vec3, const ::glm::vec3)> intersectRayAABB{
-            [=](const ::glm::vec3 orig, const ::glm::vec3 vec) noexcept -> bool {
+bool Triangle::intersect(const AABB &box) const noexcept {
+    ::std::function<bool(const ::glm::vec3 &, const ::glm::vec3 &)> intersectRayAABB{
+            [=](const ::glm::vec3 &orig, const ::glm::vec3 &vec) noexcept -> bool {
                 ::glm::vec3 T_1{};
                 ::glm::vec3 T_2{}; // vectors to hold the T-values for every direction
                 float t_near{::std::numeric_limits<float>::min()};
@@ -141,16 +142,16 @@ bool Triangle::intersect(const AABB box) const noexcept {
             }
     };
 
-    const ::glm::vec3 &min(box.pointMin_);
-    const ::glm::vec3 &max(box.pointMax_);
-    Intersection intersection{};
-    const ::glm::vec3 vec{max - min};
-    const Ray ray{vec, min, 1};
-    const bool intersectedAB{intersectRayAABB(this->pointA_, this->AB_)};
-    const bool intersectedAC{intersectRayAABB(this->pointA_, this->AC_)};
+    const ::glm::vec3 min {box.pointMin_};
+    const ::glm::vec3 max {box.pointMax_};
+    Intersection intersection {};
+    const ::glm::vec3 vec {max - min};
+    const Ray ray {vec, min, 1};
+    const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
+    const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
     const ::glm::vec3 pointB {pointA_ + AB_};
     const ::glm::vec3 pointC {pointA_ + AC_};
-    const bool intersectedBC{intersectRayAABB(pointB, pointC - pointB)};
+    const bool intersectedBC {intersectRayAABB(pointB, pointC - pointB)};
     const float lastDist {intersection.length_};
     intersection = intersect(intersection, ray);
     const bool intersectedRay {intersection.length_ < lastDist};

@@ -39,7 +39,7 @@ AABB Camera::getAABB() const noexcept {
 }
 
 //Left hand rule
-Camera::Camera(const ::glm::vec3 position, const ::glm::vec3 lookAt, const ::glm::vec3 up) noexcept :
+Camera::Camera(const ::glm::vec3 &position, const ::glm::vec3 &lookAt, const ::glm::vec3 &up) noexcept :
         position_{position},
         direction_{::glm::normalize(lookAt - position)},
         right_{::glm::cross(up, direction_)},

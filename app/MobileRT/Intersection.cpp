@@ -11,9 +11,9 @@ Intersection::Intersection(const void *primitive) noexcept :
 }
 
 Intersection::Intersection(
-    const ::glm::vec3 intPoint,
+    const ::glm::vec3 &intPoint,
     const float dist,
-    const ::glm::vec3 sphereCenter) noexcept {
+    const ::glm::vec3 &sphereCenter) noexcept {
         this->point_ = intPoint;
         this->normal_ = ::glm::normalize(this->point_ - sphereCenter);
         this->symNormal_ = -normal_;
@@ -21,10 +21,10 @@ Intersection::Intersection(
 }
 
 Intersection::Intersection(
-    const ::glm::vec3 orig,
-    const ::glm::vec3 dir,
+    const ::glm::vec3 &orig,
+    const ::glm::vec3 &dir,
     const float dist,
-    const ::glm::vec3 normal,
+    const ::glm::vec3 &normal,
     const void *const primitive) noexcept {
         this->point_ = orig + dir * dist;
         this->normal_ = normal;

@@ -36,8 +36,9 @@ namespace MobileRT {
         const ::std::uint32_t samplesLight_{};
 
     protected:
-        virtual bool shade(::glm::vec3 *rgb, Intersection intersection, Ray ray) noexcept = 0;
-        ::glm::vec3 getCosineSampleHemisphere(::glm::vec3 normal) const noexcept;
+        virtual bool shade(
+            ::glm::vec3 *rgb, const Intersection &intersection, const Ray &ray) noexcept = 0;
+        ::glm::vec3 getCosineSampleHemisphere(const ::glm::vec3 &normal) const noexcept;
 
     public:
         void initializeAccelerators(Camera *camera) noexcept;
@@ -58,11 +59,11 @@ namespace MobileRT {
 
         Shader &operator=(Shader &&shader) noexcept = delete;
 
-        bool rayTrace(::glm::vec3 *rgb, Ray ray) noexcept;
+        bool rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept;
 
-        bool shadowTrace(Intersection intersection, Ray ray) noexcept;
+        bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
 
-        Intersection traceTouch(Intersection intersection, Ray ray) noexcept;
+        Intersection traceTouch(Intersection intersection, const Ray &ray) noexcept;
 
         virtual void resetSampling() noexcept;
 

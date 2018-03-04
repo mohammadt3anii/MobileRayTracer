@@ -14,7 +14,7 @@ namespace Components {
         ::glm::vec3 position_{};
 
     public:
-        explicit PointLight(::MobileRT::Material radiance, ::glm::vec3 position) noexcept;
+        explicit PointLight(::MobileRT::Material radiance, const ::glm::vec3 &position) noexcept;
 
         PointLight(const PointLight &pointLight) noexcept = delete;
 
@@ -32,7 +32,7 @@ namespace Components {
 
         ::MobileRT::Intersection intersect(
             ::MobileRT::Intersection intersection,
-            ::MobileRT::Ray ray) const noexcept final;
+            const ::MobileRT::Ray &ray) const noexcept final;
     };
 }//namespace Components
 

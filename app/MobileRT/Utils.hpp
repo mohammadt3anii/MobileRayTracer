@@ -43,7 +43,8 @@ namespace MobileRT {
 
     float haltonSequence(::std::uint32_t index, ::std::uint32_t base) noexcept;
 
-    ::std::uint32_t incrementalAvg(::glm::vec3 sample, ::std::uint32_t avg, ::std::uint32_t numSample) noexcept;
+    ::std::uint32_t incrementalAvg(
+        const ::glm::vec3 &sample, ::std::uint32_t avg, ::std::uint32_t numSample) noexcept;
 
 
     template<typename ...Args>

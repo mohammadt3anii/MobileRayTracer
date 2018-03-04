@@ -22,7 +22,9 @@ PathTracer::PathTracer(Scene scene,
 }
 
 //pag 28 slides Monte Carlo
-bool PathTracer::shade(::glm::vec3 *const rgb, const Intersection intersection, Ray ray) noexcept {
+bool PathTracer::shade(
+    ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
+
     const ::std::int32_t rayDepth{ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;

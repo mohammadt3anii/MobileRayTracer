@@ -8,11 +8,11 @@
 using ::MobileRT::AABB;
 using ::MobileRT::Ray;
 
-AABB::AABB(const ::glm::vec3 pointMin, const ::glm::vec3 pointMax) noexcept :
+AABB::AABB(const ::glm::vec3 &pointMin, const ::glm::vec3 &pointMax) noexcept :
         pointMin_{pointMin}, pointMax_{pointMax} {
 }
 
-bool MobileRT::intersect(const AABB box, const Ray ray) noexcept {
+bool MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
     float t1 {(box.pointMin_[0] - ray.origin_[0])/ray.direction_[0]};
     float t2 {(box.pointMax_[0] - ray.origin_[0])/ray.direction_[0]};
 
@@ -60,7 +60,7 @@ float AABB::getSurfaceArea() const noexcept {
 }
 
 namespace MobileRT {
-    AABB surroundingBox(AABB box1, AABB box2) noexcept {
+    AABB surroundingBox(const AABB &box1, const AABB &box2) noexcept {
         const ::glm::vec3 min{
                 ::glm::min(box1.pointMin_, box2.pointMin_)};
         const ::glm::vec3 max{

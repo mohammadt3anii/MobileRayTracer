@@ -20,7 +20,7 @@ namespace MobileRT {
         ::glm::vec3 getRightVector() const noexcept;
 
     public:
-        explicit Plane(::glm::vec3 point, ::glm::vec3 normal) noexcept;
+        explicit Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept;
 
         Plane(const Plane &plane) noexcept = default;
 
@@ -32,7 +32,7 @@ namespace MobileRT {
 
         Plane &operator=(Plane &&plane) noexcept = default;
 
-        Intersection intersect(Intersection intersection, Ray ray) const noexcept;
+        Intersection intersect(Intersection intersection, const Ray &ray) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 
@@ -40,9 +40,9 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        float distance(::glm::vec3 point) const noexcept;
+        float distance(const ::glm::vec3 &point) const noexcept;
 
-        bool intersect(AABB box) const noexcept;
+        bool intersect(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

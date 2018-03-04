@@ -22,9 +22,9 @@ namespace Components {
         explicit AreaLight(
             ::MobileRT::Material radiance,
             ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight,
-            ::glm::vec3 pointA,
-            ::glm::vec3 pointB,
-            ::glm::vec3 pointC) noexcept;
+            const ::glm::vec3 &pointA,
+            const ::glm::vec3 &pointB,
+            const ::glm::vec3 &pointC) noexcept;
 
         AreaLight(const AreaLight &areaLight) noexcept = delete;
 
@@ -42,7 +42,7 @@ namespace Components {
 
         ::MobileRT::Intersection intersect(
             ::MobileRT::Intersection intersection,
-            ::MobileRT::Ray ray) const noexcept final;
+            const ::MobileRT::Ray &ray) const noexcept final;
     };
 }//namespace Components
 

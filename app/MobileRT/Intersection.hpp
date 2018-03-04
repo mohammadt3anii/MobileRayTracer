@@ -25,16 +25,16 @@ namespace MobileRT {
         explicit Intersection(const void *primitive) noexcept;
 
         explicit Intersection(
-            ::glm::vec3 orig,
-            ::glm::vec3 dir,
+            const ::glm::vec3 &orig,
+            const ::glm::vec3 &dir,
             float dist,
-            ::glm::vec3 normal,
+            const ::glm::vec3 &normal,
             const void *primitive = nullptr) noexcept;
 
         Intersection(
-            ::glm::vec3 intPoint,
+            const ::glm::vec3 &intPoint,
             float dist,
-            ::glm::vec3 sphereCenter) noexcept;
+            const ::glm::vec3 &sphereCenter) noexcept;
 
         Intersection(const Intersection &intersection) noexcept = default;
 

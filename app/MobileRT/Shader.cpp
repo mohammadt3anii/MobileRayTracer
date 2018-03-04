@@ -71,7 +71,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     }
 }
 
-Intersection Shader::traceTouch(Intersection intersection, Ray ray) noexcept {
+Intersection Shader::traceTouch(Intersection intersection, const Ray &ray) noexcept {
     return this->scene_.trace(intersection, ray);
 }
 
@@ -79,7 +79,7 @@ Shader::~Shader() noexcept {
     LOG("SHADER DELETED");
 }
 
-bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
+bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
     const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
@@ -102,7 +102,7 @@ bool Shader::shadowTrace(Intersection intersection, Ray ray) noexcept {
     return intersection.length_ < lastDist;
 }
 
-bool Shader::rayTrace(::glm::vec3 *rgb, Ray ray) noexcept {
+bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
     Intersection intersection {};
     const float lastDist {intersection.length_};
     switch (accelerator_) {
@@ -131,7 +131,7 @@ void Shader::resetSampling() noexcept {
     this->scene_.resetSampling();
 }
 
-::glm::vec3 Shader::getCosineSampleHemisphere(const ::glm::vec3 normal) const noexcept {
+::glm::vec3 Shader::getCosineSampleHemisphere(const ::glm::vec3 &normal) const noexcept {
     static ::std::atomic<::std::uint32_t> sampler {0};
     const ::std::uint32_t current1 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
     const ::std::uint32_t current2 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
