@@ -6,7 +6,7 @@
 
 using ::MobileRT::Light;
 
-Light::Light(Material radiance) noexcept :
+Light::Light(const Material &radiance) noexcept :
         radiance_{radiance} {
 }
 

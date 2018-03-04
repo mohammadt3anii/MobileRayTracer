@@ -222,7 +222,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   1.0f,
@@ -233,7 +233,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 /*camera = ::std::make_unique<Components::Perspective> (
                   ::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
@@ -245,7 +245,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                   ::glm::vec3 {-730.0f, 600.0f, -950.0f},
                   ::glm::vec3 {-400.0f, 300.0f, 0.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                const MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                    1.0f,
@@ -498,7 +498,7 @@ extern "C"
         jfloat const /*jy*/) noexcept {
     //const float u {static_cast<float> (jx) / width_};
     //const float v {static_cast<float> (jy) / height_};
-    //const MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
+    //const MobileRT::Ray &ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
     //MobileRT::Intersection intersection {};
     //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ray)};
     const ::std::int32_t primitiveID{-1};
@@ -513,14 +513,14 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
         jfloat const /*jy*/,
         jint const /*primitiveIndex*/
 ) noexcept {
-    /*const float u{static_cast<float> (jx) / width_};
-    const float v{static_cast<float> (jy) / height_};
-    const MobileRT::Ray ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
-    const ::std::uint32_t index{static_cast<::std::uint32_t>(primitiveIndex)};
-    const MobileRT::Plane plane{
+    /*const float u {static_cast<float> (jx) / width_};
+    const float v {static_cast<float> (jy) / height_};
+    const MobileRT::Ray &ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
+    const ::std::uint32_t index {static_cast<::std::uint32_t>(primitiveIndex)};
+    const MobileRT::Plane plane {
             ::glm::vec3 {0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
-    MobileRT::Intersection intersection{};
+    MobileRT::Intersection intersection {};
     plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_[0],
                                                             intersection.point_[1];*/

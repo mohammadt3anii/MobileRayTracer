@@ -62,7 +62,7 @@ bool Whitted::shade(
                 const float cos_N_L {::glm::dot(shadingNormal, vectorToLight)};
                 if (cos_N_L > 0.0f) {
                     //shadow ray - orig=intersection, dir=light
-                    const Ray shadowRay {vectorToLight, intersection.point_, rayDepth + 1,
+                    const Ray &shadowRay {vectorToLight, intersection.point_, rayDepth + 1,
                                     intersection.primitive_};
                     Intersection lightIntersection {};
                     lightIntersection.length_ = distanceToLight;
@@ -82,9 +82,9 @@ bool Whitted::shade(
 
     // specular reflection
     if (::glm::any(::glm::greaterThan(kS, ::glm::vec3 {0}))) {
-        const ::glm::vec3 reflectionDir {
+        const ::glm::vec3 &reflectionDir {
             ::glm::reflect(ray.direction_, shadingNormal)};
-        const Ray specularRay {
+        const Ray &specularRay {
             reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiS_RGB {};
         rayTrace(&LiS_RGB, specularRay);
@@ -94,9 +94,9 @@ bool Whitted::shade(
     // specular transmission
     if (::glm::any(::glm::greaterThan(kT, ::glm::vec3 {0}))) {
         const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
-        const ::glm::vec3 refractDir {
+        const ::glm::vec3 &refractDir {
             ::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
-        const Ray transmissionRay {
+        const Ray &transmissionRay {
             refractDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};
         rayTrace(&LiT_RGB, transmissionRay);

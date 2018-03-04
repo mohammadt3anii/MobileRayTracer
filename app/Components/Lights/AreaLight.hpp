@@ -20,7 +20,7 @@ namespace Components {
 
     public:
         explicit AreaLight(
-            ::MobileRT::Material radiance,
+            const ::MobileRT::Material &radiance,
             ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight,
             const ::glm::vec3 &pointA,
             const ::glm::vec3 &pointB,

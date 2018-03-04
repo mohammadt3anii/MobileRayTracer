@@ -15,7 +15,7 @@ Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
 
 Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const ::glm::vec3 centerToOrigin {ray.origin_ - center_};
+    const ::glm::vec3 &centerToOrigin {ray.origin_ - center_};
 
     //A = 1.0 - normalized vectors
     const float B {2.0f * ::glm::dot(centerToOrigin, ray.direction_)};
@@ -39,7 +39,7 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
     }
 
     // if so, then we have an intersection
-    const ::glm::vec3 intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
+    const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
     return Intersection {intersectionPoint, distanceToIntersection, center_};
 }
 
@@ -54,15 +54,15 @@ float Sphere::getZ() const noexcept {
 
 AABB Sphere::getAABB() const noexcept {
     const float radius {::std::sqrt(this->sq_radius_)};
-    const ::glm::vec3 min {this->center_ - radius};
-    const ::glm::vec3 max {this->center_ + radius};
+    const ::glm::vec3 &min {this->center_ - radius};
+    const ::glm::vec3 &max {this->center_ + radius};
     return AABB {min, max};
 }
 
 bool Sphere::intersect(const AABB &box) const noexcept {
     float dmin {0};
-    const ::glm::vec3 v1 {box.pointMin_};
-    const ::glm::vec3 v2 {box.pointMax_};
+    const ::glm::vec3 &v1 {box.pointMin_};
+    const ::glm::vec3 &v2 {box.pointMax_};
     if (center_[0] < v1[0]) {
         dmin = dmin + (center_[0] - v1[0]) * (center_[0] - v1[0]);
     } else if (center_[0] > v2[0]) {

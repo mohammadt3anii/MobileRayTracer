@@ -22,7 +22,7 @@ Orthographic::Orthographic(
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Orthographic::generateRay(const float u, const float v,
                               const float deviationU, const float deviationV) const noexcept {
-    const Ray ray { this->direction_,
+    const Ray &ray { this->direction_,
                     this->position_ +
                     this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU +
                     this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV, 1};
@@ -30,10 +30,10 @@ Ray Orthographic::generateRay(const float u, const float v,
 }
 
 AABB Orthographic::getAABB() const noexcept {
-    const ::glm::vec3 min {this->position_ +
+    const ::glm::vec3 &min {this->position_ +
                       this->right_ * (0.0f - 0.5f) * this->sizeH_ + this->right_ * -0.5f +
                       this->up_ * (0.5f - 0.0f) * this->sizeV_ + this->up_ * -0.5f};
-    const ::glm::vec3 max {this->position_ +
+    const ::glm::vec3 &max {this->position_ +
                       this->right_ * (1.0f - 0.5f) * this->sizeH_ + this->right_ * 0.5f +
                       this->up_ * (0.5f - 1.0f) * this->sizeV_ + this->up_ * 0.5f};
     return AABB {min, max};

@@ -51,59 +51,59 @@ bool OBJLoader::fillScene(Scene *const scene,
 
             // Loop over vertices in the face.
             for (size_t v{0}; v < fv; v += 3) {
-                ::tinyobj::index_t idx1(shape.mesh.indices[index_offset + v + 0]);
-                ::tinyobj::real_t vx1{
+                const ::tinyobj::index_t idx1(shape.mesh.indices[index_offset + v + 0]);
+                const ::tinyobj::real_t vx1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 0]};
-                ::tinyobj::real_t vy1{
+                const ::tinyobj::real_t vy1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 1]};
-                ::tinyobj::real_t vz1{
+                const ::tinyobj::real_t vz1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
 
-                ::tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
-                ::tinyobj::real_t vx2{
+                const ::tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
+                const ::tinyobj::real_t vx2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 0]};
-                ::tinyobj::real_t vy2{
+                const ::tinyobj::real_t vy2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 1]};
-                ::tinyobj::real_t vz2{
+                const ::tinyobj::real_t vz2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 2]};
 
-                ::tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
-                ::tinyobj::real_t vx3{
+                const ::tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
+                const ::tinyobj::real_t vx3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 0]};
-                ::tinyobj::real_t vy3{
+                const ::tinyobj::real_t vy3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1]};
-                ::tinyobj::real_t vz3{
+                const ::tinyobj::real_t vz3{
                         attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2]};
 
-                ::glm::vec3 vertex1 {-vx1, vy1, vz1};
-                ::glm::vec3 vertex2 {-vx2, vy2, vz2};
-                ::glm::vec3 vertex3 {-vx3, vy3, vz3};
+                const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
+                const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
+                const ::glm::vec3 &vertex3 {-vx3, vy3, vz3};
                 ::glm::vec3 normal {};
                 if (!attrib_.normals.empty()) {
-                    ::tinyobj::real_t nx1{
+                    const ::tinyobj::real_t nx1 {
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 0]};
-                    ::tinyobj::real_t ny1{
+                    const ::tinyobj::real_t ny1 {
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 1]};
-                    ::tinyobj::real_t nz1{
+                    const ::tinyobj::real_t nz1 {
                             attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 2]};
 
-                    ::tinyobj::real_t nx2{
+                    const ::tinyobj::real_t nx2 {
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 0]};
-                    ::tinyobj::real_t ny2{
+                    const ::tinyobj::real_t ny2 {
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 1]};
-                    ::tinyobj::real_t nz2{
+                    const ::tinyobj::real_t nz2 {
                             attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 2]};
 
-                    ::tinyobj::real_t nx3{
+                    const ::tinyobj::real_t nx3 {
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 0]};
-                    ::tinyobj::real_t ny3{
+                    const ::tinyobj::real_t ny3 {
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 1]};
-                    ::tinyobj::real_t nz3{
+                    const ::tinyobj::real_t nz3 {
                             attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 2]};
 
-                    const ::glm::vec3 normal1 {nx1, ny1, nz1};
-                    const ::glm::vec3 normal2 {nx2, ny2, nz2};
-                    const ::glm::vec3 normal3 {nx3, ny3, nz3};
+                    const ::glm::vec3 &normal1 {nx1, ny1, nz1};
+                    const ::glm::vec3 &normal2 {nx2, ny2, nz2};
+                    const ::glm::vec3 &normal3 {nx3, ny3, nz3};
                     normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
                 }
                 const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, normal};
@@ -115,15 +115,15 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};
-                    const ::glm::vec3 diffuse {d1, d2, d3};
+                    const ::glm::vec3 &diffuse {d1, d2, d3};
                     const float s1 {m.specular[0]};
                     const float s2 {m.specular[1]};
                     const float s3 {m.specular[2]};
-                    const ::glm::vec3 specular {s1, s2, s3};
+                    const ::glm::vec3 &specular {s1, s2, s3};
                     const float t1 {m.transmittance[0] * (1.0f - m.dissolve)};
                     const float t2 {m.transmittance[1] * (1.0f - m.dissolve)};
                     const float t3 {m.transmittance[2] * (1.0f - m.dissolve)};
-                    const ::glm::vec3 transmittance {t1, t2, t3};
+                    const ::glm::vec3 &transmittance {t1, t2, t3};
                     float e1 {m.emission[0]};
                     float e2 {m.emission[1]};
                     float e3 {m.emission[2]};
@@ -133,12 +133,12 @@ bool OBJLoader::fillScene(Scene *const scene,
                         e2 /= max;
                         e3 /= max;
                     }
-                    const ::glm::vec3 emission {e1, e2, e3};
-                    const Material material {diffuse, specular, transmittance, m.ior, emission};
+                    const ::glm::vec3 &emission {e1, e2, e3};
+                    const Material &material {diffuse, specular, transmittance, m.ior, emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
-                        const ::glm::vec3 p1 {vx1, vy1, vz1};
-                        const ::glm::vec3 p2 {vx2, vy2, vz2};
-                        const ::glm::vec3 p3 {vx3, vy3, vz3};
+                        const ::glm::vec3 &p1 {vx1, vy1, vz1};
+                        const ::glm::vec3 &p2 {vx2, vy2, vz2};
+                        const ::glm::vec3 &p3 {vx3, vy3, vz3};
                         scene->lights_.emplace_back(
                                 ::std::make_unique<AreaLight>(material, lambda(), p1, p2, p3));
                     } else {

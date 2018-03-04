@@ -68,9 +68,9 @@ float Plane::getZ() const noexcept {
 }
 
 AABB Plane::getAABB() const noexcept {
-    const ::glm::vec3 rightDir {getRightVector()};
-    const ::glm::vec3 min {this->point_ + rightDir * -100.0f};
-    const ::glm::vec3 max {this->point_ + rightDir * 100.0f};
+    const ::glm::vec3 &rightDir {getRightVector()};
+    const ::glm::vec3 &min {this->point_ + rightDir * -100.0f};
+    const ::glm::vec3 &max {this->point_ + rightDir * 100.0f};
     return AABB {min, max};
 }
 
@@ -93,8 +93,8 @@ float Plane::distance(const ::glm::vec3 &point) const noexcept {
 }
 
 bool Plane::intersect(const AABB &box) const noexcept {
-    ::glm::vec3 positiveVertex {box.pointMax_};
-    ::glm::vec3 negativeVertex {box.pointMin_};
+    const ::glm::vec3 &positiveVertex {box.pointMax_};
+    const ::glm::vec3 &negativeVertex {box.pointMin_};
 
     /*if (this->normal_[0] >= 0.0f) {
       positiveVertex[0] = box.pointMax_[0];

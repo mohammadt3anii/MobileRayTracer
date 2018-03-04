@@ -89,7 +89,7 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
                     const float r2{this->samplerPixel_->getSample()};
                     const float deviationU{(r1 - 0.5f) * 2.0f * pixelWidth};
                     const float deviationV{(r2 - 0.5f) * 2.0f * pixelHeight};
-                    const Ray ray {this->camera_->generateRay(u, v, deviationU, deviationV)};
+                    const Ray &ray {this->camera_->generateRay(u, v, deviationU, deviationV)};
                     pixelRGB = {};
                     this->shader_->rayTrace(&pixelRGB, ray);
                     const ::std::uint32_t pixelIndex{yWidth + x};

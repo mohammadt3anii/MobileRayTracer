@@ -77,8 +77,8 @@ void RegularGrid::addPrimitives
     for (T &primitive : primitives) {
         ++index;
         const AABB bound{primitive.getAABB()};
-        const ::glm::vec3 bv1{bound.pointMin_};
-        const ::glm::vec3 bv2{bound.pointMax_};
+        const ::glm::vec3 &bv1 {bound.pointMin_};
+        const ::glm::vec3 &bv2 {bound.pointMax_};
 
         // find out which cells could contain the primitive (based on aabb)
         ::std::int32_t x1{static_cast<::std::int32_t>((bv1[0] - m_Extends.pointMin_[0]) * dx_reci)};
@@ -110,10 +110,10 @@ void RegularGrid::addPrimitives
                             static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
                             static_cast<size_t>(z) * static_cast<size_t>(gridSize_) *
                             static_cast<size_t>(gridSize_)};
-                    const ::glm::vec3 pos{m_Extends.pointMin_[0] + x * dx,
+                    const ::glm::vec3 &pos {m_Extends.pointMin_[0] + x * dx,
                                       m_Extends.pointMin_[1] + y * dy,
                                       m_Extends.pointMin_[2] + z * dz};
-                    const AABB cell{pos, pos + ::glm::vec3 {dx, dy, dz}};
+                    const AABB &cell {pos, pos + ::glm::vec3 {dx, dy, dz}};
                     //LOG("min=(", pos[0], ", ", pos[1], ", ", pos[2], ") max=(", dx, ", ", dy, ",", dz, ")");
                     // do an accurate aabb / primitive intersection test
                     const bool intersectedBox{::MobileRT::intersect(primitive, cell)};
@@ -154,7 +154,7 @@ Intersection RegularGrid::intersect(
     Intersection intersection, const Ray &ray,
     const bool shadowTrace) noexcept {
     // setup 3DDDA (double check reusability of primary ray data)
-    const ::glm::vec3 cell{(ray.origin_ - m_Extends.pointMin_) * m_SR};
+    const ::glm::vec3 &cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
     ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};
     ::std::int32_t Y{static_cast<::std::int32_t>(cell[1])};
     ::std::int32_t Z{static_cast<::std::int32_t>(cell[2])};

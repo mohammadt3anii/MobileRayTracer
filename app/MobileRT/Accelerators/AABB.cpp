@@ -33,11 +33,11 @@ bool MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
 }
 
 ::std::int32_t AABB::getLongestAxis() const noexcept {
-    const float lengthX{pointMax_[0] - pointMin_[0]};
-    const float lengthY{pointMax_[1] - pointMin_[1]};
-    const float lengthZ{pointMax_[2] - pointMin_[2]};
+    const float lengthX {pointMax_[0] - pointMin_[0]};
+    const float lengthY {pointMax_[1] - pointMin_[1]};
+    const float lengthZ {pointMax_[2] - pointMin_[2]};
 
-    const ::std::int32_t longestAxis{lengthX >= lengthY && lengthX >= lengthZ ? 0 :
+    const ::std::int32_t longestAxis {lengthX >= lengthY && lengthX >= lengthZ ? 0 :
                     lengthY >= lengthX && lengthY >= lengthZ ? 1 :
                     2
     };
@@ -46,24 +46,24 @@ bool MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
 }
 
 float AABB::getSurfaceArea() const noexcept {
-    const float lengthX{pointMax_[0] - pointMin_[0]};
-    const float lengthY{pointMax_[1] - pointMin_[1]};
-    const float lengthZ{pointMax_[2] - pointMin_[2]};
+    const float lengthX {pointMax_[0] - pointMin_[0]};
+    const float lengthY {pointMax_[1] - pointMin_[1]};
+    const float lengthZ {pointMax_[2] - pointMin_[2]};
 
-    const float bottomTopArea{2 * lengthX * lengthZ};
-    const float sideAreaXY{2 * lengthX * lengthY};
-    const float sideAreaZY{2 * lengthZ * lengthY};
+    const float bottomTopArea {2 * lengthX * lengthZ};
+    const float sideAreaXY {2 * lengthX * lengthY};
+    const float sideAreaZY {2 * lengthZ * lengthY};
 
-    const float surfaceArea{bottomTopArea + sideAreaXY + sideAreaZY};
+    const float surfaceArea {bottomTopArea + sideAreaXY + sideAreaZY};
 
     return surfaceArea;
 }
 
 namespace MobileRT {
     AABB surroundingBox(const AABB &box1, const AABB &box2) noexcept {
-        const ::glm::vec3 min{
+        const ::glm::vec3 &min {
                 ::glm::min(box1.pointMin_, box2.pointMin_)};
-        const ::glm::vec3 max{
+        const ::glm::vec3 &max {
                 ::glm::max(box1.pointMax_, box2.pointMax_)};
 
         return AABB(min, max);

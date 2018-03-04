@@ -49,8 +49,8 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             break;
         }
         case Accelerator::REGULAR_GRID: {
-            ::glm::vec3 min{RayLengthMax, RayLengthMax, RayLengthMax};
-            ::glm::vec3 max{-RayLengthMax, -RayLengthMax, -RayLengthMax};
+            ::glm::vec3 min {RayLengthMax};
+            ::glm::vec3 max {-RayLengthMax};
             ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
             ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
             ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
@@ -138,15 +138,15 @@ void Shader::resetSampling() noexcept {
     const float sample1 {VALUES.at(current1 & MASK)};
     const float sample2 {VALUES.at(current2 & MASK)};
 
-    const float r1{::glm::two_pi<float>() * sample1};
-    const float r2{sample2};
-    const float r2s{::std::sqrt(r2)};
-    ::glm::vec3 u{::std::abs(normal[0]) > 0.1f ?
+    const float r1 {::glm::two_pi<float>() * sample1};
+    const float r2 {sample2};
+    const float r2s {::std::sqrt(r2)};
+    ::glm::vec3 u {::std::abs(normal[0]) > 0.1f ?
                ::glm::cross(::glm::vec3 {0.0f, 1.0f, 0.0f}, normal) :
                ::glm::cross(::glm::vec3 {1.0f, 0.0f, 0.0f}, normal)};
     u = ::glm::normalize(u);
-    const ::glm::vec3 v{::glm::cross(normal, u)};
-    ::glm::vec3 direction{(u * (::std::cos(r1) * r2s) +
+    const ::glm::vec3 v {::glm::cross(normal, u)};
+    ::glm::vec3 direction {(u * (::std::cos(r1) * r2s) +
                         v * (::std::sin(r1) * r2s) +
                         normal * ::std::sqrt(1.0f - r2))};
     direction = ::glm::normalize(direction);

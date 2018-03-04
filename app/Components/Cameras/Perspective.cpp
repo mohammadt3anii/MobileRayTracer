@@ -24,7 +24,7 @@ Perspective::Perspective(
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-    const ::glm::vec3 dest {this->position_ +
+    const ::glm::vec3 &dest {this->position_ +
                           this->direction_ +
                           (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
                           (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV))};

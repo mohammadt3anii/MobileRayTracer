@@ -11,7 +11,7 @@ using ::MobileRT::Ray;
 using ::MobileRT::Intersection;
 
 AreaLight::AreaLight(
-    Material radiance,
+    const Material &radiance,
     ::std::unique_ptr<Sampler> samplerPointLight,
     const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC) noexcept :
         Light(radiance),

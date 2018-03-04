@@ -34,6 +34,6 @@ StaticHaltonSeq::StaticHaltonSeq(const ::std::uint32_t width, const ::std::uint3
 }
 
 float StaticHaltonSeq::getSample(const ::std::uint32_t /*sample*/) noexcept {
-    const ::std::uint32_t current{this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
+    const ::std::uint32_t current {this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
     return VALUES.at(current & MASK);
 }
