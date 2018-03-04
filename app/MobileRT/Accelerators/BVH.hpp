@@ -25,8 +25,6 @@ namespace MobileRT {
     ::std::uint32_t getSplitIndex_SAH (
         ::std::vector<AABB> boxes) noexcept;
 
-    static ::std::uint32_t numberPrimitives {0};
-
     template<typename T>
     class BVH final {
     private:
@@ -75,7 +73,7 @@ namespace MobileRT {
             return;
         }
         primitives_ = primitives;
-        numberPrimitives = static_cast<::std::uint32_t>(primitives.size());
+        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
         ::std::uint32_t maxDepth {0};
         ::std::uint32_t maxNodes {1};
         while (maxNodes * maxLeafSize < numberPrimitives) {
@@ -125,7 +123,7 @@ namespace MobileRT {
         /*const ::std::uint32_t splitIndex {
             static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};*/
 
-        if (numberPrimitives <= (1 << depth) * maxLeafSize) {
+        if (primitives_.size() <= (1 << depth) * maxLeafSize) {
             boxes_.at(currentNodeId).indexOffset_ = begin;
             boxes_.at(currentNodeId).numberPrimitives_ = end - begin;
         } else {
