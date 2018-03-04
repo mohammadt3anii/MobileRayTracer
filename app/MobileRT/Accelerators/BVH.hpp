@@ -23,7 +23,7 @@ namespace MobileRT {
 
     template<typename T>
     ::std::uint32_t getSplitIndex_SAH (
-        ::std::vector<AABB> boxes) noexcept;
+        const ::std::vector<AABB> &boxes) noexcept;
 
     template<typename T>
     class BVH final {
@@ -72,16 +72,14 @@ namespace MobileRT {
         }
         primitives_ = primitives;
         const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
-        ::std::uint32_t maxDepth {0};
         ::std::uint32_t maxNodes {1};
         while (maxNodes * maxLeafSize < numberPrimitives) {
-            ++maxDepth;
-            maxNodes = 1u << maxDepth;
+            maxNodes *= 2;
         }
-        maxNodes = (2u << maxDepth) - 1;
+        maxNodes = maxNodes * 2 - 1;
 
         boxes_.resize(maxNodes);
-        //boxes_.resize(numberPrimitives);
+        //boxes_.resize((2 << numberPrimitives) - 1);
 
         build();
     }
@@ -116,7 +114,7 @@ namespace MobileRT {
             //::std::vector<AABB> boxes {boxes_.at(id).box_};
             //boxes.reserve(end - begin);
             for (::std::uint32_t i {begin + 1}; i < end; ++i) {
-                const AABB new_box {primitives_.at(i).getAABB()};
+                const AABB &new_box {primitives_.at(i).getAABB()};
                 boxes_.at(id).box_ = surroundingBox(new_box, boxes_.at(id).box_);
                 //boxes.emplace_back(new_box);
             }
@@ -132,11 +130,11 @@ namespace MobileRT {
                 }
             );
 
-            const ::std::uint32_t splitIndex {(end + begin) / 2};
+            const ::std::uint32_t splitIndex {(end - begin) / 2};
             /*const ::std::uint32_t splitIndex {
-                static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};*/
+                static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes))};*/
 
-            if (primitives_.size() <= (1 << depth) * maxLeafSize) {
+            if (end - begin <= maxLeafSize) {
                 boxes_.at(id).indexOffset_ = begin;
                 boxes_.at(id).numberPrimitives_ = end - begin;
 
@@ -153,13 +151,13 @@ namespace MobileRT {
                 stackNode.at(stackNodePtr++) = childR; // push
                 stackId.at(stackPtrId++) = left + 1; // push
                 stackDepth.at(stackDepthId++) = depth + 1; // push
-                stackBegin.at(stackBeginId++) = splitIndex; // push
+                stackBegin.at(stackBeginId++) = begin + splitIndex; // push
                 stackEnd.at(stackEndId++) = end; // push
 
                 node = childL;
                 id = left;
                 depth = depth + 1;
-                end = splitIndex;
+                end = begin + splitIndex;
             }
         } while(node != nullptr);
     }
@@ -274,7 +272,7 @@ namespace MobileRT {
 
     template<typename T>
     ::std::uint32_t getSplitIndex_SAH (
-        ::std::vector<AABB> boxes) noexcept {
+        const ::std::vector<AABB> &boxes) noexcept {
             const ::std::uint32_t N {static_cast<::std::uint32_t>(boxes.size())};
 
             ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
