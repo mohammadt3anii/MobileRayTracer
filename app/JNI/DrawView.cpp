@@ -498,7 +498,7 @@ extern "C"
         jfloat const /*jy*/) noexcept {
     //const float u {static_cast<float> (jx) / width_};
     //const float v {static_cast<float> (jy) / height_};
-    //MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
+    //const MobileRT::Ray ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
     //MobileRT::Intersection intersection {};
     //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ray)};
     const ::std::int32_t primitiveID{-1};
@@ -515,7 +515,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
 ) noexcept {
     /*const float u{static_cast<float> (jx) / width_};
     const float v{static_cast<float> (jy) / height_};
-    const MobileRT::Ray ray{renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
+    const MobileRT::Ray ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
     const ::std::uint32_t index{static_cast<::std::uint32_t>(primitiveIndex)};
     const MobileRT::Plane plane{
             ::glm::vec3 {0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},

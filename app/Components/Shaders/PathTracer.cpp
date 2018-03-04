@@ -80,7 +80,7 @@ bool PathTracer::shade(
                 const float cosNormalLight {::glm::dot(shadingNormal, vectorToLight)};
                 if (cosNormalLight > 0.0f) {
                     //shadow ray->orig=intersection, dir=light
-                    Ray shadowRay {
+                    const Ray shadowRay {
                         vectorToLight, intersection.point_, rayDepth + 1, intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
@@ -102,7 +102,7 @@ bool PathTracer::shade(
         if (rayDepth <= ::MobileRT::RayDepthMin ||
             samplerRussianRoulette_->getSample() > finish_probability) {
             const ::glm::vec3 newDirection{getCosineSampleHemisphere(shadingNormal)};
-            Ray normalizedSecundaryRay{newDirection, intersection.point_, rayDepth + 1,
+            const Ray normalizedSecundaryRay {newDirection, intersection.point_, rayDepth + 1,
                                        intersection.primitive_};
 
             //Li = Pi/N * SOMATORIO i=1->i=N [fr (p,Wi <-> Wr) L(p <- Wi)]
@@ -132,7 +132,7 @@ bool PathTracer::shade(
         //PDF = 1 / 2 Pi
         const ::glm::vec3 reflectionDir {
             ::glm::reflect(ray.direction_, shadingNormal)};
-        Ray specularRay {
+        const Ray specularRay {
             reflectionDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiS_RGB {};
         rayTrace(&LiS_RGB, specularRay);
@@ -145,7 +145,7 @@ bool PathTracer::shade(
         const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
         const ::glm::vec3 refractDir {
             ::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
-        Ray transmissionRay {
+        const Ray transmissionRay {
             refractDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};
         rayTrace(&LiT_RGB, transmissionRay);
