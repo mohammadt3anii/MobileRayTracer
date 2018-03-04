@@ -28,7 +28,7 @@ namespace MobileRT {
     template<typename T>
     class BVH final {
     private:
-        static const ::std::uint32_t maxLeafSize {3};
+        static const ::std::uint32_t maxLeafSize {2};
 
     public:
         ::std::vector<BVHNode> boxes_{};
