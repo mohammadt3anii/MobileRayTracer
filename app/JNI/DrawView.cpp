@@ -152,9 +152,9 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
         switch (scene) {
             case 0:
                 camera = ::std::make_unique<Components::Perspective>(
-                        ::glm::vec3{0.0f, 0.0f, -3.4f},
-                        ::glm::vec3{0.0f, 0.0f, 1.0f},
-                        ::glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.0f, -3.4f},
+                        ::glm::vec3 {0.0f, 0.0f, 1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
@@ -162,19 +162,19 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
 
             case 1:
                 camera = ::std::make_unique<Components::Perspective>(
-                        ::glm::vec3{4.0f, 4.0f, -8.0f},
-                        ::glm::vec3{4.0f, 4.0f, 4.0f},
-                        ::glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {4.0f, 4.0f, -8.0f},
+                        ::glm::vec3 {4.0f, 4.0f, 4.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 /*camera = ::std::make_unique<Components::Orthographic> (
-                  ::glm::vec3{0.0f, 1.0f, - 10.0f},
-                  ::glm::vec3{0.0f, 1.0f, 7.0f},
-                  ::glm::vec3{0.0f, 1.0f, 0.0f},
+                  ::glm::vec3 {0.0f, 1.0f, - 10.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 7.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 0.0f},
                   10.0f * hfovFactor, 10.0f * vfovFactor);*/
                 /*camera = ::std::make_unique<Components::Perspective>(
-                  ::glm::vec3(0.0f, 0.5f, 1.0f),
-                  ::glm::vec3(0.0f, 0.0f, 7.0f),
-                  ::glm::vec3(0.0f, 1.0f, 0.0f),
+                  ::glm::vec3 {0.0f, 0.5f, 1.0f},
+                  ::glm::vec3 {0.0f, 0.0f, 7.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 0.0f},
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
@@ -516,7 +516,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     const MobileRT::Ray ray{renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
     const ::std::uint32_t index{static_cast<::std::uint32_t>(primitiveIndex)};
     const MobileRT::Plane plane{
-            ::glm::vec3{0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
+            ::glm::vec3 {0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
     MobileRT::Intersection intersection{};
     plane.intersect(ray);

@@ -20,7 +20,7 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
     const ::glm::vec3 &Le {intersection.material_->Le_};
     const ::glm::vec3 &kD {intersection.material_->Kd_};
     //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(*rgb, ::glm::vec3(0)))) {
+    if (::glm::any(::glm::greaterThan(*rgb, ::glm::vec3 {0}))) {
         *rgb = Le;
         return true;
     }
@@ -33,7 +33,7 @@ bool NoShadows::shade(::glm::vec3 *const rgb, const Intersection intersection, R
             intersection.symNormal_};
 
     // direct lighting - only for diffuse materials
-    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
+    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {
         const ::std::uint32_t sizeLights {
             static_cast<::std::uint32_t>(scene_.lights_.size())};
         if (sizeLights > 0) {

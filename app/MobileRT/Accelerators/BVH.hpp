@@ -86,7 +86,6 @@ namespace MobileRT {
 
         boxes_.resize(maxNodes);
         //boxes_.resize(numberPrimitives);
-        //primitives_.reserve(numberPrimitives);
 
         build(0, numberPrimitives, 0, 0);
     }
@@ -94,44 +93,42 @@ namespace MobileRT {
 
     template<typename T>
     void BVH<T>::build(
-        ::std::uint32_t begin, ::std::uint32_t end,
+        const ::std::uint32_t begin, const ::std::uint32_t end,
         const ::std::uint32_t depth, const ::std::uint32_t currentNodeId) noexcept {
 
-        AABB current_box{
-            ::glm::vec3 {
-                    ::std::numeric_limits<float>::max(),
-                    ::std::numeric_limits<float>::max(),
-                    ::std::numeric_limits<float>::max()},
-            ::glm::vec3 {
-                    ::std::numeric_limits<float>::lowest(),
-                    ::std::numeric_limits<float>::lowest(),
-                    ::std::numeric_limits<float>::lowest()}};
-        ::std::vector<AABB> boxes {};
-        boxes.reserve(end - begin);
+        AABB current_box {
+            ::glm::vec3 {::std::numeric_limits<float>::max()},
+            ::glm::vec3 {::std::numeric_limits<float>::lowest()}};
+
+        //::std::vector<AABB> boxes {};
+        //boxes.reserve(end - begin);
         for (::std::uint32_t i {begin}; i < end; ++i) {
             const AABB new_box {primitives_.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
-            boxes.emplace_back(new_box);
+            //boxes.emplace_back(new_box);
         }
 
         //static ::std::int32_t axisCounter {0};
         //const ::std::int32_t axis {axisCounter++ % 3};
         const ::std::int32_t axis {current_box.getLongestAxis()};
-        ::std::sort(primitives_.begin() + static_cast<int>(begin), primitives_.begin() + static_cast<int>(end),
+        ::std::sort(
+            primitives_.begin() + static_cast<::std::int32_t>(begin),
+            primitives_.begin() + static_cast<::std::int32_t>(end),
             [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
-            });
+            }
+        );
 
         boxes_.at(currentNodeId).box_ = current_box;
 
         const ::std::uint32_t splitIndex {(end + begin) / 2};
-        //const ::std::int32_t splitIndex {static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};
+        /*const ::std::uint32_t splitIndex {
+            static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};*/
 
         if (numberPrimitives <= (1 << depth) * maxLeafSize) {
             boxes_.at(currentNodeId).indexOffset_ = begin;
             boxes_.at(currentNodeId).numberPrimitives_ = end - begin;
         } else {
-
             const ::std::uint32_t left {currentNodeId * 2 + 1};
             build(begin, splitIndex, depth + 1, left);
             build(splitIndex, end, depth + 1, left + 1);

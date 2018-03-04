@@ -18,14 +18,14 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                                                                            0.0f}));
 
     // triangle - yellow
-    const MobileRT::Material yellowMat{::glm::vec3(0.9f, 0.9f, 0.0f)};
+    const MobileRT::Material yellowMat{::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {0.5f, -0.5f, 0.99f}, ::glm::vec3 {-0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 1.001f}}, yellowMat);
 
     // sphere - mirror
-    const MobileRT::Material MirrorMat{::glm::vec3(0.0f, 0.0f, 0.0f),
-                                       ::glm::vec3(0.9f, 0.9f, 0.9f)};
+    const MobileRT::Material MirrorMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f}, MirrorMat);
 
@@ -42,7 +42,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                lightGrayMat);
 
     // front wall - light blue
-    /*const MobileRT::Material lightBlueMat {::glm::vec3 (0.0f, 0.9f, 0.9f)};
+    /*const MobileRT::Material lightBlueMat {::glm::vec3 {0.0f, 0.9f, 0.9f}};
      scene.planes_.emplace_back (MobileRT::Plane {
        ::glm::vec3 {0.0f, 0.0f, -3.5f}, ::glm::vec3 {0.0f, 0.0f, 1.0f}}, lightBlueMat);*/
 
@@ -57,12 +57,12 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                lightGrayMat);
 
     // left wall - red
-    const MobileRT::Material redMat{::glm::vec3(0.9f, 0.0f, 0.0f)};
+    const MobileRT::Material redMat{::glm::vec3 {0.9f, 0.0f, 0.0f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {-1.0f, 0.0f, 0.0f}, ::glm::vec3 {1.0f, 0.0f, 0.0f}}, redMat);
 
     // right wall - blue
-    const MobileRT::Material blueMat{::glm::vec3(0.0f, 0.0f, 0.9f)};
+    const MobileRT::Material blueMat{::glm::vec3 {0.0f, 0.0f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {1.0f, 0.0f, 0.0f}, ::glm::vec3 {-1.0f, 0.0f, 0.0f}}, blueMat);
 
@@ -123,8 +123,8 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
             ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, greenMat);
 
     // sphere - mirror
-    const MobileRT::Material MirrorMat{::glm::vec3(0.0f, 0.0f, 0.0f),
-                                       ::glm::vec3(0.9f, 0.9f, 0.9f)};
+    const MobileRT::Material MirrorMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f}, MirrorMat);
 
@@ -142,7 +142,7 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
                                lightGrayMat);
 
     // front wall - light blue
-    const MobileRT::Material lightBlueMat{::glm::vec3(0.0f, 0.9f, 0.9f)};
+    const MobileRT::Material lightBlueMat{::glm::vec3 {0.0f, 0.9f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, 0.0f, -4.0f}, ::glm::vec3 {0.0f, 0.0f, 1.0f}},
                                lightBlueMat);
@@ -161,7 +161,7 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
             ::glm::vec3 {-1.0f, 0.0f, 0.0f}, ::glm::vec3 {1.0f, 0.0f, 0.0f}}, redMat);
 
     // right wall - blue
-    const MobileRT::Material blueMat{::glm::vec3(0.0f, 0.0f, 0.9f)};
+    const MobileRT::Material blueMat{::glm::vec3 {0.0f, 0.0f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {1.0f, 0.0f, 0.0f}, ::glm::vec3 {-1.0f, 0.0f, 0.0f}}, blueMat);
 
@@ -217,7 +217,7 @@ MobileRT::Scene spheresScene2(MobileRT::Scene scene) noexcept {
                                       1.0f,
                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.lights_.emplace_back(::std::make_unique<Components::PointLight>(lightMat,
-                                                                          ::glm::vec3{0.0f,
+                                                                          ::glm::vec3 {0.0f,
                                                                                             15.0f,
                                                                                             4.0f}));
 

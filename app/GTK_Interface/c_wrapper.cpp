@@ -78,9 +78,9 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
         switch (scene) {
             case 0:
                 camera = ::std::make_unique<::Components::Perspective>(
-                        ::glm::vec3{0.0f, 0.0f, -3.4f},
-                        ::glm::vec3{0.0f, 0.0f, 1.0f},
-                        ::glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 0.0f, -3.4f},
+                        ::glm::vec3 {0.0f, 0.0f, 1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
                 scene_ = cornellBoxScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
@@ -88,14 +88,14 @@ work_thread(::std::uint32_t *const bitmap, const ::std::int32_t width, const ::s
 
             case 1:
                 camera = ::std::make_unique<::Components::Orthographic>(
-                        ::glm::vec3{0.0f, 1.0f, -10.0f},
-                        ::glm::vec3{0.0f, 1.0f, 7.0f},
-                        ::glm::vec3{0.0f, 1.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 1.0f, -10.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 7.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         10.0f * hfovFactor, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<::Components::Perspective>(
-                  ::glm::vec3(0.0f, 0.5f, 1.0f),
-                  ::glm::vec3(0.0f, 0.0f, 7.0f),
-                  ::glm::vec3(0.0f, 1.0f, 0.0f),
+                  ::glm::vec3 {0.0f, 0.5f, 1.0f},
+                  ::glm::vec3 {0.0f, 0.0f, 7.0f},
+                  ::glm::vec3 {0.0f, 1.0f, 0.0f},
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};

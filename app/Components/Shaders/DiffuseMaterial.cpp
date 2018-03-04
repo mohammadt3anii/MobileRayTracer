@@ -19,13 +19,13 @@ bool DiffuseMaterial::shade(::glm::vec3 *const rgb, const Intersection intersect
     const ::glm::vec3 &kS {intersection.material_->Ks_};
     const ::glm::vec3 &kT {intersection.material_->Kt_};
 
-    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3(0)))) {
+    if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {
         *rgb = kD;
-    } else if (::glm::any(::glm::greaterThan(kS, ::glm::vec3(0)))) {
+    } else if (::glm::any(::glm::greaterThan(kS, ::glm::vec3 {0}))) {
         *rgb = kS;
-    } else if (::glm::any(::glm::greaterThan(kT, ::glm::vec3(0)))) {
+    } else if (::glm::any(::glm::greaterThan(kT, ::glm::vec3 {0}))) {
         *rgb = kT;
-    } else if (::glm::any(::glm::greaterThan(Le, ::glm::vec3(0)))) {
+    } else if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
         *rgb = Le;
     }
     return false;
