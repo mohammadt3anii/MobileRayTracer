@@ -71,7 +71,7 @@ AABB Triangle::getAABB() const noexcept {
 
 bool Triangle::intersect(const AABB box) const noexcept {
     ::std::function<bool(const ::glm::vec3, const ::glm::vec3)> intersectRayAABB{
-            [=](const ::glm::vec3 orig, const ::glm::vec3 vec) -> bool {
+            [=](const ::glm::vec3 orig, const ::glm::vec3 vec) noexcept -> bool {
                 ::glm::vec3 T_1{};
                 ::glm::vec3 T_2{}; // vectors to hold the T-values for every direction
                 float t_near{::std::numeric_limits<float>::min()};
@@ -134,7 +134,7 @@ bool Triangle::intersect(const AABB box) const noexcept {
             }};
 
     ::std::function<bool(const ::glm::vec3)> isOverTriangle {
-            [=](const ::glm::vec3 vec) -> bool {
+            [=](const ::glm::vec3 vec) noexcept -> bool {
                 const ::glm::vec3 perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
                 return ::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon();
