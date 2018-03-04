@@ -20,12 +20,13 @@ bool NoShadows::shade(
     ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
 
     const ::glm::vec3 &Le {intersection.material_->Le_};
-    const ::glm::vec3 &kD {intersection.material_->Kd_};
     //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(*rgb, ::glm::vec3 {0}))) {
+    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
         *rgb = Le;
         return true;
     }
+
+    const ::glm::vec3 &kD {intersection.material_->Kd_};
 
     const ::glm::vec3 &shadingNormal{
             (::glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?

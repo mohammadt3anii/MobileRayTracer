@@ -373,8 +373,6 @@ public final class MainActivity extends Activity {
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
                     final String obj = "WavefrontOBJs/conference/conference";
-                    //objText_ = readTextAsset(obj + ".obj");
-                    //matText_ = readTextAsset(obj + ".mtl");
                     objText_ = obj + ".obj";
                     matText_ = obj + ".mtl";
                 }
