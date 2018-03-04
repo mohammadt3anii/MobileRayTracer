@@ -150,51 +150,43 @@ namespace MobileRT {
     Intersection BVH<T>::trace(
             Intersection intersection,
             const Ray &ray) noexcept {
-        BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
-        ::std::uint32_t stackPtr {0};
         ::std::uint32_t stackPtrId {0};
-        stack.at(stackPtr++) = nullptr;
-        stackId.at(stackPtrId++) = 0;
+        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
         do {
-            if (intersect(node->box_, ray)) {
+            const BVHNode &node {boxes_.at(id)};
+            if (intersect(node.box_, ray)) {
 
-                if (node->numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
-                        auto& primitive {primitives_.at(node->indexOffset_ + i)};
+                if (node.numberPrimitives_ != 0) {
+                    for (::std::uint32_t i {0}; i < node.numberPrimitives_; ++i) {
+                        auto& primitive {primitives_.at(node.indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
-                    node = stack.at(--stackPtr); // pop
                     id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    BVHNode* const childL {&boxes_.at(left)};
-                    BVHNode* const childR {&boxes_.at(left + 1)};
+                    const BVHNode &childL {boxes_.at(left)};
+                    const BVHNode &childR {boxes_.at(left + 1)};
 
-                    const bool traverseL {intersect(childL->box_, ray)};
-                    const bool traverseR {intersect(childR->box_, ray)};
+                    const bool traverseL {intersect(childL.box_, ray)};
+                    const bool traverseR {intersect(childR.box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = stack.at(--stackPtr); // pop
                         id = stackId.at(--stackPtrId); // pop
                     } else {
-                        node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr++) = childR; // push
                             stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                node = stack.at(--stackPtr); // pop
                 id = stackId.at(--stackPtrId); // pop
             }
 
-        } while (node != nullptr);
+        } while (id != ::std::numeric_limits<::std::uint32_t>::max());
         return intersection;
     }
 
@@ -202,55 +194,47 @@ namespace MobileRT {
     Intersection BVH<T>::shadowTrace(
         Intersection intersection,
         const Ray &ray) noexcept {
-        BVHNode* node {&boxes_.at(0)};
         ::std::uint32_t id {0};
-        ::std::array<BVHNode*, 32> stack {};
         ::std::array<::std::uint32_t, 32> stackId {};
-        ::std::uint32_t stackPtr {0};
         ::std::uint32_t stackPtrId {0};
-        stack.at(stackPtr++) = nullptr;
-        stackId.at(stackPtrId++) = 0;
+        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
         do {
-            if (intersect(node->box_, ray)) {
+            const BVHNode &node {boxes_.at(id)};
+            if (intersect(node.box_, ray)) {
 
-                if (node->numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node->numberPrimitives_; ++i) {
-                        auto& primitive {primitives_.at(node->indexOffset_ + i)};
+                if (node.numberPrimitives_ != 0) {
+                    for (::std::uint32_t i {0}; i < node.numberPrimitives_; ++i) {
+                        auto& primitive {primitives_.at(node.indexOffset_ + i)};
                         const float lastDist {intersection.length_};
                         intersection = primitive.intersect(intersection, ray);
                         if (intersection.length_ < lastDist) {
                             return intersection;
                         }
                     }
-                    node = stack.at(--stackPtr); // pop
                     id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {id * 2 + 1};
-                    BVHNode* const childL {&boxes_.at(left)};
-                    BVHNode* const childR {&boxes_.at(left + 1)};
+                    const BVHNode &childL {boxes_.at(left)};
+                    const BVHNode &childR {boxes_.at(left + 1)};
 
-                    const bool traverseL {intersect(childL->box_, ray)};
-                    const bool traverseR {intersect(childR->box_, ray)};
+                    const bool traverseL {intersect(childL.box_, ray)};
+                    const bool traverseR {intersect(childR.box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        node = stack.at(--stackPtr); // pop
                         id = stackId.at(--stackPtrId); // pop
                     } else {
-                        node = (traverseL) ? childL : childR;
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stack.at(stackPtr++) = childR; // push
                             stackId.at(stackPtrId++) = left + 1; // push
                         }
                     }
                 }
 
             } else {
-                node = stack.at(--stackPtr); // pop
                 id = stackId.at(--stackPtrId); // pop
             }
 
-        } while (node != nullptr);
+        } while (id != ::std::numeric_limits<::std::uint32_t>::max());
         return intersection;
     }
 
