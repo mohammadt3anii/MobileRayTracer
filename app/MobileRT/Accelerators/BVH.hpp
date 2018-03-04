@@ -25,6 +25,8 @@ namespace MobileRT {
     ::std::uint32_t getSplitIndex_SAH (
         ::std::vector<AABB> boxes) noexcept;
 
+    static ::std::uint32_t numberPrimitives {0};
+
     template<typename T>
     class BVH final {
     private:
@@ -35,8 +37,9 @@ namespace MobileRT {
         ::std::vector<Primitive<T>> primitives_{};
 
     private:
-        void build(::std::vector<Primitive<T>> primitives, ::std::uint32_t depth,
-                   ::std::uint32_t currentNodeId) noexcept;
+        void build(
+            ::std::uint32_t begin, ::std::uint32_t end,
+            ::std::uint32_t depth, ::std::uint32_t currentNodeId) noexcept;
 
     public:
         explicit BVH() noexcept = default;
@@ -67,52 +70,46 @@ namespace MobileRT {
 
     template<typename T>
     BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
-            if (primitives.empty()) {
-                boxes_.emplace_back(BVHNode {});
-                return;
-            }
-            const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
-            ::std::uint32_t maxDepth {0};
-            ::std::uint32_t maxNodes {1};
-            while (maxNodes * maxLeafSize < numberPrimitives) {
-                ++maxDepth;
-                maxNodes = 1u << maxDepth;
-            }
-            maxNodes = (2u << maxDepth) - 1;
+        if (primitives.empty()) {
+            boxes_.emplace_back(BVHNode {});
+            return;
+        }
+        primitives_ = primitives;
+        numberPrimitives = static_cast<::std::uint32_t>(primitives.size());
+        ::std::uint32_t maxDepth {0};
+        ::std::uint32_t maxNodes {1};
+        while (maxNodes * maxLeafSize < numberPrimitives) {
+            ++maxDepth;
+            maxNodes = 1u << maxDepth;
+        }
+        maxNodes = (2u << maxDepth) - 1;
 
-            boxes_.resize(maxNodes);
-            //boxes_.resize(numberPrimitives);
-            primitives_.reserve(numberPrimitives);
+        boxes_.resize(maxNodes);
+        //boxes_.resize(numberPrimitives);
+        //primitives_.reserve(numberPrimitives);
 
-            build(::std::move(primitives), 0, 0);
+        build(0, numberPrimitives, 0, 0);
     }
 
 
     template<typename T>
     void BVH<T>::build(
-        ::std::vector<Primitive<T>> primitives,
-        const ::std::uint32_t depth,
-        const ::std::uint32_t currentNodeId) noexcept {
-        if (primitives.empty()) {
-            return;
-        }
-        static ::std::uint32_t numberPrimitives {0};
-        if (depth == 0) {
-            numberPrimitives = static_cast<::std::uint32_t>(primitives.size());
-        }
+        ::std::uint32_t begin, ::std::uint32_t end,
+        const ::std::uint32_t depth, const ::std::uint32_t currentNodeId) noexcept {
 
         AABB current_box{
-                ::glm::vec3 {
-                        ::std::numeric_limits<float>::max(),
-                        ::std::numeric_limits<float>::max(),
-                        ::std::numeric_limits<float>::max()},
-                ::glm::vec3 {
-                        ::std::numeric_limits<float>::lowest(),
-                        ::std::numeric_limits<float>::lowest(),
-                        ::std::numeric_limits<float>::lowest()}};
+            ::glm::vec3 {
+                    ::std::numeric_limits<float>::max(),
+                    ::std::numeric_limits<float>::max(),
+                    ::std::numeric_limits<float>::max()},
+            ::glm::vec3 {
+                    ::std::numeric_limits<float>::lowest(),
+                    ::std::numeric_limits<float>::lowest(),
+                    ::std::numeric_limits<float>::lowest()}};
         ::std::vector<AABB> boxes {};
-        for (::std::uint32_t i{0}; i < primitives.size(); ++i) {
-            const AABB new_box{primitives.at(i).getAABB()};
+        boxes.reserve(end - begin);
+        for (::std::uint32_t i {begin}; i < end; ++i) {
+            const AABB new_box {primitives_.at(i).getAABB()};
             current_box = surroundingBox(new_box, current_box);
             boxes.emplace_back(new_box);
         }
@@ -120,35 +117,24 @@ namespace MobileRT {
         //static ::std::int32_t axisCounter {0};
         //const ::std::int32_t axis {axisCounter++ % 3};
         const ::std::int32_t axis {current_box.getLongestAxis()};
-        ::std::sort(primitives.begin(), primitives.end(),
+        ::std::sort(primitives_.begin() + static_cast<int>(begin), primitives_.begin() + static_cast<int>(end),
             [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
                 return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
             });
 
-        assert(currentNodeId < boxes_.size());
         boxes_.at(currentNodeId).box_ = current_box;
 
-        const ::std::int32_t splitIndex {static_cast<::std::int32_t>(primitives.size()) / 2};
-        assert(boxes.size() > 0);
-        //const ::std::int32_t splitIndex {static_cast<::std::int32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};
+        const ::std::uint32_t splitIndex {(end + begin) / 2};
+        //const ::std::int32_t splitIndex {static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};
 
         if (numberPrimitives <= (1 << depth) * maxLeafSize) {
-            boxes_.at(currentNodeId).indexOffset_ = static_cast<::std::uint32_t>(primitives_.size());
-            boxes_.at(currentNodeId).numberPrimitives_ = static_cast<::std::uint32_t>(primitives.size());
-            primitives_.insert(primitives_.end(), primitives.begin(), primitives.end());
+            boxes_.at(currentNodeId).indexOffset_ = begin;
+            boxes_.at(currentNodeId).numberPrimitives_ = end - begin;
         } else {
-            using Iterator = typename ::std::vector<Primitive<T>>::const_iterator;
-            Iterator leftBegin {primitives.begin()};
-            Iterator leftEnd {primitives.begin() + splitIndex};
-            Iterator rightBegin {primitives.begin() + splitIndex};
-            Iterator rightEnd {primitives.end()};
-
-            ::std::vector<Primitive<T>> leftVector(leftBegin, leftEnd);
-            ::std::vector<Primitive<T>> rightVector(rightBegin, rightEnd);
 
             const ::std::uint32_t left {currentNodeId * 2 + 1};
-            build(::std::move(leftVector), depth + 1, left);
-            build(::std::move(rightVector), depth + 1, left + 1);
+            build(begin, splitIndex, depth + 1, left);
+            build(splitIndex, end, depth + 1, left + 1);
         }
     }
 
