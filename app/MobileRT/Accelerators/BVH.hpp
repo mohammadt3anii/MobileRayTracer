@@ -113,14 +113,14 @@ namespace MobileRT {
 
             //static ::std::int32_t axisCounter {0};
             //const ::std::int32_t axis {axisCounter++ % 3};
-            const ::std::int32_t axis {boxes_.at(id).box_.getLongestAxis()};
+            /*const ::std::int32_t axis {boxes_.at(id).box_.getLongestAxis()};
             ::std::sort(
                 primitives_.begin() + static_cast<::std::int32_t>(begin),
                 primitives_.begin() + static_cast<::std::int32_t>(end),
                 [=](const Primitive<T>& a, const Primitive<T>& b) noexcept -> bool {
                     return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
                 }
-            );
+            );*/
 
             const ::std::uint32_t splitIndex {(end - begin) / 2};
             /*const ::std::uint32_t splitIndex {
