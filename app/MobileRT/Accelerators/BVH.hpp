@@ -30,7 +30,7 @@ namespace MobileRT {
     private:
         static const ::std::uint32_t maxLeafSize {2};
 
-    public:
+    private:
         ::std::vector<BVHNode> boxes_{};
         ::std::vector<Primitive<T>> primitives_{};
 
