@@ -51,11 +51,11 @@ work_thread(
         LOG("pathObj = ", pathObj);
         LOG("pathMtl = ", pathMtl);
 
-        ::std::unique_ptr<::MobileRT::Renderer> renderer_{};
-        ::std::ifstream obj{pathObj};
-        ::std::ifstream mtl{pathMtl};
-        ::std::string line{};
-        ::std::stringstream ssObj{""};
+        ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
+        ::std::ifstream obj {pathObj};
+        ::std::ifstream mtl {pathMtl};
+        ::std::string line {};
+        ::std::stringstream ssObj {""};
         while (::std::getline(obj, line)) {
             ssObj << line << '\n';
         }
@@ -63,18 +63,18 @@ work_thread(
         while (::std::getline(mtl, line)) {
             ssMtl << line << '\n';
         }
-        ::Components::OBJLoader objLoader{ssObj.str(), ssMtl.str()};
+        ::Components::OBJLoader objLoader {ssObj.str(), ssMtl.str()};
         objLoader.process();
-        ::std::int32_t numberOfLights_{0};
+        ::std::int32_t numberOfLights_ {0};
 
         const float ratio {
             ::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
-        const float hfovFactor{width > height ? ratio : 1.0f};
-        const float vfovFactor{width < height ? ratio : 1.0f};
-        ::MobileRT::Scene scene_{};
-        ::std::unique_ptr<::MobileRT::Sampler> samplerPixel{};
-        ::std::unique_ptr<::MobileRT::Shader> shader_{};
-        ::std::unique_ptr<::MobileRT::Camera> camera{};
+        const float hfovFactor {width > height ? ratio : 1.0f};
+        const float vfovFactor {width < height ? ratio : 1.0f};
+        ::MobileRT::Scene scene_ {};
+        ::std::unique_ptr<::MobileRT::Sampler> samplerPixel {};
+        ::std::unique_ptr<::MobileRT::Shader> shader_ {};
+        ::std::unique_ptr<::MobileRT::Camera> camera {};
         ::glm::vec3 maxDist{};
 
         switch (scene) {

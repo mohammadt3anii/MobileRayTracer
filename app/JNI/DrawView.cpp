@@ -50,16 +50,16 @@ void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
 
 static ::std::string
 readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filename) {
-    AAssetManager *const mgr{AAssetManager_fromJava(env, assetManager)};
-    ::std::vector<char> buffer{};
-    AAsset *const asset{AAssetManager_open(mgr, filename, AASSET_MODE_STREAMING)};
+    AAssetManager *const mgr {AAssetManager_fromJava(env, assetManager)};
+    ::std::vector<char> buffer {};
+    AAsset *const asset {AAssetManager_open(mgr, filename, AASSET_MODE_STREAMING)};
 
     //holds size of searched file
-    const off64_t length{AAsset_getLength64(asset)};
+    const off64_t length {AAsset_getLength64(asset)};
     //keeps track of remaining bytes to read
-    off64_t remaining{AAsset_getRemainingLength64(asset)};
-    const size_t Mb{1000 * 1024}; // 1Mb is maximum chunk size for compressed assets
-    size_t currChunk{};
+    off64_t remaining {AAsset_getRemainingLength64(asset)};
+    const size_t Mb {1000 * 1024}; // 1Mb is maximum chunk size for compressed assets
+    size_t currChunk {};
     buffer.reserve(static_cast<size_t>(length));
 
     //while we have still some data to read
@@ -71,7 +71,6 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
             currChunk = static_cast<size_t>(remaining);
         }
         ::std::vector<char> chunk(currChunk);
-        chunk.reserve(currChunk);
         //read data chunk
         if (AAsset_read(asset, chunk.data(), currChunk) > 0) {// returns less than 0 on error
             //and append it to our vector
@@ -80,7 +79,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
         }
     }
     AAsset_close(asset);
-    const ::std::string res{buffer.begin(), buffer.end()};
+    const ::std::string &res {buffer.begin(), buffer.end()};
     return res;
 }
 
@@ -205,9 +204,9 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 jboolean isCopy {JNI_FALSE};
                 const char *objFileName {(env)->GetStringUTFChars(objFile, &isCopy)};
                 const char *matFileName {(env)->GetStringUTFChars(matFile, &isCopy)};
-                ::std::string obj {readTextAsset(env, assetManager, objFileName)};
-                ::std::string mat {readTextAsset(env, assetManager, matFileName)};
-                ::Components::OBJLoader objLoader {::std::move(obj), ::std::move(mat)};
+                const ::std::string &obj {readTextAsset(env, assetManager, objFileName)};
+                const ::std::string &mat {readTextAsset(env, assetManager, matFileName)};
+                ::Components::OBJLoader objLoader {obj, mat};
                 env->ReleaseStringUTFChars(objFile, objFileName);
                 env->ReleaseStringUTFChars(matFile, matFileName);
                 objLoader.process();
