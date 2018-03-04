@@ -35,9 +35,7 @@ namespace MobileRT {
         ::std::vector<Primitive<T>> primitives_{};
 
     private:
-        void build(
-            ::std::uint32_t begin, ::std::uint32_t end,
-            ::std::uint32_t depth, ::std::uint32_t currentNodeId) noexcept;
+        void build() noexcept;
 
     public:
         explicit BVH() noexcept = default;
@@ -85,52 +83,85 @@ namespace MobileRT {
         boxes_.resize(maxNodes);
         //boxes_.resize(numberPrimitives);
 
-        build(0, numberPrimitives, 0, 0);
+        build();
     }
 
-
     template<typename T>
-    void BVH<T>::build(
-        const ::std::uint32_t begin, const ::std::uint32_t end,
-        const ::std::uint32_t depth, const ::std::uint32_t currentNodeId) noexcept {
+    void BVH<T>::build() noexcept {
+        BVHNode* node {&boxes_.at(0)};
+        ::std::uint32_t id {0};
+        ::std::uint32_t depth {0};
+        ::std::uint32_t begin {0};
+        ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
 
-        AABB current_box {
-            ::glm::vec3 {::std::numeric_limits<float>::max()},
-            ::glm::vec3 {::std::numeric_limits<float>::lowest()}};
+        ::std::array<BVHNode*, 32> stackNode {};
+        ::std::array<::std::uint32_t, 32> stackId {};
+        ::std::array<::std::uint32_t, 32> stackDepth {};
+        ::std::array<::std::uint32_t, 32> stackBegin {};
+        ::std::array<::std::uint32_t, 32> stackEnd {};
 
-        //::std::vector<AABB> boxes {};
-        //boxes.reserve(end - begin);
-        for (::std::uint32_t i {begin}; i < end; ++i) {
-            const AABB new_box {primitives_.at(i).getAABB()};
-            current_box = surroundingBox(new_box, current_box);
-            //boxes.emplace_back(new_box);
-        }
+        ::std::uint32_t stackNodePtr {0};
+        ::std::uint32_t stackPtrId {0};
+        ::std::uint32_t stackDepthId {0};
+        ::std::uint32_t stackBeginId {0};
+        ::std::uint32_t stackEndId {0};
 
-        //static ::std::int32_t axisCounter {0};
-        //const ::std::int32_t axis {axisCounter++ % 3};
-        const ::std::int32_t axis {current_box.getLongestAxis()};
-        ::std::sort(
-            primitives_.begin() + static_cast<::std::int32_t>(begin),
-            primitives_.begin() + static_cast<::std::int32_t>(end),
-            [=](const Primitive<T> a, const Primitive<T> b) noexcept -> bool {
-                return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
+        stackNode.at(stackNodePtr++) = nullptr;
+        stackId.at(stackPtrId++) = 0;
+        stackDepth.at(stackDepthId++) = 0;
+        stackBegin.at(stackBeginId++) = 0;
+        stackEnd.at(stackEndId++) = 0;
+        do {
+            boxes_.at(id).box_ = primitives_.at(begin).getAABB();
+            //::std::vector<AABB> boxes {boxes_.at(id).box_};
+            //boxes.reserve(end - begin);
+            for (::std::uint32_t i {begin + 1}; i < end; ++i) {
+                const AABB new_box {primitives_.at(i).getAABB()};
+                boxes_.at(id).box_ = surroundingBox(new_box, boxes_.at(id).box_);
+                //boxes.emplace_back(new_box);
             }
-        );
 
-        boxes_.at(currentNodeId).box_ = current_box;
+            //static ::std::int32_t axisCounter {0};
+            //const ::std::int32_t axis {axisCounter++ % 3};
+            const ::std::int32_t axis {boxes_.at(id).box_.getLongestAxis()};
+            ::std::sort(
+                primitives_.begin() + static_cast<::std::int32_t>(begin),
+                primitives_.begin() + static_cast<::std::int32_t>(end),
+                [=](const Primitive<T>& a, const Primitive<T>& b) noexcept -> bool {
+                    return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
+                }
+            );
 
-        const ::std::uint32_t splitIndex {(end + begin) / 2};
-        /*const ::std::uint32_t splitIndex {
-            static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};*/
+            const ::std::uint32_t splitIndex {(end + begin) / 2};
+            /*const ::std::uint32_t splitIndex {
+                static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(::std::move(boxes)))};*/
 
-        if (primitives_.size() <= (1 << depth) * maxLeafSize) {
-            boxes_.at(currentNodeId).indexOffset_ = begin;
-            boxes_.at(currentNodeId).numberPrimitives_ = end - begin;
-        } else {
-            const ::std::uint32_t left {currentNodeId * 2 + 1};
-            build(begin, splitIndex, depth + 1, left);
-            build(splitIndex, end, depth + 1, left + 1);
-        }
+            if (primitives_.size() <= (1 << depth) * maxLeafSize) {
+                boxes_.at(id).indexOffset_ = begin;
+                boxes_.at(id).numberPrimitives_ = end - begin;
+
+                node = stackNode.at(--stackNodePtr); // pop
+                id = stackId.at(--stackPtrId); // pop
+                depth = stackDepth.at(--stackDepthId); // pop
+                begin = stackBegin.at(--stackBeginId); // pop
+                end = stackEnd.at(--stackEndId); // pop
+            } else {
+                const ::std::uint32_t left {id * 2 + 1};
+                BVHNode* const childL {&boxes_.at(left)};
+                BVHNode* const childR {&boxes_.at(left + 1)};
+
+                stackNode.at(stackNodePtr++) = childR; // push
+                stackId.at(stackPtrId++) = left + 1; // push
+                stackDepth.at(stackDepthId++) = depth + 1; // push
+                stackBegin.at(stackBeginId++) = splitIndex; // push
+                stackEnd.at(stackEndId++) = end; // push
+
+                node = childL;
+                id = left;
+                depth = depth + 1;
+                end = splitIndex;
+            }
+        } while(node != nullptr);
     }
 
     template<typename T>
