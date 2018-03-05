@@ -61,6 +61,9 @@ function execute {
   PRINT="true"
   SHOWIMAGE="true"
   ASYNC="true"
+  SPP="1"
+  SPL="1"
+
   echo ""
   echo "THREAD = "${THREAD}
   echo "SHADER = "${SHADER}

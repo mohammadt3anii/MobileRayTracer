@@ -133,14 +133,36 @@ work_thread(
                                                     ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                     1.0f,
                                                     ::glm::vec3 {0.9f, 0.9f, 0.9f}};
-                scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
-                        lightMat, ::glm::vec3 {0.0f, 1000.0f, 0.0f}));
-                //cornell spheres
+                //conference
+                /*scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
+                        lightMat, ::glm::vec3 {0.0f, 1000.0f, 0.0f}));*/
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+                    ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint1),
+                        ::glm::vec3 {-100.0f, 640.0f, -100.0f},
+                        ::glm::vec3 {100.0f, 640.0f, -100.0f},
+                        ::glm::vec3 {100.0f, 640.0f, 100.0f}));
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+                    ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint2),
+                        ::glm::vec3 {-100.0f, 640.0f, -100.0f},
+                        ::glm::vec3 {100.0f, 640.0f, 100.0f},
+                        ::glm::vec3 {-100.0f, 640.0f, 100.0f}));
                 camera = ::std::make_unique<::Components::Perspective>(
+                        ::glm::vec3 {460.0f, 500.0f, -1000.0f},
+                        ::glm::vec3 {0.0f, 400.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                //cornell spheres
+                /*camera = ::std::make_unique<::Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
                 //teapot
                 //camera = ::std::make_unique<::Components::Perspective> (::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
                 maxDist = ::glm::vec3 {1, 1, 1};
