@@ -60,6 +60,7 @@ function execute {
   ACC="2"
   PRINT="true"
   SHOWIMAGE="true"
+  ASYNC="true"
   echo ""
   echo "THREAD = "${THREAD}
   echo "SHADER = "${SHADER}

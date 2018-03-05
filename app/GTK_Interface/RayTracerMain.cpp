@@ -59,34 +59,45 @@
     }
 
     gtk_init(&argc, &argv);
-    GtkWidget *window{gtk_window_new(GTK_WINDOW_TOPLEVEL)};
-    GdkPixbuf *pixbuff{
-            gdk_pixbuf_new_from_data(reinterpret_cast<unsigned char*>(bitmap.data()), GDK_COLORSPACE_RGB, TRUE, 8,
-                                     static_cast<::std::int32_t> (width_),
-                                     static_cast<::std::int32_t> (height_),
-                                     static_cast<::std::int32_t> (width_ * 4), nullptr, nullptr)};
-    GtkWidget *image{gtk_image_new_from_pixbuf(pixbuff)};
+    GtkWidget *const window {gtk_window_new(GTK_WINDOW_TOPLEVEL)};
     gtk_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(
             []() noexcept -> void {
                 gtk_main_quit();
             }
     ), nullptr);
-    auto *check_escape(static_cast<bool (*)(
-            GtkWidget *gtkWidget, GdkEventKey *event, gpointer)>(
-                               [](GtkWidget *gtkWidget, GdkEventKey *event,
-                                  gpointer) noexcept -> bool {
-                                   if (event->keyval == GDK_KEY_Escape) {
-                                       gtk_widget_destroy(gtkWidget);
-                                       gtk_main_quit();
-                                       return true;
-                                   }
+    auto key_handler (static_cast<bool (*)(
+            GtkWidget *, GdkEventKey *, gpointer)>(
+                               [](GtkWidget *const gtkWidget, GdkEventKey *const event,
+                                  gpointer /*user_data*/) noexcept -> bool {
+                                    switch(event->keyval) {
+                                        case GDK_KEY_Escape:
+                                            gtk_widget_destroy(gtkWidget);
+                                            gtk_main_quit();
+                                            return true;
+                                    }
                                    return false;
                                })
     );
-    gtk_signal_connect(GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(check_escape),
-                       nullptr);
+    gtk_signal_connect(
+        GTK_OBJECT(window), "key_press_event", GTK_SIGNAL_FUNC(key_handler), nullptr);
+
+   GdkPixbuf *const pixbuff {
+        gdk_pixbuf_new_from_data(reinterpret_cast<unsigned char*>(bitmap.data()),
+        GDK_COLORSPACE_RGB, TRUE, 8,
+        static_cast<::std::int32_t> (width_), static_cast<::std::int32_t> (height_),
+        static_cast<::std::int32_t> (width_ * 4), nullptr, nullptr)};
+    GtkWidget *const image {gtk_image_new_from_pixbuf(pixbuff)};
     gtk_container_add(GTK_CONTAINER(window), image);
     gtk_widget_show_all(window);
+    g_timeout_add_seconds(1, static_cast<int (*)(
+        gpointer)>(
+            [](gpointer user_data) noexcept -> int {
+                //gtk_widget_draw(reinterpret_cast<GtkWidget*>(user_data), nullptr);
+                gtk_widget_queue_draw (reinterpret_cast<GtkWidget*>(user_data));
+                //while (gtk_events_pending ())
+                //   gtk_main_iteration ();
+                return 1;
+            }), window);
     gtk_main();
     g_object_unref(G_OBJECT(pixbuff));
     return argc;
