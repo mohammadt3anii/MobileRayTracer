@@ -1,6 +1,6 @@
-# Ray-tracer for Android
+# Ray tracer library for Android
 
-![alt text](https://github.com/PTPuscas/MobileRayTracer/blob/master/Example.png)
+![alt text](Example.gif)
 
 ## TODO
 
@@ -11,7 +11,3 @@
 ### Possible Optimizing tasks
 
 * Change all methods of classes to functions that receive an object
-
-### Other tasks
-
-* Put a gif with app executing
