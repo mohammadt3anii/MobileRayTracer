@@ -8,7 +8,7 @@
 
 ::std::int32_t main(::std::int32_t argc, char **argv) noexcept {
     assert(argc == 15);
-    const ::gsl::multi_span<char *> args{argv, argc};
+    const ::gsl::multi_span<char *> &args {argv, argc};
 
     const ::std::int32_t threads{static_cast<::std::int32_t> (strtol(args[1], nullptr, 0))};
     const ::std::int32_t shader{static_cast<::std::int32_t> (strtol(args[2], nullptr, 0))};

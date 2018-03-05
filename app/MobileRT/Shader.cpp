@@ -144,7 +144,7 @@ void Shader::resetSampling() noexcept {
                ::glm::cross(::glm::vec3 {0.0f, 1.0f, 0.0f}, normal) :
                ::glm::cross(::glm::vec3 {1.0f, 0.0f, 0.0f}, normal)};
     u = ::glm::normalize(u);
-    const ::glm::vec3 v {::glm::cross(normal, u)};
+    const ::glm::vec3 &v {::glm::cross(normal, u)};
     ::glm::vec3 direction {(u * (::std::cos(r1) * r2s) +
                         v * (::std::sin(r1) * r2s) +
                         normal * ::std::sqrt(1.0f - r2))};
