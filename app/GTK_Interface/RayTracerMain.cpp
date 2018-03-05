@@ -48,10 +48,8 @@
     ssShowImage >> ::std::boolalpha >> showImage;
     assert(tAsync && tPrint && tShowImage);
 
-    const ::std::uint32_t size{static_cast<::std::uint32_t>(width_) * static_cast<::std::uint32_t>(height_)};
-    ::std::unique_ptr<uint8_t[]> buffer{::std::make_unique<uint8_t[]>(size * 4)};
+    const ::std::uint32_t size {static_cast<::std::uint32_t>(width_) * static_cast<::std::uint32_t>(height_)};
     ::std::vector<::std::uint32_t> bitmap(size);
-    bitmap.reserve(size);
 
     RayTrace(bitmap.data(), width_, height_, threads, shader, scene, samplesPixel, samplesLight,
              repeats, accelerator, printStdOut, async, pathObj, pathMtl);
@@ -60,18 +58,10 @@
         return 0;
     }
 
-
-    for (size_t i(0), j(0); i < static_cast<size_t>(size) * 4; i += 4, j += 1) {
-        const ::std::uint32_t color{bitmap[j]};
-        buffer[i + 0] = static_cast<uint8_t> ((color & 0x000000FF) >> 0);
-        buffer[i + 1] = static_cast<uint8_t> ((color & 0x0000FF00) >> 8);
-        buffer[i + 2] = static_cast<uint8_t> ((color & 0x00FF0000) >> 16);
-        buffer[i + 3] = static_cast<uint8_t> ((color & 0xFF000000) >> 24);
-    }
     gtk_init(&argc, &argv);
     GtkWidget *window{gtk_window_new(GTK_WINDOW_TOPLEVEL)};
     GdkPixbuf *pixbuff{
-            gdk_pixbuf_new_from_data(buffer.get(), GDK_COLORSPACE_RGB, TRUE, 8,
+            gdk_pixbuf_new_from_data(reinterpret_cast<unsigned char*>(bitmap.data()), GDK_COLORSPACE_RGB, TRUE, 8,
                                      static_cast<::std::int32_t> (width_),
                                      static_cast<::std::int32_t> (height_),
                                      static_cast<::std::int32_t> (width_ * 4), nullptr, nullptr)};
