@@ -25,7 +25,7 @@ PathTracer::PathTracer(Scene scene,
 bool PathTracer::shade(
     ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
 
-    const ::std::int32_t rayDepth{ray.depth_};
+    const ::std::int32_t rayDepth {ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
@@ -51,7 +51,7 @@ bool PathTracer::shade(
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const ::glm::vec3 &shadingNormal{
+    const ::glm::vec3 &shadingNormal {
             (::glm::dot(ray.direction_,intersection.normal_) < 0.0f) ?
             intersection.normal_ :// entering the object
             intersection.symNormal_};// We have to reverse the normal now
@@ -84,9 +84,7 @@ bool PathTracer::shade(
                         vectorToLight, intersection.point_, rayDepth + 1, intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
-                    Intersection intersectLight {};
-                    intersectLight.length_ = distanceToLight;
-                    intersectLight.primitive_ = intersection.primitive_;
+                    Intersection intersectLight {distanceToLight, intersection.primitive_};
                     if (!shadowTrace(intersectLight, shadowRay)) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                         Ld += light.radiance_.Le_ * cosNormalLight;

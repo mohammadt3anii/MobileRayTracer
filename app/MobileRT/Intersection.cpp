@@ -6,7 +6,8 @@
 
 using ::MobileRT::Intersection;
 
-Intersection::Intersection(const void *primitive) noexcept :
+Intersection::Intersection(float dist, const void *const primitive) noexcept :
+        length_ {dist},
         primitive_{primitive} {
 }
 

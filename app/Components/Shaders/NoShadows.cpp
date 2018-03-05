@@ -28,7 +28,7 @@ bool NoShadows::shade(
 
     const ::glm::vec3 &kD {intersection.material_->Kd_};
 
-    const ::glm::vec3 &shadingNormal{
+    const ::glm::vec3 &shadingNormal {
             (::glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?
             // entering the object
             intersection.normal_ :

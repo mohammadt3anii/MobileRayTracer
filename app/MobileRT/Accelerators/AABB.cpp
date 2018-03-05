@@ -12,7 +12,7 @@ AABB::AABB(const ::glm::vec3 &pointMin, const ::glm::vec3 &pointMax) noexcept :
         pointMin_{pointMin}, pointMax_{pointMax} {
 }
 
-bool MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
+bool ::MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
     float t1 {(box.pointMin_[0] - ray.origin_[0])/ray.direction_[0]};
     float t2 {(box.pointMax_[0] - ray.origin_[0])/ray.direction_[0]};
 

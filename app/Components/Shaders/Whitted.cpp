@@ -17,7 +17,7 @@ Whitted::Whitted(Scene scene, const ::std::uint32_t samplesLight, Accelerator ac
 bool Whitted::shade(
     ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
 
-    const ::std::int32_t rayDepth{ray.depth_};
+    const ::std::int32_t rayDepth {ray.depth_};
     if (rayDepth > ::MobileRT::RayDepthMax) {
         return false;
     }
@@ -64,9 +64,7 @@ bool Whitted::shade(
                     //shadow ray - orig=intersection, dir=light
                     const Ray &shadowRay {vectorToLight, intersection.point_, rayDepth + 1,
                                     intersection.primitive_};
-                    Intersection lightIntersection {};
-                    lightIntersection.length_ = distanceToLight;
-                    lightIntersection.primitive_ = intersection.primitive_;
+                    Intersection lightIntersection {distanceToLight, intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
                     if (!shadowTrace(lightIntersection, shadowRay)) {

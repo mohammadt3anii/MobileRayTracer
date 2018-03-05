@@ -144,7 +144,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
             ::std::max(static_cast<float>(width_) / height_, static_cast<float>(height_) / width_)};
         const float hfovFactor{width_ > height_ ? ratio : 1.0f};
         const float vfovFactor{width_ < height_ ? ratio : 1.0f};
-        MobileRT::Scene scene_{};
+        ::MobileRT::Scene scene_{};
         ::std::unique_ptr<MobileRT::Sampler> samplerPixel{};
         ::std::unique_ptr<MobileRT::Shader> shader_{};
         ::std::unique_ptr<MobileRT::Camera> camera{};
@@ -221,7 +221,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                const MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   1.0f,
@@ -270,7 +270,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
         switch (shader) {
             case 1: {
                 shader_ = ::std::make_unique<Components::Whitted>(::std::move(scene_), samplesLight,
-                                                                MobileRT::Shader::Accelerator(
+                                                                ::MobileRT::Shader::Accelerator(
                                                                         accelerator));
                 break;
             }
@@ -281,27 +281,27 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
 
                 shader_ = ::std::make_unique<Components::PathTracer>(
                         ::std::move(scene_), ::std::move(samplerRussianRoulette), samplesLight,
-                        MobileRT::Shader::Accelerator(accelerator));
+                        ::MobileRT::Shader::Accelerator(accelerator));
                 break;
             }
 
             case 3: {
                 shader_ = ::std::make_unique<Components::DepthMap>(::std::move(scene_), maxDist,
-                                                                 MobileRT::Shader::Accelerator(
+                                                                 ::MobileRT::Shader::Accelerator(
                                                                          accelerator));
                 break;
             }
 
             case 4: {
                 shader_ = ::std::make_unique<Components::DiffuseMaterial>(::std::move(scene_),
-                                                                        MobileRT::Shader::Accelerator(
+                                                                        ::MobileRT::Shader::Accelerator(
                                                                                 accelerator));
                 break;
             }
 
             default: {
                 shader_ = ::std::make_unique<Components::NoShadows>(::std::move(scene_), samplesLight,
-                                                                  MobileRT::Shader::Accelerator(
+                                                                  ::MobileRT::Shader::Accelerator(
                                                                           accelerator));
                 break;
             }
@@ -315,7 +315,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
         const int32_t nPrimitives {triangles + spheres + planes};
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
-            renderer_ = new MobileRT::Renderer{
+            renderer_ = new ::MobileRT::Renderer{
                 ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                 static_cast<::std::uint32_t>(samplesPixel)};
@@ -484,10 +484,10 @@ extern "C"
         jfloat const /*jy*/) noexcept {
     //const float u {static_cast<float> (jx) / width_};
     //const float v {static_cast<float> (jy) / height_};
-    //const MobileRT::Ray &ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
-    //MobileRT::Intersection intersection {};
+    //const ::MobileRT::Ray &ray {renderer_->camera_->generateRay (u, v, 0.0f, 0.0f)};
+    //::MobileRT::Intersection intersection {};
     //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ray)};
-    const ::std::int32_t primitiveID{-1};
+    const ::std::int32_t primitiveID {-1};
     return primitiveID;
 }
 
@@ -501,12 +501,12 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
 ) noexcept {
     /*const float u {static_cast<float> (jx) / width_};
     const float v {static_cast<float> (jy) / height_};
-    const MobileRT::Ray &ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
+    const ::MobileRT::Ray &ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
     const ::std::uint32_t index {static_cast<::std::uint32_t>(primitiveIndex)};
-    const MobileRT::Plane plane {
+    const ::MobileRT::Plane plane {
             ::glm::vec3 {0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
-    MobileRT::Intersection intersection {};
+    ::MobileRT::Intersection intersection {};
     plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_[0],
                                                             intersection.point_[1];*/
@@ -549,7 +549,7 @@ extern "C"
         jobject /*thiz*/,
         jint const size
 ) noexcept {
-    return MobileRT::roundDownToMultipleOf(size,
+    return ::MobileRT::roundDownToMultipleOf(size,
                                            static_cast<::std::int32_t>(::std::sqrt(MobileRT::NumberOfBlocks)));
 }
 
