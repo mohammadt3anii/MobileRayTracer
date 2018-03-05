@@ -11,8 +11,8 @@ using ::MobileRT::Material;
 using ::MobileRT::Scene;
 
 OBJLoader::OBJLoader(::std::string &&obj, ::std::string &&materials) noexcept :
-        objText_{std::move(obj)},
-        materialsText_{std::move(materials)} {
+        objText_{obj},
+        materialsText_{materials} {
 }
 
 void OBJLoader::process() noexcept {
