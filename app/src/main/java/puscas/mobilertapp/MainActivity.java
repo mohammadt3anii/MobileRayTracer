@@ -387,9 +387,8 @@ public final class MainActivity extends Activity {
                         Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
                                 [pickerSamplesPixel_.getValue() - 1]
                         ),
-                        Integer.parseInt(
-                                pickerSamplesLight_.getDisplayedValues()
-                                        [pickerSamplesLight_.getValue() - 1]
+                        Integer.parseInt(pickerSamplesLight_.getDisplayedValues()
+                                [pickerSamplesLight_.getValue() - 1]
                         ),
                         width,
                         height,
