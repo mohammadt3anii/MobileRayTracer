@@ -95,12 +95,12 @@ namespace MobileRT {
         ::std::array<::std::uint32_t, 32> stackEnd {};
 
         ::std::uint32_t stackPtrId {0};
-        ::std::uint32_t stackBeginId {0};
-        ::std::uint32_t stackEndId {0};
+        ::std::uint32_t stackPtrBegin {0};
+        ::std::uint32_t stackPtrEnd {0};
 
         stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
-        stackBegin.at(stackBeginId++) = 0;
-        stackEnd.at(stackEndId++) = 0;
+        stackBegin.at(stackPtrBegin++) = 0;
+        stackEnd.at(stackPtrEnd++) = 0;
         do {
             boxes_.at(id).box_ = primitives_.at(begin).getAABB();
             //::std::vector<AABB> boxes {boxes_.at(id).box_};
@@ -131,19 +131,19 @@ namespace MobileRT {
                 boxes_.at(id).numberPrimitives_ = end - begin;
 
                 id = stackId.at(--stackPtrId); // pop
-                begin = stackBegin.at(--stackBeginId); // pop
-                end = stackEnd.at(--stackEndId); // pop
+                begin = stackBegin.at(--stackPtrBegin); // pop
+                end = stackEnd.at(--stackPtrEnd); // pop
             } else {
                 const ::std::uint32_t left {id * 2 + 1};
 
                 stackId.at(stackPtrId++) = left + 1; // push
-                stackBegin.at(stackBeginId++) = begin + splitIndex; // push
-                stackEnd.at(stackEndId++) = end; // push
+                stackBegin.at(stackPtrBegin++) = begin + splitIndex; // push
+                stackEnd.at(stackPtrEnd++) = end; // push
 
                 id = left;
                 end = begin + splitIndex;
             }
-        } while(id != ::std::numeric_limits<::std::uint32_t>::max());
+        } while(stackPtrId > 0);
     }
 
     template<typename T>
@@ -153,7 +153,7 @@ namespace MobileRT {
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtrId {0};
-        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
+        stackId.at(stackPtrId++) = 0;
         do {
             const BVHNode &node {boxes_.at(id)};
             if (intersect(node.box_, ray)) {
@@ -186,7 +186,7 @@ namespace MobileRT {
                 id = stackId.at(--stackPtrId); // pop
             }
 
-        } while (id != ::std::numeric_limits<::std::uint32_t>::max());
+        } while (stackPtrId > 0);
         return intersection;
     }
 
@@ -197,7 +197,7 @@ namespace MobileRT {
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 32> stackId {};
         ::std::uint32_t stackPtrId {0};
-        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
+        stackId.at(stackPtrId++) = 0;
         do {
             const BVHNode &node {boxes_.at(id)};
             if (intersect(node.box_, ray)) {
@@ -234,7 +234,7 @@ namespace MobileRT {
                 id = stackId.at(--stackPtrId); // pop
             }
 
-        } while (id != ::std::numeric_limits<::std::uint32_t>::max());
+        } while (stackPtrId > 0);
         return intersection;
     }
 
