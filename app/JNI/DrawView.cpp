@@ -204,9 +204,9 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 jboolean isCopy {JNI_FALSE};
                 const char *objFileName {(env)->GetStringUTFChars(objFile, &isCopy)};
                 const char *matFileName {(env)->GetStringUTFChars(matFile, &isCopy)};
-                const ::std::string &obj {readTextAsset(env, assetManager, objFileName)};
-                const ::std::string &mat {readTextAsset(env, assetManager, matFileName)};
-                ::Components::OBJLoader objLoader {obj, mat};
+                ::std::string obj {readTextAsset(env, assetManager, objFileName)};
+                ::std::string mat {readTextAsset(env, assetManager, matFileName)};
+                ::Components::OBJLoader objLoader {::std::move(obj), ::std::move(mat)};
                 env->ReleaseStringUTFChars(objFile, objFileName);
                 env->ReleaseStringUTFChars(matFile, matFileName);
                 objLoader.process();

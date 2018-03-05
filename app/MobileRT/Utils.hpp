@@ -60,8 +60,8 @@ namespace MobileRT {
     }
 
     ::std::string getFileName(const char *const filepath) noexcept {
-        const ::std::string filePath{filepath};
-        ::std::string::size_type filePos{filePath.rfind('/')};
+        const ::std::string &filePath {filepath};
+        ::std::string::size_type filePos {filePath.rfind('/')};
         if (filePos != ::std::string::npos) {
             ++filePos;
         } else {

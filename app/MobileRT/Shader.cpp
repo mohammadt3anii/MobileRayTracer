@@ -4,14 +4,13 @@
 
 #include "MobileRT/Shader.hpp"
 #include "MobileRT/Utils.hpp"
-#include <glm/gtc/constants.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 #include <utility>
 
 using ::MobileRT::BVH;
 using ::MobileRT::Camera;
 using ::MobileRT::Intersection;
-using ::MobileRT::NumberOfBlocks;
 using ::MobileRT::Ray;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
