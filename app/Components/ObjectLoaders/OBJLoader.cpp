@@ -170,8 +170,8 @@ OBJLoader::~OBJLoader() noexcept {
     this->shapes_.shrink_to_fit();
     this->materials_.shrink_to_fit();
 
-    ::std::vector<::tinyobj::shape_t>().swap(this->shapes_);
-    ::std::vector<::tinyobj::material_t>().swap(this->materials_);
+    ::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
+    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);
 
     LOG("OBJLOADER DELETED");
 }

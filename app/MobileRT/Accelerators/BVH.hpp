@@ -76,7 +76,7 @@ namespace MobileRT {
         while (maxNodes * maxLeafSize < numberPrimitives) {
             maxNodes *= 2;
         }
-        const ::std::uint32_t maxNodes1 {numberPrimitives > maxLeafSize? maxNodes + (numberPrimitives - maxNodes) * maxLeafSize - 1 : 1};
+        const ::std::uint32_t maxNodes1 {numberPrimitives > maxLeafSize? maxNodes + (numberPrimitives - maxNodes) * 2 * maxLeafSize - 1 : 1};
         const ::std::uint32_t maxNodes2 {numberPrimitives * 2 - 1};
 
         LOG("maxNodes1 = ", maxNodes1);
@@ -155,6 +155,9 @@ namespace MobileRT {
             }
         } while(stackPtrId > 0);
         LOG("maxNodeId = ", maxId);
+        boxes_.erase (boxes_.begin() + maxId + 1, boxes_.end());
+        boxes_.shrink_to_fit();
+        ::std::vector<BVHNode>{boxes_}.swap(boxes_);
     }
 
     template<typename T>

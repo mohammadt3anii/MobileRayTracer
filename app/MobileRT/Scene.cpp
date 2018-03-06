@@ -18,10 +18,10 @@ Scene::~Scene() noexcept {
     this->lights_.clear();
 
     //force free memory
-    ::std::vector<MobileRT::Primitive<MobileRT::Plane>>().swap(planes_);
-    ::std::vector<MobileRT::Primitive<MobileRT::Sphere>>().swap(spheres_);
-    ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>().swap(triangles_);
-    ::std::vector<::std::unique_ptr<Light>>().swap(lights_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Plane>>{}.swap(planes_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Sphere>>{}.swap(spheres_);
+    ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>{}.swap(triangles_);
+    ::std::vector<::std::unique_ptr<Light>>{}.swap(lights_);
 
     LOG("SCENE DELETED");
 }
