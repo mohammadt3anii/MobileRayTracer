@@ -15,8 +15,11 @@
 
 namespace MobileRT {
 
+    static const ::std::uint32_t maxLeafSize {2};
+
     struct BVHNode {
         AABB box_ {};
+        ::std::uint32_t left_ {0};
         ::std::uint32_t indexOffset_ {0};
         ::std::uint32_t numberPrimitives_ {0};
     };
@@ -27,9 +30,6 @@ namespace MobileRT {
 
     template<typename T>
     class BVH final {
-    private:
-        static const ::std::uint32_t maxLeafSize {2};
-
     private:
         ::std::vector<BVHNode> boxes_{};
         ::std::vector<Primitive<T>> primitives_{};
@@ -76,10 +76,14 @@ namespace MobileRT {
         while (maxNodes * maxLeafSize < numberPrimitives) {
             maxNodes *= 2;
         }
-        maxNodes = maxNodes * 2 - 1;
+        const ::std::uint32_t maxNodes1 {maxNodes + (numberPrimitives - maxNodes) * maxLeafSize - 1};
+        const ::std::uint32_t maxNodes2 {numberPrimitives * 2 - 1};
 
-        boxes_.resize(maxNodes);
-        //boxes_.resize((2 << numberPrimitives) - 1);
+        LOG("maxNodes1 = ", maxNodes1);
+        LOG("maxNodes2 = ", maxNodes2);
+
+        boxes_.resize(maxNodes1);
+        //boxes_.resize(maxNodes2);
 
         build();
     }
@@ -98,17 +102,20 @@ namespace MobileRT {
         ::std::uint32_t stackPtrBegin {0};
         ::std::uint32_t stackPtrEnd {0};
 
-        stackId.at(stackPtrId++) = ::std::numeric_limits<::std::uint32_t>::max();
+        ::std::uint32_t maxId {0};
+
+        stackId.at(stackPtrId++) = 0;
         stackBegin.at(stackPtrBegin++) = 0;
         stackEnd.at(stackPtrEnd++) = 0;
         do {
             boxes_.at(id).box_ = primitives_.at(begin).getAABB();
-            //::std::vector<AABB> boxes {boxes_.at(id).box_};
-            //boxes.reserve(end - begin);
+            ::std::vector<AABB> boxes {boxes_.at(id).box_};
+            const ::std::uint32_t boxPrimitivesSize {end - begin};
+            boxes.reserve(boxPrimitivesSize);
             for (::std::uint32_t i {begin + 1}; i < end; ++i) {
                 const AABB &new_box {primitives_.at(i).getAABB()};
                 boxes_.at(id).box_ = surroundingBox(new_box, boxes_.at(id).box_);
-                //boxes.emplace_back(new_box);
+                boxes.emplace_back(new_box);
             }
 
             //static ::std::int32_t axisCounter {0};
@@ -122,19 +129,23 @@ namespace MobileRT {
                 }
             );*/
 
-            const ::std::uint32_t splitIndex {(end - begin) / 2};
-            /*const ::std::uint32_t splitIndex {
-                static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes))};*/
-
-            if (end - begin <= maxLeafSize) {
+            if (boxPrimitivesSize <= maxLeafSize) {
                 boxes_.at(id).indexOffset_ = begin;
-                boxes_.at(id).numberPrimitives_ = end - begin;
+                boxes_.at(id).numberPrimitives_ = boxPrimitivesSize;
 
                 id = stackId.at(--stackPtrId); // pop
                 begin = stackBegin.at(--stackPtrBegin); // pop
                 end = stackEnd.at(--stackPtrEnd); // pop
             } else {
-                const ::std::uint32_t left {id * 2 + 1};
+                const ::std::uint32_t left {maxId + 1};
+                boxes_.at(id).left_ = left;
+                //const ::std::uint32_t left {id * 2 + 1};
+                maxId = left + 1 > maxId? left + 1 : maxId;
+
+                const ::std::uint32_t splitIndex {
+                    //(boxPrimitivesSize + 1) / 2
+                    static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes))
+                };
 
                 stackId.at(stackPtrId++) = left + 1; // push
                 stackBegin.at(stackPtrBegin++) = begin + splitIndex; // push
@@ -144,6 +155,7 @@ namespace MobileRT {
                 end = begin + splitIndex;
             }
         } while(stackPtrId > 0);
+        LOG("maxNodeId = ", maxId);
     }
 
     template<typename T>
@@ -165,7 +177,8 @@ namespace MobileRT {
                     }
                     id = stackId.at(--stackPtrId); // pop
                 } else {
-                    const ::std::uint32_t left {id * 2 + 1};
+                    const ::std::uint32_t left {node.left_};
+                    //const ::std::uint32_t left {id * 2 + 1};
                     const BVHNode &childL {boxes_.at(left)};
                     const BVHNode &childR {boxes_.at(left + 1)};
 
@@ -213,7 +226,8 @@ namespace MobileRT {
                     }
                     id = stackId.at(--stackPtrId); // pop
                 } else {
-                    const ::std::uint32_t left {id * 2 + 1};
+                    const ::std::uint32_t left {node.left_};
+                    //const ::std::uint32_t left {id * 2 + 1};
                     const BVHNode &childL {boxes_.at(left)};
                     const BVHNode &childR {boxes_.at(left + 1)};
 
@@ -257,14 +271,16 @@ namespace MobileRT {
                 right_area.insert(right_area.begin(), right_box.getSurfaceArea());
             }
 
-            ::std::uint32_t splitIndex {};
-            float min_SAH {::std::numeric_limits<float>::max()};
-            for (::std::uint32_t i {0}; i < N - 1; ++i) {
-                const float SAH_left {i * left_area.at(i)};
-                const float SAH_right {(N - i - 1) * right_area.at(i)};
+            ::std::uint32_t splitIndex {maxLeafSize};
+            float min_SAH {
+                maxLeafSize * left_area.at(maxLeafSize - 1) +
+                (N - maxLeafSize) * right_area.at(maxLeafSize - 1)};
+            for (::std::uint32_t i {maxLeafSize}; i < N - maxLeafSize; ++i) {
+                const float SAH_left {(i + 1) * left_area.at(i)};
+                const float SAH_right {(N - (i + 1)) * right_area.at(i)};
                 const float SAH {SAH_left + SAH_right};
                 if (SAH < min_SAH) {
-                    splitIndex = i;
+                    splitIndex = i + 1;
                     min_SAH = SAH;
                 }
             }
