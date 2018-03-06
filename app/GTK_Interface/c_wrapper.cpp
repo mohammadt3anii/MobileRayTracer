@@ -181,6 +181,18 @@ work_thread(
                         45.0f * hfovFactor, 45.0f * vfovFactor);*/
                 //teapot
                 //camera = ::std::make_unique<::Components::Perspective> (::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                //sponza
+                /*camera = ::std::make_unique<::Components::Perspective>(
+                        ::glm::vec3 {460.0f, 100.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 100.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
+                //powerplant
+                camera = ::std::make_unique<::Components::Perspective>(
+                        ::glm::vec3 {460.0f, 100.0f, 25000.0f},
+                        ::glm::vec3 {0.0f, 100.0f, 25000.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        45.0f * hfovFactor, 45.0f * vfovFactor);
                 maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;

@@ -33,6 +33,12 @@ MTL="${OBJS_DIR}/conference/conference.mtl"
 OBJ="${OBJS_DIR}/teapot/teapot.obj"
 MTL="${OBJS_DIR}/teapot/teapot.mtl"
 
+OBJ="${OBJS_DIR}/sponza/sponza.obj"
+MTL="${OBJS_DIR}/sponza/sponza.mtl"
+
+OBJ="${OBJS_DIR}/powerplant/powerplant.obj"
+MTL="${OBJS_DIR}/powerplant/powerplant.mtl"
+
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.mtl"
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-RG.obj"
@@ -56,8 +62,8 @@ MTL="${OBJS_DIR}/CornellBox/CornellBox-Water.mtl"
 OBJ="${OBJS_DIR}/CornellBox/water.obj"
 MTL="${OBJS_DIR}/CornellBox/water.mtl"
 
-OBJ="${OBJS_DIR}/conference/conference.obj"
-MTL="${OBJS_DIR}/conference/conference.mtl"
+OBJ="${OBJS_DIR}/powerplant/powerplant.obj"
+MTL="${OBJS_DIR}/powerplant/powerplant.mtl"
 
 export ASAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0:detect_odr_violation=1"
 

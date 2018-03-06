@@ -94,9 +94,9 @@ namespace MobileRT {
         ::std::uint32_t begin {0};
         ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
 
-        ::std::array<::std::uint32_t, 64> stackId {};
-        ::std::array<::std::uint32_t, 64> stackBegin {};
-        ::std::array<::std::uint32_t, 64> stackEnd {};
+        ::std::array<::std::uint32_t, 512> stackId {};
+        ::std::array<::std::uint32_t, 512> stackBegin {};
+        ::std::array<::std::uint32_t, 512> stackEnd {};
 
         ::std::uint32_t stackPtrId {0};
         ::std::uint32_t stackPtrBegin {0};
@@ -166,7 +166,7 @@ namespace MobileRT {
             Intersection intersection,
             const Ray &ray) noexcept {
         ::std::uint32_t id {0};
-        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::array<::std::uint32_t, 512> stackId {};
         ::std::uint32_t stackPtrId {0};
         stackId.at(stackPtrId++) = 0;
         do {
@@ -211,7 +211,7 @@ namespace MobileRT {
         Intersection intersection,
         const Ray &ray) noexcept {
         ::std::uint32_t id {0};
-        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::array<::std::uint32_t, 512> stackId {};
         ::std::uint32_t stackPtrId {0};
         stackId.at(stackPtrId++) = 0;
         do {
