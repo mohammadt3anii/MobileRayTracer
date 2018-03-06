@@ -76,7 +76,7 @@ namespace MobileRT {
         while (maxNodes * maxLeafSize < numberPrimitives) {
             maxNodes *= 2;
         }
-        const ::std::uint32_t maxNodes1 {maxNodes + (numberPrimitives - maxNodes) * maxLeafSize - 1};
+        const ::std::uint32_t maxNodes1 {numberPrimitives > maxLeafSize? maxNodes + (numberPrimitives - maxNodes) * maxLeafSize - 1 : 1};
         const ::std::uint32_t maxNodes2 {numberPrimitives * 2 - 1};
 
         LOG("maxNodes1 = ", maxNodes1);
