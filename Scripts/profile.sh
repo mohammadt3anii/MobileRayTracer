@@ -27,8 +27,35 @@ do
   FILES+=($(find ${FOLDER} -type f))
 done
 
+OBJ="${OBJS_DIR}/conference/conference.obj"
+MTL="${OBJS_DIR}/conference/conference.mtl"
+
+OBJ="${OBJS_DIR}/teapot/teapot.obj"
+MTL="${OBJS_DIR}/teapot/teapot.mtl"
+
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-CO.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-RG.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-RG.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-Squashed.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-Squashed.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Empty-White.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Empty-White.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Glossy-Floor.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Glossy-Floor.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Glossy.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Glossy.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Mirror.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Mirror.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Original.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Original.mtl"
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Sphere.mtl"
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Water.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Water.mtl"
+OBJ="${OBJS_DIR}/CornellBox/water.obj"
+MTL="${OBJS_DIR}/CornellBox/water.mtl"
+
 OBJ="${OBJS_DIR}/conference/conference.obj"
 MTL="${OBJS_DIR}/conference/conference.mtl"
 
