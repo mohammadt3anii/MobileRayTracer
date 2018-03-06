@@ -83,7 +83,6 @@ namespace MobileRT {
         LOG("maxNodes2 = ", maxNodes2);
 
         boxes_.resize(maxNodes1);
-        //boxes_.resize(maxNodes2);
 
         build();
     }
@@ -142,7 +141,7 @@ namespace MobileRT {
                 //const ::std::uint32_t left {id * 2 + 1};
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
-                const ::std::uint32_t splitIndex {
+                const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
                     //(boxPrimitivesSize + 1) / 2
                     static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes))
                 };
@@ -257,18 +256,20 @@ namespace MobileRT {
         const ::std::vector<AABB> &boxes) noexcept {
             const ::std::uint32_t N {static_cast<::std::uint32_t>(boxes.size())};
 
-            ::std::vector<float> left_area {boxes.at(0).getSurfaceArea()};
-            AABB left_box {};
-            for (::std::uint32_t i {0}; i < N - 1; ++i) {
+            ::std::vector<float> left_area (N - maxLeafSize);
+            AABB left_box {boxes.at(0)};
+            left_area.at(0) = left_box.getSurfaceArea();
+            for (::std::uint32_t i {1}; i < N - maxLeafSize; ++i) {
                 left_box = surroundingBox(left_box, boxes.at(i));
-                left_area.insert(left_area.end(), left_box.getSurfaceArea());
+                left_area.at(i) = left_box.getSurfaceArea();
             }
 
-            ::std::vector<float> right_area {boxes.at(N - 1).getSurfaceArea()};
-            AABB right_box {};
-            for (::std::uint32_t i {N - 1}; i > 0; --i) {
+            ::std::vector<float> right_area (N - maxLeafSize);
+            AABB right_box {boxes.at(N - 1)};
+            right_area.at(N - maxLeafSize - 1) = right_box.getSurfaceArea();
+            for (::std::uint32_t i {N - 2}; i > maxLeafSize; --i) {
                 right_box = surroundingBox(right_box, boxes.at(i));
-                right_area.insert(right_area.begin(), right_box.getSurfaceArea());
+                right_area.at(i - maxLeafSize) = right_box.getSurfaceArea();
             }
 
             ::std::uint32_t splitIndex {maxLeafSize};
