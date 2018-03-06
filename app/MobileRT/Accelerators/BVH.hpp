@@ -71,18 +71,19 @@ namespace MobileRT {
             return;
         }
         primitives_ = primitives;
-        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives.size())};
+        const ::std::uint32_t numberPrimitives {
+            static_cast<::std::uint32_t>(primitives.size())};
         ::std::uint32_t maxNodes {1};
         while (maxNodes * maxLeafSize < numberPrimitives) {
             maxNodes *= 2;
         }
-        const ::std::uint32_t maxNodes1 {numberPrimitives > maxLeafSize? maxNodes + (numberPrimitives - maxNodes) * 2 * maxLeafSize - 1 : 1};
-        const ::std::uint32_t maxNodes2 {numberPrimitives * 2 - 1};
+        const ::std::uint32_t maxNodes1 {numberPrimitives * 2 - 1};
+        const ::std::uint32_t maxNodes2 {maxNodes * 2 - 1};
 
         LOG("maxNodes1 = ", maxNodes1);
         LOG("maxNodes2 = ", maxNodes2);
 
-        boxes_.resize(maxNodes1);
+        boxes_.resize(maxNodes2);
 
         build();
     }
@@ -93,9 +94,9 @@ namespace MobileRT {
         ::std::uint32_t begin {0};
         ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
 
-        ::std::array<::std::uint32_t, 32> stackId {};
-        ::std::array<::std::uint32_t, 32> stackBegin {};
-        ::std::array<::std::uint32_t, 32> stackEnd {};
+        ::std::array<::std::uint32_t, 64> stackId {};
+        ::std::array<::std::uint32_t, 64> stackBegin {};
+        ::std::array<::std::uint32_t, 64> stackEnd {};
 
         ::std::uint32_t stackPtrId {0};
         ::std::uint32_t stackPtrBegin {0};
@@ -165,7 +166,7 @@ namespace MobileRT {
             Intersection intersection,
             const Ray &ray) noexcept {
         ::std::uint32_t id {0};
-        ::std::array<::std::uint32_t, 32> stackId {};
+        ::std::array<::std::uint32_t, 64> stackId {};
         ::std::uint32_t stackPtrId {0};
         stackId.at(stackPtrId++) = 0;
         do {
@@ -210,7 +211,7 @@ namespace MobileRT {
         Intersection intersection,
         const Ray &ray) noexcept {
         ::std::uint32_t id {0};
-        ::std::array<::std::uint32_t, 32> stackId {};
+        ::std::array<::std::uint32_t, 64> stackId {};
         ::std::uint32_t stackPtrId {0};
         stackId.at(stackPtrId++) = 0;
         do {
