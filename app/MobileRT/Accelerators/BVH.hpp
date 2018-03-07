@@ -156,7 +156,7 @@ namespace MobileRT {
             }
         } while(stackPtrId > 0);
         LOG("maxNodeId = ", maxId);
-        boxes_.erase (boxes_.begin() + maxId + 1, boxes_.end());
+        boxes_.erase (boxes_.begin() + static_cast<::std::int32_t>(maxId) + 1, boxes_.end());
         boxes_.shrink_to_fit();
         ::std::vector<BVHNode>{boxes_}.swap(boxes_);
     }
