@@ -165,6 +165,9 @@ namespace MobileRT {
     Intersection BVH<T>::trace(
             Intersection intersection,
             const Ray &ray) noexcept {
+        if(primitives_.empty()) {
+            return intersection;
+        }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
         ::std::uint32_t stackPtrId {0};
@@ -210,6 +213,9 @@ namespace MobileRT {
     Intersection BVH<T>::shadowTrace(
         Intersection intersection,
         const Ray &ray) noexcept {
+        if(primitives_.empty()) {
+            return intersection;
+        }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
         ::std::uint32_t stackPtrId {0};
