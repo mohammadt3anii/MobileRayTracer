@@ -65,8 +65,8 @@ MTL="${OBJS_DIR}/CornellBox/CornellBox-Water.mtl"
 OBJ="${OBJS_DIR}/CornellBox/water.obj"
 MTL="${OBJS_DIR}/CornellBox/water.mtl"
 
-OBJ="${OBJS_DIR}/San_Miguel/san-miguel.obj"
-MTL="${OBJS_DIR}/San_Miguel/san-miguel.mtl"
+OBJ="${OBJS_DIR}/conference/conference.obj"
+MTL="${OBJS_DIR}/conference/conference.mtl"
 
 export ASAN_OPTIONS="suppressions=sanitizer_ignore.suppr:verbosity=1:strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:halt_on_error=0:detect_odr_violation=1"
 
