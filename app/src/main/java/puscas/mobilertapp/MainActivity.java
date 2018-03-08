@@ -380,21 +380,21 @@ public final class MainActivity extends Activity {
                 final int width = Integer.parseInt(str.substring(0, str.indexOf('x')));
                 final int height = Integer.parseInt(str.substring(str.indexOf('x') + 1, str.length()));
                 drawView_.createScene(
-                        pickerScene_.getValue(),
-                        pickerShader_.getValue(),
-                        pickerThreads_.getValue(),
-                        pickerAccelerator_.getValue(),
-                        Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
-                                [pickerSamplesPixel_.getValue() - 1]
-                        ),
-                        Integer.parseInt(pickerSamplesLight_.getDisplayedValues()
-                                [pickerSamplesLight_.getValue() - 1]
-                        ),
-                        width,
-                        height,
-                        objText_,
-                        matText_,
-                        getAssets()
+                    pickerScene_.getValue(),
+                    pickerShader_.getValue(),
+                    pickerThreads_.getValue(),
+                    pickerAccelerator_.getValue(),
+                    Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
+                        [pickerSamplesPixel_.getValue() - 1]
+                    ),
+                    Integer.parseInt(pickerSamplesLight_.getDisplayedValues()
+                        [pickerSamplesLight_.getValue() - 1]
+                    ),
+                    width,
+                    height,
+                    objText_,
+                    matText_,
+                    getAssets()
                 );
                 drawView_.startRender();
                 break;
