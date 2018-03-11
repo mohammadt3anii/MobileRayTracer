@@ -118,17 +118,6 @@ namespace MobileRT {
                 boxes.emplace_back(new_box);
             }
 
-            //static ::std::int32_t axisCounter {0};
-            //const ::std::int32_t axis {axisCounter++ % 3};
-            /*const ::std::int32_t axis {boxes_.at(id).box_.getLongestAxis()};
-            ::std::sort(
-                primitives_.begin() + static_cast<::std::int32_t>(begin),
-                primitives_.begin() + static_cast<::std::int32_t>(end),
-                [=](const Primitive<T>& a, const Primitive<T>& b) noexcept -> bool {
-                    return a.getAABB().pointMin_[axis] < b.getAABB().pointMin_[axis];
-                }
-            );*/
-
             if (boxPrimitivesSize <= maxLeafSize) {
                 boxes_.at(id).indexOffset_ = begin;
                 boxes_.at(id).numberPrimitives_ = boxPrimitivesSize;
@@ -139,7 +128,6 @@ namespace MobileRT {
             } else {
                 const ::std::uint32_t left {maxId + 1};
                 boxes_.at(id).left_ = left;
-                //const ::std::uint32_t left {id * 2 + 1};
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
                 const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
@@ -176,15 +164,15 @@ namespace MobileRT {
             const BVHNode &node {boxes_.at(id)};
             if (intersect(node.box_, ray)) {
 
-                if (node.numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node.numberPrimitives_; ++i) {
+                const ::std::uint32_t numberPrimitives {node.numberPrimitives_};
+                if (numberPrimitives > 0) {
+                    for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
                         auto& primitive {primitives_.at(node.indexOffset_ + i)};
                         intersection = primitive.intersect(intersection, ray);
                     }
                     id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {node.left_};
-                    //const ::std::uint32_t left {id * 2 + 1};
                     const BVHNode &childL {boxes_.at(left)};
                     const BVHNode &childR {boxes_.at(left + 1)};
 
@@ -224,8 +212,9 @@ namespace MobileRT {
             const BVHNode &node {boxes_.at(id)};
             if (intersect(node.box_, ray)) {
 
-                if (node.numberPrimitives_ != 0) {
-                    for (::std::uint32_t i {0}; i < node.numberPrimitives_; ++i) {
+                const ::std::uint32_t numberPrimitives {node.numberPrimitives_};
+                if (numberPrimitives > 0) {
+                    for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
                         auto& primitive {primitives_.at(node.indexOffset_ + i)};
                         const float lastDist {intersection.length_};
                         intersection = primitive.intersect(intersection, ray);
@@ -236,7 +225,6 @@ namespace MobileRT {
                     id = stackId.at(--stackPtrId); // pop
                 } else {
                     const ::std::uint32_t left {node.left_};
-                    //const ::std::uint32_t left {id * 2 + 1};
                     const BVHNode &childL {boxes_.at(left)};
                     const BVHNode &childR {boxes_.at(left + 1)};
 

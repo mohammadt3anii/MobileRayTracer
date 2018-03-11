@@ -184,6 +184,7 @@ PARAM3="draws"
 PARAM4="test"
 PARAM5="exec"
 PARAM6="tidy"
+PARAM7="gtest"
 
 for P in ${@}
 do
@@ -194,6 +195,7 @@ do
     ${PARAM4}) awk -f "${PLOT_SCRIPTS_DIR}/parser_median.awk" "${PLOT_SCRIPTS_DIR}/test.dat"  ;;
     ${PARAM5}) execute ;;
     ${PARAM6}) clangtidy ;;
+    ${PARAM7}) ${BIN_DIR}/GoogleTestd ;;
     *) echo ""
        echo "Wrong Parameter: ${P}"
        echo "The valid parameters are:"
