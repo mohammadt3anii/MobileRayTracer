@@ -78,6 +78,8 @@ public class DrawView extends GLSurfaceView {
         viewText_.start_ = (int) SystemClock.elapsedRealtime();
         viewText_.printText();
 
+        requestRender();
+        while (renderer_.frame_ <= 0) ;
         DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
 
         renderTask_ = new RenderTask(viewText_, this::requestRender);
@@ -95,7 +97,9 @@ public class DrawView extends GLSurfaceView {
         numThreads_ = numThreads;
 
         setVisibility(View.INVISIBLE);
-        renderer_.bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        float x = getX();
+        float y = getY();
+        renderer_.setBitmap(width, height, (int) x, (int) y);
         setVisibility(View.VISIBLE);
     }
 

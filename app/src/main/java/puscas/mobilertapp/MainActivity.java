@@ -189,11 +189,11 @@ public final class MainActivity extends Activity {
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             drawView_.renderer_.bitmap_ = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
             drawView_.renderer_.bitmap_.eraseColor(Color.DKGRAY);
-            drawView_.setVisibility(View.VISIBLE);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
+            drawView_.setVisibility(View.VISIBLE);
 
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
             drawView_.viewText_.buttonRender_.setOnLongClickListener((View v) -> {
