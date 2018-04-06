@@ -33,11 +33,11 @@ class MainRenderer implements Renderer {
     Bitmap bitmap_ = null;
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
-    public int frame_ = 0;
     private int width_ = 1;
     private int height_ = 1;
     private int x_ = 0;
     private int y_ = 0;
+    boolean copyFrameBuffer_ = false;
 
     private static int loadShader(final int shaderType, final String source) {
         final int shader = GLES20.glCreateShader(shaderType);
@@ -72,10 +72,10 @@ class MainRenderer implements Renderer {
         height_ = height;
         x_ = x;
         y_ = y;
-        frame_ = 0;
+        copyFrameBuffer_ = true;
     }
 
-    private void copyBuffer() {
+    private Bitmap copyFrameBuffer() {
         int b[] = new int[width_ * (y_ + height_)];
         int bt[] = new int[width_ * height_];
         IntBuffer ib = IntBuffer.wrap(b);
@@ -96,7 +96,10 @@ class MainRenderer implements Renderer {
             }
         }
 
-        bitmap_ = Bitmap.createBitmap(bt, width_, height_, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(bt, width_, height_, Bitmap.Config.ARGB_8888);
+        int pixelBefore = bitmap_.getPixel(0, 0);
+        int pixelAfter = bitmap.getPixel(0, 0);
+        return bitmap;
     }
 
     @Override
@@ -107,10 +110,10 @@ class MainRenderer implements Renderer {
         GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap_);
         checkGLError();
 
-        if (frame_ == 0) {
-            copyBuffer();
+        if (copyFrameBuffer_) {
+            bitmap_ = copyFrameBuffer();
+            copyFrameBuffer_ = false;
         }
-        frame_++;
     }
 
     @Override

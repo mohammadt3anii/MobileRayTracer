@@ -12,5 +12,8 @@ float toneMap (const float value) {
 
 void main () {
 	vec4 color = texture2D(u_Texture, v_texCoord);
+	/*color[0] *= 2.0;
+	color[1] *= 1.0;
+	color[2] += 1.0;*/
 	gl_FragColor = vec4(toneMap(color[0]), toneMap(color[1]), toneMap(color[2]), 1.0);
 }

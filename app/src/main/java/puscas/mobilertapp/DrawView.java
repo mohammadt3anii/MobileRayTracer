@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -79,7 +80,13 @@ public class DrawView extends GLSurfaceView {
         viewText_.printText();
 
         requestRender();
-        while (renderer_.frame_ <= 0) ;
+        while (renderer_.copyFrameBuffer_) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.e("MOBILERT", e.getMessage());
+            }
+        }
         DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
 
         renderTask_ = new RenderTask(viewText_, this::requestRender);
