@@ -139,7 +139,7 @@ class MainRenderer implements Renderer {
             checkGLError();
 
 
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, 3);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, verticesRaster.length / 3);
             checkGLError();
 
 
@@ -165,7 +165,7 @@ class MainRenderer implements Renderer {
             checkGLError();
 
 
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, 4);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 3);
             checkGLError();
 
 

@@ -3,7 +3,6 @@ package puscas.mobilertapp;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -82,7 +81,6 @@ public class DrawView extends GLSurfaceView {
 
         //DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, false);
 
-        renderer_.bitmap_.eraseColor(Color.RED);
         renderer_.prepareToCopyNextFrame();
         requestRender();
         while (renderer_.copyFrameBuffer_) {
