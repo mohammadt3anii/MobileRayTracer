@@ -3,6 +3,7 @@ package puscas.mobilertapp;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -24,7 +25,7 @@ public class DrawView extends GLSurfaceView {
 
     static native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText, final AssetManager assetManager);
 
-    static private native void renderIntoBitmap(final Bitmap image, final int numThreads);
+    static private native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
 
     static private native void stopRender();
 
@@ -79,6 +80,10 @@ public class DrawView extends GLSurfaceView {
         viewText_.start_ = (int) SystemClock.elapsedRealtime();
         viewText_.printText();
 
+        //DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, false);
+
+        renderer_.bitmap_.eraseColor(Color.RED);
+        renderer_.prepareToCopyNextFrame();
         requestRender();
         while (renderer_.copyFrameBuffer_) {
             try {
@@ -87,10 +92,10 @@ public class DrawView extends GLSurfaceView {
                 Log.e("MOBILERT", e.getMessage());
             }
         }
-        DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_);
 
         renderTask_ = new RenderTask(viewText_, this::requestRender);
         renderTask_.execute();
+        DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
         this.setOnTouchListener(new DrawView.TouchHandler());
     }

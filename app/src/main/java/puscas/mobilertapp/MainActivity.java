@@ -191,8 +191,12 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.bitmap_.eraseColor(Color.DKGRAY);
             final String vertexShader = readTextAsset("Shaders/VertexShader.glsl");
             final String fragmentShader = readTextAsset("Shaders/FragmentShader.glsl");
+            final String vertexShaderRaster = readTextAsset("Shaders/VertexShaderRaster.glsl");
+            final String fragmentShaderRaster = readTextAsset("Shaders/FragmentShaderRaster.glsl");
             drawView_.renderer_.vertexShaderCode = vertexShader;
             drawView_.renderer_.fragmentShaderCode = fragmentShader;
+            drawView_.renderer_.vertexShaderCodeRaster = vertexShaderRaster;
+            drawView_.renderer_.fragmentShaderCodeRaster = fragmentShaderRaster;
             drawView_.setVisibility(View.VISIBLE);
 
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);

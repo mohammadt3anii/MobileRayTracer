@@ -1,8 +1,10 @@
 #version 100
 
 precision lowp float;
-uniform sampler2D u_Texture;
-varying vec2 v_texCoord;
+
+uniform sampler2D uniformTexture;
+
+varying vec2 fragmentTexCoord;
 
 float toneMap (const float value) {
 	//return 1.0 - cos(sqrt(value));
@@ -11,9 +13,6 @@ float toneMap (const float value) {
 }
 
 void main () {
-	vec4 color = texture2D(u_Texture, v_texCoord);
-	/*color[0] *= 2.0;
-	color[1] *= 1.0;
-	color[2] += 1.0;*/
+	vec4 color = texture2D(uniformTexture, fragmentTexCoord);
 	gl_FragColor = vec4(toneMap(color[0]), toneMap(color[1]), toneMap(color[2]), 1.0);
 }

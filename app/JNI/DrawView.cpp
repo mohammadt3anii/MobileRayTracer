@@ -358,7 +358,8 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         JNIEnv *const env,
         jobject /*thiz*/,
         jobject localBitmap,
-        jint const nThreads
+        jint const nThreads,
+        jboolean const async
 ) noexcept {
     jclass localDrawViewClass{env->FindClass("puscas/mobilertapp/DrawView")};
     jclass globalDrawViewClass{static_cast<jclass>(env->NewGlobalRef(localDrawViewClass))};
@@ -472,8 +473,11 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         }
     }};
 
-    thread_ = new ::std::thread {lambda};
-    //lambda();
+    if (async) {
+        thread_ = new ::std::thread{lambda};
+    } else {
+        lambda();
+    }
 }
 
 extern "C"
