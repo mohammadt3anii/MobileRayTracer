@@ -29,16 +29,30 @@ class MainRenderer implements Renderer {
             1.0f, 0.0f
     };
     private final float[] verticesRaster = {
-            -0.5f, 0.5f, 0.5f,
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f
+            -0.5f, 0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+
+            0.5f, -0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
+            -0.5f, 0.5f, 0.0f,
+
+            -0.9f, 0.5f, 0.0f,
+            -0.9f, -0.5f, 0.0f,
+            -0.6f, -0.5f, 0.0f,
     };
     private final float[] colorsRaster = {
-            1.0f, 0.0f, 0.0f, 1.0f,
             0.0f, 1.0f, 0.0f, 1.0f,
+            0.0f, 1.0f, 0.0f, 1.0f,
+            0.0f, 1.0f, 0.0f, 1.0f,
+
             0.0f, 0.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+
+            1.0f, 0.0f, 0.0f, 1.0f,
+            1.0f, 0.0f, 0.0f, 1.0f,
+            1.0f, 0.0f, 0.0f, 1.0f,
     };
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
@@ -139,7 +153,7 @@ class MainRenderer implements Renderer {
             checkGLError();
 
 
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, verticesRaster.length / 3);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, positionAttrib, verticesRaster.length / 3);
             checkGLError();
 
 
