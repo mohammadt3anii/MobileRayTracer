@@ -78,24 +78,21 @@ public class DrawView extends GLSurfaceView {
         viewText_.buttonRender_.setText(R.string.stop);
         viewText_.start_ = (int) SystemClock.elapsedRealtime();
         viewText_.printText();
+        renderTask_ = new RenderTask(viewText_, this::requestRender);
 
-        //DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, false);
-
-        renderer_.prepareToCopyNextFrame();
-        requestRender();
-        while (renderer_.copyFrameBuffer_) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.e("MOBILERT", e.getMessage());
-            }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            Log.e("MobileRT", e.getMessage());
         }
 
-        renderTask_ = new RenderTask(viewText_, this::requestRender);
-        renderTask_.execute();
-        DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
+        queueEvent(() -> {
+            renderer_.copyFrame();
+            DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
-        this.setOnTouchListener(new DrawView.TouchHandler());
+            renderTask_.execute();
+            this.setOnTouchListener(new DrawView.TouchHandler());
+        });
     }
 
     void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
@@ -107,9 +104,7 @@ public class DrawView extends GLSurfaceView {
         numThreads_ = numThreads;
 
         setVisibility(View.INVISIBLE);
-        float x = getX();
-        float y = getY();
-        renderer_.setBitmap(width, height, (int) x, (int) y);
+        renderer_.setBitmap(width, height, (int) getX(), (int) getY());
         setVisibility(View.VISIBLE);
     }
 

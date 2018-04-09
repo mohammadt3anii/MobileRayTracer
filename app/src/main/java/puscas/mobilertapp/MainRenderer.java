@@ -28,32 +28,8 @@ class MainRenderer implements Renderer {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    private final float[] verticesRaster = {
-            -0.5f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-
-            0.5f, -0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-
-            -0.9f, 0.5f, 0.0f,
-            -0.9f, -0.5f, 0.0f,
-            -0.6f, -0.5f, 0.0f,
-    };
-    private final float[] colorsRaster = {
-            0.0f, 1.0f, 0.0f, 1.0f,
-            0.0f, 1.0f, 0.0f, 1.0f,
-            0.0f, 1.0f, 0.0f, 1.0f,
-
-            0.0f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 1.0f,
-
-            1.0f, 0.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 0.0f, 1.0f,
-    };
+    private float[] verticesRaster = null;
+    private float[] colorsRaster = null;
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
     String vertexShaderCode = null;
@@ -69,25 +45,6 @@ class MainRenderer implements Renderer {
     private FloatBuffer floatBufferColorsRaster_ = null;
     private int shaderProgram;
     private int shaderProgramRaster;
-    boolean copyFrameBuffer_ = false;
-
-    private static int loadShader(final int shaderType, final String source) {
-        final int shader = GLES20.glCreateShader(shaderType);
-        if (shader != 0) {
-            GLES20.glShaderSource(shader, source);
-            GLES20.glCompileShader(shader);
-            final int[] compiled = new int[1];
-            GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
-            if (compiled[0] == 0) {
-                Log.e("SHADER", "Could not compile shader " + shaderType + ':');
-                Log.e("SHADER", GLES20.glGetShaderInfoLog(shader));
-                Log.e("SHADER", source);
-                GLES20.glDeleteShader(shader);
-                System.exit(0);
-            }
-        }
-        return shader;
-    }
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -95,6 +52,33 @@ class MainRenderer implements Renderer {
             Log.e("glError", "glError = " + GLUtils.getEGLErrorString(glError));
             System.exit(1);
         }
+    }
+
+    private int loadShader(final int shaderType, final String source) {
+        final int shader = GLES20.glCreateShader(shaderType);
+        checkGLError();
+        if (shader != 0) {
+            GLES20.glShaderSource(shader, source);
+            checkGLError();
+            GLES20.glCompileShader(shader);
+            checkGLError();
+            final int[] compiled = new int[1];
+            GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
+            checkGLError();
+            if (compiled[0] == 0) {
+                Log.e("SHADER", "Could not compile shader " + shaderType + ':');
+                Log.e("SHADER", GLES20.glGetShaderInfoLog(shader));
+                checkGLError();
+                Log.e("SHADER", source);
+                GLES20.glDeleteShader(shader);
+                checkGLError();
+                System.exit(1);
+            }
+        } else {
+            Log.e("MobileRT", "shader = 0");
+            System.exit(1);
+        }
+        return shader;
     }
 
     public void setBitmap(final int width, final int height, final int x, final int y) {
@@ -139,59 +123,31 @@ class MainRenderer implements Renderer {
 
     @Override
     public void onDrawFrame(final GL10 gl) {
-        if (copyFrameBuffer_) {
-            GLES20.glUseProgram(shaderProgramRaster);
-            checkGLError();
+        GLES20.glUseProgram(shaderProgram);
+        checkGLError();
 
 
-            final int positionAttrib = 0;
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
-            checkGLError();
-            GLES20.glEnableVertexAttribArray(positionAttrib);
-            checkGLError();
-            GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
-            checkGLError();
+        final int positionAttrib = 0;
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
+        checkGLError();
+        GLES20.glEnableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
+        checkGLError();
 
 
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, positionAttrib, verticesRaster.length / 3);
-            checkGLError();
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 3);
+        checkGLError();
 
 
-            GLES20.glDisableVertexAttribArray(positionAttrib);
-            checkGLError();
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-            checkGLError();
+        GLES20.glDisableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        checkGLError();
 
 
-            bitmap_ = copyFrameBuffer();
-            copyFrameBuffer_ = false;
-        } else {
-            GLES20.glUseProgram(shaderProgram);
-            checkGLError();
-
-
-            final int positionAttrib = 0;
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
-            checkGLError();
-            GLES20.glEnableVertexAttribArray(positionAttrib);
-            checkGLError();
-            GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
-            checkGLError();
-
-
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 3);
-            checkGLError();
-
-
-            GLES20.glDisableVertexAttribArray(positionAttrib);
-            checkGLError();
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-            checkGLError();
-
-
-            GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap_);
-            checkGLError();
-        }
+        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap_);
+        checkGLError();
     }
 
     @Override
@@ -228,38 +184,19 @@ class MainRenderer implements Renderer {
         floatBufferVertices_.put(vertices);
         floatBufferVertices_.position(0);
 
-        final ByteBuffer bbColors = ByteBuffer.allocateDirect(colorsRaster.length << 2);
-        bbColors.order(ByteOrder.nativeOrder());
-        floatBufferColorsRaster_ = bbColors.asFloatBuffer();
-        floatBufferColorsRaster_.put(colorsRaster);
-        floatBufferColorsRaster_.position(0);
-
         final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length << 2);
         byteBufferTexCoords.order(ByteOrder.nativeOrder());
         floatBufferTexture_ = byteBufferTexCoords.asFloatBuffer();
         floatBufferTexture_.put(texCoords);
         floatBufferTexture_.position(0);
 
-        final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);
-        bbVertices2.order(ByteOrder.nativeOrder());
-        floatBufferVerticesRaster_ = bbVertices2.asFloatBuffer();
-        floatBufferVerticesRaster_.put(verticesRaster);
-        floatBufferVerticesRaster_.position(0);
 
         //Load shaders
-        final int vertexShader = MainRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        final int fragmentShader = MainRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-
-        //Load shaders
-        final int vertexShader2 = MainRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);
-        final int fragmentShader2 = MainRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCodeRaster);
+        final int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        final int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         //Create Program
         shaderProgram = GLES20.glCreateProgram();
-        checkGLError();
-
-        //Create Program
-        shaderProgramRaster = GLES20.glCreateProgram();
         checkGLError();
 
         if (shaderProgram == 0) {
@@ -275,40 +212,6 @@ class MainRenderer implements Renderer {
         GLES20.glAttachShader(shaderProgram, fragmentShader);
         checkGLError();
 
-        GLES20.glLinkProgram(shaderProgram);
-        checkGLError();
-
-        final int[] linkStatus = new int[1];
-        GLES20.glGetProgramiv(shaderProgram, GLES20.GL_LINK_STATUS, linkStatus, 0);
-        checkGLError();
-
-        if (linkStatus[0] != GLES20.GL_TRUE) {
-            Log.e("PROGRAM SHADER LOG", "Could not link program: ");
-            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgram));
-            GLES20.glDeleteProgram(shaderProgram);
-            System.exit(0);
-        }
-
-        //Attach and link shaders to program
-        GLES20.glAttachShader(shaderProgramRaster, vertexShader2);
-        checkGLError();
-
-        GLES20.glAttachShader(shaderProgramRaster, fragmentShader2);
-        checkGLError();
-
-        GLES20.glLinkProgram(shaderProgramRaster);
-        checkGLError();
-
-        final int[] linkStatus2 = new int[1];
-        GLES20.glGetProgramiv(shaderProgramRaster, GLES20.GL_LINK_STATUS, linkStatus2, 0);
-        checkGLError();
-
-        if (linkStatus2[0] != GLES20.GL_TRUE) {
-            Log.e("PROGRAM SHADER LOG", "Could not link program: ");
-            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgramRaster));
-            GLES20.glDeleteProgram(shaderProgramRaster);
-            System.exit(0);
-        }
 
         final int Number_Texures = 1;
         final int[] textureHandle = new int[Number_Texures];
@@ -318,23 +221,6 @@ class MainRenderer implements Renderer {
             System.exit(0);
         }
 
-
-        //Shader program 1
-        GLES20.glUseProgram(shaderProgram);
-        checkGLError();
-
-        // Bind to the texture in OpenGL
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        checkGLError();
-
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
-        checkGLError();
-
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-        checkGLError();
-
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        checkGLError();
 
         //Bind Attributes
         final int positionAttrib = 0;
@@ -354,8 +240,90 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        //Shader program 2
-        GLES20.glUseProgram(shaderProgramRaster);
+        GLES20.glLinkProgram(shaderProgram);
+        checkGLError();
+
+        final int[] linkStatus = new int[1];
+        GLES20.glGetProgramiv(shaderProgram, GLES20.GL_LINK_STATUS, linkStatus, 0);
+        checkGLError();
+
+        if (linkStatus[0] != GLES20.GL_TRUE) {
+            Log.e("PROGRAM SHADER LOG", "Could not link program: ");
+            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgram));
+            GLES20.glDeleteProgram(shaderProgram);
+            System.exit(0);
+        }
+
+        //Shader program 1
+        GLES20.glUseProgram(shaderProgram);
+        checkGLError();
+
+        // Bind to the texture in OpenGL
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        checkGLError();
+
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+        checkGLError();
+
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        checkGLError();
+
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        checkGLError();
+    }
+
+    void copyFrame() {
+        verticesRaster = new float[]{
+                -0.5f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+
+                0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
+                -0.5f, 0.5f, 0.0f,
+
+                -0.9f, 0.5f, 0.0f,
+                -0.9f, -0.5f, 0.0f,
+                -0.6f, -0.5f, 0.0f,
+        };
+
+        colorsRaster = new float[]{
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+
+                1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+        };
+
+        final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);
+        bbVertices2.order(ByteOrder.nativeOrder());
+        floatBufferVerticesRaster_ = bbVertices2.asFloatBuffer();
+        floatBufferVerticesRaster_.put(verticesRaster);
+        floatBufferVerticesRaster_.position(0);
+
+        final ByteBuffer bbColors = ByteBuffer.allocateDirect(colorsRaster.length << 2);
+        bbColors.order(ByteOrder.nativeOrder());
+        floatBufferColorsRaster_ = bbColors.asFloatBuffer();
+        floatBufferColorsRaster_.put(colorsRaster);
+        floatBufferColorsRaster_.position(0);
+
+        //Load shaders
+        final int vertexShaderRaster = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);
+        final int fragmentShaderRaster = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCodeRaster);
+
+        //Create Program
+        if (shaderProgramRaster != 0) {
+            GLES20.glDeleteProgram(shaderProgramRaster);
+            checkGLError();
+            shaderProgramRaster = 0;
+        }
+        shaderProgramRaster = GLES20.glCreateProgram();
         checkGLError();
 
         final int positionAttrib2 = 2;
@@ -373,9 +341,55 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glEnableVertexAttribArray(colorAttrib2);
         checkGLError();
-    }
 
-    void prepareToCopyNextFrame() {
-        copyFrameBuffer_ = true;
+
+        //Attach and link shaders to program
+        GLES20.glAttachShader(shaderProgramRaster, vertexShaderRaster);
+        checkGLError();
+
+        GLES20.glAttachShader(shaderProgramRaster, fragmentShaderRaster);
+        checkGLError();
+
+        GLES20.glLinkProgram(shaderProgramRaster);
+        checkGLError();
+
+        final int[] linkStatusRaster = new int[1];
+        GLES20.glGetProgramiv(shaderProgramRaster, GLES20.GL_LINK_STATUS, linkStatusRaster, 0);
+        checkGLError();
+
+        if (linkStatusRaster[0] != GLES20.GL_TRUE) {
+            Log.e("PROGRAM SHADER LOG", "Could not link program rasterizer: ");
+            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgramRaster));
+            checkGLError();
+            GLES20.glDeleteProgram(shaderProgramRaster);
+            checkGLError();
+            System.exit(0);
+        }
+
+
+        GLES20.glUseProgram(shaderProgramRaster);
+        checkGLError();
+
+
+        final int positionAttrib = 0;
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
+        checkGLError();
+        GLES20.glEnableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        checkGLError();
+
+
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, positionAttrib, verticesRaster.length / 3);
+        checkGLError();
+
+
+        GLES20.glDisableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        checkGLError();
+
+
+        bitmap_ = copyFrameBuffer();
     }
 }
