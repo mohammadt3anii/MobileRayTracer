@@ -285,6 +285,10 @@ class MainRenderer implements Renderer {
                 -0.9f, 0.5f, 0.0f,
                 -0.9f, -0.5f, 0.0f,
                 -0.6f, -0.5f, 0.0f,
+
+                0.6f, 0.5f, 0.0f,
+                0.6f, -0.5f, 0.0f,
+                0.9f, -0.5f, 0.0f,
         };
 
         colorsRaster = new float[]{
@@ -299,6 +303,10 @@ class MainRenderer implements Renderer {
                 1.0f, 0.0f, 0.0f, 1.0f,
                 1.0f, 0.0f, 0.0f, 1.0f,
                 1.0f, 0.0f, 0.0f, 1.0f,
+
+                1.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 0.0f, 1.0f,
         };
 
         final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);

@@ -36,13 +36,13 @@ enum class State {
 };
 
 extern "C"
-::std::int32_t JNI_OnLoad(JavaVM *pjvm, void *reserved);
+jint JNI_OnLoad(JavaVM *pjvm, void *reserved);
 
 extern "C"
 void JNI_OnUnload(JavaVM *vm, void *reserved);
 
 extern "C"
-State Java_puscas_mobilertapp_ViewText_isWorking(
+jint Java_puscas_mobilertapp_ViewText_isWorking(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -54,7 +54,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept;
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_initialize(
+jint Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *env,
         jobject thiz,
         jint scene,
@@ -71,7 +71,7 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finishRender(
-        JNIEnv *const /*env*/,
+        JNIEnv */*env*/,
         jobject /*thiz*/
 ) noexcept;
 
@@ -84,7 +84,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jboolean async) noexcept;
 
 extern "C"
-::std::int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
+jint Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *env,
         jobject thiz,
         jfloat jx,
@@ -100,32 +100,32 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
 ) noexcept;
 
 extern "C"
-float Java_puscas_mobilertapp_ViewText_getFPS(
+jfloat Java_puscas_mobilertapp_ViewText_getFPS(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
+jint Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-::std::uint32_t Java_puscas_mobilertapp_ViewText_getSample(
+jint Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-::std::int32_t Java_puscas_mobilertapp_DrawView_resize(
+jint Java_puscas_mobilertapp_DrawView_resize(
         JNIEnv *env,
         jobject thiz,
         jint size
 ) noexcept;
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+jint Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv * /*env*/,
         jobject /*thiz*/
 ) noexcept;

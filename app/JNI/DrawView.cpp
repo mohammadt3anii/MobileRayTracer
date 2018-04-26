@@ -97,11 +97,12 @@ static void FPS() noexcept {
 }
 
 extern "C"
-State Java_puscas_mobilertapp_ViewText_isWorking(
+::std::int32_t Java_puscas_mobilertapp_ViewText_isWorking(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
-    return working_;
+    const ::std::int32_t res{static_cast<::std::int32_t> (working_)};
+    return res;
 }
 
 extern "C"
@@ -115,7 +116,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_initialize(
+::std::int32_t Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *const env,
         jobject /*thiz*/,
         jint const scene,
@@ -134,8 +135,8 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
     LOG("INITIALIZE");
 
 
-    int32_t res {
-        [=]() noexcept -> int32_t {
+    ::std::int32_t res{
+            [=]() noexcept -> ::std::int32_t {
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_ = nullptr;
@@ -306,13 +307,14 @@ int32_t Java_puscas_mobilertapp_DrawView_initialize(
                 break;
             }
         }
-        const int32_t triangles {
+                const ::std::int32_t triangles{
                 static_cast<int32_t> (shader_->scene_.triangles_.size())};
-        const int32_t spheres {
+                const ::std::int32_t spheres{
                 static_cast<int32_t> (shader_->scene_.spheres_.size())};
-        const int32_t planes {static_cast<int32_t> (shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<int32_t> (shader_->scene_.lights_.size());
-        const int32_t nPrimitives {triangles + spheres + planes};
+                const ::std::int32_t planes{
+                        static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
+                numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
+                const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_ = new ::MobileRT::Renderer{
@@ -525,7 +527,7 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 }
 
 extern "C"
-int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
+::std::int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
@@ -533,11 +535,11 @@ int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
 }
 
 extern "C"
-::std::uint32_t Java_puscas_mobilertapp_ViewText_getSample(
+::std::int32_t Java_puscas_mobilertapp_ViewText_getSample(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {
-    ::std::uint32_t res{0};
+    ::std::int32_t res{0};
     /*{
         ::std::lock_guard<::std::mutex> lock(mutex_);
         if (renderer_ != nullptr) {
@@ -558,7 +560,7 @@ extern "C"
 }
 
 extern "C"
-int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
+::std::int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv *const /*env*/,
         jobject /*thiz*/
 ) noexcept {

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 class ViewText {
-    float fps_ = 0.0f;
+    float fps_;
     int start_ = 0;
     int period_ = 0;
     TextView textView_ = null;
@@ -21,9 +21,9 @@ class ViewText {
     String allocatedT_ = null;
     String sampleT_ = null;
     String nPrimitivesT_ = null;
-    String threadsT_ = null;
-    private int frame_ = 0;
-    private float timebase_ = 0.0f;
+    private String threadsT_ = null;
+    private int frame_;
+    private float timebase_;
     private String resolutionT_ = null;
     private String samplesPixelT_ = null;
     private String samplesLightT_ = null;

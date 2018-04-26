@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 final class RenderTask extends AsyncTask<Void, Void, Void> {
     final List<TouchTracker> touches_ = new ArrayList<>(1);
     private final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
-    private ViewText viewText_ = null;
-    private Runnable updateRender_ = null;
+    private ViewText viewText_;
+    private Runnable updateRender_;
 
     private final Runnable timer_ = () -> {
         final int touchesSize = touches_.size();
