@@ -3,7 +3,7 @@ android {
     signingConfigs {
         Puscas {
             keyAlias "Puscas"
-            storeFile file("../../../Dropbox/APKs/MobileRayTracer.jks").absoluteFile
+            storeFile file("../MobileRayTracer.jks").absoluteFile
             keyPassword "123456"
             storePassword "123456"
         }
@@ -64,5 +64,5 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 }
