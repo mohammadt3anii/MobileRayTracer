@@ -30,6 +30,8 @@ public class DrawView extends GLSurfaceView {
 
     static private native float[] initColorsArray();
 
+    static private native float[] initCameraArray();
+
     static private native void stopRender();
 
     static native int traceTouch(final float x, final float y);
@@ -93,8 +95,9 @@ public class DrawView extends GLSurfaceView {
         queueEvent(() -> {
             final float[] arrayVertices = initVerticesArray();
             final float[] arrayColors = initColorsArray();
+            final float[] arrayCamera = initCameraArray();
 
-            renderer_.copyFrame(arrayVertices, arrayColors);
+            renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
             DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
             renderTask_.execute();

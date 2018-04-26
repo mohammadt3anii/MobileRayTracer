@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLUtils;
+import android.opengl.Matrix;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -30,6 +31,7 @@ class MainRenderer implements Renderer {
     };
     private float[] verticesRaster = null;
     private float[] colorsRaster = null;
+    private final float[] mMVPMatrix = new float[16];
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
     String vertexShaderCode = null;
@@ -43,8 +45,12 @@ class MainRenderer implements Renderer {
     Bitmap bitmap_ = null;
     private FloatBuffer floatBufferVerticesRaster_ = null;
     private FloatBuffer floatBufferColorsRaster_ = null;
+    private final float[] mProjectionMatrix = new float[16];
     private int shaderProgram;
     private int shaderProgramRaster;
+    private final float[] mViewMatrix = new float[16];
+    private float[] cameraRaster = null;
+    private FloatBuffer floatBufferCameraRaster_ = null;
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -122,6 +128,26 @@ class MainRenderer implements Renderer {
 
     @Override
     public void onDrawFrame(final GL10 gl) {
+        // Set the camera position (View matrix)
+        final float eyeX = cameraRaster[3];
+        final float eyeY = cameraRaster[4];
+        final float eyeZ = cameraRaster[5];
+        final float centerX = cameraRaster[0];
+        final float centerY = cameraRaster[1];
+        final float centerZ = cameraRaster[2];
+        final float upX = cameraRaster[9];
+        final float upY = cameraRaster[10];
+        final float upZ = cameraRaster[11];
+
+        Matrix.setLookAtM(mViewMatrix, 0,
+                eyeX, eyeY, eyeZ,
+                centerX, centerY, centerZ,
+                upX, upY, upZ
+        );
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
         GLES20.glUseProgram(shaderProgram);
         checkGLError();
 
@@ -156,10 +182,18 @@ class MainRenderer implements Renderer {
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap_, 0);
         checkGLError();
+
+        float ratio = (float) width / height;
+
+        // this projection matrix is applied to object coordinates
+        // in the onDrawFrame() method
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
     }
 
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
+        cameraRaster = new float[12];
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
 
@@ -271,9 +305,10 @@ class MainRenderer implements Renderer {
         checkGLError();
     }
 
-    void copyFrame(final float[] vertices, final float[] colors) {
+    void copyFrame(final float[] vertices, final float[] colors, final float[] camera) {
         verticesRaster = vertices;
         colorsRaster = colors;
+        cameraRaster = camera;
 
         final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);
         bbVertices2.order(ByteOrder.nativeOrder());
@@ -286,6 +321,12 @@ class MainRenderer implements Renderer {
         floatBufferColorsRaster_ = bbColors.asFloatBuffer();
         floatBufferColorsRaster_.put(colorsRaster);
         floatBufferColorsRaster_.position(0);
+
+        final ByteBuffer bbCamera = ByteBuffer.allocateDirect(cameraRaster.length << 2);
+        bbCamera.order(ByteOrder.nativeOrder());
+        floatBufferCameraRaster_ = bbCamera.asFloatBuffer();
+        floatBufferCameraRaster_.put(cameraRaster);
+        floatBufferCameraRaster_.position(0);
 
         //Load shaders
         final int vertexShaderRaster = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);

@@ -4,6 +4,7 @@
 
 #include "DrawView.hpp"
 #include <android/bitmap.h>
+#include <glm/glm.hpp>
 #include <mutex>
 
 static ::State working_{State::IDLE};
@@ -49,11 +50,59 @@ void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
 }
 
 extern "C"
+jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
+        JNIEnv *env,
+        jclass /*thiz*/
+) noexcept {
+    const ::MobileRT::Camera *camera{renderer_->camera_.get()};
+    LOG("camera position = ", camera->position_.x, ", ", camera->position_.y, ", ",
+        camera->position_.z);
+    LOG("camera direction = ", camera->direction_.x, ", ", camera->direction_.y, ", ",
+        camera->direction_.z);
+    LOG("camera right = ", camera->right_.x, ", ", camera->right_.y, ", ", camera->right_.z);
+    LOG("camera up = ", camera->up_.x, ", ", camera->up_.y, ", ", camera->up_.z);
+
+    jfloat float_ptr[]{
+            camera->position_.x, camera->position_.y, camera->position_.z,
+            camera->direction_.x, camera->direction_.y, camera->direction_.z,
+            camera->right_.x, camera->right_.y, camera->right_.z,
+            camera->up_.x, camera->up_.y, camera->up_.z,
+    };
+
+    float_ptr[3] = 0.0f;
+    float_ptr[4] = 1.0f;
+    float_ptr[5] = 0.0f;
+
+    LOG("float_ptr size = ", sizeof(float_ptr));
+    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+
+    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+
+    return result;
+}
+
+extern "C"
 jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
         jclass /*thiz*/
 ) noexcept {
-    const jfloat float_ptr[]{-0.5f, 0.5f, 0.0f,
+    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> triangles{
+            renderer_->shader_->scene_.triangles_};
+
+    LOG("triangles size = ", triangles.size());
+    for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+        const ::glm::vec3 pointA{triangle.shape_.pointA_};
+        const ::glm::vec3 pointB{pointA.x + triangle.shape_.AB_.x, pointA.y + triangle.shape_.AB_.y,
+                                 pointA.z + triangle.shape_.AB_.z};
+        const ::glm::vec3 pointC{pointA.x + triangle.shape_.AC_.x, pointA.y + triangle.shape_.AC_.y,
+                                 pointA.z + triangle.shape_.AC_.z};
+
+        LOG("pointA = ", pointA.x, ", ", pointA.y, ", ", pointA.z);
+        LOG("pointB = ", pointB.x, ", ", pointB.y, ", ", pointB.z);
+        LOG("pointC = ", pointC.x, ", ", pointC.y, ", ", pointC.z);
+    }
+
+    jfloat float_ptr[]{-0.5f, 0.5f, 0.0f,
                              -0.5f, -0.5f, 0.0f,
                              0.5f, -0.5f, 0.0f,
 
@@ -69,7 +118,7 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
                              0.6f, -0.5f, 0.0f,
                              1.0f, -0.5f, 0.0f};
 
-    const jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
 
     env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
 
@@ -81,7 +130,16 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jclass /*thiz*/
 ) noexcept {
-    const jfloat float_ptr[]{0.0f, 1.0f, 0.0f, 1.0f,
+    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> triangles{
+            renderer_->shader_->scene_.triangles_};
+    LOG("triangles size = ", triangles.size());
+    for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+        const ::glm::vec3 Kd{triangle.material_.Kd_};
+
+        LOG("Kd = ", Kd.r, ", ", Kd.g, ", ", Kd.b);
+    }
+
+    jfloat float_ptr[]{0.0f, 1.0f, 0.0f, 1.0f,
                              0.0f, 1.0f, 0.0f, 1.0f,
                              0.0f, 1.0f, 0.0f, 1.0f,
 
@@ -97,7 +155,7 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
                              1.0f, 0.0f, 1.0f, 1.0f,
                              1.0f, 0.0f, 1.0f, 1.0f};
 
-    const jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
 
     env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
 

@@ -54,6 +54,12 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
 ) noexcept;
 
 extern "C"
+jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
+        JNIEnv *env,
+        jclass thiz
+) noexcept;
+
+extern "C"
 jint Java_puscas_mobilertapp_ViewText_isWorking(
         JNIEnv *env,
         jobject thiz
