@@ -36,8 +36,8 @@ class MainRenderer implements Renderer {
     String fragmentShaderCode = null;
     private int width_ = 1;
     private int height_ = 1;
-    private int x_ = 0;
-    private int y_ = 0;
+    private int realWidth_ = 1;
+    private int realHeight_ = 1;
     String vertexShaderCodeRaster = null;
     String fragmentShaderCodeRaster = null;
     Bitmap bitmap_ = null;
@@ -81,41 +81,40 @@ class MainRenderer implements Renderer {
         return shader;
     }
 
-    public void setBitmap(final int width, final int height, final int x, final int y) {
+    public void setBitmap(final int width, final int height, final int realWidth, final int realHeight) {
         bitmap_ = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap_.eraseColor(Color.BLACK);
         width_ = width;
         height_ = height;
-        x_ = x;
-        y_ = y;
+        realWidth_ = realWidth;
+        realHeight_ = realHeight;
     }
 
     private Bitmap copyFrameBuffer() {
-        x_ = 0;
-        y_ = 0;
-        int b[] = new int[width_ * (y_ + height_)];
-        int bt[] = new int[width_ * height_];
-        IntBuffer ib = IntBuffer.wrap(b);
+        final int b[] = new int[realWidth_ * realHeight_];
+        final int bt[] = new int[realWidth_ * realHeight_];
+        final IntBuffer ib = IntBuffer.wrap(b);
         ib.position(0);
 
-        GLES20.glReadPixels(x_, y_, width_, height_, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
+        GLES20.glReadPixels(0, 0, realWidth_, realHeight_, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
         checkGLError();
 
         //remember, that OpenGL bitmap is incompatible with Android bitmap
         //and so, some correction need.
-        for (int i = 0, k = 0; i < height_; i++, k++) {
-            for (int j = 0; j < width_; j++) {
-                int pixel = b[i * width_ + j];
-                int blue = (pixel >> 16) & 0xff;
-                int red = (pixel << 16) & 0x00ff0000;
-                int pix1 = (pixel & 0xff00ff00) | red | blue;
-                bt[(height_ - k - 1) * width_ + j] = pix1;
+        for (int i = 0, k = 0; i < realHeight_; i++, k++) {
+            for (int j = 0; j < realWidth_; j++) {
+                final int pixel = b[i * realWidth_ + j];
+                final int blue = (pixel >> 16) & 0xff;
+                final int red = (pixel << 16) & 0x00ff0000;
+                final int pix1 = (pixel & 0xff00ff00) | red | blue;
+                bt[(realHeight_ - k - 1) * realWidth_ + j] = pix1;
             }
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(bt, width_, height_, Bitmap.Config.ARGB_8888);
-        int pixelBefore = bitmap_.getPixel(0, 0);
-        int pixelAfter = bitmap.getPixel(0, 0);
+        final Bitmap bitmapAux = Bitmap.createBitmap(bt, realWidth_, realHeight_, Bitmap.Config.ARGB_8888);
+        final Bitmap bitmap = Bitmap.createScaledBitmap(bitmapAux, width_, height_, true);
+        final int pixelBefore = bitmap_.getPixel(0, 0);
+        final int pixelAfter = bitmap.getPixel(0, 0);
         Log.d("MobileRT", "pixelBefore = " + pixelBefore);
         Log.d("MobileRT", "pixelAfter = " + pixelAfter);
         return bitmap;
@@ -282,13 +281,13 @@ class MainRenderer implements Renderer {
                 0.5f, 0.5f, 0.0f,
                 -0.5f, 0.5f, 0.0f,
 
-                -0.9f, 0.5f, 0.0f,
-                -0.9f, -0.5f, 0.0f,
+                -1.0f, 0.5f, 0.0f,
+                -1.0f, -0.5f, 0.0f,
                 -0.6f, -0.5f, 0.0f,
 
                 0.6f, 0.5f, 0.0f,
                 0.6f, -0.5f, 0.0f,
-                0.9f, -0.5f, 0.0f,
+                1.0f, -0.5f, 0.0f,
         };
 
         colorsRaster = new float[]{

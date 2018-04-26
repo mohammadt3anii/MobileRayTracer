@@ -104,7 +104,7 @@ public class DrawView extends GLSurfaceView {
         numThreads_ = numThreads;
 
         setVisibility(View.INVISIBLE);
-        renderer_.setBitmap(width, height, (int) getX(), (int) getY());
+        renderer_.setBitmap(width, height, getWidth(), getHeight());
         setVisibility(View.VISIBLE);
     }
 

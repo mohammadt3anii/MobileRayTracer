@@ -200,25 +200,20 @@ public final class MainActivity extends Activity {
             drawView_.setVisibility(View.VISIBLE);
 
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
-            drawView_.viewText_.buttonRender_.setOnLongClickListener((View v) -> {
-                this.recreate();
-                return false;
-            });
             if (drawView_.viewText_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
                 System.exit(0);
             }
+            drawView_.viewText_.buttonRender_.setOnLongClickListener((View v) -> {
+                this.recreate();
+                return false;
+            });
             final TextView textView = findViewById(R.id.timeText);
             if (textView == null) {
                 Log.e("ViewText", "ViewText is NULL !!!");
                 System.exit(0);
             }
             drawView_.setView(textView);
-            drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
-            if (drawView_.viewText_.buttonRender_ == null) {
-                Log.e("Button", "Button is NULL !!!");
-                System.exit(0);
-            }
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
             System.exit(0);
