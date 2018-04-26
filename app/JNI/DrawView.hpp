@@ -44,19 +44,19 @@ void JNI_OnUnload(JavaVM *vm, void *reserved);
 extern "C"
 jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
-        jclass thiz
+        jobject thiz
 ) noexcept;
 
 extern "C"
 jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
-        jclass thiz
+        jobject thiz
 ) noexcept;
 
 extern "C"
 jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
-        jclass thiz
+        jobject thiz
 ) noexcept;
 
 extern "C"
