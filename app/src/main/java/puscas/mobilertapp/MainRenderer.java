@@ -271,42 +271,9 @@ class MainRenderer implements Renderer {
         checkGLError();
     }
 
-    void copyFrame() {
-        verticesRaster = new float[]{
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f,
-
-                -1.0f, 0.5f, 0.0f,
-                -1.0f, -0.5f, 0.0f,
-                -0.6f, -0.5f, 0.0f,
-
-                0.6f, 0.5f, 0.0f,
-                0.6f, -0.5f, 0.0f,
-                1.0f, -0.5f, 0.0f,
-        };
-
-        colorsRaster = new float[]{
-                0.0f, 1.0f, 0.0f, 1.0f,
-                0.0f, 1.0f, 0.0f, 1.0f,
-                0.0f, 1.0f, 0.0f, 1.0f,
-
-                0.0f, 0.0f, 1.0f, 1.0f,
-                0.0f, 0.0f, 1.0f, 1.0f,
-                0.0f, 0.0f, 1.0f, 1.0f,
-
-                1.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 0.0f, 1.0f,
-
-                1.0f, 1.0f, 0.0f, 1.0f,
-                1.0f, 1.0f, 0.0f, 1.0f,
-                1.0f, 1.0f, 0.0f, 1.0f,
-        };
+    void copyFrame(final float[] vertices, final float[] colors) {
+        verticesRaster = vertices;
+        colorsRaster = colors;
 
         final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);
         bbVertices2.order(ByteOrder.nativeOrder());

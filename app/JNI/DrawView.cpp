@@ -48,6 +48,62 @@ void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
     LOG("JNI_OnUnload");
 }
 
+extern "C"
+jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
+        JNIEnv *env,
+        jclass /*thiz*/
+) noexcept {
+    const jfloat float_ptr[]{-0.5f, 0.5f, 0.0f,
+                             -0.5f, -0.5f, 0.0f,
+                             0.5f, -0.5f, 0.0f,
+
+                             0.5f, -0.5f, 0.0f,
+                             0.5f, 0.5f, 0.0f,
+                             -0.5f, 0.5f, 0.0f,
+
+                             -1.0f, 0.5f, 0.0f,
+                             -1.0f, -0.5f, 0.0f,
+                             -0.6f, -0.5f, 0.0f,
+
+                             0.6f, 0.5f, 0.0f,
+                             0.6f, -0.5f, 0.0f,
+                             1.0f, -0.5f, 0.0f};
+
+    const jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+
+    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+
+    return result;
+}
+
+extern "C"
+jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
+        JNIEnv *env,
+        jclass /*thiz*/
+) noexcept {
+    const jfloat float_ptr[]{0.0f, 1.0f, 0.0f, 1.0f,
+                             0.0f, 1.0f, 0.0f, 1.0f,
+                             0.0f, 1.0f, 0.0f, 1.0f,
+
+                             0.0f, 0.0f, 1.0f, 1.0f,
+                             0.0f, 0.0f, 1.0f, 1.0f,
+                             0.0f, 0.0f, 1.0f, 1.0f,
+
+                             1.0f, 0.0f, 0.0f, 1.0f,
+                             1.0f, 0.0f, 0.0f, 1.0f,
+                             1.0f, 0.0f, 0.0f, 1.0f,
+
+                             1.0f, 0.0f, 1.0f, 1.0f,
+                             1.0f, 0.0f, 1.0f, 1.0f,
+                             1.0f, 0.0f, 1.0f, 1.0f};
+
+    const jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+
+    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+
+    return result;
+}
+
 static ::std::string
 readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filename) {
     AAssetManager *const mgr {AAssetManager_fromJava(env, assetManager)};
