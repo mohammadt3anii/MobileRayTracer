@@ -1,0 +1,126 @@
+\begin{thebibliography}{19}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[AMD()]{RadeonRays}
+AMD.
+\newblock Radeon rays technology for developers.
+\newblock URL
+  \url{http://developer.amd.com/tools-and-sdks/graphics-development/radeonpro/radeonrays-technology-developers/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Chedeau()]{jsRayTracer}
+Christopher Chedeau.
+\newblock jsraytracer.
+\newblock URL
+  \url{http://blog.vjeux.com/2012/javascript/javascript-ray-tracer.html}.
+\newblock Accessed: January 2017.
+
+\bibitem[Dahlquist()]{Android_CPU_Raytracer}
+Nic Dahlquist.
+\newblock Android cpu raytracer.
+\newblock URL \url{https://github.com/ndahlquist/raytracer}.
+\newblock Accessed: January 2017.
+
+\bibitem[Google()]{AndroidDevelopers}
+Google.
+\newblock Android developers.
+\newblock URL \url{https://developer.android.com/index.html}.
+\newblock Accessed: May 2017.
+
+\bibitem[Gustavo Pichorim~Boiko()]{YafaRay}
+Rodrigo Placencia \& David Bluecame \& Olaf Arnold \& Michele~Castigliego
+  Gustavo Pichorim~Boiko.
+\newblock Yafaray.
+\newblock URL \url{http://www.yafaray.org/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Inc()]{OctaneRender}
+©~OTOY Inc.
+\newblock Real-time 3d rendering.
+\newblock URL \url{https://home.otoy.com/render/octane-render/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Intel()]{Embree}
+Intel.
+\newblock High performance ray tracing kernels.
+\newblock URL \url{https://embree.github.io/index.html}.
+\newblock Accessed: January 2017.
+
+\bibitem[Jakob(2010)]{Mitsuba}
+Wenzel Jakob.
+\newblock Mitsuba renderer, 2010.
+\newblock URL \url{http://www.mitsuba-renderer.org}.
+\newblock Accessed: January 2017.
+
+\bibitem[Kenneth()]{HRay}
+Kenneth.
+\newblock Hray - a haskell ray tracer.
+\newblock URL \url{http://kejo.be/ELIS/Haskell/HRay/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Limited()]{IndigoRT}
+Glare~Technologies Limited.
+\newblock Indigo rt.
+\newblock URL \url{http://www.indigorenderer.com/indigo_rt}.
+\newblock Accessed: January 2017.
+
+\bibitem[Matt~Pharr()]{PBRT}
+Greg~Humphreys Matt~Pharr, Wenzel~Jakob.
+\newblock Physically based rendering.
+\newblock URL \url{http://pbrt.org/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Morgan()]{G3D17}
+Michael~Mara Morgan.
+\newblock The {G3D} innovation engine.
+\newblock URL \url{http://g3d.cs.williams.edu/}.
+\newblock Accessed: January 2017.
+
+\bibitem[Nvidia({\natexlab{a}})]{Optix}
+Nvidia.
+\newblock Nvidia® optix™ ray tracing engine, {\natexlab{a}}.
+\newblock URL \url{https://developer.nvidia.com/optix}.
+\newblock Accessed: January 2017.
+
+\bibitem[Nvidia({\natexlab{b}})]{OptixPrime}
+Nvidia.
+\newblock Baking with optix, {\natexlab{b}}.
+\newblock URL \url{https://developer.nvidia.com/optix-prime-baking-sample}.
+\newblock Accessed: January 2017.
+
+\bibitem[Pixar()]{RIS}
+Pixar.
+\newblock Pixar ris.
+\newblock URL
+  \url{https://renderman.pixar.com/resources/current/RenderMan/risOverview.html}.
+\newblock Accessed: January 2017.
+
+\bibitem[Usher({\natexlab{a}})]{micro-packet}
+Will Usher.
+\newblock upacket - a micro packet ray tracer, {\natexlab{a}}.
+\newblock URL \url{https://github.com/Twinklebear/micro-packet}.
+\newblock Accessed: January 2017.
+
+\bibitem[Usher({\natexlab{b}})]{tray}
+Will Usher.
+\newblock tray - a toy ray tracer, {\natexlab{b}}.
+\newblock URL \url{https://github.com/Twinklebear/tray}.
+\newblock Accessed: January 2017.
+
+\bibitem[Usher({\natexlab{c}})]{trayrust}
+Will Usher.
+\newblock tray\_rust - a toy ray tracer in rust, {\natexlab{c}}.
+\newblock URL \url{https://github.com/Twinklebear/tray\_rust}.
+\newblock Accessed: January 2017.
+
+\bibitem[Zellmann()]{Visionaray}
+Stefan Zellmann.
+\newblock Visionaray.
+\newblock URL \url{https://github.com/szellmann/visionaray}.
+\newblock Accessed: January 2017.
+
+\end{thebibliography}

@@ -1,0 +1,60 @@
+\chapter{Demonstration: Global Illumination}
+
+\section{Results obtained}
+
+\par
+The developed application ...
+
+\begin{tikzpicture}
+\begin{axis}[
+legend style={at={(1.05,1.00)},anchor=north west},
+axis lines = left,
+xlabel = \#threads,
+ylabel = speedup,
+xtick={0,1,2,3,4},
+ytick={0,1,...,10},
+]
+\addplot [
+color=blue,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Without Accelerator Structure}
+\addplot [
+color=black,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Regular Grid}
+\addplot [
+color=red,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Octree}
+\label{graph:NoShadows}
+\end{axis}
+\end{tikzpicture}
+
+\section{Comparison with Android CPU Raytracer (\cite{Android_CPU_Raytracer})}
+
+\par
+Comparison ...

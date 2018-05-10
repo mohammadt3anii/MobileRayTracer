@@ -1,0 +1,963 @@
+\chapter{Software architecture}
+
+\section{Approach}
+
+\par
+The development of this demonstration application involves the distinction of three layers of abstraction: user interface, rendering components and the library itself.
+
+\par
+The top layer is the User Interface which is obviously application, and eventually device, dependent.
+The user interface of this dissertation's demo application is very simple and just allows the user to see the rendered image and choose some rendering components to use, like the integrator, the sampler, the number of threads and samples and choose the scene to render.
+Although this layer is useful, this dissertation focuses only on the middle and bottom layers.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of the developed User Interface.}
+	\label{UI.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{UI.png}
+\end{figure}
+
+\par
+The middle layer provides the rendering components which are abstracted concepts about rendering that use functionalities that the library offers to the programmer.
+Some of these rendering components are the camera, the light, the sampler and the integrator.
+These rendering components are useful for the programmer since it allows them to use features without having the need to know how these were developed.
+And, of course, this facilitates and accelerates the development of new rendering applications.
+
+\par
+Lastly, the bottom layer is the library itself, which contains the business logic of basic features in a renderer, that the rendering components use.
+These features are basic functionalities of a ray tracer engine like: create vectors and points, create different primitives with different materials, cast rays and intersect rays with the primitives.
+
+\par
+It is also important to mention that the demo application was developed in order to show the developed features, the performance achieved in the mobile devices and also to help promote the library.
+This demo application is a good way to test it in several Android devices like a smart phone or a tablet.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of the 3 layers in the application}
+	\label{Illustration of the 3 layers in the application}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Layers.png}
+\end{figure}
+
+\par
+Besides the abstraction layers, there are some important strategic decisions made in order to guide the progress of the development of this library.
+
+\par
+The first decision was: the primary rays always have origin in the camera.
+This decision was made in order to not mix the code of the integrator with the ray tracer renderer engine.
+
+\par
+Other decision made was to make the rendering process progressive, which means that the rendered image is incrementally refined with more and more traced rays.
+As the integrator will be converging to better values.
+This is important in order to give the user a fast rendered image, with some noise or aliasing, and converge it progressively to a better solution with higher details and practically without any visual noise or aliasing.
+
+\par
+Another thought aspect that was studied is the permission of dynamic scenes and / or dynamic cameras, which means to let the programmer modify the camera or the scene while the ray tracer is rendering it.
+This makes possible to build challenging applications and also provide more interesting scenes and more eye candy applications for the final user.
+
+\par
+Last, but not least, is that the code was developed in a modular way.
+This allows the programmers to code their own rendering components, like the integrator, camera, sampler and light, without having to develop the basic features in the renderer engine.
+
+\section{Methodology}
+
+\par
+In order to take advantage of most of the mobile CPU resources and give a good performance for the applications, the library and the rendering components were developed using the native programming language C++.
+This was achieved by using the Native Development Kit (NDK) provided by the Integrated Development Environment (IDE) Android Studio.
+The User Interface was developed in Java using the traditional Software Development Kit (SDK) provided by the Android Studio because there is no framework in the NDK that helps the programmer design his own user interface.
+Despite that, its performance is not very important because it doesn't interfere significantly with the others layers of the application.
+
+
+
+\iffalse
+
+\section{Work plan}
+
+\par
+The development of this dissertation will be done in six stages.
+
+\par
+The first stage involves the survey of state of the art about ray tracers built for mobile systems, in order to understand the capacities and limitations of these devices when running rendering algorithms.
+
+\par
+The second stage is to make the requirements specification in order to:
+
+\begin{itemize}
+\item Describe the functionalities of the library.
+\item Explain how the user interact with the external interfaces.
+\item Demonstrate the design constraints imposed on an implementation of a custom rendering component.
+\end{itemize}
+
+\par
+The third stage will address the development of the architecture of the entire system.
+The study performed in the previous stages will serve as the basis for this development, where this architecture should be able to address all the possible problems that might arise in the development process.
+
+\par
+The fourth stage will be the development and test of the software, where it should be relatively quick if the previous stage was done properly.
+
+\par
+Next it will be made a demo application in order to illustrate the possibilities and limitations of this rendering process in the mobile devices.
+
+\par
+Finally, the writing of this dissertation will be done throughout the entire project, but there will be a reinforced effort at the end along with the writing of an article.
+
+\par
+In short, the work plan of this dissertation should be as follows:
+
+\begin{enumerate}
+
+\item Survey of the State of the Art (2 weeks)
+\item Requirements specification (2 weeks)
+\item Development of Software Architecture (3 months)
+\item Development and test of the library (2 weeks)
+\item Development of a demonstration (2 weeks)
+\item Writing the dissertation and an article (1 month)
+
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Scheduling for this dissertation}
+\label{Scheduling for this dissertation}
+\begin{tabular}{|c|c|c|c|c|c|c|}[H]
+\hline
+\textbf{}                               & \multicolumn{6}{c|}{\textbf{2017}} \\ \hline
+                                        & Jan  & Feb & Mar & Apr & May & Jun \\ \hline
+Survey of the State of the Art          & X    &     &     &     &     &     \\ \hline
+Requirements specification              & X    &     &     &     &     &     \\ \hline
+Development of Software Architecture    &      & X   & X   & X   &     &     \\ \hline
+Development and test of the library     &      &     &     &     & X   &     \\ \hline
+Development of a demonstration          &      &     &     &     & X   &     \\ \hline
+Writing the dissertation and an article &      &     &     &     &     & X   \\ \hline
+\end{tabular}
+\end{table}
+
+\fi
+
+
+
+\section{Library}
+
+\par
+Besides the obvious basic functionalities provided with Point3D and Vector3D that allows the user to create points and vectors, this library provides four main classes that allows the user set up the scenes and choose the rendering method: Renderer, Scene, Shapes and RGB.
+
+\subsection{Renderer}
+
+\par
+The Renderer is the closest class to the application that starts the rendering process.
+This class provides three main methods:
+\begin{verbatim}
+void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
+void registerToneMapper(std::function<float(const float value)> toneMapper);
+void stopRender(void);
+\end{verbatim}
+
+\par
+The \textit{renderFrame} method starts the rendering process and writes the calculated light luminance of each pixel in the parameter \textit{bitmap}.
+This method also allows to choose the number of threads that will render the image to the bitmap.
+The image plane is divided into 16 tiles of pixels and it is traced one primary ray per pixel in the tile.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of tiling image plane.}
+	\label{Illustration of tiling image plane.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{tiling.png}
+\end{figure}
+
+\par
+The \textit{stopRender} method only serves to stop the rendering process without cleaning the pixels' colors already calculated.
+
+\par
+Finally, the \textit{registerToneMapper} is a method that allows the user to define its own tone mapping function that needs to receive as a parameter a float number and returns that number transformed according to the defined function.
+Typically, renderers based in physics generate images with high dynamic range, with luminances covering a range of 14 orders of magnitude:
+$[10^{-5} .. 10^8] cd / m^2$.
+But the conventional monitors typically cover a luminance range of only 2 orders of magnitude:
+$[10^0 .. 10^2] cd / m^2$.
+So, it is the tone mapper that maps the HDR luminance according to the monitor luminance.
+
+\subsection{Scene}
+
+\par
+The Scene is the class that handles the process of intersecting a ray with the primitives and source lights in the scene.
+Besides providing a vector to add the light sources and a vector to add primitives to the scene, it also provides two main methods:
+\begin{verbatim}
+int trace(Intersection &intersection, Ray &ray) const;
+bool shadowTrace(Intersection &intersection, const Ray &ray) const;
+\end{verbatim}
+
+\par
+The \textit{trace}, as the name implies, is a method that tries to intersect a ray with all the primitives and light sources and returns the closest intersection to the origin of the ray.
+This method is used to determine the intersection of the casted ray with the primitives in the scene.
+
+\par
+The \textit{shadowTrace}, is similar to the \textit{trace} method but with the difference that returns the first intersection found.
+The purpose of this method is to simulate the shadows in the scene.
+
+
+\subsection{Shapes}
+
+\par
+In order to make possible to generate scenes with all kind of objects, it was developed 3 types of shapes: plane, sphere and triangle.
+All shapes provide only one method:
+\begin{verbatim}
+bool intersect(Intersection &int, const Ray &ray, const Material &mat) const override;
+\end{verbatim}
+This method determines if a ray intersects the shape and returns the intersection.
+It is important to mention that, obviously, each shape was developed with different algorithm.
+
+\subsubsection{Plane}
+
+\par
+The plane is an essential primitive shape because it allows the user to build scenes indoors.
+
+\par
+The construction of a plane requires just an arbitrary point in the plane and the normal of the plane.
+So, the intersect method implemented has the next algorithm:
+
+\begin{verbatim}
+projection = planeNormal . rayDirection
+if (|projection| <= 0) return false
+distance = planeNormal . (planePoint - rayOrigin) / projection
+if (distance <= 0 || distance > rayMaxDistance) return false
+intersectionPoint = rayOrigin + rayDirection * distance
+return Intersection(intersectionPoint, planeNormal, material)
+\end{verbatim}
+
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of a ray intersecting a plane.}
+	\label{Plane.}
+	\includegraphics[keepaspectratio,scale=0.4]{RayToPlane.png}
+\end{figure}
+
+\subsubsection{Sphere}
+
+\par
+The sphere is also an important primitive shape because it allows the user to build some common objects with a shape of a ball.
+
+\par
+The construction of a sphere requires just the point in the center and the radius of the sphere.
+It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
+So, the intersect method implemented has the next algorithm:
+
+\begin{verbatim}
+centerToOrigin = rayOrigin - sphereCenter
+B = 2 * centerToOrigin . rayDirection
+C = centerToOrigin.magnitude - radius
+disciminant = B^2 - 4*C
+if (discriminant <= 0) return false
+distance1 = (-B + sqrt{discriminant} * 0.5)
+distance2 = (-B - sqrt{discriminant} * 0.5)
+distance = min(distance1, distance2)
+if (distance <= 0 || distance > rayMaxDistance) return false
+intersectionPoint = rayOrigin + rayDirection * distance
+sphereNormal = intersectionPoint - sphereCenter
+return Intersection(intersectionPoint, sphereNormal, material)
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of a ray intersecting a sphere in two points.}
+	\label{Sphere.}
+	\includegraphics[keepaspectratio,scale=0.4]{Ray_Sphere_Intersection.png}
+\end{figure}
+
+\subsubsection{Triangle}
+
+\par
+And finally, obviously the triangle has also been implemented because it allows to build many different object shapes.
+
+\par
+The construction of a triangle requires three points
+$[A, B, C]$
+, two vectors
+$[AB, AC]$
+and the normal of the triangle.
+So, the intersect method implemented has the next algorithm:
+
+\begin{verbatim}
+perpendicularVector = rayDirection x AC
+projection = AB . perpendicularVector
+if(|projection| <= 0) return false
+vectorToRay = rayOrigin - A
+u = (vectorToRay . perpendicularVector) / projection
+if (u < 0 || u > 1) return false
+perpendicularVector2 = vectorToRay x AB
+v = (rayDirection . perpendicularVector2) / projection
+if(v < 0 || (u + v) > 1) return false
+distance = (AC . perpendicularVector2) / projection
+intersectionPoint = rayOrigin + rayDirection * distance
+return Intersection(intersectionPoint, triangleNormal, material)
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of a ray intersecting a triangle.}
+	\label{Sphere.}
+	\includegraphics[keepaspectratio,scale=1.0]{triangle.png}
+\end{figure}
+
+\subsection{Accelerator Structures}
+
+\par
+Accelerator Structures ...
+
+
+\section{Rendering Components}
+
+\par
+In order to show the functionalities provided by the library, it was developed a few Rendering Components.
+It is provided the perspective camera, an area light and point light, four Samplers and three Shaders.
+
+\subsection{Shaders}
+
+\par
+The implemented ray tracer was programmed objected oriented, so each Rendering Component was developed separately.
+This allows the user to develop his own Rendering Components without having to develop the ray tracer engine.
+
+\par
+In this context, a shader is the Rendering Component that describes how the Rendering Equation is approximated.
+The Rendering Equation describes how the total radiance reflected by any point
+$p$
+of a surface in a direction
+$\omega$$r$
+is calculated.
+The Bidirectional Reflectance Distribution Function (BRDF) is a function that tries to approximate the Rendering Equation.
+In summary, a shader, in this context, is the algorithm of a BRDF.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of the rendering equation describing the total amount of light emitted from a point
+	$x$
+	along a particular viewing direction and given a function for incoming light and a BRDF.}
+	\label{Rendering_Equation.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Rendering_eq.png}
+\end{figure}
+
+\par
+There was developed three shaders: NoShadows, Whitted and PathTracer.
+All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray and the respective intersection.
+
+\begin{verbatim}
+void shade(RGB &rgb, Intersection &intersection, Ray &ray) const override;
+\end{verbatim}
+
+\par
+The parameter
+$rgb$
+is where the color of the pixel will be calculated and the
+$intersection$
+contains the necessary information about the intersection of a ray with the primitive like the intersection point, its normal and the material of the intersected material.
+Finally the parameter
+$ray$
+is where the information about the ray like the origin of the ray and its direction is accessed.
+
+\subsubsection{NoShadows}
+
+\par
+NoShadows is the simplest shader because, as the name implies, it does not synthesize the shadows and it only simulates the direct lighting.
+This BRDF only simulates direct lighting in primitives with diffuse surfaces and it does not take into account the light coming from other points.
+As already said, the indirect lighting is not fully simulated but rather simplified in a way of fixed ambient light of about 10\% of the color of the objects.
+
+\par
+The algorithm developed is as following:
+
+\begin{verbatim}
+if (intersected material is diffuse) {
+  for each light source
+  	for each sample
+	    vectorToLight = lightPosition - intersectionPoint
+	    cos_N_L = vectorToLight . intersectionNormal
+	    if (cos_N_L > 0) rgb += kD * radLight * cos_N_L
+  rgb /= #samples
+  rgb /= #lights
+  rgb += kD * 0.1 //Ambient light
+}
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{NoShadows shader.}
+	\label{NoShadows shader.}
+	\includegraphics[keepaspectratio,scale=0.3]{NoShadows.png}
+\end{figure}
+
+\subsubsection{Whitted}
+
+\par
+As the name of this shader implies, Whitted is the algorithm demonstrated by Whitted in 1980s.
+Like the previous shader, it doesn't simulate indirect lighting.
+This BRDF calculates the reflected light on diffuse and specular surfaces, as well as the light refracted on surfaces with a degree of transmission, such as water.
+In order to simulate a reflective and refractive surfaces, the algorithm was divided into each case.
+This makes it possible to simulate refractive surfaces, reflective surfaces and even refractive and reflective surfaces.
+
+\par
+The reflected light in a diffuse surface is calculated by adding the casting rays in direction to the lights.
+These rays are called shadow rays and their radiance are multiplied by the dot product between vector to the light and the shading normal.
+At the end, the summation is multiplied by the diffuse color of the intersected primitive and divided by the number of samples taken.
+
+\par
+The reflected light in a specular surface is calculated in a different way.
+The specular ray is casted and ray traced, then the obtained radiance is multiplied by the specular color of the intersected primitive.
+The reflection direction is the subtraction between the double of dot product between the inverse of the ray direction and the shading normal multiplying by the shading normal, and the inverse of the ray direction.
+
+\begin{figure}[H]
+	\centering
+	\caption{Reflections projected on the floor and on the spheres.}
+	\label{Reflection.}
+	\includegraphics[keepaspectratio,scale=0.3]{Reflection.png}
+\end{figure}
+
+\par
+Finally, the refracted light in a transmission surface is calculated by using the refractive index of the intersected primitive and the ray direction and shading normal.
+First, the shading normal is inverted if the origin of the ray was inside a primitive, like a sphere, and if it was not then the refractive index is inverted.
+Then, it is calculated two auxiliary scalar projections:
+$cosTheta1$
+and
+$cosTheta2$
+.
+$cosTheta1$
+is the dot product of the inverse of the shading normal and the ray direction, and
+$cosTheta2$
+is the difference of 1 and refractive index squared multiplied by one minus
+$cosTheta1$
+squared.
+Then, if
+$cosTheta2$
+is greater than zero, then the direction of the transmission ray is ray direction multiplied with refractive index plus shading normal multiplied by refractive index multiplied $cosTheta1$
+minus square root of 
+$cosTheta2$
+.
+Else, the direction of the transmission ray is just ray direction plus shading normal multiplied by the double of
+$cosTheta1$
+.
+And, as usual, the transmission ray is traced and its radiance is multiplied by the transmission component of the intersected primitive.
+
+\begin{figure}[H]
+	\centering
+	\caption{Refraction of light at the interface of two media of different refractive indices.}
+	\label{Refraction.}
+	\includegraphics[keepaspectratio,scale=0.3]{Refraction.png}
+\end{figure}
+
+\par
+The algorithm developed is as following:
+
+\begin{verbatim}
+if (intersected material is diffuse) {
+  for each light source
+    for each sample
+      vectorToLight = lightPosition - intersectionPoint
+      cos_N_L = vectorToLight . shadingNormal
+      if (cos_N_L > 0) {
+        Ray shadowRay(intersectionPoint, vectorToLight, distanceToLight, rayDepth + 1)
+        if (!shadowTrace(shadowRay)) rgb += radLight * cos_N_L
+      }
+  rgb *= kD
+  rgb /= #samples
+}
+
+if (intersected material is specular reflective) {
+  reflectionDir = (2 * symRayDirection . normal) * normal - symRayDirection
+  Ray specularRay(intersectionPoint, reflectionDir, rayDepth + 1)
+  rgb += rayTrace (specularRay) * kS
+}
+
+if (intersected material is specular refractive) {
+  if (shadingNormal . rayDirection > 0) {
+    //we are inside the medium
+    shadingNormalT = -1 * shadingNormal
+    n = 1 / n
+  }
+  n = 1 / n
+  cosTheta1 = -shadingNormalT . rayDirection
+  cosTheta2 = 1 - n^2*(1-cosTheta1^2)
+  if (cosTheta2 > 0)
+    transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n*cost1 - sqrt(cost2))))
+  else
+    transmissionRay.dir = (rayDir + shadingNormalT*(cost1 * 2))
+  rgb += rayTrace(transmissionRay) * kT
+}
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{Whitted shader.}
+	\label{Whitted shader.}
+	\includegraphics[keepaspectratio,scale=0.3]{Whitted.png}
+\end{figure}
+
+
+\subsubsection{PathTracer}
+
+\par
+Finally, the last shader developed is the canon Path Tracer.
+Unlike the previous shaders, this one fully simulates both direct and indirect lighting.
+But, like the previous shader, this algorithm simulates the light reflected on diffuse and specular surfaces, as well as the light refracted on transparent primitives.
+
+\par
+The light reflected on diffuse surfaces is divided in two parts: direct lighting and indirect lighting.
+The direct lighting is calculated in a similar way to the Whitted shader but with the difference that samples are not taken from all sources of light but rather only one.
+The light source in each sample is chosen randomly.
+Then the obtained light radiance is multiplied by the Probability Density Function (PDF) in order to approximate the expected value.
+In this case the PDF is as simple as
+$1 / \#lights$.
+
+\par
+Finally, the indirect lighting reflected in diffuse surfaces is calculated in a much more complex way.
+First it is generated, from the intersected point, a random direction on an unit hemisphere with a PDF proportional to cosine-weighted solid angle
+($PDF: p(\Theta) = cos\theta / \pi$,
+$x = cos(2\pi r1)\sqrt{1-r2}$,
+$y = sin(2\pi r1)\sqrt{1-r2}$,
+$z = \sqrt{r2}$)
+.
+This kind of PDF is one of the best ways to render images with path tracing that the rendering equation converges to the expected value as fast as possible.
+Then a rotation matrix is built, where it lets rotate a vector around an arbitrary axis with a given angle.
+
+\begin{figure}[H]
+	\centering
+	\caption{Rotation matrix from an arbitrary axis and an angle.}
+	\label{Rotation_matrix.}
+	\includegraphics[keepaspectratio,scale=0.5]{Rotation_Matrix.png}
+\end{figure}
+
+Then the proper coordinates in the world view is just: $globalCoordinates = localCoordinates * rotationMatrix$.
+And the indirect lighting on diffuse surfaces is then the multiplication of the ray traced light radiance with the color of the primitive and
+$\pi$
+, and divided by the probability of stopping the Russian roulette.
+
+\par
+The reflected light in a specular surface and the refracted light are simulated in a similar way to the Whitted algorithm presented previously.
+
+\par
+The algorithm developed is as following:
+
+\begin{verbatim}
+if (intersected material is diffuse) {
+  for each light
+    for each sample
+      light = samplerLight.getSample()
+      vectorToLight = lightPosition - intersectionPoint
+      cos_N_L = vectorToLight . shadingNormal
+      if (cos_N_L > 0) {
+        Ray shadowRay(intersectionPoint, vectorToLight, distanceToLight, rayDepth + 1)
+        if (!shadowTrace(shadowRay)) rgb += radLight * cos_N_L
+      }
+  rgb *= kD
+  rgb *= #lights
+  rgb /= #samples
+
+  if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
+    local = Generate random direction on unit hemisphere 
+    proportional to cosine-weighted solid angle
+
+    RotationMatrix = Rotation matrix from axis and angle
+
+    Vector3D up = (0,1,0)
+    Vector3D u = intersectionNormal x up
+    if (u == 0) u.x = 1
+    cosTheta = up . intersectionNormal
+    sinTheta = 1 - cosTheta^2
+    if (sinTheta < 0) sinTheta *= -1
+    sinTheta = sqrt(sinTheta)
+
+    global = local * rotationMatrix
+
+    Ray secundaryRay (globalX, globalY, globalZ, intersectionPoint, rayDepth + 1)
+
+    LiD = rayTrace(secundaryRay) * kD * PI
+
+    if (rayDepth > RAY_DEPTH_MIN) LiD /= continue_probability
+    if(secundaryRay intersects light) LiD = 0
+
+    rgb += LiD
+  }
+
+}
+
+if (intersected material is specular reflective) {
+  reflectionDir = (2 * symRayDirection . normal) * normal - symRayDirection
+  Ray specularRay(intersectionPoint, reflectionDir, rayDepth + 1)
+  rgb += rayTrace (specularRay) * kS
+}
+
+if (intersected material is specular refractive) {
+  if (shadingNormal . rayDirection > 0) {
+    //we are inside the medium
+    shadingNormalT = -1 * shadingNormal
+    n = 1 / n
+  }
+  n = 1 / n
+
+  cosTheta1 = -shadingNormalT . rayDirection
+  cosTheta2 = 1 - n^2*(1-cosTheta1^2)
+
+  if (cosTheta2 > 0)
+    transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n*cosTheta1 - sqrt(cosTheta2))))
+  else
+    transmissionRay.dir = (rayDir + shadingNormalT*(cosTheta1 * 2))
+
+  rgb += rayTrace(transmissionRay) * kT
+}
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{PathTracer shader.}
+	\label{PathTracer shader.}
+	\includegraphics[keepaspectratio,scale=0.3]{PathTracer.png}
+\end{figure}
+
+
+\subsection{Samplers}
+
+\par
+There were implemented four samplers: Constant, Stratified, HaltonSequence and Random.
+
+\par
+All samplers just provide one method for the user to use:
+\begin{verbatim}
+float getSample(const unsigned int sample);
+\end{verbatim}
+
+\par
+The
+$getSample$
+method receives as parameter the number of the current sampler and returns the the actual sample.
+An atomic variable
+$sample$
+is used to count the current index of the samples.
+
+\subsubsection{Constant}
+
+\par
+This sampler is the simplest because it always returns the same number passed to the constructor.
+
+\par
+The algorithm of the
+$getSample$
+is just:
+
+\begin{verbatim}
+return value
+\end{verbatim}
+
+
+\subsubsection{Stratified}
+
+\par
+This sampler makes each sample at equal distance
+$(1 / domainSize)$
+and in ascending order.
+For example, for a domain size of 4, the samples taken are going to be: 0, 0.25, 0.5 and 0.75.
+
+\par
+The algorithm of the
+$getSample$
+is then:
+
+\begin{verbatim}
+//atomic operation
+current = sample++
+if (current >= (domainSize * (sampleParam + 1))) {
+  sample--
+  return 1
+}
+task = current - (sampleParam * domainSize)
+return task / domainSize
+\end{verbatim}
+
+
+\subsubsection{HaltonSequence}
+
+\par
+As the name implies, this sampler generates the Halton sequence.
+
+\par
+Halton sequence is a quasi random number sequence which is a deterministic sequence with low discrepancy.
+
+These sequences are usually good for Rendering Algorithms like Path Tracing because it can make the rendering equation converge faster (with fewer samples).
+
+\begin{figure}[H]
+	\centering
+	\caption{Halton sequence in a 2D image plane.}
+	\label{Halton_sequence_2D.}
+	\includegraphics[keepaspectratio,scale=0.5]{Halton_sequence_2D.png}
+\end{figure}
+
+\par
+The algorithm of the
+$getSample$
+is as following:
+
+\begin{verbatim}
+//atomic operation
+current = sample++
+if (current >= (domainSize * (sampleParam + 1))) {
+  sample--
+  return 1
+}
+task = current - (sampleParam * domainSize)
+
+f = 1
+result = 0
+while (task > 0) {
+  f = f / base
+  result = result + f * (index % base)
+  task = floor(index / base)
+}
+return result
+\end{verbatim}
+
+\subsubsection{Random}
+
+\par
+This sampler is just a wrapper to call the function rand() of the standard C library.
+
+This function is a pseudo random number generator (PRNG), which is an algorithm for generating a sequence of numbers whose properties approximate the properties of sequences of random numbers.
+Although the PRNG-generated sequence is not truly random, because it is completely determined by an initial value, called the PRNG's seed.
+These sequences are usually used in simulations that use Monte Carlo methods like the Monte Carlo Ray Tracing.
+
+\begin{figure}[H]
+	\centering
+	\caption{Pseudorandom sequence in a 2D image plane.}
+	\label{Pseudorandom_sequence_2D.}
+	\includegraphics[keepaspectratio,scale=0.5]{Pseudorandom_sequence_2D.png}
+\end{figure}
+
+\par
+So the algorithm of the
+$getSample$
+is just:
+
+\begin{verbatim}
+return rand() / RAND_MAX
+\end{verbatim}
+
+
+\subsection{Lights}
+
+\par
+There were implemented two types of light sources: PointLight and AreaLight.
+These light sources provide the user two main methods:
+
+\begin{verbatim}
+const Point3D getPosition(void);
+bool intersect(Intersection &intersection, const Ray &ray, const Material &) const;
+\end{verbatim}
+
+\par
+The
+$getPosition$
+method just returns the position of the light source and the 
+$intersect$
+method determines whether a given
+$ray$
+as a parameter intersects this light source and, if it intersects, writes the result to the
+$intersection$
+parameter.
+
+\subsubsection{PointLight}
+
+\par
+The PointLight is the simplest form of a light because, as the name implies, is just a point of light.
+
+\par
+Therefore, the
+$getPosition$
+method is very simple because it only returns the position of the light source determined in its constructor:
+
+\begin{verbatim}
+return position;
+\end{verbatim}
+
+\par
+And the
+$intersect$
+method is also quite simple because it always returns false.
+This is because the probability of a ray intersecting a single 3D point in the world is practically nil.
+
+\subsubsection{AreaLight}
+
+\par
+The AreaLight implemented has a shape of a triangle.
+This shape is intended as it allows to generate a random point in a triangle with barycentric coordinates.
+
+\par
+A triangle with 3 points: A, B and C.
+We get vectors AB and AC, being:
+
+\begin{verbatim}
+AB=[Bx-Ax,By-Ay,Bz-Az] and AC=[Cx-Ax,Cy-Ay,Cz-Az].
+\end{verbatim}
+
+\par
+These vectors tell how to get from point A to the other two points in the triangle, by telling us what direction to go and how far.
+So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the center of the triangle.
+To generate a random point in the triangle, we have to generate 2 random numbers between 0 and 1 (R and S).
+Then we have to make sure we stay inside the triangle by checking if they are larger than one:
+
+\begin{verbatim}
+if (R + S >= 1) {
+  R = 1 - R
+  S = 1 - S
+}
+\end{verbatim}
+
+Finally we can obtain a random point in the triangle by starting at point A, then getting a random percentage along vector AB and a random percentage along vector AC:
+
+\begin{verbatim}
+RandomPointPosition = A + R*AB + S*AC
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption{Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.}
+	\label{Barycentric_Coordinates.}
+	\includegraphics[keepaspectratio,scale=0.5]{barycentric-coordinates.png}
+\end{figure}
+
+\par
+So, the
+$getPosition$
+algorithm is as following:
+
+\begin{verbatim}
+R = samplerPointLight.getSample(0)
+S = samplerPointLight.getSample(0)
+if (R + S >= 1) {
+  R = 1 - R
+  S = 1 - S
+}
+x = A.x + R * AB.x + S * AC.x
+y = A.y + R * AB.y + S * AC.y
+z = A.z + R * AB.z + S * AC.z
+return Point3D(x, y, z);
+\end{verbatim}
+
+\par
+And the
+$intersect$
+method is equal to the intersection of a ray with a triangle presented earlier.
+
+\subsection{Cameras}
+
+\par
+There was implemented one type of Camera: Perspective Camera.
+
+\par
+The camera only provides one method for the user to generate a ray from the camera position in direction to the image plane:
+
+\begin{verbatim}
+Ray generateRay(const float u, const float v,
+                const float deviationU, const float deviationV) const;
+\end{verbatim}
+
+\par
+The method
+$generateRay$
+needs four parameters to create a ray.
+The $u$ and $v$
+are used to choose the pixel in the image plane.
+Being
+$u$
+the inverse of the index of the pixel in its line, that is,
+$x / width$
+, and
+$v$
+the inverse of the index of the pixel in its column, that is,
+$y / height$.
+In order to allow the reduction of aliasing in the generated images of the scene, the camera also accepts two extra parameters
+$deviationU$ and $deviationV$
+which are variances inside a pixel.
+The
+$deviationU$
+is a horizontal variance of the pixel, that is,
+$[-0.5*pixelWidth, 0.5*pixelWidth]$
+and
+$deviationV$ the variance in the vertical of the pixel
+$[-0.5*pixelHeight, 0.5*pixelHeight]$.
+
+\begin{figure}[H]
+	\centering
+	\caption{Jittering in a plane image.}
+	\label{Jittering.}
+	\includegraphics[keepaspectratio,scale=1.0]{Jittering.png}
+\end{figure}
+
+\subsubsection{Perspective Camera}
+
+\par
+With this type of camera we can simulate images being seen by the human eyes.
+
+\par
+To obtain an image plane with perspective is necessary to have a Field of View.
+In order to accept any resolution of the image plane, we have to divide the field of view in 2 parts: horizontal and vertical.
+This way, we can obtain the aspect ratio of the image plane we want.
+
+\begin{figure}[H]
+	\centering
+	\caption{Perspective camera with hFov, vFov and dFov.}
+	\label{Perspective_Camera.}
+	\includegraphics[keepaspectratio,scale=0.2]{hfov-vfov-dfov.jpg}
+\end{figure}
+
+\par
+The algorithm to generate a ray from the camera is very simple.
+
+...
+
+\section{Android specifics and challenges}
+
+\subsection{Specifics}
+
+\par
+Before developing the ray tracer to Android, it is necessary to understand how an Android application works.
+
+\par
+A typical Android application is programmed in Java programming language.
+And it usually needs to communicate with an User Interface which also is programmed in Java.
+The code is compiled with Android Software Development Kit (SDK) along with any data and resource files into an Android package (APK).
+But, in order to avoid using the Java Emulator in our code and program it in native code, it is necessary to use Android Native Development Kit (NDK).
+Unfortunately, the Android Studio IDE doesn't provide any support like libraries like Qt that facilitates the build of a User Interface in native code.
+So, in order to obtain the best performance possible in a mobile device, the User Interface was programmed in Java and the ray tracer library and components were programmed in C++.
+
+\subsection{User Interface}
+
+\par
+The Android User Interface is programmed in Java and only one thread can refresh the User Interface (UI thread).
+
+\par
+There are only 2 goals about the User Interface: should be as simple as possible and should be able to allow progressive ray tracing (refresh the image while it is being rendered).
+
+\par
+In order to allow progressive ray tracing, it was used a pool of 1 thread called Render Task thread that every 200 ms wakes up the thread and updates the strings used in the text view and updates the bitmap of the rendering image by locking and unlocking the pixels.
+Locking pixels means that will be ensured that the memory for the pixels will not move until the pixels is unlocked.
+Before it finishes, it publishes the progress on the UI thread.
+Then the UI thread wakes up and updates the text view.
+
+\begin{figure}[H]
+	\centering
+	\caption{Execution flow of UI thread and Render Task thread.}
+	\label{Execution flow of UI thread and Render Task thread}
+	\includegraphics[keepaspectratio,scale=0.5]{UI_thread.png}
+\end{figure}
+
+\subsection{Challenges}
+
+\par
+Developing applications for mobile devices have different challenges compared with the traditional personal computer hardware.
+
+\par
+The Android User Interface has some particularities like only one thread can modify the UI (UI thread).
+
+\par
+The memory size is typically lower, the CPU microarchitecture is different and also the Operating System (OS) is shaped for the mobile world, making a lot of restrictions in the performance in order to save battery.
+The amount of main memory available for the applications can also be affected by the OS.
+
+\par
+Other challenges are related with the communication mechanism between the SDK and the NDK, because two different languages need to “communicate” in runtime (GUI in Java and C++ for the library).
+This involves learning how to use the Java Native Interface (JNI), so that both can “communicate” with each other.
+
+\par
+Because ray tracing may involve rendering complex scenes, putting all this information in the main memory may not be possible, and so this memory management can be a worthy challenge.

@@ -1,0 +1,140 @@
+\documentclass[
+  oneside,
+  11pt, a4paper,
+  footinclude=true,
+  headinclude=true,
+  cleardoublepage=empty,
+  bibliography=totocnumbered
+]{scrbook}
+
+\usepackage{dissertation}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{url}
+\usepackage[toc]{appendix}
+\usepackage{pgfplots, pgfplotstable}
+\usepackage{fancyvrb}
+
+%\usepackage{tikz}
+
+\graphicspath{ {Images/} }
+
+% ----------------------------------------------------------------
+
+% Title
+\titleA{Mobile Ray Tracing}
+
+% Author
+\author{Tiago Manuel da Silva Santos}
+
+% Supervisor(s)
+\supervisor{Professor Doutor Luís Paulo Peixoto dos Santos}
+
+% Date
+\date{\myear} % change to text if date is not today
+
+\ummetadata % add metadata to the document (author, publisher, ...)
+
+\begin{document}
+% Cover page ---------------------------------------
+\umfrontcover
+\umtitlepage
+	
+% Add acknowledgements ----------------------------
+%\chapter*{Acknowledgements}
+
+%\par
+%Write acknowledgements here
+
+% Add abstracts (en,pt) ---------------------------
+\chapter*{Abstract}
+
+\par
+The technological advances and the massification of information technologies have allowed a huge and positive proliferation of the number of libraries and APIs.
+This greater offer has made life easier for programmers in general, because they easily find a library, free or commercial, that helps them solve the daily challenges they have at hand.
+
+\par
+One area of information technology where libraries are critical is in Computer Graphics, due to the wide range of rendering techniques it offers.
+One of these techniques is ray tracing.
+Ray tracing allows you to simulate natural electromagnetic phenomena such as the path of light and mechanical phenomena such as the propagation of sound.
+Similarly, it also allows to simulate technologies developed by men, like wifi networks.
+These simulations can have a spectacular realism and accuracy, but at a very high computational cost.
+
+\par
+The constant evolution of technology allowed to leverage and massify new areas, such as mobile devices.
+Devices today are increasingly faster and replace and / or complement tasks that were previously performed only on computers or on dedicated hardware.
+However, the number of image rendering libraries available for mobile devices is still very scarce, and no ray tracing based image rendering library has been able to assert itself on these devices.
+This dissertation aims to explore the possibilities and limitations of using mobile devices to execute rendering algorithms that use ray tracing, such as progressive path tracing.
+And with that, provide a library for mobile devices rendering based on ray tracing.
+
+\chapter*{Resumo}
+
+\par
+Os avanços tecnológicos e a massificação das tecnologias de informação permitiu uma enorme e positiva proliferação do número de bibliotecas e APIs.
+Esta maior oferta permitiu facilitar a vida dos programadores em geral, porque facilmente encontram uma biblioteca, gratuita ou comercial, que os ajudam a resolver os desafios diários que têm em mãos.
+
+\par
+Uma área das tecnologias de informação onde as bibliotecas são fundamentais é na Computação Gráfica, devido à panóplia de métodos de renderização que oferece.
+Um destes métodos é o ray tracing.
+O ray tracing permite simular fenómenos eletromagnéticos naturais como os percursos da luz e fenómenos mecânicos como a propagação do som.
+Da mesma forma também permite simular tecnologias desenvolvidas pelo homem, como por exemplo redes wifi.
+Estas simulações podem ter um realismo e precisão impressionantes, porém têm um custo computacional muito elevado.
+
+\par
+A constante evolução da tecnologia permitiu alavancar e massificar novas áreas, como os dispositivos móveis.
+Os dispositivos são hoje cada vez mais rápidos e cada vez mais substituem e/ou complementam tarefas que anteriormente eram apenas realizadas em computadores ou em hardware dedicado.
+Porém, o número de bibliotecas para renderização de imagens disponíveis para dispositivos móveis é ainda muito reduzido e nenhuma biblioteca de renderização de imagens baseada em ray tracing conseguiu afirmar-se nestes dispositivos.
+Esta dissertação tem como objetivo explorar possibilidades e limitações da utilização de dispositivos móveis para a execução de algoritmos de renderização que utilizem ray tracing, como por exemplo, o path tracing progressivo.
+E com isso, disponibilizar uma biblioteca para dispositivos móveis de renderização baseada em ray tracing.
+	
+% Summary Lists ------------------------------------
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\thispagestyle{empty}
+
+\pagenumbering{arabic}
+
+% Chapter - Introduction -------------------------
+% CHAPTER - falar do aumento do numero e da capacidade dos dispositivos moveis
+% CHAPTER - falar da oportunidade de poder avaliar algoritmos de ray tracing nos dispositivos moveis
+\include{1_introduction}
+
+% Chapter - State of the Art ---------------------
+% CHAPTER - falar de diferentes arquiteturas de ray tracing
+% ou
+% CHAPTER - falar de diferentes ports de apps para android
+\include{2_state_of_the_art}
+
+% Chapter - Ray Tracing -------------------------
+% CHAPTER - explicar a implementaçao da lib
+% CHAPTER - explicar a implementaçao dos componentes
+\include{3_software_architecture}
+
+% Chapter - Android -------------------------
+% CHAPTER - falar de como uma aplicaçao android funciona
+% CHAPTER - falar de como se liga codigo C++ nativo com Java interface
+% CHAPTER - falar de cuidados que tive na implementaçao para android
+% CHAPTER - falar das possibilidades do android
+% CHAPTER - falar das desvantagens do android
+\include{4_demonstration}
+
+% Chapter - Conclusion/Future Work --------------
+% CHAPTER - dizer que aprendi a fazer um ray tracer do zero
+% CHAPTER - dizer que aprendi a fazer uma aplicaçao android
+% CHAPTER - falar de possiveis componentes/estruturas de aceleraçao a implementar
+% Tentar chegar às 50 páginas antes do capítulo 5
+\include{5_conclusion_future_work}
+
+%- Bibliography (needs bibtex) -%
+\bibliography{dissertation}
+\nocite {*}
+
+\begin{appendices}
+\include{A_user_documentation}
+\end{appendices}
+
+\end{document}
