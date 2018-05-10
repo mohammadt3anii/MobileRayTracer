@@ -64,7 +64,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
         case Accelerator::BVH: {
             bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
             bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
-            bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {::std::move(scene_.triangles_)};
+            bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {scene_.triangles_};
             break;
         }
     }

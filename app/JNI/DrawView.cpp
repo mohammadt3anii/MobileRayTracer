@@ -15,8 +15,9 @@ static ::std::mutex mutex_{};
 static ::std::int32_t width_{0};
 static ::std::int32_t height_{0};
 static float fps_{0.0f};
-static int32_t timeFrame_{0};
-static int32_t numberOfLights_{0};
+static ::std::int32_t timeFrame_{0};
+static ::std::int32_t numberOfLights_{0};
+static ::std::int32_t accelerator_{0};
 
 extern "C"
 ::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
@@ -55,28 +56,18 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
         jobject /*thiz*/
 ) noexcept {
     const ::MobileRT::Camera *camera{renderer_->camera_.get()};
-    LOG("camera position = ", camera->position_.x, ", ", camera->position_.y, ", ",
-        camera->position_.z);
-    LOG("camera direction = ", camera->direction_.x, ", ", camera->direction_.y, ", ",
-        camera->direction_.z);
-    LOG("camera right = ", camera->right_.x, ", ", camera->right_.y, ", ", camera->right_.z);
-    LOG("camera up = ", camera->up_.x, ", ", camera->up_.y, ", ", camera->up_.z);
 
-    jfloat float_ptr[]{
-            camera->position_.x, camera->position_.y, camera->position_.z,
-            camera->direction_.x, camera->direction_.y, camera->direction_.z,
-            camera->right_.x, camera->right_.y, camera->right_.z,
-            camera->up_.x, camera->up_.y, camera->up_.z,
-    };
+    ::std::vector<jfloat> float_ptr{camera->position_.x, camera->position_.y, camera->position_.z,
+                                    1,
+                                    camera->direction_.x, camera->direction_.y,
+                                    camera->direction_.z, 1,
+                                    camera->right_.x, camera->right_.y, camera->right_.z, 1,
+                                    camera->up_.x, camera->up_.y, camera->up_.z, 1,};
 
-    float_ptr[3] = 0.0f;
-    float_ptr[4] = 1.0f;
-    float_ptr[5] = 0.0f;
+    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
+    const jfloatArray result{env->NewFloatArray(arraySize)};
 
-    LOG("float_ptr size = ", sizeof(float_ptr));
-    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
-
-    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
 
     return result;
 }
@@ -86,41 +77,69 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> triangles{
+    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
             renderer_->shader_->scene_.triangles_};
 
-    LOG("triangles size = ", triangles.size());
+    ::std::vector<jfloat> float_ptr{};
+    float_ptr.reserve(triangles.size() * 3 * 4);
     for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        const ::glm::vec3 pointA{triangle.shape_.pointA_};
-        const ::glm::vec3 pointB{pointA.x + triangle.shape_.AB_.x, pointA.y + triangle.shape_.AB_.y,
-                                 pointA.z + triangle.shape_.AB_.z};
-        const ::glm::vec3 pointC{pointA.x + triangle.shape_.AC_.x, pointA.y + triangle.shape_.AC_.y,
-                                 pointA.z + triangle.shape_.AC_.z};
+        const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1};
+        const ::glm::vec4 &pointB{pointA.x + triangle.shape_.AB_.x,
+                                  pointA.y + triangle.shape_.AB_.y,
+                                  pointA.z + triangle.shape_.AB_.z, 1};
+        const ::glm::vec4 &pointC{pointA.x + triangle.shape_.AC_.x,
+                                  pointA.y + triangle.shape_.AC_.y,
+                                  pointA.z + triangle.shape_.AC_.z, 1};
 
-        LOG("pointA = ", pointA.x, ", ", pointA.y, ", ", pointA.z);
-        LOG("pointB = ", pointB.x, ", ", pointB.y, ", ", pointB.z);
-        LOG("pointC = ", pointC.x, ", ", pointC.y, ", ", pointC.z);
+        float_ptr.insert(float_ptr.end(), {pointB.x, pointB.y, -pointB.z, pointB.w});
+        float_ptr.insert(float_ptr.end(), {pointA.x, pointA.y, -pointA.z, pointA.w});
+        float_ptr.insert(float_ptr.end(), {pointC.x, pointC.y, -pointC.z, pointC.w});
+
     }
+    /*float_ptr.clear();
 
-    jfloat float_ptr[]{-0.5f, 0.5f, 0.0f,
-                             -0.5f, -0.5f, 0.0f,
-                             0.5f, -0.5f, 0.0f,
+    float_ptr.insert(float_ptr.end(), {
+            0.5f, -0.5f, 0.99f, 1.0f,
 
-                             0.5f, -0.5f, 0.0f,
-                             0.5f, 0.5f, 0.0f,
-                             -0.5f, 0.5f, 0.0f,
+                                       -0.5f, -0.5f, 0.99f, 1.0f,
+            0.5f, 0.5f, 1.0001f, 1.0f,
 
-                             -1.0f, 0.5f, 0.0f,
-                             -1.0f, -0.5f, 0.0f,
-                             -0.6f, -0.5f, 0.0f,
+                                       0.5f, -0.5f, -0.99f, 1.0f,
+                                       0.5f, 0.5f, -1.0001f, 1.0f,
+                                       -0.5f, -0.5f, -0.99f, 1.0f,
 
-                             0.6f, 0.5f, 0.0f,
-                             0.6f, -0.5f, 0.0f,
-                             1.0f, -0.5f, 0.0f};
+                                       1.0f, -1.0f, 0.0f, 1.0f,
+                                       0.8f, 1.0f, 0.0f, 1.0f,
+                                       -1.0f, 1.0f, 0.0f, 1.0f,*/
+    //});
 
-    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+    /*float_ptr.insert(float_ptr.end(), {
+            -0.5f, 0.5f, 0.0f, 1.0f,
+             -0.5f, -0.5f, 0.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f});
 
-    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+
+    float_ptr.insert(float_ptr.end(), {
+            0.5f, -0.5f, 0.0f, 1.0f,
+             0.5f, 0.5f, 0.0f, 1.0f,
+             -0.5f, 0.5f, 0.0f, 1.0f});
+
+
+    float_ptr.insert(float_ptr.end(), {
+            -1.0f, 0.5f, 0.0f, 1.0f,
+         -1.0f, -0.5f, 0.0f, 1.0f,
+         -0.6f, -0.5f, 0.0f, 1.0f});
+
+
+    float_ptr.insert(float_ptr.end(), {
+            0.6f, 0.5f, 0.0f, 1.0f,
+         0.6f, -0.5f, 0.0f, 1.0f,
+         1.0f, -0.5f, 0.0f, 1.0f});*/
+
+    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
+    const jfloatArray result{env->NewFloatArray(arraySize)};
+
+    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
 
     return result;
 }
@@ -130,34 +149,72 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> triangles{
+    ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
             renderer_->shader_->scene_.triangles_};
-    LOG("triangles size = ", triangles.size());
+    ::std::vector<jfloat> float_ptr{};
     for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        const ::glm::vec3 Kd{triangle.material_.Kd_};
+        ::glm::vec3 color{triangle.material_.Kd_};
 
-        LOG("Kd = ", Kd.r, ", ", Kd.g, ", ", Kd.b);
+        /*if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
+            color = triangle.material_.Ks_;
+            if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
+                color = triangle.material_.Kt_;
+                if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
+                    color = triangle.material_.Le_;
+                }
+            }
+        }*/
+
+        if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
+            color = triangle.material_.Ks_;
+            if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
+                color = triangle.material_.Kt_;
+                if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
+                    color = triangle.material_.Le_;
+                }
+            }
+        }
+
+
+        /*if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
+            color = triangle.material_.Ks_;
+            if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
+                color = triangle.material_.Kt_;
+                if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
+                    color = triangle.material_.Le_;
+                }
+            }
+        }*/
+
+        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
+        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
+        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
     }
 
-    jfloat float_ptr[]{0.0f, 1.0f, 0.0f, 1.0f,
-                             0.0f, 1.0f, 0.0f, 1.0f,
-                             0.0f, 1.0f, 0.0f, 1.0f,
+    /*float_ptr.clear();
+    float_ptr.insert(float_ptr.end(), {1.0f, 0.0f, 0.0f, 1.0f,
+                                       1.0f, 0.0f, 0.0f, 1.0f,
+                                       1.0f, 0.0f, 0.0f, 1.0f,
 
-                             0.0f, 0.0f, 1.0f, 1.0f,
-                             0.0f, 0.0f, 1.0f, 1.0f,
-                             0.0f, 0.0f, 1.0f, 1.0f,
+                                       0.0f, 1.0f, 0.0f, 1.0f,
+                                       0.0f, 1.0f, 0.0f, 1.0f,
+                                       0.0f, 1.0f, 0.0f, 1.0f,
+    });*/
 
-                             1.0f, 0.0f, 0.0f, 1.0f,
-                             1.0f, 0.0f, 0.0f, 1.0f,
-                             1.0f, 0.0f, 0.0f, 1.0f,
+    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
+    const jfloatArray result{env->NewFloatArray(arraySize)};
 
-                             1.0f, 0.0f, 1.0f, 1.0f,
-                             1.0f, 0.0f, 1.0f, 1.0f,
-                             1.0f, 0.0f, 1.0f, 1.0f};
+    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
 
-    jfloatArray result{env->NewFloatArray(sizeof(float_ptr))};
+    switch (accelerator_) {
+        case ::MobileRT::Shader::BVH:
+            triangles.clear();
+            ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>{}.swap(triangles);
+            break;
 
-    env->SetFloatArrayRegion(result, 0, sizeof(float_ptr), static_cast<jfloat *> (float_ptr));
+        default:
+            break;
+    }
 
     return result;
 }
@@ -246,6 +303,7 @@ extern "C"
 ) noexcept {
     width_ = width;
     height_ = height;
+    accelerator_ = accelerator;
     LOG("INITIALIZE");
 
 
@@ -331,11 +389,11 @@ extern "C"
                 objLoader.fillScene(&scene_,
                                     []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
                 //cornellbox
-                camera = ::std::make_unique<Components::Perspective>(
+                /*camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
                 const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},

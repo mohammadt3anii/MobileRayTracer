@@ -18,10 +18,10 @@ import javax.microedition.khronos.opengles.GL10;
 
 class MainRenderer implements Renderer {
     private final float[] vertices = {
-            -1.0f, 1.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 1.0f,
+            1.0f, -1.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 0.0f, 1.0f,
     };
     private final float[] texCoords = {
             0.0f, 0.0f,
@@ -31,7 +31,6 @@ class MainRenderer implements Renderer {
     };
     private float[] verticesRaster = null;
     private float[] colorsRaster = null;
-    private final float[] mMVPMatrix = new float[16];
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
     String vertexShaderCode = null;
@@ -45,12 +44,16 @@ class MainRenderer implements Renderer {
     Bitmap bitmap_ = null;
     private FloatBuffer floatBufferVerticesRaster_ = null;
     private FloatBuffer floatBufferColorsRaster_ = null;
-    private final float[] mProjectionMatrix = new float[16];
     private int shaderProgram;
     private int shaderProgramRaster;
-    private final float[] mViewMatrix = new float[16];
     private float[] cameraRaster = null;
     private FloatBuffer floatBufferCameraRaster_ = null;
+    private final float[] mMVPMatrix = new float[16];
+    private final float[] mProjectionMatrix = new float[16];
+    private final float[] mViewMatrix = new float[16];
+    private final float[] mModelMatrix = new float[16];
+    private float mWidth;
+    private float mHeight;
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -129,15 +132,15 @@ class MainRenderer implements Renderer {
     @Override
     public void onDrawFrame(final GL10 gl) {
         // Set the camera position (View matrix)
-        final float eyeX = cameraRaster[3];
-        final float eyeY = cameraRaster[4];
-        final float eyeZ = cameraRaster[5];
+        /*final float eyeX = cameraRaster[4];
+        final float eyeY = cameraRaster[5];
+        final float eyeZ = cameraRaster[6];
         final float centerX = cameraRaster[0];
         final float centerY = cameraRaster[1];
         final float centerZ = cameraRaster[2];
-        final float upX = cameraRaster[9];
-        final float upY = cameraRaster[10];
-        final float upZ = cameraRaster[11];
+        final float upX = cameraRaster[12];
+        final float upY = cameraRaster[13];
+        final float upZ = cameraRaster[14];
 
         Matrix.setLookAtM(mViewMatrix, 0,
                 eyeX, eyeY, eyeZ,
@@ -146,7 +149,7 @@ class MainRenderer implements Renderer {
         );
 
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);*/
 
         GLES20.glUseProgram(shaderProgram);
         checkGLError();
@@ -157,11 +160,11 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib);
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
+        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
         checkGLError();
 
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 3);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 4);
         checkGLError();
 
 
@@ -183,16 +186,13 @@ class MainRenderer implements Renderer {
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap_, 0);
         checkGLError();
 
-        float ratio = (float) width / height;
-
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        mWidth = width;
+        mHeight = height;
     }
 
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-        cameraRaster = new float[12];
+        cameraRaster = new float[16];
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
@@ -259,7 +259,7 @@ class MainRenderer implements Renderer {
         final int positionAttrib = 0;
         GLES20.glBindAttribLocation(shaderProgram, positionAttrib, "vertexPosition");
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
+        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib);
         checkGLError();
@@ -344,7 +344,7 @@ class MainRenderer implements Renderer {
         final int positionAttrib2 = 2;
         GLES20.glBindAttribLocation(shaderProgramRaster, positionAttrib2, "vertexPosition");
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib2, 3, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        GLES20.glVertexAttribPointer(positionAttrib2, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib2);
         checkGLError();
@@ -356,7 +356,6 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glEnableVertexAttribArray(colorAttrib2);
         checkGLError();
-
 
         //Attach and link shaders to program
         GLES20.glAttachShader(shaderProgramRaster, vertexShaderRaster);
@@ -391,11 +390,94 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib);
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib, 3, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
         checkGLError();
 
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, positionAttrib, verticesRaster.length / 3);
+        final float eyeX = camera[0];
+        final float eyeY = camera[1];
+        final float eyeZ = -camera[2];
+        /*final float eyeX = 460.0f;
+        final float eyeY = 500.0f;
+        final float eyeZ = -1000.0f;*/
+        /*final float eyeX = 0.0f;
+        final float eyeY = 0.0f;
+        final float eyeZ = 3.4f;*/
+
+        final float lookX = camera[4];
+        final float lookY = camera[5];
+        final float lookZ = -camera[6];
+        /*final float lookX = 0.0f;
+        final float lookY = 400.0f;
+        final float lookZ = 0.0f;*/
+        /*final float lookX = 0.0f;
+        final float lookY = 0.0f;
+        final float lookZ = -1.0f;*/
+
+
+        final float upX = camera[12];
+        final float upY = camera[13];
+        final float upZ = camera[14];
+        /*final float upX = 0.0f;
+        final float upY = 1.0f;
+        final float upZ = 0.0f;*/
+
+        final float near = 1.0f;
+        final float far = 1000.0f;
+        final float ratio = mWidth / mHeight;
+        final float vfovFactor = mWidth < mHeight ? ratio : 1.0f;
+        final float fov = 45.0f * vfovFactor;
+        final float top = (float) Math.tan(fov * Math.PI / 360.0f) * near;
+        //final float top = 1.0f;
+        final float bottom = -top;
+        final float left = ratio * bottom;
+        final float right = ratio * top;
+
+        Matrix.setIdentityM(mModelMatrix, 0);
+        //Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
+        Matrix.perspectiveM(mProjectionMatrix, 0, fov, ratio, near, far);
+        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
+        float[] verticesViewModel1 = new float[4];
+        float[] verticesViewModel2 = new float[4];
+        float[] verticesViewModel3 = new float[4];
+        Matrix.multiplyMV(verticesViewModel1, 0, mMVPMatrix, 0, vertices, 0);
+        Matrix.multiplyMV(verticesViewModel2, 0, mMVPMatrix, 0, vertices, 4);
+        Matrix.multiplyMV(verticesViewModel3, 0, mMVPMatrix, 0, vertices, 8);
+
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
+        final int handleModel = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformModelMatrix");
+        final int handleView = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformViewMatrix");
+        final int handleProjection = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformProjectionMatrix");
+        final int handleMVP = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformMVPMatrix");
+
+        float[] verticesMVP1 = new float[4];
+        float[] verticesMVP2 = new float[4];
+        float[] verticesMVP3 = new float[4];
+        float[] verticesView1 = new float[4];
+        float[] verticesView2 = new float[4];
+        float[] verticesView3 = new float[4];
+        float[] verticesProjection = new float[4];
+        Matrix.multiplyMV(verticesMVP1, 0, mMVPMatrix, 0, vertices, 0);
+        Matrix.multiplyMV(verticesMVP2, 0, mMVPMatrix, 0, vertices, 4);
+        Matrix.multiplyMV(verticesMVP3, 0, mMVPMatrix, 0, vertices, 8);
+        Matrix.multiplyMV(verticesView1, 0, mViewMatrix, 0, vertices, 0);
+        Matrix.multiplyMV(verticesView2, 0, mViewMatrix, 0, vertices, 4);
+        Matrix.multiplyMV(verticesView3, 0, mViewMatrix, 0, vertices, 8);
+        Matrix.multiplyMV(verticesProjection, 0, mProjectionMatrix, 0, vertices, 0);
+
+        GLES20.glUniformMatrix4fv(handleModel, 1, false, mModelMatrix, 0);
+        checkGLError();
+        GLES20.glUniformMatrix4fv(handleView, 1, false, mViewMatrix, 0);
+        checkGLError();
+        GLES20.glUniformMatrix4fv(handleProjection, 1, false, mProjectionMatrix, 0);
+        checkGLError();
+        GLES20.glUniformMatrix4fv(handleMVP, 1, false, mMVPMatrix, 0);
+        checkGLError();
+
+
+        final int vertexCount = verticesRaster.length / 4;
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         checkGLError();
 
 

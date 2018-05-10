@@ -97,7 +97,9 @@ public class DrawView extends GLSurfaceView {
             final float[] arrayColors = initColorsArray();
             final float[] arrayCamera = initCameraArray();
 
-            renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
+            if (arrayVertices.length > 0) {
+                renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
+            }
             DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
             renderTask_.execute();
