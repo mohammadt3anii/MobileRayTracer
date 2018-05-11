@@ -1,31 +1,32 @@
 \deactivateaddvspace 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1}{\ignorespaces Illustration of the most common mobile devices - tablet and smartphone\relax }}{2}{figure.caption.6}
+\contentsline {figure}{\numberline {1}{\ignorespaces Illustration of the most common mobile devices - tablet and smartphone (\cite {JournalDuNet})\relax }}{2}{figure.caption.6}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2}{\ignorespaces Illustration of a typical ray tracer algorithm.\relax }}{4}{figure.caption.7}
-\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a typical cache memory inside a processor.\relax }}{5}{figure.caption.8}
-\contentsline {figure}{\numberline {4}{\ignorespaces Illustration of a typical multilevel cpu pipeline.\relax }}{6}{figure.caption.9}
-\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of a typical execution of SIMD extension.\relax }}{6}{figure.caption.10}
+\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a typical cache memory inside a microprocessor (\cite {CPU_Cache}).\relax }}{5}{figure.caption.8}
+\contentsline {figure}{\numberline {4}{\ignorespaces Illustration of the Classic RISC multilevel CPU pipeline (\cite {CPU_Pipeline}).\relax }}{6}{figure.caption.9}
+\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of a typical execution of SIMD extension (\cite {CPU_SIMD}).\relax }}{6}{figure.caption.10}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {6}{\ignorespaces Illustration of the developed User Interface.\relax }}{10}{figure.caption.12}
 \contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the 3 layers in the application\relax }}{11}{figure.caption.13}
-\contentsline {figure}{\numberline {8}{\ignorespaces Illustration of tiling image plane.\relax }}{13}{figure.caption.14}
-\contentsline {figure}{\numberline {9}{\ignorespaces Illustration of a ray intersecting a plane.\relax }}{14}{figure.caption.15}
-\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of a ray intersecting a sphere in two points.\relax }}{15}{figure.caption.16}
-\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of a ray intersecting a triangle.\relax }}{16}{figure.caption.17}
-\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF.\relax }}{17}{figure.caption.18}
-\contentsline {figure}{\numberline {13}{\ignorespaces NoShadows shader.\relax }}{18}{figure.caption.19}
-\contentsline {figure}{\numberline {14}{\ignorespaces Reflections projected on the floor and on the spheres.\relax }}{19}{figure.caption.20}
-\contentsline {figure}{\numberline {15}{\ignorespaces Refraction of light at the interface of two media of different refractive indices.\relax }}{20}{figure.caption.21}
-\contentsline {figure}{\numberline {16}{\ignorespaces Whitted shader.\relax }}{21}{figure.caption.22}
-\contentsline {figure}{\numberline {17}{\ignorespaces Rotation matrix from an arbitrary axis and an angle.\relax }}{22}{figure.caption.23}
-\contentsline {figure}{\numberline {18}{\ignorespaces PathTracer shader.\relax }}{24}{figure.caption.24}
-\contentsline {figure}{\numberline {19}{\ignorespaces Halton sequence in a 2D image plane.\relax }}{25}{figure.caption.25}
-\contentsline {figure}{\numberline {20}{\ignorespaces Pseudorandom sequence in a 2D image plane.\relax }}{26}{figure.caption.26}
-\contentsline {figure}{\numberline {21}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.\relax }}{28}{figure.caption.27}
-\contentsline {figure}{\numberline {22}{\ignorespaces Jittering in a plane image.\relax }}{29}{figure.caption.28}
-\contentsline {figure}{\numberline {23}{\ignorespaces Perspective camera with hFov, vFov and dFov.\relax }}{30}{figure.caption.29}
-\contentsline {figure}{\numberline {24}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{31}{figure.caption.30}
+\contentsline {figure}{\numberline {8}{\ignorespaces Illustration of tiling the image plane.\relax }}{14}{figure.caption.14}
+\contentsline {figure}{\numberline {9}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{15}{figure.caption.15}
+\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{16}{figure.caption.16}
+\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{17}{figure.caption.17}
+\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{18}{figure.caption.18}
+\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF.\relax }}{19}{figure.caption.19}
+\contentsline {figure}{\numberline {14}{\ignorespaces NoShadows shader.\relax }}{20}{figure.caption.20}
+\contentsline {figure}{\numberline {15}{\ignorespaces Reflections projected on the floor and on the spheres.\relax }}{21}{figure.caption.21}
+\contentsline {figure}{\numberline {16}{\ignorespaces Refraction of light at the interface of two media of different refractive indices.\relax }}{22}{figure.caption.22}
+\contentsline {figure}{\numberline {17}{\ignorespaces Whitted shader.\relax }}{23}{figure.caption.23}
+\contentsline {figure}{\numberline {18}{\ignorespaces Rotation matrix from an arbitrary axis and an angle.\relax }}{24}{figure.caption.24}
+\contentsline {figure}{\numberline {19}{\ignorespaces PathTracer shader.\relax }}{26}{figure.caption.25}
+\contentsline {figure}{\numberline {20}{\ignorespaces Halton sequence in a 2D image plane.\relax }}{27}{figure.caption.26}
+\contentsline {figure}{\numberline {21}{\ignorespaces Pseudorandom sequence in a 2D image plane.\relax }}{28}{figure.caption.27}
+\contentsline {figure}{\numberline {22}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.\relax }}{30}{figure.caption.28}
+\contentsline {figure}{\numberline {23}{\ignorespaces Jittering in a plane image.\relax }}{31}{figure.caption.29}
+\contentsline {figure}{\numberline {24}{\ignorespaces Perspective camera with hFov, vFov and dFov.\relax }}{32}{figure.caption.30}
+\contentsline {figure}{\numberline {25}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{33}{figure.caption.31}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

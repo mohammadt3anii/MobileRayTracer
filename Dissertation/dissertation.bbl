@@ -1,4 +1,4 @@
-\begin{thebibliography}{19}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -12,6 +12,12 @@ AMD.
   \url{http://developer.amd.com/tools-and-sdks/graphics-development/radeonpro/radeonrays-technology-developers/}.
 \newblock Accessed: January 2017.
 
+\bibitem[Bishop()]{CPU_SIMD}
+Russ Bishop.
+\newblock Swift 2: Simd.
+\newblock URL \url{http://www.russbishop.net/?page=5&x=272}.
+\newblock Accessed: May 2018.
+
 \bibitem[Chedeau()]{jsRayTracer}
 Christopher Chedeau.
 \newblock jsraytracer.
@@ -19,17 +25,62 @@ Christopher Chedeau.
   \url{http://blog.vjeux.com/2012/javascript/javascript-ray-tracer.html}.
 \newblock Accessed: January 2017.
 
+\bibitem[Chirag()]{SphereRayIntersection}
+Chirag.
+\newblock Ray sphere intersection.
+\newblock URL
+  \url{http://ray-tracing-conept.blogspot.pt/2015/01/ray-sphere-intersection.html}.
+\newblock Accessed: May 2018.
+
+\bibitem[Creation()]{GLM}
+G-Truc Creation.
+\newblock Opengl mathematics.
+\newblock URL \url{https://github.com/g-truc/glm}.
+\newblock Accessed: May 2018.
+
 \bibitem[Dahlquist()]{Android_CPU_Raytracer}
 Nic Dahlquist.
 \newblock Android cpu raytracer.
 \newblock URL \url{https://github.com/ndahlquist/raytracer}.
 \newblock Accessed: January 2017.
 
-\bibitem[Google()]{AndroidDevelopers}
+\bibitem[Dictionaries and Encyclopedias()]{CPU_Pipeline}
+Academic Dictionaries and Encyclopedias.
+\newblock Instruction pipeline.
+\newblock URL \url{http://enacademic.com/dic.nsf/enwiki/141209}.
+\newblock Accessed: May 2018.
+
+\bibitem[dos Santos()]{Whitted}
+Luís Paulo~Peixoto dos Santos.
+\newblock Ray tracing clássico.
+\newblock URL \url{gec.di.uminho.pt/psantos/VI2/Acetatos/02-RayTracing.ppsx}.
+\newblock Accessed: May 2018.
+
+\bibitem[du~Net()]{JournalDuNet}
+Le~Journal du~Net.
+\newblock Gérer et sécuriser ses flottes de smartphones et tablettes.
+\newblock URL
+  \url{https://www.journaldunet.com/solutions/mobilite/mobile-device-management-comparatif-des-offres}.
+\newblock Accessed: May 2018.
+
+\bibitem[Foundry()]{ShadowRays}
+The Foundry.
+\newblock Casting shadows.
+\newblock URL
+  \url{https://learn.foundry.com/nuke/8.0/content/user_guide/3d_compositing/casting_shadows.html}.
+\newblock Accessed: May 2018.
+
+\bibitem[Google({\natexlab{a}})]{AndroidDevelopers}
 Google.
-\newblock Android developers.
+\newblock Android developers, {\natexlab{a}}.
 \newblock URL \url{https://developer.android.com/index.html}.
 \newblock Accessed: May 2017.
+
+\bibitem[Google({\natexlab{b}})]{GoogleTest}
+Google.
+\newblock Google test, {\natexlab{b}}.
+\newblock URL \url{https://github.com/google/googletest}.
+\newblock Accessed: May 2018.
 
 \bibitem[Gustavo Pichorim~Boiko()]{YafaRay}
 Rodrigo Placencia \& David Bluecame \& Olaf Arnold \& Michele~Castigliego
@@ -44,6 +95,12 @@ Rodrigo Placencia \& David Bluecame \& Olaf Arnold \& Michele~Castigliego
 \newblock URL \url{https://home.otoy.com/render/octane-render/}.
 \newblock Accessed: January 2017.
 
+\bibitem[Inc.()]{OpenGL_ES_2}
+The Khronos™~Group Inc.
+\newblock Opengl es overview.
+\newblock URL \url{https://www.khronos.org/opengles/}.
+\newblock Accessed: May 2018.
+
 \bibitem[Intel()]{Embree}
 Intel.
 \newblock High performance ray tracing kernels.
@@ -56,11 +113,24 @@ Wenzel Jakob.
 \newblock URL \url{http://www.mitsuba-renderer.org}.
 \newblock Accessed: January 2017.
 
+\bibitem[Karbo and Aps.()]{CPU_Cache}
+Michael Karbo and ELI Aps.
+\newblock Chapter 28. the cache.
+\newblock URL
+  \url{http://www.karbosguide.com/books/pcarchitecture/chapter28.htm}.
+\newblock Accessed: May 2018.
+
 \bibitem[Kenneth()]{HRay}
 Kenneth.
 \newblock Hray - a haskell ray tracer.
 \newblock URL \url{http://kejo.be/ELIS/Haskell/HRay/}.
 \newblock Accessed: January 2017.
+
+\bibitem[kitware()]{CMake}
+kitware.
+\newblock Cmake.
+\newblock URL \url{https://cmake.org/}.
+\newblock Accessed: May 2018.
 
 \bibitem[Limited()]{IndigoRT}
 Glare~Technologies Limited.
@@ -99,6 +169,19 @@ Pixar.
   \url{https://renderman.pixar.com/resources/current/RenderMan/risOverview.html}.
 \newblock Accessed: January 2017.
 
+\bibitem[Scratchapixel()]{TriangleRayIntersection}
+Scratchapixel.
+\newblock Ray tracing: Rendering a triangle.
+\newblock URL
+  \url{https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle}.
+\newblock Accessed: May 2018.
+
+\bibitem[syoyo()]{tinyobjloader}
+syoyo.
+\newblock tinyobjloader.
+\newblock URL \url{https://github.com/syoyo/tinyobjloader}.
+\newblock Accessed: May 2018.
+
 \bibitem[Usher({\natexlab{a}})]{micro-packet}
 Will Usher.
 \newblock upacket - a micro packet ray tracer, {\natexlab{a}}.
@@ -116,6 +199,12 @@ Will Usher.
 \newblock tray\_rust - a toy ray tracer in rust, {\natexlab{c}}.
 \newblock URL \url{https://github.com/Twinklebear/tray\_rust}.
 \newblock Accessed: January 2017.
+
+\bibitem[Vink()]{PlaneRayIntersection}
+Menno Vink.
+\newblock Ray to plane intersection.
+\newblock URL \url{http://www.echo-gaming.eu/ray-to-plane-intersection/}.
+\newblock Accessed: May 2018.
 
 \bibitem[Zellmann()]{Visionaray}
 Stefan Zellmann.

@@ -7,11 +7,11 @@
 \contentsline {chapter}{\numberline {2}\spacedlowsmallcaps {State of the art}}{4}{chapter.2}
 \contentsline {section}{\numberline {2.1}Ray Tracing}{4}{section.2.1}
 \contentsline {section}{\numberline {2.2}Typical CPU features}{5}{section.2.2}
-\contentsline {section}{\numberline {2.3}Key features of Ray Tracing for this work}{6}{section.2.3}
+\contentsline {section}{\numberline {2.3}Key features of Ray Tracing for this work}{7}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Type of software license}{7}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Platform}{7}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Interactivity}{7}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Progressive}{7}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.4}Progressive}{8}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Types of Rendering Components}{8}{subsection.2.3.5}
 \contentsline {section}{\numberline {2.4}Related work}{8}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Conclusions}{9}{subsection.2.4.1}
@@ -19,39 +19,42 @@
 \contentsline {section}{\numberline {3.1}Approach}{10}{section.3.1}
 \contentsline {section}{\numberline {3.2}Methodology}{12}{section.3.2}
 \contentsline {section}{\numberline {3.3}Library}{12}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Renderer}{12}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}Scene}{13}{subsection.3.3.2}
-\contentsline {subsection}{\numberline {3.3.3}Shapes}{14}{subsection.3.3.3}
-\contentsline {subsubsection}{Plane}{14}{subsection.3.3.3}
-\contentsline {subsubsection}{Sphere}{15}{figure.caption.15}
-\contentsline {subsubsection}{Triangle}{15}{figure.caption.16}
-\contentsline {subsection}{\numberline {3.3.4}Accelerator Structures}{16}{subsection.3.3.4}
-\contentsline {section}{\numberline {3.4}Rendering Components}{16}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Shaders}{17}{subsection.3.4.1}
-\contentsline {subsubsection}{NoShadows}{17}{figure.caption.18}
-\contentsline {subsubsection}{Whitted}{18}{figure.caption.19}
-\contentsline {subsubsection}{PathTracer}{21}{figure.caption.22}
-\contentsline {subsection}{\numberline {3.4.2}Samplers}{24}{subsection.3.4.2}
-\contentsline {subsubsection}{Constant}{25}{subsection.3.4.2}
-\contentsline {subsubsection}{Stratified}{25}{subsection.3.4.2}
-\contentsline {subsubsection}{HaltonSequence}{25}{subsection.3.4.2}
-\contentsline {subsubsection}{Random}{26}{figure.caption.25}
-\contentsline {subsection}{\numberline {3.4.3}Lights}{27}{subsection.3.4.3}
-\contentsline {subsubsection}{PointLight}{27}{subsection.3.4.3}
-\contentsline {subsubsection}{AreaLight}{27}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}Cameras}{28}{subsection.3.4.4}
-\contentsline {subsubsection}{Perspective Camera}{29}{figure.caption.28}
-\contentsline {section}{\numberline {3.5}Android specifics and challenges}{30}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}Specifics}{30}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}User Interface}{31}{subsection.3.5.2}
-\contentsline {subsection}{\numberline {3.5.3}Challenges}{31}{subsection.3.5.3}
-\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{33}{chapter.4}
-\contentsline {section}{\numberline {4.1}Results obtained}{33}{section.4.1}
-\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{33}{section.4.2}
-\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{34}{chapter.5}
-\contentsline {section}{\numberline {5.1}Conclusions}{34}{section.5.1}
-\contentsline {section}{\numberline {5.2}Future Work}{34}{section.5.2}
+\contentsline {subsection}{\numberline {3.3.1}Third parties dependencies}{12}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Renderer}{13}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Scene}{14}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}Shapes}{15}{subsection.3.3.4}
+\contentsline {subsubsection}{Plane}{15}{lstnumber.-3.1}
+\contentsline {subsubsection}{Sphere}{16}{figure.caption.16}
+\contentsline {subsubsection}{Triangle}{17}{figure.caption.17}
+\contentsline {subsection}{\numberline {3.3.5}Acceleration Structures}{18}{subsection.3.3.5}
+\contentsline {subsubsection}{Regular Grid}{18}{subsection.3.3.5}
+\contentsline {subsubsection}{Bounding Volume Hierarchy}{18}{subsection.3.3.5}
+\contentsline {section}{\numberline {3.4}Rendering Components}{18}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Shaders}{18}{subsection.3.4.1}
+\contentsline {subsubsection}{NoShadows}{19}{lstnumber.-7.1}
+\contentsline {subsubsection}{Whitted}{20}{figure.caption.20}
+\contentsline {subsubsection}{PathTracer}{23}{figure.caption.23}
+\contentsline {subsection}{\numberline {3.4.2}Samplers}{26}{subsection.3.4.2}
+\contentsline {subsubsection}{Constant}{26}{lstnumber.-11.1}
+\contentsline {subsubsection}{Stratified}{27}{lstnumber.-12.1}
+\contentsline {subsubsection}{HaltonSequence}{27}{lstnumber.-13.8}
+\contentsline {subsubsection}{Random}{28}{lstnumber.-14.16}
+\contentsline {subsection}{\numberline {3.4.3}Lights}{29}{subsection.3.4.3}
+\contentsline {subsubsection}{PointLight}{29}{lstnumber.-16.2}
+\contentsline {subsubsection}{AreaLight}{29}{lstnumber.-17.1}
+\contentsline {subsection}{\numberline {3.4.4}Cameras}{31}{subsection.3.4.4}
+\contentsline {subsubsection}{Perspective Camera}{31}{figure.caption.29}
+\contentsline {section}{\numberline {3.5}Android specifics and challenges}{32}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Specifics}{32}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}User Interface}{33}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Challenges}{33}{subsection.3.5.3}
+\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{35}{chapter.4}
+\contentsline {section}{\numberline {4.1}Results obtained}{35}{section.4.1}
+\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{35}{section.4.2}
+\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{36}{chapter.5}
+\contentsline {section}{\numberline {5.1}Conclusions}{36}{section.5.1}
+\contentsline {section}{\numberline {5.2}Future Work}{36}{section.5.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{35}{chapter.6}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{37}{Appendix.1.A}
-\contentsline {chapter}{Appendices}{37}{section*.31}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{37}{chapter.6}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{40}{Appendix.1.A}
+\contentsline {chapter}{Appendices}{40}{section*.32}

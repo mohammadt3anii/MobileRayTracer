@@ -55,7 +55,7 @@ Another thought aspect that was studied is the permission of dynamic scenes and 
 This makes possible to build challenging applications and also provide more interesting scenes and more eye candy applications for the final user.
 
 \par
-Last, but not least, is that the code was developed in a modular way.
+Last, but not least, is that the code was developed in a modular way, in this case was programmed in an object oriented manner.
 This allows the programmers to code their own rendering components, like the integrator, camera, sampler and light, without having to develop the basic features in the renderer engine.
 
 \section{Methodology}
@@ -138,59 +138,92 @@ Writing the dissertation and an article &      &     &     &     &     & X   \\ 
 \section{Library}
 
 \par
-Besides the obvious basic functionalities provided with Point3D and Vector3D that allows the user to create points and vectors, this library provides four main classes that allows the user set up the scenes and choose the rendering method: Renderer, Scene, Shapes and RGB.
+As stated above, this library was implemented in an object-oriented fashion.
+The most important classes that provide functionalities already developed for the user to use are:
+
+\begin{itemize}
+\item Renderer: class that starts the rendering process and stores the calculated pixels colors in a C style array.
+\item Scene: class that stores the geometry information in vectors and provides methods to trace rays in the scene without any acceleration structures.
+\item Shapes: set of classes that allows to create triangles, spheres and planes.
+\item Material: class that stores all 4 types of material color:
+\begin{itemize}
+	\item Emission light color
+	\item Diffuse reflection color
+	\item Specular reflection color
+	\item Specular refraction color
+\end{itemize}
+\item Primitive: class that stores the shape and material of each primitive in the scene.
+\item Ray: class that represents a ray casted into the scene.
+\end{itemize}
+
+\subsection{Third parties dependencies}
+
+\par
+Before describing each functionality provided in each class developed, it is important to mention that this library uses 3 other libraries developed in C++ by third parties.
+Those libraries are:
+
+\begin{itemize}
+	\item OpenGL Mathematics (\cite{GLM}): used to create 3d points and vectors, perform geometry calculations and store pixels and primitives colors.
+	\item tinyobjloader (\cite{tinyobjloader}): used to load scenes from wavefront obj files.
+	\item Google Test (\cite{GoogleTest}): used to create some unit tests and to mock some classes.
+\end{itemize}
+
+\par
+All these libraries are Android compatible and are reliable in terms of performance and maintenance.
+
+\par
+Besides being dependent on these 3 libraries, this library also depends on OpenGL ES 2.0 (\cite{OpenGL_ES_2}) from Android SDK and depends on CMake (\cite{CMake}) in order to compile the application.
 
 \subsection{Renderer}
 
 \par
 The Renderer is the closest class to the application that starts the rendering process.
-This class provides three main methods:
-\begin{verbatim}
-void renderFrame(unsigned int *const bitmap, const unsigned int numThreads);
-void registerToneMapper(std::function<float(const float value)> toneMapper);
-void stopRender(void);
-\end{verbatim}
+This class provides two main methods:
+\begin{lstlisting}
+void renderFrame(::std::uint32_t *bitmap, ::std::int32_t numThreads, ::std::uint32_t stride) noexcept;
+void stopRender() noexcept;
+\end{lstlisting}
 
 \par
 The \textit{renderFrame} method starts the rendering process and writes the calculated light luminance of each pixel in the parameter \textit{bitmap}.
-This method also allows to choose the number of threads that will render the image to the bitmap.
-The image plane is divided into 16 tiles of pixels and it is traced one primary ray per pixel in the tile.
+This method also allows to choose the number of threads that will render the image into the bitmap, and needs the stride of that bitmap array.
+The image plane is divided into 16 tiles of pixels and it is traced one primary ray per pixel in each tile.
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of tiling image plane.}
-	\label{Illustration of tiling image plane.}
+	\caption{Illustration of tiling the image plane.}
+	\label{Illustration of tiling the image plane.}
 	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{tiling.png}
 \end{figure}
 
 \par
 The \textit{stopRender} method only serves to stop the rendering process without cleaning the pixels' colors already calculated.
 
-\par
-Finally, the \textit{registerToneMapper} is a method that allows the user to define its own tone mapping function that needs to receive as a parameter a float number and returns that number transformed according to the defined function.
-Typically, renderers based in physics generate images with high dynamic range, with luminances covering a range of 14 orders of magnitude:
-$[10^{-5} .. 10^8] cd / m^2$.
-But the conventional monitors typically cover a luminance range of only 2 orders of magnitude:
-$[10^0 .. 10^2] cd / m^2$.
-So, it is the tone mapper that maps the HDR luminance according to the monitor luminance.
-
 \subsection{Scene}
 
 \par
 The Scene is the class that handles the process of intersecting a ray with the primitives and source lights in the scene.
 Besides providing a vector to add the light sources and a vector to add primitives to the scene, it also provides two main methods:
-\begin{verbatim}
-int trace(Intersection &intersection, Ray &ray) const;
-bool shadowTrace(Intersection &intersection, const Ray &ray) const;
-\end{verbatim}
+\begin{lstlisting}
+Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+\end{lstlisting}
 
 \par
-The \textit{trace}, as the name implies, is a method that tries to intersect a ray with all the primitives and light sources and returns the closest intersection to the origin of the ray.
+The \textit{trace}, as the name implies, is a method that tries to intersect a ray with all the primitives and light sources in the scene.
+And It returns the closest intersection to the origin of that ray.
 This method is used to determine the intersection of the casted ray with the primitives in the scene.
 
 \par
 The \textit{shadowTrace}, is similar to the \textit{trace} method but with the difference that returns the first intersection found.
-The purpose of this method is to simulate the shadows in the scene.
+The purpose of this method is to simulate the shadows in the scene, like it is illustrated in figure \ref{Illustration of shadow rays casting.}.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of shadow rays casting (\cite{ShadowRays}).}
+	\label{Illustration of shadow rays casting.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Shadow_Ray.jpg}
+\end{figure}
 
 
 \subsection{Shapes}
@@ -198,34 +231,34 @@ The purpose of this method is to simulate the shadows in the scene.
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed 3 types of shapes: plane, sphere and triangle.
 All shapes provide only one method:
-\begin{verbatim}
-bool intersect(Intersection &int, const Ray &ray, const Material &mat) const override;
-\end{verbatim}
+\begin{lstlisting}
+Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
+\end{lstlisting}
 This method determines if a ray intersects the shape and returns the intersection.
 It is important to mention that, obviously, each shape was developed with different algorithm.
 
 \subsubsection{Plane}
 
 \par
-The plane is an essential primitive shape because it allows the user to build scenes indoors.
+The plane is an essential primitive shape because it allows the user to build indoor scenes.
 
 \par
 The construction of a plane requires just an arbitrary point in the plane and the normal of the plane.
-So, the intersect method implemented has the next algorithm:
+So, the intersect method implemented has the following algorithm:
 
-\begin{verbatim}
+\begin{lstlisting}
 projection = planeNormal . rayDirection
 if (|projection| <= 0) return false
 distance = planeNormal . (planePoint - rayOrigin) / projection
 if (distance <= 0 || distance > rayMaxDistance) return false
 intersectionPoint = rayOrigin + rayDirection * distance
 return Intersection(intersectionPoint, planeNormal, material)
-\end{verbatim}
+\end{lstlisting}
 
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a ray intersecting a plane.}
+	\caption{Illustration of a ray intersecting a plane (\cite{PlaneRayIntersection}).}
 	\label{Plane.}
 	\includegraphics[keepaspectratio,scale=0.4]{RayToPlane.png}
 \end{figure}
@@ -238,9 +271,9 @@ The sphere is also an important primitive shape because it allows the user to bu
 \par
 The construction of a sphere requires just the point in the center and the radius of the sphere.
 It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
-So, the intersect method implemented has the next algorithm:
+So, the intersect method implemented has the following algorithm:
 
-\begin{verbatim}
+\begin{lstlisting}
 centerToOrigin = rayOrigin - sphereCenter
 B = 2 * centerToOrigin . rayDirection
 C = centerToOrigin.magnitude - radius
@@ -253,11 +286,11 @@ if (distance <= 0 || distance > rayMaxDistance) return false
 intersectionPoint = rayOrigin + rayDirection * distance
 sphereNormal = intersectionPoint - sphereCenter
 return Intersection(intersectionPoint, sphereNormal, material)
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a ray intersecting a sphere in two points.}
+	\caption{Illustration of a ray intersecting a sphere in two points (\cite{SphereRayIntersection}).}
 	\label{Sphere.}
 	\includegraphics[keepaspectratio,scale=0.4]{Ray_Sphere_Intersection.png}
 \end{figure}
@@ -265,7 +298,7 @@ return Intersection(intersectionPoint, sphereNormal, material)
 \subsubsection{Triangle}
 
 \par
-And finally, obviously the triangle has also been implemented because it allows to build many different object shapes.
+And finally, obviously the triangle has also been implemented because, as it is the simplest primitive with an area, it allows to build many different object shapes.
 
 \par
 The construction of a triangle requires three points
@@ -273,9 +306,9 @@ $[A, B, C]$
 , two vectors
 $[AB, AC]$
 and the normal of the triangle.
-So, the intersect method implemented has the next algorithm:
+So, the intersect method implemented has the following algorithm:
 
-\begin{verbatim}
+\begin{lstlisting}
 perpendicularVector = rayDirection x AC
 projection = AB . perpendicularVector
 if(|projection| <= 0) return false
@@ -288,20 +321,31 @@ if(v < 0 || (u + v) > 1) return false
 distance = (AC . perpendicularVector2) / projection
 intersectionPoint = rayOrigin + rayDirection * distance
 return Intersection(intersectionPoint, triangleNormal, material)
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a ray intersecting a triangle.}
+	\caption{Illustration of a ray intersecting a triangle (\cite{TriangleRayIntersection}).}
 	\label{Sphere.}
 	\includegraphics[keepaspectratio,scale=1.0]{triangle.png}
 \end{figure}
 
-\subsection{Accelerator Structures}
+\subsection{Acceleration Structures}
 
 \par
-Accelerator Structures ...
+As previously stated, the rendering algorithms based on ray tracing can be very computationally demanding, like Path Tracing and Bidirectional Path Tracing.
+These algorithms are very computationally demanding because 
+Luckly, there are already known techniques that helps to acc
 
+\subsubsection{Regular Grid}
+
+\par
+Regular Grid ...
+
+\subsubsection{Bounding Volume Hierarchy}
+
+\par
+Bounding Volume Hierarchy ...
 
 \section{Rendering Components}
 
@@ -338,9 +382,9 @@ In summary, a shader, in this context, is the algorithm of a BRDF.
 There was developed three shaders: NoShadows, Whitted and PathTracer.
 All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray and the respective intersection.
 
-\begin{verbatim}
+\begin{lstlisting}
 void shade(RGB &rgb, Intersection &intersection, Ray &ray) const override;
-\end{verbatim}
+\end{lstlisting}
 
 \par
 The parameter
@@ -362,7 +406,7 @@ As already said, the indirect lighting is not fully simulated but rather simplif
 \par
 The algorithm developed is as following:
 
-\begin{verbatim}
+\begin{lstlisting}
 if (intersected material is diffuse) {
   for each light source
   	for each sample
@@ -373,7 +417,7 @@ if (intersected material is diffuse) {
   rgb /= #lights
   rgb += kD * 0.1 //Ambient light
 }
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -443,7 +487,7 @@ And, as usual, the transmission ray is traced and its radiance is multiplied by 
 \par
 The algorithm developed is as following:
 
-\begin{verbatim}
+\begin{lstlisting}
 if (intersected material is diffuse) {
   for each light source
     for each sample
@@ -478,7 +522,7 @@ if (intersected material is specular refractive) {
     transmissionRay.dir = (rayDir + shadingNormalT*(cost1 * 2))
   rgb += rayTrace(transmissionRay) * kT
 }
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -532,7 +576,7 @@ The reflected light in a specular surface and the refracted light are simulated 
 \par
 The algorithm developed is as following:
 
-\begin{verbatim}
+\begin{lstlisting}
 if (intersected material is diffuse) {
   for each light
     for each sample
@@ -599,7 +643,7 @@ if (intersected material is specular refractive) {
 
   rgb += rayTrace(transmissionRay) * kT
 }
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -616,9 +660,9 @@ There were implemented four samplers: Constant, Stratified, HaltonSequence and R
 
 \par
 All samplers just provide one method for the user to use:
-\begin{verbatim}
+\begin{lstlisting}
 float getSample(const unsigned int sample);
-\end{verbatim}
+\end{lstlisting}
 
 \par
 The
@@ -638,9 +682,9 @@ The algorithm of the
 $getSample$
 is just:
 
-\begin{verbatim}
+\begin{lstlisting}
 return value
-\end{verbatim}
+\end{lstlisting}
 
 
 \subsubsection{Stratified}
@@ -656,7 +700,7 @@ The algorithm of the
 $getSample$
 is then:
 
-\begin{verbatim}
+\begin{lstlisting}
 //atomic operation
 current = sample++
 if (current >= (domainSize * (sampleParam + 1))) {
@@ -665,7 +709,7 @@ if (current >= (domainSize * (sampleParam + 1))) {
 }
 task = current - (sampleParam * domainSize)
 return task / domainSize
-\end{verbatim}
+\end{lstlisting}
 
 
 \subsubsection{HaltonSequence}
@@ -690,7 +734,7 @@ The algorithm of the
 $getSample$
 is as following:
 
-\begin{verbatim}
+\begin{lstlisting}
 //atomic operation
 current = sample++
 if (current >= (domainSize * (sampleParam + 1))) {
@@ -707,7 +751,7 @@ while (task > 0) {
   task = floor(index / base)
 }
 return result
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Random}
 
@@ -730,9 +774,9 @@ So the algorithm of the
 $getSample$
 is just:
 
-\begin{verbatim}
+\begin{lstlisting}
 return rand() / RAND_MAX
-\end{verbatim}
+\end{lstlisting}
 
 
 \subsection{Lights}
@@ -741,10 +785,10 @@ return rand() / RAND_MAX
 There were implemented two types of light sources: PointLight and AreaLight.
 These light sources provide the user two main methods:
 
-\begin{verbatim}
+\begin{lstlisting}
 const Point3D getPosition(void);
 bool intersect(Intersection &intersection, const Ray &ray, const Material &) const;
-\end{verbatim}
+\end{lstlisting}
 
 \par
 The
@@ -767,9 +811,9 @@ Therefore, the
 $getPosition$
 method is very simple because it only returns the position of the light source determined in its constructor:
 
-\begin{verbatim}
+\begin{lstlisting}
 return position;
-\end{verbatim}
+\end{lstlisting}
 
 \par
 And the
@@ -787,9 +831,9 @@ This shape is intended as it allows to generate a random point in a triangle wit
 A triangle with 3 points: A, B and C.
 We get vectors AB and AC, being:
 
-\begin{verbatim}
+\begin{lstlisting}
 AB=[Bx-Ax,By-Ay,Bz-Az] and AC=[Cx-Ax,Cy-Ay,Cz-Az].
-\end{verbatim}
+\end{lstlisting}
 
 \par
 These vectors tell how to get from point A to the other two points in the triangle, by telling us what direction to go and how far.
@@ -797,18 +841,18 @@ So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the
 To generate a random point in the triangle, we have to generate 2 random numbers between 0 and 1 (R and S).
 Then we have to make sure we stay inside the triangle by checking if they are larger than one:
 
-\begin{verbatim}
+\begin{lstlisting}
 if (R + S >= 1) {
   R = 1 - R
   S = 1 - S
 }
-\end{verbatim}
+\end{lstlisting}
 
 Finally we can obtain a random point in the triangle by starting at point A, then getting a random percentage along vector AB and a random percentage along vector AC:
 
-\begin{verbatim}
+\begin{lstlisting}
 RandomPointPosition = A + R*AB + S*AC
-\end{verbatim}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -822,7 +866,7 @@ So, the
 $getPosition$
 algorithm is as following:
 
-\begin{verbatim}
+\begin{lstlisting}
 R = samplerPointLight.getSample(0)
 S = samplerPointLight.getSample(0)
 if (R + S >= 1) {
@@ -833,7 +877,7 @@ x = A.x + R * AB.x + S * AC.x
 y = A.y + R * AB.y + S * AC.y
 z = A.z + R * AB.z + S * AC.z
 return Point3D(x, y, z);
-\end{verbatim}
+\end{lstlisting}
 
 \par
 And the
@@ -848,10 +892,10 @@ There was implemented one type of Camera: Perspective Camera.
 \par
 The camera only provides one method for the user to generate a ray from the camera position in direction to the image plane:
 
-\begin{verbatim}
+\begin{lstlisting}
 Ray generateRay(const float u, const float v,
                 const float deviationU, const float deviationV) const;
-\end{verbatim}
+\end{lstlisting}
 
 \par
 The method

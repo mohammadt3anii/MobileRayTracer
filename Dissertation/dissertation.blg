@@ -1,70 +1,42 @@
-This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: dissertation.aux
+This is BibTeX, Version 0.99dThe top-level auxiliary file: dissertation.aux
 The style file: plainnat.bst
 A level-1 auxiliary file: 1_introduction.aux
 A level-1 auxiliary file: 2_state_of_the_art.aux
-A level-1 auxiliary file: 3_ray_tracing.aux
-A level-1 auxiliary file: 4_android.aux
+A level-1 auxiliary file: 3_software_architecture.aux
+A level-1 auxiliary file: 4_demonstration.aux
 A level-1 auxiliary file: 5_conclusion_future_work.aux
+A level-1 auxiliary file: A_user_documentation.aux
 Database file #1: dissertation.bib
 Warning--empty year in RadeonRays
+Warning--empty year in CPU_SIMD
 Warning--empty year in jsRayTracer
+Warning--empty year in SphereRayIntersection
+Warning--empty year in GLM
 Warning--empty year in Android_CPU_Raytracer
+Warning--empty year in CPU_Pipeline
+Warning--empty year in Whitted
+Warning--empty year in JournalDuNet
+Warning--empty year in ShadowRays
 Warning--empty year in AndroidDevelopers
+Warning--empty year in GoogleTest
 Warning--empty year in YafaRay
 Warning--empty year in OctaneRender
+Warning--empty year in OpenGL_ES_2
 Warning--empty year in Embree
+Warning--empty year in CPU_Cache
 Warning--empty year in HRay
+Warning--empty year in CMake
 Warning--empty year in IndigoRT
 Warning--empty year in PBRT
 Warning--empty year in G3D17
 Warning--empty year in Optix
 Warning--empty year in OptixPrime
 Warning--empty year in RIS
+Warning--empty year in TriangleRayIntersection
+Warning--empty year in tinyobjloader
 Warning--empty year in micro-packet
 Warning--empty year in tray
 Warning--empty year in trayrust
+Warning--empty year in PlaneRayIntersection
 Warning--empty year in Visionaray
-You've used 19 entries,
-            2773 wiz_defined-function locations,
-            685 strings with 6785 characters,
-and the built_in function-call counts, 5859 in all, are:
-= -- 519
-> -- 190
-< -- 19
-+ -- 79
-- -- 57
-* -- 302
-:= -- 889
-add.period$ -- 76
-call.type$ -- 19
-change.case$ -- 76
-chr.to.int$ -- 16
-cite$ -- 56
-duplicate$ -- 285
-empty$ -- 609
-format.name$ -- 76
-if$ -- 1242
-int.to.chr$ -- 4
-int.to.str$ -- 1
-missing$ -- 0
-newline$ -- 122
-num.names$ -- 76
-pop$ -- 295
-preamble$ -- 1
-purify$ -- 57
-quote$ -- 0
-skip$ -- 187
-stack$ -- 0
-substring$ -- 38
-swap$ -- 24
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 209
-warning$ -- 18
-while$ -- 57
-width$ -- 0
-write$ -- 260
-(There were 18 warnings)
+(There were 32 warnings)

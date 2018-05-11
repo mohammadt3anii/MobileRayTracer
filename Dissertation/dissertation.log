@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  10 MAY 2018 15:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  11 MAY 2018 17:34
 entering extended mode
 **./dissertation.tex
 (dissertation.tex
@@ -1704,8 +1704,15 @@ Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix
 \c@FancyVerbLine=\count181
 \FV@StepNumber=\count182
 \FV@OutFile=\write6
-) (dissertation.aux (1_introduction.aux)
-(2_state_of_the_art.aux) (3_software_architecture.aux
+)
+(C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\makece
+ll\makecell.sty
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
+\rotheadsize=\dimen273
+\c@nlinenum=\count183
+\TeXr@lab=\toks51
+) (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux) (3_software_a
+rchitecture.aux
 
 LaTeX Warning: Label `Sphere.' multiply defined.
 
@@ -1716,23 +1723,23 @@ LaTeX Warning: Label `Sphere.@cref' multiply defined.
 (A_user_documentation.aux))
 \openout1 = `dissertation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Try loading font information for T1+pplj on input line 40.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Try loading font information for T1+pplj on input line 43.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \t1pplj.fd
@@ -1741,17 +1748,17 @@ File: t1pplj.fd 2004/09/06 font definitions for T1/pplj.
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\context\base
 \supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count183
-\scratchdimen=\dimen273
+\scratchcounter=\count184
+\scratchdimen=\dimen274
 \scratchbox=\box53
-\nofMPsegments=\count184
-\nofMParguments=\count185
-\everyMPshowfont=\toks51
-\MPscratchCnt=\count186
-\MPscratchDim=\dimen274
-\MPnumerator=\count187
-\makeMPintoPDFobject=\count188
-\everyMPtoPDFconversion=\toks52
+\nofMPsegments=\count185
+\nofMParguments=\count186
+\everyMPshowfont=\toks52
+\MPscratchCnt=\count187
+\MPscratchDim=\dimen275
+\MPnumerator=\count188
+\makeMPintoPDFobject=\count189
+\everyMPtoPDFconversion=\toks53
 )
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\oberdi
 ek\epstopdf-base.sty
@@ -1769,7 +1776,7 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
 \AtBeginShipoutBox=\box54
-Package hyperref Info: Link coloring ON on input line 40.
+Package hyperref Info: Link coloring ON on input line 43.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\hyperr
 ef\nameref.sty
@@ -1779,12 +1786,12 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 diek\gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count189
+\c@section@level=\count190
 )
-LaTeX Info: Redefining \ref on input line 40.
-LaTeX Info: Redefining \pageref on input line 40.
-LaTeX Info: Redefining \nameref on input line 40.
-LaTeX Info: Redefining \microtypecontext on input line 40.
+LaTeX Info: Redefining \ref on input line 43.
+LaTeX Info: Redefining \pageref on input line 43.
+LaTeX Info: Redefining \nameref on input line 43.
+LaTeX Info: Redefining \microtypecontext on input line 43.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1809,7 +1816,7 @@ Package scrlayer-scrpage Warning: Very small head height detected!
 (scrlayer-scrpage)                option `singlespacing=true'
 (scrlayer-scrpage)                to avoid this warning.
 
-Package soulpos Info: Loading soulutf8 on input line 40.
+Package soulpos Info: Loading soulutf8 on input line 43.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\generic\ober
 diek\soulutf8.sty
@@ -1818,58 +1825,58 @@ Package: soulutf8 2016/05/16 v1.1 Permit use of UTF-8 characters in soul (HO)
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\soul\s
 oul.sty
 Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
-\SOUL@word=\toks53
-\SOUL@lasttoken=\toks54
-\SOUL@cmds=\toks55
-\SOUL@buffer=\toks56
-\SOUL@token=\toks57
+\SOUL@word=\toks54
+\SOUL@lasttoken=\toks55
+\SOUL@cmds=\toks56
+\SOUL@buffer=\toks57
+\SOUL@token=\toks58
 \SOUL@spaceskip=\skip127
-\SOUL@ttwidth=\dimen275
-\SOUL@uldp=\dimen276
-\SOUL@ulht=\dimen277
+\SOUL@ttwidth=\dimen276
+\SOUL@uldp=\dimen277
+\SOUL@ulht=\dimen278
 )) ABD: EveryShipout initializing macros
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count190
+\c@lstlisting=\count191
 
 
 Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.16} into 
 your preamble.
- on input line 40.
+ on input line 43.
 
 \GPT@outputbox=\box55
-LaTeX Font Info:    Try loading font information for OT1+pplx on input line 42.
+LaTeX Font Info:    Try loading font information for OT1+pplx on input line 45.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \ot1pplx.fd
 File: ot1pplx.fd 2004/09/06 font definitions for OT1/pplx.
 )
-LaTeX Font Info:    Try loading font information for OML+zplm on input line 42.
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 45.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMS+zplm on input line 42.
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 45.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMX+zplm on input line 42.
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 45.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
-LaTeX Font Info:    Try loading font information for OT1+zplm on input line 42.
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 45.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
@@ -1880,7 +1887,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zplm' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 42.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 45.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \t1phv.fd
@@ -1902,9 +1909,9 @@ x.map}] [2
 
 ]
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 72.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 75.
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <9> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 72.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 75.
  [1
 
 
@@ -1914,7 +1921,7 @@ LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <9> not available
 
 
 ]
-Package tocbasic Info: character protrusion at toc deactivated on input line 93
+Package tocbasic Info: character protrusion at toc deactivated on input line 96
 .
  (dissertation.toc
 Package microtype Info: Character `029' is missing
@@ -1928,9 +1935,9 @@ Package microtype Info: Character `029' is missing
 \openout7 = `dissertation.toc'.
 
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <10> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 93.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 96.
  [4]
-Package tocbasic Info: character protrusion at lof deactivated on input line 94
+Package tocbasic Info: character protrusion at lof deactivated on input line 97
 .
  (dissertation.lof)
 \tf@lof=\write8
@@ -1943,7 +1950,7 @@ Package tocbasic Info: character protrusion at lof deactivated on input line 94
 
 
 ]
-Package tocbasic Info: character protrusion at lot deactivated on input line 95
+Package tocbasic Info: character protrusion at lot deactivated on input line 98
 .
  (dissertation.lot)
 \tf@lot=\write9
@@ -1974,16 +1981,16 @@ Class scrbook Warning: \float@addtolists detected!
 (scrbook)              a package that still implements the
 (scrbook)              deprecated \float@addtolist interface .
 
-<Images/Mobile_devices.jpg, id=193, 1127.21124pt x 939.51pt>
+<Images/Mobile_devices.jpg, id=219, 1127.21124pt x 939.51pt>
 File: Images/Mobile_devices.jpg Graphic file (type jpg)
 <use Images/Mobile_devices.jpg>
-Package pdftex.def Info: Images/Mobile_devices.jpg  used on input line 30.
+Package pdftex.def Info: Images/Mobile_devices.jpg  used on input line 34.
 (pdftex.def)             Requested size: 1127.2085pt x 939.5077pt.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.32 
+l.36 
       [1
 
 
@@ -1995,14 +2002,14 @@ l.32
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.57 F
-      inally, it is important to do a demonstration of a rendering applicati...
+l.61 F
+      inally, it is important to do a demonstration of the rendering applica...
 [2 <./Images/Mobile_devices.jpg>]) [3]
 \openout2 = `2_state_of_the_art.aux'.
 
  (2_state_of_the_art.tex
 chapter 2.
-<Images/Ray_Tracing.png, id=206, 1312.905pt x 586.19pt>
+<Images/Ray_Tracing.png, id=232, 1312.905pt x 586.19pt>
 File: Images/Ray_Tracing.png Graphic file (type png)
 <use Images/Ray_Tracing.png>
 Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
@@ -2013,27 +2020,37 @@ Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
 
 
  <./Images/Ray_Tracing.png>]
-<Images/cache.png, id=213, 652.4375pt x 361.35pt>
+<Images/cache.png, id=241, 652.4375pt x 361.35pt>
 File: Images/cache.png Graphic file (type png)
 <use Images/cache.png>
 Package pdftex.def Info: Images/cache.png  used on input line 39.
 (pdftex.def)             Requested size: 195.73276pt x 108.40584pt.
-<Images/Pipeline.png, id=214, 301.125pt x 190.7125pt>
+LaTeX Font Info:    Try loading font information for OMS+pplj on input line 47.
+
+LaTeX Font Info:    No file OMSpplj.fd. on input line 47.
+
+
+LaTeX Font Warning: Font shape `OMS/pplj/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbullet' on input line 47.
+
+[5 <./Images/cache.png>]
+<Images/Pipeline.png, id=251, 301.125pt x 190.7125pt>
 File: Images/Pipeline.png Graphic file (type png)
 <use Images/Pipeline.png>
-Package pdftex.def Info: Images/Pipeline.png  used on input line 52.
+Package pdftex.def Info: Images/Pipeline.png  used on input line 60.
 (pdftex.def)             Requested size: 150.56212pt x 95.356pt.
- [5 <./Images/cache.png>]
-<Images/SIMD.png, id=221, 311.20348pt x 298.66684pt>
+<Images/SIMD.png, id=254, 311.20348pt x 298.66684pt>
 File: Images/SIMD.png Graphic file (type png)
 <use Images/SIMD.png>
-Package pdftex.def Info: Images/SIMD.png  used on input line 68.
+Package pdftex.def Info: Images/SIMD.png  used on input line 76.
 (pdftex.def)             Requested size: 155.60135pt x 149.33304pt.
- [6 <./Images/Pipeline.png> <./Images/SIMD.png>] [7]
+ [6 <./Images/Pipeline.png> <./Images/SIMD.png>]
+[7]
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <8> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 140.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 148.
 
-Overfull \hbox (54.55174pt too wide) in paragraph at lines 136--161
+Overfull \hbox (9.14053pt too wide) in paragraph at lines 144--169
  []|  [] 
  []
 
@@ -2042,7 +2059,7 @@ Overfull \hbox (54.55174pt too wide) in paragraph at lines 136--161
 
  (3_software_architecture.tex
 chapter 3.
-<Images/UI.png, id=283, 541.02126pt x 180.675pt>
+<Images/UI.png, id=318, 541.02126pt x 180.675pt>
 File: Images/UI.png Graphic file (type png)
 <use Images/UI.png>
 Package pdftex.def Info: Images/UI.png  used on input line 17.
@@ -2053,13 +2070,13 @@ Package pdftex.def Info: Images/UI.png  used on input line 17.
 
 
  <./Images/UI.png (PNG copy)>]
-<Images/Layers.png, id=288, 450.68375pt x 310.15875pt>
+<Images/Layers.png, id=323, 450.68375pt x 310.15875pt>
 File: Images/Layers.png Graphic file (type png)
 <use Images/Layers.png>
 Package pdftex.def Info: Images/Layers.png  used on input line 38.
 (pdftex.def)             Requested size: 450.68263pt x 310.15799pt.
- [11 <./Images/Layers.png>]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 148.
+ [11 <./Images/Layers.png>] [12]
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 182.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\base\t
@@ -2070,167 +2087,136 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<Images/tiling.png, id=295, 328.8285pt x 532.389pt>
+<Images/tiling.png, id=340, 328.8285pt x 532.389pt>
 File: Images/tiling.png Graphic file (type png)
 <use Images/tiling.png>
-Package pdftex.def Info: Images/tiling.png  used on input line 163.
+Package pdftex.def Info: Images/tiling.png  used on input line 196.
 (pdftex.def)             Requested size: 328.8277pt x 532.3877pt.
- [12] [13 <./Images/tiling.png>]
-Overfull \hbox (42.26865pt too wide) in paragraph at lines 203--203
-[]\T1/cmtt/m/n/10.95 bool intersect(Intersection &int, const Ray &ray, const Ma
-terial &mat) const override;[] 
- []
-
-<Images/RayToPlane.png, id=308, 376.40625pt x 276.03125pt>
+ [13]
+<Images/Shadow_Ray.jpg, id=357, 281.55188pt x 152.82094pt>
+File: Images/Shadow_Ray.jpg Graphic file (type jpg)
+<use Images/Shadow_Ray.jpg>
+Package pdftex.def Info: Images/Shadow_Ray.jpg  used on input line 225.
+(pdftex.def)             Requested size: 281.55118pt x 152.82054pt.
+ [14 <./Images/tiling.png>]
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 251.
+ [15 <./Images/Shadow_Ray.jpg>]
+<Images/RayToPlane.png, id=381, 376.40625pt x 276.03125pt>
 File: Images/RayToPlane.png Graphic file (type png)
 <use Images/RayToPlane.png>
-Package pdftex.def Info: Images/RayToPlane.png  used on input line 230.
+Package pdftex.def Info: Images/RayToPlane.png  used on input line 263.
 (pdftex.def)             Requested size: 150.55983pt x 110.41054pt.
-[14 <./Images/RayToPlane.png>]
-<Images/Ray_Sphere_Intersection.png, id=314, 682.04813pt x 411.03563pt>
+<Images/Ray_Sphere_Intersection.png, id=384, 682.04813pt x 411.03563pt>
 File: Images/Ray_Sphere_Intersection.png Graphic file (type png)
 <use Images/Ray_Sphere_Intersection.png>
 Package pdftex.def Info: Images/Ray_Sphere_Intersection.png  used on input line
- 262.
+ 295.
 (pdftex.def)             Requested size: 272.8144pt x 164.41133pt.
- [15 <./Images/Ray_Sphere_Intersection.png>]
-<Images/triangle.png, id=320, 150.5625pt x 181.67876pt>
+
+[16 <./Images/RayToPlane.png>]
+<Images/triangle.png, id=405, 150.5625pt x 181.67876pt>
 File: Images/triangle.png Graphic file (type png)
 <use Images/triangle.png>
-Package pdftex.def Info: Images/triangle.png  used on input line 297.
+Package pdftex.def Info: Images/triangle.png  used on input line 330.
 (pdftex.def)             Requested size: 150.56212pt x 181.6783pt.
-
-[16 <./Images/triangle.png>]
-<Images/Rendering_eq.png, id=326, 556.32843pt x 299.61937pt>
+ [17 <./Images/Ray_Sphere_Intersection.png>]
+[18 <./Images/triangle.png>]
+<Images/Rendering_eq.png, id=431, 556.32843pt x 299.61937pt>
 File: Images/Rendering_eq.png Graphic file (type png)
 <use Images/Rendering_eq.png>
-Package pdftex.def Info: Images/Rendering_eq.png  used on input line 334.
+Package pdftex.def Info: Images/Rendering_eq.png  used on input line 376.
 (pdftex.def)             Requested size: 556.32707pt x 299.61864pt.
- [17 <./Images/Rendering_eq.png>]
-<Images/NoShadows.png, id=334, 544.0325pt x 880.28876pt>
+ [19 <./Images/Rendering_eq.png>]
+<Images/NoShadows.png, id=443, 544.0325pt x 880.28876pt>
 File: Images/NoShadows.png Graphic file (type png)
 <use Images/NoShadows.png>
-Package pdftex.def Info: Images/NoShadows.png  used on input line 382.
+Package pdftex.def Info: Images/NoShadows.png  used on input line 424.
 (pdftex.def)             Requested size: 163.211pt x 264.08865pt.
- [18 <./Images/NoShadows.png (PNG copy)>]
-<Images/Reflection.png, id=339, 803.0pt x 602.25pt>
+ [20 <./Images/NoShadows.png (PNG copy)>]
+<Images/Reflection.png, id=457, 803.0pt x 602.25pt>
 File: Images/Reflection.png Graphic file (type png)
 <use Images/Reflection.png>
-Package pdftex.def Info: Images/Reflection.png  used on input line 408.
+Package pdftex.def Info: Images/Reflection.png  used on input line 450.
 (pdftex.def)             Requested size: 240.90186pt x 180.67639pt.
-<Images/Refraction.png, id=340, 643.40375pt x 356.33125pt>
+<Images/Refraction.png, id=458, 643.40375pt x 356.33125pt>
 File: Images/Refraction.png Graphic file (type png)
 <use Images/Refraction.png>
-Package pdftex.def Info: Images/Refraction.png  used on input line 440.
+Package pdftex.def Info: Images/Refraction.png  used on input line 482.
 (pdftex.def)             Requested size: 193.02261pt x 106.90019pt.
- [19 <./Images/Reflection.png>]
-Overfull \hbox (42.83449pt too wide) in paragraph at lines 481--481
-[]        \T1/cmtt/m/n/10.95 Ray shadowRay(intersectionPoint, vectorToLight, di
-stanceToLight, rayDepth + 1)[] 
- []
-
-[20 <./Images/Refraction.png>]
-Overfull \hbox (14.54263pt too wide) in paragraph at lines 481--481
-[]    \T1/cmtt/m/n/10.95 transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n
-*cost1 - sqrt(cost2))))[] 
- []
-
-<Images/Whitted.png, id=351, 541.02126pt x 881.2925pt>
+ [21 <./Images/Reflection.png>] [22 <./Images/Refraction.png>]
+<Images/Whitted.png, id=503, 541.02126pt x 881.2925pt>
 File: Images/Whitted.png Graphic file (type png)
 <use Images/Whitted.png>
-Package pdftex.def Info: Images/Whitted.png  used on input line 487.
+Package pdftex.def Info: Images/Whitted.png  used on input line 529.
 (pdftex.def)             Requested size: 162.30762pt x 264.38979pt.
-[21 <./Images/Whitted.png (PNG copy)>]
-<Images/Rotation_Matrix.png, id=356, 909.89937pt x 103.38625pt>
+ [23 <./Images/Whitted.png (PNG copy)>]
+<Images/Rotation_Matrix.png, id=511, 909.89937pt x 103.38625pt>
 File: Images/Rotation_Matrix.png Graphic file (type png)
 <use Images/Rotation_Matrix.png>
-Package pdftex.def Info: Images/Rotation_Matrix.png  used on input line 521.
+Package pdftex.def Info: Images/Rotation_Matrix.png  used on input line 563.
 (pdftex.def)             Requested size: 454.94856pt x 51.693pt.
 
-Overfull \hbox (12.29482pt too wide) in paragraph at lines 521--522
+Overfull \hbox (12.29482pt too wide) in paragraph at lines 563--564
  [][] 
  []
 
 
-Overfull \hbox (14.66426pt too wide) in paragraph at lines 524--528
+Overfull \hbox (14.66426pt too wide) in paragraph at lines 566--570
 []\T1/pplj/m/n/10.95 Then the prop-er co-or-di-nates in the world view is just:
  $\OML/zplm/m/it/10.95 globalCoordinates \OT1/zplm/m/n/10.95 = \OML/zplm/m/it/1
 0.95 localCoordinates \OMS/zplm/m/n/10.95 
  []
 
-
-Overfull \hbox (42.83449pt too wide) in paragraph at lines 602--602
-[]        \T1/cmtt/m/n/10.95 Ray shadowRay(intersectionPoint, vectorToLight, di
-stanceToLight, rayDepth + 1)[] 
- []
-
-[22 <./Images/Rotation_Matrix.png>]
-Overfull \hbox (14.54263pt too wide) in paragraph at lines 602--602
-[]    \T1/cmtt/m/n/10.95 Ray secundaryRay (globalX, globalY, globalZ, intersect
-ionPoint, rayDepth + 1)[] 
- []
-
-[23]
-Overfull \hbox (59.8096pt too wide) in paragraph at lines 602--602
-[]    \T1/cmtt/m/n/10.95 transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n
-*cosTheta1 - sqrt(cosTheta2))))[] 
- []
-
-<Images/PathTracer.png, id=367, 544.0325pt x 883.3pt>
+[24 <./Images/Rotation_Matrix.png>]
+<Images/PathTracer.png, id=544, 544.0325pt x 883.3pt>
 File: Images/PathTracer.png Graphic file (type png)
 <use Images/PathTracer.png>
-Package pdftex.def Info: Images/PathTracer.png  used on input line 608.
+Package pdftex.def Info: Images/PathTracer.png  used on input line 650.
 (pdftex.def)             Requested size: 163.211pt x 264.99205pt.
-[24 <./Images/PathTracer.png (PNG copy)>]
-<Images/Halton_sequence_2D.png, id=372, 290.08376pt x 290.08376pt>
+ [25] [26 <./Images/PathTracer.png (PNG copy)>]
+<Images/Halton_sequence_2D.png, id=596, 290.08376pt x 290.08376pt>
 File: Images/Halton_sequence_2D.png Graphic file (type png)
 <use Images/Halton_sequence_2D.png>
-Package pdftex.def Info: Images/Halton_sequence_2D.png  used on input line 685.
+Package pdftex.def Info: Images/Halton_sequence_2D.png  used on input line 727.
 
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
- [25 <./Images/Halton_sequence_2D.png>]
-<Images/Pseudorandom_sequence_2D.png, id=378, 290.08376pt x 290.08376pt>
+ [27 <./Images/Halton_sequence_2D.png>]
+<Images/Pseudorandom_sequence_2D.png, id=616, 290.08376pt x 290.08376pt>
 File: Images/Pseudorandom_sequence_2D.png Graphic file (type png)
 <use Images/Pseudorandom_sequence_2D.png>
 Package pdftex.def Info: Images/Pseudorandom_sequence_2D.png  used on input lin
-e 725.
+e 767.
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
- [26 <./Images/Pseudorandom_sequence_2D.png>]
-Overfull \hbox (25.29353pt too wide) in paragraph at lines 747--747
-[]\T1/cmtt/m/n/10.95 bool intersect(Intersection &intersection, const Ray &ray,
- const Material &) const;[] 
- []
-
-[27]
-<Images/barycentric-coordinates.png, id=388, 401.5pt x 284.06125pt>
+ [28 <./Images/Pseudorandom_sequence_2D.png>] [29]
+<Images/barycentric-coordinates.png, id=648, 401.5pt x 284.06125pt>
 File: Images/barycentric-coordinates.png Graphic file (type png)
 <use Images/barycentric-coordinates.png>
 Package pdftex.def Info: Images/barycentric-coordinates.png  used on input line
- 817.
+ 859.
 (pdftex.def)             Requested size: 200.7495pt x 142.03026pt.
- [28 <./Images/barycentric-coordinates.png>]
-<Images/Jittering.png, id=394, 127.47626pt x 127.47626pt>
+ [30 <./Images/barycentric-coordinates.png>]
+<Images/Jittering.png, id=672, 127.47626pt x 127.47626pt>
 File: Images/Jittering.png Graphic file (type png)
 <use Images/Jittering.png>
-Package pdftex.def Info: Images/Jittering.png  used on input line 885.
+Package pdftex.def Info: Images/Jittering.png  used on input line 927.
 (pdftex.def)             Requested size: 127.47594pt x 127.47594pt.
-<Images/hfov-vfov-dfov.jpg, id=395, 1517.67pt x 1092.08pt>
+<Images/hfov-vfov-dfov.jpg, id=673, 1517.67pt x 1092.08pt>
 File: Images/hfov-vfov-dfov.jpg Graphic file (type jpg)
 <use Images/hfov-vfov-dfov.jpg>
-Package pdftex.def Info: Images/hfov-vfov-dfov.jpg  used on input line 902.
+Package pdftex.def Info: Images/hfov-vfov-dfov.jpg  used on input line 944.
 (pdftex.def)             Requested size: 303.52863pt x 218.41212pt.
- [29 <./Images/Jittering.png>]
-[30 <./Images/hfov-vfov-dfov.jpg>]
-<Images/UI_thread.png, id=406, 312.16624pt x 322.20375pt>
+ [31 <./Images/Jittering.png>] [32 <./Images/hfov-vfov-dfov.jpg>]
+<Images/UI_thread.png, id=686, 312.16624pt x 322.20375pt>
 File: Images/UI_thread.png Graphic file (type png)
 <use Images/UI_thread.png>
-Package pdftex.def Info: Images/UI_thread.png  used on input line 943.
+Package pdftex.def Info: Images/UI_thread.png  used on input line 985.
 (pdftex.def)             Requested size: 156.08273pt x 161.10147pt.
- [31 <./Images/UI_thread.png>]) [32]
+ [33 <./Images/UI_thread.png>])
+[34]
 \openout2 = `4_demonstration.aux'.
 
-
-(4_demonstration.tex
+ (4_demonstration.tex
 chapter 4.
 Package pgfplots info on input line 16: Overriding colorspace to rgb due to xco
 lor configuration.
@@ -2270,7 +2256,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `subscript' on input line 57.
 
-) [33
+) [35
 
 
 
@@ -2280,7 +2266,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
  (5_conclusion_future_work.tex
 chapter 5.
-) [34
+) [36
 
 
 
@@ -2300,55 +2286,66 @@ lopment / radeonpro /
  []
 
 
-Underfull \hbox (badness 1210) in paragraph at lines 16--21
+Underfull \hbox (badness 1210) in paragraph at lines 22--27
 []\T1/pplj/m/n/10.95 Christopher Chedeau.  js-ray-trac-er.  URL [][]$\T1/cmtt/m
 /n/10.95 http : / / blog . vjeux . com / 2012 / javascript /
  []
 
-LaTeX Font Info:    Try loading font information for OMS+pplj on input line 42.
 
-LaTeX Font Info:    No file OMSpplj.fd. on input line 42.
+Underfull \hbox (badness 10000) in paragraph at lines 60--65
+[]\T1/pplj/m/n/10.95 Le Jour-nal du Net.  Gér-er et sécuris-er s-es flottes de 
+s-mart-phones et
+ []
 
-LaTeX Font Warning: Font shape `OMS/pplj/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead on input line 42.
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--65
+\T1/pplj/m/n/10.95 tablettes.  URL [][]$\T1/cmtt/m/n/10.95 https : / / www . jo
+urnaldunet . com / solutions / mobilite /
+ []
+
+[37
 
 
-Underfull \hbox (badness 2913) in paragraph at lines 42--46
+
+
+
+]
+Underfull \hbox (badness 2913) in paragraph at lines 93--97
 [][] \T1/pplj/m/n/10.95 O-TOY In-c.  Real-time 3d ren-der-ing.  URL [][]$\T1/cm
 tt/m/n/10.95 https : / / home . otoy . com / render /
  []
 
-[35
 
-
-
-
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 90--94
+Underfull \hbox (badness 10000) in paragraph at lines 160--164
 []\T1/pplj/m/n/10.95 Nvidia.  Bak-ing with op-tix, b.  URL [][]$\T1/cmtt/m/n/10
 .95 https : / / developer . nvidia . com /
  []
 
-) [36]
+[38]
+Underfull \hbox (badness 4739) in paragraph at lines 204--208
+[]\T1/pplj/m/n/10.95 Menno Vink.  Ray to plane in-ter-sec-tion.  URL [][]$\T1/c
+mtt/m/n/10.95 http : / / www . echo-[]gaming . eu /
+ []
+
+) [39]
 \openout2 = `A_user_documentation.aux'.
 
  (A_user_documentation.tex
 chapter A.
-) [37
+) [40
 
 
 
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 140.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 140.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 143.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 143.
  (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux)
 (3_software_architecture.aux) (4_demonstration.aux)
 (5_conclusion_future_work.aux) (A_user_documentation.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 140.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 140.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 143.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 143.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
@@ -2356,36 +2353,39 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 140.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 143.
  ) 
 Here is how much of TeX's memory you used:
- 47956 strings out of 495204
- 1092026 string characters out of 3179758
- 1408885 words of memory out of 3000000
- 50327 multiletter control sequences out of 15000+200000
- 81918 words of font info for 120 fonts, out of 3000000 for 9000
- 14 hyphenation exceptions out of 8191
- 74i,23n,106p,9093b,2175s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 50671 strings out of 495204
+ 1135527 string characters out of 3179758
+ 1514885 words of memory out of 3000000
+ 52797 multiletter control sequences out of 15000+200000
+ 83745 words of font info for 124 fonts, out of 3000000 for 9000
+ 15 hyphenation exceptions out of 8191
+ 74i,23n,106p,9093b,2924s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs/data\fonts\pk\ljfour\
-jknappen\ec\dpi600\ectt1095.pk>{C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/
-texmfs/install/fonts/enc/dvips/base/8r.enc}<C:/Users/PC/Desktop/C/miktex-portab
-le-2.9.6621/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/P
-C/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/public/amsfonts
-/cm/cmsy10.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/f
-onts/type1/public/fpl/fplbj8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.66
-21/texmfs/install/fonts/type1/public/mathpazo/fplmr.pfb><C:/Users/PC/Desktop/C/
-miktex-portable-2.9.6621/texmfs/install/fonts/type1/public/mathpazo/fplmri.pfb>
-<C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/publ
-ic/fpl/fplrc8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/insta
-ll/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2
-.9.6621/texmfs/install/fonts/type1/urw/helvetic/uhvr8ac.pfb><C:/Users/PC/Deskto
-p/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/palatino/uplb8a.pfb
-><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw
-/palatino/uplr8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/ins
-tall/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on dissertation.pdf (45 pages, 3053700 bytes).
+jknappen\ec\dpi600\ectt1095.pk> <C:\Users\PC\Desktop\C\miktex-portable-2.9.6621
+\texmfs/data\fonts\pk\ljfour\jknappen\ec\dpi600\ecit0900.pk> <C:\Users\PC\Deskt
+op\C\miktex-portable-2.9.6621\texmfs/data\fonts\pk\ljfour\jknappen\ec\dpi600\ec
+tt0900.pk>{C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/
+enc/dvips/base/8r.enc}<C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/in
+stall/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/PC/Desktop/C/miktex-po
+rtable-2.9.6621/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Us
+ers/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/public/fpl
+/fplbj8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fon
+ts/type1/public/mathpazo/fplmr.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6
+621/texmfs/install/fonts/type1/public/mathpazo/fplmri.pfb><C:/Users/PC/Desktop/
+C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/public/fpl/fplrc8a.pfb><C
+:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/he
+lvetic/uhvb8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/instal
+l/fonts/type1/urw/helvetic/uhvr8ac.pfb><C:/Users/PC/Desktop/C/miktex-portable-2
+.9.6621/texmfs/install/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/PC/Desktop
+/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/palatino/uplr8a.pfb>
+<C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/
+palatino/uplri8a.pfb>
+Output written on dissertation.pdf (48 pages, 3158300 bytes).
 PDF statistics:
- 744 PDF objects out of 1000 (max. 8388607)
- 136 named destinations out of 1000 (max. 500000)
- 19413 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 1183 PDF objects out of 1200 (max. 8388607)
+ 371 named destinations out of 1000 (max. 500000)
+ 20450 words of extra memory for PDF output out of 20736 (max. 10000000)
 

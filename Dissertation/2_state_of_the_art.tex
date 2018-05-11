@@ -29,12 +29,12 @@ This is achieved thanks to features developed inside the processor like the cach
 \par
 The cache is a very small and fast multilevel memory inside the processor that temporarily stores the data read from the main memory.
 This memory allows reading its content at a very low latency in the order of magnitude of around 1 nanosecond in the first level, 10 nanoseconds at second level and 50 nanoseconds at third level compared to the typical 100 nanoseconds of a DDR main memory.
-The downside that this memory is that  it is very small because its cost is much higher than a typical RAM memory.
-So, usually the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB which is very little compared to the typical 16GB provided by the memory RAM.
+The downside is that it is very small because its cost are much higher than a typical RAM memory.
+Nowadays, the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB which is very little compared to the typical 16GB provided by the memory RAM.
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a typical cache memory inside a processor.}
+	\caption{Illustration of a typical cache memory inside a microprocessor (\cite{CPU_Cache}).}
 	\label{Cache.}
 	\includegraphics[keepaspectratio,scale=0.3]{cache.png}
 \end{figure}
@@ -42,12 +42,20 @@ So, usually the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB
 \par
 The multilevel pipeline is another feature inside a processor which allows to reduce the processor's own latency by allowing a form of parallelism called instruction-level parallelism within a single processor.
 Basically, one instruction is divided in some stages and it allows the possibility to execute different stages of different instructions simultaneously.
-Typically the instruction is divided in 5 stages: fetching the instruction, decoding the instruction, executing the instruction, reading / storing values in memory and writing back the value in the register.
-This allows faster CPU throughput, which means the number of instructions that can be executed in a unit of time, than would otherwise be possible at a given clock rate.
+In the early days, the Classic RISC pipeline were typically divided in 5 stages:
+\begin{itemize}  
+	\item Fetching the instruction
+	\item Decoding the instruction
+	\item Executing the instruction where the arguments can be fetched from registers (1 cycle latency) or from memory (2 cycle latency)
+	\item Memory access where it ensured that writing in memory was always performed in the same stage and allowed to use that value in another instruction before it was written in memory
+	\item Writing back the value in the register
+\end{itemize}
+Nowadays, the current microprocessors have a pipeline with 8-14 stages and can be more complex than the Classic RISC, but the operating principle is the same.
+This allows faster CPU throughput, which means the number of instructions that can be executed in a unit of time is greater, than it would otherwise be possible at a given clock rate.
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a typical multilevel cpu pipeline.}
+	\caption{Illustration of the Classic RISC multilevel CPU pipeline (\cite{CPU_Pipeline}).}
 	\label{Pipeline.}
 	\includegraphics[keepaspectratio,scale=0.5]{Pipeline.png}
 \end{figure}
@@ -59,17 +67,17 @@ This allows to reduce the time that the processor waits for the data in the main
 \par
 Finally, SIMD instruction set is a set of special instructions that allows the processor to read or write bigger sizes of data.
 Typically, a 64 bit processor can only work with 64 bits of information at a time during the execution of an instruction.
-This feature can allow to read or write up to 256 bits by using special registers and more ALUs provided in the processor.
+This feature can allow to read or write up to 512 bits by using special registers and additional ALUs provided in the processor.
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of a typical execution of SIMD extension.}
+	\caption{Illustration of a typical execution of SIMD extension (\cite{CPU_SIMD}).}
 	\label{SIMD.}
 	\includegraphics[keepaspectratio,scale=0.5]{SIMD.png}
 \end{figure}
 
 \par
-Nowadays, even mobile devices like smart phones and tablets have multiple CPU cores with features like these.
+Nowadays, even mobile devices like smart phones and tablets have multiple CPU cores with features similar to those described above.
 This opens the possibility to execute more computationally demanding algorithms, like ray tracing, in these devices.
 
 \section{Key features of Ray Tracing for this work}
@@ -95,7 +103,7 @@ The software license is very important in this work because it lets the user kno
 \par
 An application can only be executed in the platforms that the developers compiled the code for.
 So, a ray tracer that can be executed in a desktop may also or may not be executed on another platform, like a mobile device.
-This information is very important in this work because it inform us whether a ray tracer can be executed in a mobile device with the typical Operating System like Android, iOS or Windows Phone.
+This information is very important in this work because it inform us whether a ray tracer can be executed in a mobile device with the typical Operating System like Android, iOS or Windows 10 Mobile.
 
 \subsection{Interactivity}
 
@@ -121,8 +129,8 @@ This is very important because it allows the user to develop his own renderer ba
 \section{Related work}
 
 \par
-The possibility of rendering an image with ray tracing was demonstrated in 1980 by Whitted and since then the number of libraries that provide basic ray tracing functionalities increased greatly.
-There is a wide range of different ray tracers available today for the programmer to use, yet the majority can only be used with the traditional personal computer hardware.
+The possibility of rendering an image with ray tracing was demonstrated in 1980 by Whitted (\cite {Whitted}) and since then the number of libraries that provide basic ray tracing functionalities increased greatly.
+There is a wide range of different ray tracers available today for the programmer to use, yet the majority can only be used with the traditional personal computer hardware (desktop or laptop).
 
 \par
 The table \ref{comparison state of the art} shows some applications or frameworks that use ray tracing available today and compares them according to their type of license, platform compatibility, interactivity, progressive and whether they allow development of your own rendering components like the integrator and sampler.
@@ -133,29 +141,29 @@ During the research of the available ray tracers, others than the ones presented
 \centering
 \caption{Comparison of different applications/frameworks that use ray tracing}
 \label{comparison state of the art}
-\hspace*{-3.0cm}
+\hspace*{-2.0cm}
 \scriptsize
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{Product}											& \textbf{License}	& \textbf{Platform}	& \textbf{Mobile}		& \textbf{Interactivity}	& \textbf{Progressive}	& \textbf{Programmable Components}\\ \hline
-Optix (\cite{Optix})											& Free                	& Nvidia GPU 			& No				& Yes                  	& Yes                 		& Yes\\ \hline
-Optix Prime (\cite{OptixPrime})								& Free                	& CPU \& Nvidia GPU 	& No				& Yes                  	& Yes                 		& Yes\\ \hline
-RenderMan RIS (\cite{RIS})									& Commercial       	& CPU 		             & No                  		& Yes                 		& Yes				& Yes\\ \hline
-OctaneRender (\cite{OctaneRender})							& Commercial       	& GPU 		             & No                  		& Yes                 		& Yes				& No\\ \hline
-Embree (\cite{Embree}										& Open Source     	& Intel CPU			& No				& Yes                  	& Yes                      	& Yes\\ \hline
-Radeon Rays (\cite{RadeonRays})							& Open Source	& CPU \& GPU		& No				& Yes                    	& Yes                     	& Yes\\ \hline
-PBRT (\cite{PBRT})	 									& Open Source	& CPU				& No                 		& No                 		& No				& No\\ \hline
-Visionaray (\cite{Visionaray})									& Open Source     	& CPU \& Nvidia GPU	& No                  		& Yes				& Yes                  	& No\\ \hline
-YafaRay	(\cite{YafaRay})									& Open Source     	& CPU 				& No                  		& No				& No                  		& No\\ \hline
-tray\_rust (\cite{trayrust})									& Open Source    	& CPU                  	& No                   	& No                  		& No                 		& No\\ \hline
-micro-packet (\cite{micro-packet})							& Open Source     	& Intel CPU 			& No                  		& No                  		& No 				& No\\ \hline
-tray (\cite{tray})											& Open Source     	& CPU 				& No				& No                     	& No                  		& No\\ \hline
-The G3D Innovation Engine (\cite{G3D17})						& Open Source	& CPU 				& No				& No                 		& No                 		& No\\ \hline
-HRay (\cite{HRay})										& Open Source     	& CPU                		& No                  		& No                      	& No				& No\\ \hline
-Mitsuba (\cite{Mitsuba})										& Open Source 	& CPU 				& No				& No                 		& No				& No\\ \hline
-Indigo RT (\cite{IndigoRT})									& Open Source 	& CPU \& GPU		& No				& Yes                 		& No				& No\\ \hline
-jsRayTracer (\cite{jsRayTracer})								& Open Source 	& CPU 				& No				& Yes                 		& Yes				& No\\ \hline
-Android CPU Raytracer (\cite{Android_CPU_Raytracer})			& Open Source 	& CPU 				& Yes (Android)		& Yes                 		& No				& No\\ \hline
+\textbf{Product}											& \textbf{License}	& \textbf{Platform}	& \textbf{Mobile}		& \textbf{Interactivity}	& \textbf{Progressive}	& \makecell{\textbf{Programmable} \\ \textbf{Components}}\\ \hline
+Optix (\cite{Optix})											& F                	& Nvidia GPU 			& N				& Y                  	& Y                 		& Y\\ \hline
+Optix Prime (\cite{OptixPrime})								& F                	& CPU \& Nvidia GPU 	& N				& Y                  	& Y                 		& Y\\ \hline
+RenderMan RIS (\cite{RIS})									& C       	& CPU 		             & N                  		& Y                 		& Y				& Y\\ \hline
+OctaneRender (\cite{OctaneRender})							& C       	& GPU 		             & N                  		& Y                 		& Y				& N\\ \hline
+Embree (\cite{Embree}										& O     	& Intel CPU			& N				& Y                  	& Y                      	& Y\\ \hline
+Radeon Rays (\cite{RadeonRays})							& O	& CPU \& GPU		& N				& Y                    	& Y                     	& Y\\ \hline
+PBRT (\cite{PBRT})	 									& O	& CPU				& N                 		& N                 		& N				& N\\ \hline
+Visionaray (\cite{Visionaray})									& O     	& CPU \& Nvidia GPU	& N                  		& Y				& Y                  	& N\\ \hline
+YafaRay	(\cite{YafaRay})									& O     	& CPU 				& N                  		& N				& N                  		& N\\ \hline
+tray\_rust (\cite{trayrust})									& O    	& CPU                  	& N                   	& N                  		& N                 		& N\\ \hline
+micro-packet (\cite{micro-packet})							& O     	& Intel CPU 			& N                  		& N                  		& N 				& N\\ \hline
+tray (\cite{tray})											& O     	& CPU 				& N				& N                     	& N                  		& N\\ \hline
+The G3D Innovation Engine (\cite{G3D17})						& O	& CPU 				& N				& N                 		& N                 		& N\\ \hline
+HRay (\cite{HRay})										& O     	& CPU                		& N                  		& N                      	& N				& N\\ \hline
+Mitsuba (\cite{Mitsuba})										& O 	& CPU 				& N				& N                 		& N				& N\\ \hline
+Indigo RT (\cite{IndigoRT})									& O 	& CPU \& GPU		& N				& Y                 		& N				& N\\ \hline
+jsRayTracer (\cite{jsRayTracer})								& O 	& CPU 				& N				& Y                 		& Y				& N\\ \hline
+Android CPU Raytracer (\cite{Android_CPU_Raytracer})			& O 	& CPU 				& Y (Android)		& Y                 		& N				& N\\ \hline
 \end{tabular}
 \normalsize
 \end{table}
