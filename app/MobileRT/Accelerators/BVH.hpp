@@ -12,6 +12,7 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <random>
+#include <vector>
 
 namespace MobileRT {
 

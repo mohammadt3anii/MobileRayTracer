@@ -334,18 +334,94 @@ return Intersection(intersectionPoint, triangleNormal, material)
 
 \par
 As previously stated, the rendering algorithms based on ray tracing can be very computationally demanding, like Path Tracing and Bidirectional Path Tracing.
-These algorithms are very computationally demanding because 
-Luckly, there are already known techniques that helps to acc
+These algorithms are very computationally demanding because if the scene is very complex, made with millions of primitives, it is necessary to try to intersect every ray thrown into the scene with those millions of primitives.
+This task is, obviously, very time consuming and can waste a lot of battery power on the mobile device.
+Luckly, there are already known techniques, called acceleration structures, that helps to accelerate this process by reducing the number of intersections.
+
+\par
+There are 2 types of approaches that acceleration structures can have:
+
+\begin{itemize}
+	\item Subdivision of Space: the 3D space of the scene is divided in smaller portions of space which the volume elements can be uniform or irregular:
+	\begin{itemize}
+		\item Regular Grids
+		\item Octrees
+		\item Kd-trees
+	\end{itemize}
+	\item Subdivision of Objects: the 3D space of the scene is divided by aggregating the 3D primitives in groups which are next to each others:
+	\begin{itemize}
+		\item Bounding Volume Hierarchy (BVH)
+	\end{itemize}
+\end{itemize}
+
+\par
+The idea in Subdivision of Space is allowing the intersections to start with the nearest primitives of the ray and is only intersected with the further ones, if these are not in the same direction of the ray.
+These structures also allow the rapid and simultaneous rejection of groups of primitives.
+
+\par
+In contrast, structures based on Subdivision of objects only allow the rapid and simultaneous rejection of groups of primitives.
+
+\par
+The developed library provides only 2 types of structures, 1 of each approach: the regular grid and the bounding volume hierarchy.
+Both structures are built with Axis Aligned Bounding Volumes (AABB), which are volume elements (voxels) that can cover, 1 or more primitives from the 3D scene.
+An AABB is a voxel, like the name implies, that is aligned to the axis of the scene.
+This type of voxels are great to use in acceleration structures because it is very fast to test whether or not a ray intersects that voxel and it only needs to store, in memory, 2 points of that box.
+Besides AABB, it is possible to build the structures with other types of voxels, like:
+
+\begin{itemize}
+	\item Sphere: intersection with a sphere is simpler than AABB but covers more 3D space than the scene primitive needs.
+	\item Oriented Bounding Volume: its like a AABB but rotated according to the orientation of the primitive.
+	\item k-Discrete Oriented Prototype (k-DOP): 
+	\item Convex Hull: 
+\end{itemize}
 
 \subsubsection{Regular Grid}
 
 \par
-Regular Grid ...
+A regular grid is an acceleration structure where the scene space is subdivided into equal voxels.
+Each voxel is a volume element where it could have inside 1 or more primitives of the scene, if a ray intersects that voxel, then it tries to intersect the primitives inside it.
+The order of testing each voxel is from the nearest of the ray into the furthest in the direction of that ray.
+This type of structure is very fast to build but its traversal is poorly efficient due to poor distribution of primitives by voxels.
+The figure \ref{RegularGrid.} shows the process of intersecting a ray with the primitives in a scene.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of traversing a regular grid acceleration structure (\cite{RegularGrid}).}
+	\label{RegularGrid.}
+	\includegraphics[keepaspectratio,scale=1.0]{Regular_Grid.jpg}
+\end{figure}
+
+\par
+The ray tracer library provides a regular grid as an acceleration structure and its operation is as shown in the figure.
 
 \subsubsection{Bounding Volume Hierarchy}
 
 \par
-Bounding Volume Hierarchy ...
+Bounding Volume Hierarchy is another acceleration structure provided in the library.
+This structure is different from the regular grid because the space is not divided into voxels of the same size.
+The space is divided in a way where the primitives of the scene are grouped according to the nearest primitives of each.
+This allows to build a structure of voxels where a voxel has, for sure, 1 or more primitives inside.
+
+\par
+The figure \ref{BVH.} shows an example of a BVH structure of a scene.
+As it can be seen, each primitive is covered by an AABB, and then 2 or more AABBs are covered by 1 larger AABB.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite{BVH}).}
+	\label{BVH.}
+	\includegraphics[keepaspectratio,scale=1.0]{BVH.jpg}
+\end{figure}
+
+\subsubsection{Surface Area Heuristic}
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite{SAH}).}
+	\label{SAH.}
+	\includegraphics[keepaspectratio,scale=1.0]{SAH.png}
+\end{figure}
+
 
 \section{Rendering Components}
 

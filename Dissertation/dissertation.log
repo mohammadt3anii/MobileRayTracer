@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  11 MAY 2018 17:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  14 MAY 2018 15:36
 entering extended mode
 **./dissertation.tex
 (dissertation.tex
@@ -1939,24 +1939,29 @@ LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <10> not available
  [4]
 Package tocbasic Info: character protrusion at lof deactivated on input line 97
 .
- (dissertation.lof)
-\tf@lof=\write8
-\openout8 = `dissertation.lof'.
-
+ (dissertation.lof
+Overfull \hbox (58.0333pt too wide) in paragraph at lines 17--17
+ [][] [][][]\T1/pplj/m/n/10.95 Illustration of travers-ing a reg-u-lar grid ac-
+cel-er-a-tion struc-ture ([][]Torsten Möller[][]).[][] []  
+ []
 
 [5
 
 
 
 
-]
+])
+\tf@lof=\write8
+\openout8 = `dissertation.lof'.
+
+ [6]
 Package tocbasic Info: character protrusion at lot deactivated on input line 98
 .
  (dissertation.lot)
 \tf@lot=\write9
 \openout9 = `dissertation.lot'.
 
- [6
+ [7
 
 
 
@@ -1981,7 +1986,7 @@ Class scrbook Warning: \float@addtolists detected!
 (scrbook)              a package that still implements the
 (scrbook)              deprecated \float@addtolist interface .
 
-<Images/Mobile_devices.jpg, id=219, 1127.21124pt x 939.51pt>
+<Images/Mobile_devices.jpg, id=237, 1127.21124pt x 939.51pt>
 File: Images/Mobile_devices.jpg Graphic file (type jpg)
 <use Images/Mobile_devices.jpg>
 Package pdftex.def Info: Images/Mobile_devices.jpg  used on input line 34.
@@ -2009,7 +2014,7 @@ l.61 F
 
  (2_state_of_the_art.tex
 chapter 2.
-<Images/Ray_Tracing.png, id=232, 1312.905pt x 586.19pt>
+<Images/Ray_Tracing.png, id=250, 1312.905pt x 586.19pt>
 File: Images/Ray_Tracing.png Graphic file (type png)
 <use Images/Ray_Tracing.png>
 Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
@@ -2020,7 +2025,7 @@ Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
 
 
  <./Images/Ray_Tracing.png>]
-<Images/cache.png, id=241, 652.4375pt x 361.35pt>
+<Images/cache.png, id=260, 652.4375pt x 361.35pt>
 File: Images/cache.png Graphic file (type png)
 <use Images/cache.png>
 Package pdftex.def Info: Images/cache.png  used on input line 39.
@@ -2035,12 +2040,12 @@ LaTeX Font Warning: Font shape `OMS/pplj/m/n' undefined
 (Font)              for symbol `textbullet' on input line 47.
 
 [5 <./Images/cache.png>]
-<Images/Pipeline.png, id=251, 301.125pt x 190.7125pt>
+<Images/Pipeline.png, id=269, 301.125pt x 190.7125pt>
 File: Images/Pipeline.png Graphic file (type png)
 <use Images/Pipeline.png>
 Package pdftex.def Info: Images/Pipeline.png  used on input line 60.
 (pdftex.def)             Requested size: 150.56212pt x 95.356pt.
-<Images/SIMD.png, id=254, 311.20348pt x 298.66684pt>
+<Images/SIMD.png, id=272, 311.20348pt x 298.66684pt>
 File: Images/SIMD.png Graphic file (type png)
 <use Images/SIMD.png>
 Package pdftex.def Info: Images/SIMD.png  used on input line 76.
@@ -2059,7 +2064,7 @@ Overfull \hbox (9.14053pt too wide) in paragraph at lines 144--169
 
  (3_software_architecture.tex
 chapter 3.
-<Images/UI.png, id=318, 541.02126pt x 180.675pt>
+<Images/UI.png, id=336, 541.02126pt x 180.675pt>
 File: Images/UI.png Graphic file (type png)
 <use Images/UI.png>
 Package pdftex.def Info: Images/UI.png  used on input line 17.
@@ -2070,7 +2075,7 @@ Package pdftex.def Info: Images/UI.png  used on input line 17.
 
 
  <./Images/UI.png (PNG copy)>]
-<Images/Layers.png, id=323, 450.68375pt x 310.15875pt>
+<Images/Layers.png, id=342, 450.68375pt x 310.15875pt>
 File: Images/Layers.png Graphic file (type png)
 <use Images/Layers.png>
 Package pdftex.def Info: Images/Layers.png  used on input line 38.
@@ -2087,13 +2092,13 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<Images/tiling.png, id=340, 328.8285pt x 532.389pt>
+<Images/tiling.png, id=358, 328.8285pt x 532.389pt>
 File: Images/tiling.png Graphic file (type png)
 <use Images/tiling.png>
 Package pdftex.def Info: Images/tiling.png  used on input line 196.
 (pdftex.def)             Requested size: 328.8277pt x 532.3877pt.
  [13]
-<Images/Shadow_Ray.jpg, id=357, 281.55188pt x 152.82094pt>
+<Images/Shadow_Ray.jpg, id=375, 281.55188pt x 152.82094pt>
 File: Images/Shadow_Ray.jpg Graphic file (type jpg)
 <use Images/Shadow_Ray.jpg>
 Package pdftex.def Info: Images/Shadow_Ray.jpg  used on input line 225.
@@ -2102,12 +2107,12 @@ Package pdftex.def Info: Images/Shadow_Ray.jpg  used on input line 225.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 251.
  [15 <./Images/Shadow_Ray.jpg>]
-<Images/RayToPlane.png, id=381, 376.40625pt x 276.03125pt>
+<Images/RayToPlane.png, id=399, 376.40625pt x 276.03125pt>
 File: Images/RayToPlane.png Graphic file (type png)
 <use Images/RayToPlane.png>
 Package pdftex.def Info: Images/RayToPlane.png  used on input line 263.
 (pdftex.def)             Requested size: 150.55983pt x 110.41054pt.
-<Images/Ray_Sphere_Intersection.png, id=384, 682.04813pt x 411.03563pt>
+<Images/Ray_Sphere_Intersection.png, id=402, 682.04813pt x 411.03563pt>
 File: Images/Ray_Sphere_Intersection.png Graphic file (type png)
 <use Images/Ray_Sphere_Intersection.png>
 Package pdftex.def Info: Images/Ray_Sphere_Intersection.png  used on input line
@@ -2115,108 +2120,140 @@ Package pdftex.def Info: Images/Ray_Sphere_Intersection.png  used on input line
 (pdftex.def)             Requested size: 272.8144pt x 164.41133pt.
 
 [16 <./Images/RayToPlane.png>]
-<Images/triangle.png, id=405, 150.5625pt x 181.67876pt>
+<Images/triangle.png, id=424, 225.84375pt x 272.51813pt>
 File: Images/triangle.png Graphic file (type png)
 <use Images/triangle.png>
 Package pdftex.def Info: Images/triangle.png  used on input line 330.
-(pdftex.def)             Requested size: 150.56212pt x 181.6783pt.
+(pdftex.def)             Requested size: 225.84319pt x 272.51746pt.
  [17 <./Images/Ray_Sphere_Intersection.png>]
 [18 <./Images/triangle.png>]
-<Images/Rendering_eq.png, id=431, 556.32843pt x 299.61937pt>
+<Images/Regular_Grid.jpg, id=452, 391.33437pt x 360.58118pt>
+File: Images/Regular_Grid.jpg Graphic file (type jpg)
+<use Images/Regular_Grid.jpg>
+Package pdftex.def Info: Images/Regular_Grid.jpg  used on input line 391.
+(pdftex.def)             Requested size: 391.3334pt x 360.58029pt.
+ [19]
+<Images/BVH.jpg, id=460, 488.57532pt x 234.1247pt>
+File: Images/BVH.jpg Graphic file (type jpg)
+<use Images/BVH.jpg>
+Package pdftex.def Info: Images/BVH.jpg  used on input line 413.
+(pdftex.def)             Requested size: 488.57413pt x 234.12411pt.
+
+Overfull \hbox (45.92038pt too wide) in paragraph at lines 413--414
+ [][] 
+ []
+
+[20 <./Images/Regular_Grid.jpg>]
+<Images/SAH.png, id=467, 512.22948pt x 170.53185pt>
+File: Images/SAH.png Graphic file (type png)
+<use Images/SAH.png>
+Package pdftex.def Info: Images/SAH.png  used on input line 422.
+(pdftex.def)             Requested size: 512.22821pt x 170.53142pt.
+
+Overfull \hbox (69.57446pt too wide) in paragraph at lines 422--423
+ [][] 
+ []
+
+[21 <./Images/BVH.jpg> <./Images/SAH.png>]
+<Images/Rendering_eq.png, id=472, 556.32843pt x 299.61937pt>
 File: Images/Rendering_eq.png Graphic file (type png)
 <use Images/Rendering_eq.png>
-Package pdftex.def Info: Images/Rendering_eq.png  used on input line 376.
+Package pdftex.def Info: Images/Rendering_eq.png  used on input line 454.
 (pdftex.def)             Requested size: 556.32707pt x 299.61864pt.
- [19 <./Images/Rendering_eq.png>]
-<Images/NoShadows.png, id=443, 544.0325pt x 880.28876pt>
+ [22 <./Images/Rendering_eq.png>]
+<Images/NoShadows.png, id=482, 544.0325pt x 880.28876pt>
 File: Images/NoShadows.png Graphic file (type png)
 <use Images/NoShadows.png>
-Package pdftex.def Info: Images/NoShadows.png  used on input line 424.
+Package pdftex.def Info: Images/NoShadows.png  used on input line 502.
 (pdftex.def)             Requested size: 163.211pt x 264.08865pt.
- [20 <./Images/NoShadows.png (PNG copy)>]
-<Images/Reflection.png, id=457, 803.0pt x 602.25pt>
+
+[23 <./Images/NoShadows.png (PNG copy)>]
+<Images/Reflection.png, id=499, 803.0pt x 602.25pt>
 File: Images/Reflection.png Graphic file (type png)
 <use Images/Reflection.png>
-Package pdftex.def Info: Images/Reflection.png  used on input line 450.
+Package pdftex.def Info: Images/Reflection.png  used on input line 528.
 (pdftex.def)             Requested size: 240.90186pt x 180.67639pt.
-<Images/Refraction.png, id=458, 643.40375pt x 356.33125pt>
+ [24 <./Images/Reflection.png>]
+<Images/Refraction.png, id=505, 643.40375pt x 356.33125pt>
 File: Images/Refraction.png Graphic file (type png)
 <use Images/Refraction.png>
-Package pdftex.def Info: Images/Refraction.png  used on input line 482.
+Package pdftex.def Info: Images/Refraction.png  used on input line 560.
 (pdftex.def)             Requested size: 193.02261pt x 106.90019pt.
- [21 <./Images/Reflection.png>] [22 <./Images/Refraction.png>]
-<Images/Whitted.png, id=503, 541.02126pt x 881.2925pt>
+
+[25 <./Images/Refraction.png>]
+<Images/Whitted.png, id=538, 541.02126pt x 881.2925pt>
 File: Images/Whitted.png Graphic file (type png)
 <use Images/Whitted.png>
-Package pdftex.def Info: Images/Whitted.png  used on input line 529.
+Package pdftex.def Info: Images/Whitted.png  used on input line 607.
 (pdftex.def)             Requested size: 162.30762pt x 264.38979pt.
- [23 <./Images/Whitted.png (PNG copy)>]
-<Images/Rotation_Matrix.png, id=511, 909.89937pt x 103.38625pt>
+ [26 <./Images/Whitted.png (PNG copy)>]
+<Images/Rotation_Matrix.png, id=551, 909.89937pt x 103.38625pt>
 File: Images/Rotation_Matrix.png Graphic file (type png)
 <use Images/Rotation_Matrix.png>
-Package pdftex.def Info: Images/Rotation_Matrix.png  used on input line 563.
+Package pdftex.def Info: Images/Rotation_Matrix.png  used on input line 641.
 (pdftex.def)             Requested size: 454.94856pt x 51.693pt.
 
-Overfull \hbox (12.29482pt too wide) in paragraph at lines 563--564
+Overfull \hbox (12.29482pt too wide) in paragraph at lines 641--642
  [][] 
  []
 
 
-Overfull \hbox (14.66426pt too wide) in paragraph at lines 566--570
+Overfull \hbox (14.66426pt too wide) in paragraph at lines 644--648
 []\T1/pplj/m/n/10.95 Then the prop-er co-or-di-nates in the world view is just:
  $\OML/zplm/m/it/10.95 globalCoordinates \OT1/zplm/m/n/10.95 = \OML/zplm/m/it/1
 0.95 localCoordinates \OMS/zplm/m/n/10.95 
  []
 
-[24 <./Images/Rotation_Matrix.png>]
-<Images/PathTracer.png, id=544, 544.0325pt x 883.3pt>
+[27 <./Images/Rotation_Matrix.png>] [28]
+<Images/PathTracer.png, id=627, 544.0325pt x 883.3pt>
 File: Images/PathTracer.png Graphic file (type png)
 <use Images/PathTracer.png>
-Package pdftex.def Info: Images/PathTracer.png  used on input line 650.
+Package pdftex.def Info: Images/PathTracer.png  used on input line 728.
 (pdftex.def)             Requested size: 163.211pt x 264.99205pt.
- [25] [26 <./Images/PathTracer.png (PNG copy)>]
-<Images/Halton_sequence_2D.png, id=596, 290.08376pt x 290.08376pt>
+ [29 <./Images/PathTracer.png (PNG copy)>]
+<Images/Halton_sequence_2D.png, id=636, 290.08376pt x 290.08376pt>
 File: Images/Halton_sequence_2D.png Graphic file (type png)
 <use Images/Halton_sequence_2D.png>
-Package pdftex.def Info: Images/Halton_sequence_2D.png  used on input line 727.
+Package pdftex.def Info: Images/Halton_sequence_2D.png  used on input line 805.
 
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
- [27 <./Images/Halton_sequence_2D.png>]
-<Images/Pseudorandom_sequence_2D.png, id=616, 290.08376pt x 290.08376pt>
+ [30]
+<Images/Pseudorandom_sequence_2D.png, id=652, 290.08376pt x 290.08376pt>
 File: Images/Pseudorandom_sequence_2D.png Graphic file (type png)
 <use Images/Pseudorandom_sequence_2D.png>
 Package pdftex.def Info: Images/Pseudorandom_sequence_2D.png  used on input lin
-e 767.
+e 845.
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
- [28 <./Images/Pseudorandom_sequence_2D.png>] [29]
-<Images/barycentric-coordinates.png, id=648, 401.5pt x 284.06125pt>
+ [31 <./Images/Halton_sequence_2D.png>] [32 <./Images/Pseudorandom_sequence_2D.
+png>]
+<Images/barycentric-coordinates.png, id=687, 401.5pt x 284.06125pt>
 File: Images/barycentric-coordinates.png Graphic file (type png)
 <use Images/barycentric-coordinates.png>
 Package pdftex.def Info: Images/barycentric-coordinates.png  used on input line
- 859.
+ 937.
 (pdftex.def)             Requested size: 200.7495pt x 142.03026pt.
- [30 <./Images/barycentric-coordinates.png>]
-<Images/Jittering.png, id=672, 127.47626pt x 127.47626pt>
+ [33 <./Images/barycentric-coordinates.png>]
+<Images/Jittering.png, id=702, 127.47626pt x 127.47626pt>
 File: Images/Jittering.png Graphic file (type png)
 <use Images/Jittering.png>
-Package pdftex.def Info: Images/Jittering.png  used on input line 927.
+Package pdftex.def Info: Images/Jittering.png  used on input line 1005.
 (pdftex.def)             Requested size: 127.47594pt x 127.47594pt.
-<Images/hfov-vfov-dfov.jpg, id=673, 1517.67pt x 1092.08pt>
+ [34]
+<Images/hfov-vfov-dfov.jpg, id=722, 1517.67pt x 1092.08pt>
 File: Images/hfov-vfov-dfov.jpg Graphic file (type jpg)
 <use Images/hfov-vfov-dfov.jpg>
-Package pdftex.def Info: Images/hfov-vfov-dfov.jpg  used on input line 944.
+Package pdftex.def Info: Images/hfov-vfov-dfov.jpg  used on input line 1022.
 (pdftex.def)             Requested size: 303.52863pt x 218.41212pt.
- [31 <./Images/Jittering.png>] [32 <./Images/hfov-vfov-dfov.jpg>]
-<Images/UI_thread.png, id=686, 312.16624pt x 322.20375pt>
+ [35 <./Images/Jittering.png> <./Images/hfov-vfov-dfov.jpg>]
+<Images/UI_thread.png, id=728, 312.16624pt x 322.20375pt>
 File: Images/UI_thread.png Graphic file (type png)
 <use Images/UI_thread.png>
-Package pdftex.def Info: Images/UI_thread.png  used on input line 985.
+Package pdftex.def Info: Images/UI_thread.png  used on input line 1063.
 (pdftex.def)             Requested size: 156.08273pt x 161.10147pt.
- [33 <./Images/UI_thread.png>])
-[34]
+ [36]) [37 <./Images/UI_thread.png>]
 \openout2 = `4_demonstration.aux'.
 
- (4_demonstration.tex
+(4_demonstration.tex
 chapter 4.
 Package pgfplots info on input line 16: Overriding colorspace to rgb due to xco
 lor configuration.
@@ -2256,7 +2293,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `subscript' on input line 57.
 
-) [35
+) [38
 
 
 
@@ -2266,7 +2303,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
  (5_conclusion_future_work.tex
 chapter 5.
-) [36
+) [39
 
 
 
@@ -2303,7 +2340,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 60--65
 urnaldunet . com / solutions / mobilite /
  []
 
-[37
+[40
 
 
 
@@ -2316,23 +2353,29 @@ tt/m/n/10.95 https : / / home . otoy . com / render /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 160--164
+Underfull \hbox (badness 1033) in paragraph at lines 142--147
+\T1/cmtt/m/n/10.95 questions / 20019110 / kd-[]tree-[]for-[]triangle-[]meshes-[
+]is-[]too-[]slow$[][]\T1/pplj/m/n/10.95 .  Ac-cessed: May
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 173--177
 []\T1/pplj/m/n/10.95 Nvidia.  Bak-ing with op-tix, b.  URL [][]$\T1/cmtt/m/n/10
 .95 https : / / developer . nvidia . com /
  []
 
-[38]
-Underfull \hbox (badness 4739) in paragraph at lines 204--208
+[41]
+Underfull \hbox (badness 4739) in paragraph at lines 223--227
 []\T1/pplj/m/n/10.95 Menno Vink.  Ray to plane in-ter-sec-tion.  URL [][]$\T1/c
 mtt/m/n/10.95 http : / / www . echo-[]gaming . eu /
  []
 
-) [39]
+) [42]
 \openout2 = `A_user_documentation.aux'.
 
  (A_user_documentation.tex
 chapter A.
-) [40
+) [43
 
 
 
@@ -2356,10 +2399,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 143.
  ) 
 Here is how much of TeX's memory you used:
- 50671 strings out of 495204
- 1135527 string characters out of 3179758
- 1514885 words of memory out of 3000000
- 52797 multiletter control sequences out of 15000+200000
+ 50711 strings out of 495204
+ 1136132 string characters out of 3179758
+ 1534885 words of memory out of 3000000
+ 52824 multiletter control sequences out of 15000+200000
  83745 words of font info for 124 fonts, out of 3000000 for 9000
  15 hyphenation exceptions out of 8191
  74i,23n,106p,9093b,2924s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -2383,9 +2426,9 @@ l/fonts/type1/urw/helvetic/uhvr8ac.pfb><C:/Users/PC/Desktop/C/miktex-portable-2
 /C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/palatino/uplr8a.pfb>
 <C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/
 palatino/uplri8a.pfb>
-Output written on dissertation.pdf (48 pages, 3158300 bytes).
+Output written on dissertation.pdf (52 pages, 3321449 bytes).
 PDF statistics:
- 1183 PDF objects out of 1200 (max. 8388607)
- 371 named destinations out of 1000 (max. 500000)
- 20450 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 1235 PDF objects out of 1440 (max. 8388607)
+ 381 named destinations out of 1000 (max. 500000)
+ 20465 words of extra memory for PDF output out of 20736 (max. 10000000)
 

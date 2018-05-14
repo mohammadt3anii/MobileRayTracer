@@ -6,6 +6,7 @@
 #define MOBILERT_RAYPACKET_HPP
 
 #include "MobileRT/Utils.hpp"
+#include <array>
 #include <glm/glm.hpp>
 
 namespace MobileRT {

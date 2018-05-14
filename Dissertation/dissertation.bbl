@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{36}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -50,7 +50,7 @@ Academic Dictionaries and Encyclopedias.
 \newblock URL \url{http://enacademic.com/dic.nsf/enwiki/141209}.
 \newblock Accessed: May 2018.
 
-\bibitem[dos Santos()]{Whitted}
+\bibitem[dos Santos()]{RT_classic}
 Luís Paulo~Peixoto dos Santos.
 \newblock Ray tracing clássico.
 \newblock URL \url{gec.di.uminho.pt/psantos/VI2/Acetatos/02-RayTracing.ppsx}.
@@ -126,10 +126,23 @@ Kenneth.
 \newblock URL \url{http://kejo.be/ELIS/Haskell/HRay/}.
 \newblock Accessed: January 2017.
 
+\bibitem[Kilgard()]{BVH}
+Mark Kilgard.
+\newblock Cs 354 acceleration structures.
+\newblock URL \url{https://www.slideshare.net/Mark_Kilgard/26accelstruct}.
+\newblock Accessed: May 2018.
+
 \bibitem[kitware()]{CMake}
 kitware.
 \newblock Cmake.
 \newblock URL \url{https://cmake.org/}.
+\newblock Accessed: May 2018.
+
+\bibitem[Lahodiuk()]{SAH}
+Yurii Lahodiuk.
+\newblock Kd tree for triangle meshes is too slow.
+\newblock URL
+  \url{https://stackoverflow.com/questions/20019110/kd-tree-for-triangle-meshes-is-too-slow}.
 \newblock Accessed: May 2018.
 
 \bibitem[Limited()]{IndigoRT}
@@ -180,6 +193,12 @@ Scratchapixel.
 syoyo.
 \newblock tinyobjloader.
 \newblock URL \url{https://github.com/syoyo/tinyobjloader}.
+\newblock Accessed: May 2018.
+
+\bibitem[Torsten~Möller()]{RegularGrid}
+Raghu~Machiraju Torsten~Möller.
+\newblock Ray intersection acceleration.
+\newblock URL \url{http://slideplayer.com/slide/7981872/}.
 \newblock Accessed: May 2018.
 
 \bibitem[Usher({\natexlab{a}})]{micro-packet}

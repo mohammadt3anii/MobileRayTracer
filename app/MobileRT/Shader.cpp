@@ -4,8 +4,10 @@
 
 #include "MobileRT/Shader.hpp"
 #include "MobileRT/Utils.hpp"
+#include <array>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include <random>
 #include <utility>
 
 using ::MobileRT::BVH;

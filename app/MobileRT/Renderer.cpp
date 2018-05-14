@@ -3,6 +3,8 @@
 //
 
 #include "MobileRT/Renderer.hpp"
+#include <thread>
+#include <vector>
 
 using ::MobileRT::Renderer;
 

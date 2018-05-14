@@ -14,7 +14,7 @@ Warning--empty year in SphereRayIntersection
 Warning--empty year in GLM
 Warning--empty year in Android_CPU_Raytracer
 Warning--empty year in CPU_Pipeline
-Warning--empty year in Whitted
+Warning--empty year in RT_classic
 Warning--empty year in JournalDuNet
 Warning--empty year in ShadowRays
 Warning--empty year in AndroidDevelopers
@@ -25,7 +25,9 @@ Warning--empty year in OpenGL_ES_2
 Warning--empty year in Embree
 Warning--empty year in CPU_Cache
 Warning--empty year in HRay
+Warning--empty year in BVH
 Warning--empty year in CMake
+Warning--empty year in SAH
 Warning--empty year in IndigoRT
 Warning--empty year in PBRT
 Warning--empty year in G3D17
@@ -34,9 +36,10 @@ Warning--empty year in OptixPrime
 Warning--empty year in RIS
 Warning--empty year in TriangleRayIntersection
 Warning--empty year in tinyobjloader
+Warning--empty year in RegularGrid
 Warning--empty year in micro-packet
 Warning--empty year in tray
 Warning--empty year in trayrust
 Warning--empty year in PlaneRayIntersection
 Warning--empty year in Visionaray
-(There were 32 warnings)
+(There were 35 warnings)
