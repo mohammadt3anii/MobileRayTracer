@@ -405,6 +405,8 @@ This allows to build a structure of voxels where a voxel has, for sure, 1 or mor
 \par
 The figure \ref{BVH.} shows an example of a BVH structure of a scene.
 As it can be seen, each primitive is covered by an AABB, and then 2 or more AABBs are covered by 1 larger AABB.
+In this library, this is built in a top down manner, where the scene is divided by a fake plane that divides the scene into 2 AABBs.
+The calculation of that plane is using the Surface Area Heuristic which is a very popular heuristic commonly used in ray tracers.
 
 \begin{figure}[H]
 	\centering
@@ -415,11 +417,29 @@ As it can be seen, each primitive is covered by an AABB, and then 2 or more AABB
 
 \subsubsection{Surface Area Heuristic}
 
+\par
+As it was said above, the library uses the Surface Area Heuristic in order to split the scene.
+The algorithm used in the library is very simple, it just needs to calculate the minimum area surface of the sum of left and right subtrees, as following:
+
+\begin{equation}
+SAH_{optimal} = min(S_L * N_L + S_R * N_R)
+\end{equation}
+
+\begin{conditions}
+	N_L & number of polygons in left subtree \\
+	N   & number of polygons in right subtree \\
+	S_L & surface area of left subtree \\
+	S_R & surface area of right subtree \\
+\end{conditions}
+
+\par
+The figure \ref{SAH.} shows a very simple example of how the SAH algorithm works.
+
 \begin{figure}[H]
 	\centering
 	\caption{Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite{SAH}).}
 	\label{SAH.}
-	\includegraphics[keepaspectratio,scale=1.0]{SAH.png}
+	\includegraphics[keepaspectratio,scale=1.0]{SAH_example.png}
 \end{figure}
 
 
@@ -427,7 +447,7 @@ As it can be seen, each primitive is covered by an AABB, and then 2 or more AABB
 
 \par
 In order to show the functionalities provided by the library, it was developed a few Rendering Components.
-It is provided the perspective camera, an area light and point light, four Samplers and three Shaders.
+It is provided the perspective and orthographic cameras, the area and point lights, 6 Samplers, 5 Shaders and 1 OBJ loader.
 
 \subsection{Shaders}
 
@@ -1027,6 +1047,90 @@ The algorithm to generate a ray from the camera is very simple.
 
 ...
 
+
+\subsection{Object Loaders}
+
+\par
+Last, but not least, the library allows to develop different Object Loaders.
+An Object Loader is, as the name implies, a class that allows the ray tracer to import meshes from different Model file formats.
+There are many different types of file formats for storing meshes:
+
+\begin{itemize}
+	\item 3ds
+	\item FBX
+	\item Wavefront .obj file
+	\item COLLADA
+	\item SketchUp
+	\item AutoCAD DXF
+\end{itemize}
+
+\par
+All these file formats allows the user to store the positions of many triangles in a file, which together form the geometry of the scene.
+
+\par
+This library only provides an Object Loader that allows loading the scene geometry from Wavefront obj files.
+This type of Model file format is a good choice because, besides being simple, it is open and has been adopted by many 3D graphics application vendors, like, 3ds Max and Blender.
+
+\subsubsection{OBJ Loader}
+
+\par
+The OBJ file format is a simple data format that allows to store only the position of each vertex, the UV position of each texture coordinate vertex, vertex normals, and the faces that make each polygon defined as a list of vertices, and texture vertices.
+Vertices are stored in a counter-clockwise order by default, making explicit declaration of face normals unnecessary.
+
+\begin{lstlisting}[caption={.OBJ file format}, captionpos=b, label=obj]
+	# This is a comment
+
+	# List of geometric vertices
+	# x   y   z   w
+	v 1.0 2.0 3.0 1.0
+	v 5.0 6.0 7.0 1.0
+	...
+	
+	# List of texture coordinates
+	#  x   y   w
+	vt 0.5 1.0 0.0
+	vt 0.1 0.3 0.0
+	...
+	
+	# List of vertex normals
+	#  x   y   z
+	vn 0.3 0.0 0.7
+	vn 0.2 1.0 0.3
+	...
+	
+	# List of polygonal face elements
+	# v1/vt1/vn1	v2/vt2/vn2	v3/vt3/vn3
+	f 3/1/1				4/2/3				5/3/4
+	f 6/6/3				7/1/2				8/2/6
+	...
+\end{lstlisting}
+
+\par
+The Wavefront OBJ file format is described as shown in \ref{obj}, and is accompanied by another file, Material Template Library (MTL), that describes the visual aspects of the polygons.
+It is this file that describes surface shading (material) properties of objects within one or more .OBJ files.
+It allows to define multiple materials, with, ambient color, diffuse color, specular reflective color and specular refractive color.
+And even allows to load texture maps stored in TGA files.
+The Listing \ref{mtl} shows an example of a description of a material.
+
+\begin{lstlisting}[caption={.MTL file format}, captionpos=b, label=mtl]
+# This is a comment
+
+# Define a material named 'Colored'
+newmtl Colored
+
+# Ambient color
+Ka 1.0 0.0 0.0	# red
+
+# Diffuse color
+Kd 0.0 1.0 0.0	# green
+
+# Specular color
+Ks 0.0 0.0 1.0	# blue
+
+# Dissolved (transparency)
+d 0.4
+\end{lstlisting}
+
 \section{Android specifics and challenges}
 
 \subsection{Specifics}
@@ -1039,8 +1143,8 @@ A typical Android application is programmed in Java programming language.
 And it usually needs to communicate with an User Interface which also is programmed in Java.
 The code is compiled with Android Software Development Kit (SDK) along with any data and resource files into an Android package (APK).
 But, in order to avoid using the Java Emulator in our code and program it in native code, it is necessary to use Android Native Development Kit (NDK).
-Unfortunately, the Android Studio IDE doesn't provide any support like libraries like Qt that facilitates the build of a User Interface in native code.
-So, in order to obtain the best performance possible in a mobile device, the User Interface was programmed in Java and the ray tracer library and components were programmed in C++.
+Unfortunately, the NDK tool-chain doesn't provide any User Interface libraries like Qt that facilitates the build of a User Interface in native code.
+So, in order to obtain the best performance possible in a mobile device, the ray tracer library and components were programmed in C++ and the User Interface was programmed in Java.
 
 \subsection{User Interface}
 
@@ -1048,11 +1152,10 @@ So, in order to obtain the best performance possible in a mobile device, the Use
 The Android User Interface is programmed in Java and only one thread can refresh the User Interface (UI thread).
 
 \par
-There are only 2 goals about the User Interface: should be as simple as possible and should be able to allow progressive ray tracing (refresh the image while it is being rendered).
+There are only 2 goals in the User Interface: should be as simple as possible and should be able to allow progressive ray tracing, which means, refreshing the image while it is being rendered.
 
 \par
-In order to allow progressive ray tracing, it was used a pool of 1 thread called Render Task thread that every 200 ms wakes up the thread and updates the strings used in the text view and updates the bitmap of the rendering image by locking and unlocking the pixels.
-Locking pixels means that will be ensured that the memory for the pixels will not move until the pixels is unlocked.
+In order to allow progressive ray tracing, it was used a pool of 1 thread called Render Task thread that every 250 ms wakes up the thread and updates the strings used in the text view.
 Before it finishes, it publishes the progress on the UI thread.
 Then the UI thread wakes up and updates the text view.
 
@@ -1069,15 +1172,16 @@ Then the UI thread wakes up and updates the text view.
 Developing applications for mobile devices have different challenges compared with the traditional personal computer hardware.
 
 \par
-The Android User Interface has some particularities like only one thread can modify the UI (UI thread).
+The Android User Interface has some particularities like only 1 thread can modify the UI, and is usually called the UI thread.
 
 \par
-The memory size is typically lower, the CPU microarchitecture is different and also the Operating System (OS) is shaped for the mobile world, making a lot of restrictions in the performance in order to save battery.
+The size of RAM available for executing programs is typically smaller and the CPU microarchitecture is generally simpler and with smaller computational power.
+Also the Operating System (OS) is shaped for the mobile world, making a lot of restrictions in the performance of the applications in order to save battery.
 The amount of main memory available for the applications can also be affected by the OS.
 
 \par
-Other challenges are related with the communication mechanism between the SDK and the NDK, because two different languages need to “communicate” in runtime (GUI in Java and C++ for the library).
-This involves learning how to use the Java Native Interface (JNI), so that both can “communicate” with each other.
+Other challenges are related with the communication mechanism between the SDK and the NDK, because two different languages need to "communicate" in runtime (GUI in Java and the library in C++).
+This involves learning how to use the Java Native Interface (JNI), so that the native code can send and receive information from Java Virtual Machine (JVM).
 
 \par
-Because ray tracing may involve rendering complex scenes, putting all this information in the main memory may not be possible, and so this memory management can be a worthy challenge.
+Because ray tracing may involve rendering complex scenes, placing all this information in the main memory may not be possible, and so this memory management can be a worthy challenge.

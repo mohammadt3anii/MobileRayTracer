@@ -17,6 +17,11 @@
 \usepackage{pgfplots, pgfplotstable}
 \usepackage{fancyvrb}
 \usepackage{makecell}
+\usepackage{array}
+
+\newenvironment{conditions}
+{\par\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}
+	{\end{tabular}\par\vspace{\belowdisplayskip}}
 
 %\usepackage{tikz}
 

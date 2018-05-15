@@ -16,20 +16,20 @@
 \contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{18}{figure.caption.18}
 \contentsline {figure}{\numberline {13}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{20}{figure.caption.19}
 \contentsline {figure}{\numberline {14}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{21}{figure.caption.20}
-\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{21}{figure.caption.21}
-\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF.\relax }}{22}{figure.caption.22}
-\contentsline {figure}{\numberline {17}{\ignorespaces NoShadows shader.\relax }}{23}{figure.caption.23}
-\contentsline {figure}{\numberline {18}{\ignorespaces Reflections projected on the floor and on the spheres.\relax }}{24}{figure.caption.24}
-\contentsline {figure}{\numberline {19}{\ignorespaces Refraction of light at the interface of two media of different refractive indices.\relax }}{25}{figure.caption.25}
-\contentsline {figure}{\numberline {20}{\ignorespaces Whitted shader.\relax }}{26}{figure.caption.26}
-\contentsline {figure}{\numberline {21}{\ignorespaces Rotation matrix from an arbitrary axis and an angle.\relax }}{27}{figure.caption.27}
-\contentsline {figure}{\numberline {22}{\ignorespaces PathTracer shader.\relax }}{29}{figure.caption.28}
+\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{22}{figure.caption.21}
+\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF.\relax }}{23}{figure.caption.22}
+\contentsline {figure}{\numberline {17}{\ignorespaces NoShadows shader.\relax }}{24}{figure.caption.23}
+\contentsline {figure}{\numberline {18}{\ignorespaces Reflections projected on the floor and on the spheres.\relax }}{25}{figure.caption.24}
+\contentsline {figure}{\numberline {19}{\ignorespaces Refraction of light at the interface of two media of different refractive indices.\relax }}{26}{figure.caption.25}
+\contentsline {figure}{\numberline {20}{\ignorespaces Whitted shader.\relax }}{27}{figure.caption.26}
+\contentsline {figure}{\numberline {21}{\ignorespaces Rotation matrix from an arbitrary axis and an angle.\relax }}{28}{figure.caption.27}
+\contentsline {figure}{\numberline {22}{\ignorespaces PathTracer shader.\relax }}{30}{figure.caption.28}
 \contentsline {figure}{\numberline {23}{\ignorespaces Halton sequence in a 2D image plane.\relax }}{31}{figure.caption.29}
 \contentsline {figure}{\numberline {24}{\ignorespaces Pseudorandom sequence in a 2D image plane.\relax }}{32}{figure.caption.30}
-\contentsline {figure}{\numberline {25}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.\relax }}{33}{figure.caption.31}
+\contentsline {figure}{\numberline {25}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.\relax }}{34}{figure.caption.31}
 \contentsline {figure}{\numberline {26}{\ignorespaces Jittering in a plane image.\relax }}{35}{figure.caption.32}
-\contentsline {figure}{\numberline {27}{\ignorespaces Perspective camera with hFov, vFov and dFov.\relax }}{35}{figure.caption.33}
-\contentsline {figure}{\numberline {28}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{37}{figure.caption.34}
+\contentsline {figure}{\numberline {27}{\ignorespaces Perspective camera with hFov, vFov and dFov.\relax }}{36}{figure.caption.33}
+\contentsline {figure}{\numberline {28}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{39}{figure.caption.34}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
