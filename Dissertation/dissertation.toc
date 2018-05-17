@@ -44,20 +44,21 @@
 \contentsline {subsubsection}{PointLight}{33}{lstnumber.-16.2}
 \contentsline {subsubsection}{AreaLight}{33}{lstnumber.-17.1}
 \contentsline {subsection}{\numberline {3.4.4}Cameras}{35}{subsection.3.4.4}
-\contentsline {subsubsection}{Perspective Camera}{35}{figure.caption.32}
-\contentsline {subsection}{\numberline {3.4.5}Object Loaders}{36}{subsection.3.4.5}
-\contentsline {subsubsection}{OBJ Loader}{37}{subsection.3.4.5}
-\contentsline {section}{\numberline {3.5}Android specifics and challenges}{38}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}Specifics}{38}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}User Interface}{38}{subsection.3.5.2}
-\contentsline {subsection}{\numberline {3.5.3}Challenges}{39}{subsection.3.5.3}
-\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{40}{chapter.4}
-\contentsline {section}{\numberline {4.1}Results obtained}{40}{section.4.1}
-\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{40}{section.4.2}
-\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{41}{chapter.5}
-\contentsline {section}{\numberline {5.1}Conclusions}{41}{section.5.1}
-\contentsline {section}{\numberline {5.2}Future Work}{41}{section.5.2}
+\contentsline {subsubsection}{Perspective Camera}{37}{figure.caption.35}
+\contentsline {subsubsection}{Orthographic Camera}{37}{figure.caption.36}
+\contentsline {subsection}{\numberline {3.4.5}Object Loaders}{38}{subsection.3.4.5}
+\contentsline {subsubsection}{OBJ Loader}{39}{subsection.3.4.5}
+\contentsline {section}{\numberline {3.5}Android specifics and challenges}{40}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Specifics}{40}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}User Interface}{40}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Challenges}{41}{subsection.3.5.3}
+\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{42}{chapter.4}
+\contentsline {section}{\numberline {4.1}Results obtained}{42}{section.4.1}
+\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{42}{section.4.2}
+\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{43}{chapter.5}
+\contentsline {section}{\numberline {5.1}Conclusions}{43}{section.5.1}
+\contentsline {section}{\numberline {5.2}Future Work}{43}{section.5.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{43}{chapter.6}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{46}{Appendix.1.A}
-\contentsline {chapter}{Appendices}{46}{section*.35}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{45}{chapter.6}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{48}{Appendix.1.A}
+\contentsline {chapter}{Appendices}{48}{section*.39}

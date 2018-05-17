@@ -27,9 +27,17 @@
 \contentsline {figure}{\numberline {23}{\ignorespaces Halton sequence in a 2D image plane.\relax }}{31}{figure.caption.29}
 \contentsline {figure}{\numberline {24}{\ignorespaces Pseudorandom sequence in a 2D image plane.\relax }}{32}{figure.caption.30}
 \contentsline {figure}{\numberline {25}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC.\relax }}{34}{figure.caption.31}
-\contentsline {figure}{\numberline {26}{\ignorespaces Jittering in a plane image.\relax }}{35}{figure.caption.32}
-\contentsline {figure}{\numberline {27}{\ignorespaces Perspective camera with hFov, vFov and dFov.\relax }}{36}{figure.caption.33}
-\contentsline {figure}{\numberline {28}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{39}{figure.caption.34}
+\contentsline {figure}{\numberline {26}{\ignorespaces Illustration of how sampling the plane image with jittering works.\relax }}{35}{figure.caption.32}
+\contentsline {figure}{\numberline {27}{\ignorespaces Aliasing effect.\relax }}{36}{figure.caption.33}
+\contentsline {figure}{\numberline {28}{\ignorespaces Stratified sampling.\relax }}{36}{figure.caption.34}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Stratified sampling with 1, sampler per pixel.}}{36}{subfigure.28.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Stratified sampling with 256, samplers per pixel.}}{36}{subfigure.28.2}
+\contentsline {figure}{\numberline {29}{\ignorespaces Jittered sampling.\relax }}{36}{figure.caption.35}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Jittered sampling with 1, sampler per pixel.}}{36}{subfigure.29.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Jittered sampling with 4, samplers per pixel.}}{36}{subfigure.29.2}
+\contentsline {figure}{\numberline {30}{\ignorespaces Perspective camera with hFov, vFov and dFov (\cite {Camera_Perspective_Orthographic}).\relax }}{37}{figure.caption.36}
+\contentsline {figure}{\numberline {31}{\ignorespaces Orthographic camera with hFov, vFov and dFov (\cite {Camera_Perspective_Orthographic}).\relax }}{38}{figure.caption.37}
+\contentsline {figure}{\numberline {32}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{41}{figure.caption.38}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

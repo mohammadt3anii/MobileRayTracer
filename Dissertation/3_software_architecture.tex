@@ -983,10 +983,10 @@ method is equal to the intersection of a ray with a triangle presented earlier.
 \subsection{Cameras}
 
 \par
-There was implemented one type of Camera: Perspective Camera.
+Only 2 types of cameras were implemented: perspective and orthographic cameras.
 
 \par
-The camera only provides one method for the user to generate a ray from the camera position in direction to the image plane:
+The camera only provides one method for the user to cast a ray from the camera position in direction to the image plane:
 
 \begin{lstlisting}
 Ray generateRay(const float u, const float v,
@@ -998,7 +998,7 @@ The method
 $generateRay$
 needs four parameters to create a ray.
 The $u$ and $v$
-are used to choose the pixel in the image plane.
+are used to choose the targeted pixel in the image plane.
 Being
 $u$
 the inverse of the index of the pixel in its line, that is,
@@ -1012,18 +1012,61 @@ $deviationU$ and $deviationV$
 which are variances inside a pixel.
 The
 $deviationU$
-is a horizontal variance of the pixel, that is,
+is a horizontal variance of the pixel, that is,\\
 $[-0.5*pixelWidth, 0.5*pixelWidth]$
 and
-$deviationV$ the variance in the vertical of the pixel
+$deviationV$ the variance in the vertical of the pixel\\
 $[-0.5*pixelHeight, 0.5*pixelHeight]$.
+This technique is called jittering, as shown in figure \ref{Jittering.}, and allows to reduce the aliasing effect by introducing noise into the output image.
+Although the final image gets some noise, this effect turns out to be visually more appealing than aliasing because it is an effect without patterns that are easily detectable by the human eye.
+It is important to reduce the aliasing effect because, it is an effect that the human eyes can detect very fast because the generated image will have quite regular patterns, as shown in figure \ref{Aliased.}.
 
 \begin{figure}[H]
 	\centering
-	\caption{Jittering in a plane image.}
+	\caption{Illustration of how sampling the plane image with jittering works.}
 	\label{Jittering.}
 	\includegraphics[keepaspectratio,scale=1.0]{Jittering.png}
 \end{figure}
+
+\begin{figure}[H]
+	\centering
+	\caption{Aliasing effect.}
+	\label{Aliased.}
+	\includegraphics[keepaspectratio,scale=0.6]{aliasing.jpg}
+\end{figure}
+
+
+\par
+Sampling with jittering is, as previously stated, a good technique to avoid aliasing in the image.
+The figure \ref{Sampling_Stratified.} shows an example of stratified sampling with 1 and 256 samples per pixel.
+As can be seen in the figure on the left, there is a noticeably aliasing in the image, and we can't even perceive the correct positions of the black squares on the background.
+Of course, with 256 samples per pixel, the aliasing effect is greatly reduced, but also, the execution time is linearly increased, which is a downside to the user experience.
+
+\begin{figure}[H]
+	\centering
+	\subfloat[Stratified sampling with 1, sampler per pixel.][Stratified sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{regular_1spp.png} }}
+	\qquad
+	\subfloat[Stratified sampling with 256, samplers per pixel.][Stratified sampling with 256 \\samples per pixel.]{{\includegraphics[width=5cm]{regular_256spp.png} }}
+	\caption{Stratified sampling.}
+	\label{Sampling_Stratified.}
+\end{figure}
+
+\par
+Sampling with jittering is, obviously not perfect, as shown in the figure \ref{Sampling_Jittering.}.
+But, it produces more visually appealing images, although it introduces some noise.
+Even, with just 1 sample per pixel, the generated image is less "jaggy" in the background.
+And, with 4 samples per pixel, the noise is greatly reduced and its quality is visually comparable to the stratified sampling with 256 samples per pixel.
+This means that by using jittering it is possible to obtain images pleasing to the human eye with fewer samples per pixel, and consequently in less execution time.
+
+\begin{figure}[H]
+	\centering
+	\subfloat[Jittered sampling with 1, sampler per pixel.][Jittered sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{jittering_1spp.png} }}
+	\qquad
+	\subfloat[Jittered sampling with 4, samplers per pixel.][Jittered sampling with 4 \\samples per pixel.]{{\includegraphics[width=5cm]{jittering_4spp.png} }}
+	\caption{Jittered sampling.}
+	\label{Sampling_Jittering.}
+\end{figure}
+
 
 \subsubsection{Perspective Camera}
 
@@ -1037,15 +1080,27 @@ This way, we can obtain the aspect ratio of the image plane we want.
 
 \begin{figure}[H]
 	\centering
-	\caption{Perspective camera with hFov, vFov and dFov.}
+	\caption{Perspective camera with hFov, vFov and dFov (\cite{Camera_Perspective_Orthographic}).}
 	\label{Perspective_Camera.}
-	\includegraphics[keepaspectratio,scale=0.2]{hfov-vfov-dfov.jpg}
+	\includegraphics[keepaspectratio,scale=0.6]{Camera_Perspective_v2.png}
 \end{figure}
 
 \par
-The algorithm to generate a ray from the camera is very simple.
+The algorithm to generate a ray from the perspective camera is very simple.
 
+
+
+\subsubsection{Orthographic Camera}
+
+\par
 ...
+
+\begin{figure}[H]
+	\centering
+	\caption{Orthographic camera with hFov, vFov and dFov (\cite{Camera_Perspective_Orthographic}).}
+	\label{Perspective_Camera.}
+	\includegraphics[keepaspectratio,scale=0.6]{Camera_Orthographic_v2.png}
+\end{figure}
 
 
 \subsection{Object Loaders}

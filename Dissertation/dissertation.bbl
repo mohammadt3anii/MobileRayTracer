@@ -1,4 +1,4 @@
-\begin{thebibliography}{36}
+\begin{thebibliography}{38}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -181,6 +181,20 @@ Pixar.
 \newblock URL
   \url{https://renderman.pixar.com/resources/current/RenderMan/risOverview.html}.
 \newblock Accessed: January 2017.
+
+\bibitem[Schim()]{Camera_Perspective_Orthographic}
+Raph Schim.
+\newblock From perspective picture to orthographic picture.
+\newblock URL
+  \url{https://stackoverflow.com/questions/36573283/from-perspective-picture-to-orthographic-picture}.
+\newblock Accessed: May 2018.
+
+\bibitem[Science and Engineering()]{Aliasing}
+Computer Science and Engineering.
+\newblock Anti aliasing computer graphics.
+\newblock URL
+  \url{https://www.slideshare.net/DelwarHossain8/anti-aliasing-computer-graphics}.
+\newblock Accessed: May 2018.
 
 \bibitem[Scratchapixel()]{TriangleRayIntersection}
 Scratchapixel.

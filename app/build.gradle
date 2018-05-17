@@ -39,21 +39,11 @@ android {
             signingConfig signingConfigs.Puscas
             debuggable true
             jniDebuggable true
-            externalNativeBuild {
-                cmake {
-                    arguments "-DCMAKE_BUILD_TYPE=Debug, -DANDROID_STL=c++_shared"
-                }
-            }
         }
         release {
             signingConfig signingConfigs.Puscas
             debuggable false
             jniDebuggable false
-            externalNativeBuild {
-                cmake {
-                    arguments "-DCMAKE_BUILD_TYPE=Release, -DANDROID_STL=c++_shared"
-                }
-            }
         }
     }
 }

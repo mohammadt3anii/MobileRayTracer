@@ -34,6 +34,8 @@ Warning--empty year in G3D17
 Warning--empty year in Optix
 Warning--empty year in OptixPrime
 Warning--empty year in RIS
+Warning--empty year in Camera_Perspective_Orthographic
+Warning--empty year in Aliasing
 Warning--empty year in TriangleRayIntersection
 Warning--empty year in tinyobjloader
 Warning--empty year in RegularGrid
@@ -42,4 +44,4 @@ Warning--empty year in tray
 Warning--empty year in trayrust
 Warning--empty year in PlaneRayIntersection
 Warning--empty year in Visionaray
-(There were 35 warnings)
+(There were 37 warnings)

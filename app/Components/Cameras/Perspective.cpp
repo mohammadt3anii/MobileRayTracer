@@ -24,12 +24,11 @@ Perspective::Perspective(
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Perspective::generateRay(const float u, const float v,
                              const float deviationU, const float deviationV) const noexcept {
-    const ::glm::vec3 &dest {this->position_ +
-                          this->direction_ +
-                          (this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)) +
-                          (this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV))};
-    return Ray {::glm::normalize(dest - position_),
-                    this->position_, 1};
+    const ::glm::vec3 &right{this->right_ * (fastArcTan(this->hFov_ * (u - 0.5f)) + deviationU)};
+    const ::glm::vec3 &up{this->up_ * (fastArcTan(this->vFov_ * (0.5f - v)) + deviationV)};
+    const ::glm::vec3 &dest{this->position_ + this->direction_ + right + up};
+    const Ray &ray{::glm::normalize(dest - position_), this->position_, 1};
+    return ray;
 }
 
 //http://nghiaho.com/?p=997
