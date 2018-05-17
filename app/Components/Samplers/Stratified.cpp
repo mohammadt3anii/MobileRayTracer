@@ -17,5 +17,7 @@ float Stratified::getSample(const ::std::uint32_t sample) noexcept {
         this->sample_.fetch_sub(1, ::std::memory_order_relaxed);
         return 1.0f;
     }
-    return static_cast<float> (current - (sample * this->domainSize_)) / this->domainSize_;
+    const float res{
+            static_cast<float> (current - (sample * this->domainSize_)) / this->domainSize_};
+    return res;
 }

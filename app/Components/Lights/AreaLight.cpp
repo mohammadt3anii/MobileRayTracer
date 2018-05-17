@@ -26,7 +26,8 @@ AreaLight::AreaLight(
         R = 1.0f - R;
         S = 1.0f - S;
     }
-    return triangle_.pointA_ + R * triangle_.AB_ + S * triangle_.AC_;
+    const ::glm::vec3 &position{triangle_.pointA_ + R * triangle_.AB_ + S * triangle_.AC_};
+    return position;
 }
 
 void AreaLight::resetSampling() noexcept {

@@ -34,6 +34,7 @@ Ray Perspective::generateRay(const float u, const float v,
 //http://nghiaho.com/?p=997
 float Perspective::fastArcTan(const float value) const noexcept {
     const float absValue{::std::abs(value)};
-    return ::glm::quarter_pi<float>() * value -
-           (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue));
+    const float res{::glm::quarter_pi<float>() * value -
+                    (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue))};
+    return res;
 }

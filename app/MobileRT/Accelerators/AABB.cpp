@@ -65,7 +65,8 @@ namespace MobileRT {
                 ::glm::min(box1.pointMin_, box2.pointMin_)};
         const ::glm::vec3 &max {
                 ::glm::max(box1.pointMax_, box2.pointMax_)};
+        const AABB &res{min, max};
 
-        return AABB(min, max);
+        return res;
     }
 }//namespace MobileRT

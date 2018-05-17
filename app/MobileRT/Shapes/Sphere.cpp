@@ -40,7 +40,8 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
 
     // if so, then we have an intersection
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
-    return Intersection {intersectionPoint, distanceToIntersection, center_};
+    const Intersection &res{intersectionPoint, distanceToIntersection, center_};
+    return res;
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
@@ -56,7 +57,8 @@ AABB Sphere::getAABB() const noexcept {
     const float radius {::std::sqrt(this->sq_radius_)};
     const ::glm::vec3 &min {this->center_ - radius};
     const ::glm::vec3 &max {this->center_ + radius};
-    return AABB {min, max};
+    const AABB &res{min, max};
+    return res;
 }
 
 bool Sphere::intersect(const AABB &box) const noexcept {

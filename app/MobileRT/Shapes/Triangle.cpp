@@ -52,7 +52,8 @@ Intersection Triangle::intersect(const Intersection &intersection, const Ray &ra
     if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
-    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    return res;
 }
 
 void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -67,7 +68,8 @@ AABB Triangle::getAABB() const noexcept {
     const ::glm::vec3 &pointC {pointA_ + AC_};
     const ::glm::vec3 &min {::glm::min(pointA_, ::glm::min(pointB, pointC))};
     const ::glm::vec3 &max {::glm::max(pointA_, ::glm::max(pointB, pointC))};
-    return AABB {min, max};
+    const AABB &res{min, max};
+    return res;
 }
 
 bool Triangle::intersect(const AABB &box) const noexcept {
@@ -138,7 +140,9 @@ bool Triangle::intersect(const AABB &box) const noexcept {
             [=](const ::glm::vec3 &vec) noexcept -> bool {
                 const ::glm::vec3 &perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-                return ::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon();
+                const bool res{
+                        ::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon()};
+                return res;
             }
     };
 
@@ -156,6 +160,8 @@ bool Triangle::intersect(const AABB &box) const noexcept {
     intersection = intersect(intersection, ray);
     const bool intersectedRay {intersection.length_ < lastDist};
     const bool insideTriangle{isOverTriangle(vec)};
+    const bool res{
+            intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle};
 
-    return intersectedAB || intersectedAC || intersectedBC || intersectedRay || insideTriangle;
+    return res;
 }

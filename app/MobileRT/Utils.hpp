@@ -67,7 +67,8 @@ namespace MobileRT {
         } else {
             filePos = 0;
         }
-        return ::std::string {filePath.substr(filePos)};
+        const ::std::string &res{::std::string {filePath.substr(filePos)}};
+        return res;
     }
 
     template<typename T>

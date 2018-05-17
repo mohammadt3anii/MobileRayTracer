@@ -73,7 +73,8 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
 }
 
 Intersection Shader::traceTouch(Intersection intersection, const Ray &ray) noexcept {
-    return this->scene_.trace(intersection, ray);
+    const Intersection &res{this->scene_.trace(intersection, ray)};
+    return res;
 }
 
 Shader::~Shader() noexcept {
@@ -100,7 +101,8 @@ bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
             break;
         }
     }
-    return intersection.length_ < lastDist;
+    const bool res{intersection.length_ < lastDist};
+    return res;
 }
 
 bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
@@ -125,7 +127,8 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
             break;
         }
     }
-    return intersection.length_ < lastDist && shade(rgb, intersection, ray);
+    const bool res{intersection.length_ < lastDist && shade(rgb, intersection, ray)};
+    return res;
 }
 
 void Shader::resetSampling() noexcept {

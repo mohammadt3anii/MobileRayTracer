@@ -727,8 +727,10 @@ extern "C"
         jobject /*thiz*/,
         jint const size
 ) noexcept {
-    return ::MobileRT::roundDownToMultipleOf(size,
-                                           static_cast<::std::int32_t>(::std::sqrt(MobileRT::NumberOfBlocks)));
+    const ::std::int32_t res{::MobileRT::roundDownToMultipleOf(size,
+                                                               static_cast<::std::int32_t>(::std::sqrt(
+                                                                       MobileRT::NumberOfBlocks)))};
+    return res;
 }
 
 extern "C"

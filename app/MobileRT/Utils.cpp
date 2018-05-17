@@ -8,7 +8,8 @@ namespace MobileRT {
 
     ::std::int32_t roundDownToMultipleOf(const ::std::int32_t value, const ::std::int32_t multiple) noexcept {
         const ::std::int32_t rest{value % multiple};
-        return rest > 1 ? value - rest : value;
+        const ::std::int32_t res{rest > 1 ? value - rest : value};
+        return res;
     }
 
     //https://en.wikipedia.org/wiki/Halton_sequence
@@ -44,6 +45,8 @@ namespace MobileRT {
         const ::std::uint32_t retG {::std::min(currentGreen, 255u)};
         const ::std::uint32_t retB {::std::min(currentBlue, 255u)};
 
-        return (0xFF000000 | (retB << 16) | (retG << 8) | retR);
+        const ::std::uint32_t res{0xFF000000 | (retB << 16) | (retG << 8) | retR};
+
+        return res;
     }
 }//namespace MobileRT

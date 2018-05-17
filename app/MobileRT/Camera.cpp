@@ -29,13 +29,15 @@ float Camera::getBlock(const ::std::uint32_t sample) noexcept {
         this->block_.fetch_sub(1, ::std::memory_order_relaxed);
         return 1.0f;
     }
-    return VALUES.at(current);
+    const float res{VALUES.at(current)};
+    return res;
 }
 
 AABB Camera::getAABB() const noexcept {
     const ::glm::vec3 &min {position_};
     const ::glm::vec3 &max {position_};
-    return AABB {min, max};
+    const AABB &res{min, max};
+    return res;
 }
 
 //Left hand rule

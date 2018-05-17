@@ -38,7 +38,8 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
     }
 
     // if so, then we have an intersection
-    return Intersection {ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    return res;
 }
 
 void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -71,7 +72,8 @@ AABB Plane::getAABB() const noexcept {
     const ::glm::vec3 &rightDir {getRightVector()};
     const ::glm::vec3 &min {this->point_ + rightDir * -100.0f};
     const ::glm::vec3 &max {this->point_ + rightDir * 100.0f};
-    return AABB {min, max};
+    const AABB &res{min, max};
+    return res;
 }
 
 float Plane::distance(const ::glm::vec3 &point) const noexcept {
@@ -89,7 +91,8 @@ float Plane::distance(const ::glm::vec3 &point) const noexcept {
             ::std::sqrt(
                     normal_[0] * normal_[0] + normal_[1] * normal_[1] +
                     normal_[2] * normal_[2])};
-    return numerator / denumerator;
+    const float res{numerator / denumerator};
+    return res;
 }
 
 bool Plane::intersect(const AABB &box) const noexcept {

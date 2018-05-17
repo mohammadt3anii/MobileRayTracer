@@ -28,5 +28,6 @@ StaticMersenneTwister::StaticMersenneTwister() noexcept {
 
 float StaticMersenneTwister::getSample(const ::std::uint32_t /*sample*/) noexcept {
     const ::std::uint32_t current {this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
-    return VALUES.at(current & MASK);
+    const float res{VALUES.at(current & MASK)};
+    return res;
 }
