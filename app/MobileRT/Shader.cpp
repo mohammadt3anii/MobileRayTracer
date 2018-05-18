@@ -23,10 +23,11 @@ namespace {
     ::std::array<float, SIZE> VALUES{};
 
     bool FillThings() {
-        static ::std::mt19937 generator(::std::random_device{}());
         for (::std::uint32_t i{0}; i < SIZE; ++i) {
-            VALUES.at(i) = ::MobileRT::haltonSequence(i, 2);
+            const float value{::MobileRT::haltonSequence(i, 2)};
+            VALUES.at(i) = value;
         }
+        static ::std::mt19937 generator{::std::random_device{}()};
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
         return true;
     }
@@ -139,21 +140,31 @@ void Shader::resetSampling() noexcept {
     static ::std::atomic<::std::uint32_t> sampler {0};
     const ::std::uint32_t current1 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
     const ::std::uint32_t current2 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-    const float sample1 {VALUES.at(current1 & MASK)};
-    const float sample2 {VALUES.at(current2 & MASK)};
+    const float uniformRandom1{VALUES.at(current1 & MASK)};
+    const float uniformRandom2{VALUES.at(current2 & MASK)};
 
-    const float r1 {::glm::two_pi<float>() * sample1};
-    const float r2 {sample2};
-    const float r2s {::std::sqrt(r2)};
-    ::glm::vec3 u {::std::abs(normal[0]) > 0.1f ?
-               ::glm::cross(::glm::vec3 {0.0f, 1.0f, 0.0f}, normal) :
-               ::glm::cross(::glm::vec3 {1.0f, 0.0f, 0.0f}, normal)};
-    u = ::glm::normalize(u);
-    const ::glm::vec3 &v {::glm::cross(normal, u)};
-    ::glm::vec3 direction {(u * (::std::cos(r1) * r2s) +
-                        v * (::std::sin(r1) * r2s) +
-                        normal * ::std::sqrt(1.0f - r2))};
+    const float phi{
+            ::glm::two_pi<float>() * uniformRandom1};// random angle around - azimuthal angle
+    const float r2{uniformRandom2};// random distance from center
+    const float cosTheta{::std::sqrt(
+            r2)};// square root of distance from center - cos(theta) = cos(elevation angle)
+
+    ::glm::vec3 u{::std::abs(normal.x) > 0.1f ? ::glm::vec3 {0.0f, 1.0f, 0.0f} :
+                  ::glm::vec3 {1.0f, 0.0f, 0.0f}};
+    u = ::glm::normalize(::glm::cross(u, normal));// second axis
+    const ::glm::vec3 &v{::glm::cross(normal, u)};// final axis
+
+    ::glm::vec3 direction{u * (::std::cos(phi) * cosTheta) +
+                          v * (::std::sin(phi) * cosTheta) +
+                          normal * ::std::sqrt(1.0f - r2)};
     direction = ::glm::normalize(direction);
+
+    /*float phi2 {::std::acos(::std::sqrt(1.0f - uniformRandom1))};
+    float theta2 = ::glm::two_pi<float>() * r2;
+    ::glm::vec3 dir {sin(phi2) * cos(theta2),
+                    cos(phi2),
+                     sin(phi2) * sin(theta2)};*/
+
     return direction;
 }
 

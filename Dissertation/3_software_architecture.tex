@@ -645,13 +645,16 @@ $1 / \#lights$.
 
 \par
 Finally, the indirect lighting reflected in diffuse surfaces is calculated in a much more complex way.
-First it is generated, from the intersected point, a random direction on an unit hemisphere with a PDF proportional to cosine-weighted solid angle
+First it is generated, from the intersected point, a random direction on an unit hemisphere with a PDF proportional to cosine-weighted solid angle\\
 ($PDF: p(\Theta) = cos\theta / \pi$,
 $x = cos(2\pi r1)\sqrt{1-r2}$,
 $y = sin(2\pi r1)\sqrt{1-r2}$,
 $z = \sqrt{r2}$)
 .
 This kind of PDF is one of the best ways to render images with path tracing that the rendering equation converges to the expected value as fast as possible.
+
+
+\iffalse
 Then a rotation matrix is built, where it lets rotate a vector around an arbitrary axis with a given angle.
 
 \begin{figure}[H]
@@ -662,6 +665,11 @@ Then a rotation matrix is built, where it lets rotate a vector around an arbitra
 \end{figure}
 
 Then the proper coordinates in the world view is just: $globalCoordinates = localCoordinates * rotationMatrix$.
+\fi
+
+Then to generate 
+
+
 And the indirect lighting on diffuse surfaces is then the multiplication of the ray traced light radiance with the color of the primitive and
 $\pi$
 , and divided by the probability of stopping the Russian roulette.
@@ -972,7 +980,7 @@ if (R + S >= 1) {
 x = A.x + R * AB.x + S * AC.x
 y = A.y + R * AB.y + S * AC.y
 z = A.z + R * AB.z + S * AC.z
-return Point3D(x, y, z);
+return Point3D(x, y, z)
 \end{lstlisting}
 
 \par
@@ -1071,7 +1079,7 @@ This means that by using jittering it is possible to obtain images pleasing to t
 \subsubsection{Perspective Camera}
 
 \par
-With this type of camera we can simulate images being seen by the human eyes.
+With this type of camera we can simulate images being seen by the human eyes, which means, it simulates the depth of the objects, and produces 2D images with a 3D projection.
 
 \par
 To obtain an image plane with perspective is necessary to have a Field of View.
@@ -1080,24 +1088,80 @@ This way, we can obtain the aspect ratio of the image plane we want.
 
 \begin{figure}[H]
 	\centering
-	\caption{Perspective camera with hFov, vFov and dFov (\cite{Camera_Perspective_Orthographic}).}
+	\caption{Perspective camera with hFov and vFov (\cite{Camera_Perspective_Orthographic}).}
 	\label{Perspective_Camera.}
 	\includegraphics[keepaspectratio,scale=0.6]{Camera_Perspective_v2.png}
 \end{figure}
 
 \par
 The algorithm to generate a ray from the perspective camera is very simple.
+By knowing the horizontal Field of View and vertical Field of View in radians, and with
+$u$
+and
+$v$
+as parameters, it is possible to calculate the direction of that ray.
 
+\par
+It starts to calculate the distance to go through the right vector and the up vector of the camera.
+That can be done with the arctangent of each Field of View of the camera (horizontal and vertical) and multiplying it with
+$u - 0.5$
+in the right vector and with
+$0.5 - v$
+in the up vector.
+This makes sure that we go through every pixel, starting with the pixel from the upper left corner to the lower right corner of the image plane.
+Then the destination point of the ray is just the sum:\\
+$destinationPoint = cameraPosition + cameraDirection + rightVector + upVector$
+, and so its direction is just:\\
+$rayDirection = destinationPoint - cameraPosition$
+.
+The origin of the ray is the position of the camera, because in a perspective camera, all rays come from the same point: the point where the camera is located.
+
+\begin{lstlisting}
+rightFactor = arctan(hFov * (u - 0.5)) + deviationU
+rightVector = right * rightFactor
+upFactor = arctan(vFov * (0.5 - v)) + deviationV
+upVector = up * upFactor
+destinationPoint = cameraPosition + cameraDirection + rightVector + upVector
+rayDirection = destinationPoint - cameraPosition
+return Ray (rayDirection, cameraPosition)
+\end{lstlisting}
 
 
 \subsubsection{Orthographic Camera}
 
 \par
-...
+The orthographic camera removes the sense of perspective by drawing the image plane without simulating the depth of the objects, making all the objects looking flat.
+This is achieved by inverting the logic of the perspective camera.
+Instead of calculating the direction and always having the same origin, in the orthographic camera, the direction is always the same for all rays, and the origin of the ray varies.
+
+\par
+It starts to calculate the distance to go through the right vector and up vector of the camera, like the perspective camera.
+But, instead of using the Field of View, we now use the
+$sizeH$
+and
+$sizeV$
+, which are the horizontal and vertical sizes of the image plane.
+Then, to make sure that we go through all pixels from upper left pixel to lower right, we need to use the
+$u$
+and
+$v$
+values from the parameters.
+Then, the origin of the ray is:
+$rayOrigin = cameraPosition + rightVector + upVector$
+.
+
+\begin{lstlisting}
+rightFactor = (u - 0.5) * sizeH
+rightVector = right * rightFactor + right * deviationU
+upFactor = (0.5f - v) * sizeV
+upVector = up * upFactor + up * deviationV
+rayOrigin = cameraPosition + rightVector + upVector
+return Ray (cameraDirection, rayOrigin)
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
-	\caption{Orthographic camera with hFov, vFov and dFov (\cite{Camera_Perspective_Orthographic}).}
+	\caption{Orthographic camera with sizeH and sizeV (\cite{Camera_Perspective_Orthographic}).}
 	\label{Perspective_Camera.}
 	\includegraphics[keepaspectratio,scale=0.6]{Camera_Orthographic_v2.png}
 \end{figure}

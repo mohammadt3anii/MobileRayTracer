@@ -4,6 +4,7 @@
 
 #include "MobileRT/Camera.hpp"
 #include <array>
+#include <glm/gtc/constants.hpp>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Camera;
@@ -13,10 +14,11 @@ namespace {
     ::std::array<float, NumberOfBlocks> VALUES;
 
     bool FillThings() {
-        static ::std::mt19937 generator(::std::random_device{}());
         for (::std::uint32_t i{0}; i < NumberOfBlocks; ++i) {
-            VALUES.at(i) = ::MobileRT::haltonSequence(i, 2);
+            const float value{::MobileRT::haltonSequence(i, 2)};
+            VALUES.at(i) = value;
         }
+        static ::std::mt19937 generator(::std::random_device{}());
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
         return true;
     }
@@ -64,4 +66,9 @@ Camera::~Camera() noexcept {
 
 void Camera::resetSampling() noexcept {
     this->block_ = 0;
+}
+
+float Camera::degToRad(const float deg) noexcept {
+    const float radians{(deg * ::glm::pi<float>()) / 180.0f};
+    return radians;
 }

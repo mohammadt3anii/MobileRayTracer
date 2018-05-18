@@ -18,6 +18,9 @@ namespace MobileRT {
     protected:
         ::std::atomic<::std::uint32_t> block_{0};
 
+    protected:
+        float degToRad(const float deg) noexcept;
+
     public:
         ::glm::vec3 position_{};
         ::glm::vec3 direction_{};

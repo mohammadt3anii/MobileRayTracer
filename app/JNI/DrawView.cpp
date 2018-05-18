@@ -334,16 +334,16 @@ extern "C"
                 break;
 
             case 1:
-                camera = ::std::make_unique<Components::Perspective>(
+                /*camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {4.0f, 4.0f, -8.0f},
                         ::glm::vec3 {4.0f, 4.0f, 4.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
-                /*camera = ::std::make_unique<Components::Orthographic> (
-                  ::glm::vec3 {0.0f, 1.0f, - 10.0f},
-                  ::glm::vec3 {0.0f, 1.0f, 7.0f},
-                  ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                  10.0f * hfovFactor, 10.0f * vfovFactor);*/
+                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
+                camera = ::std::make_unique<Components::Orthographic>(
+                        ::glm::vec3 {0.0f, 1.0f, - 10.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 7.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        10.0f * hfovFactor, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<Components::Perspective>(
                   ::glm::vec3 {0.0f, 0.5f, 1.0f},
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},

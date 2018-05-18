@@ -96,8 +96,9 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
                     this->shader_->rayTrace(&pixelRGB, ray);
                     const ::std::uint32_t pixelIndex{yWidth + x};
                     assert(pixelIndex < width * height_);
-                    bitmap[pixelIndex] = ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex],
-                        sample + 1);
+                    const ::std::uint32_t pixelColor{
+                            ::MobileRT::incrementalAvg(pixelRGB, bitmap[pixelIndex], sample + 1)};
+                    bitmap[pixelIndex] = pixelColor;
                 }
             }
         }

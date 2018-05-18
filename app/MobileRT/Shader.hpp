@@ -38,6 +38,7 @@ namespace MobileRT {
     protected:
         virtual bool shade(
             ::glm::vec3 *rgb, const Intersection &intersection, const Ray &ray) noexcept = 0;
+
         ::glm::vec3 getCosineSampleHemisphere(const ::glm::vec3 &normal) const noexcept;
 
     public:

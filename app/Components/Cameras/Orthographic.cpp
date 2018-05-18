@@ -22,8 +22,10 @@ Orthographic::Orthographic(
 /* deviationV = [-0.5f / height, 0.5f / height] */
 Ray Orthographic::generateRay(const float u, const float v,
                               const float deviationU, const float deviationV) const noexcept {
-    const ::glm::vec3 &right{this->right_ * (u - 0.5f) * this->sizeH_ + this->right_ * deviationU};
-    const ::glm::vec3 &up{this->up_ * (0.5f - v) * this->sizeV_ + this->up_ * deviationV};
+    const float rightFactor{(u - 0.5f) * this->sizeH_};
+    const ::glm::vec3 &right{this->right_ * rightFactor + this->right_ * deviationU};
+    const float upFactor{(0.5f - v) * this->sizeV_};
+    const ::glm::vec3 &up{this->up_ * upFactor + this->up_ * deviationV};
     const Ray &ray{this->direction_, this->position_ + right + up, 1};
     return ray;
 }
