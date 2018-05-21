@@ -182,7 +182,7 @@ public final class MainActivity extends Activity {
             }
             drawView_.setVisibility(View.INVISIBLE);
             drawView_.setEGLContextClientVersion(2);
-            drawView_.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
+            drawView_.setEGLConfigChooser(8, 8, 8, 8, 24, 0);
             final MainRenderer renderer = new MainRenderer();
             drawView_.renderer_ = renderer;
             drawView_.setRenderer(renderer);
