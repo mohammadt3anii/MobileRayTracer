@@ -179,6 +179,9 @@ class MainRenderer implements Renderer {
         GLES20.glEnable(GLES20.GL_BLEND);
         checkGLError();
 
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        checkGLError();
+
         GLES20.glCullFace(GLES20.GL_BACK);
         checkGLError();
 
@@ -381,6 +384,12 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
+        final float zNear = 0.1f;
+        final float zFar = 1.0e+30f;
+        final float ratio = Math.max(width_ / height_, height_ / width_);
+        final float vfovFactor = width_ < height_ ? ratio : 1.0f;
+        final float fovy = 45.0f * vfovFactor;
+
         final float eyeX = camera[0];
         final float eyeY = camera[1];
         final float eyeZ = -camera[2];
@@ -394,26 +403,15 @@ class MainRenderer implements Renderer {
         final float upY = camera[9];
         final float upZ = camera[10];
 
-        //final float zNear = Math.ulp(1000.0f);
-        final float zNear = 0.1f;
-        final float zFar = 1.0e+30f;
-        final float ratio = Math.max(width_ / height_, height_ / width_);
-        final float vfovFactor = width_ < height_ ? ratio : 1.0f;
-        final float fovy = 45.0f * vfovFactor;
-
         Matrix.setIdentityM(mModelMatrix, 0);
         Matrix.perspectiveM(mProjectionMatrix, 0, fovy, ratio, zNear, zFar);
         Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
         final int handleModel = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformModelMatrix");
         final int handleView = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformViewMatrix");
         final int handleProjection = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformProjectionMatrix");
         final int handleMVP = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformMVPMatrix");
-
-        float[] verticesProjection = new float[4];
-        Matrix.multiplyMV(verticesProjection, 0, mProjectionMatrix, 0, vertices, 0);
 
         GLES20.glUniformMatrix4fv(handleModel, 1, false, mModelMatrix, 0);
         checkGLError();
@@ -426,15 +424,10 @@ class MainRenderer implements Renderer {
 
 
         final int vertexCount = verticesRaster.length / 4;
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
-        GLES20.glClearDepthf(1.0f);
-        checkGLError();
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-        checkGLError();
+
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
-        checkGLError();
-        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         checkGLError();
 
 

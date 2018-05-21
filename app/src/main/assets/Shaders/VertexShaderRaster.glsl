@@ -13,10 +13,7 @@ attribute vec4 vertexColor;
 varying vec4 fragmentColor;
 
 void main () {
-	//gl_Position = uniformMVPMatrix * vertexPosition;
 	gl_Position = uniformProjectionMatrix * uniformViewMatrix * uniformModelMatrix * vertexPosition;
+	gl_Position = uniformMVPMatrix * vertexPosition;
     fragmentColor = vertexColor;
-
-    //fragmentColor = uniformMVPMatrix[1];
-    //fragmentColor = vertexPosition;
 }
