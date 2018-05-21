@@ -20,8 +20,9 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
     // triangle - yellow
     const ::MobileRT::Material &yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
-            ::glm::vec3 {0.5f, -0.5f, 0.99f}, ::glm::vec3 {-0.5f, -0.5f, 0.99f},
-            ::glm::vec3 {0.5f, 0.5f, 1.001f}}, yellowMat);
+            ::glm::vec3 {0.5f, -0.5f, 0.99f},
+            ::glm::vec3 {0.5f, 0.5f, 1.001f},
+            ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, yellowMat);
 
     // sphere - mirror
     const ::MobileRT::Material &MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
@@ -112,15 +113,16 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
     // triangle - yellow
     const ::MobileRT::Material &yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
-            ::glm::vec3 {0.5f, -0.5f, 0.99f}, ::glm::vec3 {-0.5f, -0.5f, 0.99f},
-            ::glm::vec3 {0.5f, 0.5f, 1.001f}}, yellowMat);
+            ::glm::vec3 {0.5f, -0.5f, 0.99f},
+            ::glm::vec3 {0.5f, 0.5f, 1.001f},
+            ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, yellowMat);
 
     // triangle - green
     const ::MobileRT::Material &greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {-0.5f, 0.5f, 0.99f},
-            ::glm::vec3 {0.5f, 0.5f, 0.99f},
-            ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, greenMat);
+            ::glm::vec3 {-0.5f, -0.5f, 0.99f},
+            ::glm::vec3 {0.5f, 0.5f, 0.99f}}, greenMat);
 
     // sphere - mirror
     const ::MobileRT::Material &MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},

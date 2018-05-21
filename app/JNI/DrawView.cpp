@@ -58,11 +58,12 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
     const ::MobileRT::Camera *camera{renderer_->camera_.get()};
 
     ::std::vector<jfloat> float_ptr{camera->position_.x, camera->position_.y, camera->position_.z,
-                                    1,
+                                    1.0f,
                                     camera->direction_.x, camera->direction_.y,
-                                    camera->direction_.z, 1,
-                                    camera->right_.x, camera->right_.y, camera->right_.z, 1,
-                                    camera->up_.x, camera->up_.y, camera->up_.z, 1,};
+                                    camera->direction_.z, 1.0f,
+                                    camera->up_.x, camera->up_.y, camera->up_.z, 1.0f,
+                                    camera->right_.x, camera->right_.y, camera->right_.z, 1.0f,
+    };
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
     const jfloatArray result{env->NewFloatArray(arraySize)};
@@ -83,58 +84,18 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
     ::std::vector<jfloat> float_ptr{};
     float_ptr.reserve(triangles.size() * 3 * 4);
     for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1};
+        const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1.0f};
         const ::glm::vec4 &pointB{pointA.x + triangle.shape_.AB_.x,
                                   pointA.y + triangle.shape_.AB_.y,
-                                  pointA.z + triangle.shape_.AB_.z, 1};
+                                  pointA.z + triangle.shape_.AB_.z, 1.0f};
         const ::glm::vec4 &pointC{pointA.x + triangle.shape_.AC_.x,
                                   pointA.y + triangle.shape_.AC_.y,
-                                  pointA.z + triangle.shape_.AC_.z, 1};
+                                  pointA.z + triangle.shape_.AC_.z, 1.0f};
 
-        float_ptr.insert(float_ptr.end(), {pointB.x, pointB.y, -pointB.z, pointB.w});
         float_ptr.insert(float_ptr.end(), {pointA.x, pointA.y, -pointA.z, pointA.w});
+        float_ptr.insert(float_ptr.end(), {pointB.x, pointB.y, -pointB.z, pointB.w});
         float_ptr.insert(float_ptr.end(), {pointC.x, pointC.y, -pointC.z, pointC.w});
-
     }
-    /*float_ptr.clear();
-
-    float_ptr.insert(float_ptr.end(), {
-            0.5f, -0.5f, 0.99f, 1.0f,
-
-                                       -0.5f, -0.5f, 0.99f, 1.0f,
-            0.5f, 0.5f, 1.0001f, 1.0f,
-
-                                       0.5f, -0.5f, -0.99f, 1.0f,
-                                       0.5f, 0.5f, -1.0001f, 1.0f,
-                                       -0.5f, -0.5f, -0.99f, 1.0f,
-
-                                       1.0f, -1.0f, 0.0f, 1.0f,
-                                       0.8f, 1.0f, 0.0f, 1.0f,
-                                       -1.0f, 1.0f, 0.0f, 1.0f,*/
-    //});
-
-    /*float_ptr.insert(float_ptr.end(), {
-            -0.5f, 0.5f, 0.0f, 1.0f,
-             -0.5f, -0.5f, 0.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f});
-
-
-    float_ptr.insert(float_ptr.end(), {
-            0.5f, -0.5f, 0.0f, 1.0f,
-             0.5f, 0.5f, 0.0f, 1.0f,
-             -0.5f, 0.5f, 0.0f, 1.0f});
-
-
-    float_ptr.insert(float_ptr.end(), {
-            -1.0f, 0.5f, 0.0f, 1.0f,
-         -1.0f, -0.5f, 0.0f, 1.0f,
-         -0.6f, -0.5f, 0.0f, 1.0f});
-
-
-    float_ptr.insert(float_ptr.end(), {
-            0.6f, 0.5f, 0.0f, 1.0f,
-         0.6f, -0.5f, 0.0f, 1.0f,
-         1.0f, -0.5f, 0.0f, 1.0f});*/
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
     const jfloatArray result{env->NewFloatArray(arraySize)};
@@ -152,54 +113,22 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
     ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
             renderer_->shader_->scene_.triangles_};
     ::std::vector<jfloat> float_ptr{};
+    float_ptr.reserve(triangles.size() * 3 * 4);
     for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        ::glm::vec3 color{triangle.material_.Kd_};
+        const ::glm::vec3 &kD{triangle.material_.Kd_};
+        const ::glm::vec3 &kS{triangle.material_.Ks_};
+        const ::glm::vec3 &kT{triangle.material_.Kt_};
+        const ::glm::vec3 &lE{triangle.material_.Le_};
+        ::glm::vec3 color{kD};
 
-        /*if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
-            color = triangle.material_.Ks_;
-            if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
-                color = triangle.material_.Kt_;
-                if (!::glm::any(::glm::greaterThan(color, ::glm::vec3 {0}))) {
-                    color = triangle.material_.Le_;
-                }
-            }
-        }*/
+        color = ::glm::all(::glm::greaterThan(kS, color)) ? kS : color;
+        color = ::glm::all(::glm::greaterThan(kT, color)) ? kT : color;
+        color = ::glm::all(::glm::greaterThan(lE, color)) ? lE : color;
 
-        if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
-            color = triangle.material_.Ks_;
-            if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
-                color = triangle.material_.Kt_;
-                if (::glm::all(::glm::lessThan(color, ::glm::vec3 {0.1f}))) {
-                    color = triangle.material_.Le_;
-                }
-            }
-        }
-
-
-        /*if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
-            color = triangle.material_.Ks_;
-            if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
-                color = triangle.material_.Kt_;
-                if (::glm::all(::glm::equal(color, ::glm::vec3 {0}))) {
-                    color = triangle.material_.Le_;
-                }
-            }
-        }*/
-
-        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
-        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
-        float_ptr.insert(float_ptr.end(), {color.x, color.y, color.z, 1.0f});
+        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
+        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
+        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
     }
-
-    /*float_ptr.clear();
-    float_ptr.insert(float_ptr.end(), {1.0f, 0.0f, 0.0f, 1.0f,
-                                       1.0f, 0.0f, 0.0f, 1.0f,
-                                       1.0f, 0.0f, 0.0f, 1.0f,
-
-                                       0.0f, 1.0f, 0.0f, 1.0f,
-                                       0.0f, 1.0f, 0.0f, 1.0f,
-                                       0.0f, 1.0f, 0.0f, 1.0f,
-    });*/
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
     const jfloatArray result{env->NewFloatArray(arraySize)};

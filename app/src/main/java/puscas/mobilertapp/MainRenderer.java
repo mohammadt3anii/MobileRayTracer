@@ -52,8 +52,6 @@ class MainRenderer implements Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mModelMatrix = new float[16];
-    private float mWidth;
-    private float mHeight;
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -185,9 +183,6 @@ class MainRenderer implements Renderer {
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap_, 0);
         checkGLError();
-
-        mWidth = width;
-        mHeight = height;
     }
 
     @Override
@@ -397,46 +392,25 @@ class MainRenderer implements Renderer {
         final float eyeX = camera[0];
         final float eyeY = camera[1];
         final float eyeZ = -camera[2];
-        /*final float eyeX = 460.0f;
-        final float eyeY = 500.0f;
-        final float eyeZ = -1000.0f;*/
-        /*final float eyeX = 0.0f;
-        final float eyeY = 0.0f;
-        final float eyeZ = 3.4f;*/
+        final float dirX = camera[4];
+        final float dirY = camera[5];
+        final float dirZ = -camera[6];
+        final float centerX = eyeX + dirX;
+        final float centerY = eyeY + dirY;
+        final float centerZ = eyeZ + dirZ;
+        final float upX = camera[8];
+        final float upY = camera[9];
+        final float upZ = camera[10];
 
-        final float lookX = camera[4];
-        final float lookY = camera[5];
-        final float lookZ = -camera[6];
-        /*final float lookX = 0.0f;
-        final float lookY = 400.0f;
-        final float lookZ = 0.0f;*/
-        /*final float lookX = 0.0f;
-        final float lookY = 0.0f;
-        final float lookZ = -1.0f;*/
-
-
-        final float upX = camera[12];
-        final float upY = camera[13];
-        final float upZ = camera[14];
-        /*final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;*/
-
-        final float near = 1.0f;
-        final float far = 1000.0f;
-        final float ratio = mWidth / mHeight;
-        final float vfovFactor = mWidth < mHeight ? ratio : 1.0f;
-        final float fov = 45.0f * vfovFactor;
-        final float top = (float) Math.tan(fov * Math.PI / 360.0f) * near;
-        //final float top = 1.0f;
-        final float bottom = -top;
-        final float left = ratio * bottom;
-        final float right = ratio * top;
+        final float zNear = 0.001f;
+        final float zFar = 1000000.0f;
+        final float ratio = Math.max(width_ / height_, height_ / width_);
+        final float vfovFactor = width_ < height_ ? ratio : 1.0f;
+        final float fovy = 45.0f * vfovFactor;
 
         Matrix.setIdentityM(mModelMatrix, 0);
-        //Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
-        Matrix.perspectiveM(mProjectionMatrix, 0, fov, ratio, near, far);
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+        Matrix.perspectiveM(mProjectionMatrix, 0, fovy, ratio, zNear, zFar);
+        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
         float[] verticesViewModel1 = new float[4];
         float[] verticesViewModel2 = new float[4];
