@@ -98,9 +98,13 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
     }
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jfloatArray result{env->NewFloatArray(arraySize)};
+    jfloatArray result{nullptr};
 
-    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+    if (arraySize > 0) {
+        result = env->NewFloatArray(arraySize);
+        env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+    }
+
 
     return result;
 }
@@ -131,9 +135,12 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
     }
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jfloatArray result{env->NewFloatArray(arraySize)};
+    jfloatArray result{nullptr};
 
-    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+    if (arraySize > 0) {
+        result = env->NewFloatArray(arraySize);
+        env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+    }
 
     switch (accelerator_) {
         case ::MobileRT::Shader::BVH:
@@ -269,7 +276,7 @@ extern "C"
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);*/
                 camera = ::std::make_unique<Components::Orthographic>(
-                        ::glm::vec3 {0.0f, 1.0f, - 10.0f},
+                        ::glm::vec3 {0.0f, 1.0f, -10.0f},
                         ::glm::vec3 {0.0f, 1.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         10.0f * hfovFactor, 10.0f * vfovFactor);
@@ -318,20 +325,20 @@ extern "C"
                 objLoader.fillScene(&scene_,
                                     []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
                 //cornellbox
-                /*camera = ::std::make_unique<Components::Perspective>(
+                camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
-                const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                /*const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                   1.0f,
-                                                  ::glm::vec3 {0.9f, 0.9f, 0.9f}};
+                                                  ::glm::vec3 {0.9f, 0.9f, 0.9f}};*/
                 //conference
                 /*scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
                         lightMat, ::glm::vec3 {0.0f, 1000.0f, 0.0f}));*/
-                ::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+                /*::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
                     ::std::make_unique<Components::StaticHaltonSeq>()};
                 scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                         lightMat,
@@ -346,12 +353,12 @@ extern "C"
                         ::std::move(samplerPoint2),
                         ::glm::vec3 {-100.0f, 640.0f, -100.0f},
                         ::glm::vec3 {100.0f, 640.0f, 100.0f},
-                        ::glm::vec3 {-100.0f, 640.0f, 100.0f}));
-                camera = ::std::make_unique<::Components::Perspective>(
+                        ::glm::vec3 {-100.0f, 640.0f, 100.0f}));*/
+                /*camera = ::std::make_unique<::Components::Perspective>(
                         ::glm::vec3 {460.0f, 500.0f, -1000.0f},
                         ::glm::vec3 {0.0f, 400.0f, 0.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
                 //cornell spheres
                 /*camera = ::std::make_unique<::Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},

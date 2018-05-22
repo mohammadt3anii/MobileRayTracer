@@ -38,6 +38,7 @@
 \contentsline {figure}{\numberline {30}{\ignorespaces Orthographic camera with sizeH and sizeV (\cite {Camera_Perspective_Orthographic}).\relax }}{39}{figure.caption.36}
 \contentsline {figure}{\numberline {31}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{42}{figure.caption.37}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {32}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{44}{figure.caption.39}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

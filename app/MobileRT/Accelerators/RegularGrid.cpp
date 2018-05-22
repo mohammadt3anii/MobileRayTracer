@@ -231,7 +231,7 @@ Intersection RegularGrid::intersect(
                 static_cast<size_t>(X) +
                 (static_cast<size_t>(Y) << gridShift_) +
                 (static_cast<size_t>(Z) << (gridShift_ * 2))};
-        ::std::vector<T *> primitivesList{primitivesMatrix[index]};
+        ::std::vector<T *> primitivesList{primitivesMatrix.at(index)};
         for (auto *const primitive : primitivesList) {
             const float lastDist {intersection.length_};
             intersection = primitive->intersect(intersection, ray);
@@ -279,7 +279,7 @@ Intersection RegularGrid::intersect(
         const size_t index{static_cast<size_t>(X) +
                            (static_cast<size_t>(Y) << gridShift_) +
                            (static_cast<size_t>(Z) << (gridShift_ * 2))};
-        ::std::vector<T *> primitivesList{primitivesMatrix[index]};
+        ::std::vector<T *> primitivesList{primitivesMatrix.at(index)};
         for (auto *const primitive : primitivesList) {
             intersection = primitive->intersect(intersection, ray);
         }

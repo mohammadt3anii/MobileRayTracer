@@ -368,10 +368,10 @@ public final class MainActivity extends Activity {
             case 3://if ray-tracer is idle
                 if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
+                    final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
                     //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
                     //final String obj = "WavefrontOBJs/teapot/teapot";
-                    final String obj = "WavefrontOBJs/conference/conference";
+                    //final String obj = "WavefrontOBJs/conference/conference";
                     objText_ = obj + ".obj";
                     matText_ = obj + ".mtl";
                 }

@@ -60,7 +60,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Sphere>>(spheres, &min, &max);
             Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
             Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
-            AABB sceneBounds{min, max};
+            const AABB &sceneBounds{min - 0.01f, max + 0.01f};
             regularGrid_ = RegularGrid {sceneBounds, &scene_, 32};
             break;
         }
