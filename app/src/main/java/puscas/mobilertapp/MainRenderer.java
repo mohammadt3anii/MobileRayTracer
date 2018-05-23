@@ -55,10 +55,25 @@ class MainRenderer implements Renderer {
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
-        if (glError != GLES20.GL_NO_ERROR) {
-            Log.e("glError", "glError = " + GLUtils.getEGLErrorString(glError));
-            System.exit(1);
+        String stringError = null;
+        switch (glError) {
+            case GLES20.GL_NO_ERROR:
+                return;
+
+            case GLES20.GL_INVALID_ENUM:
+                stringError = "GL_INVALID_ENUM";
+                break;
+
+            case GLES20.GL_INVALID_VALUE:
+                stringError = "GL_INVALID_VALUE";
+                break;
+
+            case GLES20.GL_OUT_OF_MEMORY:
+                stringError = "GL_OUT_OF_MEMORY";
+                break;
         }
+        Log.e("glError", "glError = " + GLUtils.getEGLErrorString(glError) + ": " + stringError);
+        System.exit(1);
     }
 
     private int loadShader(final int shaderType, final String source) {
@@ -151,8 +166,7 @@ class MainRenderer implements Renderer {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         checkGLError();
 
-
-        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap_);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_, GLES20.GL_UNSIGNED_BYTE, 0);
         checkGLError();
     }
 

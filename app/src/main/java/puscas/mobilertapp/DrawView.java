@@ -114,10 +114,10 @@ public class DrawView extends GLSurfaceView {
         final int numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText, assetManager);
         viewText_.nPrimitivesT_ = ",p=" + numberPrimitives + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
+        final int realWidth = getWidth();
+        final int realHeight = getHeight();
 
-        setVisibility(View.INVISIBLE);
-        renderer_.setBitmap(width, height, getWidth(), getHeight());
-        setVisibility(View.VISIBLE);
+        renderer_.setBitmap(width, height, realWidth, realHeight);
     }
 
     private int getTouchListIndex(final int pointerID) {
