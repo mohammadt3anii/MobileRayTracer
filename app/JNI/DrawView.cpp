@@ -41,7 +41,7 @@ extern "C"
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
-
+    jniENV->ExceptionClear();
     return JNI_VERSION_1_6;
 }
 
@@ -55,7 +55,7 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::MobileRT::Camera *camera{renderer_->camera_.get()};
+    const ::MobileRT::Camera *const camera{renderer_->camera_.get()};
 
     ::std::vector<jfloat> float_ptr{camera->position_.x, camera->position_.y, camera->position_.z,
                                     1.0f,
@@ -66,11 +66,16 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
     };
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jfloatArray result{env->NewFloatArray(arraySize)};
+    jfloatArray outJNIArray{nullptr};
 
-    env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
-
-    return result;
+    if (arraySize > 0) {
+        outJNIArray = env->NewFloatArray(arraySize);
+        if (outJNIArray != nullptr) {
+            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
+        }
+    }
+    env->ExceptionClear();
+    return outJNIArray;
 }
 
 extern "C"
@@ -98,15 +103,16 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
     }
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    jfloatArray result{nullptr};
+    jfloatArray outJNIArray{nullptr};
 
     if (arraySize > 0) {
-        result = env->NewFloatArray(arraySize);
-        env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+        outJNIArray = env->NewFloatArray(arraySize);
+        if (outJNIArray != nullptr) {
+            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
+        }
     }
-
-
-    return result;
+    env->ExceptionClear();
+    return outJNIArray;
 }
 
 extern "C"
@@ -135,11 +141,26 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
     }
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    jfloatArray result{nullptr};
+    jfloatArray outJNIArray{nullptr};
 
     if (arraySize > 0) {
-        result = env->NewFloatArray(arraySize);
-        env->SetFloatArrayRegion(result, 0, arraySize, float_ptr.data());
+        outJNIArray = env->NewFloatArray(arraySize);
+        if (outJNIArray != nullptr) {
+            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
+        }
+    }
+    const jthrowable exception{env->ExceptionOccurred()};
+    if (exception != nullptr) {
+        LOG("11111111111111111111111111111111111");
+        //OutOfMemory exception
+        env->ExceptionDescribe();
+        LOG("22222222222222222222222222222222222");
+        jclass clazz{env->GetObjectClass(exception)};
+        jmethodID getMessage{env->GetMethodID(clazz, "getMessage", "()Ljava/lang/String;")};
+        jstring message{static_cast<jstring> (env->CallObjectMethod(exception, getMessage))};
+        LOG("Exception = ", message);
+        const char *mstr{env->GetStringUTFChars(message, nullptr)};
+        env->ReleaseStringUTFChars(message, mstr);
     }
 
     switch (accelerator_) {
@@ -152,7 +173,8 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
             break;
     }
 
-    return result;
+    env->ExceptionClear();
+    return outJNIArray;
 }
 
 static ::std::string
@@ -187,6 +209,7 @@ readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filenam
     }
     AAsset_close(asset);
     const ::std::string &res {buffer.begin(), buffer.end()};
+    env->ExceptionClear();
     return res;
 }
 
@@ -205,21 +228,23 @@ static void FPS() noexcept {
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_ViewText_isWorking(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
     const ::std::int32_t res{static_cast<::std::int32_t> (working_)};
+    env->ExceptionClear();
     return res;
 }
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
     renderer_->stopRender();
     working_ = State::STOPPED;
     LOG("WORKING = STOPPED");
+    env->ExceptionClear();
 }
 
 extern "C"
@@ -443,12 +468,13 @@ extern "C"
 
 
     //LOG("PRIMITIVES = ", res);
+    env->ExceptionClear();
     return res;
 }
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finishRender(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
     if (thread_ != nullptr) {
@@ -465,6 +491,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
     LOG("WORKING = IDLE");
     timeFrame_ = 0;
     fps_ = 0.0f;
+    env->ExceptionClear();
 }
 
 extern "C"
@@ -580,6 +607,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
+            env->ExceptionClear();
         if (jniThread == JNI_EDETACHED) {
             const ::std::int32_t result {javaVM_->DetachCurrentThread()};
             assert(result == JNI_OK);
@@ -592,11 +620,12 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     } else {
         lambda();
     }
+    env->ExceptionClear();
 }
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/,
         jfloat const /*jx*/,
         jfloat const /*jy*/) noexcept {
@@ -606,12 +635,13 @@ extern "C"
     //::MobileRT::Intersection intersection {};
     //const ::std::int32_t primitiveID {renderer_->shader_->traceTouch(&intersection, ray)};
     const ::std::int32_t primitiveID {-1};
+    env->ExceptionClear();
     return primitiveID;
 }
 
 extern "C"
 void Java_puscas_mobilertapp_ViewText_moveTouch(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/,
         jfloat const /*jx*/,
         jfloat const /*jy*/,
@@ -628,27 +658,30 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     plane.intersect(ray);
     renderer_->shader_->scene_.planes_[index].shape_.moveTo(intersection.point_[0],
                                                             intersection.point_[1];*/
+    env->ExceptionClear();
 }
 
 extern "C"
 float Java_puscas_mobilertapp_ViewText_getFPS(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    env->ExceptionClear();
     return fps_;
 }
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    env->ExceptionClear();
     return timeFrame_;
 }
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_ViewText_getSample(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
     ::std::int32_t res{0};
@@ -658,25 +691,28 @@ extern "C"
             res = renderer_->getSample();
         }
     }*/
+    env->ExceptionClear();
     return res;
 }
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/,
         jint const size
 ) noexcept {
     const ::std::int32_t res{::MobileRT::roundDownToMultipleOf(size,
                                                                static_cast<::std::int32_t>(::std::sqrt(
                                                                        MobileRT::NumberOfBlocks)))};
+    env->ExceptionClear();
     return res;
 }
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
-        JNIEnv *const /*env*/,
+        JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    env->ExceptionClear();
     return numberOfLights_;
 }
