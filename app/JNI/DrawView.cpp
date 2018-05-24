@@ -479,6 +479,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
 ) noexcept {
     if (thread_ != nullptr) {
         thread_->join();
+        delete thread_;
         thread_ = nullptr;
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
