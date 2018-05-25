@@ -8,9 +8,9 @@
 #include <mutex>
 
 static ::State working_{State::IDLE};
-static ::MobileRT::Renderer *renderer_{nullptr};
-static ::JavaVM *javaVM_{nullptr};
-static ::std::thread *thread_{nullptr};
+static ::std::unique_ptr<::MobileRT::Renderer> renderer_{nullptr};
+static ::std::unique_ptr<::JavaVM> javaVM_{nullptr};
+static ::std::unique_ptr<::std::thread> thread_{nullptr};
 static ::std::mutex mutex_{};
 static ::std::int32_t width_{0};
 static ::std::int32_t height_{0};
@@ -22,7 +22,7 @@ static ::std::int32_t accelerator_{0};
 extern "C"
 ::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
     LOG("JNI_OnLoad");
-    javaVM_ = jvm;
+    javaVM_.reset(jvm);
 
     JNIEnv *jniENV{nullptr};
     {
@@ -454,10 +454,10 @@ extern "C"
                 const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
-            renderer_ = new ::MobileRT::Renderer{
-                ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
-                static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
-                static_cast<::std::uint32_t>(samplesPixel)};
+            renderer_ = ::std::make_unique<::MobileRT::Renderer>(
+                    ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
+                    static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
+                    static_cast<::std::uint32_t>(samplesPixel));
         }
         /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
@@ -479,11 +479,11 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
 ) noexcept {
     if (thread_ != nullptr) {
         thread_->join();
-        delete thread_;
+        thread_.reset();
         thread_ = nullptr;
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
-            delete renderer_;
+            renderer_.reset();
             LOG("DELETED RENDERER");
             renderer_ = nullptr;
         }
@@ -617,7 +617,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     }};
 
     if (async) {
-        thread_ = new ::std::thread{lambda};
+        thread_ = ::std::make_unique<::std::thread>(lambda);
     } else {
         lambda();
     }
