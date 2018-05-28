@@ -68,6 +68,10 @@ class MainRenderer implements Renderer {
                 stringError = "GL_INVALID_VALUE";
                 break;
 
+            case GLES20.GL_INVALID_OPERATION:
+                stringError = "GL_INVALID_OPERATION";
+                break;
+
             case GLES20.GL_OUT_OF_MEMORY:
                 stringError = "GL_OUT_OF_MEMORY";
                 break;
