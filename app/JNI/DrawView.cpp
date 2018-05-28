@@ -51,7 +51,7 @@ void JNI_OnUnload(JavaVM * /*vm*/, void * /*reserved*/) {
 }
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
+jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
@@ -66,20 +66,21 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
     };
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    jfloatArray outJNIArray{nullptr};
-
+    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    jobject directBuffer{nullptr};
     if (arraySize > 0) {
-        outJNIArray = env->NewFloatArray(arraySize);
-        if (outJNIArray != nullptr) {
-            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
+        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
+        if (buffer != nullptr) {
+            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
+            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
         }
     }
     env->ExceptionClear();
-    return outJNIArray;
+    return directBuffer;
 }
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
+jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
@@ -103,20 +104,21 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
     }
 
     const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    jfloatArray outJNIArray{nullptr};
-
+    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    jobject directBuffer{nullptr};
     if (arraySize > 0) {
-        outJNIArray = env->NewFloatArray(arraySize);
-        if (outJNIArray != nullptr) {
-            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
+        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
+        if (buffer != nullptr) {
+            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
+            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
         }
     }
     env->ExceptionClear();
-    return outJNIArray;
+    return directBuffer;
 }
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
+jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
@@ -139,30 +141,6 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
         float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
         float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
     }
-
-    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    jfloatArray outJNIArray{nullptr};
-
-    if (arraySize > 0) {
-        outJNIArray = env->NewFloatArray(arraySize);
-        if (outJNIArray != nullptr) {
-            env->SetFloatArrayRegion(outJNIArray, 0, arraySize, float_ptr.data());
-        }
-    }
-    const jthrowable exception{env->ExceptionOccurred()};
-    if (exception != nullptr) {
-        LOG("11111111111111111111111111111111111");
-        //OutOfMemory exception
-        env->ExceptionDescribe();
-        LOG("22222222222222222222222222222222222");
-        jclass clazz{env->GetObjectClass(exception)};
-        jmethodID getMessage{env->GetMethodID(clazz, "getMessage", "()Ljava/lang/String;")};
-        jstring message{static_cast<jstring> (env->CallObjectMethod(exception, getMessage))};
-        LOG("Exception = ", message);
-        const char *mstr{env->GetStringUTFChars(message, nullptr)};
-        env->ReleaseStringUTFChars(message, mstr);
-    }
-
     switch (accelerator_) {
         case ::MobileRT::Shader::BVH:
             triangles.clear();
@@ -173,8 +151,18 @@ jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
             break;
     }
 
+    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
+    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    jobject directBuffer{nullptr};
+    if (arraySize > 0) {
+        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
+        if (buffer != nullptr) {
+            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
+            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
+        }
+    }
     env->ExceptionClear();
-    return outJNIArray;
+    return directBuffer;
 }
 
 static ::std::string
@@ -716,4 +704,26 @@ extern "C"
 ) noexcept {
     env->ExceptionClear();
     return numberOfLights_;
+}
+
+extern "C"
+jint Java_puscas_mobilertapp_DrawView_getNumberOfTriangles(
+        JNIEnv * /*env*/,
+        jobject /*thiz*/
+) noexcept {
+    const jint trianglesSize{static_cast<jint>(renderer_->shader_->scene_.triangles_.size())};
+    return trianglesSize;
+}
+
+extern "C"
+jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
+        JNIEnv *env,
+        jobject /*thiz*/,
+        jobject bufferRef
+) noexcept {
+    if (bufferRef != nullptr) {
+        void *buffer{env->GetDirectBufferAddress(bufferRef)};
+        ::operator delete(buffer);
+    }
+    return nullptr;
 }

@@ -11,11 +11,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import java.nio.ByteBuffer;
+
 public class DrawView extends GLSurfaceView {
     final ViewText viewText_ = new ViewText();
     MainRenderer renderer_ = null;
     private RenderTask renderTask_ = null;
     private int numThreads_ = 0;
+    ByteBuffer arrayVertices;
+    ByteBuffer arrayColors;
+    ByteBuffer arrayCamera;
 
     public DrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -26,11 +31,15 @@ public class DrawView extends GLSurfaceView {
 
     static private native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
 
-    static private native float[] initVerticesArray();
+    static private native ByteBuffer initVerticesArray();
 
-    static private native float[] initColorsArray();
+    static private native ByteBuffer initColorsArray();
 
-    static private native float[] initCameraArray();
+    static private native ByteBuffer initCameraArray();
+
+    static private native ByteBuffer freeNativeBuffer(ByteBuffer bb);
+
+    static private native int getNumberOfTriangles();
 
     static private native void stopRender();
 
@@ -80,6 +89,10 @@ public class DrawView extends GLSurfaceView {
     }
 
     void startRender() {
+        arrayVertices = freeNativeBuffer(arrayVertices);
+        arrayColors = freeNativeBuffer(arrayColors);
+        arrayCamera = freeNativeBuffer(arrayCamera);
+
         viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
         viewText_.start_ = (int) SystemClock.elapsedRealtime();
@@ -93,17 +106,41 @@ public class DrawView extends GLSurfaceView {
         }
 
         queueEvent(() -> {
-            final float[] arrayVertices = initVerticesArray();
-            final float[] arrayColors = initColorsArray();
-            final float[] arrayCamera = initCameraArray();
+            System.gc();
+            System.runFinalization();
+            /*final int verticesLength = getNumberOfTriangles() * 3 * 4;
+            final long mem1 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+            final float[] arrayVertices = verticesLength > 0? new float[verticesLength] : null;
+            final long mem2 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+            final float[] arrayColors = verticesLength > 0? new float[verticesLength] : null;
+            final long mem3 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+            final float[] arrayCamera = verticesLength > 0? new float[16] : null;
+            final long mem4 = Debug.getNativeHeapAllocatedSize() / 1048576L;*/
+            arrayVertices = initVerticesArray();
+            arrayColors = initColorsArray();
+            arrayCamera = initCameraArray();
 
-            if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
+
+            if (arrayVertices != null) {
+                /*final long mem5 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+                initVerticesArray();
+                final long mem6 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+                initColorsArray();
+                final long mem7 = Debug.getNativeHeapAllocatedSize() / 1048576L;
+                initCameraArray();
+                final long mem8 = Debug.getNativeHeapAllocatedSize() / 1048576L;*/
+                /*final float[] floatsVertices = arrayVertices.asFloatBuffer().array();
+                final float[] floatsColors = arrayColors.asFloatBuffer().array();
+                final float[] floatsCamera = arrayCamera.asFloatBuffer().array();*/
+
                 renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
             }
             DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
             renderTask_.execute();
             this.setOnTouchListener(new DrawView.TouchHandler());
+            System.gc();
+            System.runFinalization();
         });
     }
 

@@ -44,10 +44,10 @@ class MainRenderer implements Renderer {
     Bitmap bitmap_ = null;
     private FloatBuffer floatBufferVerticesRaster_ = null;
     private FloatBuffer floatBufferColorsRaster_ = null;
+    private FloatBuffer floatBufferCameraRaster_ = null;
     private int shaderProgram;
     private int shaderProgramRaster;
     private float[] cameraRaster = null;
-    private FloatBuffer floatBufferCameraRaster_ = null;
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
@@ -113,8 +113,9 @@ class MainRenderer implements Renderer {
     }
 
     private Bitmap copyFrameBuffer() {
-        final int b[] = new int[realWidth_ * realHeight_];
-        final int bt[] = new int[realWidth_ * realHeight_];
+        final int sizePixels = realWidth_ * realHeight_;
+        final int b[] = new int[sizePixels];
+        final int bt[] = new int[sizePixels];
         final IntBuffer ib = IntBuffer.wrap(b);
         ib.position(0);
 
@@ -123,22 +124,22 @@ class MainRenderer implements Renderer {
 
         //remember, that OpenGL bitmap is incompatible with Android bitmap
         //and so, some correction need.
-        for (int i = 0, k = 0; i < realHeight_; i++, k++) {
+        for (int i = 0; i < realHeight_; i++) {
             for (int j = 0; j < realWidth_; j++) {
-                final int pixel = b[i * realWidth_ + j];
+                final int oldPixelId = i * realWidth_ + j;
+                final int newPixelId = (realHeight_ - i - 1) * realWidth_ + j;
+                final int pixel = b[oldPixelId];
+                final int red = pixel & 0xff;
+                final int green = (pixel >> 8) & 0xff;
                 final int blue = (pixel >> 16) & 0xff;
-                final int red = (pixel << 16) & 0x00ff0000;
-                final int pix1 = (pixel & 0xff00ff00) | red | blue;
-                bt[(realHeight_ - k - 1) * realWidth_ + j] = pix1;
+                final int alpha = (pixel >> 24) & 0xff;
+                final int newPixel = (red << 16) | (green << 8) | blue | (alpha << 24);
+                bt[newPixelId] = newPixel;
             }
         }
 
         final Bitmap bitmapAux = Bitmap.createBitmap(bt, realWidth_, realHeight_, Bitmap.Config.ARGB_8888);
         final Bitmap bitmap = Bitmap.createScaledBitmap(bitmapAux, width_, height_, true);
-        final int pixelBefore = bitmap_.getPixel(0, 0);
-        final int pixelAfter = bitmap.getPixel(0, 0);
-        Log.d("MobileRT", "pixelBefore = " + pixelBefore);
-        Log.d("MobileRT", "pixelAfter = " + pixelAfter);
         return bitmap;
     }
 
@@ -148,7 +149,8 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        final int positionAttrib = 0;
+        final int positionAttrib = GLES20.glGetAttribLocation(shaderProgram, "vertexPosition");
+        checkGLError();
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib);
@@ -157,7 +159,8 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertices.length / 4);
+        final int vertexCount = vertices.length / (Float.SIZE / Byte.SIZE);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertexCount);
         checkGLError();
 
 
@@ -309,27 +312,20 @@ class MainRenderer implements Renderer {
         checkGLError();
     }
 
-    void copyFrame(final float[] vertices, final float[] colors, final float[] camera) {
-        verticesRaster = vertices;
-        colorsRaster = colors;
-        cameraRaster = camera;
+    void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera) {
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
+        checkGLError();
 
-        final ByteBuffer bbVertices2 = ByteBuffer.allocateDirect(verticesRaster.length << 2);
-        bbVertices2.order(ByteOrder.nativeOrder());
-        floatBufferVerticesRaster_ = bbVertices2.asFloatBuffer();
-        floatBufferVerticesRaster_.put(verticesRaster);
+        bbVertices.order(ByteOrder.nativeOrder());
+        floatBufferVerticesRaster_ = bbVertices.asFloatBuffer();
         floatBufferVerticesRaster_.position(0);
 
-        final ByteBuffer bbColors = ByteBuffer.allocateDirect(colorsRaster.length << 2);
         bbColors.order(ByteOrder.nativeOrder());
         floatBufferColorsRaster_ = bbColors.asFloatBuffer();
-        floatBufferColorsRaster_.put(colorsRaster);
         floatBufferColorsRaster_.position(0);
 
-        final ByteBuffer bbCamera = ByteBuffer.allocateDirect(cameraRaster.length << 2);
         bbCamera.order(ByteOrder.nativeOrder());
         floatBufferCameraRaster_ = bbCamera.asFloatBuffer();
-        floatBufferCameraRaster_.put(cameraRaster);
         floatBufferCameraRaster_.position(0);
 
         //Load shaders
@@ -389,33 +385,24 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        final int positionAttrib = 0;
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
-        checkGLError();
-        GLES20.glEnableVertexAttribArray(positionAttrib);
-        checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
-        checkGLError();
-
-
         final float zNear = 0.1f;
         final float zFar = 1.0e+30f;
         final float ratio = Math.max(width_ / height_, height_ / width_);
         final float vfovFactor = width_ < height_ ? ratio : 1.0f;
         final float fovy = 45.0f * vfovFactor;
 
-        final float eyeX = camera[0];
-        final float eyeY = camera[1];
-        final float eyeZ = -camera[2];
-        final float dirX = camera[4];
-        final float dirY = camera[5];
-        final float dirZ = -camera[6];
+        final float eyeX = floatBufferCameraRaster_.get(0);
+        final float eyeY = floatBufferCameraRaster_.get(1);
+        final float eyeZ = -floatBufferCameraRaster_.get(2);
+        final float dirX = floatBufferCameraRaster_.get(4);
+        final float dirY = floatBufferCameraRaster_.get(5);
+        final float dirZ = -floatBufferCameraRaster_.get(6);
+        final float upX = floatBufferCameraRaster_.get(8);
+        final float upY = floatBufferCameraRaster_.get(9);
+        final float upZ = -floatBufferCameraRaster_.get(10);
         final float centerX = eyeX + dirX;
         final float centerY = eyeY + dirY;
         final float centerZ = eyeZ + dirZ;
-        final float upX = camera[8];
-        final float upY = camera[9];
-        final float upZ = camera[10];
 
         Matrix.setIdentityM(mModelMatrix, 0);
         Matrix.perspectiveM(mProjectionMatrix, 0, fovy, ratio, zNear, zFar);
@@ -437,20 +424,21 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        final int vertexCount = verticesRaster.length / 4;
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
-        checkGLError();
-
+        final int vertexCount = floatBufferVerticesRaster_.capacity() / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         checkGLError();
 
 
-        GLES20.glDisableVertexAttribArray(positionAttrib);
-        checkGLError();
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         checkGLError();
 
 
         bitmap_ = copyFrameBuffer();
+
+        floatBufferVerticesRaster_ = null;
+        floatBufferColorsRaster_ = null;
+
+        verticesRaster = null;
+        colorsRaster = null;
     }
 }

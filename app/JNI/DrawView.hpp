@@ -42,19 +42,19 @@ extern "C"
 void JNI_OnUnload(JavaVM *vm, void *reserved);
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initVerticesArray(
+jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initColorsArray(
+jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
 
 extern "C"
-jfloatArray Java_puscas_mobilertapp_DrawView_initCameraArray(
+jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject thiz
 ) noexcept;
@@ -147,5 +147,15 @@ jint Java_puscas_mobilertapp_DrawView_getNumberOfLights(
         JNIEnv * /*env*/,
         jobject /*thiz*/
 ) noexcept;
+
+extern "C"
+jint Java_puscas_mobilertapp_DrawView_getNumberOfTriangles(
+        JNIEnv * /*env*/,
+        jobject /*thiz*/
+) noexcept;
+
+extern "C"
+jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
+        JNIEnv *env, jobject thiz, jobject bufferRef) noexcept;
 
 #endif //APP_DRAWVIEW_HPP
