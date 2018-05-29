@@ -53,7 +53,7 @@ set( COMMON_FLAGS "${COMMON_FLAGS}" -fno-omit-frame-pointer -Wno-exit-time-destr
 
 set( COMMON_FLAGS_DEBUG -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer )
 
-set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections -fno-rtti )
+set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections )
 
 # Set common linker flags
 set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions )
