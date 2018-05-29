@@ -55,24 +55,48 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::MobileRT::Camera *const camera{renderer_->camera_.get()};
-
-    ::std::vector<jfloat> float_ptr{camera->position_.x, camera->position_.y, camera->position_.z,
-                                    1.0f,
-                                    camera->direction_.x, camera->direction_.y,
-                                    camera->direction_.z, 1.0f,
-                                    camera->up_.x, camera->up_.y, camera->up_.z, 1.0f,
-                                    camera->right_.x, camera->right_.y, camera->right_.z, 1.0f,
-    };
-
-    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    ::MobileRT::Camera *const camera{renderer_->camera_.get()};
+    const unsigned long arraySize{18};
+    const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
-    if (arraySize > 0) {
-        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
-        if (buffer != nullptr) {
-            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
-            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
+    float *const floatBuffer{new float[arraySize]};
+
+    if (floatBuffer != nullptr) {
+        directBuffer = env->NewDirectByteBuffer(floatBuffer, arrayBytes);
+        if (directBuffer != nullptr) {
+            int i{0};
+
+            floatBuffer[i++] = camera->position_.x;
+            floatBuffer[i++] = camera->position_.y;
+            floatBuffer[i++] = camera->position_.z;
+            floatBuffer[i++] = 1.0f;
+
+            floatBuffer[i++] = camera->direction_.x;
+            floatBuffer[i++] = camera->direction_.y;
+            floatBuffer[i++] = camera->direction_.z;
+            floatBuffer[i++] = 1.0f;
+
+            floatBuffer[i++] = camera->up_.x;
+            floatBuffer[i++] = camera->up_.y;
+            floatBuffer[i++] = camera->up_.z;
+            floatBuffer[i++] = 1.0f;
+
+            floatBuffer[i++] = camera->right_.x;
+            floatBuffer[i++] = camera->right_.y;
+            floatBuffer[i++] = camera->right_.z;
+            floatBuffer[i++] = 1.0f;
+
+            ::Components::Perspective *perspective{
+                    dynamic_cast<::Components::Perspective *>(camera)};
+            if (perspective != nullptr) {
+                const float hFov{perspective->getHFov()};
+                const float vFov{perspective->getVFov()};
+                floatBuffer[i++] = hFov;
+                floatBuffer[i++] = vFov;
+            } else {
+                floatBuffer[i++] = 45.0f;
+                floatBuffer[i++] = 45.0f;
+            }
         }
     }
     env->ExceptionClear();
@@ -86,31 +110,40 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
             renderer_->shader_->scene_.triangles_};
-
-    ::std::vector<jfloat> float_ptr{};
-    float_ptr.reserve(triangles.size() * 3 * 4);
-    for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1.0f};
-        const ::glm::vec4 &pointB{pointA.x + triangle.shape_.AB_.x,
-                                  pointA.y + triangle.shape_.AB_.y,
-                                  pointA.z + triangle.shape_.AB_.z, 1.0f};
-        const ::glm::vec4 &pointC{pointA.x + triangle.shape_.AC_.x,
-                                  pointA.y + triangle.shape_.AC_.y,
-                                  pointA.z + triangle.shape_.AC_.z, 1.0f};
-
-        float_ptr.insert(float_ptr.end(), {pointA.x, pointA.y, -pointA.z, pointA.w});
-        float_ptr.insert(float_ptr.end(), {pointB.x, pointB.y, -pointB.z, pointB.w});
-        float_ptr.insert(float_ptr.end(), {pointC.x, pointC.y, -pointC.z, pointC.w});
-    }
-
-    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    const unsigned long arraySize{triangles.size() * 3 * 4};
+    const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
     if (arraySize > 0) {
-        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
-        if (buffer != nullptr) {
-            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
-            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
+        float *const floatBuffer{new float[arraySize]};
+        if (floatBuffer != nullptr) {
+            directBuffer = env->NewDirectByteBuffer(floatBuffer, arrayBytes);
+            if (directBuffer != nullptr) {
+                int i{0};
+                for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+                    const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1.0f};
+                    const ::glm::vec4 &pointB{pointA.x + triangle.shape_.AB_.x,
+                                              pointA.y + triangle.shape_.AB_.y,
+                                              pointA.z + triangle.shape_.AB_.z, 1.0f};
+                    const ::glm::vec4 &pointC{pointA.x + triangle.shape_.AC_.x,
+                                              pointA.y + triangle.shape_.AC_.y,
+                                              pointA.z + triangle.shape_.AC_.z, 1.0f};
+
+                    floatBuffer[i++] = pointA.x;
+                    floatBuffer[i++] = pointA.y;
+                    floatBuffer[i++] = -pointA.z;
+                    floatBuffer[i++] = pointA.w;
+
+                    floatBuffer[i++] = pointB.x;
+                    floatBuffer[i++] = pointB.y;
+                    floatBuffer[i++] = -pointB.z;
+                    floatBuffer[i++] = pointB.w;
+
+                    floatBuffer[i++] = pointC.x;
+                    floatBuffer[i++] = pointC.y;
+                    floatBuffer[i++] = -pointC.z;
+                    floatBuffer[i++] = pointC.w;
+                }
+            }
         }
     }
     env->ExceptionClear();
@@ -124,41 +157,51 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
 ) noexcept {
     ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
             renderer_->shader_->scene_.triangles_};
-    ::std::vector<jfloat> float_ptr{};
-    float_ptr.reserve(triangles.size() * 3 * 4);
-    for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-        const ::glm::vec3 &kD{triangle.material_.Kd_};
-        const ::glm::vec3 &kS{triangle.material_.Ks_};
-        const ::glm::vec3 &kT{triangle.material_.Kt_};
-        const ::glm::vec3 &lE{triangle.material_.Le_};
-        ::glm::vec3 color{kD};
-
-        color = ::glm::all(::glm::greaterThan(kS, color)) ? kS : color;
-        color = ::glm::all(::glm::greaterThan(kT, color)) ? kT : color;
-        color = ::glm::all(::glm::greaterThan(lE, color)) ? lE : color;
-
-        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
-        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
-        float_ptr.insert(float_ptr.end(), {color.r, color.g, color.b, 1.0f});
-    }
-    switch (accelerator_) {
-        case ::MobileRT::Shader::BVH:
-            triangles.clear();
-            ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>{}.swap(triangles);
-            break;
-
-        default:
-            break;
-    }
-
-    const jsize arraySize{static_cast<jsize> (float_ptr.size())};
-    const jlong arrayBytes{static_cast<jlong> (float_ptr.size() * sizeof(jfloat))};
+    const unsigned long arraySize{triangles.size() * 3 * 4};
+    const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
     if (arraySize > 0) {
-        void *buffer{::operator new(static_cast<size_t>(arrayBytes))};
-        if (buffer != nullptr) {
-            directBuffer = env->NewDirectByteBuffer(buffer, arrayBytes);
-            ::std::copy(float_ptr.begin(), float_ptr.end(), static_cast<float *> (buffer));
+        float *const floatBuffer{new float[arraySize]};
+        if (floatBuffer != nullptr) {
+            directBuffer = env->NewDirectByteBuffer(floatBuffer, arrayBytes);
+            if (directBuffer != nullptr) {
+                int i{0};
+                for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+                    const ::glm::vec3 &kD{triangle.material_.Kd_};
+                    const ::glm::vec3 &kS{triangle.material_.Ks_};
+                    const ::glm::vec3 &kT{triangle.material_.Kt_};
+                    const ::glm::vec3 &lE{triangle.material_.Le_};
+                    ::glm::vec3 color{kD};
+
+                    color = ::glm::all(::glm::greaterThan(kS, color)) ? kS : color;
+                    color = ::glm::all(::glm::greaterThan(kT, color)) ? kT : color;
+                    color = ::glm::all(::glm::greaterThan(lE, color)) ? lE : color;
+
+                    floatBuffer[i++] = color.r;
+                    floatBuffer[i++] = color.g;
+                    floatBuffer[i++] = color.b;
+                    floatBuffer[i++] = 1.0f;
+
+                    floatBuffer[i++] = color.r;
+                    floatBuffer[i++] = color.g;
+                    floatBuffer[i++] = color.b;
+                    floatBuffer[i++] = 1.0f;
+
+                    floatBuffer[i++] = color.r;
+                    floatBuffer[i++] = color.g;
+                    floatBuffer[i++] = color.b;
+                    floatBuffer[i++] = 1.0f;
+                }
+            }
+            switch (accelerator_) {
+                case ::MobileRT::Shader::BVH:
+                    triangles.clear();
+                    ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>{}.swap(triangles);
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
     env->ExceptionClear();
@@ -272,14 +315,17 @@ extern "C"
         ::std::unique_ptr<MobileRT::Camera> camera{};
         ::glm::vec3 maxDist{0, 0, 0};
         switch (scene) {
-            case 0:
+            case 0: {
+                const float fovX{45.0f * hfovFactor};
+                const float fovY{45.0f * vfovFactor};
                 camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.0f, -3.4f},
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        fovX, fovY);
                 scene_ = cornellBoxScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
+            }
                 break;
 
             case 1:
@@ -292,12 +338,12 @@ extern "C"
                         ::glm::vec3 {0.0f, 1.0f, -10.0f},
                         ::glm::vec3 {0.0f, 1.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        10.0f * hfovFactor, 10.0f * vfovFactor);
+                        10.0f /* * hfovFactor*/, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<Components::Perspective>(
                   ::glm::vec3 {0.0f, 0.5f, 1.0f},
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                  60.0f * hfovFactor, 60.0f * vfovFactor);*/
+                  60.0f  * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
@@ -707,15 +753,6 @@ extern "C"
 }
 
 extern "C"
-jint Java_puscas_mobilertapp_DrawView_getNumberOfTriangles(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
-) noexcept {
-    const jint trianglesSize{static_cast<jint>(renderer_->shader_->scene_.triangles_.size())};
-    return trianglesSize;
-}
-
-extern "C"
 jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
         JNIEnv *env,
         jobject /*thiz*/,
@@ -723,7 +760,8 @@ jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
 ) noexcept {
     if (bufferRef != nullptr) {
         void *buffer{env->GetDirectBufferAddress(bufferRef)};
-        ::operator delete(buffer);
+        float *const floatBuffer{static_cast<float *>(buffer)};
+        delete[] floatBuffer;
     }
     return nullptr;
 }

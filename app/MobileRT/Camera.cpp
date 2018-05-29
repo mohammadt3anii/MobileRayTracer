@@ -68,7 +68,12 @@ void Camera::resetSampling() noexcept {
     this->block_ = 0;
 }
 
-float Camera::degToRad(const float deg) noexcept {
+float Camera::degToRad(const float deg) const noexcept {
     const float radians{(deg * ::glm::pi<float>()) / 180.0f};
     return radians;
+}
+
+float Camera::radToDeg(const float rad) const noexcept {
+    const float degrees{(rad / ::glm::pi<float>()) * 180.0f};
+    return degrees;
 }

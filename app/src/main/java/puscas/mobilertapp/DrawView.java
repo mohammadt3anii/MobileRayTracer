@@ -39,8 +39,6 @@ public class DrawView extends GLSurfaceView {
 
     static private native ByteBuffer freeNativeBuffer(ByteBuffer bb);
 
-    static private native int getNumberOfTriangles();
-
     static private native void stopRender();
 
     static native int traceTouch(final float x, final float y);
@@ -106,41 +104,18 @@ public class DrawView extends GLSurfaceView {
         }
 
         queueEvent(() -> {
-            System.gc();
-            System.runFinalization();
-            /*final int verticesLength = getNumberOfTriangles() * 3 * 4;
-            final long mem1 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-            final float[] arrayVertices = verticesLength > 0? new float[verticesLength] : null;
-            final long mem2 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-            final float[] arrayColors = verticesLength > 0? new float[verticesLength] : null;
-            final long mem3 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-            final float[] arrayCamera = verticesLength > 0? new float[16] : null;
-            final long mem4 = Debug.getNativeHeapAllocatedSize() / 1048576L;*/
             arrayVertices = initVerticesArray();
             arrayColors = initColorsArray();
             arrayCamera = initCameraArray();
 
-
-            if (arrayVertices != null) {
-                /*final long mem5 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-                initVerticesArray();
-                final long mem6 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-                initColorsArray();
-                final long mem7 = Debug.getNativeHeapAllocatedSize() / 1048576L;
-                initCameraArray();
-                final long mem8 = Debug.getNativeHeapAllocatedSize() / 1048576L;*/
-                /*final float[] floatsVertices = arrayVertices.asFloatBuffer().array();
-                final float[] floatsColors = arrayColors.asFloatBuffer().array();
-                final float[] floatsCamera = arrayCamera.asFloatBuffer().array();*/
-
+            if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
                 renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
             }
             DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
             renderTask_.execute();
             this.setOnTouchListener(new DrawView.TouchHandler());
-            System.gc();
-            System.runFinalization();
+            requestRender();
         });
     }
 

@@ -41,3 +41,13 @@ float Perspective::fastArcTan(const float value) const noexcept {
                     (value * (absValue - 1.0f)) * (0.2447f + (0.0663f * absValue))};
     return res;
 }
+
+float Perspective::getHFov() const noexcept {
+    const float degrees{radToDeg(hFov_)};
+    return degrees;
+}
+
+float Perspective::getVFov() const noexcept {
+    const float degrees{radToDeg(vFov_)};
+    return degrees;
+}

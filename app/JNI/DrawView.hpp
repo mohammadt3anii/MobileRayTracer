@@ -149,12 +149,6 @@ jint Java_puscas_mobilertapp_DrawView_getNumberOfLights(
 ) noexcept;
 
 extern "C"
-jint Java_puscas_mobilertapp_DrawView_getNumberOfTriangles(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
-) noexcept;
-
-extern "C"
 jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
         JNIEnv *env, jobject thiz, jobject bufferRef) noexcept;
 

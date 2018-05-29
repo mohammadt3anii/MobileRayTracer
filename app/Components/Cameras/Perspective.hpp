@@ -34,6 +34,10 @@ namespace Components {
 
         ::MobileRT::Ray generateRay(float u, float v,
                         float deviationU, float deviationV) const noexcept final;
+
+        float getHFov() const noexcept;
+
+        float getVFov() const noexcept;
     };
 }//namespace Components
 

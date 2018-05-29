@@ -48,7 +48,6 @@ class MainRenderer implements Renderer {
     private int shaderProgram;
     private int shaderProgramRaster;
     private float[] cameraRaster = null;
-    private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mModelMatrix = new float[16];
@@ -388,35 +387,50 @@ class MainRenderer implements Renderer {
         GLES20.glUseProgram(shaderProgramRaster);
         checkGLError();
 
-
         final float zNear = 0.1f;
         final float zFar = 1.0e+30f;
-        final float ratio = Math.max(width_ / height_, height_ / width_);
-        final float vfovFactor = width_ < height_ ? ratio : 1.0f;
-        final float fovy = 45.0f * vfovFactor;
 
         final float eyeX = floatBufferCameraRaster_.get(0);
         final float eyeY = floatBufferCameraRaster_.get(1);
         final float eyeZ = -floatBufferCameraRaster_.get(2);
+        /*final float eyeX = 460.0f;
+        final float eyeY = 500.0f;
+        final float eyeZ = 1000.0f;*/
+
         final float dirX = floatBufferCameraRaster_.get(4);
         final float dirY = floatBufferCameraRaster_.get(5);
         final float dirZ = -floatBufferCameraRaster_.get(6);
+
         final float upX = floatBufferCameraRaster_.get(8);
         final float upY = floatBufferCameraRaster_.get(9);
         final float upZ = -floatBufferCameraRaster_.get(10);
+        /*final float upX = 0.0f;
+        final float upY = 1.0f;
+        final float upZ = 0.0f;*/
+
         final float centerX = eyeX + dirX;
         final float centerY = eyeY + dirY;
         final float centerZ = eyeZ + dirZ;
+        /*final float centerX = 0.0f;
+        final float centerY = 400.0f;
+        final float centerZ = 0.0f;*/
+
+        final float ratio = Math.max((float) width_ / height_, (float) height_ / width_);
+        final float hfovFactor = width_ > height_ ? ratio : 1.0f;
+        final float vfovFactor = width_ < height_ ? ratio : 1.0f;
+        final float fovX = floatBufferCameraRaster_.get(16);
+        final float fovY = floatBufferCameraRaster_.get(17);
+        final float fov = fovY / vfovFactor;
 
         Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.perspectiveM(mProjectionMatrix, 0, fovy, ratio, zNear, zFar);
+        Matrix.perspectiveM(mProjectionMatrix, 0, fov, vfovFactor, zNear, zFar);
         Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
         final int handleModel = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformModelMatrix");
+        checkGLError();
         final int handleView = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformViewMatrix");
+        checkGLError();
         final int handleProjection = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformProjectionMatrix");
-        final int handleMVP = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformMVPMatrix");
+        checkGLError();
 
         GLES20.glUniformMatrix4fv(handleModel, 1, false, mModelMatrix, 0);
         checkGLError();
@@ -424,18 +438,10 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glUniformMatrix4fv(handleProjection, 1, false, mProjectionMatrix, 0);
         checkGLError();
-        GLES20.glUniformMatrix4fv(handleMVP, 1, false, mMVPMatrix, 0);
-        checkGLError();
-
 
         final int vertexCount = floatBufferVerticesRaster_.capacity() / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         checkGLError();
-
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-        checkGLError();
-
 
         bitmap_ = copyFrameBuffer();
 
