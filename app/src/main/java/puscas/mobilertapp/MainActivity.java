@@ -81,6 +81,7 @@ public final class MainActivity extends Activity {
         savedInstanceState.putInt("pickerSamplesPixel", pickerSamplesPixel_.getValue());
         savedInstanceState.putInt("pickerSamplesLight", pickerSamplesLight_.getValue());
         savedInstanceState.putInt("pickerSizes", pickerSizes_.getValue());
+        DrawView.finishRender();
         drawView_.freeArrays();
     }
 

@@ -513,6 +513,9 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    if (renderer_ != nullptr) {
+        renderer_->stopRender();
+    }
     if (thread_ != nullptr) {
         thread_.reset();
         thread_ = nullptr;
