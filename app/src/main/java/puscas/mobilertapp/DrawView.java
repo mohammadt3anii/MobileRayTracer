@@ -101,6 +101,10 @@ public class DrawView extends GLSurfaceView {
         viewText_.printText();
         renderTask_ = new RenderTask(viewText_, this::requestRender);
 
+        arrayVertices = initVerticesArray();
+        arrayColors = initColorsArray();
+        arrayCamera = initCameraArray();
+
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
@@ -108,10 +112,6 @@ public class DrawView extends GLSurfaceView {
         }
 
         queueEvent(() -> {
-            arrayVertices = initVerticesArray();
-            arrayColors = initColorsArray();
-            arrayCamera = initCameraArray();
-
             if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
                 renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
             }
