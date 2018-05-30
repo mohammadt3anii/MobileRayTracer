@@ -272,7 +272,9 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
-    renderer_->stopRender();
+    if (renderer_ != nullptr) {
+        renderer_->stopRender();
+    }
     working_ = State::STOPPED;
     LOG("WORKING = STOPPED");
     env->ExceptionClear();
@@ -512,7 +514,6 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
         jobject /*thiz*/
 ) noexcept {
     if (thread_ != nullptr) {
-        thread_->join();
         thread_.reset();
         thread_ = nullptr;
         {
@@ -652,6 +653,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
     if (async) {
         thread_ = ::std::make_unique<::std::thread>(lambda);
+        thread_->detach();
     } else {
         lambda();
     }

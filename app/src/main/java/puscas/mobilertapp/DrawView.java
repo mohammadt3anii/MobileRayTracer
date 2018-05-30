@@ -99,7 +99,6 @@ public class DrawView extends GLSurfaceView {
         viewText_.buttonRender_.setText(R.string.stop);
         viewText_.start_ = (int) SystemClock.elapsedRealtime();
         viewText_.printText();
-        renderTask_ = new RenderTask(viewText_, this::requestRender);
 
         arrayVertices = initVerticesArray();
         arrayColors = initColorsArray();
@@ -117,6 +116,7 @@ public class DrawView extends GLSurfaceView {
             }
             DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
 
+            renderTask_ = new RenderTask(viewText_, this::requestRender);
             renderTask_.execute();
             this.setOnTouchListener(new DrawView.TouchHandler());
             requestRender();
