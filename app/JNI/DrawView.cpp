@@ -517,11 +517,12 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
         renderer_->stopRender();
     }
     if (thread_ != nullptr) {
-        thread_.reset();
-        thread_ = nullptr;
         {
             ::std::lock_guard<::std::mutex> lock(mutex_);
             renderer_.reset();
+            renderer_ = nullptr;
+            thread_.reset();
+            thread_ = nullptr;
             LOG("DELETED RENDERER");
             renderer_ = nullptr;
         }
