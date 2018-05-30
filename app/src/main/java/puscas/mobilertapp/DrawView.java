@@ -18,9 +18,9 @@ public class DrawView extends GLSurfaceView {
     MainRenderer renderer_ = null;
     private RenderTask renderTask_ = null;
     private int numThreads_ = 0;
-    ByteBuffer arrayVertices;
-    ByteBuffer arrayColors;
-    ByteBuffer arrayCamera;
+    private ByteBuffer arrayVertices;
+    private ByteBuffer arrayColors;
+    private ByteBuffer arrayCamera;
 
     public DrawView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -52,6 +52,12 @@ public class DrawView extends GLSurfaceView {
     static private int calledByJNI_static() {
         //System.out.println("JNI1 CALLED THIS");
         return 0;
+    }
+
+    void freeArrays() {
+        arrayVertices = freeNativeBuffer(arrayVertices);
+        arrayColors = freeNativeBuffer(arrayColors);
+        arrayCamera = freeNativeBuffer(arrayCamera);
     }
 
     @Override
@@ -87,9 +93,7 @@ public class DrawView extends GLSurfaceView {
     }
 
     void startRender() {
-        arrayVertices = freeNativeBuffer(arrayVertices);
-        arrayColors = freeNativeBuffer(arrayColors);
-        arrayCamera = freeNativeBuffer(arrayCamera);
+        freeArrays();
 
         viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
