@@ -44,12 +44,11 @@ void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t n
     threads.reserve(static_cast<::std::uint32_t>(numChildren));
 
     for (::std::int32_t i{0}; i < numChildren; ++i) {
+        const unsigned long threadId{static_cast<unsigned long>(i)};
         threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
+        threads.at(threadId).detach();
     }
     renderScene(bitmap, numChildren, realWidth);
-    for (auto &thread : threads) {
-        thread.join();
-    }
     threads.clear();
 
     LOG("Resolution = ", width_, "x", height_);

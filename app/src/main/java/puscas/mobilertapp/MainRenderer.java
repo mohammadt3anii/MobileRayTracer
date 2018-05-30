@@ -29,8 +29,6 @@ class MainRenderer implements Renderer {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    private float[] verticesRaster = null;
-    private float[] colorsRaster = null;
     private FloatBuffer floatBufferVertices_ = null;
     private FloatBuffer floatBufferTexture_ = null;
     String vertexShaderCode = null;
@@ -47,7 +45,6 @@ class MainRenderer implements Renderer {
     private FloatBuffer floatBufferCameraRaster_ = null;
     private int shaderProgram;
     private int shaderProgramRaster;
-    private float[] cameraRaster = null;
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mModelMatrix = new float[16];
@@ -195,8 +192,6 @@ class MainRenderer implements Renderer {
 
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-        cameraRaster = new float[16];
-
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
 
@@ -478,8 +473,6 @@ class MainRenderer implements Renderer {
 
         floatBufferVerticesRaster_ = null;
         floatBufferColorsRaster_ = null;
-
-        verticesRaster = null;
-        colorsRaster = null;
+        floatBufferCameraRaster_ = null;
     }
 }
