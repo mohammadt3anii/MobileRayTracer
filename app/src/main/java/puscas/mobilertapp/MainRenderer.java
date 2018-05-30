@@ -161,18 +161,26 @@ class MainRenderer implements Renderer {
         GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVertices_);
         checkGLError();
 
+        final int texCoordAttrib = GLES20.glGetAttribLocation(shaderProgram, "vertexTexCoord");
+        checkGLError();
+        GLES20.glEnableVertexAttribArray(texCoordAttrib);
+        checkGLError();
+        GLES20.glVertexAttribPointer(texCoordAttrib, 2, GLES20.GL_FLOAT, false, 0, floatBufferTexture_);
+        checkGLError();
+
 
         final int vertexCount = vertices.length / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertexCount);
         checkGLError();
 
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_, GLES20.GL_UNSIGNED_BYTE, 0);
+        checkGLError();
 
         GLES20.glDisableVertexAttribArray(positionAttrib);
         checkGLError();
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        GLES20.glDisableVertexAttribArray(texCoordAttrib);
         checkGLError();
-
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_, GLES20.GL_UNSIGNED_BYTE, 0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         checkGLError();
     }
 
@@ -221,13 +229,13 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         //Create geometry and texCoords buffers
-        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(vertices.length << 2);
+        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(vertices.length * (Float.SIZE / Byte.SIZE));
         bbVertices.order(ByteOrder.nativeOrder());
         floatBufferVertices_ = bbVertices.asFloatBuffer();
         floatBufferVertices_.put(vertices);
         floatBufferVertices_.position(0);
 
-        final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length << 2);
+        final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length * (Float.SIZE / Byte.SIZE));
         byteBufferTexCoords.order(ByteOrder.nativeOrder());
         floatBufferTexture_ = byteBufferTexCoords.asFloatBuffer();
         floatBufferTexture_.put(texCoords);
@@ -344,7 +352,7 @@ class MainRenderer implements Renderer {
         shaderProgramRaster = GLES20.glCreateProgram();
         checkGLError();
 
-        final int positionAttrib2 = 2;
+        final int positionAttrib2 = 0;
         GLES20.glBindAttribLocation(shaderProgramRaster, positionAttrib2, "vertexPosition");
         checkGLError();
         GLES20.glVertexAttribPointer(positionAttrib2, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
@@ -352,7 +360,7 @@ class MainRenderer implements Renderer {
         GLES20.glEnableVertexAttribArray(positionAttrib2);
         checkGLError();
 
-        final int colorAttrib2 = 3;
+        final int colorAttrib2 = 1;
         GLES20.glBindAttribLocation(shaderProgramRaster, colorAttrib2, "vertexColor");
         checkGLError();
         GLES20.glVertexAttribPointer(colorAttrib2, 4, GLES20.GL_FLOAT, false, 0, floatBufferColorsRaster_);
@@ -439,8 +447,31 @@ class MainRenderer implements Renderer {
         GLES20.glUniformMatrix4fv(handleProjection, 1, false, mProjectionMatrix, 0);
         checkGLError();
 
+        final int positionAttrib = GLES20.glGetAttribLocation(shaderProgramRaster, "vertexPosition");
+        checkGLError();
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, positionAttrib);
+        checkGLError();
+        GLES20.glEnableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        checkGLError();
+
+        final int colorAttrib = GLES20.glGetAttribLocation(shaderProgramRaster, "vertexColor");
+        checkGLError();
+        GLES20.glEnableVertexAttribArray(colorAttrib);
+        checkGLError();
+        GLES20.glVertexAttribPointer(colorAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferColorsRaster_);
+        checkGLError();
+
         final int vertexCount = floatBufferVerticesRaster_.capacity() / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        checkGLError();
+
+        GLES20.glDisableVertexAttribArray(positionAttrib);
+        checkGLError();
+        GLES20.glDisableVertexAttribArray(colorAttrib);
+        checkGLError();
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         checkGLError();
 
         bitmap_ = copyFrameBuffer();
