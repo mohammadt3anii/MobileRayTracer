@@ -435,7 +435,7 @@ class MainRenderer implements Renderer {
         }
 
         if (sizeH > 0.0f && sizeV > 0.0f) {
-            Matrix.orthoM(mProjectionMatrix, 0, -sizeH, sizeH, -sizeV, sizeV, zNear, zFar);
+            Matrix.orthoM(mProjectionMatrix, 0, -sizeH / 2, sizeH / 2, -sizeV / 2, sizeV / 2, zNear, zFar);
         }
 
         Matrix.setLookAtM(mViewMatrix, 0,
