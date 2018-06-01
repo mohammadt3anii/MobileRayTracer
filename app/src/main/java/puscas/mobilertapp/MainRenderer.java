@@ -423,7 +423,7 @@ class MainRenderer implements Renderer {
         final float vfovFactor = width_ < height_ ? ratio : 1.0f;
         final float fovX = floatBufferCameraRaster_.get(16);
         final float fovY = floatBufferCameraRaster_.get(17);
-        final float fov = fovY / vfovFactor;
+        final float aspect = 1.0f / vfovFactor;
 
         final float sizeH = floatBufferCameraRaster_.get(18);
         final float sizeV = floatBufferCameraRaster_.get(19);
@@ -431,14 +431,17 @@ class MainRenderer implements Renderer {
         Matrix.setIdentityM(mModelMatrix, 0);
 
         if (fovX > 0.0f && fovY > 0.0f) {
-            Matrix.perspectiveM(mProjectionMatrix, 0, fov, vfovFactor, zNear, zFar);
+            Matrix.perspectiveM(mProjectionMatrix, 0, fovY, aspect, zNear, zFar);
         }
 
         if (sizeH > 0.0f && sizeV > 0.0f) {
             Matrix.orthoM(mProjectionMatrix, 0, -sizeH, sizeH, -sizeV, sizeV, zNear, zFar);
         }
 
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+        Matrix.setLookAtM(mViewMatrix, 0,
+                eyeX - 0.1f * eyeX, eyeY, eyeZ - 0.1f * eyeZ,
+                centerX - 0.1f * eyeX, centerY, centerZ - 0.1f * eyeZ,
+                upX, upY, upZ);
         final int handleModel = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformModelMatrix");
         checkGLError();
         final int handleView = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformViewMatrix");
