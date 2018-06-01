@@ -339,7 +339,9 @@ extern "C"
             }
                 break;
 
-            case 1:
+            case 1: {
+                const float sizeH{10.0f * hfovFactor};
+                const float sizeV{10.0f * vfovFactor};
                 /*camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {4.0f, 4.0f, -8.0f},
                         ::glm::vec3 {4.0f, 4.0f, 4.0f},
@@ -349,7 +351,7 @@ extern "C"
                         ::glm::vec3 {0.0f, 1.0f, -10.0f},
                         ::glm::vec3 {0.0f, 1.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        10.0f * hfovFactor, 10.0f * vfovFactor);
+                        sizeH, sizeV);
                 /*camera = ::std::make_unique<Components::Perspective>(
                   ::glm::vec3 {0.0f, 0.5f, 1.0f},
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},
@@ -357,26 +359,33 @@ extern "C"
                   60.0f  * hfovFactor, 60.0f * vfovFactor);*/
                 scene_ = spheresScene(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
+            }
                 break;
 
-            case 2:
+            case 2: {
+                const float fovX{45.0f * hfovFactor};
+                const float fovY{45.0f * vfovFactor};
                 camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.0f, -3.4f},
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        fovX, fovY);
                 scene_ = cornellBoxScene2(::std::move(scene_));
                 maxDist = ::glm::vec3 {1, 1, 1};
+            }
                 break;
 
-            case 3:
+            case 3: {
+                const float fovX{60.0f * hfovFactor};
+                const float fovY{60.0f * vfovFactor};
                 camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.5f, 1.0f},
                         ::glm::vec3 {0.0f, 0.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        60.0f * hfovFactor, 60.0f * vfovFactor);
+                        fovX, fovY);
                 scene_ = spheresScene2(::std::move(scene_));
                 maxDist = ::glm::vec3 {8, 8, 8};
+            }
                 break;
 
             default: {
@@ -395,6 +404,8 @@ extern "C"
                 objLoader.fillScene(&scene_,
                                     []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
 
+                const float fovX{45.0f * hfovFactor};
+                const float fovY{45.0f * vfovFactor};
                 //cornellbox
                 /*camera = ::std::make_unique<Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
@@ -430,17 +441,21 @@ extern "C"
                         ::glm::vec3 {460.0f, 500.0f, -1000.0f},
                         ::glm::vec3 {0.0f, 400.0f, 0.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);
+                        fovX, fovY);
 
                 //cornell spheres
                 /*camera = ::std::make_unique<::Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.7f, 3.0f},
                         ::glm::vec3 {0.0f, 0.7f, -1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
+                        fovX, fovY);*/
 
                 //teapot
-                //camera = ::std::make_unique<::Components::Perspective> (::glm::vec3 {0.0f, 30.0f, -200.0f}, ::glm::vec3 {0.0f, 30.0f, 100.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f}, 45.0f * hfovFactor, 45.0f * vfovFactor);
+                /*camera = ::std::make_unique<::Components::Perspective> (
+                         ::glm::vec3 {0.0f, 30.0f, -200.0f},
+                         ::glm::vec3 {0.0f, 30.0f, 100.0f},
+                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                         fovX, fovY);*/
                 maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;
