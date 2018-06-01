@@ -423,7 +423,7 @@ class MainRenderer implements Renderer {
         final float vfovFactor = width_ < height_ ? ratio : 1.0f;
         final float fovX = floatBufferCameraRaster_.get(16);
         final float fovY = floatBufferCameraRaster_.get(17);
-        final float aspect = 1.0f / vfovFactor;
+        final float aspect = hfovFactor > vfovFactor ? hfovFactor : 1.0f / vfovFactor;
 
         final float sizeH = floatBufferCameraRaster_.get(18);
         final float sizeV = floatBufferCameraRaster_.get(19);
