@@ -34,6 +34,10 @@ namespace Components {
                         float deviationV) const noexcept final;
 
         ::MobileRT::AABB getAABB() const noexcept final;
+
+        float getSizeH() const noexcept;
+
+        float getSizeV() const noexcept;
     };
 }//namespace Components
 

@@ -56,7 +56,7 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         jobject /*thiz*/
 ) noexcept {
     ::MobileRT::Camera *const camera{renderer_->camera_.get()};
-    const unsigned long arraySize{18};
+    const unsigned long arraySize{20};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
     float *const floatBuffer{new float[arraySize]};
@@ -88,14 +88,23 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
 
             ::Components::Perspective *perspective{
                     dynamic_cast<::Components::Perspective *>(camera)};
+            ::Components::Orthographic *orthographic{
+                    dynamic_cast<::Components::Orthographic *>(camera)};
             if (perspective != nullptr) {
                 const float hFov{perspective->getHFov()};
                 const float vFov{perspective->getVFov()};
                 floatBuffer[i++] = hFov;
                 floatBuffer[i++] = vFov;
-            } else {
-                floatBuffer[i++] = 45.0f;
-                floatBuffer[i++] = 45.0f;
+                floatBuffer[i++] = 0.0f;
+                floatBuffer[i++] = 0.0f;
+            }
+            if (orthographic != nullptr) {
+                const float sizeH{orthographic->getSizeH()};
+                const float sizeV{orthographic->getSizeV()};
+                floatBuffer[i++] = 0.0f;
+                floatBuffer[i++] = 0.0f;
+                floatBuffer[i++] = sizeH;
+                floatBuffer[i++] = sizeV;
             }
         }
     }
@@ -340,7 +349,7 @@ extern "C"
                         ::glm::vec3 {0.0f, 1.0f, -10.0f},
                         ::glm::vec3 {0.0f, 1.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        10.0f /* * hfovFactor*/, 10.0f * vfovFactor);
+                        10.0f * hfovFactor, 10.0f * vfovFactor);
                 /*camera = ::std::make_unique<Components::Perspective>(
                   ::glm::vec3 {0.0f, 0.5f, 1.0f},
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},

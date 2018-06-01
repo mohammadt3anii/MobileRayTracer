@@ -17,7 +17,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 class MainRenderer implements Renderer {
-    private final float[] vertices = {
+    private final float[] verticesTexture = {
             -1.0f, 1.0f, 0.0f, 1.0f,
             -1.0f, -1.0f, 0.0f, 1.0f,
             1.0f, -1.0f, 0.0f, 1.0f,
@@ -166,7 +166,7 @@ class MainRenderer implements Renderer {
         checkGLError();
 
 
-        final int vertexCount = vertices.length / (Float.SIZE / Byte.SIZE);
+        final int vertexCount = verticesTexture.length / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, positionAttrib, vertexCount);
         checkGLError();
 
@@ -224,10 +224,10 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         //Create geometry and texCoords buffers
-        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(vertices.length * (Float.SIZE / Byte.SIZE));
+        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(verticesTexture.length * (Float.SIZE / Byte.SIZE));
         bbVertices.order(ByteOrder.nativeOrder());
         floatBufferVertices_ = bbVertices.asFloatBuffer();
-        floatBufferVertices_.put(vertices);
+        floatBufferVertices_.put(verticesTexture);
         floatBufferVertices_.position(0);
 
         final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length * (Float.SIZE / Byte.SIZE));
@@ -425,8 +425,19 @@ class MainRenderer implements Renderer {
         final float fovY = floatBufferCameraRaster_.get(17);
         final float fov = fovY / vfovFactor;
 
+        final float sizeH = floatBufferCameraRaster_.get(18);
+        final float sizeV = floatBufferCameraRaster_.get(19);
+
         Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.perspectiveM(mProjectionMatrix, 0, fov, vfovFactor, zNear, zFar);
+
+        if (fovX > 0.0f && fovY > 0.0f) {
+            Matrix.perspectiveM(mProjectionMatrix, 0, fov, vfovFactor, zNear, zFar);
+        }
+
+        if (sizeH > 0.0f && sizeV > 0.0f) {
+            Matrix.orthoM(mProjectionMatrix, 0, -sizeH, sizeH, -sizeV, sizeV, zNear, zFar);
+        }
+
         Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
         final int handleModel = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformModelMatrix");
         checkGLError();
@@ -458,8 +469,14 @@ class MainRenderer implements Renderer {
         GLES20.glVertexAttribPointer(colorAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferColorsRaster_);
         checkGLError();
 
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        checkGLError();
+
         final int vertexCount = floatBufferVerticesRaster_.capacity() / (Float.SIZE / Byte.SIZE);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        checkGLError();
+
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         checkGLError();
 
         GLES20.glDisableVertexAttribArray(positionAttrib);

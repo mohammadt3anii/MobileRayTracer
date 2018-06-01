@@ -182,7 +182,7 @@ MobileRT::Scene spheresScene(MobileRT::Scene scene) noexcept {
                                                                                    4.0f}));*/
 
     // create diffuse Materials
-    //const ::MobileRT::Material &sandMat {::glm::vec3 {0.914f, 0.723f, 0.531f}};
+    const ::MobileRT::Material &sandMat{::glm::vec3 {0.914f, 0.723f, 0.531f}};
     const ::MobileRT::Material &redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
     /*const ::MobileRT::Material &mirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                         ::glm::vec3 {0.9f, 0.9f, 0.9f}};*/
@@ -190,11 +190,11 @@ MobileRT::Scene spheresScene(MobileRT::Scene scene) noexcept {
     // create one sphere
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {4.0f, 4.0f, 4.0f}, 4.0f}, redMat);
-    /*scene.triangles_.emplace_back (MobileRT::Triangle {
-      ::glm::vec3 {10.0f, 0.0f, 10.0f},
-      ::glm::vec3 {0.0f, 0.0f, 10.0f},
-      ::glm::vec3 {0.0f, 10.0f, 10.0f}}, sandMat);
     scene.triangles_.emplace_back (MobileRT::Triangle {
+            ::glm::vec3 {0.0f, 10.0f, 10.0f},
+            ::glm::vec3 {0.0f, 0.0f, 10.0f},
+            ::glm::vec3 {10.0f, 0.0f, 10.0f}}, sandMat);
+    /*scene.triangles_.emplace_back (MobileRT::Triangle {
       ::glm::vec3 {10.0f, 10.0f, 10.0f},
       ::glm::vec3 {10.0f, 0.0f, 10.0f},
       ::glm::vec3 {0.0f, 10.0f, 10.0f}}, greenMat);*/

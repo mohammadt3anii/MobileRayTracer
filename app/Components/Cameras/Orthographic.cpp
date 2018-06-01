@@ -40,3 +40,11 @@ AABB Orthographic::getAABB() const noexcept {
     const AABB &res{min, max};
     return res;
 }
+
+float Orthographic::getSizeH() const noexcept {
+    return sizeH_;
+}
+
+float Orthographic::getSizeV() const noexcept {
+    return sizeV_;
+}
