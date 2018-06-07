@@ -83,8 +83,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
         jint samplesPixel,
         jint samplesLight,
         jstring objFile,
-        jstring matFile,
-        jobject assetManager
+        jstring matFile
 ) noexcept;
 
 extern "C"

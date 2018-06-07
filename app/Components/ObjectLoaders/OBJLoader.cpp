@@ -38,7 +38,8 @@ bool OBJLoader::fillScene(Scene *const scene,
 
     for (const auto &shape : shapes_) {
         for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            numberTriangles += shape.mesh.num_face_vertices[f] / 3;
+            const size_t triangles{static_cast<size_t>(shape.mesh.num_face_vertices[f] / 3)};
+            numberTriangles += triangles;
         }
     }
     scene->triangles_.reserve(numberTriangles);
@@ -134,7 +135,9 @@ bool OBJLoader::fillScene(Scene *const scene,
                         e3 /= max;
                     }
                     const ::glm::vec3 &emission {e1, e2, e3};
-                    const Material &material {diffuse, specular, transmittance, m.ior, emission};
+                    const float indexRefraction{m.ior};
+                    const Material &material{diffuse, specular, transmittance, indexRefraction,
+                                             emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         const ::glm::vec3 &p1 {vx1, vy1, vz1};
                         const ::glm::vec3 &p2 {vx2, vy2, vz2};
@@ -144,6 +147,15 @@ bool OBJLoader::fillScene(Scene *const scene,
                     } else {
                         scene->triangles_.emplace_back(triangle, material);
                     }
+                } else {
+                    const ::glm::vec3 &diffuse{0.0f, 1.0f, 0.0f};
+                    const ::glm::vec3 &specular{0.0f, 0.0f, 0.0f};
+                    const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
+                    const ::glm::vec3 &transmittance{0.0f, 0.0f, 0.0f};
+                    const float indexRefraction{1.0f};
+                    const Material &material{diffuse, specular, transmittance, indexRefraction,
+                                             emission};
+                    scene->triangles_.emplace_back(triangle, material);
                 }
             }
             index_offset += fv;

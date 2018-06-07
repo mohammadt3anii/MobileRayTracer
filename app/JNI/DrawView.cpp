@@ -4,6 +4,7 @@
 
 #include "DrawView.hpp"
 #include <android/bitmap.h>
+#include <fstream>
 #include <glm/glm.hpp>
 #include <mutex>
 
@@ -217,39 +218,18 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
     return directBuffer;
 }
 
-static ::std::string
-readTextAsset(JNIEnv *const env, jobject assetManager, const char *const filename) {
-    AAssetManager *const mgr {AAssetManager_fromJava(env, assetManager)};
-    ::std::vector<char> buffer {};
-    AAsset *const asset {AAssetManager_open(mgr, filename, AASSET_MODE_STREAMING)};
-
-    //holds size of searched file
-    const off64_t length {AAsset_getLength64(asset)};
-    //keeps track of remaining bytes to read
-    off64_t remaining {AAsset_getRemainingLength64(asset)};
-    const size_t Mb {1000 * 1024}; // 1Mb is maximum chunk size for compressed assets
-    size_t currChunk {};
-    buffer.reserve(static_cast<size_t>(length));
-
-    //while we have still some data to read
-    while (remaining != 0) {
-        //set proper size for our next chunk
-        if (remaining >= static_cast<off64_t>(Mb)) {
-            currChunk = Mb;
-        } else {
-            currChunk = static_cast<size_t>(remaining);
-        }
-        ::std::vector<char> chunk(currChunk);
-        //read data chunk
-        if (AAsset_read(asset, chunk.data(), currChunk) > 0) {// returns less than 0 on error
-            //and append it to our vector
-            buffer.insert(buffer.end(), chunk.begin(), chunk.end());
-            remaining = AAsset_getRemainingLength64(asset);
-        }
+static ::std::string readFile(::std::string filePath) {
+    errno = 0;
+    const char *const path{filePath.c_str()};
+    ::std::ifstream ifstream{path};
+    ::std::string line{};
+    ::std::stringstream ss{""};
+    while (::std::getline(ifstream, line)) {
+        ss << line << '\n';
     }
-    AAsset_close(asset);
-    const ::std::string &res {buffer.begin(), buffer.end()};
-    env->ExceptionClear();
+    const char *const error{::std::strerror(errno)};
+    LOG("readFile error: ", error);
+    const ::std::string res{ss.str()};
     return res;
 }
 
@@ -301,8 +281,7 @@ extern "C"
         jint const samplesPixel,
         jint const samplesLight,
         jstring objFile,
-        jstring matFile,
-        jobject assetManager
+        jstring matFile
 ) noexcept {
     width_ = width;
     height_ = height;
@@ -392,8 +371,8 @@ extern "C"
                 jboolean isCopy {JNI_FALSE};
                 const char *const objFileName {(env)->GetStringUTFChars(objFile, &isCopy)};
                 const char *const matFileName {(env)->GetStringUTFChars(matFile, &isCopy)};
-                ::std::string obj {readTextAsset(env, assetManager, objFileName)};
-                ::std::string mat {readTextAsset(env, assetManager, matFileName)};
+                ::std::string obj{readFile(objFileName)};
+                ::std::string mat{readFile(matFileName)};
                 ::Components::OBJLoader objLoader {::std::move(obj), ::std::move(mat)};
                 env->ReleaseStringUTFChars(objFile, objFileName);
                 env->ReleaseStringUTFChars(matFile, matFileName);
@@ -406,23 +385,42 @@ extern "C"
 
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
-                //cornellbox
-                /*camera = ::std::make_unique<Components::Perspective>(
-                        ::glm::vec3 {0.0f, 0.7f, 3.0f},
-                        ::glm::vec3 {0.0f, 0.7f, -1.0f},
-                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        45.0f * hfovFactor, 45.0f * vfovFactor);*/
+                maxDist = ::glm::vec3 {1, 1, 1};
                 const ::MobileRT::Material &lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      1.0f,
                                                      ::glm::vec3 {0.9f, 0.9f, 0.9f}};
 
+                //cornellbox
+                /*camera = ::std::make_unique<Components::Perspective>(
+                        ::glm::vec3 {0.0f, 0.7f, 3.0f},
+                        ::glm::vec3 {0.0f, 0.7f, -1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        fovX, fovY);
+
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint1),
+                        ::glm::vec3 {0.5f, 1.58f, 0.5f},
+                        ::glm::vec3 {-0.5f, 1.58f, 0.5f},
+                        ::glm::vec3 {-0.5f, 1.58f, -0.5f}));
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint2),
+                        ::glm::vec3 {0.5f, 1.58f, 0.5f},
+                        ::glm::vec3 {-0.5f, 1.58f, -0.5f},
+                        ::glm::vec3 {0.5f, 1.58f, -0.5f}));*/
+                
                 //conference
                 /*scene_.lights_.emplace_back(::std::make_unique<::Components::PointLight>(
                         lightMat, ::glm::vec3 {0.0f, 1000.0f, 0.0f}));*/
                 ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                    ::std::make_unique<Components::StaticHaltonSeq>()};
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
                 scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                         lightMat,
                         ::std::move(samplerPoint1),
@@ -443,20 +441,42 @@ extern "C"
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         fovX, fovY);
 
-                //cornell spheres
-                /*camera = ::std::make_unique<::Components::Perspective>(
-                        ::glm::vec3 {0.0f, 0.7f, 3.0f},
-                        ::glm::vec3 {0.0f, 0.7f, -1.0f},
-                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
-                        fovX, fovY);*/
-
                 //teapot
                 /*camera = ::std::make_unique<::Components::Perspective> (
                          ::glm::vec3 {0.0f, 30.0f, -200.0f},
                          ::glm::vec3 {0.0f, 30.0f, 100.0f},
                          ::glm::vec3 {0.0f, 1.0f, 0.0f},
                          fovX, fovY);*/
-                maxDist = ::glm::vec3 {1, 1, 1};
+
+                //dragon
+                /*camera = ::std::make_unique<::Components::Perspective> (
+                        ::glm::vec3 {0.0f, 0.0f, -1.5f},
+                        ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        fovX, fovY);
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint1),
+                        ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                        ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                        ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                ::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {
+                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                        lightMat,
+                        ::std::move(samplerPoint2),
+                        ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                        ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                        ::glm::vec3 {-0.3f, 1.0f, 0.3f}));*/
+
+                //bedroom
+                /*camera = ::std::make_unique<::Components::Perspective> (
+                        ::glm::vec3 {0.0f, 0.0f, -2.5f},
+                        ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        fovX, fovY);*/
             }
                 break;
         }

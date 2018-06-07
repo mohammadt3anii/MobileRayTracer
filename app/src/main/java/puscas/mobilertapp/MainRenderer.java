@@ -391,14 +391,11 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         final float zNear = 0.1f;
-        final float zFar = 1.0e+30f;
+        final float zFar = 1.0e38f;
 
         final float eyeX = floatBufferCameraRaster_.get(0);
         final float eyeY = floatBufferCameraRaster_.get(1);
         final float eyeZ = -floatBufferCameraRaster_.get(2);
-        /*final float eyeX = 460.0f;
-        final float eyeY = 500.0f;
-        final float eyeZ = 1000.0f;*/
 
         final float dirX = floatBufferCameraRaster_.get(4);
         final float dirY = floatBufferCameraRaster_.get(5);
@@ -407,23 +404,19 @@ class MainRenderer implements Renderer {
         final float upX = floatBufferCameraRaster_.get(8);
         final float upY = floatBufferCameraRaster_.get(9);
         final float upZ = -floatBufferCameraRaster_.get(10);
-        /*final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;*/
 
         final float centerX = eyeX + dirX;
         final float centerY = eyeY + dirY;
         final float centerZ = eyeZ + dirZ;
-        /*final float centerX = 0.0f;
-        final float centerY = 400.0f;
-        final float centerZ = 0.0f;*/
 
         final float ratio = Math.max((float) width_ / height_, (float) height_ / width_);
         final float hfovFactor = width_ > height_ ? ratio : 1.0f;
         final float vfovFactor = width_ < height_ ? ratio : 1.0f;
         final float fovX = floatBufferCameraRaster_.get(16);
-        final float fovY = floatBufferCameraRaster_.get(17) - 2.98f;
-        final float aspect = hfovFactor > vfovFactor ? hfovFactor : 1.0f / vfovFactor;
+        float fovY = floatBufferCameraRaster_.get(17);
+        fovY *= 0.918f;
+        float aspect = hfovFactor > vfovFactor ? hfovFactor : 1.0f / vfovFactor;
+        //aspect *= 0.9f;
 
         final float sizeH = floatBufferCameraRaster_.get(18);
         final float sizeV = floatBufferCameraRaster_.get(19);

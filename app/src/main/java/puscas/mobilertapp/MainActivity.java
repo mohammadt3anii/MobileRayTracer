@@ -1,21 +1,30 @@
 package puscas.mobilertapp;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -52,6 +61,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSizes_;
     private String objText_;
     private String matText_;
+    private String obj_;
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -71,16 +81,124 @@ public final class MainActivity extends Activity {
                 Runtime.getRuntime().availableProcessors();
     }
 
+    private void startStopRender() {
+        final int scene = pickerScene_.getValue();
+        final int shader = pickerShader_.getValue();
+        final int threads = pickerThreads_.getValue();
+        final int accelerator = pickerAccelerator_.getValue();
+        final int samplesPixel = Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
+                [pickerSamplesPixel_.getValue() - 1]);
+        final int samplesLight = Integer.parseInt(pickerSamplesLight_.getDisplayedValues()
+                [pickerSamplesLight_.getValue() - 1]);
+        final String strResolution = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
+        final int width = Integer.parseInt(strResolution.substring(0, strResolution.indexOf('x')));
+        final int height = Integer.parseInt(strResolution.substring(strResolution.indexOf('x') + 1, strResolution.length()));
+        final String strScene = pickerScene_.getDisplayedValues()[pickerScene_.getValue()];
+        objText_ = obj_ + ".obj";
+        matText_ = obj_ + ".mtl";
+
+        switch (ViewText.isWorking()) {
+            case 0:
+            case 2:
+            case 3://if ray-tracer is idle
+                drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText_, matText_);
+                drawView_.startRender();
+                break;
+
+            default://if ray-tracer is busy
+                this.drawView_.stopDrawing();
+                break;
+        }
+    }
+
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        drawView_.onDestroy();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            final Uri uri = data.getData();
+            final String sdCardDir = Environment.getExternalStorageDirectory() + "/";
+            String filePath = uri.getEncodedPath();
+            filePath = filePath.replace("%2F", "/");
+            filePath = filePath.replace("%3A", "/");
+            filePath = filePath.replace("/document/primary/", sdCardDir);
+
+            final int lastIndex = filePath.lastIndexOf('.');
+            obj_ = filePath.substring(0, lastIndex);
+        } catch (final NullPointerException e) {
+            Log.e("MobileRT", e.getMessage());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        startStopRender();
+    }
+
+    private void showFileChooser() {
+        final int FILE_SELECT_CODE = 1;
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            final Intent intentChooseFile = Intent.createChooser(intent, "Select a File to Upload");
+            startActivityForResult(intentChooseFile, FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean CheckStoragePermission() {
+        final int PERMISSION_STORAGE = 1;
+        final int permissionCheckRead = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheckRead != PackageManager.PERMISSION_GRANTED) {
+            final String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_STORAGE);
+            return false;
+        } else
+            return true;
+    }
+
+    @Override
+    public void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int scene = savedInstanceState.getInt("pickerScene");
+        final int shader = savedInstanceState.getInt("pickerShader");
+        final int threads = savedInstanceState.getInt("pickerThreads");
+        final int accelerator = savedInstanceState.getInt("pickerAccelerator");
+        final int samplesPixel = savedInstanceState.getInt("pickerSamplesPixel");
+        final int samplesLight = savedInstanceState.getInt("pickerSamplesLight");
+        final int sizes = savedInstanceState.getInt("pickerSizes");
+        pickerScene_.setValue(scene);
+        pickerShader_.setValue(shader);
+        pickerThreads_.setValue(threads);
+        pickerAccelerator_.setValue(accelerator);
+        pickerSamplesPixel_.setValue(samplesPixel);
+        pickerSamplesLight_.setValue(samplesLight);
+        pickerSizes_.setValue(sizes);
+    }
+
     @Override
     public void onSaveInstanceState(final Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt("pickerScene", pickerScene_.getValue());
-        savedInstanceState.putInt("pickerShader", pickerShader_.getValue());
-        savedInstanceState.putInt("pickerThreads", pickerThreads_.getValue());
-        savedInstanceState.putInt("pickerAccelerator", pickerAccelerator_.getValue());
-        savedInstanceState.putInt("pickerSamplesPixel", pickerSamplesPixel_.getValue());
-        savedInstanceState.putInt("pickerSamplesLight", pickerSamplesLight_.getValue());
-        savedInstanceState.putInt("pickerSizes", pickerSizes_.getValue());
+        final int scene = pickerScene_.getValue();
+        final int shader = pickerShader_.getValue();
+        final int threads = pickerThreads_.getValue();
+        final int accelerator = pickerAccelerator_.getValue();
+        final int samplesPixel = pickerSamplesPixel_.getValue();
+        final int samplesLight = pickerSamplesLight_.getValue();
+        final int sizes = pickerSizes_.getValue();
+        savedInstanceState.putInt("pickerScene", scene);
+        savedInstanceState.putInt("pickerShader", shader);
+        savedInstanceState.putInt("pickerThreads", threads);
+        savedInstanceState.putInt("pickerAccelerator", accelerator);
+        savedInstanceState.putInt("pickerSamplesPixel", samplesPixel);
+        savedInstanceState.putInt("pickerSamplesLight", samplesLight);
+        savedInstanceState.putInt("pickerSizes", sizes);
         DrawView.finishRender();
         drawView_.freeArrays();
     }
@@ -141,7 +259,8 @@ public final class MainActivity extends Activity {
         final int[] num_config = new int[1];
         egl.eglChooseConfig(display, configAttribs, configs, 10, num_config);
         egl.eglTerminate(display);
-        return num_config[0] > 0;
+        final boolean res = num_config[0] > 0;
+        return res;
     }
 
     @Override
@@ -178,6 +297,9 @@ public final class MainActivity extends Activity {
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2 && checkGL20Support()) {
             drawView_ = findViewById(R.id.drawLayout);
+            //drawView_ = new DrawView(this);
+            //setContentView(drawView_);
+            //setContentView(R.layout.activity_main);
             if (drawView_ == null) {
                 Log.e("DrawView", "DrawView is NULL !!!");
                 System.exit(0);
@@ -201,6 +323,22 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.fragmentShaderCodeRaster = fragmentShaderRaster;
             drawView_.setVisibility(View.VISIBLE);
 
+            /*if (supportES2 && checkGL20Support()) {
+                //View view = GLSurfaceView.inflate(this, R.layout.activity_main, null);
+                //drawView_ = new DrawView(this);
+                drawView_.setVisibility(View.GONE);
+                drawView_.setEGLContextClientVersion(2);
+                DrawView myLayout = findViewById(R.id.drawLayout);
+                final MainRenderer renderer2 = new MainRenderer();
+                drawView_.clearFocus();
+                drawView_.clearAnimation();
+                drawView_.setVisibility(View.INVISIBLE);
+                drawView_.destroyDrawingCache();
+                drawView_.renderer_ = renderer;
+                drawView_.setRenderer(renderer);
+                drawView_.setVisibility(View.VISIBLE);
+            }*/
+
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
             if (drawView_.viewText_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
@@ -216,6 +354,7 @@ public final class MainActivity extends Activity {
                 System.exit(0);
             }
             drawView_.setView(textView);
+            drawView_.setPreserveEGLContextOnPause(true);
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
             System.exit(0);
@@ -364,46 +503,16 @@ public final class MainActivity extends Activity {
     }
 
     public void startRender(final View view) {
-        switch (ViewText.isWorking()) {
-            case 0:
-            case 2:
-            case 3://if ray-tracer is idle
-                if (pickerScene_.getDisplayedValues()[pickerScene_.getValue()].equals("OBJ")) {
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Sphere";
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Water";
-                    //final String obj = "WavefrontOBJs/CornellBox/CornellBox-Glossy";
-                    //final String obj = "WavefrontOBJs/teapot/teapot";
-                    final String obj = "WavefrontOBJs/conference/conference";
-                    objText_ = obj + ".obj";
-                    matText_ = obj + ".mtl";
-                }
-                final String str = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
-                final int width = Integer.parseInt(str.substring(0, str.indexOf('x')));
-                final int height = Integer.parseInt(str.substring(str.indexOf('x') + 1, str.length()));
-                drawView_.createScene(
-                    pickerScene_.getValue(),
-                    pickerShader_.getValue(),
-                    pickerThreads_.getValue(),
-                    pickerAccelerator_.getValue(),
-                    Integer.parseInt(pickerSamplesPixel_.getDisplayedValues()
-                        [pickerSamplesPixel_.getValue() - 1]
-                    ),
-                    Integer.parseInt(pickerSamplesLight_.getDisplayedValues()
-                        [pickerSamplesLight_.getValue() - 1]
-                    ),
-                    width,
-                    height,
-                    objText_,
-                    matText_,
-                    getAssets()
-                );
-                drawView_.startRender();
-                break;
-
-            default://if ray-tracer is busy
-                this.drawView_.stopDrawing();
-                break;
+        final int scene = pickerScene_.getValue();
+        final int isWorking = ViewText.isWorking();
+        if (scene >= 4 && isWorking != 1) {
+            final boolean permissionToReadFile = CheckStoragePermission();
+            if (permissionToReadFile) {
+                showFileChooser();
+            }
+            return;
         }
+        startStopRender();
     }
 
     private static final class CpuFilter implements FileFilter {
