@@ -59,9 +59,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
-    private String objText_;
-    private String matText_;
-    private String obj_;
+    private String objFile_;
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -94,14 +92,14 @@ public final class MainActivity extends Activity {
         final int width = Integer.parseInt(strResolution.substring(0, strResolution.indexOf('x')));
         final int height = Integer.parseInt(strResolution.substring(strResolution.indexOf('x') + 1, strResolution.length()));
         final String strScene = pickerScene_.getDisplayedValues()[pickerScene_.getValue()];
-        objText_ = obj_ + ".obj";
-        matText_ = obj_ + ".mtl";
+        final String objText = objFile_ + ".obj";
+        final String matText = objFile_ + ".mtl";
 
         switch (ViewText.isWorking()) {
             case 0:
             case 2:
             case 3://if ray-tracer is idle
-                drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText_, matText_);
+                drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText, matText);
                 drawView_.startRender();
                 break;
 
@@ -121,21 +119,21 @@ public final class MainActivity extends Activity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
             final Uri uri = data.getData();
             final String sdCardDir = Environment.getExternalStorageDirectory() + "/";
-            String filePath = uri.getEncodedPath();
-            filePath = filePath.replace("%2F", "/");
-            filePath = filePath.replace("%3A", "/");
-            filePath = filePath.replace("/document/primary/", sdCardDir);
+            if (uri != null) {
+                String filePath = uri.getEncodedPath();
+                filePath = filePath.replace("%2F", "/");
+                filePath = filePath.replace("%3A", "/");
+                filePath = filePath.replace("/document/primary/", sdCardDir);
 
-            final int lastIndex = filePath.lastIndexOf('.');
-            obj_ = filePath.substring(0, lastIndex);
-        } catch (final NullPointerException e) {
-            Log.e("MobileRT", e.getMessage());
+                final int lastIndex = filePath.lastIndexOf('.');
+                objFile_ = filePath.substring(0, lastIndex);
+                startStopRender();
+            }
         }
-        super.onActivityResult(requestCode, resultCode, data);
-        startStopRender();
     }
 
     private void showFileChooser() {
@@ -146,6 +144,8 @@ public final class MainActivity extends Activity {
         try {
             final Intent intentChooseFile = Intent.createChooser(intent, "Select a File to Upload");
             startActivityForResult(intentChooseFile, FILE_SELECT_CODE);
+            //objFile_ = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/conference/conference";
+            //startStopRender();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
         }

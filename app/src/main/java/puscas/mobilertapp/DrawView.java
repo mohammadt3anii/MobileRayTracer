@@ -189,7 +189,8 @@ public class DrawView extends GLSurfaceView {
                 DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
                 renderTask_ = new RenderTask(viewText_, this::requestRender);
                 renderTask_.execute();
-                this.setOnTouchListener(new DrawView.TouchHandler());
+                final DrawView.TouchHandler touchHandler = new DrawView.TouchHandler();
+                this.setOnTouchListener(touchHandler);
                 requestRender();
             });
         }, 100);

@@ -68,24 +68,14 @@ namespace MobileRT {
     template<typename T>
     BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
         if (primitives.empty()) {
-            boxes_.emplace_back(BVHNode {});
+            BVHNode bvhNode{};
+            boxes_.emplace_back(bvhNode);
             return;
         }
         primitives_ = primitives;
-        const ::std::uint32_t numberPrimitives {
-            static_cast<::std::uint32_t>(primitives.size())};
-        ::std::uint32_t maxNodes {1};
-        while (maxNodes * maxLeafSize < numberPrimitives) {
-            maxNodes *= 2;
-        }
-        const ::std::uint32_t maxNodes1 {numberPrimitives * 2 - 1};
-        const ::std::uint32_t maxNodes2 {maxNodes * 2 - 1};
-
-        LOG("maxNodes1 = ", maxNodes1);
-        LOG("maxNodes2 = ", maxNodes2);
-
-        boxes_.resize(maxNodes2);
-
+        const ::std::uint32_t numberPrimitives{static_cast<::std::uint32_t>(primitives.size())};
+        const ::std::uint32_t maxNodes{numberPrimitives * 2 - 1};
+        boxes_.resize(maxNodes);
         build();
     }
 
