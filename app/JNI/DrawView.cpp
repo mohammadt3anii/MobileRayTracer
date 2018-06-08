@@ -619,6 +619,32 @@ extern "C"
                             fovX, fovY);
                 }
 
+                //Porsche
+                if (::std::strstr(objFileName, "Porsche") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-1.0f, 1.0f, 1.0f},
+                            ::glm::vec3 {1.0f, 1.0f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.0f, 1.0f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-1.0f, 1.0f, 1.0f},
+                            ::glm::vec3 {-1.0f, 1.0f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.0f, -1.0f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {-4.0f, 0.0f, -2.5f},
+                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
                 env->ReleaseStringUTFChars(objFile, objFileName);
                 env->ReleaseStringUTFChars(matFile, matFileName);
             }
