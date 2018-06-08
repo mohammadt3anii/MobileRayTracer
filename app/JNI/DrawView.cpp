@@ -448,6 +448,22 @@ extern "C"
                             ::glm::vec3 {0.0f, 30.0f, 100.0f},
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-30.0f, 100.0f, -30.0f},
+                            ::glm::vec3 {30.0f, 100.0f, -30.0f},
+                            ::glm::vec3 {30.0f, 100.0f, 30.0f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-30.0f, 100.0f, -30.0f},
+                            ::glm::vec3 {30.0f, 100.0f, 30.0f},
+                            ::glm::vec3 {-30.0f, 100.0f, 30.0f}));
                 }
 
                 //dragon
@@ -477,6 +493,125 @@ extern "C"
 
                 //bedroom
                 if (::std::strstr(objFileName, "bedroom") != nullptr) {
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {0.0f, 0.0f, -2.5f},
+                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                            ::glm::vec3 {-0.3f, 1.0f, 0.3f}));
+                }
+
+                //breakfast_room
+                if (::std::strstr(objFileName, "breakfast_room")) {
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {0.0f, 0.0f, -5.0f},
+                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                            ::glm::vec3 {-0.3f, 1.0f, 0.3f}));
+                }
+
+                //buddha
+                if (::std::strstr(objFileName, "buddha") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                            ::glm::vec3 {-0.3f, 1.0f, 0.3f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {0.0f, 0.0f, -2.5f},
+                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
+                //erato
+                if (::std::strstr(objFileName, "erato") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                            ::glm::vec3 {-0.3f, 1.0f, 0.3f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {0.0f, 0.0f, -2.5f},
+                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
+                //gallery
+                if (::std::strstr(objFileName, "gallery") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.3f, 1.0f, -0.3f},
+                            ::glm::vec3 {0.3f, 1.0f, 0.3f},
+                            ::glm::vec3 {-0.3f, 1.0f, 0.3f}));
+
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {0.0f, 0.0f, -2.5f},
                             ::glm::vec3 {0.0f, 0.0f, 0.0f},
