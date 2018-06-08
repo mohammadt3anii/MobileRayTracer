@@ -22,5 +22,4 @@
 **/*.so
 **/*.dat
 **/node_modules/**
-**/app/src/main/assets/WavefrontOBJs/**
 **/WavefrontOBJs/**

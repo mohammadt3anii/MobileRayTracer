@@ -6,9 +6,10 @@
 
 ### Main tasks
 
+* Use library to read texture images
+* Implement loading of textures
 * Rewrite code in a data oriented design
 * Rewrite data structures in order to take advantage of **cache spatial / temporal locality**
-* Implement loading of textures
 
 ### Possible Optimizing tasks
 

@@ -639,7 +639,7 @@ extern "C"
                             ::glm::vec3 {1.0f, 1.0f, -1.0f}));
 
                     camera = ::std::make_unique<::Components::Perspective>(
-                            ::glm::vec3 {-4.0f, 0.0f, -2.5f},
+                            ::glm::vec3 {-4.0f, 2.0f, -2.5f},
                             ::glm::vec3 {0.0f, 0.0f, 0.0f},
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);

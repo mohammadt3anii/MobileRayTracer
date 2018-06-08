@@ -2,6 +2,7 @@
 // Created by puscas on 30/07/17.
 //
 
+#include <tinyobjloader/tiny_obj_loader.h>
 #include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Lights/AreaLight.hpp"
 
@@ -60,6 +61,19 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::tinyobj::real_t vz1{
                         attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
 
+                const ::tinyobj::real_t red {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 0]};
+                const ::tinyobj::real_t green {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 1]};
+                const ::tinyobj::real_t blue {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
+
+                /*::tinyobj::real_t tx {0};
+                ::tinyobj::real_t ty {0};
+                if (!attrib_.texcoords.empty()) {
+                    tx = attrib_.texcoords[2 * static_cast<size_t> (idx1.texcoord_index) + 0];
+                    ty = attrib_.texcoords[2 * static_cast<size_t> (idx1.texcoord_index) + 1];
+                    LOG(tx, ty);
+                }*/
+
+
                 const ::tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
                 const ::tinyobj::real_t vx2{
                         attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 0]};
@@ -107,12 +121,12 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const ::glm::vec3 &normal3 {nx3, ny3, nz3};
                     normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
                 }
-                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, normal};
+                const ::MobileRT::Triangle &triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
                 const ::std::int32_t materialID{shape.mesh.material_ids[f]};
                 if (materialID >= 0) {
-                    const ::tinyobj::material_t m(materials_[static_cast<size_t> (materialID)]);
+                    const ::tinyobj::material_t &m {materials_[static_cast<size_t> (materialID)]};
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};
@@ -148,7 +162,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         scene->triangles_.emplace_back(triangle, material);
                     }
                 } else {
-                    const ::glm::vec3 &diffuse{0.0f, 1.0f, 0.0f};
+                    const ::glm::vec3 &diffuse{red, green, blue};
                     const ::glm::vec3 &specular{0.0f, 0.0f, 0.0f};
                     const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
                     const ::glm::vec3 &transmittance{0.0f, 0.0f, 0.0f};
