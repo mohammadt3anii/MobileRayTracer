@@ -19,7 +19,7 @@ namespace Components {
         ::std::vector<::tinyobj::material_t> materials_ {::std::vector<::tinyobj::material_t>()};
 
     public:
-        explicit OBJLoader(::std::string &&obj, ::std::string &&materials) noexcept;
+        explicit OBJLoader(const ::std::string &obj, const ::std::string &materials) noexcept;
 
         OBJLoader(const OBJLoader &objLoader) noexcept = delete;
 
@@ -31,7 +31,7 @@ namespace Components {
 
         OBJLoader &operator=(OBJLoader &&objLoader) noexcept = delete;
 
-        void process() noexcept final;
+        void process(JNIEnv *jniEnv) noexcept final;
 
         bool fillScene(::MobileRT::Scene *scene,
                        ::std::function<::std::unique_ptr<::MobileRT::Sampler>()> lambda) noexcept final;

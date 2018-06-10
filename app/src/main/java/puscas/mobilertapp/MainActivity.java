@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -137,15 +138,36 @@ public final class MainActivity extends Activity {
     }
 
     private void showFileChooser() {
-        final int FILE_SELECT_CODE = 1;
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             final Intent intentChooseFile = Intent.createChooser(intent, "Select a File to Upload");
-            startActivityForResult(intentChooseFile, FILE_SELECT_CODE);
+            //startActivityForResult(intentChooseFile, 1);
+
             //objFile_ = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/conference/conference";
-            //startStopRender();
+            //objFile_ = "/storage/extSdCard/WavefrontOBJs/conference/conference";
+            //objFile_ = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/buddha/buddha";
+            objFile_ = "/storage/extSdCard/WavefrontOBJs/buddha/buddha";
+
+
+            final long allocatedHeap = Debug.getNativeHeapAllocatedSize() / 1048576L;
+            final long freeHeap = Debug.getNativeHeapFreeSize() / 1048576L;
+            final long sizeHeap = Debug.getNativeHeapSize() / 1048576L;
+
+            final ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            activityManager.getMemoryInfo(memoryInfo);
+            final long availMem = memoryInfo.availMem / 1048576L;
+            final long totalMem = memoryInfo.totalMem / 1048576L;
+            final long threshold = memoryInfo.threshold / 1048576L;
+
+            final Runtime runtime = Runtime.getRuntime();
+            final long freeMem2 = runtime.freeMemory() / 1048576L;
+            final long maxMem2 = runtime.maxMemory() / 1048576L;
+            final long totalMem2 = runtime.totalMemory() / 1048576L;
+
+            startStopRender();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
         }

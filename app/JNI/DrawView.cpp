@@ -20,6 +20,29 @@ static ::std::int32_t timeFrame_{0};
 static ::std::int32_t numberOfLights_{0};
 static ::std::int32_t accelerator_{0};
 
+long long getNativeHeapAllocatedSize(JNIEnv *const env) {
+    const jclass clazz {env->FindClass("android/os/Debug")};
+    if (clazz) {
+        const jmethodID mid {env->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
+        if (mid) {
+            return env->CallStaticLongMethod(clazz, mid);
+        }
+    }
+    return -1L;
+}
+
+long long getNativeHeapSize(JNIEnv *const env) {
+    const jclass clazz {env->FindClass("android/os/Debug")};
+    if (clazz) {
+        const jmethodID mid {env->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
+        if (mid) {
+            return env->CallStaticLongMethod(clazz, mid);
+        }
+    }
+    return -1L;
+}
+
+
 extern "C"
 ::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
     LOG("JNI_OnLoad");
@@ -218,19 +241,25 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
     return directBuffer;
 }
 
-static ::std::string readFile(::std::string filePath) {
+static ::std::string readFile(const ::std::string &filePath) noexcept {
     errno = 0;
     const char *const path{filePath.c_str()};
     ::std::ifstream ifstream{path};
+    ifstream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::std::string line{};
     ::std::stringstream ss{""};
+    ss.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
+    errno = 0;
     while (::std::getline(ifstream, line)) {
         ss << line << '\n';
     }
-    const char *const error{::std::strerror(errno)};
-    LOG("readFile error: ", error);
-    const ::std::string res{ss.str()};
-    return res;
+    if (errno) {
+        const char *const error{::std::strerror(errno)};
+        LOG("readFile filePath: ", filePath);
+        LOG("readFile error: ", error);
+        errno = 0;
+    }
+    return ss.str();
 }
 
 static void FPS() noexcept {
@@ -280,19 +309,21 @@ extern "C"
         jint const accelerator,
         jint const samplesPixel,
         jint const samplesLight,
-        jstring objFile,
-        jstring matFile
+        jstring localObjFile,
+        jstring localMatFile
 ) noexcept {
     width_ = width;
     height_ = height;
     accelerator_ = accelerator;
     LOG("INITIALIZE");
+    const jstring globalObjFile {static_cast<jstring>(env->NewGlobalRef(localObjFile))};
+    const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
 
 
     ::std::int32_t res{
-            [=]() noexcept -> ::std::int32_t {
+            [&]() noexcept -> ::std::int32_t {
         {
-            ::std::lock_guard<::std::mutex> lock(mutex_);
+            const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_ = nullptr;
         }
         const float ratio {
@@ -369,12 +400,29 @@ extern "C"
 
             default: {
                 jboolean isCopy {JNI_FALSE};
-                const char *const objFileName {(env)->GetStringUTFChars(objFile, &isCopy)};
-                const char *const matFileName {(env)->GetStringUTFChars(matFile, &isCopy)};
-                ::std::string obj{readFile(objFileName)};
-                ::std::string mat{readFile(matFileName)};
-                ::Components::OBJLoader objLoader {::std::move(obj), ::std::move(mat)};
-                objLoader.process();
+                const char *const objFileName {(env)->GetStringUTFChars(globalObjFile, &isCopy)};
+                const char *const matFileName {(env)->GetStringUTFChars(globalMatFile, &isCopy)};
+
+                {
+                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
+                    const long long heapSize{getNativeHeapSize(env) / 1048576};
+                    LOG(allocatedSize, heapSize);
+                }
+                const ::std::string &obj{readFile(objFileName)};
+                {
+                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
+                    const long long heapSize{getNativeHeapSize(env) / 1048576};
+                    LOG(allocatedSize, heapSize);
+                }
+                const ::std::string &mat{readFile(matFileName)};
+                {
+                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
+                    const long long heapSize{getNativeHeapSize(env) / 1048576};
+                    LOG(allocatedSize, heapSize);
+                }
+
+                ::Components::OBJLoader objLoader {obj, mat};
+                objLoader.process(env);
                 if (!objLoader.isProcessed()) {
                     exit(0);
                 }
@@ -645,8 +693,8 @@ extern "C"
                             fovX, fovY);
                 }
 
-                env->ReleaseStringUTFChars(objFile, objFileName);
-                env->ReleaseStringUTFChars(matFile, matFileName);
+                env->ReleaseStringUTFChars(globalObjFile, objFileName);
+                env->ReleaseStringUTFChars(globalMatFile, matFileName);
             }
                 break;
         }
@@ -703,7 +751,7 @@ extern "C"
                 numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
                 const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
-            ::std::lock_guard<::std::mutex> lock(mutex_);
+            const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                     ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                     static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
@@ -732,7 +780,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
     }
     if (thread_ != nullptr) {
         {
-            ::std::lock_guard<::std::mutex> lock(mutex_);
+            const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_.reset();
             renderer_ = nullptr;
             thread_.reset();
@@ -765,7 +813,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     assert(drawViewMethodId != nullptr);
     {
         const ::std::int32_t result {env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
-        static_cast<void> (result);
+        assert(result == JNI_OK);
     }
 
     drawViewMethodId = env->GetMethodID(globalDrawViewClass, "calledByJNI", "()I");
@@ -774,13 +822,11 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
     {
         const ::std::int32_t result {env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId)};
         assert(result == JNI_OK);
-        static_cast<void> (result);
     }
 
     {
         const ::std::int32_t result {env->CallIntMethod(resultObj, drawViewMethodId)};
         assert(result == JNI_OK);
-        static_cast<void> (result);
     }
 
     working_ = State::BUSY;
@@ -797,7 +843,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         {
             const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
             assert(result == JNI_OK);
-            static_cast<void> (result);
         }
         const ::std::int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
 
@@ -832,7 +877,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             LOG("STARTING RENDERING");
             LOG("nThreads = ", nThreads);
             {
-                ::std::lock_guard<::std::mutex> lock(mutex_);
+                const ::std::lock_guard<::std::mutex> lock {mutex_};
                 if (renderer_ != nullptr) {
                     renderer_->renderFrame(dstPixels, nThreads, stride);
                 }
@@ -941,7 +986,7 @@ extern "C"
 ) noexcept {
     ::std::int32_t res{0};
     /*{
-        ::std::lock_guard<::std::mutex> lock(mutex_);
+        const ::std::lock_guard<::std::mutex> lock {mutex_};
         if (renderer_ != nullptr) {
             res = renderer_->getSample();
         }

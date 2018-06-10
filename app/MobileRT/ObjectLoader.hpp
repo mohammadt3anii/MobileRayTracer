@@ -8,6 +8,7 @@
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Scene.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
+#include <jni.h>
 #include <memory>
 #include <string>
 
@@ -29,7 +30,7 @@ namespace MobileRT {
 
         ObjectLoader &operator=(ObjectLoader &&objectLoader) noexcept = delete;
 
-        virtual void process() noexcept = 0;
+        virtual void process(JNIEnv *jniEnv) noexcept = 0;
 
         bool isProcessed() const noexcept;
 

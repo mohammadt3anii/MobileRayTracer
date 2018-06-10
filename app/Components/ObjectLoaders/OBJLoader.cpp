@@ -5,24 +5,90 @@
 #include <tinyobjloader/tiny_obj_loader.h>
 #include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Lights/AreaLight.hpp"
+#include "JNI/DrawView.hpp"
 
 using ::Components::AreaLight;
 using ::Components::OBJLoader;
 using ::MobileRT::Material;
 using ::MobileRT::Scene;
 
-OBJLoader::OBJLoader(::std::string &&obj, ::std::string &&materials) noexcept :
+OBJLoader::OBJLoader(const ::std::string &obj, const ::std::string &materials) noexcept :
         objText_{obj},
         materialsText_{materials} {
 }
 
-void OBJLoader::process() noexcept {
-    ::std::istringstream objStream {objText_};
-    ::std::istringstream matStream {materialsText_};
+void OBJLoader::process(JNIEnv *jniEnv) noexcept {
+    ::std::istringstream objStream {""};
+    //objStream.exceptions(::std::istringstream::goodbit | ::std::istringstream::badbit | ::std::istringstream::failbit | ::std::istringstream::eofbit);
+    try {
+        {
+            const jclass clazz {jniEnv->FindClass("android/os/Debug")};
+            if (clazz) {
+                const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
+                const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
+                if (mid1 && mid2) {
+                    const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
+                    const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
+                    const long long allocatedSize{l1 / 1048576};
+                    const long long heapSize{l2 / 1048576};
+                    LOG(allocatedSize, heapSize);
+                }
+            }
+        }
+        objStream.str(objText_);
+        {
+            const jclass clazz {jniEnv->FindClass("android/os/Debug")};
+            if (clazz) {
+                const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
+                const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
+                if (mid1 && mid2) {
+                    const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
+                    const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
+                    const long long allocatedSize{l1 / 1048576};
+                    const long long heapSize{l2 / 1048576};
+                    LOG(allocatedSize, heapSize);
+                }
+            }
+        }
+    } catch (...) {
+        LOG("Exception");
+    }
+    ::std::istringstream matStream {""};
+    //matStream.exceptions(::std::istringstream::goodbit | ::std::istringstream::badbit | ::std::istringstream::failbit | ::std::istringstream::eofbit);
+    {
+        const jclass clazz {jniEnv->FindClass("android/os/Debug")};
+        if (clazz) {
+            const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
+            const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
+            if (mid1 && mid2) {
+                const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
+                const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
+                const long long allocatedSize{l1 / 1048576};
+                const long long heapSize{l2 / 1048576};
+                LOG(allocatedSize, heapSize);
+            }
+        }
+    }
+    matStream.str(materialsText_);
+    {
+        const jclass clazz {jniEnv->FindClass("android/os/Debug")};
+        if (clazz) {
+            const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
+            const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
+            if (mid1 && mid2) {
+                const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
+                const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
+                const long long allocatedSize{l1 / 1048576};
+                const long long heapSize{l2 / 1048576};
+                LOG(allocatedSize, heapSize);
+            }
+        }
+    }
     ::tinyobj::MaterialStreamReader matStreamReader {matStream};
+    ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!materialsText_.empty()? &matStreamReader : nullptr};
     ::std::string err {};
     const bool ret {
-        ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream, &matStreamReader, true)};
+        ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream, matStreamReaderPtr, true)};
 
     if (!err.empty()) {
         ::std::cerr << err << '\n';
@@ -39,7 +105,7 @@ bool OBJLoader::fillScene(Scene *const scene,
 
     for (const auto &shape : shapes_) {
         for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            const size_t triangles{static_cast<size_t>(shape.mesh.num_face_vertices[f] / 3)};
+            const size_t triangles{static_cast<size_t>(shape.mesh.num_face_vertices.at(f) / 3)};
             numberTriangles += triangles;
         }
     }
@@ -49,46 +115,49 @@ bool OBJLoader::fillScene(Scene *const scene,
         // Loop over faces(polygon)
         size_t index_offset{0};
         for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            size_t fv{shape.mesh.num_face_vertices[f]};
+            size_t fv{shape.mesh.num_face_vertices.at(f)};
 
             // Loop over vertices in the face.
             for (size_t v{0}; v < fv; v += 3) {
-                const ::tinyobj::index_t idx1(shape.mesh.indices[index_offset + v + 0]);
+                const ::tinyobj::index_t idx1{shape.mesh.indices.at(index_offset + v + 0)};
                 const ::tinyobj::real_t vx1{
-                        attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 0]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx1.vertex_index) + 0)};
                 const ::tinyobj::real_t vy1{
-                        attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 1]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx1.vertex_index) + 1)};
                 const ::tinyobj::real_t vz1{
-                        attrib_.vertices[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx1.vertex_index) + 2)};
 
-                const ::tinyobj::real_t red {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 0]};
-                const ::tinyobj::real_t green {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 1]};
-                const ::tinyobj::real_t blue {attrib_.colors[3 * static_cast<size_t> (idx1.vertex_index) + 2]};
+                const ::tinyobj::real_t red {
+                        attrib_.colors.at(3 * static_cast<size_t> (idx1.vertex_index) + 0)};
+                const ::tinyobj::real_t green {
+                        attrib_.colors.at(3 * static_cast<size_t> (idx1.vertex_index) + 1)};
+                const ::tinyobj::real_t blue {
+                        attrib_.colors.at(3 * static_cast<size_t> (idx1.vertex_index) + 2)};
 
                 /*::tinyobj::real_t tx {0};
                 ::tinyobj::real_t ty {0};
                 if (!attrib_.texcoords.empty()) {
-                    tx = attrib_.texcoords[2 * static_cast<size_t> (idx1.texcoord_index) + 0];
-                    ty = attrib_.texcoords[2 * static_cast<size_t> (idx1.texcoord_index) + 1];
+                    tx = attrib_.texcoords.at(2 * static_cast<size_t> (idx1.texcoord_index) + 0);
+                    ty = attrib_.texcoords.at(2 * static_cast<size_t> (idx1.texcoord_index) + 1);
                     LOG(tx, ty);
                 }*/
 
 
-                const ::tinyobj::index_t idx2(shape.mesh.indices[index_offset + v + 1]);
+                const ::tinyobj::index_t idx2{shape.mesh.indices.at(index_offset + v + 1)};
                 const ::tinyobj::real_t vx2{
-                        attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 0]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx2.vertex_index) + 0)};
                 const ::tinyobj::real_t vy2{
-                        attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 1]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx2.vertex_index) + 1)};
                 const ::tinyobj::real_t vz2{
-                        attrib_.vertices[3 * static_cast<size_t> (idx2.vertex_index) + 2]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx2.vertex_index) + 2)};
 
-                const ::tinyobj::index_t idx3(shape.mesh.indices[index_offset + v + 2]);
+                const ::tinyobj::index_t idx3{shape.mesh.indices.at(index_offset + v + 2)};
                 const ::tinyobj::real_t vx3{
-                        attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 0]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx3.vertex_index) + 0)};
                 const ::tinyobj::real_t vy3{
-                        attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 1]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx3.vertex_index) + 1)};
                 const ::tinyobj::real_t vz3{
-                        attrib_.vertices[3 * static_cast<size_t> (idx3.vertex_index) + 2]};
+                        attrib_.vertices.at(3 * static_cast<size_t> (idx3.vertex_index) + 2)};
 
                 const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
                 const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
@@ -96,25 +165,25 @@ bool OBJLoader::fillScene(Scene *const scene,
                 ::glm::vec3 normal {};
                 if (!attrib_.normals.empty()) {
                     const ::tinyobj::real_t nx1 {
-                            attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 0]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 0)};
                     const ::tinyobj::real_t ny1 {
-                            attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 1]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 1)};
                     const ::tinyobj::real_t nz1 {
-                            attrib_.normals[3 * static_cast<size_t> (idx1.normal_index) + 2]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 2)};
 
                     const ::tinyobj::real_t nx2 {
-                            attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 0]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 0)};
                     const ::tinyobj::real_t ny2 {
-                            attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 1]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 1)};
                     const ::tinyobj::real_t nz2 {
-                            attrib_.normals[3 * static_cast<size_t> (idx2.normal_index) + 2]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 2)};
 
                     const ::tinyobj::real_t nx3 {
-                            attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 0]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 0)};
                     const ::tinyobj::real_t ny3 {
-                            attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 1]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 1)};
                     const ::tinyobj::real_t nz3 {
-                            attrib_.normals[3 * static_cast<size_t> (idx3.normal_index) + 2]};
+                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 2)};
 
                     const ::glm::vec3 &normal1 {nx1, ny1, nz1};
                     const ::glm::vec3 &normal2 {nx2, ny2, nz2};
@@ -124,9 +193,9 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::MobileRT::Triangle &triangle {vertex1, vertex2, vertex3, normal};
 
                 // per-face material
-                const ::std::int32_t materialID{shape.mesh.material_ids[f]};
+                const ::std::int32_t materialID{shape.mesh.material_ids.at(f)};
                 if (materialID >= 0) {
-                    const ::tinyobj::material_t &m {materials_[static_cast<size_t> (materialID)]};
+                    const ::tinyobj::material_t &m {materials_.at(static_cast<size_t> (materialID))};
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};
@@ -164,9 +233,9 @@ bool OBJLoader::fillScene(Scene *const scene,
                 } else {
                     const ::glm::vec3 &diffuse{red, green, blue};
                     const ::glm::vec3 &specular{0.0f, 0.0f, 0.0f};
-                    const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
                     const ::glm::vec3 &transmittance{0.0f, 0.0f, 0.0f};
                     const float indexRefraction{1.0f};
+                    const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
                     const Material &material{diffuse, specular, transmittance, indexRefraction,
                                              emission};
                     scene->triangles_.emplace_back(triangle, material);
