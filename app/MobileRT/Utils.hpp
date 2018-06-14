@@ -67,7 +67,7 @@ namespace MobileRT {
         } else {
             filePos = 0;
         }
-        const ::std::string &res{::std::string {filePath.substr(filePos)}};
+        const ::std::string &res{filePath.substr(filePos)};
         return res;
     }
 

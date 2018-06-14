@@ -2,6 +2,7 @@
 // Created by puscas on 30/07/17.
 //
 
+#include <fstream>
 #include <tinyobjloader/tiny_obj_loader.h>
 #include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Lights/AreaLight.hpp"
@@ -17,81 +18,26 @@ OBJLoader::OBJLoader(const ::std::string &obj, const ::std::string &materials) n
         materialsText_{materials} {
 }
 
-void OBJLoader::process(JNIEnv *jniEnv) noexcept {
-    ::std::istringstream objStream {""};
-    //objStream.exceptions(::std::istringstream::goodbit | ::std::istringstream::badbit | ::std::istringstream::failbit | ::std::istringstream::eofbit);
-    try {
-        {
-            const jclass clazz {jniEnv->FindClass("android/os/Debug")};
-            if (clazz) {
-                const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
-                const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
-                if (mid1 && mid2) {
-                    const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
-                    const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
-                    const long long allocatedSize{l1 / 1048576};
-                    const long long heapSize{l2 / 1048576};
-                    LOG(allocatedSize, heapSize);
-                }
-            }
-        }
-        objStream.str(objText_);
-        {
-            const jclass clazz {jniEnv->FindClass("android/os/Debug")};
-            if (clazz) {
-                const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
-                const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
-                if (mid1 && mid2) {
-                    const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
-                    const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
-                    const long long allocatedSize{l1 / 1048576};
-                    const long long heapSize{l2 / 1048576};
-                    LOG(allocatedSize, heapSize);
-                }
-            }
-        }
-    } catch (...) {
-        LOG("Exception");
-    }
-    ::std::istringstream matStream {""};
-    //matStream.exceptions(::std::istringstream::goodbit | ::std::istringstream::badbit | ::std::istringstream::failbit | ::std::istringstream::eofbit);
-    {
-        const jclass clazz {jniEnv->FindClass("android/os/Debug")};
-        if (clazz) {
-            const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
-            const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
-            if (mid1 && mid2) {
-                const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
-                const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
-                const long long allocatedSize{l1 / 1048576};
-                const long long heapSize{l2 / 1048576};
-                LOG(allocatedSize, heapSize);
-            }
-        }
-    }
-    matStream.str(materialsText_);
-    {
-        const jclass clazz {jniEnv->FindClass("android/os/Debug")};
-        if (clazz) {
-            const jmethodID mid1 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
-            const jmethodID mid2 {jniEnv->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
-            if (mid1 && mid2) {
-                const jlong l1 {jniEnv->CallStaticLongMethod(clazz, mid1)};
-                const jlong l2 {jniEnv->CallStaticLongMethod(clazz, mid2)};
-                const long long allocatedSize{l1 / 1048576};
-                const long long heapSize{l2 / 1048576};
-                LOG(allocatedSize, heapSize);
-            }
-        }
-    }
+void OBJLoader::process() noexcept {
+    ::std::ifstream objStream{objText_};
+    objStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
+    ::std::ifstream matStream{materialsText_};
+    matStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::tinyobj::MaterialStreamReader matStreamReader {matStream};
     ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!materialsText_.empty()? &matStreamReader : nullptr};
     ::std::string err {};
+    errno = 0;
+
     const bool ret {
-        ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream, matStreamReaderPtr, true)};
+            ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream,
+                               matStreamReaderPtr, true)};
 
     if (!err.empty()) {
-        ::std::cerr << err << '\n';
+        LOG("Error: ", err);
+    }
+
+    if (errno) {
+        LOG("Error (errno): ", ::std::strerror(errno));
     }
 
     if (ret) {

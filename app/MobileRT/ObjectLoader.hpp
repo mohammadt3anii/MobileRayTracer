@@ -30,7 +30,7 @@ namespace MobileRT {
 
         ObjectLoader &operator=(ObjectLoader &&objectLoader) noexcept = delete;
 
-        virtual void process(JNIEnv *jniEnv) noexcept = 0;
+        virtual void process() noexcept = 0;
 
         bool isProcessed() const noexcept;
 

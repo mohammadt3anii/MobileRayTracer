@@ -33,6 +33,8 @@ namespace MobileRT {
     class BVH final {
     private:
         ::std::vector<BVHNode> boxes_{};
+
+    public:
         ::std::vector<Primitive<T>> primitives_{};
 
     private:
@@ -42,7 +44,7 @@ namespace MobileRT {
         explicit BVH() noexcept = default;
 
         explicit BVH<T>(
-            ::std::vector<Primitive<T>> primitives) noexcept;
+                ::std::vector<Primitive<T>> &&primitives) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
 
@@ -66,14 +68,14 @@ namespace MobileRT {
 
 
     template<typename T>
-    BVH<T>::BVH(::std::vector<Primitive<T>> primitives) noexcept {
+    BVH<T>::BVH(::std::vector<Primitive<T>> &&primitives) noexcept {
         if (primitives.empty()) {
             BVHNode bvhNode{};
             boxes_.emplace_back(bvhNode);
             return;
         }
-        primitives_ = primitives;
-        const ::std::uint32_t numberPrimitives{static_cast<::std::uint32_t>(primitives.size())};
+        primitives_ = ::std::move(primitives);
+        const ::std::uint32_t numberPrimitives{static_cast<::std::uint32_t>(primitives_.size())};
         const ::std::uint32_t maxNodes{numberPrimitives * 2 - 1};
         boxes_.resize(maxNodes);
         build();

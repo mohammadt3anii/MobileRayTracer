@@ -34,7 +34,7 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
         m_Extends.pointMin_[2], ") max=(", m_Extends.pointMax_[0], ", ",
         m_Extends.pointMax_[1], ", ", m_Extends.pointMax_[2], ")");
 
-    size_t vectorSize{static_cast<size_t>(gridSize * gridSize * gridSize)};
+    const ::std::size_t vectorSize{static_cast<::std::size_t>(gridSize * gridSize * gridSize)};
     triangles_.reserve(vectorSize);
     spheres_.reserve(vectorSize);
     planes_.reserve(vectorSize);

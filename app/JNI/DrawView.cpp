@@ -20,28 +20,6 @@ static ::std::int32_t timeFrame_{0};
 static ::std::int32_t numberOfLights_{0};
 static ::std::int32_t accelerator_{0};
 
-long long getNativeHeapAllocatedSize(JNIEnv *const env) {
-    const jclass clazz {env->FindClass("android/os/Debug")};
-    if (clazz) {
-        const jmethodID mid {env->GetStaticMethodID(clazz, "getNativeHeapAllocatedSize", "()J")};
-        if (mid) {
-            return env->CallStaticLongMethod(clazz, mid);
-        }
-    }
-    return -1L;
-}
-
-long long getNativeHeapSize(JNIEnv *const env) {
-    const jclass clazz {env->FindClass("android/os/Debug")};
-    if (clazz) {
-        const jmethodID mid {env->GetStaticMethodID(clazz, "getNativeHeapSize", "()J")};
-        if (mid) {
-            return env->CallStaticLongMethod(clazz, mid);
-        }
-    }
-    return -1L;
-}
-
 
 extern "C"
 ::std::int32_t JNI_OnLoad(JavaVM *const jvm, void * /*reserved*/) {
@@ -55,16 +33,6 @@ extern "C"
         static_cast<void> (result);
     }
     assert(jniENV != nullptr);
-    jclass drawViewClass{jniENV->FindClass("puscas/mobilertapp/DrawView")};
-    assert(drawViewClass != nullptr);
-    jmethodID drawViewMethodId{
-            jniENV->GetStaticMethodID(drawViewClass, "calledByJNI_static", "()I")};
-    assert(drawViewMethodId != nullptr);
-    {
-        const ::std::int32_t result {jniENV->CallStaticIntMethod(drawViewClass, drawViewMethodId)};
-        assert(result == JNI_OK);
-        static_cast<void> (result);
-    }
     jniENV->ExceptionClear();
     return JNI_VERSION_1_6;
 }
@@ -142,7 +110,8 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            renderer_->shader_->scene_.triangles_};
+            !renderer_->shader_->scene_.triangles_.empty() ?
+            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -188,8 +157,9 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            renderer_->shader_->scene_.triangles_};
+    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
+            !renderer_->shader_->scene_.triangles_.empty() ?
+            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -226,40 +196,10 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
                     floatBuffer[i++] = 1.0f;
                 }
             }
-            switch (accelerator_) {
-                case ::MobileRT::Shader::BVH:
-                    triangles.clear();
-                    ::std::vector<MobileRT::Primitive<MobileRT::Triangle>>{}.swap(triangles);
-                    break;
-
-                default:
-                    break;
-            }
         }
     }
     env->ExceptionClear();
     return directBuffer;
-}
-
-static ::std::string readFile(const ::std::string &filePath) noexcept {
-    errno = 0;
-    const char *const path{filePath.c_str()};
-    ::std::ifstream ifstream{path};
-    ifstream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-    ::std::string line{};
-    ::std::stringstream ss{""};
-    ss.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-    errno = 0;
-    while (::std::getline(ifstream, line)) {
-        ss << line << '\n';
-    }
-    if (errno) {
-        const char *const error{::std::strerror(errno)};
-        LOG("readFile filePath: ", filePath);
-        LOG("readFile error: ", error);
-        errno = 0;
-    }
-    return ss.str();
 }
 
 static void FPS() noexcept {
@@ -301,7 +241,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *const env,
-        jobject /*thiz*/,
+        jobject const /*thiz*/,
         jint const scene,
         jint const shader,
         jint const width,
@@ -309,8 +249,8 @@ extern "C"
         jint const accelerator,
         jint const samplesPixel,
         jint const samplesLight,
-        jstring localObjFile,
-        jstring localMatFile
+        jstring const localObjFile,
+        jstring const localMatFile
 ) noexcept {
     width_ = width;
     height_ = height;
@@ -318,10 +258,13 @@ extern "C"
     LOG("INITIALIZE");
     const jstring globalObjFile {static_cast<jstring>(env->NewGlobalRef(localObjFile))};
     const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
+    const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/MainActivity")};
+    const jmethodID mainActivityMethodId{
+            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "()Z")};
 
 
     ::std::int32_t res{
-            [&]() noexcept -> ::std::int32_t {
+            [=]() noexcept -> ::std::int32_t {
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_ = nullptr;
@@ -403,31 +346,44 @@ extern "C"
                 const char *const objFileName {(env)->GetStringUTFChars(globalObjFile, &isCopy)};
                 const char *const matFileName {(env)->GetStringUTFChars(globalMatFile, &isCopy)};
 
+                assert(mainActivityMethodId != nullptr);
                 {
-                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
-                    const long long heapSize{getNativeHeapSize(env) / 1048576};
-                    LOG(allocatedSize, heapSize);
-                }
-                const ::std::string &obj{readFile(objFileName)};
-                {
-                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
-                    const long long heapSize{getNativeHeapSize(env) / 1048576};
-                    LOG(allocatedSize, heapSize);
-                }
-                const ::std::string &mat{readFile(matFileName)};
-                {
-                    const long long allocatedSize{getNativeHeapAllocatedSize(env) / 1048576};
-                    const long long heapSize{getNativeHeapSize(env) / 1048576};
-                    LOG(allocatedSize, heapSize);
+                    const jboolean result{
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                    if (result) {
+                        return -1;
+                    }
                 }
 
-                ::Components::OBJLoader objLoader {obj, mat};
-                objLoader.process(env);
+                ::Components::OBJLoader objLoader{objFileName, matFileName};
+                {
+                    const jboolean result{
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                    if (result) {
+                        return -1;
+                    }
+                }
+                objLoader.process();
+                {
+                    const jboolean result{
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                    if (result) {
+                        return -1;
+                    }
+                }
+
                 if (!objLoader.isProcessed()) {
-                    exit(0);
+                    return -1;
                 }
                 objLoader.fillScene(&scene_,
                                     []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                {
+                    const jboolean result{
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                    if (result) {
+                        return -1;
+                    }
+                }
 
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
@@ -765,8 +721,8 @@ extern "C"
     }()};
 
 
-    //LOG("PRIMITIVES = ", res);
     env->ExceptionClear();
+    LOG("PRIMITIVES = ", res);
     return res;
 }
 
@@ -804,30 +760,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jint const nThreads,
         jboolean const async
 ) noexcept {
-    jclass localDrawViewClass{env->FindClass("puscas/mobilertapp/DrawView")};
-    jclass globalDrawViewClass{static_cast<jclass>(env->NewGlobalRef(localDrawViewClass))};
     jobject globalBitmap{static_cast<jobject>(env->NewGlobalRef(localBitmap))};
-
-    jmethodID drawViewMethodId{
-            env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
-    assert(drawViewMethodId != nullptr);
-    {
-        const ::std::int32_t result {env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId)};
-        assert(result == JNI_OK);
-    }
-
-    drawViewMethodId = env->GetMethodID(globalDrawViewClass, "calledByJNI", "()I");
-    assert(drawViewMethodId != nullptr);
-    jobject resultObj = env->AllocObject(globalDrawViewClass);
-    {
-        const ::std::int32_t result {env->CallNonvirtualIntMethod(resultObj, globalDrawViewClass, drawViewMethodId)};
-        assert(result == JNI_OK);
-    }
-
-    {
-        const ::std::int32_t result {env->CallIntMethod(resultObj, drawViewMethodId)};
-        assert(result == JNI_OK);
-    }
 
     working_ = State::BUSY;
     LOG("WORKING = BUSY");
@@ -843,16 +776,9 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         {
             const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
             assert(result == JNI_OK);
+            static_cast<void>(result);
         }
         const ::std::int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
-
-        assert(globalDrawViewClass != nullptr);
-        jmethodID drawViewMethodId_thread{
-                env->GetStaticMethodID(globalDrawViewClass, "calledByJNI_static", "()I")};
-        assert(drawViewMethodId_thread != nullptr);
-        const ::std::int32_t result_thread{
-                env->CallStaticIntMethod(globalDrawViewClass, drawViewMethodId_thread)};
-        LOG("result_thread = ", result_thread);
 
         ::std::uint32_t *dstPixels{nullptr};
         {
@@ -898,7 +824,6 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             static_cast<void> (result);
         }
 
-        env->DeleteGlobalRef(globalDrawViewClass);
         env->DeleteGlobalRef(globalBitmap);
         {
             const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),

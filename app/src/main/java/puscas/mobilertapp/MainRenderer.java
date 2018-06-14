@@ -40,14 +40,8 @@ class MainRenderer implements Renderer {
     String vertexShaderCodeRaster = null;
     String fragmentShaderCodeRaster = null;
     Bitmap bitmap_ = null;
-    private FloatBuffer floatBufferVerticesRaster_ = null;
-    private FloatBuffer floatBufferColorsRaster_ = null;
-    private FloatBuffer floatBufferCameraRaster_ = null;
     private int shaderProgram;
     private int shaderProgramRaster;
-    private final float[] mProjectionMatrix = new float[16];
-    private final float[] mViewMatrix = new float[16];
-    private final float[] mModelMatrix = new float[16];
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -72,7 +66,7 @@ class MainRenderer implements Renderer {
                 stringError = "GL_OUT_OF_MEMORY";
                 break;
         }
-        Log.e("glError", "glError = " + GLUtils.getEGLErrorString(glError) + ": " + stringError);
+        Log.e("LOG", "glError = " + GLUtils.getEGLErrorString(glError) + ": " + stringError);
         System.exit(1);
     }
 
@@ -224,13 +218,15 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         //Create geometry and texCoords buffers
-        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(verticesTexture.length * (Float.SIZE / Byte.SIZE));
+        final int byteBufferVerticesSize = verticesTexture.length * (Float.SIZE / Byte.SIZE);
+        final ByteBuffer bbVertices = ByteBuffer.allocateDirect(byteBufferVerticesSize);
         bbVertices.order(ByteOrder.nativeOrder());
         floatBufferVertices_ = bbVertices.asFloatBuffer();
         floatBufferVertices_.put(verticesTexture);
         floatBufferVertices_.position(0);
 
-        final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(texCoords.length * (Float.SIZE / Byte.SIZE));
+        final int byteBufferTexCoordsSize = texCoords.length * (Float.SIZE / Byte.SIZE);
+        final ByteBuffer byteBufferTexCoords = ByteBuffer.allocateDirect(byteBufferTexCoordsSize);
         byteBufferTexCoords.order(ByteOrder.nativeOrder());
         floatBufferTexture_ = byteBufferTexCoords.asFloatBuffer();
         floatBufferTexture_.put(texCoords);
@@ -318,21 +314,34 @@ class MainRenderer implements Renderer {
         checkGLError();
     }
 
-    void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera) {
+    void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera, final int numberPrimitives) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
 
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
+
         bbVertices.order(ByteOrder.nativeOrder());
-        floatBufferVerticesRaster_ = bbVertices.asFloatBuffer();
-        floatBufferVerticesRaster_.position(0);
+        bbVertices.position(0);
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         bbColors.order(ByteOrder.nativeOrder());
-        floatBufferColorsRaster_ = bbColors.asFloatBuffer();
-        floatBufferColorsRaster_.position(0);
+        bbColors.position(0);
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         bbCamera.order(ByteOrder.nativeOrder());
-        floatBufferCameraRaster_ = bbCamera.asFloatBuffer();
-        floatBufferCameraRaster_.position(0);
+        bbCamera.position(0);
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         //Load shaders
         final int vertexShaderRaster = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);
@@ -350,7 +359,7 @@ class MainRenderer implements Renderer {
         final int positionAttrib2 = 0;
         GLES20.glBindAttribLocation(shaderProgramRaster, positionAttrib2, "vertexPosition");
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib2, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        GLES20.glVertexAttribPointer(positionAttrib2, 4, GLES20.GL_FLOAT, false, 0, bbVertices);
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib2);
         checkGLError();
@@ -358,7 +367,7 @@ class MainRenderer implements Renderer {
         final int colorAttrib2 = 1;
         GLES20.glBindAttribLocation(shaderProgramRaster, colorAttrib2, "vertexColor");
         checkGLError();
-        GLES20.glVertexAttribPointer(colorAttrib2, 4, GLES20.GL_FLOAT, false, 0, floatBufferColorsRaster_);
+        GLES20.glVertexAttribPointer(colorAttrib2, 4, GLES20.GL_FLOAT, false, 0, bbColors);
         checkGLError();
         GLES20.glEnableVertexAttribArray(colorAttrib2);
         checkGLError();
@@ -377,6 +386,10 @@ class MainRenderer implements Renderer {
         GLES20.glGetProgramiv(shaderProgramRaster, GLES20.GL_LINK_STATUS, linkStatusRaster, 0);
         checkGLError();
 
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
+
         if (linkStatusRaster[0] != GLES20.GL_TRUE) {
             Log.e("PROGRAM SHADER LOG", "Could not link program rasterizer: ");
             Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgramRaster));
@@ -390,20 +403,21 @@ class MainRenderer implements Renderer {
         GLES20.glUseProgram(shaderProgramRaster);
         checkGLError();
 
+        final int floatSize = Float.SIZE / Byte.SIZE;
         final float zNear = 0.1f;
         final float zFar = 1.0e38f;
 
-        final float eyeX = floatBufferCameraRaster_.get(0);
-        final float eyeY = floatBufferCameraRaster_.get(1);
-        final float eyeZ = -floatBufferCameraRaster_.get(2);
+        final float eyeX = bbCamera.getFloat(0);
+        final float eyeY = bbCamera.getFloat(floatSize);
+        final float eyeZ = -bbCamera.getFloat(2 * floatSize);
 
-        final float dirX = floatBufferCameraRaster_.get(4);
-        final float dirY = floatBufferCameraRaster_.get(5);
-        final float dirZ = -floatBufferCameraRaster_.get(6);
+        final float dirX = bbCamera.getFloat(4 * floatSize);
+        final float dirY = bbCamera.getFloat(5 * floatSize);
+        final float dirZ = -bbCamera.getFloat(6 * floatSize);
 
-        final float upX = floatBufferCameraRaster_.get(8);
-        final float upY = floatBufferCameraRaster_.get(9);
-        final float upZ = -floatBufferCameraRaster_.get(10);
+        final float upX = bbCamera.getFloat(8 * floatSize);
+        final float upY = bbCamera.getFloat(9 * floatSize);
+        final float upZ = -bbCamera.getFloat(10 * floatSize);
 
         final float centerX = eyeX + dirX;
         final float centerY = eyeY + dirY;
@@ -412,26 +426,29 @@ class MainRenderer implements Renderer {
         final float ratio = Math.max((float) width_ / height_, (float) height_ / width_);
         final float hfovFactor = width_ > height_ ? ratio : 1.0f;
         final float vfovFactor = width_ < height_ ? ratio : 1.0f;
-        final float fovX = floatBufferCameraRaster_.get(16);
-        float fovY = floatBufferCameraRaster_.get(17);
+        final float fovX = bbCamera.getFloat(16 * floatSize);
+        float fovY = bbCamera.getFloat(17 * floatSize);
         fovY *= 0.918f;
         float aspect = hfovFactor > vfovFactor ? hfovFactor : 1.0f / vfovFactor;
         //aspect *= 0.9f;
 
-        final float sizeH = floatBufferCameraRaster_.get(18);
-        final float sizeV = floatBufferCameraRaster_.get(19);
+        final float sizeH = bbCamera.getFloat(18 * floatSize);
+        final float sizeV = bbCamera.getFloat(19 * floatSize);
 
-        Matrix.setIdentityM(mModelMatrix, 0);
+        final float[] projectionMatrix = new float[16];
+        final float[] viewMatrix = new float[16];
+        final float[] modelMatrix = new float[16];
+        Matrix.setIdentityM(modelMatrix, 0);
 
         if (fovX > 0.0f && fovY > 0.0f) {
-            Matrix.perspectiveM(mProjectionMatrix, 0, fovY, aspect, zNear, zFar);
+            Matrix.perspectiveM(projectionMatrix, 0, fovY, aspect, zNear, zFar);
         }
 
         if (sizeH > 0.0f && sizeV > 0.0f) {
-            Matrix.orthoM(mProjectionMatrix, 0, -sizeH / 2, sizeH / 2, -sizeV / 2, sizeV / 2, zNear, zFar);
+            Matrix.orthoM(projectionMatrix, 0, -sizeH / 2, sizeH / 2, -sizeV / 2, sizeV / 2, zNear, zFar);
         }
 
-        Matrix.setLookAtM(mViewMatrix, 0,
+        Matrix.setLookAtM(viewMatrix, 0,
                 eyeX, eyeY, eyeZ,
                 centerX, centerY, centerZ,
                 upX, upY, upZ);
@@ -442,12 +459,16 @@ class MainRenderer implements Renderer {
         final int handleProjection = GLES20.glGetUniformLocation(shaderProgramRaster, "uniformProjectionMatrix");
         checkGLError();
 
-        GLES20.glUniformMatrix4fv(handleModel, 1, false, mModelMatrix, 0);
+        GLES20.glUniformMatrix4fv(handleModel, 1, false, modelMatrix, 0);
         checkGLError();
-        GLES20.glUniformMatrix4fv(handleView, 1, false, mViewMatrix, 0);
+        GLES20.glUniformMatrix4fv(handleView, 1, false, viewMatrix, 0);
         checkGLError();
-        GLES20.glUniformMatrix4fv(handleProjection, 1, false, mProjectionMatrix, 0);
+        GLES20.glUniformMatrix4fv(handleProjection, 1, false, projectionMatrix, 0);
         checkGLError();
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         final int positionAttrib = GLES20.glGetAttribLocation(shaderProgramRaster, "vertexPosition");
         checkGLError();
@@ -455,22 +476,34 @@ class MainRenderer implements Renderer {
         checkGLError();
         GLES20.glEnableVertexAttribArray(positionAttrib);
         checkGLError();
-        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferVerticesRaster_);
+        GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, bbVertices);
         checkGLError();
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         final int colorAttrib = GLES20.glGetAttribLocation(shaderProgramRaster, "vertexColor");
         checkGLError();
         GLES20.glEnableVertexAttribArray(colorAttrib);
         checkGLError();
-        GLES20.glVertexAttribPointer(colorAttrib, 4, GLES20.GL_FLOAT, false, 0, floatBufferColorsRaster_);
+        GLES20.glVertexAttribPointer(colorAttrib, 4, GLES20.GL_FLOAT, false, 0, bbColors);
         checkGLError();
+
+        if (MainActivity.getFreeMemStatic()) {
+            return;
+        }
 
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         checkGLError();
 
-        final int vertexCount = floatBufferVerticesRaster_.capacity() / (Float.SIZE / Byte.SIZE);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
-        checkGLError();
+        final int vertexCount = bbVertices.capacity() / (floatSize * 4);
+
+        if (!MainActivity.getFreeMemStatic()) {
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+            Log.d("LOG", "glDrawArrays Complete");
+            checkGLError();
+        }
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         checkGLError();
@@ -483,9 +516,5 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         bitmap_ = copyFrameBuffer();
-
-        floatBufferVerticesRaster_ = null;
-        floatBufferColorsRaster_ = null;
-        floatBufferCameraRaster_ = null;
     }
 }

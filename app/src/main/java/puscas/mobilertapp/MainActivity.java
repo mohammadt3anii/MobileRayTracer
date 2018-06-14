@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -60,7 +59,17 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
-    private String objFile_;
+    private static MainActivity mainActivity_;
+
+    static boolean getFreeMemStatic() {
+        final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(ACTIVITY_SERVICE);
+        final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        final long availMem = memoryInfo.availMem / 1048576L;
+        final long thresholdMem = memoryInfo.threshold / 1048576L;
+        final boolean res = availMem <= thresholdMem;
+        return res;
+    }
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -80,7 +89,7 @@ public final class MainActivity extends Activity {
                 Runtime.getRuntime().availableProcessors();
     }
 
-    private void startStopRender() {
+    private void startStopRender(final String objFile) {
         final int scene = pickerScene_.getValue();
         final int shader = pickerShader_.getValue();
         final int threads = pickerThreads_.getValue();
@@ -92,16 +101,17 @@ public final class MainActivity extends Activity {
         final String strResolution = pickerSizes_.getDisplayedValues()[pickerSizes_.getValue() - 1];
         final int width = Integer.parseInt(strResolution.substring(0, strResolution.indexOf('x')));
         final int height = Integer.parseInt(strResolution.substring(strResolution.indexOf('x') + 1, strResolution.length()));
-        final String strScene = pickerScene_.getDisplayedValues()[pickerScene_.getValue()];
-        final String objText = objFile_ + ".obj";
-        final String matText = objFile_ + ".mtl";
+        final String objText = objFile + ".obj";
+        final String matText = objFile + ".mtl";
 
         switch (ViewText.isWorking()) {
             case 0:
             case 2:
             case 3://if ray-tracer is idle
-                drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText, matText);
-                drawView_.startRender();
+                final int ret = drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText, matText);
+                if (ret != -1) {
+                    drawView_.startRender();
+                }
                 break;
 
             default://if ray-tracer is busy
@@ -131,8 +141,8 @@ public final class MainActivity extends Activity {
                 filePath = filePath.replace("/document/primary/", sdCardDir);
 
                 final int lastIndex = filePath.lastIndexOf('.');
-                objFile_ = filePath.substring(0, lastIndex);
-                startStopRender();
+                final String objFile = filePath.substring(0, lastIndex);
+                startStopRender(objFile);
             }
         }
     }
@@ -143,33 +153,17 @@ public final class MainActivity extends Activity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             final Intent intentChooseFile = Intent.createChooser(intent, "Select a File to Upload");
-            //startActivityForResult(intentChooseFile, 1);
+            startActivityForResult(intentChooseFile, 1);
 
-            //objFile_ = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/conference/conference";
-            //objFile_ = "/storage/extSdCard/WavefrontOBJs/conference/conference";
-            //objFile_ = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/buddha/buddha";
-            objFile_ = "/storage/extSdCard/WavefrontOBJs/buddha/buddha";
-
-
-            final long allocatedHeap = Debug.getNativeHeapAllocatedSize() / 1048576L;
-            final long freeHeap = Debug.getNativeHeapFreeSize() / 1048576L;
-            final long sizeHeap = Debug.getNativeHeapSize() / 1048576L;
-
-            final ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-            activityManager.getMemoryInfo(memoryInfo);
-            final long availMem = memoryInfo.availMem / 1048576L;
-            final long totalMem = memoryInfo.totalMem / 1048576L;
-            final long threshold = memoryInfo.threshold / 1048576L;
-
-            final Runtime runtime = Runtime.getRuntime();
-            final long freeMem2 = runtime.freeMemory() / 1048576L;
-            final long maxMem2 = runtime.maxMemory() / 1048576L;
-            final long totalMem2 = runtime.totalMemory() / 1048576L;
-
-            startStopRender();
+            //final String objFile = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/conference/conference";
+            //final String objFile = "/storage/extSdCard/WavefrontOBJs/conference/conference";
+            //final String objFile = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/buddha/buddha";
+            //final String objFile = "/storage/extSdCard/WavefrontOBJs/buddha/buddha";
+            //startStopRender(objFile);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < 3; ++i) {
+                Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -287,6 +281,7 @@ public final class MainActivity extends Activity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        mainActivity_ = this;
         super.onCreate(savedInstanceState);
 
         int defaultPickerScene = 0;
@@ -319,9 +314,6 @@ public final class MainActivity extends Activity {
         final boolean supportES2 = (info.reqGlEsVersion >= 0x20000);
         if (supportES2 && checkGL20Support()) {
             drawView_ = findViewById(R.id.drawLayout);
-            //drawView_ = new DrawView(this);
-            //setContentView(drawView_);
-            //setContentView(R.layout.activity_main);
             if (drawView_ == null) {
                 Log.e("DrawView", "DrawView is NULL !!!");
                 System.exit(0);
@@ -344,22 +336,6 @@ public final class MainActivity extends Activity {
             drawView_.renderer_.vertexShaderCodeRaster = vertexShaderRaster;
             drawView_.renderer_.fragmentShaderCodeRaster = fragmentShaderRaster;
             drawView_.setVisibility(View.VISIBLE);
-
-            /*if (supportES2 && checkGL20Support()) {
-                //View view = GLSurfaceView.inflate(this, R.layout.activity_main, null);
-                //drawView_ = new DrawView(this);
-                drawView_.setVisibility(View.GONE);
-                drawView_.setEGLContextClientVersion(2);
-                DrawView myLayout = findViewById(R.id.drawLayout);
-                final MainRenderer renderer2 = new MainRenderer();
-                drawView_.clearFocus();
-                drawView_.clearAnimation();
-                drawView_.setVisibility(View.INVISIBLE);
-                drawView_.destroyDrawingCache();
-                drawView_.renderer_ = renderer;
-                drawView_.setRenderer(renderer);
-                drawView_.setVisibility(View.VISIBLE);
-            }*/
 
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
             if (drawView_.viewText_.buttonRender_ == null) {
@@ -534,7 +510,7 @@ public final class MainActivity extends Activity {
             }
             return;
         }
-        startStopRender();
+        startStopRender("");
     }
 
     private static final class CpuFilter implements FileFilter {

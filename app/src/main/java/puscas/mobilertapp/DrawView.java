@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.nio.ByteBuffer;
 
@@ -29,6 +30,7 @@ public class DrawView extends GLSurfaceView {
     private ByteBuffer arrayColors = null;
     private ByteBuffer arrayCamera = null;
     private boolean changingConfigurations = false;
+    private int numberPrimitives_ = 0;
 
     public DrawView(final Context context) {
         super(context);
@@ -101,11 +103,6 @@ public class DrawView extends GLSurfaceView {
 
     static native void finishRender();
 
-    static private int calledByJNI_static() {
-        //System.out.println("JNI1 CALLED THIS");
-        return 0;
-    }
-
     void freeArrays() {
         arrayVertices = freeNativeBuffer(arrayVertices);
         arrayColors = freeNativeBuffer(arrayColors);
@@ -142,7 +139,6 @@ public class DrawView extends GLSurfaceView {
     @Override
     public void onResume() {
         super.onResume();
-        final boolean context = getPreserveEGLContextOnPause();
     }
 
     @Override
@@ -156,11 +152,6 @@ public class DrawView extends GLSurfaceView {
         viewText_.printText();
     }
 
-    private int calledByJNI() {
-        //System.out.println("JNI2 CALLED THIS");
-        return 0;
-    }
-
 
     void stopDrawing() {
         this.setOnTouchListener(null);
@@ -170,9 +161,27 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         freeArrays();
 
+        if (MainActivity.getFreeMemStatic()) {
+            freeArrays();
+        }
+
         arrayVertices = initVerticesArray();
+
+        if (MainActivity.getFreeMemStatic()) {
+            freeArrays();
+        }
+
         arrayColors = initColorsArray();
+
+        if (MainActivity.getFreeMemStatic()) {
+            freeArrays();
+        }
+
         arrayCamera = initCameraArray();
+
+        if (MainActivity.getFreeMemStatic()) {
+            freeArrays();
+        }
 
         viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
@@ -182,7 +191,7 @@ public class DrawView extends GLSurfaceView {
         this.postDelayed(() -> {
             queueEvent(() -> {
                 if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
-                    renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera);
+                    renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera, numberPrimitives_);
                 }
 
                 DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
@@ -195,17 +204,26 @@ public class DrawView extends GLSurfaceView {
         }, 100);
     }
 
-    void createScene(final int scene, final int shader, final int numThreads, final int accelerator,
-                     final int samplesPixel, final int samplesLight, final int width, final int height,
-                     final String objFile, final String matText) {
+    int createScene(final int scene, final int shader, final int numThreads, final int accelerator,
+                    final int samplesPixel, final int samplesLight, final int width, final int height,
+                    final String objFile, final String matText) {
+        freeArrays();
         viewText_.resetPrint(width, height, numThreads, samplesPixel, samplesLight);
-        final int numberPrimitives = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
-        viewText_.nPrimitivesT_ = ",p=" + numberPrimitives + ",l=" + getNumberOfLights();
+
+        numberPrimitives_ = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
+        if (numberPrimitives_ == -1) {
+            for (int i = 0; i < 2; ++i) {
+                Toast.makeText(getContext(), "Device without enough memory to render the scene.", Toast.LENGTH_LONG).show();
+            }
+            return -1;
+        }
+        viewText_.nPrimitivesT_ = ",p=" + numberPrimitives_ + ",l=" + getNumberOfLights();
         numThreads_ = numThreads;
         final int realWidth = getWidth();
         final int realHeight = getHeight();
 
         renderer_.setBitmap(width, height, realWidth, realHeight);
+        return 0;
     }
 
     private int getTouchListIndex(final int pointerID) {

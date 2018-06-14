@@ -31,7 +31,7 @@ namespace Components {
 
         OBJLoader &operator=(OBJLoader &&objLoader) noexcept = delete;
 
-        void process(JNIEnv *jniEnv) noexcept final;
+        void process() noexcept final;
 
         bool fillScene(::MobileRT::Scene *scene,
                        ::std::function<::std::unique_ptr<::MobileRT::Sampler>()> lambda) noexcept final;

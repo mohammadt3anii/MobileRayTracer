@@ -36,11 +36,6 @@ enum class State {
 };
 
 extern "C"
-long long getNativeHeapAllocatedSize(JNIEnv *env);
-extern "C"
-long long getNativeHeapSize(JNIEnv *env);
-
-extern "C"
 jint JNI_OnLoad(JavaVM *pjvm, void *reserved);
 
 extern "C"

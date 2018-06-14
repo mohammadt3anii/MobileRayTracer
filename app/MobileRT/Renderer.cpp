@@ -73,9 +73,10 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
         while (true) {
             const float block{this->camera_->getBlock(sample)};
             if (block >= 1.0f) { break; }
+            const ::std::uint32_t roundBlock{
+                    static_cast<::std::uint32_t> (::std::roundf(block * this->domainSize_))};
             const ::std::uint32_t pixel{
-                    static_cast<::std::uint32_t>(static_cast<::std::uint32_t>(roundf(block * this->domainSize_)) *
-                                          this->blockSizeX_ % resolution_)};
+                    static_cast<::std::uint32_t>(roundBlock * this->blockSizeX_ % resolution_)};
             const ::std::uint32_t startY{
                     ((pixel / this->width_) * this->blockSizeY_) % this->height_};
             const ::std::uint32_t endY{startY + this->blockSizeY_};
