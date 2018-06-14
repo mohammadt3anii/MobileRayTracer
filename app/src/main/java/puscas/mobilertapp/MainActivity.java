@@ -67,7 +67,7 @@ public final class MainActivity extends Activity {
         activityManager.getMemoryInfo(memoryInfo);
         final long availMem = memoryInfo.availMem / 1048576L;
         final long thresholdMem = memoryInfo.threshold / 1048576L;
-        final boolean res = availMem <= thresholdMem;
+        final boolean res = availMem < thresholdMem;
         return res;
     }
 
