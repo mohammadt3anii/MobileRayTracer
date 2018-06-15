@@ -34,7 +34,8 @@ namespace Components {
         void process() noexcept final;
 
         bool fillScene(::MobileRT::Scene *scene,
-                       ::std::function<::std::unique_ptr<::MobileRT::Sampler>()> lambda) noexcept final;
+                       ::std::function<::std::unique_ptr<::MobileRT::Sampler>()> lambda,
+                       JNIEnv *const env) noexcept final;
     };
 }//namespace Components
 

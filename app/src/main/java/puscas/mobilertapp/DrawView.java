@@ -161,31 +161,31 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         freeArrays();
 
-        if (MainActivity.getFreeMemStatic()) {
+        if (MainActivity.getFreeMemStatic(0)) {
             freeArrays();
         }
 
         arrayVertices = initVerticesArray();
 
-        if (MainActivity.getFreeMemStatic()) {
+        if (MainActivity.getFreeMemStatic(0)) {
             freeArrays();
         }
 
         arrayColors = initColorsArray();
 
-        if (MainActivity.getFreeMemStatic()) {
+        if (MainActivity.getFreeMemStatic(0)) {
             freeArrays();
         }
 
         arrayCamera = initCameraArray();
 
-        if (MainActivity.getFreeMemStatic()) {
+        if (MainActivity.getFreeMemStatic(0)) {
             freeArrays();
         }
 
         viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
-        viewText_.start_ = (int) SystemClock.elapsedRealtime();
+        viewText_.start_ = SystemClock.elapsedRealtime();
         viewText_.printText();
 
         this.postDelayed(() -> {

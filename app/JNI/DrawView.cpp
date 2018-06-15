@@ -260,11 +260,11 @@ extern "C"
     const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
     const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/MainActivity")};
     const jmethodID mainActivityMethodId{
-            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "()Z")};
+            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
 
 
     ::std::int32_t res{
-            [=]() noexcept -> ::std::int32_t {
+            [&]() noexcept -> ::std::int32_t {
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_ = nullptr;
@@ -349,7 +349,8 @@ extern "C"
                 assert(mainActivityMethodId != nullptr);
                 {
                     const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
+                                                         0)};
                     if (result) {
                         return -1;
                     }
@@ -358,7 +359,8 @@ extern "C"
                 ::Components::OBJLoader objLoader{objFileName, matFileName};
                 {
                     const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
+                                                         0)};
                     if (result) {
                         return -1;
                     }
@@ -366,7 +368,8 @@ extern "C"
                 objLoader.process();
                 {
                     const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
+                                                         0)};
                     if (result) {
                         return -1;
                     }
@@ -375,11 +378,16 @@ extern "C"
                 if (!objLoader.isProcessed()) {
                     return -1;
                 }
-                objLoader.fillScene(&scene_,
-                                    []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                const bool sceneBuilt{objLoader.fillScene(&scene_,
+                                                          []() { return ::std::make_unique<Components::StaticHaltonSeq>(); },
+                                                          env)};
+                if (!sceneBuilt) {
+                    return -1;
+                }
                 {
                     const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId)};
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
+                                                         0)};
                     if (result) {
                         return -1;
                     }
@@ -592,7 +600,7 @@ extern "C"
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {0.0f, 0.0f, -2.5f},
-                            ::glm::vec3 {0.0f, 0.0f, 0.0f},
+                            ::glm::vec3 {-11442.307617f, -12999.129883, -12729.150391},
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
                 }
@@ -630,17 +638,17 @@ extern "C"
                     scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
-                            ::glm::vec3 {-1.0f, 1.0f, 1.0f},
-                            ::glm::vec3 {1.0f, 1.0f, -1.0f},
-                            ::glm::vec3 {1.0f, 1.0f, 1.0f}));
+                            ::glm::vec3 {-1.0f, 1.5f, 1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
                     scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
-                            ::glm::vec3 {-1.0f, 1.0f, 1.0f},
-                            ::glm::vec3 {-1.0f, 1.0f, -1.0f},
-                            ::glm::vec3 {1.0f, 1.0f, -1.0f}));
+                            ::glm::vec3 {-1.0f, 1.5f, 1.0f},
+                            ::glm::vec3 {-1.0f, 1.5f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, -1.0f}));
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {-4.0f, 2.0f, -2.5f},

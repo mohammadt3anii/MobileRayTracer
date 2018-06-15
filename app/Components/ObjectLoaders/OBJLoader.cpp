@@ -46,7 +46,8 @@ void OBJLoader::process() noexcept {
 }
 
 bool OBJLoader::fillScene(Scene *const scene,
-                          ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda) noexcept {
+                          ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda,
+                          JNIEnv *const env) noexcept {
     size_t numberTriangles{0};
 
     for (const auto &shape : shapes_) {
@@ -55,13 +56,30 @@ bool OBJLoader::fillScene(Scene *const scene,
             numberTriangles += triangles;
         }
     }
+
+    const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/MainActivity")};
+    const jmethodID mainActivityMethodId{
+            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
+    const jint needMem{(static_cast<jint>(numberTriangles * 3 * 3 * sizeof(float) +
+                                          numberTriangles * 13 * sizeof(float))) / 1048576};
+    const jboolean result{
+            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, needMem)};
+    if (result) {
+        return false;
+    }
+
     scene->triangles_.reserve(numberTriangles);
 
     for (const auto &shape : shapes_) {
         // Loop over faces(polygon)
         size_t index_offset{0};
         for (size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            size_t fv{shape.mesh.num_face_vertices.at(f)};
+            const size_t fv{shape.mesh.num_face_vertices.at(f)};
+
+            if (fv % 3 != 0) {
+                LOG("num_face_vertices [", f, "] = ", fv);
+                continue;
+            }
 
             // Loop over vertices in the face.
             for (size_t v{0}; v < fv; v += 3) {
@@ -191,7 +209,7 @@ bool OBJLoader::fillScene(Scene *const scene,
         }
     }
 
-    return false;
+    return true;
 }
 
 OBJLoader::~OBJLoader() noexcept {
@@ -203,16 +221,16 @@ OBJLoader::~OBJLoader() noexcept {
     this->shapes_.clear();
     this->materials_.clear();
 
-    this->objText_.shrink_to_fit();
+    /*this->objText_.shrink_to_fit();
     this->materialsText_.shrink_to_fit();
     this->attrib_.normals.shrink_to_fit();
     this->attrib_.texcoords.shrink_to_fit();
     this->attrib_.vertices.shrink_to_fit();
     this->shapes_.shrink_to_fit();
-    this->materials_.shrink_to_fit();
+    this->materials_.shrink_to_fit();*/
 
-    ::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
-    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);
+    /*::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
+    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);*/
 
     LOG("OBJLOADER DELETED");
 }

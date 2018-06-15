@@ -61,13 +61,13 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSizes_;
     private static MainActivity mainActivity_;
 
-    static boolean getFreeMemStatic() {
+    static boolean getFreeMemStatic(final int memoryNeed) {
         final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(ACTIVITY_SERVICE);
         final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(memoryInfo);
         final long availMem = memoryInfo.availMem / 1048576L;
         final long thresholdMem = memoryInfo.threshold / 1048576L;
-        final boolean res = availMem < thresholdMem;
+        final boolean res = availMem < (thresholdMem + memoryNeed);
         return res;
     }
 

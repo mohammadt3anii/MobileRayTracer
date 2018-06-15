@@ -87,9 +87,9 @@ namespace MobileRT {
         ::std::uint32_t begin {0};
         ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
 
-        ::std::array<::std::uint32_t, 512> stackId {};
-        ::std::array<::std::uint32_t, 512> stackBegin {};
-        ::std::array<::std::uint32_t, 512> stackEnd {};
+        ::std::array<::std::uint32_t, 512> stackId{0};
+        ::std::array<::std::uint32_t, 512> stackBegin{0};
+        ::std::array<::std::uint32_t, 512> stackEnd{0};
 
         ::std::uint32_t stackPtrId {0};
         ::std::uint32_t stackPtrBegin {0};
@@ -138,8 +138,8 @@ namespace MobileRT {
         } while(stackPtrId > 0);
         LOG("maxNodeId = ", maxId);
         boxes_.erase (boxes_.begin() + static_cast<::std::int32_t>(maxId) + 1, boxes_.end());
-        boxes_.shrink_to_fit();
-        ::std::vector<BVHNode>{boxes_}.swap(boxes_);
+        //boxes_.shrink_to_fit();
+        //::std::vector<BVHNode>{boxes_}.swap(boxes_);
     }
 
     template<typename T>

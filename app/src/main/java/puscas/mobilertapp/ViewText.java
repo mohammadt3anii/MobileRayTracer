@@ -9,7 +9,7 @@ import java.util.Locale;
 
 class ViewText {
     float fps_;
-    int start_ = 0;
+    long start_ = 0;
     int period_ = 0;
     TextView textView_ = null;
     Button buttonRender_ = null;
