@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  22 MAY 2018 14:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  15 JUN 2018 16:22
 entering extended mode
 **./dissertation.tex
 (dissertation.tex
@@ -1726,8 +1726,14 @@ Package: subfig 2005/06/28 ver: 1.3 subfig package
 \c@subtable@save=\count188
 \sf@top=\skip130
 \sf@bottom=\skip131
-) (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux)
-(3_software_architecture.aux
+)
+(C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\hyphen
+at\hyphenat.sty
+Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
+\langwohyphens=\language2
+LaTeX Info: Redefining \_ on input line 43.
+) (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux) (3_software_a
+rchitecture.aux
 
 LaTeX Warning: Label `Sphere.' multiply defined.
 
@@ -1762,23 +1768,23 @@ LaTeX Warning: Label `graph:NoShadows@cref' multiply defined.
 ) (5_conclusion_future_work.aux) (A_user_documentation.aux))
 \openout1 = `dissertation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Try loading font information for T1+pplj on input line 49.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Try loading font information for T1+pplj on input line 48.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \t1pplj.fd
@@ -1815,7 +1821,7 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
 \AtBeginShipoutBox=\box54
-Package hyperref Info: Link coloring ON on input line 49.
+Package hyperref Info: Link coloring ON on input line 48.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\hyperr
 ef\nameref.sty
@@ -1827,10 +1833,10 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count195
 )
-LaTeX Info: Redefining \ref on input line 49.
-LaTeX Info: Redefining \pageref on input line 49.
-LaTeX Info: Redefining \nameref on input line 49.
-LaTeX Info: Redefining \microtypecontext on input line 49.
+LaTeX Info: Redefining \ref on input line 48.
+LaTeX Info: Redefining \pageref on input line 48.
+LaTeX Info: Redefining \nameref on input line 48.
+LaTeX Info: Redefining \microtypecontext on input line 48.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1855,7 +1861,7 @@ Package scrlayer-scrpage Warning: Very small head height detected!
 (scrlayer-scrpage)                option `singlespacing=true'
 (scrlayer-scrpage)                to avoid this warning.
 
-Package soulpos Info: Loading soulutf8 on input line 49.
+Package soulpos Info: Loading soulutf8 on input line 48.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\generic\ober
 diek\soulutf8.sty
@@ -1885,38 +1891,38 @@ Package caption Info: End \AtBeginDocument code.
 Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.16} into 
 your preamble.
- on input line 49.
+ on input line 48.
 
 \GPT@outputbox=\box55
-LaTeX Font Info:    Try loading font information for OT1+pplx on input line 51.
+LaTeX Font Info:    Try loading font information for OT1+pplx on input line 50.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \ot1pplx.fd
 File: ot1pplx.fd 2004/09/06 font definitions for OT1/pplx.
 )
-LaTeX Font Info:    Try loading font information for OML+zplm on input line 51.
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 50.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMS+zplm on input line 51.
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 50.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMX+zplm on input line 51.
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 50.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
-LaTeX Font Info:    Try loading font information for OT1+zplm on input line 51.
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 50.
 
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
@@ -1927,7 +1933,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zplm' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 51.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 50.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\psnfss
 \t1phv.fd
@@ -1949,9 +1955,9 @@ x.map}] [2
 
 ]
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 81.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 80.
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <9> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 81.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 80.
  [1
 
 
@@ -1962,7 +1968,7 @@ LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <9> not available
 
 ]
 Package tocbasic Info: character protrusion at toc deactivated on input line 10
-2.
+1.
  (dissertation.toc
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/pplj/m/sc/10.95'.
@@ -1975,14 +1981,20 @@ Package microtype Info: Character `029' is missing
 \openout7 = `dissertation.toc'.
 
 LaTeX Font Info:    Font shape `T1/pplj/bx/n' in size <10> not available
-(Font)              Font shape `T1/pplj/b/n' tried instead on input line 102.
+(Font)              Font shape `T1/pplj/b/n' tried instead on input line 101.
  [4]
 Package tocbasic Info: character protrusion at lof deactivated on input line 10
-3.
+2.
  (dissertation.lof
-Overfull \hbox (58.0333pt too wide) in paragraph at lines 17--17
+Underfull \hbox (badness 1292) in paragraph at lines 3--3
+ [][] [][][]\T1/pplj/m/n/10.95 Illustration of the most com-mon mo-bile de-vice
+s - tablet and 
+ []
+
+
+Underfull \hbox (badness 1931) in paragraph at lines 17--17
  [][] [][][]\T1/pplj/m/n/10.95 Illustration of travers-ing a reg-u-lar grid ac-
-cel-er-a-tion struc-ture ([][]Torsten Möller[][]).[][] []  
+cel-er-a-tion struc-ture 
  []
 
 [5
@@ -1996,8 +2008,14 @@ cel-er-a-tion struc-ture ([][]Torsten Möller[][]).[][] []
 
  [6]
 Package tocbasic Info: character protrusion at lot deactivated on input line 10
-4.
- (dissertation.lot)
+3.
+ (dissertation.lot
+Underfull \hbox (badness 1394) in paragraph at lines 4--4
+ [][] [][][]\T1/pplj/m/n/10.95 Comparison of d-if-fer-en-t ap-pli-ca-tion-s/fra
+me-work-s that use ray 
+ []
+
+)
 \tf@lot=\write9
 \openout9 = `dissertation.lot'.
 
@@ -2132,41 +2150,50 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+
+Overfull \hbox (135.55066pt too wide) in paragraph at lines 183--184
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][]  
+ []
+
 <Images/tiling.png, id=382, 328.8285pt x 532.389pt>
 File: Images/tiling.png Graphic file (type png)
 <use Images/tiling.png>
 Package pdftex.def Info: Images/tiling.png  used on input line 196.
 (pdftex.def)             Requested size: 328.8277pt x 532.3877pt.
- [13]
+[13]
 <Images/Shadow_Ray.jpg, id=399, 281.55188pt x 152.82094pt>
 File: Images/Shadow_Ray.jpg Graphic file (type jpg)
 <use Images/Shadow_Ray.jpg>
 Package pdftex.def Info: Images/Shadow_Ray.jpg  used on input line 225.
 (pdftex.def)             Requested size: 281.55118pt x 152.82054pt.
  [14 <./Images/tiling.png>]
+Overfull \hbox (56.18927pt too wide) in paragraph at lines 235--236
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][]  
+ []
+
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 251.
- [15 <./Images/Shadow_Ray.jpg>]
-<Images/RayToPlane.png, id=423, 376.40625pt x 276.03125pt>
+<Images/RayToPlane.png, id=410, 376.40625pt x 276.03125pt>
 File: Images/RayToPlane.png Graphic file (type png)
 <use Images/RayToPlane.png>
 Package pdftex.def Info: Images/RayToPlane.png  used on input line 263.
 (pdftex.def)             Requested size: 150.55983pt x 110.41054pt.
+[15 <./Images/Shadow_Ray.jpg>]
 <Images/Ray_Sphere_Intersection.png, id=426, 682.04813pt x 411.03563pt>
 File: Images/Ray_Sphere_Intersection.png Graphic file (type png)
 <use Images/Ray_Sphere_Intersection.png>
 Package pdftex.def Info: Images/Ray_Sphere_Intersection.png  used on input line
  295.
 (pdftex.def)             Requested size: 272.8144pt x 164.41133pt.
-
-[16 <./Images/RayToPlane.png>]
+ [16 <./Images/RayToPlane.png>]
 <Images/triangle.png, id=448, 225.84375pt x 272.51813pt>
 File: Images/triangle.png Graphic file (type png)
 <use Images/triangle.png>
 Package pdftex.def Info: Images/triangle.png  used on input line 330.
 (pdftex.def)             Requested size: 225.84319pt x 272.51746pt.
- [17 <./Images/Ray_Sphere_Intersection.png>]
-[18 <./Images/triangle.png>]
+ [17 <./Images/Ray_Sphere_Intersection.png>] [18 <./Images/triangle.png>]
 <Images/Regular_Grid.jpg, id=476, 391.33437pt x 360.58118pt>
 File: Images/Regular_Grid.jpg Graphic file (type jpg)
 <use Images/Regular_Grid.jpg>
@@ -2217,20 +2244,48 @@ File: Images/Refraction.png Graphic file (type png)
 <use Images/Refraction.png>
 Package pdftex.def Info: Images/Refraction.png  used on input line 580.
 (pdftex.def)             Requested size: 193.02261pt x 106.90019pt.
- [25 <./Images/Reflection.png>] [26 <./Images/Refraction.png>]
-<Images/Whitted.png, id=575, 541.02126pt x 881.2925pt>
+ [25 <./Images/Reflection.png>]
+Overfull \hbox (44.85193pt too wide) in paragraph at lines 593--594
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+]  
+ []
+
+
+Overfull \hbox (16.50858pt too wide) in paragraph at lines 616--617
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][]  
+ []
+
+[26 <./Images/Refraction.png>]
+<Images/Whitted.png, id=576, 541.02126pt x 881.2925pt>
 File: Images/Whitted.png Graphic file (type png)
 <use Images/Whitted.png>
 Package pdftex.def Info: Images/Whitted.png  used on input line 627.
 (pdftex.def)             Requested size: 162.30762pt x 264.38979pt.
  [27 <./Images/Whitted.png (PNG copy)>]
+Overfull \hbox (44.85193pt too wide) in paragraph at lines 691--692
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+]  
+ []
+
+
+Overfull \hbox (16.50858pt too wide) in paragraph at lines 714--716
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]  
+ []
+
 [28]
-<Images/PathTracer.png, id=622, 544.0325pt x 883.3pt>
+Overfull \hbox (61.85794pt too wide) in paragraph at lines 744--745
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][]  
+ []
+
+<Images/PathTracer.png, id=624, 544.0325pt x 883.3pt>
 File: Images/PathTracer.png Graphic file (type png)
 <use Images/PathTracer.png>
 Package pdftex.def Info: Images/PathTracer.png  used on input line 756.
 (pdftex.def)             Requested size: 163.211pt x 264.99205pt.
- [29] [30 <./Images/PathTracer.png (PNG copy)>]
+[29] [30 <./Images/PathTracer.png (PNG copy)>]
 <Images/Halton_sequence_2D.png, id=667, 290.08376pt x 290.08376pt>
 File: Images/Halton_sequence_2D.png Graphic file (type png)
 <use Images/Halton_sequence_2D.png>
@@ -2244,7 +2299,13 @@ File: Images/Pseudorandom_sequence_2D.png Graphic file (type png)
 Package pdftex.def Info: Images/Pseudorandom_sequence_2D.png  used on input lin
 e 873.
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
- [32 <./Images/Pseudorandom_sequence_2D.png>] [33]
+ [32 <./Images/Pseudorandom_sequence_2D.png>]
+Overfull \hbox (27.84592pt too wide) in paragraph at lines 894--895
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][]  
+ []
+
+[33]
 <Images/barycentric-coordinates.png, id=718, 401.5pt x 284.06125pt>
 File: Images/barycentric-coordinates.png Graphic file (type png)
 <use Images/barycentric-coordinates.png>
@@ -2283,8 +2344,9 @@ File: Images/jittering_4spp.png Graphic file (type png)
 <use Images/jittering_4spp.png>
 Package pdftex.def Info: Images/jittering_4spp.png  used on input line 1073.
 (pdftex.def)             Requested size: 142.26378pt x 46.76521pt.
- [36 <./Images/aliasing.jpg> <./Images/regular_1spp.png> <./Images/regular_256s
-pp.png> <./Images/jittering_1spp.png> <./Images/jittering_4spp.png>]
+
+[36 <./Images/aliasing.jpg> <./Images/regular_1spp.png> <./Images/regular_256sp
+p.png> <./Images/jittering_1spp.png> <./Images/jittering_4spp.png>]
 <Images/Camera_Perspective_v2.png, id=771, 409.53pt x 346.29375pt>
 File: Images/Camera_Perspective_v2.png Graphic file (type png)
 <use Images/Camera_Perspective_v2.png>
@@ -2301,13 +2363,14 @@ Package pdftex.def Info: Images/Camera_Orthographic_v2.png  used on input line
  [38] [39 <./Images/Camera_Orthographic_v2.png>]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 1199.
- [40]
-<Images/UI_thread.png, id=840, 278.03876pt x 313.17pt>
+
+[40] [41]
+<Images/UI_thread.png, id=856, 278.03876pt x 313.17pt>
 File: Images/UI_thread.png Graphic file (type png)
 <use Images/UI_thread.png>
 Package pdftex.def Info: Images/UI_thread.png  used on input line 1285.
 (pdftex.def)             Requested size: 139.01903pt x 156.58461pt.
- [41]) [42 <./Images/UI_thread.png>]
+) [42 <./Images/UI_thread.png>]
 \openout2 = `4_demonstration.aux'.
 
  (4_demonstration.tex
@@ -2443,13 +2506,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 173--177
 [50]
 Underfull \hbox (badness 10000) in paragraph at lines 186--191
 []\T1/pplj/m/n/10.95 Raph Schim.  From per-spec-tive pic-ture to or-tho-graph-i
-c pic-
+c
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 186--191
-\T1/pplj/m/n/10.95 ture.  URL [][]$\T1/cmtt/m/n/10.95 https : / / stackoverflow
- . com / questions / 36573283 /
+\T1/pplj/m/n/10.95 pic-ture.  URL [][]$\T1/cmtt/m/n/10.95 https : / / stackover
+flow . com / questions / 36573283 /
  []
 
 
@@ -2470,13 +2533,13 @@ chapter A.
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 149.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 149.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
  (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux)
 (3_software_architecture.aux) (4_demonstration.aux)
 (5_conclusion_future_work.aux) (A_user_documentation.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 149.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 149.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 148.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
@@ -2484,15 +2547,15 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 149.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
  ) 
 Here is how much of TeX's memory you used:
- 51075 strings out of 495204
- 1142368 string characters out of 3179758
- 1537406 words of memory out of 3000000
- 53082 multiletter control sequences out of 15000+200000
+ 51113 strings out of 495204
+ 1143054 string characters out of 3179758
+ 1539148 words of memory out of 3000000
+ 53117 multiletter control sequences out of 15000+200000
  90292 words of font info for 134 fonts, out of 3000000 for 9000
- 15 hyphenation exceptions out of 8191
+ 14 hyphenation exceptions out of 8191
  74i,23n,106p,9093b,2925s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs/data\fonts\pk\ljfour\
 jknappen\ec\dpi600\ectt1095.pk>{C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/
@@ -2515,7 +2578,7 @@ l/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.
 <C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/
 palatino/uplr8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/inst
 all/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on dissertation.pdf (61 pages, 4096456 bytes).
+Output written on dissertation.pdf (61 pages, 4096684 bytes).
 PDF statistics:
  1447 PDF objects out of 1728 (max. 8388607)
  468 named destinations out of 1000 (max. 500000)
