@@ -164,7 +164,7 @@ Those libraries are:
 
 \begin{itemize}
 	\item OpenGL Mathematics (\cite{GLM}): used to create 3d points and vectors, perform geometry calculations and store pixels and primitives colors.
-	\item tinyobjloader (\cite{tinyobjloader}): used to load scenes from wavefront obj files.
+	\item tinyobjloader (\cite{tinyobjloader}): used to load scenes from wavefront obj files into the main memory.
 	\item Google Test (\cite{GoogleTest}): used to create some unit tests and to mock some classes.
 \end{itemize}
 
@@ -179,7 +179,11 @@ Besides being dependent on these 3 libraries, this library also depends on OpenG
 \par
 The Renderer is the closest class to the application that starts the rendering process.
 This class provides two main methods:
-\begin{lstlisting}
+
+\lstset{
+	breaklines=true
+}
+\begin{lstlisting}[language=c++]
 void renderFrame(::std::uint32_t *bitmap, ::std::int32_t numThreads, ::std::uint32_t stride) noexcept;
 void stopRender() noexcept;
 \end{lstlisting}
