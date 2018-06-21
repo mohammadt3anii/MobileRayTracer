@@ -19,10 +19,35 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{subfig}
-\usepackage[none]{hyphenat}
+\usepackage[none,htt]{hyphenat}
 \usepackage{listings}
+\usepackage[cache=false]{minted}
+
+\lstset{
+	float=H,
+	breaklines=true,
+	breakatwhitespace=false,
+	keepspaces=true,
+	keywordstyle=\color{blue},
+	numbers=left,
+	showlines=true,
+	stepnumber=1,
+	stringstyle=\color{red},
+	tabsize=2,
+	frame=single,
+	columns=fullflexible,
+	language=C++,
+	basicstyle=\small,
+	keywordstyle=\color{blue}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{green}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
+}
 
 \sloppy
+
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
 
 \newenvironment{conditions}
 {\par\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}

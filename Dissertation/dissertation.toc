@@ -23,7 +23,7 @@
 \contentsline {subsection}{\numberline {3.3.2}Renderer}{13}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}Scene}{14}{subsection.3.3.3}
 \contentsline {subsection}{\numberline {3.3.4}Shapes}{15}{subsection.3.3.4}
-\contentsline {subsubsection}{Plane}{15}{lstnumber.-3.1}
+\contentsline {subsubsection}{Plane}{15}{lstnumber.3.3.1}
 \contentsline {subsubsection}{Sphere}{16}{figure.caption.16}
 \contentsline {subsubsection}{Triangle}{17}{figure.caption.17}
 \contentsline {subsection}{\numberline {3.3.5}Acceleration Structures}{18}{subsection.3.3.5}
@@ -32,20 +32,20 @@
 \contentsline {subsubsection}{Surface Area Heuristic}{21}{figure.caption.20}
 \contentsline {section}{\numberline {3.4}Rendering Components}{22}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Shaders}{22}{subsection.3.4.1}
-\contentsline {subsubsection}{NoShadows}{23}{lstnumber.-7.1}
+\contentsline {subsubsection}{NoShadows}{23}{lstnumber.3.7.1}
 \contentsline {subsubsection}{Whitted}{24}{figure.caption.23}
 \contentsline {subsubsection}{PathTracer}{27}{figure.caption.26}
 \contentsline {subsection}{\numberline {3.4.2}Samplers}{30}{subsection.3.4.2}
-\contentsline {subsubsection}{Constant}{30}{lstnumber.-11.1}
-\contentsline {subsubsection}{Stratified}{31}{lstnumber.-12.1}
-\contentsline {subsubsection}{HaltonSequence}{31}{lstnumber.-13.8}
-\contentsline {subsubsection}{Random}{32}{lstnumber.-14.16}
+\contentsline {subsubsection}{Constant}{30}{lstnumber.3.11.1}
+\contentsline {subsubsection}{Stratified}{31}{lstnumber.3.12.1}
+\contentsline {subsubsection}{HaltonSequence}{31}{lstnumber.3.13.8}
+\contentsline {subsubsection}{Random}{32}{lstnumber.3.14.16}
 \contentsline {subsection}{\numberline {3.4.3}Lights}{33}{subsection.3.4.3}
-\contentsline {subsubsection}{PointLight}{33}{lstnumber.-16.2}
-\contentsline {subsubsection}{AreaLight}{33}{lstnumber.-17.1}
+\contentsline {subsubsection}{PointLight}{33}{lstnumber.3.16.2}
+\contentsline {subsubsection}{AreaLight}{33}{lstnumber.3.17.1}
 \contentsline {subsection}{\numberline {3.4.4}Cameras}{35}{subsection.3.4.4}
 \contentsline {subsubsection}{Perspective Camera}{37}{figure.caption.34}
-\contentsline {subsubsection}{Orthographic Camera}{38}{lstnumber.-23.7}
+\contentsline {subsubsection}{Orthographic Camera}{38}{lstnumber.3.23.7}
 \contentsline {subsection}{\numberline {3.4.5}Object Loaders}{39}{subsection.3.4.5}
 \contentsline {subsubsection}{OBJ Loader}{40}{subsection.3.4.5}
 \contentsline {section}{\numberline {3.5}Android specifics and challenges}{41}{section.3.5}

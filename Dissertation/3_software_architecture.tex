@@ -180,10 +180,7 @@ Besides being dependent on these 3 libraries, this library also depends on OpenG
 The Renderer is the closest class to the application that starts the rendering process.
 This class provides two main methods:
 
-\lstset{
-	breaklines=true
-}
-\begin{lstlisting}[language=c++]
+\begin{lstlisting}[caption={Main methods in Renderer}, captionpos=b, label=Renderer]
 void renderFrame(::std::uint32_t *bitmap, ::std::int32_t numThreads, ::std::uint32_t stride) noexcept;
 void stopRender() noexcept;
 \end{lstlisting}
@@ -208,7 +205,8 @@ The \textit{stopRender} method only serves to stop the rendering process without
 \par
 The Scene is the class that handles the process of intersecting a ray with the primitives and source lights in the scene.
 Besides providing a vector to add the light sources and a vector to add primitives to the scene, it also provides two main methods:
-\begin{lstlisting}
+
+\begin{lstlisting}[caption={Main methods in Scene}, captionpos=b, label=Scene]
 Intersection trace(Intersection intersection, const Ray &ray) noexcept;
 Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
 \end{lstlisting}
@@ -235,9 +233,11 @@ The purpose of this method is to simulate the shadows in the scene, like it is i
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed 3 types of shapes: plane, sphere and triangle.
 All shapes provide only one method:
-\begin{lstlisting}
+
+\begin{lstlisting}[caption={Main methods in Shape}, captionpos=b, label=Shape]
 Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
 \end{lstlisting}
+
 This method determines if a ray intersects the shape and returns the intersection.
 It is important to mention that, obviously, each shape was developed with different algorithm.
 
@@ -250,7 +250,7 @@ The plane is an essential primitive shape because it allows the user to build in
 The construction of a plane requires just an arbitrary point in the plane and the normal of the plane.
 So, the intersect method implemented has the following algorithm:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Ray plane intersection}, captionpos=b, label=Plane]
 projection = planeNormal . rayDirection
 if (|projection| <= 0) return false
 distance = planeNormal . (planePoint - rayOrigin) / projection
@@ -277,7 +277,7 @@ The construction of a sphere requires just the point in the center and the radiu
 It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
 So, the intersect method implemented has the following algorithm:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Ray sphere intersection}, captionpos=b, label=Sphere]
 centerToOrigin = rayOrigin - sphereCenter
 B = 2 * centerToOrigin . rayDirection
 C = centerToOrigin.magnitude - radius
@@ -312,7 +312,7 @@ $[AB, AC]$
 and the normal of the triangle.
 So, the intersect method implemented has the following algorithm:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Ray triangle intersection}, captionpos=b, label=Triangle]
 perpendicularVector = rayDirection x AC
 projection = AB . perpendicularVector
 if(|projection| <= 0) return false
@@ -482,7 +482,7 @@ In summary, a shader, in this context, is the algorithm of a BRDF.
 There was developed three shaders: NoShadows, Whitted and PathTracer.
 All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray and the respective intersection.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Main methods of Shader}, captionpos=b, label=Shader]
 void shade(RGB &rgb, Intersection &intersection, Ray &ray) const override;
 \end{lstlisting}
 
@@ -506,7 +506,7 @@ As already said, the indirect lighting is not fully simulated but rather simplif
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of NoShadows Shader}, captionpos=b, label=NoShadows]
 if (intersected material is diffuse) {
   for each light source
   	for each sample
@@ -587,7 +587,7 @@ And, as usual, the transmission ray is traced and its radiance is multiplied by 
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Whitted Shader}, captionpos=b, label=Whitted]
 if (intersected material is diffuse) {
   for each light source
     for each sample
@@ -684,7 +684,7 @@ The reflected light in a specular surface and the refracted light are simulated 
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer]
 if (intersected material is diffuse) {
   for each light
     for each sample
@@ -768,7 +768,8 @@ There were implemented four samplers: Constant, Stratified, HaltonSequence and R
 
 \par
 All samplers just provide one method for the user to use:
-\begin{lstlisting}
+
+\begin{lstlisting}[caption={Main methods of Sampler}, captionpos=b, label=Sampler]
 float getSample(const unsigned int sample);
 \end{lstlisting}
 
@@ -790,7 +791,7 @@ The algorithm of the
 $getSample$
 is just:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Constant Sampler}, captionpos=b, label=Constant]
 return value
 \end{lstlisting}
 
@@ -808,7 +809,7 @@ The algorithm of the
 $getSample$
 is then:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Stratified Sampler}, captionpos=b, label=Stratified]
 //atomic operation
 current = sample++
 if (current >= (domainSize * (sampleParam + 1))) {
@@ -842,7 +843,7 @@ The algorithm of the
 $getSample$
 is as following:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of HaltonSequence Sampler}, captionpos=b, label=HaltonSequence]
 //atomic operation
 current = sample++
 if (current >= (domainSize * (sampleParam + 1))) {
@@ -882,7 +883,7 @@ So the algorithm of the
 $getSample$
 is just:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Random Sampler}, captionpos=b, label=Random]
 return rand() / RAND_MAX
 \end{lstlisting}
 
@@ -893,7 +894,7 @@ return rand() / RAND_MAX
 There were implemented two types of light sources: PointLight and AreaLight.
 These light sources provide the user two main methods:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Main methods in Light}, captionpos=b, label=Light]
 const Point3D getPosition(void);
 bool intersect(Intersection &intersection, const Ray &ray, const Material &) const;
 \end{lstlisting}
@@ -919,7 +920,7 @@ Therefore, the
 $getPosition$
 method is very simple because it only returns the position of the light source determined in its constructor:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of PointLight}, captionpos=b, label=PointLight]
 return position;
 \end{lstlisting}
 
@@ -939,7 +940,7 @@ This shape is intended as it allows to generate a random point in a triangle wit
 A triangle with 3 points: A, B and C.
 We get vectors AB and AC, being:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
 AB=[Bx-Ax,By-Ay,Bz-Az] and AC=[Cx-Ax,Cy-Ay,Cz-Az].
 \end{lstlisting}
 
@@ -949,7 +950,7 @@ So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the
 To generate a random point in the triangle, we have to generate 2 random numbers between 0 and 1 (R and S).
 Then we have to make sure we stay inside the triangle by checking if they are larger than one:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
 if (R + S >= 1) {
   R = 1 - R
   S = 1 - S
@@ -958,7 +959,7 @@ if (R + S >= 1) {
 
 Finally we can obtain a random point in the triangle by starting at point A, then getting a random percentage along vector AB and a random percentage along vector AC:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
 RandomPointPosition = A + R*AB + S*AC
 \end{lstlisting}
 
@@ -974,7 +975,7 @@ So, the
 $getPosition$
 algorithm is as following:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
 R = samplerPointLight.getSample(0)
 S = samplerPointLight.getSample(0)
 if (R + S >= 1) {
@@ -1000,7 +1001,7 @@ Only 2 types of cameras were implemented: perspective and orthographic cameras.
 \par
 The camera only provides one method for the user to cast a ray from the camera position in direction to the image plane:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Main methods in Camera}, captionpos=b, label=Camera]
 Ray generateRay(const float u, const float v,
                 const float deviationU, const float deviationV) const;
 \end{lstlisting}
@@ -1120,7 +1121,7 @@ $rayDirection = destinationPoint - cameraPosition$
 .
 The origin of the ray is the position of the camera, because in a perspective camera, all rays come from the same point: the point where the camera is located.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Perspective Camera}, captionpos=b, label=Perspective]
 rightFactor = arctan(hFov * (u - 0.5)) + deviationU
 rightVector = right * rightFactor
 upFactor = arctan(vFov * (0.5 - v)) + deviationV
@@ -1154,7 +1155,7 @@ Then, the origin of the ray is:
 $rayOrigin = cameraPosition + rightVector + upVector$
 .
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm of Orthographic Camera}, captionpos=b, label=Orthographic]
 rightFactor = (u - 0.5) * sizeH
 rightVector = right * rightFactor + right * deviationU
 upFactor = (0.5f - v) * sizeV
@@ -1200,7 +1201,7 @@ This type of Model file format is a good choice because, besides being simple, i
 The OBJ file format is a simple data format that allows to store only the position of each vertex, the UV position of each texture coordinate vertex, vertex normals, and the faces that make each polygon defined as a list of vertices, and texture vertices.
 Vertices are stored in a counter-clockwise order by default, making explicit declaration of face normals unnecessary.
 
-\begin{lstlisting}[caption={.OBJ file format}, captionpos=b, label=obj]
+\begin{lstlisting}[caption={.OBJ file format}, captionpos=b, label=OBJ]
 	# This is a comment
 
 	# List of geometric vertices
@@ -1223,19 +1224,19 @@ Vertices are stored in a counter-clockwise order by default, making explicit dec
 	
 	# List of polygonal face elements
 	# v1/vt1/vn1	v2/vt2/vn2	v3/vt3/vn3
-	f 3/1/1				4/2/3				5/3/4
-	f 6/6/3				7/1/2				8/2/6
+	f 3/1/1		4/2/3		5/3/4
+	f 6/6/3		7/1/2		8/2/6
 	...
 \end{lstlisting}
 
 \par
-The Wavefront OBJ file format is described as shown in \ref{obj}, and is accompanied by another file, Material Template Library (MTL), that describes the visual aspects of the polygons.
+The Wavefront OBJ file format is described as shown in \ref{OBJ}, and is accompanied by another file, Material Template Library (MTL), that describes the visual aspects of the polygons.
 It is this file that describes surface shading (material) properties of objects within one or more .OBJ files.
 It allows to define multiple materials, with, ambient color, diffuse color, specular reflective color and specular refractive color.
 And even allows to load texture maps stored in TGA files.
-The Listing \ref{mtl} shows an example of a description of a material.
+The Listing \ref{MTL} shows an example of a description of a material.
 
-\begin{lstlisting}[caption={.MTL file format}, captionpos=b, label=mtl]
+\begin{lstlisting}[caption={.MTL file format}, captionpos=b, label=MTL]
 # This is a comment
 
 # Define a material named 'Colored'
