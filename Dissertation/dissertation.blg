@@ -7,7 +7,6 @@ A level-1 auxiliary file: 4_demonstration.aux
 A level-1 auxiliary file: 5_conclusion_future_work.aux
 A level-1 auxiliary file: A_user_documentation.aux
 Database file #1: dissertation.bib
-Warning--I didn't find a database entry for "JournalDuNetNI"
 Warning--empty year in RadeonRays
 Warning--empty year in CPU_SIMD
 Warning--empty year in jsRayTracer
@@ -24,6 +23,8 @@ Warning--empty year in YafaRay
 Warning--empty year in OctaneRender
 Warning--empty year in OpenGL_ES_2
 Warning--empty year in Embree
+Warning--empty year in TriangleBarycentricCoordinates
+Warning--empty year in Mitsuba
 Warning--empty year in CPU_Cache
 Warning--empty year in HRay
 Warning--empty year in BVH
@@ -35,17 +36,23 @@ Warning--empty year in PBRT
 Warning--empty year in G3D17
 Warning--empty year in Optix
 Warning--empty year in OptixPrime
+Warning--empty year in RTRefractions
 Warning--empty year in RIS
 Warning--empty year in Camera_Perspective_Orthographic
 Warning--empty year in Aliasing
 Warning--empty year in TriangleRayIntersection
 Warning--empty year in tinyobjloader
+Warning--empty year in SamplingRayDirection
 Warning--empty year in RegularGrid
 Warning--empty year in micro-packet
 Warning--empty year in tray
 Warning--empty year in trayrust
 Warning--empty year in PlaneRayIntersection
+Warning--empty year in RTReflections
+Warning--empty year in Jittering
 Warning--empty year in HaltonSequence
+Warning--empty year in RenderingEquation
+Warning--empty year in SphericalCoordinates
 Warning--empty year in CosineSampleHemisphere
 Warning--empty year in Visionaray
-(There were 41 warnings)
+(There were 48 warnings)
