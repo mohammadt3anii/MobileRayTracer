@@ -33,8 +33,8 @@ This demo application is a good way to test it in several Android devices like a
 
 \begin{figure}[H]
 	\centering
-	\caption{Illustration of the 3 layers in the application}
-	\label{Illustration of the 3 layers in the application}
+	\caption{Illustration of the three layers in the application}
+	\label{Illustration of the three layers in the application}
 	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Layers.png}
 \end{figure}
 
@@ -145,7 +145,7 @@ The most important classes that provide functionalities already developed for th
 \item Renderer: class that starts the rendering process and stores the calculated pixels colors in a C style array.
 \item Scene: class that stores the geometry information in vectors and provides methods to trace rays in the scene without any acceleration structures.
 \item Shapes: set of classes that allows to create triangles, spheres and planes.
-\item Material: class that stores all 4 types of material color:
+\item Material: class that stores all four types of material color:
 \begin{itemize}
 	\item Emission light color
 	\item Diffuse reflection color
@@ -159,7 +159,7 @@ The most important classes that provide functionalities already developed for th
 \subsection{Third parties dependencies}
 
 \par
-Before describing each functionality provided in each class developed, it is important to mention that this library uses 3 other libraries developed in C++ by third parties.
+Before describing each functionality provided in each class developed, it is important to mention that this library uses three other libraries developed in C++ by third parties.
 Those libraries are:
 
 \begin{itemize}
@@ -232,7 +232,7 @@ The shadow ray is represented by the yellow line pointed to the light source.
 \subsection{Shapes}
 
 \par
-In order to make possible to generate scenes with all kind of objects, it was developed 3 types of shapes: plane, sphere and triangle.
+In order to make possible to generate scenes with all kind of objects, it was developed three types of shapes: plane, sphere and triangle.
 All shapes provide one important method:
 
 \begin{lstlisting}[caption={Main methods in Shape}, captionpos=b, label=Shape]
@@ -344,7 +344,7 @@ This task is, obviously, very time consuming and can waste a lot of battery powe
 Luckly, there are already known techniques, called acceleration structures, that helps to accelerate this process by reducing the number of intersections.
 
 \par
-There are 2 types of approaches that acceleration structures can have:
+There are two types of approaches that acceleration structures can have:
 
 \begin{itemize}
 	\item Subdivision of Space: the 3D space of the scene is divided in smaller portions of space which the volume elements can be uniform or irregular:
@@ -367,10 +367,10 @@ These structures also allow the rapid and simultaneous rejection of groups of pr
 In contrast, structures based on Subdivision of objects only allow the rapid and simultaneous rejection of groups of primitives.
 
 \par
-The developed library provides only 2 types of structures, 1 of each approach: the regular grid and the bounding volume hierarchy.
-Both structures are built with Axis Aligned Bounding Volumes (AABB), which are volume elements (voxels) that can cover, 1 or more primitives from the 3D scene.
+The developed library provides only two types of structures, one of each approach: the regular grid and the bounding volume hierarchy.
+Both structures are built with Axis Aligned Bounding Volumes (AABB), which are volume elements (voxels) that can cover, one or more primitives from the 3D scene.
 An AABB is a voxel, like the name implies, that is aligned to the axis of the scene.
-This type of voxels are great to use in acceleration structures because it is very fast to test whether or not a ray intersects that voxel and it only needs to store, in memory, 2 points of that box.
+This type of voxels are great to use in acceleration structures because it is very fast to test whether or not a ray intersects that voxel and it only needs to store, in memory, two points of that box.
 Besides AABB, it is possible to build the structures with other types of voxels, like:
 
 \begin{itemize}
@@ -384,7 +384,7 @@ Besides AABB, it is possible to build the structures with other types of voxels,
 
 \par
 A regular grid is an acceleration structure where the scene space is subdivided into equal voxels.
-Each voxel is a volume element where it could have inside 1 or more primitives of the scene, if a ray intersects that voxel, then it tries to intersect the primitives inside it.
+Each voxel is a volume element where it could have inside one or more primitives of the scene, if a ray intersects that voxel, then it tries to intersect the primitives inside it.
 The order of testing each voxel is from the nearest of the ray into the furthest in the direction of that ray.
 This type of structure is very fast to build but its traversal is poorly efficient due to poor distribution of primitives by voxels.
 The figure \ref{RegularGrid.} shows the process of intersecting a ray with the primitives in a scene.
@@ -405,12 +405,12 @@ The developed ray tracer library provides a regular grid as an acceleration stru
 Bounding Volume Hierarchy is another acceleration structure provided in the developed library.
 This structure is different from the regular grid because the space is not divided into voxels of the same size.
 The space is divided in a way where the primitives of the scene are grouped according to the nearest primitives of each.
-This allows to build a structure of voxels where a voxel has, for sure, 1 or more primitives inside.
+This allows to build a structure of voxels where a voxel has, for sure, one or more primitives inside.
 
 \par
 The figure \ref{BVH.} shows an example of a BVH structure of a scene.
-As it can be seen, each primitive is covered by an AABB, and then 2 or more AABBs are covered by 1 larger AABB.
-In this library, this is built in a top down manner, where the scene is divided by a fake plane that divides the scene into 2 AABBs.
+As it can be seen, each primitive is covered by an AABB, and then two or more AABBs are covered by one larger AABB.
+In this library, this is built in a top down manner, where the scene is divided by a fake plane that divides the scene into two AABBs.
 The calculation of those planes is performed with the Surface Area Heuristic (SAH) algorithm which is a very popular heuristic commonly used in ray tracers.
 
 \begin{figure}[H]
@@ -452,7 +452,7 @@ The figure \ref{SAH.} shows a very simple example of how the SAH algorithm works
 
 \par
 In order to show the functionalities provided by the library, it was developed a few Rendering Components.
-It is provided the perspective and orthographic cameras, the area and point lights, 6 Samplers, 5 Shaders and 1 Object loader.
+It is provided the perspective and orthographic cameras, the area and point lights, six Samplers, five Shaders and one Object loader.
 
 \subsection{Shaders}
 
@@ -480,7 +480,7 @@ In summary, a shader, in this context, is the algorithm of a BRDF.
 \end{figure}
 
 \par
-There were developed 5 shaders: NoShadows, Whitted, PathTracer, DepthMap and DiffuseMaterial.
+There were developed five shaders: NoShadows, Whitted, PathTracer, DepthMap and DiffuseMaterial.
 All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray casted into the scene and its nearest calculated intersection.
 
 \begin{lstlisting}[caption={Main methods of Shader}, captionpos=b, label=Shader]
@@ -643,7 +643,7 @@ $cosTheta2$
 $cosTheta1$
 is the dot product of the inverse of the shading normal and the ray direction, and
 $cosTheta2$
-is the difference of 1 and refractive index squared multiplied by one minus
+is the difference of one and refractive index squared multiplied by one minus
 $cosTheta1$
 squared.
 Then, if
@@ -734,7 +734,7 @@ $z = \sqrt{r2}$)
 .
 This kind of PDF is one of the best ways to render images with path tracing that the rendering equation converges to the expected value as fast as possible.
 
-Then to generate a new ray direction in a world coordinates from a hemisphere it is needed to distinguish the 6 different possible materials:
+Then to generate a new ray direction in a world coordinates from a hemisphere it is needed to distinguish the six different possible materials:
 
 \begin{itemize}
 	\item Diffuse reflection
@@ -746,7 +746,7 @@ Then to generate a new ray direction in a world coordinates from a hemisphere it
 \end{itemize}
 
 \par
-The figure \ref{Secondary_Rays.} illustrates those 6 possible scenarios.
+The figure \ref{Secondary_Rays.} illustrates those six possible scenarios.
 
 To calculate the secondary ray direction in a diffuse reflective material, it was implemented a generator of random directions on unit hemisphere proportional to cosine-weighted solid angle around the normal of that hemisphere.
 Sampling in a cosine weighted hemisphere is better than uniform sampling over the hemisphere about the normal because the rays casted at the bottom of the hemisphere will not contribute as much as the other directions because of the multiplication by the cosine of theta.
@@ -1087,7 +1087,7 @@ The AreaLight implemented has a shape of a triangle.
 This shape is intended as it allows to generate a random point in a triangle with barycentric coordinates.
 
 \par
-A triangle with 3 points: A, B and C.
+A triangle with three points: A, B and C.
 We get vectors AB and AC, being:
 
 \begin{lstlisting}[caption={Vectors AB and AC in a triangle}, captionpos=b, label=AreaLight]
@@ -1097,7 +1097,7 @@ AB=[Bx-Ax,By-Ay,Bz-Az] and AC=[Cx-Ax,Cy-Ay,Cz-Az].
 \par
 These vectors tell us how to get from point A to the other two points in the triangle, by telling us what direction to go and how far.
 So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the center of the triangle.
-To generate a random point in the triangle, we have to generate 2 random numbers between 0 and 1 (R and S).
+To generate a random point in the triangle, we have to generate two random numbers between 0 and 1 (R and S).
 Then we have to make sure we stay inside the triangle by checking if they are larger than one:
 
 \begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
@@ -1151,7 +1151,7 @@ return intersection
 \subsection{Cameras}
 
 \par
-Only 2 types of cameras were implemented: perspective and orthographic cameras.
+Only two types of cameras were implemented: perspective and orthographic cameras.
 
 \par
 The camera only provides one method for the user to cast a ray from the camera position in direction to the image plane:
@@ -1211,9 +1211,9 @@ Of course, with 256 samples per pixel, the aliasing effect is greatly reduced, b
 
 \begin{figure}[H]
 	\centering
-	\subfloat[Stratified sampling with 1, sampler per pixel.][Stratified sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{regular_1spp.png} }}
+	\subfloat[Stratified sampling with 1, sample per pixel.][Stratified sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{regular_1spp.png} }}
 	\qquad
-	\subfloat[Stratified sampling with 256, samplers per pixel.][Stratified sampling with 256 \\samples per pixel.]{{\includegraphics[width=5cm]{regular_256spp.png} }}
+	\subfloat[Stratified sampling with 256, samples per pixel.][Stratified sampling with 256 \\samples per pixel.]{{\includegraphics[width=5cm]{regular_256spp.png} }}
 	\caption{Stratified sampling.}
 	\label{Sampling_Stratified.}
 \end{figure}
@@ -1227,9 +1227,9 @@ This means that by using jittering it is possible to obtain images pleasing to t
 
 \begin{figure}[H]
 	\centering
-	\subfloat[Jittered sampling with 1, sampler per pixel.][Jittered sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{jittering_1spp.png} }}
+	\subfloat[Jittered sampling with 1, sample per pixel.][Jittered sampling with 1 \\sample per pixel.]{{\includegraphics[width=5cm]{jittering_1spp.png} }}
 	\qquad
-	\subfloat[Jittered sampling with 4, samplers per pixel.][Jittered sampling with 4 \\samples per pixel.]{{\includegraphics[width=5cm]{jittering_4spp.png} }}
+	\subfloat[Jittered sampling with 4, samples per pixel.][Jittered sampling with 4 \\samples per pixel.]{{\includegraphics[width=5cm]{jittering_4spp.png} }}
 	\caption{Jittered sampling.}
 	\label{Sampling_Jittering.}
 \end{figure}
