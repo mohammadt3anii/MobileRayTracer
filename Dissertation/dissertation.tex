@@ -22,6 +22,11 @@
 \usepackage[none,htt]{hyphenat}
 \usepackage{listings}
 \usepackage[cache=false]{minted}
+\usepackage{amsmath}
+\usepackage{caption}
+
+\DeclareCaptionType{MyEquation}[][List of equations]
+\captionsetup[MyEquation]{labelformat=empty}
 
 \lstset{
 	float=H,
@@ -40,8 +45,7 @@
 	basicstyle=\small,
 	keywordstyle=\color{blue}\ttfamily,
 	stringstyle=\color{red}\ttfamily,
-	commentstyle=\color{green}\ttfamily,
-	morecomment=[l][\color{magenta}]{\#}
+	commentstyle=\color{magenta}\ttfamily,
 }
 
 \sloppy

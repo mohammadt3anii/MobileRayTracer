@@ -1,4 +1,4 @@
-\begin{thebibliography}{38}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -138,6 +138,14 @@ kitware.
 \newblock URL \url{https://cmake.org/}.
 \newblock Accessed: May 2018.
 
+\bibitem[Krajci and Cummings()]{JNI}
+Iggy Krajci and Darren Cummings.
+\newblock Android on x86: Java native interface and the android native
+  development kit.
+\newblock URL
+  \url{http://www.drdobbs.com/architecture-and-design/android-on-x86-java-native-interface-and/240166271}.
+\newblock Accessed: July 2018.
+
 \bibitem[Lahodiuk()]{SAH}
 Yurii Lahodiuk.
 \newblock Kd tree for triangle meshes is too slow.
@@ -238,6 +246,18 @@ Menno Vink.
 \newblock Ray to plane intersection.
 \newblock URL \url{http://www.echo-gaming.eu/ray-to-plane-intersection/}.
 \newblock Accessed: May 2018.
+
+\bibitem[Wikipedia()]{HaltonSequence}
+Wikipedia.
+\newblock Halton sequence.
+\newblock URL \url{https://en.wikipedia.org/wiki/Halton_sequence}.
+\newblock Accessed: July 2018.
+
+\bibitem[Wolfe()]{CosineSampleHemisphere}
+Alan Wolfe.
+\newblock Randomcode.
+\newblock URL \url{https://github.com/Atrix256/RandomCode}.
+\newblock Accessed: July 2018.
 
 \bibitem[Zellmann()]{Visionaray}
 Stefan Zellmann.

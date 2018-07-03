@@ -111,6 +111,7 @@ bool PathTracer::shade(
             //PDF = cos(theta) / Pi
             //cos (theta) = cos(dir, normal)
             //PDF = cos(dir, normal) / Pi
+
             //LiD += kD * LiD_RGB * cos (dir, normal) / (PDF * continue_probability)
             //LiD += kD * LiD_RGB * Pi / continue_probability
             LiD += kD * LiD_RGB;

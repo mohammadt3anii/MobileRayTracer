@@ -219,6 +219,7 @@ This method is used to determine the intersection of the casted ray with the pri
 \par
 The \textit{shadowTrace}, is similar to the \textit{trace} method but with the difference that returns the first intersection found.
 The purpose of this method is to simulate the shadows in the scene, like it is illustrated in figure \ref{Illustration of shadow rays casting.}.
+The shadow ray is represented by the yellow line pointed to the light source.
 
 \begin{figure}[H]
 	\centering
@@ -232,7 +233,7 @@ The purpose of this method is to simulate the shadows in the scene, like it is i
 
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed 3 types of shapes: plane, sphere and triangle.
-All shapes provide only one method:
+All shapes provide one important method:
 
 \begin{lstlisting}[caption={Main methods in Shape}, captionpos=b, label=Shape]
 Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
@@ -338,7 +339,7 @@ return Intersection(intersectionPoint, triangleNormal, material)
 
 \par
 As previously stated, the rendering algorithms based on ray tracing can be very computationally demanding, like Path Tracing and Bidirectional Path Tracing.
-These algorithms are very computationally demanding because if the scene is very complex, made with millions of primitives, it is necessary to try to intersect every ray thrown into the scene with those millions of primitives.
+These algorithms are very computationally demanding because if the scene is very complex, made with millions of primitives, it is necessary to try to intersect every ray casted into the scene with those millions of primitives.
 This task is, obviously, very time consuming and can waste a lot of battery power on the mobile device.
 Luckly, there are already known techniques, called acceleration structures, that helps to accelerate this process by reducing the number of intersections.
 
@@ -374,9 +375,9 @@ Besides AABB, it is possible to build the structures with other types of voxels,
 
 \begin{itemize}
 	\item Sphere: intersection with a sphere is simpler than AABB but covers more 3D space than the scene primitive needs.
-	\item Oriented Bounding Volume: its like a AABB but rotated according to the orientation of the primitive.
-	\item k-Discrete Oriented Prototype (k-DOP): 
-	\item Convex Hull: 
+	\item Oriented Bounding Volume: its like an AABB but rotated according to the orientation of the primitive.
+	\item k-Discrete Oriented Prototype (k-DOP): a generalization of AABBs defined by k hyperplanes with normals in discrete directions.
+	\item Convex Hull: is the smallest convex volume containing the object.
 \end{itemize}
 
 \subsubsection{Regular Grid}
@@ -396,12 +397,12 @@ The figure \ref{RegularGrid.} shows the process of intersecting a ray with the p
 \end{figure}
 
 \par
-The ray tracer library provides a regular grid as an acceleration structure and its operation is as shown in the figure.
+The developed ray tracer library provides a regular grid as an acceleration structure and its operation is as shown in the figure.
 
 \subsubsection{Bounding Volume Hierarchy}
 
 \par
-Bounding Volume Hierarchy is another acceleration structure provided in the library.
+Bounding Volume Hierarchy is another acceleration structure provided in the developed library.
 This structure is different from the regular grid because the space is not divided into voxels of the same size.
 The space is divided in a way where the primitives of the scene are grouped according to the nearest primitives of each.
 This allows to build a structure of voxels where a voxel has, for sure, 1 or more primitives inside.
@@ -410,7 +411,7 @@ This allows to build a structure of voxels where a voxel has, for sure, 1 or mor
 The figure \ref{BVH.} shows an example of a BVH structure of a scene.
 As it can be seen, each primitive is covered by an AABB, and then 2 or more AABBs are covered by 1 larger AABB.
 In this library, this is built in a top down manner, where the scene is divided by a fake plane that divides the scene into 2 AABBs.
-The calculation of that plane is using the Surface Area Heuristic which is a very popular heuristic commonly used in ray tracers.
+The calculation of those planes is performed with the Surface Area Heuristic (SAH) algorithm which is a very popular heuristic commonly used in ray tracers.
 
 \begin{figure}[H]
 	\centering
@@ -431,7 +432,7 @@ SAH_{optimal} = min(S_L * N_L + S_R * N_R)
 
 \begin{conditions}
 	N_L & number of polygons in left subtree \\
-	N   & number of polygons in right subtree \\
+	N_R & number of polygons in right subtree \\
 	S_L & surface area of left subtree \\
 	S_R & surface area of right subtree \\
 \end{conditions}
@@ -451,16 +452,16 @@ The figure \ref{SAH.} shows a very simple example of how the SAH algorithm works
 
 \par
 In order to show the functionalities provided by the library, it was developed a few Rendering Components.
-It is provided the perspective and orthographic cameras, the area and point lights, 6 Samplers, 5 Shaders and 1 OBJ loader.
+It is provided the perspective and orthographic cameras, the area and point lights, 6 Samplers, 5 Shaders and 1 Object loader.
 
 \subsection{Shaders}
 
 \par
-The implemented ray tracer was programmed objected oriented, so each Rendering Component was developed separately.
+The implemented ray tracer was programmed in an objected oriented fashion, so each Rendering Component was developed separately, in a different class.
 This allows the user to develop his own Rendering Components without having to develop the ray tracer engine.
 
 \par
-In this context, a shader is the Rendering Component that describes how the Rendering Equation is approximated.
+A shader is the Rendering Component that describes how the Rendering Equation is approximated.
 The Rendering Equation describes how the total radiance reflected by any point
 $p$
 of a surface in a direction
@@ -479,27 +480,93 @@ In summary, a shader, in this context, is the algorithm of a BRDF.
 \end{figure}
 
 \par
-There was developed three shaders: NoShadows, Whitted and PathTracer.
-All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray and the respective intersection.
+There were developed 5 shaders: NoShadows, Whitted, PathTracer, DepthMap and DiffuseMaterial.
+All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray casted into the scene and its nearest calculated intersection.
 
 \begin{lstlisting}[caption={Main methods of Shader}, captionpos=b, label=Shader]
-void shade(RGB &rgb, Intersection &intersection, Ray &ray) const override;
+virtual bool shade(glm::vec3 *rgb, const Intersection &intersection, const Ray &ray) noexcept = 0;
+glm::vec3 getCosineSampleHemisphere(const glm::vec3 &normal) const noexcept;
+bool rayTrace(glm::vec3 *rgb, const Ray &ray) noexcept;
+bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
 \end{lstlisting}
 
 \par
-The parameter
+The method
+$shade$
+calculates the color of the pixel that will be stored in the parameter
 $rgb$
-is where the color of the pixel will be calculated and the
+and the
 $intersection$
-contains the necessary information about the intersection of a ray with the primitive like the intersection point, its normal and the material of the intersected material.
+contains the calculated information about the intersection of a ray with the nearest primitive of the scene like the intersection point, its normal and the material of the intersected material.
 Finally the parameter
 $ray$
 is where the information about the ray like the origin of the ray and its direction is accessed.
 
+\par
+The method
+$getCosineSampleHemisphere$
+calculates a random direction in World coordinates around an hemisphere with a given
+$normal$.
+
+This method is used to cast new secondary rays in the scene in order to simulate the indirect light.
+This is typically used in Path Tracers.
+
+\subsubsection{DepthMap}
+
+\par
+DepthMap is a very simple shader that calculates the distance in percentage of each primary ray casted to the scene.
+
+The algorithm is as much as simple as:
+
+\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
+float maxDist = glm::length(maxPoint - rayOrigin) * 1.1
+float depth = std::max((maxDist - intersectionLength) / maxDist, 0.0)
+rgb = {depth, depth, depth}
+\end{lstlisting}
+
+Where the
+$maxPoint$
+is the furthest 3D point that the user send as parameter in the DepthMap constructor.
+
+\begin{figure}[H]
+	\centering
+	\caption{DepthMap shader.}
+	\label{DepthMap shader.}
+	\includegraphics[keepaspectratio,scale=0.3]{DepthMap.png}
+\end{figure}
+
+
+\subsubsection{DiffuseMaterial}
+
+\par
+The DiffuseMaterial is another very simple shader that only computes directly the diffuse material color of the intersected primitive.
+But, in case the primitive material does not have diffuse color, the specular color is computed or the transmission color or even the light emission.
+As illustrated below:
+
+\begin{lstlisting}[caption={Algorithm of DiffuseMaterial Shader}, captionpos=b, label=DiffuseMaterial]
+if (kD > 0) {
+	rgb = kD;
+} else if (kS > 0) {
+	rgb = kS;
+} else if (kT > 0) {
+	rgb = kT;
+} else if (Le > 0) {
+	rgb = Le;
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\caption{DiffuseMaterial shader.}
+	\label{DiffuseMaterial shader.}
+	\includegraphics[keepaspectratio,scale=0.3]{DiffuseMaterial.png}
+\end{figure}
+
+
 \subsubsection{NoShadows}
 
 \par
-NoShadows is the simplest shader because, as the name implies, it does not synthesize the shadows and it only simulates the direct lighting.
+NoShadows is a simple shader because, as the name implies, it does not synthesize the shadows and it only simulates the direct lighting.
 This BRDF only simulates direct lighting in primitives with diffuse surfaces and it does not take into account the light coming from other points.
 As already said, the indirect lighting is not fully simulated but rather simplified in a way of fixed ambient light of about 10\% of the color of the objects.
 
@@ -554,6 +621,19 @@ The reflection direction is the subtraction between the double of dot product be
 
 \par
 Finally, the refracted light in a transmission surface is calculated by using the refractive index of the intersected primitive and the ray direction and shading normal.
+
+The specular refraction is calculated as follows:
+
+\begin{lstlisting}[caption={Algorithm of Specular Transmission}, captionpos=b, label=Transmission]
+float refractiveIndiceInv = 1.0 / refractiveIndice
+glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
+Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
+glm::vec3 LiT_RGB
+rayTrace(&LiT_RGB, transmissionRay)
+glm::vec3 specularTransmissionColor = kT * LiT_RGB
+\end{lstlisting}
+
+\iffalse
 First, the shading normal is inverted if the origin of the ray was inside a primitive, like a sphere, and if it was not then the refractive index is inverted.
 Then, it is calculated two auxiliary scalar projections:
 $cosTheta1$
@@ -575,6 +655,8 @@ $cosTheta2$
 Else, the direction of the transmission ray is just ray direction plus shading normal multiplied by the double of
 $cosTheta1$
 .
+\fi
+
 And, as usual, the transmission ray is traced and its radiance is multiplied by the transmission component of the intersected primitive.
 
 \begin{figure}[H]
@@ -602,25 +684,20 @@ if (intersected material is diffuse) {
 }
 
 if (intersected material is specular reflective) {
-  reflectionDir = (2 * symRayDirection . normal) * normal - symRayDirection
-  Ray specularRay(intersectionPoint, reflectionDir, rayDepth + 1)
-  rgb += rayTrace (specularRay) * kS
+  glm::vec3 reflectionDir = glm::reflect(rayDirection, shadingNormal)
+  Ray specularRay (reflectionDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
+  glm::vec3 LiS_RGB
+  rayTrace(&LiS_RGB, specularRay)
+  rgb += kS * LiS_RGB
 }
 
 if (intersected material is specular refractive) {
-  if (shadingNormal . rayDirection > 0) {
-    //we are inside the medium
-    shadingNormalT = -1 * shadingNormal
-    n = 1 / n
-  }
-  n = 1 / n
-  cosTheta1 = -shadingNormalT . rayDirection
-  cosTheta2 = 1 - n^2*(1-cosTheta1^2)
-  if (cosTheta2 > 0)
-    transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n*cost1 - sqrt(cost2))))
-  else
-    transmissionRay.dir = (rayDir + shadingNormalT*(cost1 * 2))
-  rgb += rayTrace(transmissionRay) * kT
+  float refractiveIndiceInv = 1.0 / refractiveIndice
+  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
+  Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
+  glm::vec3 LiT_RGB
+  rayTrace(&LiT_RGB, transmissionRay)
+  rgb += kT * LiT_RGB
 }
 \end{lstlisting}
 
@@ -657,32 +734,92 @@ $z = \sqrt{r2}$)
 .
 This kind of PDF is one of the best ways to render images with path tracing that the rendering equation converges to the expected value as fast as possible.
 
+Then to generate a new ray direction in a world coordinates from a hemisphere it is needed to distinguish the 6 different possible materials:
 
-\iffalse
-Then a rotation matrix is built, where it lets rotate a vector around an arbitrary axis with a given angle.
+\begin{itemize}
+	\item Diffuse reflection
+	\item Glossy reflection
+	\item Specular reflection
+	\item Diffuse transmission
+	\item Glossy transmission
+	\item Specular transmission
+\end{itemize}
+
+\par
+The figure \ref{Secondary_Rays.} illustrates those 6 possible scenarios.
+
+To calculate the secondary ray direction in a diffuse reflective material, it was implemented a generator of random directions on unit hemisphere proportional to cosine-weighted solid angle around the normal of that hemisphere.
+Sampling in a cosine weighted hemisphere is better than uniform sampling over the hemisphere about the normal because the rays casted at the bottom of the hemisphere will not contribute as much as the other directions because of the multiplication by the cosine of theta.
+
+\par
+To do this, it was implemented a method called \textit{getCosineSampleHemisphere}, which generates a random direction around an hemisphere oriented by an arbitrary normal.
+
+\begin{lstlisting}[caption={Method in Shader which generates a random direction in an hemisphere.}, captionpos=b, label=Shader]
+glm::vec3 getCosineSampleHemisphere(glm::vec3 normal);
+\end{lstlisting}
+
+\par
+The algorithm to generate a random direction in an hemisphere was taken from  \cite{CosineSampleHemisphere}, which is as follows:
+
+\begin{lstlisting}[caption={Method in Shader which generates a random direction in an hemisphere.}, captionpos=b, label=Shader]
+float phi = glm::two_pi<float>() * uniformRandom1;// azimuthal angle
+float r2 = uniformRandom2;// random distance from center
+float cosTheta = std::sqrt(r2);// cos(theta) = cos(elevation angle)
+
+glm::vec3 u = std::abs(normal.x) > 0.1 ? glm::vec3 {0.0, 1.0, 0.0} : glm::vec3 {1.0, 0.0, 0.0};
+u = glm::normalize(glm::cross(u, normal));// second axis
+glm::vec3 v = glm::cross(normal, u);// final axis
+
+glm::vec3 newDirection = glm::normalize(u * (std::cos(phi) * cosTheta) + v * (std::sin(phi) * cosTheta)
++ normal * std::sqrt(1.0 - r2));
+\end{lstlisting}
+
+The figure \ref{Spherical_Coordinates.} shows the spherical coordinate system with the respective polar angle
+$\theta$
+(theta) and the azimuthal angle
+$\phi$
+(phi).
+
+And the indirect lighting on diffuse reflective surfaces is then the multiplication of the ray traced light radiance with the material diffuse color of the primitive and
+$\pi$
+, and divided by the probability of continuing the Russian roulette.
+The equations \ref{Diffuse_Reflection.} shows the simplification of the reflected diffuse color calculation equation.
+
+\begin{MyEquation}[H]
+\caption{The resolution of diffuse reflected color of an object.}
+\begin{equation}
+\begin{gathered}
+\label{Diffuse_Reflection.}
+cos (\theta) = cos(\overrightarrow{NewDirection}, \overrightarrow{N})\\
+\\
+PDF = cos(\theta) / \pi\\
+PDF = cos(\overrightarrow{NewDirection}, \overrightarrow{N}) / \pi\\
+\\
+LiD += kD * RGB_{SecondaryRay} * cos (\overrightarrow{NewDirection}, \overrightarrow{N}) / (PDF * ContinueProbability)\\
+LiD += kD * RGB_{SecondaryRay} * \pi / ContinueProbability
+\end{gathered}
+\end{equation}
+\end{MyEquation}
 
 \begin{figure}[H]
 	\centering
-	\caption{Rotation matrix from an arbitrary axis and an angle.}
-	\label{Rotation_matrix.}
-	\includegraphics[keepaspectratio,scale=0.5]{Rotation_Matrix.png}
+	\caption{The spherical coordinates.}
+	\label{Spherical_Coordinates.}
+	\includegraphics[keepaspectratio,scale=0.5]{Spherical_Coordinates.png}
 \end{figure}
 
-Then the proper coordinates in the world view is just: $globalCoordinates = localCoordinates * rotationMatrix$.
-\fi
-
-Then to generate 
-
-
-And the indirect lighting on diffuse surfaces is then the multiplication of the ray traced light radiance with the color of the primitive and
-$\pi$
-, and divided by the probability of stopping the Russian roulette.
+\begin{figure}[H]
+	\centering
+	\caption{The possible directions in secondary rays.}
+	\label{Secondary_Rays.}
+	\includegraphics[keepaspectratio,scale=0.5]{SecondaryRayDirection.png}
+\end{figure}
 
 \par
 The reflected light in a specular surface and the refracted light are simulated in a similar way to the Whitted algorithm presented previously.
 
 \par
-The algorithm developed is as following:
+The algorithm developed in Path Tracer Shader is as following:
 
 \begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer]
 if (intersected material is diffuse) {
@@ -700,27 +837,15 @@ if (intersected material is diffuse) {
   rgb /= #samples
 
   if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
-    local = Generate random direction on unit hemisphere 
-    proportional to cosine-weighted solid angle
-
-    RotationMatrix = Rotation matrix from axis and angle
-
-    Vector3D up = (0,1,0)
-    Vector3D u = intersectionNormal x up
-    if (u == 0) u.x = 1
-    cosTheta = up . intersectionNormal
-    sinTheta = 1 - cosTheta^2
-    if (sinTheta < 0) sinTheta *= -1
-    sinTheta = sqrt(sinTheta)
-
-    global = local * rotationMatrix
-
-    Ray secundaryRay (globalX, globalY, globalZ, intersectionPoint, rayDepth + 1)
-
-    LiD = rayTrace(secundaryRay) * kD * PI
+    glm::vec3 newDirection = getCosineSampleHemisphere(shadingNormal)
+    Ray normalizedSecundaryRay (newDirection, intersectionPoint, rayDepth + 1,
+    intersectionPrimitive)
+    
+    glm::vec3 LiD_RGB
+    intersectedLight = rayTrace(&LiD_RGB, normalizedSecundaryRay)
 
     if (rayDepth > RAY_DEPTH_MIN) LiD /= continue_probability
-    if(secundaryRay intersects light) LiD = 0
+    if (Ld > 0 && intersectedLight) LiD = 0
 
     rgb += LiD
   }
@@ -728,28 +853,20 @@ if (intersected material is diffuse) {
 }
 
 if (intersected material is specular reflective) {
-  reflectionDir = (2 * symRayDirection . normal) * normal - symRayDirection
-  Ray specularRay(intersectionPoint, reflectionDir, rayDepth + 1)
-  rgb += rayTrace (specularRay) * kS
+  glm::vec3 reflectionDir = glm::reflect(rayDirection, shadingNormal)
+  Ray specularRay (reflectionDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
+  glm::vec3 LiS_RGB
+  rayTrace(&LiS_RGB, specularRay)
+  LiS += kS * LiS_RGB
 }
 
 if (intersected material is specular refractive) {
-  if (shadingNormal . rayDirection > 0) {
-    //we are inside the medium
-    shadingNormalT = -1 * shadingNormal
-    n = 1 / n
-  }
-  n = 1 / n
-
-  cosTheta1 = -shadingNormalT . rayDirection
-  cosTheta2 = 1 - n^2*(1-cosTheta1^2)
-
-  if (cosTheta2 > 0)
-    transmissionRay.dir = ((rayDir*n) + (shadingNormalT*(n*cosTheta1 - sqrt(cosTheta2))))
-  else
-    transmissionRay.dir = (rayDir + shadingNormalT*(cosTheta1 * 2))
-
-  rgb += rayTrace(transmissionRay) * kT
+  float refractiveIndiceInv = 1.0 / refractiveIndice
+  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
+  Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
+  glm::vec3 LiT_RGB
+  rayTrace(&LiT_RGB, transmissionRay)
+  LiT += kT * LiT_RGB
 }
 \end{lstlisting}
 
@@ -764,19 +881,19 @@ if (intersected material is specular refractive) {
 \subsection{Samplers}
 
 \par
-There were implemented four samplers: Constant, Stratified, HaltonSequence and Random.
+There were implemented four samplers: Constant, Stratified, HaltonSequence and MersenneTwister.
 
 \par
 All samplers just provide one method for the user to use:
 
 \begin{lstlisting}[caption={Main methods of Sampler}, captionpos=b, label=Sampler]
-float getSample(const unsigned int sample);
+float getSample(unsigned sampleNumber);
 \end{lstlisting}
 
 \par
 The
 $getSample$
-method receives as parameter the number of the current sampler and returns the the actual sample.
+method receives as parameter the number of the current sample and returns the the actual sample.
 An atomic variable
 $sample$
 is used to count the current index of the samples.
@@ -812,13 +929,16 @@ is then:
 \begin{lstlisting}[caption={Algorithm of Stratified Sampler}, captionpos=b, label=Stratified]
 //atomic operation
 current = sample++
-if (current >= (domainSize * (sampleParam + 1))) {
+if (current >= (domainSize * (sampleNumber + 1))) {
   sample--
   return 1
 }
-task = current - (sampleParam * domainSize)
-return task / domainSize
+unsigned task = current - (sampleNumber * domainSize)
+resSample = task / domainSize
+return resSample
 \end{lstlisting}
+
+This algorithm ensures that if the current sample is greater than the domain size, then it will always return 1 which means the end of the sampler.
 
 
 \subsubsection{HaltonSequence}
@@ -843,32 +963,45 @@ The algorithm of the
 $getSample$
 is as following:
 
-\begin{lstlisting}[caption={Algorithm of HaltonSequence Sampler}, captionpos=b, label=HaltonSequence]
-//atomic operation
-current = sample++
-if (current >= (domainSize * (sampleParam + 1))) {
+\begin{lstlisting}[caption={Algorithm of HaltonSequence Sampler}, captionpos=b, label=HaltonSequenceSampler]
+current = sample++ //atomic operation
+if (current >= (domainSize * (sampleNumber + 1))) {
   sample--
   return 1
 }
-task = current - (sampleParam * domainSize)
-
-f = 1
-result = 0
-while (task > 0) {
-  f = f / base
-  result = result + f * (index % base)
-  task = floor(index / base)
-}
-return result
+unsigned task = current - (sampleNumber * domainSize)
+float resSample = MobileRT::haltonSequence(task, 2)
+return resSample
 \end{lstlisting}
 
-\subsubsection{Random}
+\par
+As it can be seen in listing \ref{HaltonSequenceSampler}, most of the Halton Sequence Sampler is similar to the Stratified Sampler.
+The only difference is the call to the \textit{haltonSequence} method where it computes the Halton sequence for an arbitrary index and base number.
 
 \par
-This sampler is just a wrapper to call the function rand() of the standard C library.
+The Halton sequence algorithm is very simple as shown in listing \ref{HaltonSequence} and it was taken from \cite{HaltonSequence}.
 
-This function is a pseudo random number generator (PRNG), which is an algorithm for generating a sequence of numbers whose properties approximate the properties of sequences of random numbers.
-Although the PRNG-generated sequence is not truly random, because it is completely determined by an initial value, called the PRNG's seed.
+\begin{lstlisting}[caption={Developed method of HaltonSequence}, captionpos=b, label=HaltonSequence]
+float haltonSequence(unsigned index, unsigned base) {
+	float f = 1.0
+	float result = 0.0
+	while (index > 0) {
+		f /= base
+		result += f * (index % base)
+		index = std::floor(index / base)
+	}
+	return result;
+}
+\end{lstlisting}
+
+\subsubsection{MersenneTwister}
+
+\par
+This sampler is just a wrapper to call the constructor of std::uniform\_real\_distribution() and the constructor of std::random\_device() of the standard C++ library.
+
+This allow to construct a random number generator which calculates a random number between 0 and 1 with an uniform distribution.
+This generator is a pseudo random number generator (PRNG), which is an algorithm for generating a sequence of numbers whose properties approximate the properties of sequences of random numbers.
+Although the PRNG-generated sequence is not truly random, because it is completely determined by an initial value, called the PRNG's seed, it commonly used a std::random\_device for the generator seed because it produces non-deterministic random numbers, when supported.
 These sequences are usually used in simulations that use Monte Carlo methods like the Monte Carlo Ray Tracing.
 
 \begin{figure}[H]
@@ -883,10 +1016,23 @@ So the algorithm of the
 $getSample$
 is just:
 
-\begin{lstlisting}[caption={Algorithm of Random Sampler}, captionpos=b, label=Random]
-return rand() / RAND_MAX
+\begin{lstlisting}[caption={Algorithm of MersenneTwister Sampler}, captionpos=b, label=MersenneTwister]
+static std::uniform_real_distribution<float> uniform_dist {0.0, 1.0}
+static std::mt19937 gen(std::random_device {}())
+float res = uniform_dist(gen)
+return res
 \end{lstlisting}
 
+\par
+As can be seen in listing \ref{MersenneTwister}, the algorithm is very simple because it just constructs two objects in the first time the method is called:
+
+\begin{enumerate}
+	\item std::uniform\_real\_distribution - which produces random floating-point values, uniformly distributed on the interval [a, b), that the user specifies.
+	\item std::mt19937 - pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
+\end{enumerate}
+
+\par
+Then every time the user calls \textit{getSample}, the MersenneTwister Sampler just calls the operator() of std::uniform\_real\_distribution generator, which generates the next random number in the distribution.
 
 \subsection{Lights}
 
@@ -895,8 +1041,8 @@ There were implemented two types of light sources: PointLight and AreaLight.
 These light sources provide the user two main methods:
 
 \begin{lstlisting}[caption={Main methods in Light}, captionpos=b, label=Light]
-const Point3D getPosition(void);
-bool intersect(Intersection &intersection, const Ray &ray, const Material &) const;
+glm::vec3 getPosition()
+Intersection intersect(Intersection intersection, Ray ray)
 \end{lstlisting}
 
 \par
@@ -920,15 +1066,19 @@ Therefore, the
 $getPosition$
 method is very simple because it only returns the position of the light source determined in its constructor:
 
-\begin{lstlisting}[caption={Algorithm of PointLight}, captionpos=b, label=PointLight]
-return position;
+\begin{lstlisting}[caption={Algorithm of getPosition in PointLight}, captionpos=b, label=getPositionPointLight]
+return lightPosition
 \end{lstlisting}
 
 \par
 And the
 $intersect$
-method is also quite simple because it always returns false.
-This is because the probability of a ray intersecting a single 3D point in the world is practically nil.
+method is also quite simple because the ray parameter never intersects the point light.
+This is because the probability of a ray intersecting a single 3D point in the world is practically null.
+
+\begin{lstlisting}[caption={Algorithm of intersect in PointLight}, captionpos=b, label=intersectPointLight]
+return intersection
+\end{lstlisting}
 
 \subsubsection{AreaLight}
 
@@ -940,12 +1090,12 @@ This shape is intended as it allows to generate a random point in a triangle wit
 A triangle with 3 points: A, B and C.
 We get vectors AB and AC, being:
 
-\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
+\begin{lstlisting}[caption={Vectors AB and AC in a triangle}, captionpos=b, label=AreaLight]
 AB=[Bx-Ax,By-Ay,Bz-Az] and AC=[Cx-Ax,Cy-Ay,Cz-Az].
 \end{lstlisting}
 
 \par
-These vectors tell how to get from point A to the other two points in the triangle, by telling us what direction to go and how far.
+These vectors tell us how to get from point A to the other two points in the triangle, by telling us what direction to go and how far.
 So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the center of the triangle.
 To generate a random point in the triangle, we have to generate 2 random numbers between 0 and 1 (R and S).
 Then we have to make sure we stay inside the triangle by checking if they are larger than one:
@@ -975,23 +1125,28 @@ So, the
 $getPosition$
 algorithm is as following:
 
-\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
-R = samplerPointLight.getSample(0)
-S = samplerPointLight.getSample(0)
-if (R + S >= 1) {
-  R = 1 - R
-  S = 1 - S
+\begin{lstlisting}[caption={Algorithm of getPosition in AreaLight}, captionpos=b, label=AreaLight]
+float R = samplerPointLight->getSample()
+float S = samplerPointLight->getSample()
+if (R + S >= 1.0) {
+	R = 1.0 - R;
+	S = 1.0 - S;
 }
-x = A.x + R * AB.x + S * AC.x
-y = A.y + R * AB.y + S * AC.y
-z = A.z + R * AB.z + S * AC.z
-return Point3D(x, y, z)
+glm::vec3 position = triangle.pointA + R * triangle.AB + S * triangle.AC
+return position
 \end{lstlisting}
 
 \par
 And the
 $intersect$
-method is equal to the intersection of a ray with a triangle presented earlier.
+method just calls the intersection of a ray with a triangle method presented earlier, and if it intersects updates the material.
+
+\begin{lstlisting}[caption={Algorithm of intersect in AreaLight}, captionpos=b, label=AreaLight]
+float lastDist = intersection.length
+intersection = triangle.intersect(intersection, ray)
+intersection.material_= intersection.length < lastDist? &radiance : intersection.material
+return intersection
+\end{lstlisting}
 
 \subsection{Cameras}
 
@@ -1002,8 +1157,7 @@ Only 2 types of cameras were implemented: perspective and orthographic cameras.
 The camera only provides one method for the user to cast a ray from the camera position in direction to the image plane:
 
 \begin{lstlisting}[caption={Main methods in Camera}, captionpos=b, label=Camera]
-Ray generateRay(const float u, const float v,
-                const float deviationU, const float deviationV) const;
+Ray generateRay(float u, float v, float deviationU, float deviationV);
 \end{lstlisting}
 
 \par
@@ -1087,8 +1241,8 @@ This means that by using jittering it is possible to obtain images pleasing to t
 With this type of camera we can simulate images being seen by the human eyes, which means, it simulates the depth of the objects, and produces 2D images with a 3D projection.
 
 \par
-To obtain an image plane with perspective is necessary to have a Field of View.
-In order to accept any resolution of the image plane, we have to divide the field of view in 2 parts: horizontal and vertical.
+To obtain an image plane with perspective it is necessary to have a Field of View.
+In order to accept any resolution of the image plane, we have to divide the field of view in two parts: horizontal and vertical.
 This way, we can obtain the aspect ratio of the image plane we want.
 
 \begin{figure}[H]
@@ -1113,7 +1267,7 @@ $u - 0.5$
 in the right vector and with
 $0.5 - v$
 in the up vector.
-This makes sure that we go through every pixel, starting with the pixel from the upper left corner to the lower right corner of the image plane.
+This makes sure that we go through every pixel, starting with the pixel from the top left corner to the bottom right corner of the image plane.
 Then the destination point of the ray is just the sum:\\
 $destinationPoint = cameraPosition + cameraDirection + rightVector + upVector$
 , and so its direction is just:\\
@@ -1121,14 +1275,15 @@ $rayDirection = destinationPoint - cameraPosition$
 .
 The origin of the ray is the position of the camera, because in a perspective camera, all rays come from the same point: the point where the camera is located.
 
-\begin{lstlisting}[caption={Algorithm of Perspective Camera}, captionpos=b, label=Perspective]
-rightFactor = arctan(hFov * (u - 0.5)) + deviationU
-rightVector = right * rightFactor
-upFactor = arctan(vFov * (0.5 - v)) + deviationV
-upVector = up * upFactor
-destinationPoint = cameraPosition + cameraDirection + rightVector + upVector
-rayDirection = destinationPoint - cameraPosition
-return Ray (rayDirection, cameraPosition)
+\begin{lstlisting}[caption={Algorithm of generateRay in Perspective Camera}, captionpos=b, label=Perspective]
+float rightFactor = arctan(hFov * (u - 0.5)) + deviationU
+glm::vec3 rightVector = right * rightFactor
+float upFactor = arctan(vFov * (0.5 - v)) + deviationV
+glm::vec3 upVector = up * upFactor
+glm::vec3 destinationPoint = cameraPosition + cameraDirection + rightVector + upVector
+glm::vec3 rayDirection = destinationPoint - cameraPosition
+Ray ray = Ray(glm::normalize(rayDirection), cameraPosition)
+return ray
 \end{lstlisting}
 
 
@@ -1146,7 +1301,7 @@ $sizeH$
 and
 $sizeV$
 , which are the horizontal and vertical sizes of the image plane.
-Then, to make sure that we go through all pixels from upper left pixel to lower right, we need to use the
+Then, to make sure that we go through all pixels from top left pixel to the bottom right, we need to use the
 $u$
 and
 $v$
@@ -1155,13 +1310,14 @@ Then, the origin of the ray is:
 $rayOrigin = cameraPosition + rightVector + upVector$
 .
 
-\begin{lstlisting}[caption={Algorithm of Orthographic Camera}, captionpos=b, label=Orthographic]
-rightFactor = (u - 0.5) * sizeH
-rightVector = right * rightFactor + right * deviationU
-upFactor = (0.5f - v) * sizeV
-upVector = up * upFactor + up * deviationV
-rayOrigin = cameraPosition + rightVector + upVector
-return Ray (cameraDirection, rayOrigin)
+\begin{lstlisting}[caption={Algorithm of generateRay in Orthographic Camera}, captionpos=b, label=Orthographic]
+float rightFactor = (u - 0.5) * sizeH
+glm::vec3 rightVector = right * rightFactor + right * deviationU
+float upFactor = (0.5 - v) * sizeV
+glm::vec3 upVector = up * upFactor + up * deviationV
+glm::vec3 rayOrigin = cameraPosition + rightVector + upVector
+Ray ray = Ray (cameraDirection, rayOrigin)
+return ray
 \end{lstlisting}
 
 \begin{figure}[H]
@@ -1192,7 +1348,7 @@ There are many different types of file formats for storing meshes:
 All these file formats allows the user to store the positions of many triangles in a file, which together form the geometry of the scene.
 
 \par
-This library only provides an Object Loader that allows loading the scene geometry from Wavefront obj files.
+This library only provides one Object Loader that allows loading the scene geometry from Wavefront obj files.
 This type of Model file format is a good choice because, besides being simple, it is open and has been adopted by many 3D graphics application vendors, like, 3ds Max and Blender.
 
 \subsubsection{OBJ Loader}
@@ -1224,8 +1380,8 @@ Vertices are stored in a counter-clockwise order by default, making explicit dec
 	
 	# List of polygonal face elements
 	# v1/vt1/vn1	v2/vt2/vn2	v3/vt3/vn3
-	f 3/1/1		4/2/3		5/3/4
-	f 6/6/3		7/1/2		8/2/6
+	f 03/01/01			04/02/03		05/03/04
+	f 06/06/03			07/01/02		08/02/06
 	...
 \end{lstlisting}
 
@@ -1234,7 +1390,7 @@ The Wavefront OBJ file format is described as shown in \ref{OBJ}, and is accompa
 It is this file that describes surface shading (material) properties of objects within one or more .OBJ files.
 It allows to define multiple materials, with, ambient color, diffuse color, specular reflective color and specular refractive color.
 And even allows to load texture maps stored in TGA files.
-The Listing \ref{MTL} shows an example of a description of a material.
+The listing \ref{MTL} shows an example of a description of a material.
 
 \begin{lstlisting}[caption={.MTL file format}, captionpos=b, label=MTL]
 # This is a comment
@@ -1266,9 +1422,17 @@ Before developing the ray tracer to Android, it is necessary to understand how a
 A typical Android application is programmed in Java programming language.
 And it usually needs to communicate with an User Interface which also is programmed in Java.
 The code is compiled with Android Software Development Kit (SDK) along with any data and resource files into an Android package (APK).
-But, in order to avoid using the Java Emulator in our code and program it in native code, it is necessary to use Android Native Development Kit (NDK).
+But, in order to avoid using the Java Virtual Machine (JVM) in our code and program it in native code, it is necessary to use Android Native Development Kit (NDK).
 Unfortunately, the NDK tool-chain doesn't provide any User Interface libraries like Qt that facilitates the build of a User Interface in native code.
 So, in order to obtain the best performance possible in a mobile device, the ray tracer library and components were programmed in C++ and the User Interface was programmed in Java.
+The User Interface calls the ray tracer available methods using the Java Native Interface (JNI) which is a programming standard that allows Java code running on a JVM to call native applications (programs specific to a hardware platform and operating system) and libraries written in other languages such as C, C ++ and assembly.
+
+\begin{figure}[H]
+	\centering
+	\caption{Diagram explaining how the JVM can call native code.(\cite{JNI}).}
+	\label{JNI.}
+	\includegraphics[keepaspectratio,scale=0.3]{JNI.png}
+\end{figure}
 
 \subsection{User Interface}
 
@@ -1276,10 +1440,10 @@ So, in order to obtain the best performance possible in a mobile device, the ray
 The Android User Interface is programmed in Java and only one thread can refresh the User Interface (UI thread).
 
 \par
-There are only 2 goals in the User Interface: should be as simple as possible and should be able to allow progressive ray tracing, which means, refreshing the image while it is being rendered.
+There are only two goals in the User Interface: should be as simple as possible and should be able to allow progressive ray tracing, which means, refreshing the image while it is being rendered.
 
 \par
-In order to allow progressive ray tracing, it was used a pool of 1 thread called Render Task thread that every 250 ms wakes up the thread and updates the strings used in the text view.
+In order to allow progressive ray tracing, it was used a pool of one thread called Render Task thread that every 250 ms wakes up the thread and updates the strings used in the text view.
 Before it finishes, it publishes the progress on the UI thread.
 Then the UI thread wakes up and updates the text view.
 
@@ -1296,7 +1460,7 @@ Then the UI thread wakes up and updates the text view.
 Developing applications for mobile devices have different challenges compared with the traditional personal computer hardware.
 
 \par
-The Android User Interface has some particularities like only 1 thread can modify the UI, and is usually called the UI thread.
+The Android User Interface has some particularities like only one thread can modify the UI, and is usually called the UI thread.
 
 \par
 The size of RAM available for executing programs is typically smaller and the CPU microarchitecture is generally simpler and with smaller computational power.
@@ -1304,7 +1468,7 @@ Also the Operating System (OS) is shaped for the mobile world, making a lot of r
 The amount of main memory available for the applications can also be affected by the OS.
 
 \par
-Other challenges are related with the communication mechanism between the SDK and the NDK, because two different languages need to "communicate" in runtime (GUI in Java and the library in C++).
+Other challenges are related with the communication mechanism between the SDK and the NDK, because two different languages environments need to "communicate" in runtime (GUI in Java and the library in C++).
 This involves learning how to use the Java Native Interface (JNI), so that the native code can send and receive information from Java Virtual Machine (JVM).
 
 \par

@@ -7,6 +7,7 @@ A level-1 auxiliary file: 4_demonstration.aux
 A level-1 auxiliary file: 5_conclusion_future_work.aux
 A level-1 auxiliary file: A_user_documentation.aux
 Database file #1: dissertation.bib
+Warning--I didn't find a database entry for "JournalDuNetNI"
 Warning--empty year in RadeonRays
 Warning--empty year in CPU_SIMD
 Warning--empty year in jsRayTracer
@@ -27,6 +28,7 @@ Warning--empty year in CPU_Cache
 Warning--empty year in HRay
 Warning--empty year in BVH
 Warning--empty year in CMake
+Warning--empty year in JNI
 Warning--empty year in SAH
 Warning--empty year in IndigoRT
 Warning--empty year in PBRT
@@ -43,5 +45,7 @@ Warning--empty year in micro-packet
 Warning--empty year in tray
 Warning--empty year in trayrust
 Warning--empty year in PlaneRayIntersection
+Warning--empty year in HaltonSequence
+Warning--empty year in CosineSampleHemisphere
 Warning--empty year in Visionaray
-(There were 37 warnings)
+(There were 41 warnings)

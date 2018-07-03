@@ -27,8 +27,8 @@ The library was implemented as planned, having been developed:
 
 
 \begin{itemize}
-	\item 2 acceleration structures
-	\item 3 primitive shapes
+	\item two acceleration structures
+	\item three primitive shapes
 	\item intersection
 	\item material
 	\item primitive
@@ -51,11 +51,11 @@ With this, the user can create simple rendering applications that just use the r
 Besides the library, it was also developed several rendering components:
 
 \begin{itemize}
-	\item 2 cameras
-	\item 2 lights
-	\item 1 object loader
-	\item 6 samplers
-	\item 5 shaders
+	\item two cameras
+	\item two lights
+	\item one object loader
+	\item six samplers
+	\item five shaders
 \end{itemize}
 
 \par
@@ -63,3 +63,12 @@ This allows the user to develop rendering applications in an easy, safe and fast
 Unfortunately, this does not allow rapid development of all kinds of rendering applications.
 One of the things that can be improved in this library is allowing to put more than one camera in the scene, so that you can cast rays to the scene from more than one different point.
 And thus open the possibility of allowing the user to develop more different shaders, such as Bidirectional Path Tracing, or even allowing to render the 3D scene into a 3D image.
+
+\par
+Other thing that could be implemented is a texture loader for the ray tracer.
+This allows the possibility to render more beautiful scenes.
+
+\par
+And last but not least, there is always the possibility to improve the ray tracer performance by redeveloping the application using a 
+Data-oriented design instead of the traditional Object-oriented design used.
+This approach approach was motivated by cache coherency, used in video game development, usually in the programming languages C or C++.
