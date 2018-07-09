@@ -123,8 +123,14 @@ jfloat Java_puscas_mobilertapp_ViewText_getFPS(
 ) noexcept;
 
 extern "C"
-jint Java_puscas_mobilertapp_ViewText_getTimeFrame(
+jlong Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *env,
+        jobject thiz
+) noexcept;
+
+extern "C"
+jlong Java_puscas_mobilertapp_ViewText_getTimeRenderer(
+        JNIEnv *const env,
         jobject thiz
 ) noexcept;
 

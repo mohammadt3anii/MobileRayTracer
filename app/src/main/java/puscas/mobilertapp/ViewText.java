@@ -37,7 +37,9 @@ class ViewText {
 
     static native float getFPS();
 
-    static native int getTimeFrame();
+    static native long getTimeFrame();
+
+    static native long getTimeRenderer();
 
     static native void moveTouch(final float x, final float y, final int primitiveId);
 

@@ -16,7 +16,8 @@ static ::std::mutex mutex_{};
 static ::std::int32_t width_{0};
 static ::std::int32_t height_{0};
 static float fps_{0.0f};
-static ::std::int32_t timeFrame_{0};
+static ::std::int64_t timeFrame_{0};
+static ::std::int64_t timeRenderer_{0};
 static ::std::int32_t numberOfLights_{0};
 static ::std::int32_t accelerator_{0};
 
@@ -207,9 +208,10 @@ static void FPS() noexcept {
     static ::std::chrono::steady_clock::time_point timebase_{};
     ++frame;
     const ::std::chrono::steady_clock::time_point time{::std::chrono::steady_clock::now()};
-    if (::std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count() > 1000) {
-        fps_ = (frame * 1000.0f) /
-               (::std::chrono::duration_cast<::std::chrono::milliseconds>(time - timebase_).count());
+    const ::std::int64_t timeElapsed{
+            ::std::chrono::duration_cast<std::chrono::milliseconds>(time - timebase_).count()};
+    if (timeElapsed > 1000) {
+        fps_ = (frame * 1000.0f) / timeElapsed;
         timebase_ = time;
         frame = 0;
     }
@@ -657,6 +659,110 @@ extern "C"
                             fovX, fovY);
                 }
 
+                //Power Plant
+                if (::std::strstr(objFileName, "powerplant") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-1.0f, 1.5f, 1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, 1.0f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-1.0f, 1.5f, 1.0f},
+                            ::glm::vec3 {-1.0f, 1.5f, -1.0f},
+                            ::glm::vec3 {1.0f, 1.5f, -1.0f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {-1.0f, -1.0f, -1.0f},
+                            ::glm::vec3 {0.005265f, 0.801842f, -0.150495f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
+                //Road Bike
+                if (::std::strstr(objFileName, "roadBike") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, 0.5f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {-0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {-2.0f, 0.0f, -2.0f},
+                            ::glm::vec3 {0.0f, 0.5f, 0.0f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
+                //San Miguel
+                if (::std::strstr(objFileName, "San_Miguel") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, 0.5f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {-0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {-19.3901f, 0.798561f, 6.01737f},
+                            ::glm::vec3 {-49.3901f, 0.798561f, 6.01737f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
+                //Sports Car
+                if (::std::strstr(objFileName, "sportsCar") != nullptr) {
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint1),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, 0.5f}));
+                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            lightMat,
+                            ::std::move(samplerPoint2),
+                            ::glm::vec3 {-0.5f, 1.5f, 0.5f},
+                            ::glm::vec3 {-0.5f, 1.5f, -0.5f},
+                            ::glm::vec3 {0.5f, 1.5f, -0.5f}));
+
+                    camera = ::std::make_unique<::Components::Perspective>(
+                            ::glm::vec3 {-6.0f, 3.798561f, -6.0f},
+                            ::glm::vec3 {0.5110f, 0.8459f, -0.7924f},
+                            ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                            fovX, fovY);
+                }
+
                 env->ReleaseStringUTFChars(globalObjFile, objFileName);
                 env->ReleaseStringUTFChars(globalMatFile, matFileName);
             }
@@ -716,10 +822,17 @@ extern "C"
                 const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
+            const ::std::chrono::time_point<::std::chrono::system_clock> start{
+                    ::std::chrono::system_clock::now()};
             renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                     ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                     static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                     static_cast<::std::uint32_t>(samplesPixel));
+            const ::std::chrono::time_point<::std::chrono::system_clock> end{
+                    ::std::chrono::system_clock::now()};
+            timeRenderer_ = ::std::chrono::duration_cast<std::chrono::milliseconds>(
+                    end - start).count();
+            LOG("TIME CONSTRUCTION RENDERER = ", timeRenderer_, "ms");
         }
         /*LOG("TRIANGLES = ", triangles);
         LOG("SPHERES = ", spheres);
@@ -757,6 +870,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
     LOG("WORKING = IDLE");
     timeFrame_ = 0;
     fps_ = 0.0f;
+    timeRenderer_ = 0;
     env->ExceptionClear();
 }
 
@@ -806,19 +920,21 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         const ::std::uint32_t stride{info.stride};
         ::std::int32_t rep {1};
         do {
-            const ::std::chrono::steady_clock::time_point start{
-                    ::std::chrono::steady_clock::now()};
             LOG("STARTING RENDERING");
             LOG("nThreads = ", nThreads);
             {
                 const ::std::lock_guard<::std::mutex> lock {mutex_};
+                const ::std::chrono::steady_clock::time_point start{
+                        ::std::chrono::steady_clock::now()};
                 if (renderer_ != nullptr) {
                     renderer_->renderFrame(dstPixels, nThreads, stride);
                 }
+                const ::std::chrono::steady_clock::time_point end{
+                        ::std::chrono::steady_clock::now()};
+                timeFrame_ = ::std::chrono::duration_cast<::std::chrono::milliseconds>(
+                        end - start).count();
             }
             LOG("FINISHED RENDERING");
-            timeFrame_ = static_cast<int> (::std::chrono::duration_cast<::std::chrono::milliseconds>(
-                    ::std::chrono::steady_clock::now() - start).count());
             FPS();
             rep--;
         } while (working_ != State::STOPPED && rep > 0);
@@ -904,12 +1020,21 @@ float Java_puscas_mobilertapp_ViewText_getFPS(
 }
 
 extern "C"
-::std::int32_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
+::std::int64_t Java_puscas_mobilertapp_ViewText_getTimeFrame(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
     env->ExceptionClear();
     return timeFrame_;
+}
+
+extern "C"
+::std::int64_t Java_puscas_mobilertapp_ViewText_getTimeRenderer(
+        JNIEnv *const env,
+        jobject /*thiz*/
+) noexcept {
+    env->ExceptionClear();
+    return timeRenderer_;
 }
 
 extern "C"

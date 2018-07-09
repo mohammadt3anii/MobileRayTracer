@@ -1,4 +1,4 @@
-\begin{thebibliography}{48}
+\begin{thebibliography}{50}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -170,6 +170,19 @@ Greg~Humphreys Matt~Pharr, Wenzel~Jakob.
 \newblock Physically based rendering.
 \newblock URL \url{http://pbrt.org/}.
 \newblock Accessed: January 2017.
+
+\bibitem[McGuire(2017)]{McGuire2017Data}
+Morgan McGuire.
+\newblock Computer graphics archive, July 2017.
+\newblock URL \url{https://casual-effects.com/data}.
+\newblock Accessed: July 2018.
+
+\bibitem[Moller and Trumbore(1997)]{RayTriangleIntersection}
+Tomas Moller and Ben Trumbore.
+\newblock Fast minimum storage ray/triangle intersection, 1997.
+\newblock URL
+  \url{https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf}.
+\newblock Accessed: July 2018.
 
 \bibitem[Morgan()]{G3D17}
 Michael~Mara Morgan.

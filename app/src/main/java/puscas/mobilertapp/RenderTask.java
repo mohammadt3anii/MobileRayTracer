@@ -27,8 +27,9 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
         viewText_.FPS();
         viewText_.fpsT_ = String.format(Locale.US, "fps:%.1f", ViewText.getFPS());
         viewText_.fpsRenderT_ = String.format(Locale.US, "[%.1f]", viewText_.fps_);
-        viewText_.timeFrameT_ = String.format(Locale.US, ",t:%.2fs",
-                ViewText.getTimeFrame() / 1000.0f);
+        final long timeFrame = ViewText.getTimeFrame();
+        final long timeRenderer = ViewText.getTimeRenderer();
+        viewText_.timeFrameT_ = String.format(Locale.US, ",t:%.2fs", timeRenderer / 1000.0f);
         final long currentTime = SystemClock.elapsedRealtime();
         viewText_.timeT_ = String.format(Locale.US, "[%.2fs]", (currentTime - viewText_.start_) / 1000.0f);
         viewText_.allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";

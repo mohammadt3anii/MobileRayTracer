@@ -10,8 +10,6 @@ The developed application was tested in five different devices:
 	\item Samsung Galaxy Fresh Duos GT-S7392
 	\item Raspberry Pi 2 Model B
 	\item MINIX NEO X8-H PLUS (k200)
-	\item Android Virtual Device (AVD) in an HP Z440 desktop
-	\item Android Virtual Device (AVD) in a Clevo W230SS laptop
 \end{itemize}
 
 \begin{table}[H]
@@ -19,15 +17,13 @@ The developed application was tested in five different devices:
 	\centering
 	\caption{Devices specifications.}
 	\label{specs}
-	\hspace*{-3cm}
+	\hspace*{-2cm}
 	\begin{tabular}{|l|l|l|l|l|}
 		\hline
 		Device&CPU&Cache(L1/L2/L3)&GPU&RAM\\ \hline
-		Samsung Galaxy&1xARM Cortex A9 @1GHz&64KB/Unknown&1xBroadcom VideoCore IV&512MB\\ \hline
+		Samsung Galaxy Fresh&1xARM Cortex A9 @1GHz&64KB/Unknown&1xBroadcom VideoCore IV&512MB\\ \hline
 		Raspberry Pi 2 Model B&4xARM Cortex A7 @900MHz&64KB/1MB&1xBroadcom VideoCore IV&1GB\\ \hline
 		MINIX NEO X8 PLUS&4xARM Cortex A9 @2.0GHz&64KB/Unknown&4xMali-450 MP&2GB\\ \hline
-		HP Z440 desktop&4xIntel Xeon E5-1620 v4 @3.5GHz&64KB/256KB/10MB&1xNvidia Quadro P2000&16GB\\ \hline
-		Clevo W230SS laptop&4xIntel® Core™ i7-4710MQ @2.5GHz&64KB/256KB/6MB&1xNvidia 860M&16GB \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -40,10 +36,6 @@ This device is a low-end smartphone with a low-end single core CPU.
 It was also possible to test it on two different computers that are portable and even smaller than a common laptop.
 The Raspberry Pi 2 Model B and the MINIX NEO X8-H PLUS which are devices with the Android operating system installed.
 
-\par
-Last, but not least, it was also tested in two Android Virtual Devices, one desktop and one laptop.
-The desktop is a HP Z440 computer, which is a workstation, and the laptop is a Clevo W230SS, which is a middle end laptop.
-
 \begin{figure}[H]
 	\centering
 	\caption{Illustration of conference scene, rendered with shader Whitted in MobileRT.}
@@ -54,6 +46,57 @@ The desktop is a HP Z440 computer, which is a workstation, and the laptop is a C
 \par
 The scene used for testing was the conference scene, as illustrated in figure \ref{scene_conference}.
 This scene consists of 331179 triangles and has two area lights in form of triangles.
+
+\subsection{Samsung Galaxy Fresh Duos GT-S7392}
+
+\begin{tikzpicture}
+\begin{axis}[
+legend style={at={(1.05,1.00)},anchor=north west},
+axis lines = left,
+xlabel = \#threads,
+ylabel = speedup,
+xtick={0,1,2,3,4},
+ytick={0,1,...,10},
+]
+\addplot [
+color=blue,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Without Accelerator Structure}
+\addplot [
+color=black,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Regular Grid}
+\addplot [
+color=red,
+mark=*,
+dashed,
+] plot coordinates {
+	(0,0.0)
+	(1,1.0)
+	(2,1.0)
+	(3,1.0)
+	(4,1.0)
+};
+\addlegendentry{Octree}
+\label{graph:NoShadows}
+\end{axis}
+\end{tikzpicture}
 
 \subsection{Raspberry Pi 2 Model B}
 
@@ -108,108 +151,6 @@ dashed,
 
 
 \subsection{MINIX NEO X8-H PLUS}
-
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-axis lines = left,
-xlabel = \#threads,
-ylabel = speedup,
-xtick={0,1,2,3,4},
-ytick={0,1,...,10},
-]
-\addplot [
-color=blue,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Without Accelerator Structure}
-\addplot [
-color=black,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Regular Grid}
-\addplot [
-color=red,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Octree}
-\label{graph:NoShadows}
-\end{axis}
-\end{tikzpicture}
-
-\subsection{Android Virtual Device in an HP Z440 desktop}
-
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-axis lines = left,
-xlabel = \#threads,
-ylabel = speedup,
-xtick={0,1,2,3,4},
-ytick={0,1,...,10},
-]
-\addplot [
-color=blue,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Without Accelerator Structure}
-\addplot [
-color=black,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Regular Grid}
-\addplot [
-color=red,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Octree}
-\label{graph:NoShadows}
-\end{axis}
-\end{tikzpicture}
-
-\subsection{Android Virtual Device in a Clevo W230SS laptop}
 
 \begin{tikzpicture}
 \begin{axis}[

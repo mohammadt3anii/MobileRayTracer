@@ -56,15 +56,14 @@
 \contentsline {subsection}{\numberline {3.5.3}Challenges}{47}{subsection.3.5.3}
 \contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{49}{chapter.4}
 \contentsline {section}{\numberline {4.1}Results obtained}{49}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Raspberry Pi 2 Model B}{50}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}MINIX NEO X8-H PLUS}{51}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}Android Virtual Device in an HP Z440 desktop}{51}{subsection.4.1.3}
-\contentsline {subsection}{\numberline {4.1.4}Android Virtual Device in a Clevo W230SS laptop}{52}{subsection.4.1.4}
-\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{52}{section.4.2}
-\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{53}{chapter.5}
-\contentsline {section}{\numberline {5.1}Conclusions}{53}{section.5.1}
-\contentsline {section}{\numberline {5.2}Future Work}{53}{section.5.2}
+\contentsline {subsection}{\numberline {4.1.1}Samsung Galaxy Fresh Duos GT-S7392}{50}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Raspberry Pi 2 Model B}{51}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}MINIX NEO X8-H PLUS}{51}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{51}{section.4.2}
+\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{52}{chapter.5}
+\contentsline {section}{\numberline {5.1}Conclusions}{52}{section.5.1}
+\contentsline {section}{\numberline {5.2}Future Work}{52}{section.5.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{56}{chapter.6}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{60}{Appendix.1.A}
-\contentsline {chapter}{Appendices}{60}{section*.46}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{55}{chapter.6}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{59}{Appendix.1.A}
+\contentsline {chapter}{Appendices}{59}{section*.46}
