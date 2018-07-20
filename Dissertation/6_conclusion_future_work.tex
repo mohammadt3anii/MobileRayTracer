@@ -1,0 +1,74 @@
+\chapter{Conclusion \& Future work}
+
+\section{Conclusions}
+
+\par
+The constant evolution of technology allowed to leverage and massify the mobile devices.
+With, more and increasingly powerful, mobile devices, it is possible to perform more and more complex and useful tasks in them.
+This is a huge market where the programmers can develop their applications to, and where the development time can be a huge factor in their career success.
+
+\par
+But as noted in the section \ref{RelatedWork}, there is clearly a lack of well documented rendering libraries for mobile systems.
+There is then the need to change this reality, since more and more the Internet of Things is more present each passing year, because there are increasingly powerful mobile systems.
+
+\par
+During the development of this ray tracer library, it was identified some challenges caused by the fact that it was developed for an Android mobile device, like, the smaller amount of RAM available for the software applications.
+And, also, the simpler CPUs microarchitectures and smaller computational power available from these devices can make computational demanding applications, like ray tracers, difficult to perform the required calculations in a useful time for the user.
+This fact is corroborated by the obtained results as demonstrated in section \ref{ResultsObtained}.
+
+\section{Future Work}
+
+\par
+With respect to future work, it should be the development of the library for Android and the analysis of possibilities and challenges that may arise.
+Upon completion of the development process, besides writing the dissertation and the article, it is expected to provide a demo application in order to illustrate the functionalities and performance that the library will offer.
+
+\par
+The library was implemented as planned, having been developed:
+
+
+\begin{itemize}
+	\item two acceleration structures
+	\item three primitive shapes
+	\item intersection
+	\item material
+	\item primitive
+	\item ray
+	\item renderer
+	\item scene
+	\item possibility to develop different types of cameras
+	\item possibility to develop different types of lights
+	\item possibility to develop different types of object loaders
+	\item possibility to develop different types of samplers
+	\item possibility to develop different types of shaders
+\end{itemize}
+
+\par
+All these developed components allow the execution of the basic features of a ray tracer, such as the intersection of rays with the different shapes of primitives.
+Besides that, it allows the user the possibility to develop several types of rendering components, like cameras, lights, object loaders, samplers and shaders.
+With this, the user can create simple rendering applications that just use the rendering components offered together with the library, or even very complex applications, that use rendering components developed by the user.
+
+\par
+Besides the library, it was also developed several rendering components:
+
+\begin{itemize}
+	\item two cameras
+	\item two lights
+	\item one object loader
+	\item six samplers
+	\item five shaders
+\end{itemize}
+
+\par
+This allows the user to develop rendering applications in an easy, safe and fast way, as was intended in this dissertation.
+Unfortunately, this does not allow rapid development of all kinds of rendering applications.
+One of the things that can be improved in this library is allowing to put more than one camera in the scene, so that you can cast rays to the scene from more than one different point.
+And thus open the possibility of allowing the user to develop more different shaders, such as Bidirectional Path Tracing, or even allowing to render the 3D scene into a 3D image.
+
+\par
+Other thing that could be implemented is a texture loader for the ray tracer.
+This allows the possibility to render more beautiful scenes.
+
+\par
+And last but not least, there is always the possibility to improve the ray tracer performance by redeveloping the application using a 
+Data-oriented design instead of the traditional Object-oriented design used.
+This approach approach was motivated by cache coherency, used in video game development, usually in the programming languages C or C++.

@@ -50,21 +50,22 @@
 \contentsline {subsubsection}{Orthographic Camera}{46}{lstnumber.3.31.8}
 \contentsline {subsection}{\numberline {3.4.5}Object Loaders}{47}{subsection.3.4.5}
 \contentsline {subsubsection}{OBJ Loader}{48}{subsection.3.4.5}
-\contentsline {section}{\numberline {3.5}Android specifics and challenges}{49}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}Android specifics}{49}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}User Interface}{50}{subsection.3.5.2}
-\contentsline {subsection}{\numberline {3.5.3}Programming decisions}{51}{subsection.3.5.3}
-\contentsline {subsection}{\numberline {3.5.4}Challenges}{51}{subsection.3.5.4}
-\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Demonstration: Global Illumination}}{53}{chapter.4}
-\contentsline {section}{\numberline {4.1}Results obtained}{53}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Samsung Galaxy Fresh Duos GT-S7392}{54}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}Raspberry Pi 2 Model B}{55}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}MINIX NEO X8-H PLUS}{55}{subsection.4.1.3}
-\contentsline {section}{\numberline {4.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{55}{section.4.2}
-\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Conclusion \& Future work}}{56}{chapter.5}
-\contentsline {section}{\numberline {5.1}Conclusions}{56}{section.5.1}
-\contentsline {section}{\numberline {5.2}Future Work}{56}{section.5.2}
+\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Android challenges}}{50}{chapter.4}
+\contentsline {section}{\numberline {4.1}Android specifics}{50}{section.4.1}
+\contentsline {section}{\numberline {4.2}User Interface}{51}{section.4.2}
+\contentsline {section}{\numberline {4.3}Programming decisions}{52}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Challenges}{52}{subsection.4.3.1}
+\contentsline {section}{\numberline {4.4}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{53}{section.4.4}
+\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Demonstration: Global Illumination}}{54}{chapter.5}
+\contentsline {section}{\numberline {5.1}Results obtained}{54}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Samsung Galaxy Fresh Duos GT-S7392}{55}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Raspberry Pi 2 Model B}{56}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}MINIX NEO X8-H PLUS}{56}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{56}{section.5.2}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Conclusion \& Future work}}{57}{chapter.6}
+\contentsline {section}{\numberline {6.1}Conclusions}{57}{section.6.1}
+\contentsline {section}{\numberline {6.2}Future Work}{57}{section.6.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Bibliography}}{59}{chapter.6}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{64}{Appendix.1.A}
-\contentsline {chapter}{Appendices}{64}{section*.51}
+\contentsline {chapter}{\numberline {7}\spacedlowsmallcaps {Bibliography}}{60}{chapter.7}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{65}{Appendix.1.A}
+\contentsline {chapter}{Appendices}{65}{section*.51}

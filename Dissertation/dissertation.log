@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  20 JUL 2018 12:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6600) (preloaded format=pdflatex 2018.5.10)  20 JUL 2018 16:12
 entering extended mode
 **./dissertation.tex
 (dissertation.tex
@@ -2074,7 +2074,7 @@ LaTeX Warning: Label `Perspective_Camera.' multiply defined.
 
 LaTeX Warning: Label `Perspective_Camera.@cref' multiply defined.
 
-) (4_demonstration.aux
+) (4_android.aux) (5_demonstration.aux
 
 LaTeX Warning: Label `graph:NoShadows' multiply defined.
 
@@ -2087,7 +2087,7 @@ LaTeX Warning: Label `graph:NoShadows' multiply defined.
 
 LaTeX Warning: Label `graph:NoShadows@cref' multiply defined.
 
-) (5_conclusion_future_work.aux) (A_user_documentation.aux))
+) (6_conclusion_future_work.aux) (A_user_documentation.aux))
 \openout1 = `dissertation.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
@@ -2477,7 +2477,7 @@ Class scrbook Warning: \float@addtolists detected!
 (scrbook)              a package that still implements the
 (scrbook)              deprecated \float@addtolist interface .
 
-<Images/Mobile_devices.jpg, id=321, 1127.21124pt x 939.51pt>
+<Images/Mobile_devices.jpg, id=324, 1127.21124pt x 939.51pt>
 File: Images/Mobile_devices.jpg Graphic file (type jpg)
 <use Images/Mobile_devices.jpg>
 Package pdftex.def Info: Images/Mobile_devices.jpg  used on input line 34.
@@ -2495,7 +2495,7 @@ l.36
 
 
 ]
-<Images/Android_devices.png, id=330, 1003.75pt x 587.19376pt>
+<Images/Android_devices.png, id=333, 1003.75pt x 587.19376pt>
 File: Images/Android_devices.png Graphic file (type png)
 <use Images/Android_devices.png>
 Package pdftex.def Info: Images/Android_devices.png  used on input line 57.
@@ -2511,7 +2511,7 @@ opy)>]) [4]
 
  (2_state_of_the_art.tex
 chapter 2.
-<Images/Ray_Tracing.png, id=344, 1312.905pt x 586.19pt>
+<Images/Ray_Tracing.png, id=347, 1312.905pt x 586.19pt>
 File: Images/Ray_Tracing.png Graphic file (type png)
 <use Images/Ray_Tracing.png>
 Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
@@ -2522,7 +2522,7 @@ Package pdftex.def Info: Images/Ray_Tracing.png  used on input line 16.
 
 
  <./Images/Ray_Tracing.png>]
-<Images/cache.png, id=353, 652.4375pt x 361.35pt>
+<Images/cache.png, id=356, 652.4375pt x 361.35pt>
 File: Images/cache.png Graphic file (type png)
 <use Images/cache.png>
 Package pdftex.def Info: Images/cache.png  used on input line 39.
@@ -2534,12 +2534,12 @@ LaTeX Font Info:    Try loading font information for TS1+pplj on input line 47.
 \ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 ) [6 <./Images/cache.png>]
-<Images/Pipeline.png, id=361, 301.125pt x 190.7125pt>
+<Images/Pipeline.png, id=364, 301.125pt x 190.7125pt>
 File: Images/Pipeline.png Graphic file (type png)
 <use Images/Pipeline.png>
 Package pdftex.def Info: Images/Pipeline.png  used on input line 60.
 (pdftex.def)             Requested size: 150.56212pt x 95.356pt.
-<Images/SIMD.png, id=364, 311.20348pt x 298.66684pt>
+<Images/SIMD.png, id=367, 311.20348pt x 298.66684pt>
 File: Images/SIMD.png Graphic file (type png)
 <use Images/SIMD.png>
 Package pdftex.def Info: Images/SIMD.png  used on input line 76.
@@ -2557,7 +2557,7 @@ Overfull \hbox (9.14053pt too wide) in paragraph at lines 145--170
 
  (3_software_architecture.tex
 chapter 3.
-<Images/UI.png, id=428, 395.22656pt x 128.73094pt>
+<Images/UI.png, id=431, 395.22656pt x 128.73094pt>
 File: Images/UI.png Graphic file (type png)
 <use Images/UI.png>
 Package pdftex.def Info: Images/UI.png  used on input line 17.
@@ -2568,7 +2568,7 @@ Package pdftex.def Info: Images/UI.png  used on input line 17.
 
 
  <./Images/UI.png>]
-<Images/Layers.png, id=433, 442.65375pt x 302.12875pt>
+<Images/Layers.png, id=436, 442.65375pt x 302.12875pt>
 File: Images/Layers.png Graphic file (type png)
 <use Images/Layers.png>
 Package pdftex.def Info: Images/Layers.png  used on input line 39.
@@ -2581,44 +2581,44 @@ Package pdftex.def Info: Images/Layers.png  used on input line 185.
  [14]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 199.
-<Images/tiling.png, id=458, 328.8285pt x 532.389pt>
+<Images/tiling.png, id=461, 328.8285pt x 532.389pt>
 File: Images/tiling.png Graphic file (type png)
 <use Images/tiling.png>
 Package pdftex.def Info: Images/tiling.png  used on input line 213.
 (pdftex.def)             Requested size: 328.8277pt x 532.3877pt.
  [15 <./Images/tiling.png>]
-<Images/Shadow_Ray.jpg, id=472, 281.55188pt x 152.82094pt>
+<Images/Shadow_Ray.jpg, id=475, 281.55188pt x 152.82094pt>
 File: Images/Shadow_Ray.jpg Graphic file (type jpg)
 <use Images/Shadow_Ray.jpg>
 Package pdftex.def Info: Images/Shadow_Ray.jpg  used on input line 244.
 (pdftex.def)             Requested size: 281.55118pt x 152.82054pt.
  [16 <./Images/Shadow_Ray.jpg>]
-<Images/RayToPlane.png, id=482, 376.40625pt x 276.03125pt>
+<Images/RayToPlane.png, id=485, 376.40625pt x 276.03125pt>
 File: Images/RayToPlane.png Graphic file (type png)
 <use Images/RayToPlane.png>
 Package pdftex.def Info: Images/RayToPlane.png  used on input line 292.
 (pdftex.def)             Requested size: 150.55983pt x 110.41054pt.
  [17 <./Images/RayToPlane.png>]
-<Images/Ray_Sphere_Intersection.png, id=500, 682.04813pt x 411.03563pt>
+<Images/Ray_Sphere_Intersection.png, id=503, 682.04813pt x 411.03563pt>
 File: Images/Ray_Sphere_Intersection.png Graphic file (type png)
 <use Images/Ray_Sphere_Intersection.png>
 Package pdftex.def Info: Images/Ray_Sphere_Intersection.png  used on input line
  324.
 (pdftex.def)             Requested size: 272.8144pt x 164.41133pt.
  [18 <./Images/Ray_Sphere_Intersection.png>]
-<Images/triangle.png, id=525, 225.84375pt x 272.51813pt>
+<Images/triangle.png, id=528, 225.84375pt x 272.51813pt>
 File: Images/triangle.png Graphic file (type png)
 <use Images/triangle.png>
 Package pdftex.def Info: Images/triangle.png  used on input line 362.
 (pdftex.def)             Requested size: 225.84319pt x 272.51746pt.
  [19] [20 <./Images/triangle.png>]
-<Images/Regular_Grid.jpg, id=554, 391.33437pt x 360.58118pt>
+<Images/Regular_Grid.jpg, id=557, 391.33437pt x 360.58118pt>
 File: Images/Regular_Grid.jpg Graphic file (type jpg)
 <use Images/Regular_Grid.jpg>
 Package pdftex.def Info: Images/Regular_Grid.jpg  used on input line 423.
 (pdftex.def)             Requested size: 391.3334pt x 360.58029pt.
  [21]
-<Images/BVH.jpg, id=563, 488.57532pt x 234.1247pt>
+<Images/BVH.jpg, id=566, 488.57532pt x 234.1247pt>
 File: Images/BVH.jpg Graphic file (type jpg)
 <use Images/BVH.jpg>
 Package pdftex.def Info: Images/BVH.jpg  used on input line 447.
@@ -2629,7 +2629,7 @@ Overfull \hbox (45.92038pt too wide) in paragraph at lines 447--448
  []
 
 [22 <./Images/Regular_Grid.jpg>]
-<Images/SAH_example.png, id=571, 512.22948pt x 170.53185pt>
+<Images/SAH_example.png, id=574, 512.22948pt x 170.53185pt>
 File: Images/SAH_example.png Graphic file (type png)
 <use Images/SAH_example.png>
 Package pdftex.def Info: Images/SAH_example.png  used on input line 474.
@@ -2640,7 +2640,7 @@ Overfull \hbox (69.57446pt too wide) in paragraph at lines 474--475
  []
 
 [23 <./Images/BVH.jpg>]
-<Images/Rendering_eq.png, id=581, 556.32843pt x 299.61937pt>
+<Images/Rendering_eq.png, id=584, 556.32843pt x 299.61937pt>
 File: Images/Rendering_eq.png Graphic file (type png)
 <use Images/Rendering_eq.png>
 Package pdftex.def Info: Images/Rendering_eq.png  used on input line 506.
@@ -2659,36 +2659,36 @@ $ \T1/pplj/m/n/10.95 cal-cu-lates a ran-dom di-rec-tion in World
  []
 
 [25 <./Images/Rendering_eq.png>]
-<Images/DepthMap.png, id=600, 387.69844pt x 636.87938pt>
+<Images/DepthMap.png, id=603, 387.69844pt x 636.87938pt>
 File: Images/DepthMap.png Graphic file (type png)
 <use Images/DepthMap.png>
 Package pdftex.def Info: Images/DepthMap.png  used on input line 563.
 (pdftex.def)             Requested size: 116.31042pt x 191.06528pt.
  [26 <./Images/DepthMap.png>]
-<Images/DiffuseMaterial.png, id=616, 387.69844pt x 637.63219pt>
+<Images/DiffuseMaterial.png, id=619, 387.69844pt x 637.63219pt>
 File: Images/DiffuseMaterial.png Graphic file (type png)
 <use Images/DiffuseMaterial.png>
 Package pdftex.def Info: Images/DiffuseMaterial.png  used on input line 591.
 (pdftex.def)             Requested size: 116.31042pt x 191.29112pt.
  [27 <./Images/DiffuseMaterial.png>]
-<Images/NoShadows.png, id=636, 544.0325pt x 880.28876pt>
+<Images/NoShadows.png, id=639, 544.0325pt x 880.28876pt>
 File: Images/NoShadows.png Graphic file (type png)
 <use Images/NoShadows.png>
 Package pdftex.def Info: Images/NoShadows.png  used on input line 623.
 (pdftex.def)             Requested size: 163.211pt x 264.08865pt.
-<Images/Reflection.png, id=639, 803.0pt x 602.25pt>
+<Images/Reflection.png, id=642, 803.0pt x 602.25pt>
 File: Images/Reflection.png Graphic file (type png)
 <use Images/Reflection.png>
 Package pdftex.def Info: Images/Reflection.png  used on input line 649.
 (pdftex.def)             Requested size: 240.90186pt x 180.67639pt.
  [28 <./Images/NoShadows.png (PNG copy)>]
-<Images/Refraction.png, id=646, 643.40375pt x 356.33125pt>
+<Images/Refraction.png, id=649, 643.40375pt x 356.33125pt>
 File: Images/Refraction.png Graphic file (type png)
 <use Images/Refraction.png>
 Package pdftex.def Info: Images/Refraction.png  used on input line 696.
 (pdftex.def)             Requested size: 193.02261pt x 106.90019pt.
  [29 <./Images/Reflection.png> <./Images/Refraction.png>]
-<Images/Whitted.png, id=660, 541.02126pt x 881.2925pt>
+<Images/Whitted.png, id=663, 541.02126pt x 881.2925pt>
 File: Images/Whitted.png Graphic file (type png)
 <use Images/Whitted.png>
 Package pdftex.def Info: Images/Whitted.png  used on input line 738.
@@ -2709,13 +2709,13 @@ Overfull \hbox (5.55603pt too wide) in paragraph at lines 804--805
 [32]
 Package hyperref Info: bookmark level for unknown MyEquation defaults to 0 on i
 nput line 820.
-<Images/Spherical_Coordinates.png, id=726, 420.82219pt x 389.20406pt>
+<Images/Spherical_Coordinates.png, id=729, 420.82219pt x 389.20406pt>
 File: Images/Spherical_Coordinates.png Graphic file (type png)
 <use Images/Spherical_Coordinates.png>
 Package pdftex.def Info: Images/Spherical_Coordinates.png  used on input line 8
 39.
 (pdftex.def)             Requested size: 210.41057pt x 194.60155pt.
-<Images/SecondaryRayDirection.png, id=729, 690.4194pt x 316.0608pt>
+<Images/SecondaryRayDirection.png, id=732, 690.4194pt x 316.0608pt>
 File: Images/SecondaryRayDirection.png Graphic file (type png)
 <use Images/SecondaryRayDirection.png>
 Package pdftex.def Info: Images/SecondaryRayDirection.png  used on input line 8
@@ -2723,20 +2723,20 @@ Package pdftex.def Info: Images/SecondaryRayDirection.png  used on input line 8
 (pdftex.def)             Requested size: 345.20886pt x 158.03001pt.
  [33 <./Images/Spherical_Coordinates.png>] [34 <./Images/SecondaryRayDirection.
 png>]
-<Images/PathTracer.png, id=768, 544.0325pt x 883.3pt>
+<Images/PathTracer.png, id=771, 544.0325pt x 883.3pt>
 File: Images/PathTracer.png Graphic file (type png)
 <use Images/PathTracer.png>
 Package pdftex.def Info: Images/PathTracer.png  used on input line 908.
 (pdftex.def)             Requested size: 163.211pt x 264.99205pt.
  [35 <./Images/PathTracer.png (PNG copy)>] [36]
-<Images/Halton_sequence_2D.png, id=814, 290.08376pt x 290.08376pt>
+<Images/Halton_sequence_2D.png, id=817, 290.08376pt x 290.08376pt>
 File: Images/Halton_sequence_2D.png Graphic file (type png)
 <use Images/Halton_sequence_2D.png>
 Package pdftex.def Info: Images/Halton_sequence_2D.png  used on input line 993.
 
 (pdftex.def)             Requested size: 145.04152pt x 145.04152pt.
  [37 <./Images/Halton_sequence_2D.png>]
-<Images/Pseudorandom_sequence_2D.png, id=837, 290.08376pt x 290.08376pt>
+<Images/Pseudorandom_sequence_2D.png, id=840, 290.08376pt x 290.08376pt>
 File: Images/Pseudorandom_sequence_2D.png Graphic file (type png)
 <use Images/Pseudorandom_sequence_2D.png>
 Package pdftex.def Info: Images/Pseudorandom_sequence_2D.png  used on input lin
@@ -2749,75 +2749,75 @@ which pro-duces ran-dom
  []
 
 [39 <./Images/Pseudorandom_sequence_2D.png>]
-<Images/Shadows_Hard.png, id=872, 359.09157pt x 262.73157pt>
+<Images/Shadows_Hard.png, id=875, 359.09157pt x 262.73157pt>
 File: Images/Shadows_Hard.png Graphic file (type png)
 <use Images/Shadows_Hard.png>
 Package pdftex.def Info: Images/Shadows_Hard.png  used on input line 1107.
 (pdftex.def)             Requested size: 179.54533pt x 131.36545pt.
-<Images/Shadows_Soft.png, id=876, 356.83313pt x 265.74281pt>
+<Images/Shadows_Soft.png, id=879, 356.83313pt x 265.74281pt>
 File: Images/Shadows_Soft.png Graphic file (type png)
 <use Images/Shadows_Soft.png>
 Package pdftex.def Info: Images/Shadows_Soft.png  used on input line 1139.
 (pdftex.def)             Requested size: 178.41612pt x 132.87108pt.
  [40 <./Images/Shadows_Hard.png>]
 [41 <./Images/Shadows_Soft.png>]
-<Images/barycentric-coordinates.png, id=901, 401.5pt x 284.06125pt>
+<Images/barycentric-coordinates.png, id=904, 401.5pt x 284.06125pt>
 File: Images/barycentric-coordinates.png Graphic file (type png)
 <use Images/barycentric-coordinates.png>
 Package pdftex.def Info: Images/barycentric-coordinates.png  used on input line
  1178.
 (pdftex.def)             Requested size: 200.7495pt x 142.03026pt.
  [42 <./Images/barycentric-coordinates.png>]
-<Images/Jittering.png, id=925, 127.47626pt x 127.47626pt>
+<Images/Jittering.png, id=928, 127.47626pt x 127.47626pt>
 File: Images/Jittering.png Graphic file (type png)
 <use Images/Jittering.png>
 Package pdftex.def Info: Images/Jittering.png  used on input line 1253.
 (pdftex.def)             Requested size: 127.47594pt x 127.47594pt.
-<Images/aliasing.jpg, id=928, 216.81pt x 200.24812pt>
+<Images/aliasing.jpg, id=931, 216.81pt x 200.24812pt>
 File: Images/aliasing.jpg Graphic file (type jpg)
 <use Images/aliasing.jpg>
 Package pdftex.def Info: Images/aliasing.jpg  used on input line 1260.
 (pdftex.def)             Requested size: 130.08699pt x 120.1498pt.
 
 [43 <./Images/Jittering.png>]
-<Images/regular_1spp.png, id=937, 300.3722pt x 122.70844pt>
+<Images/regular_1spp.png, id=940, 300.3722pt x 122.70844pt>
 File: Images/regular_1spp.png Graphic file (type png)
 <use Images/regular_1spp.png>
 Package pdftex.def Info: Images/regular_1spp.png  used on input line 1272.
 (pdftex.def)             Requested size: 142.26378pt x 58.11859pt.
-<Images/regular_256spp.png, id=938, 300.3722pt x 122.70844pt>
+<Images/regular_256spp.png, id=941, 300.3722pt x 122.70844pt>
 File: Images/regular_256spp.png Graphic file (type png)
 <use Images/regular_256spp.png>
 Package pdftex.def Info: Images/regular_256spp.png  used on input line 1274.
 (pdftex.def)             Requested size: 142.26378pt x 58.11859pt.
-<Images/jittering_1spp.png, id=940, 380.17032pt x 124.21407pt>
+<Images/jittering_1spp.png, id=943, 380.17032pt x 124.21407pt>
 File: Images/jittering_1spp.png Graphic file (type png)
 <use Images/jittering_1spp.png>
 Package pdftex.def Info: Images/jittering_1spp.png  used on input line 1288.
 (pdftex.def)             Requested size: 142.26378pt x 46.48349pt.
-<Images/jittering_4spp.png, id=941, 380.17032pt x 124.96687pt>
+<Images/jittering_4spp.png, id=944, 380.17032pt x 124.96687pt>
 File: Images/jittering_4spp.png Graphic file (type png)
 <use Images/jittering_4spp.png>
 Package pdftex.def Info: Images/jittering_4spp.png  used on input line 1290.
 (pdftex.def)             Requested size: 142.26378pt x 46.76521pt.
  [44 <./Images/aliasing.jpg> <./Images/regular_1spp.png> <./Images/regular_256s
 pp.png> <./Images/jittering_1spp.png> <./Images/jittering_4spp.png>]
-<Images/Camera_Perspective_v2.png, id=952, 409.53pt x 346.29375pt>
+<Images/Camera_Perspective_v2.png, id=955, 409.53pt x 346.29375pt>
 File: Images/Camera_Perspective_v2.png Graphic file (type png)
 <use Images/Camera_Perspective_v2.png>
 Package pdftex.def Info: Images/Camera_Perspective_v2.png  used on input line 1
-313.
+311.
 (pdftex.def)             Requested size: 245.7199pt x 207.77785pt.
  [45 <./Images/Camera_Perspective_v2.png>]
-<Images/Camera_Orthographic_v2.png, id=961, 364.36125pt x 343.2825pt>
+<Images/Camera_Orthographic_v2.png, id=964, 364.36125pt x 343.2825pt>
 File: Images/Camera_Orthographic_v2.png Graphic file (type png)
 <use Images/Camera_Orthographic_v2.png>
 Package pdftex.def Info: Images/Camera_Orthographic_v2.png  used on input line 
-1388.
+1390.
 (pdftex.def)             Requested size: 218.61842pt x 205.97107pt.
  [46] [47 <./Images/Camera_Orthographic_v2.png>] [48]
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 145
-9.
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 146
+1.
 
 (C:\Users\PC\Desktop\C\miktex-portable-2.9.6621\texmfs\install\tex\latex\base\t
 s1cmtt.fd
@@ -2827,34 +2827,80 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: TS1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [49]
-<Images/JNI.png, id=1042, 883.04906pt x 781.41937pt>
+) [49]
+\openout2 = `4_android.aux'.
+
+ (4_android.tex
+chapter 4.
+<Images/JNI.png, id=1045, 883.04906pt x 781.41937pt>
 File: Images/JNI.png Graphic file (type png)
 <use Images/JNI.png>
-Package pdftex.def Info: Images/JNI.png  used on input line 1497.
+Package pdftex.def Info: Images/JNI.png  used on input line 23.
 (pdftex.def)             Requested size: 264.91675pt x 234.42761pt.
-<Images/UI_thread.png, id=1043, 278.03876pt x 313.17pt>
+[50
+
+
+
+
+]
+<Images/UI_thread.png, id=1050, 278.03876pt x 313.17pt>
 File: Images/UI_thread.png Graphic file (type png)
 <use Images/UI_thread.png>
-Package pdftex.def Info: Images/UI_thread.png  used on input line 1518.
+Package pdftex.def Info: Images/UI_thread.png  used on input line 44.
 (pdftex.def)             Requested size: 139.01903pt x 156.58461pt.
- [50 <./Images/JNI.png>] [51 <./Images/UI_thread.png>]) [52]
-\openout2 = `4_demonstration.aux'.
+ [51 <./Images/JNI.png>] [52 <./Images/UI_thread.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\begingroup' on input line 86.
 
 
-(4_demonstration.tex
-chapter 4.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\<let>-command' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\NAT@ctype' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\z@' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\let' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\let' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\new@ifnextchar' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 86.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 86.
+
+) [53]
+\openout2 = `5_demonstration.aux'.
+
+ (5_demonstration.tex
+chapter 5.
 
 Overfull \hbox (30.73048pt too wide) in paragraph at lines 20--28
  []|  [] 
  []
 
-<Images/Scene_Conference.png, id=1060, 390.70969pt x 475.02469pt>
+<Images/Scene_Conference.png, id=1069, 390.70969pt x 475.02469pt>
 File: Images/Scene_Conference.png Graphic file (type png)
 <use Images/Scene_Conference.png>
 Package pdftex.def Info: Images/Scene_Conference.png  used on input line 43.
 (pdftex.def)             Requested size: 195.35435pt x 237.51175pt.
-[53
+[54
 
 
 
@@ -2864,7 +2910,7 @@ Package pgfplots info on input line 60: Overriding colorspace to rgb due to xco
 lor configuration.
 Package pgfplots info on input line 111: Overriding colorspace to rgb due to xc
 olor configuration.
- [54 <./Images/Scene_Conference.png>]
+ [55 <./Images/Scene_Conference.png>]
 Package pgfplots info on input line 163: Overriding colorspace to rgb due to xc
 olor configuration.
 
@@ -2904,18 +2950,18 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `subscript' on input line 204.
 
-) [55]
-\openout2 = `5_conclusion_future_work.aux'.
+) [56]
+\openout2 = `6_conclusion_future_work.aux'.
 
- (5_conclusion_future_work.tex
-chapter 5.
-[56
-
-
-
-
-] [57]) [58] (dissertation.bbl
+ (6_conclusion_future_work.tex
 chapter 6.
+[57
+
+
+
+
+] [58]) [59] (dissertation.bbl
+chapter 7.
 
 Underfull \hbox (badness 10000) in paragraph at lines 9--14
 []\T1/pplj/m/n/10.95 AMD.  Radeon rays tech-nol-o-gy for de-vel-op-er-s.  URL [
@@ -2946,7 +2992,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 75--80
 urnaldunet . com / solutions / mobilite /
  []
 
-[59
+[60
 
 
 
@@ -2958,7 +3004,7 @@ Underfull \hbox (badness 3312) in paragraph at lines 115--119
 g.  URL [][]$\T1/cmtt/l/n/10.95 https : / / home . otoy . com / render /
  []
 
-[60]
+[61]
 Underfull \hbox (badness 1033) in paragraph at lines 178--183
 \T1/cmtt/l/n/10.95 questions / 20019110 / kd-[]tree-[]for-[]triangle-[]meshes-[
 ]is-[]too-[]slow$[][]\T1/pplj/m/n/10.95 .  Ac-cessed: May
@@ -2994,7 +3040,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 241--246
 flow . com / questions / 36573283 /
  []
 
-[61]
+[62]
 Underfull \hbox (badness 10000) in paragraph at lines 268--273
 []\T1/pplj/m/n/10.95 Daniel A. Thomp-son.  Ray trac-ing glossy re-flec-tion: sa
 m-pling ray
@@ -3012,25 +3058,25 @@ Underfull \hbox (badness 4739) in paragraph at lines 299--303
 mtt/l/n/10.95 http : / / www . echo-[]gaming . eu /
  []
 
-[62]) [63]
+[63]) [64]
 \openout2 = `A_user_documentation.aux'.
 
  (A_user_documentation.tex
 chapter A.
-) [64
+) [65
 
 
 
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 192.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 192.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 195.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 195.
  (dissertation.aux (1_introduction.aux) (2_state_of_the_art.aux)
-(3_software_architecture.aux) (4_demonstration.aux)
-(5_conclusion_future_work.aux) (A_user_documentation.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 192.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 192.
+(3_software_architecture.aux) (4_android.aux) (5_demonstration.aux)
+(6_conclusion_future_work.aux) (A_user_documentation.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 195.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 195.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
@@ -3038,13 +3084,13 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 192.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 195.
  ) 
 Here is how much of TeX's memory you used:
- 52551 strings out of 495204
- 1179555 string characters out of 3179758
+ 52563 strings out of 495204
+ 1179847 string characters out of 3179758
  1605916 words of memory out of 3000000
- 54418 multiletter control sequences out of 15000+200000
+ 54421 multiletter control sequences out of 15000+200000
  88046 words of font info for 134 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  74i,23n,106p,9093b,2175s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -3069,9 +3115,9 @@ l/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.
 <C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/install/fonts/type1/urw/
 palatino/uplr8a.pfb><C:/Users/PC/Desktop/C/miktex-portable-2.9.6621/texmfs/inst
 all/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on dissertation.pdf (74 pages, 5101456 bytes).
+Output written on dissertation.pdf (75 pages, 5103518 bytes).
 PDF statistics:
- 1610 PDF objects out of 1728 (max. 8388607)
- 534 named destinations out of 1000 (max. 500000)
- 23135 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 1623 PDF objects out of 1728 (max. 8388607)
+ 536 named destinations out of 1000 (max. 500000)
+ 23143 words of extra memory for PDF output out of 24883 (max. 10000000)
 
