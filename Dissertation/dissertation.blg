@@ -8,6 +8,7 @@ A level-1 auxiliary file: 5_conclusion_future_work.aux
 A level-1 auxiliary file: A_user_documentation.aux
 Database file #1: dissertation.bib
 Warning--empty year in RadeonRays
+Warning--empty year in Shadows
 Warning--empty year in CPU_SIMD
 Warning--empty year in jsRayTracer
 Warning--empty year in SphereRayIntersection
@@ -16,6 +17,7 @@ Warning--empty year in Android_CPU_Raytracer
 Warning--empty year in CPU_Pipeline
 Warning--empty year in RT_classic
 Warning--empty year in JournalDuNet
+Warning--empty year in LightHouseRayTriangle
 Warning--empty year in ShadowRays
 Warning--empty year in AndroidDevelopers
 Warning--empty year in GoogleTest
@@ -50,9 +52,10 @@ Warning--empty year in trayrust
 Warning--empty year in PlaneRayIntersection
 Warning--empty year in RTReflections
 Warning--empty year in Jittering
+Warning--empty year in DepthMap
 Warning--empty year in HaltonSequence
 Warning--empty year in RenderingEquation
 Warning--empty year in SphericalCoordinates
 Warning--empty year in CosineSampleHemisphere
 Warning--empty year in Visionaray
-(There were 48 warnings)
+(There were 51 warnings)

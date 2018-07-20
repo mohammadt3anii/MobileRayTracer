@@ -18,18 +18,19 @@ Although this layer is useful, this dissertation focuses only on the middle and 
 \end{figure}
 
 \par
-The middle layer provides the rendering components which are abstracted concepts about rendering that use functionalities that the library offers to the programmer.
-Some of these rendering components are the camera, the light, the sampler and the integrator.
+The middle layer provides the rendering components which are abstract concepts about rendering which use functionalities that the library itself offers to the programmers.
+Some of these rendering components are the camera, the light, the sampler, the integrator and the object loader.
 These rendering components are useful for the programmer since it allows them to use features without having the need to know how these were developed.
-And, of course, this facilitates and accelerates the development of new rendering applications.
+And, of course, this facilitates and accelerates the development of new rendering applications for the programmers.
 
 \par
 Lastly, the bottom layer is the library itself, which contains the business logic of basic features in a renderer, that the rendering components use.
-These features are basic functionalities of a ray tracer engine like: create vectors and points, create different primitives with different materials, cast rays and intersect rays with the primitives.
+These features are the basic functionalities of a ray tracing engine.
+Those functionalities can be: create vectors and points; create different shapes like triangles, spheres and planes; create different primitives with different materials and with different shapes; cast rays; and even intersect rays with the primitives.
 
 \par
-It is also important to mention that the demo application was developed in order to show the developed features, the performance achieved in the mobile devices and also to help promote the library.
-This demo application is a good way to test it in several Android devices like a smart phone or a tablet.
+It is also important to mention that the demo application was built in order to show the developed features, the performance achieved in the mobile devices and also to help promote the library.
+This demo application is a good way to test it in several Android devices, like: a smart phone, a tablet computer, a smart TV, or even a smart watch.
 
 \begin{figure}[H]
 	\centering
@@ -172,7 +173,22 @@ Those libraries are:
 All these libraries are Android compatible and are reliable in terms of performance and maintenance.
 
 \par
-Besides being dependent on these 3 libraries, this library also depends on OpenGL ES 2.0 (\cite{OpenGL_ES_2}) from Android SDK and depends on CMake (\cite{CMake}) in order to compile the application.
+Besides being dependent on these threes libraries, this library also depends on OpenGL ES 2.0 (\cite{OpenGL_ES_2}) from Android SDK and depends on CMake (\cite{CMake}) in order to compile the application.
+
+\par
+The OpenGL ES 2.0 is necessary in order to let the application rasterize one frame of the scene so the user can view it without having to wait a long time to render it with the ray tracer.
+
+\begin{figure}[H]
+	\centering
+	\caption{A scene rendered with OpenGL ES 2.0 before the ray tracer.}
+	\label{A scene rendered with OpenGL ES 2.0 before the ray tracer.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Layers.png}
+\end{figure}
+
+\par
+The CMake was used so that the application code could be compiled on any operating system.
+As it is a cross-platform family of tools designed to build, test and package software developed for a variety of operating systems like Windows, Linux, Mac OS X, and even FreeBSD.
+The main goal of CMake is to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles and workspaces that can be used in the compiler environment of the programmer's choice.
 
 \subsection{Renderer}
 
@@ -181,7 +197,7 @@ The Renderer is the closest class to the application that starts the rendering p
 This class provides two main methods:
 
 \begin{lstlisting}[caption={Main methods in Renderer}, captionpos=b, label=Renderer]
-void renderFrame(::std::uint32_t *bitmap, ::std::int32_t numThreads, ::std::uint32_t stride) noexcept;
+void renderFrame(std::uint32_t *bitmap, std::int32_t numThreads, std::uint32_t stride) noexcept;
 void stopRender() noexcept;
 \end{lstlisting}
 
@@ -233,6 +249,14 @@ The shadow ray is represented by the yellow line pointed to the light source.
 
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed three types of shapes: plane, sphere and triangle.
+One way to allow this would be to use the process of inheritance available in C++.
+Which means, for example, create a class called Shape and create sub classes like Triangle, Plane or Sphere that derived from that class.
+And each of those classes would implement different intersect methods.
+In this way, it would be possible for the programmer to develop his own custom shapes as new Rendering Components.
+But of course, the benefit of this flexibility also brings the downside of performance loss as the application will have at runtime to figure out which of the derived classes is required to call.
+The other way to do it is by developing each shape class without inheritance and being each class independent of each other.
+This can have greater performance but the downside is that the programmer cannot add new shapes to the library.
+
 All shapes provide one important method:
 
 \begin{lstlisting}[caption={Main methods in Shape}, captionpos=b, label=Shape]
@@ -311,10 +335,12 @@ $[A, B, C]$
 , two vectors
 $[AB, AC]$
 and the normal of the triangle.
-This is needed in order to execute the Möller-Trumbore algorithm \cite{RayTriangleIntersection} for the intersection of a ray with a triangle.
+This is needed in order to execute the Möller-Trumbore algorithm (\cite{RayTriangleIntersection}) for the intersection of a ray with a triangle.
+The Möller–Trumbore ray-triangle intersection algorithm, named after its inventors Tomas Möller and Ben Trumbore, is a fast method for calculating the intersection of a ray and a triangle in three dimensions without needing precomputation of the plane equation of the plane containing the triangle.
+It only needs to store 1 triangle vertex, 2 triangle vectors and the triangle normal, which means that each triangle needs only to store 12 floating point values, or 48 bytes.
 So, the intersect method implemented has the following algorithm:
 
-\begin{lstlisting}[caption={Algorithm of Ray triangle intersection}, captionpos=b, label=Triangle]
+\begin{lstlisting}[caption={Algorithm of Ray triangle intersection (\cite{LightHouseRayTriangle})}, captionpos=b, label=Triangle]
 perpendicularVector = rayDirection x AC
 projection = AB . perpendicularVector
 if(|projection| <= 0) return false
@@ -378,7 +404,7 @@ Besides AABB, it is possible to build the structures with other types of voxels,
 	\item Sphere: intersection with a sphere is simpler than AABB but covers more 3D space than the scene primitive needs.
 	\item Oriented Bounding Volume: its like an AABB but rotated according to the orientation of the primitive.
 	\item k-Discrete Oriented Prototype (k-DOP): a generalization of AABBs defined by k hyperplanes with normals in discrete directions.
-	\item Convex Hull: is the smallest convex volume containing the object.
+	\item Convex Hull: is the smallest and more complex convex volume containing the object.
 \end{itemize}
 
 \subsubsection{Regular Grid}
@@ -462,7 +488,7 @@ The implemented ray tracer was programmed in an objected oriented fashion, so ea
 This allows the user to develop his own Rendering Components without having to develop the ray tracer engine.
 
 \par
-A shader is the Rendering Component that describes how the Rendering Equation is approximated.
+A shader is the most important Rendering Component because it is the Rendering Component that describes how the Rendering Equation is approximated.
 The Rendering Equation describes how the total radiance reflected by any point
 $p$
 of a surface in a direction
@@ -515,7 +541,8 @@ This is typically used in Path Tracers.
 \subsubsection{DepthMap}
 
 \par
-DepthMap is a very simple shader that calculates the distance in percentage of each primary ray casted to the scene.
+DepthMap is a very simple shader that calculates an image or image channel that contains information relating to the distance of the surfaces of scene objects from a viewpoint (\cite{DepthMap}).
+It is useful to various things like simulating the effect of uniformly dense semi-transparent media within a scene - such as fog, smoke or large volumes of water; or even to create Shadow Maps.
 
 The algorithm is as much as simple as:
 
@@ -542,17 +569,18 @@ is the furthest 3D point that the user send as parameter in the DepthMap constru
 \par
 The DiffuseMaterial is another very simple shader that only computes directly the diffuse material color of the intersected primitive.
 But, in case the primitive material does not have diffuse color, the specular color is computed or the transmission color or even the light emission.
-As illustrated below:
+This is can be useful to debug the application because it renders the scene, including all types of materials, very fast.
+And the algorithm is very simple as illustrated below:
 
 \begin{lstlisting}[caption={Algorithm of DiffuseMaterial Shader}, captionpos=b, label=DiffuseMaterial]
 if (kD > 0) {
-	rgb = kD;
+	outputRGB = kD;
 } else if (kS > 0) {
-	rgb = kS;
+	outputRGB = kS;
 } else if (kT > 0) {
-	rgb = kT;
+	outputRGB = kT;
 } else if (Le > 0) {
-	rgb = Le;
+	outputRGB = Le;
 }
 \end{lstlisting}
 
@@ -569,7 +597,8 @@ if (kD > 0) {
 \par
 NoShadows is a simple shader because, as the name implies, it does not synthesize the shadows and it only simulates the direct lighting.
 This BRDF only simulates direct lighting in primitives with diffuse surfaces and it does not take into account the light coming from other points.
-As already said, the indirect lighting is not fully simulated but rather simplified in a way of fixed ambient light of about 10\% of the color of the objects.
+As already said, the indirect lighting is not fully simulated but rather approximated with a fixed ambient light of about 10\% of the diffuse color of the objects.
+This can be useful in order to let the user render a scene with good details and without having to wait as long as the Whitted algorithm.
 
 \par
 The algorithm developed is as following:
@@ -597,9 +626,9 @@ if (intersected material is diffuse) {
 \subsubsection{Whitted}
 
 \par
-As the name of this shader implies, Whitted is the algorithm demonstrated by Whitted in 1980s.
+As the name of this shader implies, Whitted is the algorithm presented by John Turner Whitted in the 1980s.
 Like the previous shader, it doesn't simulate indirect lighting.
-This BRDF calculates the reflected light on diffuse and specular surfaces, as well as the light refracted on surfaces with a degree of transmission, such as water.
+This BRDF recursively perform the ray casting to simulate refraction and reflection on diffuse and specular surfaces.
 In order to simulate a reflective and refractive surfaces, the algorithm was divided into each case.
 This makes it possible to simulate refractive surfaces, reflective surfaces and even refractive and reflective surfaces.
 
@@ -713,13 +742,14 @@ if (intersected material is specular refractive) {
 \subsubsection{PathTracer}
 
 \par
-Finally, the last shader developed is the canon Path Tracer.
+Finally, the last developed shader is the canonical Path Tracer which is a Monte Carlo method of rendering images of three-dimensional scenes such that the global illumination is faithful to reality.
+This renderer algorithm can synthesize very realistic scenes.
 Unlike the previous shaders, this one fully simulates both direct and indirect lighting.
 But, like the previous shader, this algorithm simulates the light reflected on diffuse and specular surfaces, as well as the light refracted on transparent primitives.
 
 \par
 The light reflected on diffuse surfaces is divided in two parts: direct lighting and indirect lighting.
-The direct lighting is calculated in a similar way to the Whitted shader but with the difference that samples are not taken from all sources of light but rather only one.
+The direct lighting is calculated in a similar way to the Whitted shader but with the difference that the samples are not taken from all sources of light but rather only one.
 The light source in each sample is chosen randomly.
 Then the obtained light radiance is multiplied by the Probability Density Function (PDF) in order to approximate the expected value.
 In this case the PDF is as simple as
@@ -784,7 +814,7 @@ $\phi$
 And the indirect lighting on diffuse reflective surfaces is then the multiplication of the ray traced light radiance with the material diffuse color of the primitive and
 $\pi$
 , and divided by the probability of continuing the Russian roulette.
-The equations \ref{Diffuse_Reflection.} shows the simplification of the reflected diffuse color calculation equation.
+The set of equations \ref{Diffuse_Reflection.} shows the simplification of the reflected diffuse color equation.
 
 \begin{MyEquation}[H]
 \caption{The resolution of diffuse reflected color of an object.}
@@ -817,10 +847,10 @@ LiD += kD * RGB_{SecondaryRay} * \pi / ContinueProbability
 \end{figure}
 
 \par
-The reflected light in a specular surface and the refracted light are simulated in a similar way to the Whitted algorithm presented previously.
+The reflected and refracted light in a specular surface are simulated in a similar way to the Whitted algorithm presented previously.
 
 \par
-The algorithm developed in Path Tracer Shader is as following:
+So, the algorithm developed in Path Tracer Shader is as following:
 
 \begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer]
 if (intersected material is diffuse) {
@@ -905,7 +935,10 @@ is used to count the current index of the samples.
 This sampler is the simplest because it always returns the same number passed to the constructor.
 
 \par
-The algorithm of the
+This is used when the user only needs one sample per pixel and want all the samples to be in the middle of each pixel.
+
+\par
+So, the algorithm of the
 $getSample$
 is just:
 
@@ -923,13 +956,15 @@ and in ascending order.
 For example, for a domain size of 4, the samples taken are going to be: 0, 0.25, 0.5 and 0.75.
 
 \par
+This is useful for taking samples when supersampling without any noise, because each sample is not randomly chosen.
+
+\par
 The algorithm of the
 $getSample$
 is then:
 
 \begin{lstlisting}[caption={Algorithm of Stratified Sampler}, captionpos=b, label=Stratified]
-//atomic operation
-current = sample++
+current = sample++ //atomic operation
 if (current >= (domainSize * (sampleNumber + 1))) {
   sample--
   return 1
@@ -949,8 +984,7 @@ As the name implies, this sampler generates the Halton sequence.
 
 \par
 Halton sequence is a quasi random number sequence which is a deterministic sequence with low discrepancy.
-
-These sequences are usually good for Rendering Algorithms like Path Tracing because it can make the rendering equation converge faster (with fewer samples).
+These sequences are usually good for Rendering Algorithms like Path Tracing because it can make the rendering equation converge faster, that is, with fewer samples.
 
 \begin{figure}[H]
 	\centering
@@ -1005,6 +1039,9 @@ This generator is a pseudo random number generator (PRNG), which is an algorithm
 Although the PRNG-generated sequence is not truly random, because it is completely determined by an initial value, called the PRNG's seed, it commonly used a std::random\_device for the generator seed because it produces non-deterministic random numbers, when supported.
 These sequences are usually used in simulations that use Monte Carlo methods like the Monte Carlo Ray Tracing.
 
+\par
+It is a good PRNG because it produces uniformly distributed numbers, it doesn't repeat the same sequence and it does not exhibit correlation between successive numbers.
+
 \begin{figure}[H]
 	\centering
 	\caption{Pseudorandom sequence in a 2D image plane (\cite{HaltonSequence}).}
@@ -1028,8 +1065,8 @@ return res
 As can be seen in listing \ref{MersenneTwister}, the algorithm is very simple because it just constructs two objects in the first time the method is called:
 
 \begin{enumerate}
-	\item std::uniform\_real\_distribution - which produces random floating-point values, uniformly distributed on the interval [a, b), that the user specifies.
-	\item std::mt19937 - pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
+	\item std::uniform\_real\_distribution (paramA, paramB) - which produces random floating-point values, uniformly distributed on the interval [paramA, paramB), that the user specifies.
+	\item std::mt19937 (std::random\_device {}()) - pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
 \end{enumerate}
 
 \par
@@ -1038,7 +1075,7 @@ Then every time the user calls \textit{getSample}, the MersenneTwister Sampler j
 \subsection{Lights}
 
 \par
-There were implemented two types of light sources: PointLight and AreaLight.
+There were implemented two types of light sources: point light and area light.
 These light sources provide the user two main methods:
 
 \begin{lstlisting}[caption={Main methods in Light}, captionpos=b, label=Light]
@@ -1057,17 +1094,25 @@ as a parameter intersects this light source and, if it intersects, writes the re
 $intersection$
 parameter.
 
-\subsubsection{PointLight}
+\subsubsection{Point light}
 
 \par
-The PointLight is the simplest form of a light because, as the name implies, is just a point of light.
+The Point light is the simplest form of a light because, as the name implies, it is just a point of light which emits light in all directions at once.
+This type of light is useful to render fast shadows because it just simulates hard shadows, in that each shadow is only constituted with an umbra, which is the fully dark shadow.
+
+\begin{figure}[H]
+	\centering
+	\caption{Hard shadows (\cite{Shadows}).}
+	\label{Shadows_Hard.}
+	\includegraphics[keepaspectratio,scale=0.5]{Shadows_Hard.png}
+\end{figure}
 
 \par
 Therefore, the
 $getPosition$
 method is very simple because it only returns the position of the light source determined in its constructor:
 
-\begin{lstlisting}[caption={Algorithm of getPosition in PointLight}, captionpos=b, label=getPositionPointLight]
+\begin{lstlisting}[caption={Algorithm of getPosition in Point light}, captionpos=b, label=getPositionPointLight]
 return lightPosition
 \end{lstlisting}
 
@@ -1077,15 +1122,27 @@ $intersect$
 method is also quite simple because the ray parameter never intersects the point light.
 This is because the probability of a ray intersecting a single 3D point in the world is practically null.
 
-\begin{lstlisting}[caption={Algorithm of intersect in PointLight}, captionpos=b, label=intersectPointLight]
+\begin{lstlisting}[caption={Algorithm of intersect in Point light}, captionpos=b, label=intersectPointLight]
 return intersection
 \end{lstlisting}
 
-\subsubsection{AreaLight}
+\subsubsection{Area light}
 
 \par
-The AreaLight implemented has a shape of a triangle.
-This shape is intended as it allows to generate a random point in a triangle with barycentric coordinates.
+The Area light is another type of light source where the light comes from an area.
+It can have many different shapes, like square, triangle, circle, etc., and this allows the simulation of soft shadows like the figure \ref{Shadows_Soft.}.
+
+\begin{figure}[H]
+	\centering
+	\caption{Soft shadows (\cite{Shadows}).}
+	\label{Shadows_Soft.}
+	\includegraphics[keepaspectratio,scale=0.5]{Shadows_Soft.png}
+\end{figure}
+
+\par
+The Area light implemented for this application has a shape of a triangle.
+This shape is intended as the triangle is the simplest shape which allows to construct more complex shapes.
+And, with barycentric coordinates, it is very easy to generate a random point in the triangle.
 
 \par
 A triangle with three points: A, B and C.
@@ -1101,7 +1158,7 @@ So, with barycentric coordinates R=1/3, S=1/3 and T=1/3, we get the point in the
 To generate a random point in the triangle, we have to generate two random numbers between 0 and 1 (R and S).
 Then we have to make sure we stay inside the triangle by checking if they are larger than one:
 
-\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
+\begin{lstlisting}[caption={Algorithm of Area light}, captionpos=b, label=AreaLight]
 if (R + S >= 1) {
   R = 1 - R
   S = 1 - S
@@ -1110,7 +1167,7 @@ if (R + S >= 1) {
 
 Finally we can obtain a random point in the triangle by starting at point A, then getting a random percentage along vector AB and a random percentage along vector AC:
 
-\begin{lstlisting}[caption={Algorithm of AreaLight}, captionpos=b, label=AreaLight]
+\begin{lstlisting}[caption={Algorithm of Area light}, captionpos=b, label=AreaLight]
 RandomPointPosition = A + R*AB + S*AC
 \end{lstlisting}
 
@@ -1126,7 +1183,7 @@ So, the
 $getPosition$
 algorithm is as following:
 
-\begin{lstlisting}[caption={Algorithm of getPosition in AreaLight}, captionpos=b, label=AreaLight]
+\begin{lstlisting}[caption={Algorithm of getPosition in Area light}, captionpos=b, label=AreaLight]
 float R = samplerPointLight->getSample()
 float S = samplerPointLight->getSample()
 if (R + S >= 1.0) {
@@ -1142,7 +1199,7 @@ And the
 $intersect$
 method just calls the intersection of a ray with a triangle method presented earlier, and if it intersects updates the material.
 
-\begin{lstlisting}[caption={Algorithm of intersect in AreaLight}, captionpos=b, label=AreaLight]
+\begin{lstlisting}[caption={Algorithm of intersect in Area light}, captionpos=b, label=AreaLight]
 float lastDist = intersection.length
 intersection = triangle.intersect(intersection, ray)
 intersection.material_= intersection.length < lastDist? &radiance : intersection.material
@@ -1237,6 +1294,9 @@ This means that by using jittering it is possible to obtain images pleasing to t
 
 
 \subsubsection{Perspective Camera}
+
+\par
+The Perspective Camera 
 
 \par
 With this type of camera we can simulate images being seen by the human eyes, which means, it simulates the depth of the objects, and produces 2D images with a 3D projection.
@@ -1414,7 +1474,7 @@ d 0.4
 
 \section{Android specifics and challenges}
 
-\subsection{Specifics}
+\subsection{Android specifics}
 
 \par
 Before developing the ray tracer to Android, it is necessary to understand how an Android application works.
@@ -1427,6 +1487,8 @@ But, in order to avoid using the Java Virtual Machine (JVM) in our code and prog
 Unfortunately, the NDK tool-chain doesn't provide any User Interface libraries like Qt that facilitates the build of a User Interface in native code.
 So, in order to obtain the best performance possible in a mobile device, the ray tracer library and components were programmed in C++ and the User Interface was programmed in Java.
 The User Interface calls the ray tracer available methods using the Java Native Interface (JNI) which is a programming standard that allows Java code running on a JVM to call native applications (programs specific to a hardware platform and operating system) and libraries written in other languages such as C, C ++ and assembly.
+The use of JNI to call native applications is not guaranteed to have better performance than having all the application written in Java, because each JNI call have a performance cost associated with the fact that the JVM needs to use call external native code.
+But, in this case as the ray tracer can be a very computing demanding application, the fact it is written in native code (C++) is better than having all the code written in Java and executed by the JVM.
 
 \begin{figure}[H]
 	\centering
@@ -1434,6 +1496,7 @@ The User Interface calls the ray tracer available methods using the Java Native 
 	\label{JNI.}
 	\includegraphics[keepaspectratio,scale=0.3]{JNI.png}
 \end{figure}
+
 
 \subsection{User Interface}
 
@@ -1454,6 +1517,19 @@ Then the UI thread wakes up and updates the text view.
 	\label{Execution flow of UI thread and Render Task thread}
 	\includegraphics[keepaspectratio,scale=0.5]{UI_thread.png}
 \end{figure}
+
+\subsection{Programming decisions}
+
+\par
+The main goal of programming this library in a object oriented manner is to have a library with relatively good performance and with a maintainable code.
+
+\par
+Besides that, it was used the smart pointers available in the C++ standard library.
+The smart pointer used was the unique pointer, as this was enough for this project and also because it is the smart pointer with best performance.
+This smart pointer automatically free the resources it contains.
+This greatly reduces the chance of the programmer to forget to free a resource or trying to free it multiple times.
+Of course this comes with a little performance cost of about 1\% to 5\% relatively to the manual resource management by the programmer.
+But for this project, some extra code correctness is more important than more performance.
 
 \subsection{Challenges}
 

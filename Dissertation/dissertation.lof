@@ -1,49 +1,53 @@
 \deactivateaddvspace 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1}{\ignorespaces Illustration of the most common mobile devices - tablet and smartphone (\cite {JournalDuNet}).\relax }}{2}{figure.caption.6}
+\contentsline {figure}{\numberline {1}{\ignorespaces Illustration of the most common mobile devices - tablet and smartphone (\cite {JournalDuNet}).\relax }}{2}{figure.caption.7}
+\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of a variety of mobile devices compatible with Android (\cite {AndroidDevices}).\relax }}{3}{figure.caption.8}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of a typical ray tracer algorithm.\relax }}{4}{figure.caption.7}
-\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a typical cache memory inside a microprocessor (\cite {CPU_Cache}).\relax }}{5}{figure.caption.8}
-\contentsline {figure}{\numberline {4}{\ignorespaces Illustration of the Classic RISC multilevel CPU pipeline (\cite {CPU_Pipeline}).\relax }}{6}{figure.caption.9}
-\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of a typical execution of SIMD extension (\cite {CPU_SIMD}).\relax }}{6}{figure.caption.10}
+\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a typical ray tracer algorithm.\relax }}{5}{figure.caption.9}
+\contentsline {figure}{\numberline {4}{\ignorespaces Illustration of a typical cache memory inside a microprocessor (\cite {CPU_Cache}).\relax }}{6}{figure.caption.10}
+\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of the Classic RISC multilevel CPU pipeline (\cite {CPU_Pipeline}).\relax }}{7}{figure.caption.11}
+\contentsline {figure}{\numberline {6}{\ignorespaces Illustration of a typical execution of SIMD extension (\cite {CPU_SIMD}).\relax }}{7}{figure.caption.12}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6}{\ignorespaces Illustration of the developed User Interface.\relax }}{10}{figure.caption.12}
-\contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the three layers in the application.\relax }}{11}{figure.caption.13}
-\contentsline {figure}{\numberline {8}{\ignorespaces Illustration of tiling the image plane.\relax }}{14}{figure.caption.14}
-\contentsline {figure}{\numberline {9}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{15}{figure.caption.15}
-\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{16}{figure.caption.16}
-\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{17}{figure.caption.17}
-\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{18}{figure.caption.18}
-\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{20}{figure.caption.19}
-\contentsline {figure}{\numberline {14}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{21}{figure.caption.20}
-\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{22}{figure.caption.21}
-\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF (\cite {RenderingEquation}).\relax }}{23}{figure.caption.22}
-\contentsline {figure}{\numberline {17}{\ignorespaces DepthMap shader.\relax }}{24}{figure.caption.23}
-\contentsline {figure}{\numberline {18}{\ignorespaces DiffuseMaterial shader.\relax }}{25}{figure.caption.24}
-\contentsline {figure}{\numberline {19}{\ignorespaces NoShadows shader.\relax }}{26}{figure.caption.25}
-\contentsline {figure}{\numberline {20}{\ignorespaces Reflections projected on the floor and on the spheres (\cite {RTReflections}).\relax }}{27}{figure.caption.26}
-\contentsline {figure}{\numberline {21}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{27}{figure.caption.27}
-\contentsline {figure}{\numberline {22}{\ignorespaces Whitted shader.\relax }}{29}{figure.caption.28}
-\contentsline {figure}{\numberline {23}{\ignorespaces The spherical coordinates (\cite {SphericalCoordinates}).\relax }}{31}{figure.caption.30}
-\contentsline {figure}{\numberline {24}{\ignorespaces The possible directions in secondary rays (\cite {SamplingRayDirection}).\relax }}{32}{figure.caption.31}
-\contentsline {figure}{\numberline {25}{\ignorespaces PathTracer shader.\relax }}{33}{figure.caption.32}
-\contentsline {figure}{\numberline {26}{\ignorespaces Halton sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{35}{figure.caption.33}
-\contentsline {figure}{\numberline {27}{\ignorespaces Pseudorandom sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{36}{figure.caption.34}
-\contentsline {figure}{\numberline {28}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC (\cite {TriangleBarycentricCoordinates}).\relax }}{39}{figure.caption.35}
-\contentsline {figure}{\numberline {29}{\ignorespaces Illustration of how sampling the plane image with jittering works (\cite {Jittering}).\relax }}{40}{figure.caption.36}
-\contentsline {figure}{\numberline {30}{\ignorespaces Aliasing effect (\cite {Aliasing}).\relax }}{40}{figure.caption.37}
-\contentsline {figure}{\numberline {31}{\ignorespaces Stratified sampling.\relax }}{41}{figure.caption.38}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Stratified sampling with 1, sample per pixel.}}{41}{subfigure.31.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Stratified sampling with 256, samples per pixel.}}{41}{subfigure.31.2}
-\contentsline {figure}{\numberline {32}{\ignorespaces Jittered sampling.\relax }}{41}{figure.caption.39}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Jittered sampling with 1, sample per pixel.}}{41}{subfigure.32.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Jittered sampling with 4, samples per pixel.}}{41}{subfigure.32.2}
-\contentsline {figure}{\numberline {33}{\ignorespaces Perspective camera with hFov and vFov (\cite {Camera_Perspective_Orthographic}).\relax }}{42}{figure.caption.40}
-\contentsline {figure}{\numberline {34}{\ignorespaces Orthographic camera with sizeH and sizeV (\cite {Camera_Perspective_Orthographic}).\relax }}{43}{figure.caption.41}
-\contentsline {figure}{\numberline {35}{\ignorespaces Diagram explaining how the JVM can call native code (\cite {JNI}).\relax }}{46}{figure.caption.42}
-\contentsline {figure}{\numberline {36}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{47}{figure.caption.43}
+\contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the developed User Interface.\relax }}{11}{figure.caption.14}
+\contentsline {figure}{\numberline {8}{\ignorespaces Illustration of the three layers in the application.\relax }}{12}{figure.caption.15}
+\contentsline {figure}{\numberline {9}{\ignorespaces A scene rendered with OpenGL ES 2.0 before the ray tracer.\relax }}{14}{figure.caption.16}
+\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of tiling the image plane.\relax }}{15}{figure.caption.17}
+\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{16}{figure.caption.18}
+\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{17}{figure.caption.19}
+\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{18}{figure.caption.20}
+\contentsline {figure}{\numberline {14}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{20}{figure.caption.21}
+\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{22}{figure.caption.22}
+\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{23}{figure.caption.23}
+\contentsline {figure}{\numberline {17}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{24}{figure.caption.24}
+\contentsline {figure}{\numberline {18}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF (\cite {RenderingEquation}).\relax }}{25}{figure.caption.25}
+\contentsline {figure}{\numberline {19}{\ignorespaces DepthMap shader.\relax }}{26}{figure.caption.26}
+\contentsline {figure}{\numberline {20}{\ignorespaces DiffuseMaterial shader.\relax }}{27}{figure.caption.27}
+\contentsline {figure}{\numberline {21}{\ignorespaces NoShadows shader.\relax }}{28}{figure.caption.28}
+\contentsline {figure}{\numberline {22}{\ignorespaces Reflections projected on the floor and on the spheres (\cite {RTReflections}).\relax }}{29}{figure.caption.29}
+\contentsline {figure}{\numberline {23}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{29}{figure.caption.30}
+\contentsline {figure}{\numberline {24}{\ignorespaces Whitted shader.\relax }}{31}{figure.caption.31}
+\contentsline {figure}{\numberline {25}{\ignorespaces The spherical coordinates (\cite {SphericalCoordinates}).\relax }}{33}{figure.caption.33}
+\contentsline {figure}{\numberline {26}{\ignorespaces The possible directions in secondary rays (\cite {SamplingRayDirection}).\relax }}{34}{figure.caption.34}
+\contentsline {figure}{\numberline {27}{\ignorespaces PathTracer shader.\relax }}{35}{figure.caption.35}
+\contentsline {figure}{\numberline {28}{\ignorespaces Halton sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{37}{figure.caption.36}
+\contentsline {figure}{\numberline {29}{\ignorespaces Pseudorandom sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{39}{figure.caption.37}
+\contentsline {figure}{\numberline {30}{\ignorespaces Hard shadows (\cite {Shadows}).\relax }}{40}{figure.caption.38}
+\contentsline {figure}{\numberline {31}{\ignorespaces Soft shadows (\cite {Shadows}).\relax }}{41}{figure.caption.39}
+\contentsline {figure}{\numberline {32}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC (\cite {TriangleBarycentricCoordinates}).\relax }}{42}{figure.caption.40}
+\contentsline {figure}{\numberline {33}{\ignorespaces Illustration of how sampling the plane image with jittering works (\cite {Jittering}).\relax }}{43}{figure.caption.41}
+\contentsline {figure}{\numberline {34}{\ignorespaces Aliasing effect (\cite {Aliasing}).\relax }}{44}{figure.caption.42}
+\contentsline {figure}{\numberline {35}{\ignorespaces Stratified sampling.\relax }}{44}{figure.caption.43}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Stratified sampling with 1, sample per pixel.}}{44}{subfigure.35.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Stratified sampling with 256, samples per pixel.}}{44}{subfigure.35.2}
+\contentsline {figure}{\numberline {36}{\ignorespaces Jittered sampling.\relax }}{44}{figure.caption.44}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Jittered sampling with 1, sample per pixel.}}{44}{subfigure.36.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Jittered sampling with 4, samples per pixel.}}{44}{subfigure.36.2}
+\contentsline {figure}{\numberline {37}{\ignorespaces Perspective camera with hFov and vFov (\cite {Camera_Perspective_Orthographic}).\relax }}{45}{figure.caption.45}
+\contentsline {figure}{\numberline {38}{\ignorespaces Orthographic camera with sizeH and sizeV (\cite {Camera_Perspective_Orthographic}).\relax }}{47}{figure.caption.46}
+\contentsline {figure}{\numberline {39}{\ignorespaces Diagram explaining how the JVM can call native code (\cite {JNI}).\relax }}{50}{figure.caption.47}
+\contentsline {figure}{\numberline {40}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{51}{figure.caption.48}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {37}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{50}{figure.caption.45}
+\contentsline {figure}{\numberline {41}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{54}{figure.caption.50}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

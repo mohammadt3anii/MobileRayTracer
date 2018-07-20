@@ -116,7 +116,7 @@ bool PathTracer::shade(
             //LiD += kD * LiD_RGB * Pi / continue_probability
             LiD += kD * LiD_RGB;
             if (rayDepth > ::MobileRT::RayDepthMin) {
-                LiD /= continue_probability;
+                LiD /= continue_probability * 0.5f;
             }
 
             //if it has Ld and if LiD intersects a light source then LiD = 0
