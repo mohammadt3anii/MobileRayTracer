@@ -64,7 +64,10 @@ This allows the programmers to code their own rendering components, like the int
 \par
 In order to take advantage of most of the mobile CPU resources and give a good performance for the applications, the library and the rendering components were developed using the native programming language C++.
 This was achieved by using the Native Development Kit (NDK) provided by the Integrated Development Environment (IDE) Android Studio.
-The User Interface was developed in Java using the traditional Software Development Kit (SDK) provided by the Android Studio because there is no framework in the NDK that helps the programmer design his own user interface.
+This way, the mobile device can provide better performance in computationally intensive applications at the expense of the programmer having to manage manually the memory.
+And it facilitates the porting of existing C/C++ code to Android and promotes developing multiplatforms applications.
+But, it won't ensure device portability despite processor architecture and the number of libraries compatible with the NDK is very scarce.
+It is also important to mention that the User Interface was developed in Java using the traditional Software Development Kit (SDK) provided by the Android Studio because there is no framework in the NDK that helps the programmer design his own user interface.
 Despite that, its performance is not very important because it doesn't interfere significantly with the others layers of the application.
 
 
@@ -177,6 +180,7 @@ Besides being dependent on these threes libraries, this library also depends on 
 
 \par
 The OpenGL ES 2.0 is necessary in order to let the application rasterize one frame of the scene so the user can view it without having to wait a long time to render it with the ray tracer.
+This is done by copying the scene data from native code to the OpenGL of JVM with the help of JNI.
 
 \begin{figure}[H]
 	\centering
@@ -189,6 +193,19 @@ The OpenGL ES 2.0 is necessary in order to let the application rasterize one fra
 The CMake was used so that the application code could be compiled on any operating system.
 As it is a cross-platform family of tools designed to build, test and package software developed for a variety of operating systems like Windows, Linux, Mac OS X, and even FreeBSD.
 The main goal of CMake is to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles and workspaces that can be used in the compiler environment of the programmer's choice.
+This facilitates the integration of third party libraries that use CMake to compile into our own project.
+But, unfortunately the NDK only provides CMake up to the version 3.6.0, so projects that use latter versions of CMake will not work.
+
+\par
+The CMake generate makefiles that call the available C++ compilers in the Android Environment.
+The NDK in Android Studio uses, by default, the LLVM Project, which is a collection of modular and reusable compiler and toolchain technologies.
+This toolchain provides Clang, which is C/C++/Objective-C compiler that aims to deliver amazingly fast compiles and extremely useful error and warning messages for the programmers.
+Unfortunately, this compiler only provides features up to C++ 14.
+
+\par
+Last, but not least, it is important to mention that all the code of this application, including the ray tracer library, the rendering components and the Graphical User Interface are available in the github.
+It is 100\% open source and it is accessed in the web page:
+\url{https://github.com/PTPuscas/MobileRayTracer}.
 
 \subsection{Renderer}
 
@@ -203,8 +220,9 @@ void stopRender() noexcept;
 
 \par
 The \textit{renderFrame} method starts the rendering process and writes the calculated light luminance of each pixel in the parameter \textit{bitmap}.
-This method also allows to choose the number of threads that will render the image into the bitmap, and needs the stride of that bitmap array.
-The image plane is divided into 16 tiles of pixels and it is traced one primary ray per pixel in each tile.
+This method also allows to choose the number of threads that will render the image into the bitmap, and needs the \textit{stride} of that bitmap array.
+Besides rendering the scene in a progressive way, the image plane is divided into 256 tiles of pixels and it is traced one primary ray per pixel in each tile.
+This allows the user to wait less time in order to view the scene being rendering.
 
 \begin{figure}[H]
 	\centering
@@ -447,6 +465,9 @@ The calculation of those planes is performed with the Surface Area Heuristic (SA
 	\includegraphics[keepaspectratio,scale=1.0]{BVH.jpg}
 \end{figure}
 
+\par
+In this library, the BVH class is a template, because this way, it is possible to create multiple BVH classes where each one store a vector of primitives with different shapes.
+
 \subsubsection{Surface Area Heuristic}
 
 \par
@@ -473,6 +494,26 @@ The figure \ref{SAH.} shows a very simple example of how the SAH algorithm works
 	\label{SAH.}
 	\includegraphics[keepaspectratio,scale=1.0]{SAH_example.png}
 \end{figure}
+
+\subsection{Primitive}
+
+\par
+The Primitive is a template class that needs a Shape and wraps it with the Material together.
+It is useful to be a template class because this way it allows to different shapes have different types of material.
+
+\begin{lstlisting}[caption={Main methods in Primitive}, captionpos=b, label=Primitive]
+Intersection intersect(Intersection intersection, const Ray &ray) noexcept;
+AABB getAABB() const noexcept;
+\end{lstlisting}
+
+\par
+The \textit{intersect}, as the name implies, is a method that tries to intersect a ray with the primitive.
+This method calls the \textit{intersect} of the Shape and it returns the closest intersection to the origin of that ray.
+It is used to determine the intersection of the casted ray with the primitives in the scene.
+
+\par
+The \textit{getAABB} is the method that returns the AABB voxel that surrounds the primitive.
+It also calls the \textit{getAABB} from the Shape and it is used to construct the Acceleration Structures.
 
 
 \section{Rendering Components}
@@ -1411,10 +1452,13 @@ There are many different types of file formats for storing meshes:
 All these file formats allows the user to store the positions of many triangles in a file, which together form the geometry of the scene.
 
 \par
-This library only provides one Object Loader that allows loading the scene geometry from Wavefront obj files.
+This library only provides one Object Loader that allows loading the scene geometry from Wavefront obj files, which was achieved using a third party library called "tinyobjloader".
 This type of Model file format is a good choice because, besides being simple, it is open and has been adopted by many 3D graphics application vendors, like, 3ds Max and Blender.
 
 \subsubsection{OBJ Loader}
+
+\par
+The class "OBJLoader" is a Rendering Component that allows the user to load 3D scenes from Wavefront obj files.
 
 \par
 The OBJ file format is a simple file data format that allows to store only the position of each vertex, the UV position of each texture coordinate vertex, each vertex normal, and the faces that make each polygon defined as a list of vertices, and texture vertices.

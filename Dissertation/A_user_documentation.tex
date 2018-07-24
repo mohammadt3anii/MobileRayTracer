@@ -1,1 +1,526 @@
 \chapter{User documentation}
+
+\section{API}
+
+\par
+
+\begin{lstlisting}[caption={Renderer API}, captionpos=b, label=API_Renderer]
+public:
+explicit Renderer(::std::unique_ptr<Shader> shader,
+	::std::unique_ptr<Camera> camera,
+	::std::unique_ptr<Sampler> samplerPixel,
+	::std::uint32_t width, ::std::uint32_t height,
+	::std::uint32_t samplesPixel) noexcept;
+
+Renderer(const Renderer &renderer) noexcept = delete;
+
+Renderer(Renderer &&renderer) noexcept = delete;
+
+~Renderer() noexcept = default;
+
+Renderer &operator=(const Renderer &renderer) noexcept = delete;
+
+Renderer &operator=(Renderer &&renderer) noexcept = delete;
+
+void renderFrame(::std::uint32_t *bitmap, ::std::int32_t numThreads, ::std::uint32_t stride) noexcept;
+
+void stopRender() noexcept;
+
+::std::uint32_t getSample() const noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Scene API}, captionpos=b, label=API_Scene]
+public:
+explicit Scene() = default;
+
+Scene(const Scene &scene) noexcept = delete;
+
+Scene(Scene &&scene) noexcept = default;
+
+~Scene() noexcept;
+
+Scene &operator=(const Scene &scene) noexcept = delete;
+
+Scene &operator=(Scene &&scene) noexcept = default;
+
+Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+
+Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+
+Intersection traceLights(Intersection intersection, const Ray &ray) const noexcept;
+
+void resetSampling() noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Ray API}, captionpos=b, label=API_Ray]
+public:
+explicit Ray(const ::glm::vec3 &dir, const ::glm::vec3 &origin,
+::std::int32_t depth, const void *primitive = nullptr) noexcept;
+
+Ray(const Ray &ray) noexcept = default;
+
+Ray(Ray &&ray) noexcept = default;
+
+~Ray() noexcept = default;
+
+Ray &operator=(const Ray &ray) noexcept = delete;
+
+Ray &operator=(Ray &&ray) noexcept = delete;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Primitive API}, captionpos=b, label=API_Primitive]
+public:
+Primitive(const T &shape, const Material &material) noexcept;
+
+Primitive() noexcept = delete;
+
+Primitive(const Primitive &primitive) noexcept = default;
+
+Primitive(Primitive &&primitive) noexcept = default;
+
+~Primitive() noexcept = default;
+
+Primitive &operator=(const Primitive &primitive) noexcept = default;
+
+Primitive &operator=(Primitive &&primitive) noexcept = default;
+
+AABB getAABB() const noexcept;
+
+Intersection intersect(Intersection intersection, const Ray &ray) noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Intersection API}, captionpos=b, label=API_Intersection]
+public:
+explicit Intersection() noexcept = default;
+
+explicit Intersection(float dist, const void *primitive = nullptr) noexcept;
+
+explicit Intersection(
+	const ::glm::vec3 &orig,
+	const ::glm::vec3 &dir,
+	float dist,
+	const ::glm::vec3 &normal,
+	const void *primitive = nullptr) noexcept;
+
+explicit Intersection(
+	const ::glm::vec3 &intPoint,
+	float dist,
+	const ::glm::vec3 &sphereCenter) noexcept;
+
+Intersection(const Intersection &intersection) noexcept = default;
+
+Intersection(Intersection &&intersection) noexcept = default;
+
+~Intersection() noexcept = default;
+
+Intersection &operator=(const Intersection &intersection) noexcept = delete;
+
+Intersection &operator=(Intersection &&intersection) noexcept = default;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Material API}, captionpos=b, label=API_Material]
+public:
+explicit Material(
+	const ::glm::vec3 &Kd = ::glm::vec3 {},
+	const ::glm::vec3 &Ks = ::glm::vec3 {},
+	const ::glm::vec3 &Kt = ::glm::vec3 {},
+	float refractiveIndice = 1.0f, const ::glm::vec3 &Le = ::glm::vec3 {}) noexcept;
+
+Material(const Material &material) noexcept = default;
+
+Material(Material &&material) noexcept = default;
+
+~Material() noexcept = default;
+
+Material &operator=(const Material &material) noexcept = default;
+
+Material &operator=(Material &&material) noexcept = default;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Triangle API}, captionpos=b, label=API_Triangle]
+public:
+explicit Triangle(
+	const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+	const ::glm::vec3 &normal = ::glm::vec3 {}) noexcept;
+
+Triangle(const Triangle &triangle) noexcept = default;
+
+Triangle(Triangle &&triangle) noexcept = default;
+
+~Triangle() noexcept = default;
+
+Triangle &operator=(const Triangle &triangle) noexcept = default;
+
+Triangle &operator=(Triangle &&triangle) noexcept = default;
+
+Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
+
+void moveTo(float x, float y) noexcept;
+
+float getZ() const noexcept;
+
+AABB getAABB() const noexcept;
+
+bool intersect(const AABB &box) const noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Plane API}, captionpos=b, label=API_Plane]
+public:
+explicit Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept;
+
+Plane(const Plane &plane) noexcept = default;
+
+Plane(Plane &&plane) noexcept = default;
+
+~Plane() noexcept = default;
+
+Plane &operator=(const Plane &plane) noexcept = default;
+
+Plane &operator=(Plane &&plane) noexcept = default;
+
+Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
+
+void moveTo(float x, float y) noexcept;
+
+float getZ() const noexcept;
+
+AABB getAABB() const noexcept;
+
+float distance(const ::glm::vec3 &point) const noexcept;
+
+bool intersect(const AABB &box) const noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Sphere API}, captionpos=b, label=API_Sphere]
+public:
+explicit Sphere(const ::glm::vec3 &center, float radius) noexcept;
+
+Sphere(const Sphere &sphere) noexcept = default;
+
+Sphere(Sphere &&sphere) noexcept = default;
+
+~Sphere() noexcept = default;
+
+Sphere &operator=(const Sphere &sphere) noexcept = default;
+
+Sphere &operator=(Sphere &&sphere) noexcept = default;
+
+Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
+
+void moveTo(float x, float y) noexcept;
+
+float getZ() const noexcept;
+
+AABB getAABB() const noexcept;
+
+bool intersect(const AABB &box) const noexcept;
+\end{lstlisting}
+
+
+\begin{lstlisting}[caption={Utils API}, captionpos=b, label=API_Utils]
+#define LOG(...) {::MobileRT::log(::MobileRT::getFileName(__FILE__), ":", __LINE__, ": ",
+__VA_ARGS__);}
+
+template<typename ...Args>
+void log(Args &&... args) noexcept;
+
+inline ::std::string getFileName(const char *filepath) noexcept;
+
+template<typename T>
+::std::vector<T *> convertVector(::std::vector<T> &source) noexcept;
+
+::std::int32_t roundDownToMultipleOf(::std::int32_t value, ::std::int32_t multiple) noexcept;
+
+float haltonSequence(::std::uint32_t index, ::std::uint32_t base) noexcept;
+
+::std::uint32_t incrementalAvg(
+	const ::glm::vec3 &sample, ::std::uint32_t avg, ::std::uint32_t numSample) noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={AABB API}, captionpos=b, label=API_AABB]
+public:
+explicit AABB() noexcept = default;
+
+explicit AABB(const ::glm::vec3 &pointMin, const ::glm::vec3 &pointMax) noexcept;
+
+AABB(const AABB &AABB) noexcept = default;
+
+AABB(AABB &&AABB) noexcept = default;
+
+~AABB() noexcept = default;
+
+AABB &operator=(const AABB &AABB) noexcept = default;
+
+AABB &operator=(AABB &&AABB) noexcept = default;
+
+float getSurfaceArea() const noexcept;
+
+::std::int32_t getLongestAxis() const noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={BVH API}, captionpos=b, label=API_BVH]
+public:
+explicit BVH() noexcept = default;
+
+explicit BVH<T>(
+	::std::vector<Primitive<T>> &&primitives) noexcept;
+
+BVH(const BVH &bVH) noexcept = delete;
+
+BVH(BVH &&bVH) noexcept = default;
+
+~BVH() noexcept = default;
+
+BVH &operator=(const BVH &bVH) noexcept = delete;
+
+BVH &operator=(BVH &&bVH) noexcept = default;
+
+Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+
+Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={RegularGrid API}, captionpos=b, label=API_RegularGrid]
+public:
+explicit RegularGrid() noexcept = default;
+
+explicit RegularGrid(AABB sceneBounds, Scene *scene, ::std::int32_t gridSize) noexcept;
+
+RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
+
+RegularGrid(RegularGrid &&regularGrid) noexcept = default;
+
+~RegularGrid() noexcept = default;
+
+RegularGrid &operator=(const RegularGrid &regularGrid) noexcept = delete;
+
+RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
+
+Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+
+Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+\end{lstlisting}
+
+
+\begin{lstlisting}[caption={Shader API}, captionpos=b, label=API_Shader]
+protected:
+virtual bool shade(::glm::vec3 *rgb, const Intersection &intersection,
+const Ray &ray) noexcept = 0;
+
+::glm::vec3 getCosineSampleHemisphere(const ::glm::vec3 &normal) const noexcept;
+
+public:
+void initializeAccelerators(Camera *camera) noexcept;
+
+public:
+explicit Shader(Scene scene, ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
+
+Shader(const Shader &shader) noexcept = delete;
+
+Shader(Shader &&shader) noexcept = default;
+
+virtual ~Shader() noexcept;
+
+Shader &operator=(const Shader &shader) noexcept = delete;
+
+Shader &operator=(Shader &&shader) noexcept = delete;
+
+bool rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept;
+
+bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+
+Intersection traceTouch(Intersection intersection, const Ray &ray) noexcept;
+
+virtual void resetSampling() noexcept;
+
+::std::uint32_t getLightIndex ();
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Sampler API}, captionpos=b, label=API_Sampler]
+public:
+explicit Sampler() noexcept = default;
+
+explicit Sampler(::std::uint32_t width, ::std::uint32_t height,
+::std::uint32_t samples) noexcept;
+
+Sampler(const Sampler &sampler) noexcept = delete;
+
+Sampler(Sampler &&sampler) noexcept = delete;
+
+virtual ~Sampler() noexcept;
+
+Sampler &operator=(const Sampler &sampler) noexcept = delete;
+
+Sampler &operator=(Sampler &&sampler) noexcept = delete;
+
+void resetSampling() noexcept;
+
+void stopSampling() noexcept;
+
+virtual float getSample(::std::uint32_t sample) noexcept = 0;
+
+float getSample() noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Camera API}, captionpos=b, label=API_Camera]
+protected:
+float degToRad(const float deg) const noexcept;
+float radToDeg(const float rad) const noexcept;
+
+public:
+explicit Camera(const ::glm::vec3 &position,
+	const ::glm::vec3 &lookAt, const ::glm::vec3 &up) noexcept;
+
+Camera(const Camera &camera) noexcept;
+
+Camera(Camera &&camera) noexcept = delete;
+
+virtual ~Camera() noexcept;
+
+Camera &operator=(const Camera &camera) noexcept = delete;
+
+Camera &operator=(Camera &&camera) noexcept = delete;
+
+virtual Ray generateRay(float u, float v,
+	float deviationU,
+	float deviationV) const noexcept = 0;
+
+float getBlock(::std::uint32_t sample) noexcept;
+
+virtual AABB getAABB() const noexcept;
+
+void resetSampling() noexcept;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Light API}, captionpos=b, label=API_Light]
+public:
+explicit Light(const Material &radiance) noexcept;
+
+Light(const Light &light) noexcept = delete;
+
+Light(Light &&light) noexcept = delete;
+
+virtual ~Light() noexcept;
+
+Light &operator=(const Light &light) noexcept = delete;
+
+Light &operator=(Light &&light) noexcept = delete;
+
+virtual ::glm::vec3 getPosition() noexcept = 0;
+
+virtual void resetSampling() noexcept = 0;
+
+virtual Intersection intersect(Intersection intersection, const Ray &ray) const noexcept = 0;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={ObjectLoader API}, captionpos=b, label=API_ObjectLoader]
+public:
+explicit ObjectLoader() noexcept = default;
+
+ObjectLoader(const ObjectLoader &objectLoader) noexcept = delete;
+
+ObjectLoader(ObjectLoader &&objectLoader) noexcept = delete;
+
+virtual ~ObjectLoader() noexcept;
+
+ObjectLoader &operator=(const ObjectLoader &objectLoader) noexcept = delete;
+
+ObjectLoader &operator=(ObjectLoader &&objectLoader) noexcept = delete;
+
+virtual void process() noexcept = 0;
+
+bool isProcessed() const noexcept;
+
+virtual bool fillScene(Scene *scene,
+::std::function<::std::unique_ptr<Sampler>()> lambda,
+JNIEnv *env) noexcept = 0;
+\end{lstlisting}
+
+\section{Loading a scene}
+
+\par
+
+
+\begin{lstlisting}[caption={How to load a 3D scene}, captionpos=b, label=LoadingScene]
+jboolean isCopy {JNI_FALSE};
+const char *const objFileName {(env)->GetStringUTFChars(globalObjFile, &isCopy)};
+const char *const matFileName {(env)->GetStringUTFChars(globalMatFile, &isCopy)};
+
+const jboolean result{
+	env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 0)};
+if (result) {
+	return -1;
+}
+
+::Components::OBJLoader objLoader{objFileName, matFileName};
+{
+	const jboolean result{
+	env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 0)};
+	if (result) {
+		return -1;
+	}
+}
+objLoader.process();
+{
+	const jboolean result{
+	env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 0)};
+	if (result) {
+		return -1;
+	}
+}
+
+if (!objLoader.isProcessed()) {
+	return -1;
+}
+const bool sceneBuilt{objLoader.fillScene(&scene_,
+[]() { return ::std::make_unique<Components::StaticHaltonSeq>(); }, env)};
+if (!sceneBuilt) {
+	return -1;
+}
+{
+	const jboolean result{
+	env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 0)};
+	if (result) {
+		return -1;
+	}
+}
+
+const float ratio {
+::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
+const float hfovFactor{width > height ? ratio : 1.0f};
+const float vfovFactor{width < height ? ratio : 1.0f};
+const float fovX{45.0f * hfovFactor};
+const float fovY{45.0f * vfovFactor};
+maxDist = ::glm::vec3 {1, 1, 1};
+const ::MobileRT::Material &lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+	::glm::vec3 {0.0f, 0.0f, 0.0f},
+	::glm::vec3 {0.0f, 0.0f, 0.0f},
+	1.0f,
+	::glm::vec3 {0.9f, 0.9f, 0.9f}};
+
+//cornellbox
+if (::std::strstr(objFileName, "CornellBox") != nullptr) {
+	camera = ::std::make_unique<Components::Perspective>(
+		::glm::vec3 {0.0f, 0.7f, 3.0f},
+		::glm::vec3 {0.0f, 0.7f, -1.0f},
+		::glm::vec3 {0.0f, 1.0f, 0.0f},
+		fovX, fovY);
+	
+	::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+	::std::make_unique<Components::StaticHaltonSeq>()};
+	scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+		lightMat,
+		::std::move(samplerPoint1),
+		::glm::vec3 {0.5f, 1.58f, 0.5f},
+		::glm::vec3 {-0.5f, 1.58f, 0.5f},
+		::glm::vec3 {-0.5f, 1.58f, -0.5f}));
+	::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
+	::std::make_unique<Components::StaticHaltonSeq>()};
+	scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+		lightMat,
+		::std::move(samplerPoint2),
+		::glm::vec3 {0.5f, 1.58f, 0.5f},
+		::glm::vec3 {-0.5f, 1.58f, -0.5f},
+		::glm::vec3 {0.5f, 1.58f, -0.5f}));
+}
+\end{lstlisting}

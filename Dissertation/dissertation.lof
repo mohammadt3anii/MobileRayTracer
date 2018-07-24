@@ -11,10 +11,10 @@
 \contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the developed User Interface.\relax }}{11}{figure.caption.14}
 \contentsline {figure}{\numberline {8}{\ignorespaces Illustration of the three layers in the application.\relax }}{12}{figure.caption.15}
 \contentsline {figure}{\numberline {9}{\ignorespaces A scene rendered with OpenGL ES 2.0 before the ray tracer.\relax }}{14}{figure.caption.16}
-\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of tiling the image plane.\relax }}{15}{figure.caption.17}
-\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{16}{figure.caption.18}
-\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{17}{figure.caption.19}
-\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{18}{figure.caption.20}
+\contentsline {figure}{\numberline {10}{\ignorespaces Illustration of tiling the image plane.\relax }}{16}{figure.caption.17}
+\contentsline {figure}{\numberline {11}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{17}{figure.caption.18}
+\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{18}{figure.caption.19}
+\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{19}{figure.caption.20}
 \contentsline {figure}{\numberline {14}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{20}{figure.caption.21}
 \contentsline {figure}{\numberline {15}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{22}{figure.caption.22}
 \contentsline {figure}{\numberline {16}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{23}{figure.caption.23}
@@ -24,7 +24,7 @@
 \contentsline {figure}{\numberline {20}{\ignorespaces DiffuseMaterial shader.\relax }}{27}{figure.caption.27}
 \contentsline {figure}{\numberline {21}{\ignorespaces NoShadows shader.\relax }}{28}{figure.caption.28}
 \contentsline {figure}{\numberline {22}{\ignorespaces Reflections projected on the floor and on the spheres (\cite {RTReflections}).\relax }}{29}{figure.caption.29}
-\contentsline {figure}{\numberline {23}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{29}{figure.caption.30}
+\contentsline {figure}{\numberline {23}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{30}{figure.caption.30}
 \contentsline {figure}{\numberline {24}{\ignorespaces Whitted shader.\relax }}{31}{figure.caption.31}
 \contentsline {figure}{\numberline {25}{\ignorespaces The spherical coordinates (\cite {SphericalCoordinates}).\relax }}{33}{figure.caption.33}
 \contentsline {figure}{\numberline {26}{\ignorespaces The possible directions in secondary rays (\cite {SamplingRayDirection}).\relax }}{34}{figure.caption.34}

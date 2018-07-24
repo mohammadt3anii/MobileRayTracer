@@ -3,8 +3,9 @@ The style file: plainnat.bst
 A level-1 auxiliary file: 1_introduction.aux
 A level-1 auxiliary file: 2_state_of_the_art.aux
 A level-1 auxiliary file: 3_software_architecture.aux
-A level-1 auxiliary file: 4_demonstration.aux
-A level-1 auxiliary file: 5_conclusion_future_work.aux
+A level-1 auxiliary file: 4_android.aux
+A level-1 auxiliary file: 5_demonstration.aux
+A level-1 auxiliary file: 6_conclusion_future_work.aux
 A level-1 auxiliary file: A_user_documentation.aux
 Database file #1: dissertation.bib
 Warning--empty year in RadeonRays
