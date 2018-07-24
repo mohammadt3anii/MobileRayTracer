@@ -61,6 +61,60 @@ All of the used scenes models were downloaded from
 
 \subsection{Samsung Galaxy Fresh Duos GT-S7392}
 
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\label{graph:SamsungTime}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Speedup in the scene 1}
+\end{figure}
+
+\begin{figure}[H]
 \begin{tikzpicture}
 \begin{axis}[
 legend style={at={(1.05,1.00)},anchor=north west},
@@ -69,9 +123,10 @@ xlabel = \#threads,
 ylabel = speedup,
 xtick={0,1,2,3,4},
 ytick={0,1,...,10},
+width=0.75\textwidth,
 ]
 \addplot [
-color=blue,
+color=red,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -81,7 +136,7 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Without Accelerator Structure}
+\addlegendentry{BVH}
 \addplot [
 color=black,
 mark=*,
@@ -95,7 +150,7 @@ dashed,
 };
 \addlegendentry{Regular Grid}
 \addplot [
-color=red,
+color=blue,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -105,13 +160,104 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Octree}
-\label{graph:NoShadows}
+\addlegendentry{Naive}
+\label{graph:SamsungSpeedup}
 \end{axis}
 \end{tikzpicture}
+\caption{Speedup in the scene 1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tikzpicture}
+\begin{axis}[
+legend style={at={(1.05,1.00)},anchor=north west},
+ylabel = memory (MB),
+symbolic x coords={scene 1, scene 2, scene 3},
+xtick=data,
+width=0.75\textwidth,
+]
+\addplot[ybar,fill=red,color=red,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   85)
+	(scene 2,  	85)
+	(scene 3,   105)
+};
+\addlegendentry{BVH}
+\addplot[ybar,fill=black,color=black,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   80)
+	(scene 2,  	80)
+	(scene 3,   99)
+};
+\addlegendentry{Regular Grid}
+\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   70)
+	(scene 2,  	77)
+	(scene 3,   91)
+};
+\addlegendentry{Naive}
+\end{axis}
+\label{graph:SamsungMemory}
+\end{tikzpicture}
+\caption{Memory usage in the Samsung Galaxy smart phone}
+\end{figure}
 
 \subsection{Raspberry Pi 2 Model B}
 
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\label{graph:RaspberryTime}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
 \begin{tikzpicture}
 \begin{axis}[
 legend style={at={(1.05,1.00)},anchor=north west},
@@ -120,9 +266,10 @@ xlabel = \#threads,
 ylabel = speedup,
 xtick={0,1,2,3,4},
 ytick={0,1,...,10},
+width=0.75\textwidth,
 ]
 \addplot [
-color=blue,
+color=red,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -132,7 +279,7 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Without Accelerator Structure}
+\addlegendentry{BVH}
 \addplot [
 color=black,
 mark=*,
@@ -146,7 +293,7 @@ dashed,
 };
 \addlegendentry{Regular Grid}
 \addplot [
-color=red,
+color=blue,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -156,14 +303,104 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Octree}
-\label{graph:NoShadows}
+\addlegendentry{Naive}
+\label{graph:RaspberrySpeedup}
 \end{axis}
 \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tikzpicture}
+\begin{axis}[
+legend style={at={(1.05,1.00)},anchor=north west},
+ylabel = memory (MB),
+symbolic x coords={scene 1, scene 2, scene 3},
+xtick=data,
+width=0.75\textwidth,
+]
+\addplot[ybar,fill=red,color=red,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   85)
+	(scene 2,  	85)
+	(scene 3,   105)
+};
+\addlegendentry{BVH}
+\addplot[ybar,fill=black,color=black,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   80)
+	(scene 2,  	80)
+	(scene 3,   99)
+};
+\addlegendentry{Regular Grid}
+\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   70)
+	(scene 2,  	77)
+	(scene 3,   91)
+};
+\addlegendentry{Naive}
+\end{axis}
+\label{graph:RaspberryMemory}
+\end{tikzpicture}
+\caption{Memory usage in the Raspberry Pi 2 Model B}
+\end{figure}
 
 
 \subsection{MINIX NEO X8-H PLUS}
 
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\label{graph:MinixTime}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
 \begin{tikzpicture}
 \begin{axis}[
 legend style={at={(1.05,1.00)},anchor=north west},
@@ -172,9 +409,10 @@ xlabel = \#threads,
 ylabel = speedup,
 xtick={0,1,2,3,4},
 ytick={0,1,...,10},
+width=0.75\textwidth,
 ]
 \addplot [
-color=blue,
+color=red,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -184,7 +422,7 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Without Accelerator Structure}
+\addlegendentry{BVH}
 \addplot [
 color=black,
 mark=*,
@@ -198,7 +436,7 @@ dashed,
 };
 \addlegendentry{Regular Grid}
 \addplot [
-color=red,
+color=blue,
 mark=*,
 dashed,
 ] plot coordinates {
@@ -208,10 +446,47 @@ dashed,
 	(3,1.0)
 	(4,1.0)
 };
-\addlegendentry{Octree}
-\label{graph:NoShadows}
+\addlegendentry{Naive}
+\label{graph:MinixSpeedup}
 \end{axis}
 \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tikzpicture}
+\begin{axis}[
+legend style={at={(1.05,1.00)},anchor=north west},
+ylabel = memory (MB),
+symbolic x coords={scene 1, scene 2, scene 3},
+xtick=data,
+width=0.75\textwidth,
+]
+\addplot[ybar,fill=red,color=red,area legend,width=4.30\textwidth] coordinates {
+	(scene 1,   0)
+	(scene 1,   85)
+	(scene 2,  	85)
+	(scene 3,   105)
+};
+\addlegendentry{BVH}
+\addplot[ybar,fill=black,color=black,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   80)
+	(scene 2,  	80)
+	(scene 3,   99)
+};
+\addlegendentry{Regular Grid}
+\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+	(scene 1,   0)
+	(scene 1,   70)
+	(scene 2,  	77)
+	(scene 3,   91)
+};
+\addlegendentry{Naive}
+\end{axis}
+\label{graph:MinixMemory}
+\end{tikzpicture}
+\caption{Memory usage in the MINIX NEO X8-H PLUS}
+\end{figure}
 
 \section{Comparison with Android CPU Raytracer (\cite{Android_CPU_Raytracer})}
 
