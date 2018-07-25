@@ -20,61 +20,61 @@
 \contentsline {section}{\numberline {3.2}Methodology}{13}{section.3.2}
 \contentsline {section}{\numberline {3.3}Library}{13}{section.3.3}
 \contentsline {subsection}{\numberline {3.3.1}Third parties dependencies}{14}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}Renderer}{15}{subsection.3.3.2}
-\contentsline {subsection}{\numberline {3.3.3}Scene}{16}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.2}Renderer}{16}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Scene}{17}{subsection.3.3.3}
 \contentsline {subsection}{\numberline {3.3.4}Shapes}{17}{subsection.3.3.4}
-\contentsline {subsubsection}{Plane}{17}{lstnumber.3.3.1}
-\contentsline {subsubsection}{Sphere}{18}{figure.caption.19}
+\contentsline {subsubsection}{Plane}{18}{lstnumber.3.3.1}
+\contentsline {subsubsection}{Sphere}{19}{figure.caption.19}
 \contentsline {subsubsection}{Triangle}{19}{figure.caption.20}
-\contentsline {subsection}{\numberline {3.3.5}Acceleration Structures}{20}{subsection.3.3.5}
-\contentsline {subsubsection}{Regular Grid}{21}{subsection.3.3.5}
-\contentsline {subsubsection}{Bounding Volume Hierarchy}{22}{figure.caption.22}
-\contentsline {subsubsection}{Surface Area Heuristic}{23}{figure.caption.23}
-\contentsline {subsection}{\numberline {3.3.6}Primitive}{24}{subsection.3.3.6}
-\contentsline {section}{\numberline {3.4}Rendering Components}{24}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Shaders}{25}{subsection.3.4.1}
-\contentsline {subsubsection}{DepthMap}{26}{lstnumber.3.8.4}
-\contentsline {subsubsection}{DiffuseMaterial}{27}{figure.caption.26}
-\contentsline {subsubsection}{NoShadows}{27}{figure.caption.27}
-\contentsline {subsubsection}{Whitted}{28}{figure.caption.28}
-\contentsline {subsubsection}{PathTracer}{31}{figure.caption.31}
-\contentsline {subsection}{\numberline {3.4.2}Samplers}{36}{subsection.3.4.2}
-\contentsline {subsubsection}{Constant}{36}{lstnumber.3.17.1}
-\contentsline {subsubsection}{Stratified}{36}{lstnumber.3.18.1}
-\contentsline {subsubsection}{HaltonSequence}{37}{lstnumber.3.19.8}
-\contentsline {subsubsection}{MersenneTwister}{38}{lstnumber.3.21.10}
-\contentsline {subsection}{\numberline {3.4.3}Lights}{39}{subsection.3.4.3}
-\contentsline {subsubsection}{Point light}{40}{lstnumber.3.23.2}
-\contentsline {subsubsection}{Area light}{41}{lstnumber.3.25.1}
-\contentsline {subsection}{\numberline {3.4.4}Cameras}{42}{subsection.3.4.4}
-\contentsline {subsubsection}{Perspective Camera}{45}{figure.caption.44}
-\contentsline {subsubsection}{Orthographic Camera}{46}{lstnumber.3.32.8}
-\contentsline {subsection}{\numberline {3.4.5}Object Loaders}{47}{subsection.3.4.5}
-\contentsline {subsubsection}{OBJ Loader}{48}{subsection.3.4.5}
-\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Android challenges}}{50}{chapter.4}
-\contentsline {section}{\numberline {4.1}Android specifics}{50}{section.4.1}
-\contentsline {section}{\numberline {4.2}User Interface}{51}{section.4.2}
-\contentsline {section}{\numberline {4.3}Programming decisions}{52}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Android benefits}{52}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Android challenges}{53}{subsection.4.3.2}
-\contentsline {section}{\numberline {4.4}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{53}{section.4.4}
-\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Demonstration: Global Illumination}}{54}{chapter.5}
-\contentsline {section}{\numberline {5.1}Results obtained}{54}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Whitted Shader}{57}{subsection.5.1.1}
-\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{57}{subsection.5.1.1}
-\contentsline {subsubsection}{Raspberry Pi 2 Model B}{59}{figure.caption.56}
-\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{61}{figure.caption.60}
-\contentsline {subsection}{\numberline {5.1.2}Path Tracing Shader}{64}{subsection.5.1.2}
-\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{64}{subsection.5.1.2}
-\contentsline {subsubsection}{Raspberry Pi 2 Model B}{66}{figure.caption.68}
-\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{68}{figure.caption.72}
-\contentsline {section}{\numberline {5.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{70}{section.5.2}
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Conclusion \& Future work}}{71}{chapter.6}
-\contentsline {section}{\numberline {6.1}Conclusions}{71}{section.6.1}
-\contentsline {section}{\numberline {6.2}Future Work}{71}{section.6.2}
+\contentsline {subsection}{\numberline {3.3.5}Acceleration Structures}{21}{subsection.3.3.5}
+\contentsline {subsubsection}{Regular Grid}{22}{subsection.3.3.5}
+\contentsline {subsubsection}{Bounding Volume Hierarchy}{23}{figure.caption.22}
+\contentsline {subsubsection}{Surface Area Heuristic}{24}{figure.caption.23}
+\contentsline {subsection}{\numberline {3.3.6}Primitive}{25}{subsection.3.3.6}
+\contentsline {section}{\numberline {3.4}Rendering Components}{25}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Shaders}{26}{subsection.3.4.1}
+\contentsline {subsubsection}{DepthMap}{27}{lstnumber.3.8.4}
+\contentsline {subsubsection}{DiffuseMaterial}{28}{figure.caption.26}
+\contentsline {subsubsection}{NoShadows}{28}{figure.caption.27}
+\contentsline {subsubsection}{Whitted}{29}{figure.caption.28}
+\contentsline {subsubsection}{PathTracer}{32}{figure.caption.31}
+\contentsline {subsection}{\numberline {3.4.2}Samplers}{37}{subsection.3.4.2}
+\contentsline {subsubsection}{Constant}{37}{lstnumber.3.17.1}
+\contentsline {subsubsection}{Stratified}{37}{lstnumber.3.18.1}
+\contentsline {subsubsection}{HaltonSequence}{38}{lstnumber.3.19.8}
+\contentsline {subsubsection}{MersenneTwister}{39}{lstnumber.3.21.10}
+\contentsline {subsection}{\numberline {3.4.3}Lights}{40}{subsection.3.4.3}
+\contentsline {subsubsection}{Point light}{41}{lstnumber.3.23.2}
+\contentsline {subsubsection}{Area light}{42}{lstnumber.3.25.1}
+\contentsline {subsection}{\numberline {3.4.4}Cameras}{43}{subsection.3.4.4}
+\contentsline {subsubsection}{Perspective Camera}{46}{figure.caption.44}
+\contentsline {subsubsection}{Orthographic Camera}{47}{lstnumber.3.32.8}
+\contentsline {subsection}{\numberline {3.4.5}Object Loaders}{48}{subsection.3.4.5}
+\contentsline {subsubsection}{OBJ Loader}{49}{subsection.3.4.5}
+\contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Android challenges}}{51}{chapter.4}
+\contentsline {section}{\numberline {4.1}Android specifics}{51}{section.4.1}
+\contentsline {section}{\numberline {4.2}User Interface}{52}{section.4.2}
+\contentsline {section}{\numberline {4.3}Programming decisions}{53}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Android benefits}{53}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Android challenges}{54}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{54}{section.4.4}
+\contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Demonstration: Global Illumination}}{55}{chapter.5}
+\contentsline {section}{\numberline {5.1}Results obtained}{55}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Whitted Shader}{58}{subsection.5.1.1}
+\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{58}{subsection.5.1.1}
+\contentsline {subsubsection}{Raspberry Pi 2 Model B}{60}{figure.caption.56}
+\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{62}{figure.caption.60}
+\contentsline {subsection}{\numberline {5.1.2}Path Tracing Shader}{65}{subsection.5.1.2}
+\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{65}{subsection.5.1.2}
+\contentsline {subsubsection}{Raspberry Pi 2 Model B}{67}{figure.caption.68}
+\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{69}{figure.caption.72}
+\contentsline {section}{\numberline {5.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{71}{section.5.2}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Conclusion \& Future work}}{72}{chapter.6}
+\contentsline {section}{\numberline {6.1}Conclusions}{72}{section.6.1}
+\contentsline {section}{\numberline {6.2}Future Work}{72}{section.6.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {7}\spacedlowsmallcaps {Bibliography}}{74}{chapter.7}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{79}{Appendix.1.A}
-\contentsline {section}{\numberline {A.1}API}{79}{section.1.A.1}
-\contentsline {section}{\numberline {A.2}Loading a scene}{89}{section.1.A.2}
-\contentsline {chapter}{Appendices}{79}{section*.77}
+\contentsline {chapter}{\numberline {7}\spacedlowsmallcaps {Bibliography}}{75}{chapter.7}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{80}{Appendix.1.A}
+\contentsline {section}{\numberline {A.1}API}{80}{section.1.A.1}
+\contentsline {section}{\numberline {A.2}Loading a scene}{90}{section.1.A.2}
+\contentsline {chapter}{Appendices}{80}{section*.77}

@@ -126,35 +126,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
                 const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
                 const ::glm::vec3 &vertex3 {-vx3, vy3, vz3};
-                ::glm::vec3 normal {};
-                if (!attrib_.normals.empty()) {
-                    const ::tinyobj::real_t nx1 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 0)};
-                    const ::tinyobj::real_t ny1 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 1)};
-                    const ::tinyobj::real_t nz1 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx1.normal_index) + 2)};
-
-                    const ::tinyobj::real_t nx2 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 0)};
-                    const ::tinyobj::real_t ny2 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 1)};
-                    const ::tinyobj::real_t nz2 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx2.normal_index) + 2)};
-
-                    const ::tinyobj::real_t nx3 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 0)};
-                    const ::tinyobj::real_t ny3 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 1)};
-                    const ::tinyobj::real_t nz3 {
-                            attrib_.normals.at(3 * static_cast<size_t> (idx3.normal_index) + 2)};
-
-                    const ::glm::vec3 &normal1 {nx1, ny1, nz1};
-                    const ::glm::vec3 &normal2 {nx2, ny2, nz2};
-                    const ::glm::vec3 &normal3 {nx3, ny3, nz3};
-                    normal = ::glm::normalize((normal1 + normal2 + normal3) / 3.0f);
-                }
-                const ::MobileRT::Triangle &triangle {vertex1, vertex2, vertex3, normal};
+                const ::MobileRT::Triangle &triangle{vertex1, vertex2, vertex3};
 
                 // per-face material
                 const ::std::int32_t materialID{shape.mesh.material_ids.at(f)};
@@ -221,16 +193,16 @@ OBJLoader::~OBJLoader() noexcept {
     this->shapes_.clear();
     this->materials_.clear();
 
-    /*this->objText_.shrink_to_fit();
+    this->objText_.shrink_to_fit();
     this->materialsText_.shrink_to_fit();
     this->attrib_.normals.shrink_to_fit();
     this->attrib_.texcoords.shrink_to_fit();
     this->attrib_.vertices.shrink_to_fit();
     this->shapes_.shrink_to_fit();
-    this->materials_.shrink_to_fit();*/
+    this->materials_.shrink_to_fit();
 
-    /*::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
-    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);*/
+    ::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
+    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);
 
     LOG("OBJLOADER DELETED");
 }

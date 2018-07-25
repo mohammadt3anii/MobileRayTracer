@@ -10,63 +10,63 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the developed User Interface.\relax }}{11}{figure.caption.14}
 \contentsline {figure}{\numberline {8}{\ignorespaces Illustration of the three layers in the application.\relax }}{12}{figure.caption.15}
-\contentsline {figure}{\numberline {9}{\ignorespaces A scene rendered with OpenGL ES 2.0 before the ray tracer.\relax }}{14}{figure.caption.16}
+\contentsline {figure}{\numberline {9}{\ignorespaces The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.\relax }}{15}{figure.caption.16}
 \contentsline {figure}{\numberline {10}{\ignorespaces Illustration of tiling the image plane.\relax }}{16}{figure.caption.17}
 \contentsline {figure}{\numberline {11}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{17}{figure.caption.18}
 \contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{18}{figure.caption.19}
 \contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{19}{figure.caption.20}
-\contentsline {figure}{\numberline {14}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{20}{figure.caption.21}
-\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{22}{figure.caption.22}
-\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{23}{figure.caption.23}
-\contentsline {figure}{\numberline {17}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{24}{figure.caption.24}
-\contentsline {figure}{\numberline {18}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF (\cite {RenderingEquation}).\relax }}{25}{figure.caption.25}
-\contentsline {figure}{\numberline {19}{\ignorespaces DepthMap shader.\relax }}{26}{figure.caption.26}
-\contentsline {figure}{\numberline {20}{\ignorespaces DiffuseMaterial shader.\relax }}{27}{figure.caption.27}
-\contentsline {figure}{\numberline {21}{\ignorespaces NoShadows shader.\relax }}{28}{figure.caption.28}
-\contentsline {figure}{\numberline {22}{\ignorespaces Reflections projected on the floor and on the spheres (\cite {RTReflections}).\relax }}{29}{figure.caption.29}
-\contentsline {figure}{\numberline {23}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{30}{figure.caption.30}
-\contentsline {figure}{\numberline {24}{\ignorespaces Whitted shader.\relax }}{31}{figure.caption.31}
-\contentsline {figure}{\numberline {25}{\ignorespaces The spherical coordinates (\cite {SphericalCoordinates}).\relax }}{33}{figure.caption.33}
-\contentsline {figure}{\numberline {26}{\ignorespaces The possible directions in secondary rays (\cite {SamplingRayDirection}).\relax }}{34}{figure.caption.34}
-\contentsline {figure}{\numberline {27}{\ignorespaces PathTracer shader.\relax }}{35}{figure.caption.35}
-\contentsline {figure}{\numberline {28}{\ignorespaces Halton sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{37}{figure.caption.36}
-\contentsline {figure}{\numberline {29}{\ignorespaces Pseudorandom sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{39}{figure.caption.37}
-\contentsline {figure}{\numberline {30}{\ignorespaces Hard shadows (\cite {Shadows}).\relax }}{40}{figure.caption.38}
-\contentsline {figure}{\numberline {31}{\ignorespaces Soft shadows (\cite {Shadows}).\relax }}{41}{figure.caption.39}
-\contentsline {figure}{\numberline {32}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC (\cite {TriangleBarycentricCoordinates}).\relax }}{42}{figure.caption.40}
-\contentsline {figure}{\numberline {33}{\ignorespaces Illustration of how sampling the plane image with jittering works (\cite {Jittering}).\relax }}{43}{figure.caption.41}
-\contentsline {figure}{\numberline {34}{\ignorespaces Aliasing effect (\cite {Aliasing}).\relax }}{44}{figure.caption.42}
-\contentsline {figure}{\numberline {35}{\ignorespaces Stratified sampling.\relax }}{44}{figure.caption.43}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Stratified sampling with 1, sample per pixel.}}{44}{subfigure.35.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Stratified sampling with 256, samples per pixel.}}{44}{subfigure.35.2}
-\contentsline {figure}{\numberline {36}{\ignorespaces Jittered sampling.\relax }}{44}{figure.caption.44}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Jittered sampling with 1, sample per pixel.}}{44}{subfigure.36.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Jittered sampling with 4, samples per pixel.}}{44}{subfigure.36.2}
-\contentsline {figure}{\numberline {37}{\ignorespaces Perspective camera with hFov and vFov (\cite {Camera_Perspective_Orthographic}).\relax }}{45}{figure.caption.45}
-\contentsline {figure}{\numberline {38}{\ignorespaces Orthographic camera with sizeH and sizeV (\cite {Camera_Perspective_Orthographic}).\relax }}{47}{figure.caption.46}
+\contentsline {figure}{\numberline {14}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{21}{figure.caption.21}
+\contentsline {figure}{\numberline {15}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{23}{figure.caption.22}
+\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{24}{figure.caption.23}
+\contentsline {figure}{\numberline {17}{\ignorespaces Illustration of how Surface Area Heuristic works in Bounding Volume Hierarchy acceleration structure (\cite {SAH}).\relax }}{25}{figure.caption.24}
+\contentsline {figure}{\numberline {18}{\ignorespaces Illustration of the rendering equation describing the total amount of light emitted from a point $x$ along a particular viewing direction and given a function for incoming light and a BRDF (\cite {RenderingEquation}).\relax }}{26}{figure.caption.25}
+\contentsline {figure}{\numberline {19}{\ignorespaces DepthMap shader.\relax }}{27}{figure.caption.26}
+\contentsline {figure}{\numberline {20}{\ignorespaces DiffuseMaterial shader.\relax }}{28}{figure.caption.27}
+\contentsline {figure}{\numberline {21}{\ignorespaces NoShadows shader.\relax }}{29}{figure.caption.28}
+\contentsline {figure}{\numberline {22}{\ignorespaces Reflections projected on the floor and on the spheres (\cite {RTReflections}).\relax }}{30}{figure.caption.29}
+\contentsline {figure}{\numberline {23}{\ignorespaces Refraction of light at the interface of two media of different refractive indices (\cite {RTRefractions}).\relax }}{31}{figure.caption.30}
+\contentsline {figure}{\numberline {24}{\ignorespaces Whitted shader.\relax }}{32}{figure.caption.31}
+\contentsline {figure}{\numberline {25}{\ignorespaces The spherical coordinates (\cite {SphericalCoordinates}).\relax }}{34}{figure.caption.33}
+\contentsline {figure}{\numberline {26}{\ignorespaces The possible directions in secondary rays (\cite {SamplingRayDirection}).\relax }}{35}{figure.caption.34}
+\contentsline {figure}{\numberline {27}{\ignorespaces PathTracer shader.\relax }}{36}{figure.caption.35}
+\contentsline {figure}{\numberline {28}{\ignorespaces Halton sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{38}{figure.caption.36}
+\contentsline {figure}{\numberline {29}{\ignorespaces Pseudorandom sequence in a 2D image plane (\cite {HaltonSequence}).\relax }}{40}{figure.caption.37}
+\contentsline {figure}{\numberline {30}{\ignorespaces Hard shadows (\cite {Shadows}).\relax }}{41}{figure.caption.38}
+\contentsline {figure}{\numberline {31}{\ignorespaces Soft shadows (\cite {Shadows}).\relax }}{42}{figure.caption.39}
+\contentsline {figure}{\numberline {32}{\ignorespaces Calculation of point P by using barycentric coordinates starting at point A and adding a vector AB and a vector AC (\cite {TriangleBarycentricCoordinates}).\relax }}{43}{figure.caption.40}
+\contentsline {figure}{\numberline {33}{\ignorespaces Illustration of how sampling the plane image with jittering works (\cite {Jittering}).\relax }}{44}{figure.caption.41}
+\contentsline {figure}{\numberline {34}{\ignorespaces Aliasing effect (\cite {Aliasing}).\relax }}{45}{figure.caption.42}
+\contentsline {figure}{\numberline {35}{\ignorespaces Stratified sampling.\relax }}{45}{figure.caption.43}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Stratified sampling with 1, sample per pixel.}}{45}{subfigure.35.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Stratified sampling with 256, samples per pixel.}}{45}{subfigure.35.2}
+\contentsline {figure}{\numberline {36}{\ignorespaces Jittered sampling.\relax }}{45}{figure.caption.44}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces Jittered sampling with 1, sample per pixel.}}{45}{subfigure.36.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces Jittered sampling with 4, samples per pixel.}}{45}{subfigure.36.2}
+\contentsline {figure}{\numberline {37}{\ignorespaces Perspective camera with hFov and vFov (\cite {Camera_Perspective_Orthographic}).\relax }}{46}{figure.caption.45}
+\contentsline {figure}{\numberline {38}{\ignorespaces Orthographic camera with sizeH and sizeV (\cite {Camera_Perspective_Orthographic}).\relax }}{48}{figure.caption.46}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {39}{\ignorespaces Diagram explaining how the JVM can call native code (\cite {JNI}).\relax }}{51}{figure.caption.47}
-\contentsline {figure}{\numberline {40}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{52}{figure.caption.48}
+\contentsline {figure}{\numberline {39}{\ignorespaces Diagram explaining how the JVM can call native code (\cite {JNI}).\relax }}{52}{figure.caption.47}
+\contentsline {figure}{\numberline {40}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{53}{figure.caption.48}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {41}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{55}{figure.caption.50}
-\contentsline {figure}{\numberline {42}{\ignorespaces Illustration of Porsche 911 GT2 scene, rendered with shader Whitted in MobileRT.\relax }}{55}{figure.caption.51}
-\contentsline {figure}{\numberline {43}{\ignorespaces Illustration of Cornell Box scene, rendered with shader Whitted in MobileRT.\relax }}{56}{figure.caption.52}
-\contentsline {figure}{\numberline {44}{\ignorespaces Time in the scene 1\relax }}{57}{figure.caption.53}
-\contentsline {figure}{\numberline {45}{\ignorespaces Speedup in the scene 1\relax }}{58}{figure.caption.54}
-\contentsline {figure}{\numberline {46}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{58}{figure.caption.55}
-\contentsline {figure}{\numberline {47}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{59}{figure.caption.56}
-\contentsline {figure}{\numberline {48}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{60}{figure.caption.59}
-\contentsline {figure}{\numberline {49}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{61}{figure.caption.60}
-\contentsline {figure}{\numberline {50}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{62}{figure.caption.63}
-\contentsline {figure}{\numberline {51}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{63}{figure.caption.64}
-\contentsline {figure}{\numberline {52}{\ignorespaces Time in the scene 1\relax }}{64}{figure.caption.65}
-\contentsline {figure}{\numberline {53}{\ignorespaces Speedup in the scene 1\relax }}{65}{figure.caption.66}
-\contentsline {figure}{\numberline {54}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{65}{figure.caption.67}
-\contentsline {figure}{\numberline {55}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{66}{figure.caption.68}
-\contentsline {figure}{\numberline {56}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{67}{figure.caption.71}
-\contentsline {figure}{\numberline {57}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{68}{figure.caption.72}
-\contentsline {figure}{\numberline {58}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{69}{figure.caption.75}
-\contentsline {figure}{\numberline {59}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{70}{figure.caption.76}
+\contentsline {figure}{\numberline {41}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{56}{figure.caption.50}
+\contentsline {figure}{\numberline {42}{\ignorespaces Illustration of Porsche 911 GT2 scene, rendered with shader Whitted in MobileRT.\relax }}{56}{figure.caption.51}
+\contentsline {figure}{\numberline {43}{\ignorespaces Illustration of Cornell Box scene, rendered with shader Whitted in MobileRT.\relax }}{57}{figure.caption.52}
+\contentsline {figure}{\numberline {44}{\ignorespaces Time in the Conference scene\relax }}{58}{figure.caption.53}
+\contentsline {figure}{\numberline {45}{\ignorespaces Speedup in the Conference scene\relax }}{59}{figure.caption.54}
+\contentsline {figure}{\numberline {46}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{59}{figure.caption.55}
+\contentsline {figure}{\numberline {47}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{60}{figure.caption.56}
+\contentsline {figure}{\numberline {48}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{61}{figure.caption.59}
+\contentsline {figure}{\numberline {49}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{62}{figure.caption.60}
+\contentsline {figure}{\numberline {50}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{63}{figure.caption.63}
+\contentsline {figure}{\numberline {51}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{64}{figure.caption.64}
+\contentsline {figure}{\numberline {52}{\ignorespaces Time in the Conference scene\relax }}{65}{figure.caption.65}
+\contentsline {figure}{\numberline {53}{\ignorespaces Speedup in the Conference scene\relax }}{66}{figure.caption.66}
+\contentsline {figure}{\numberline {54}{\ignorespaces Time to construct accelerators in the Samsung Galaxy smart phone\relax }}{66}{figure.caption.67}
+\contentsline {figure}{\numberline {55}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{67}{figure.caption.68}
+\contentsline {figure}{\numberline {56}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{68}{figure.caption.71}
+\contentsline {figure}{\numberline {57}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{69}{figure.caption.72}
+\contentsline {figure}{\numberline {58}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{70}{figure.caption.75}
+\contentsline {figure}{\numberline {59}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{71}{figure.caption.76}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

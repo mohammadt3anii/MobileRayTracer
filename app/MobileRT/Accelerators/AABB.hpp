@@ -33,8 +33,6 @@ namespace MobileRT {
         AABB &operator=(AABB &&AABB) noexcept = default;
 
         float getSurfaceArea() const noexcept;
-
-        ::std::int32_t getLongestAxis() const noexcept;
     };
 
     AABB surroundingBox(const AABB &box1, const AABB &box2) noexcept;

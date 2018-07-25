@@ -50,10 +50,6 @@ TEST_F(TestTriangle, ConstructorVALUES) {
 	ASSERT_EQ(0, bc[0]);
 	ASSERT_EQ(-1, bc[1]);
 	ASSERT_EQ(1, bc[2]);
-
-	ASSERT_EQ(1, triangle->normal_[0]);
-	ASSERT_EQ(0, triangle->normal_[1]);
-	ASSERT_EQ(0, triangle->normal_[2]);
 }
 
 TEST_F(TestTriangle, AABB) {

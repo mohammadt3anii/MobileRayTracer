@@ -47,6 +47,16 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
     LOG("PLANES = ", this->planes_.size());
 }
 
+RegularGrid::~RegularGrid() noexcept {
+    triangles_.clear();
+    spheres_.clear();
+    planes_.clear();
+
+    ::std::vector<::std::vector<Primitive<Triangle> *>> {}.swap(triangles_);
+    ::std::vector<::std::vector<Primitive<Sphere> *>> {}.swap(spheres_);
+    ::std::vector<::std::vector<Primitive<Plane> *>> {}.swap(planes_);
+}
+
 ::std::int32_t RegularGrid::bitCounter(::std::uint32_t n) const noexcept {
     ::std::int32_t counter{0};
     while (n > 0) {

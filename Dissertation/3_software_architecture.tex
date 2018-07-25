@@ -180,13 +180,14 @@ Besides being dependent on these threes libraries, this library also depends on 
 
 \par
 The OpenGL ES 2.0 is necessary in order to let the application rasterize one frame of the scene so the user can view it without having to wait a long time to render it with the ray tracer.
+For example, in the Conference scene, the OpenGL can rasterize one frame in less than 17ms compared with 500ms that the NoShadows shader takes.
 This is done by copying the scene data from native code to the OpenGL of JVM with the help of JNI.
 
 \begin{figure}[H]
 	\centering
-	\caption{A scene rendered with OpenGL ES 2.0 before the ray tracer.}
-	\label{A scene rendered with OpenGL ES 2.0 before the ray tracer.}
-	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{Layers.png}
+	\caption{The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.}
+	\label{The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.}
+	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{OpenGL_Conference.png}
 \end{figure}
 
 \par

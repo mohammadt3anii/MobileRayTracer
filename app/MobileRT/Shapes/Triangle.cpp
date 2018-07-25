@@ -10,13 +10,9 @@ using ::MobileRT::Triangle;
 using ::MobileRT::Intersection;
 
 Triangle::Triangle(
-    const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
-    const ::glm::vec3 &normal) noexcept :
+        const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
-        normal_{
-            ::glm::all(::glm::lessThanEqual(normal, ::glm::vec3 {0}))?
-                ::glm::normalize(::glm::cross(AB_, AC_)) : ::glm::normalize(normal)},
         pointA_{pointA}
 {
 }
@@ -52,7 +48,8 @@ Intersection Triangle::intersect(const Intersection &intersection, const Ray &ra
     if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
-    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    const ::glm::vec3 &normal{::glm::normalize(::glm::cross(AB_, AC_))};
+    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal, this};
     return res;
 }
 

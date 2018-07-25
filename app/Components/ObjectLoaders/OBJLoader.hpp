@@ -15,8 +15,8 @@ namespace Components {
         ::std::string objText_ {};
         ::std::string materialsText_ {};
         ::tinyobj::attrib_t attrib_ {};
-        ::std::vector<::tinyobj::shape_t> shapes_ {::std::vector<::tinyobj::shape_t>()};
-        ::std::vector<::tinyobj::material_t> materials_ {::std::vector<::tinyobj::material_t>()};
+        ::std::vector<::tinyobj::shape_t> shapes_{};
+        ::std::vector<::tinyobj::material_t> materials_{};
 
     public:
         explicit OBJLoader(const ::std::string &obj, const ::std::string &materials) noexcept;

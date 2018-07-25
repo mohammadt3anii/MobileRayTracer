@@ -50,7 +50,7 @@ namespace MobileRT {
 
         BVH(BVH &&bVH) noexcept = default;
 
-        ~BVH() noexcept = default;
+        ~BVH() noexcept;
 
         BVH &operator=(const BVH &bVH) noexcept = delete;
 
@@ -80,6 +80,16 @@ namespace MobileRT {
         boxes_.resize(maxNodes);
         build();
     }
+
+template<typename T>
+BVH<T>::~BVH() noexcept {
+    boxes_.clear();
+    primitives_.clear();
+
+    ::std::vector<BVHNode>{}.swap(boxes_);
+    ::std::vector<Primitive < T>>
+    {}.swap(primitives_);
+}
 
     template<typename T>
     void BVH<T>::build() noexcept {
@@ -138,8 +148,8 @@ namespace MobileRT {
         } while(stackPtrId > 0);
         LOG("maxNodeId = ", maxId);
         boxes_.erase (boxes_.begin() + static_cast<::std::int32_t>(maxId) + 1, boxes_.end());
-        //boxes_.shrink_to_fit();
-        //::std::vector<BVHNode>{boxes_}.swap(boxes_);
+        boxes_.shrink_to_fit();
+        ::std::vector<BVHNode>{boxes_}.swap(boxes_);
     }
 
     template<typename T>

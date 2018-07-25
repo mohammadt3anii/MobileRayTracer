@@ -15,13 +15,12 @@ namespace MobileRT {
     public:
         ::glm::vec3 AC_ {};
         ::glm::vec3 AB_{};
-        ::glm::vec3 normal_{};
         ::glm::vec3 pointA_{};
 
     public:
         explicit Triangle(
-            const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
-            const ::glm::vec3 &normal = ::glm::vec3 {}) noexcept;
+                const ::glm::vec3 &pointA, const ::glm::vec3 &pointB,
+                const ::glm::vec3 &pointC) noexcept;
 
         Triangle(const Triangle &triangle) noexcept = default;
 

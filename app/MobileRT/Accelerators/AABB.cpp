@@ -32,19 +32,6 @@ bool ::MobileRT::intersect(const AABB &box, const Ray &ray) noexcept {
     return intersected;
 }
 
-::std::int32_t AABB::getLongestAxis() const noexcept {
-    const float lengthX {pointMax_[0] - pointMin_[0]};
-    const float lengthY {pointMax_[1] - pointMin_[1]};
-    const float lengthZ {pointMax_[2] - pointMin_[2]};
-
-    const ::std::int32_t longestAxis {lengthX >= lengthY && lengthX >= lengthZ ? 0 :
-                    lengthY >= lengthX && lengthY >= lengthZ ? 1 :
-                    2
-    };
-
-    return longestAxis;
-}
-
 float AABB::getSurfaceArea() const noexcept {
     const float lengthX {pointMax_[0] - pointMin_[0]};
     const float lengthY {pointMax_[1] - pointMin_[1]};

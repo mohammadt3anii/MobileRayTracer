@@ -51,6 +51,7 @@ void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t n
         thread.join();
     }
     threads.clear();
+    ::std::vector<::std::thread> {}.swap(threads);
 
     LOG("Resolution = ", width_, "x", height_);
     LOG("FINISH");
