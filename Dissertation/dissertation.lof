@@ -49,11 +49,24 @@
 \contentsline {figure}{\numberline {40}{\ignorespaces Execution flow of UI thread and Render Task thread.\relax }}{52}{figure.caption.48}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {41}{\ignorespaces Illustration of conference scene, rendered with shader Whitted in MobileRT.\relax }}{55}{figure.caption.50}
-\contentsline {figure}{\numberline {42}{\ignorespaces Speedup in the scene 1\relax }}{56}{figure.caption.51}
-\contentsline {figure}{\numberline {43}{\ignorespaces Speedup in the scene 1\relax }}{57}{figure.caption.52}
-\contentsline {figure}{\numberline {44}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{57}{figure.caption.53}
-\contentsline {figure}{\numberline {45}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{59}{figure.caption.56}
-\contentsline {figure}{\numberline {46}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{60}{figure.caption.59}
+\contentsline {figure}{\numberline {42}{\ignorespaces Illustration of Porsche 911 GT2 scene, rendered with shader Whitted in MobileRT.\relax }}{55}{figure.caption.51}
+\contentsline {figure}{\numberline {43}{\ignorespaces Illustration of Cornell Box scene, rendered with shader Whitted in MobileRT.\relax }}{56}{figure.caption.52}
+\contentsline {figure}{\numberline {44}{\ignorespaces Time in the scene 1\relax }}{57}{figure.caption.53}
+\contentsline {figure}{\numberline {45}{\ignorespaces Speedup in the scene 1\relax }}{58}{figure.caption.54}
+\contentsline {figure}{\numberline {46}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{58}{figure.caption.55}
+\contentsline {figure}{\numberline {47}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{59}{figure.caption.56}
+\contentsline {figure}{\numberline {48}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{60}{figure.caption.59}
+\contentsline {figure}{\numberline {49}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{61}{figure.caption.60}
+\contentsline {figure}{\numberline {50}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{62}{figure.caption.63}
+\contentsline {figure}{\numberline {51}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{63}{figure.caption.64}
+\contentsline {figure}{\numberline {52}{\ignorespaces Time in the scene 1\relax }}{64}{figure.caption.65}
+\contentsline {figure}{\numberline {53}{\ignorespaces Speedup in the scene 1\relax }}{65}{figure.caption.66}
+\contentsline {figure}{\numberline {54}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{65}{figure.caption.67}
+\contentsline {figure}{\numberline {55}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{66}{figure.caption.68}
+\contentsline {figure}{\numberline {56}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{67}{figure.caption.71}
+\contentsline {figure}{\numberline {57}{\ignorespaces Memory usage in the Raspberry Pi 2 Model B\relax }}{68}{figure.caption.72}
+\contentsline {figure}{\numberline {58}{\ignorespaces Time to construct accelerators in the MINIX NEO X8-H PLUS\relax }}{69}{figure.caption.75}
+\contentsline {figure}{\numberline {59}{\ignorespaces Memory usage in the MINIX NEO X8-H PLUS\relax }}{70}{figure.caption.76}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

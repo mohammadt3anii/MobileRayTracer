@@ -412,7 +412,7 @@ extern "C"
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
 
-                    ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
+                    /*::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
                     scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
@@ -427,7 +427,7 @@ extern "C"
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
                             ::glm::vec3 {-0.5f, 1.58f, -0.5f},
-                            ::glm::vec3 {0.5f, 1.58f, -0.5f}));
+                            ::glm::vec3 {0.5f, 1.58f, -0.5f}));*/
                 }
                 
                 //conference

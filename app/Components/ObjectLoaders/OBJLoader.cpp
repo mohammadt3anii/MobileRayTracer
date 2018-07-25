@@ -167,7 +167,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const float s1 {m.specular[0]};
                     const float s2 {m.specular[1]};
                     const float s3 {m.specular[2]};
-                    const ::glm::vec3 &specular{s1 / 10.0f, s2 / 10.0f, s3 / 10.0f};
+                    const ::glm::vec3 &specular{s1 / 2.0f, s2 / 2.0f, s3 / 2.0f};
                     const float t1 {m.transmittance[0] * (1.0f - m.dissolve)};
                     const float t2 {m.transmittance[1] * (1.0f - m.dissolve)};
                     const float t3 {m.transmittance[2] * (1.0f - m.dissolve)};

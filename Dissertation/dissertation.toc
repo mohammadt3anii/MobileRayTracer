@@ -60,16 +60,21 @@
 \contentsline {section}{\numberline {4.4}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{53}{section.4.4}
 \contentsline {chapter}{\numberline {5}\spacedlowsmallcaps {Demonstration: Global Illumination}}{54}{chapter.5}
 \contentsline {section}{\numberline {5.1}Results obtained}{54}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Samsung Galaxy Fresh Duos GT-S7392}{56}{subsection.5.1.1}
-\contentsline {subsection}{\numberline {5.1.2}Raspberry Pi 2 Model B}{58}{subsection.5.1.2}
-\contentsline {subsection}{\numberline {5.1.3}MINIX NEO X8-H PLUS}{59}{subsection.5.1.3}
-\contentsline {section}{\numberline {5.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{61}{section.5.2}
-\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Conclusion \& Future work}}{62}{chapter.6}
-\contentsline {section}{\numberline {6.1}Conclusions}{62}{section.6.1}
-\contentsline {section}{\numberline {6.2}Future Work}{62}{section.6.2}
+\contentsline {subsection}{\numberline {5.1.1}Whitted Shader}{57}{subsection.5.1.1}
+\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{57}{subsection.5.1.1}
+\contentsline {subsubsection}{Raspberry Pi 2 Model B}{59}{figure.caption.56}
+\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{61}{figure.caption.60}
+\contentsline {subsection}{\numberline {5.1.2}Path Tracing Shader}{64}{subsection.5.1.2}
+\contentsline {subsubsection}{Samsung Galaxy Fresh Duos GT-S7392}{64}{subsection.5.1.2}
+\contentsline {subsubsection}{Raspberry Pi 2 Model B}{66}{figure.caption.68}
+\contentsline {subsubsection}{MINIX NEO X8-H PLUS}{68}{figure.caption.72}
+\contentsline {section}{\numberline {5.2}Comparison with Android CPU Raytracer (\cite {Android_CPU_Raytracer})}{70}{section.5.2}
+\contentsline {chapter}{\numberline {6}\spacedlowsmallcaps {Conclusion \& Future work}}{71}{chapter.6}
+\contentsline {section}{\numberline {6.1}Conclusions}{71}{section.6.1}
+\contentsline {section}{\numberline {6.2}Future Work}{71}{section.6.2}
 \vspace \bigskipamount 
-\contentsline {chapter}{\numberline {7}\spacedlowsmallcaps {Bibliography}}{65}{chapter.7}
-\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{70}{Appendix.1.A}
-\contentsline {section}{\numberline {A.1}API}{70}{section.1.A.1}
-\contentsline {section}{\numberline {A.2}Loading a scene}{80}{section.1.A.2}
-\contentsline {chapter}{Appendices}{70}{section*.60}
+\contentsline {chapter}{\numberline {7}\spacedlowsmallcaps {Bibliography}}{74}{chapter.7}
+\contentsline {chapter}{\numberline {A}\spacedlowsmallcaps {User documentation}}{79}{Appendix.1.A}
+\contentsline {section}{\numberline {A.1}API}{79}{section.1.A.1}
+\contentsline {section}{\numberline {A.2}Loading a scene}{89}{section.1.A.2}
+\contentsline {chapter}{Appendices}{79}{section*.77}
