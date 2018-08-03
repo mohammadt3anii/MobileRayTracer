@@ -23,7 +23,7 @@ The developed application was tested in three different devices:
 		Device&CPU&Cache(L1/L2/L3)&GPU&RAM\\ \hline
 		Samsung Galaxy Fresh&1xARM Cortex A9 @1GHz&64KB/Unknown&1xBroadcom VideoCore IV&512MB\\ \hline
 		Raspberry Pi 2 Model B&4xARM Cortex A7 @900MHz&64KB/1MB&1xBroadcom VideoCore IV&1GB\\ \hline
-		MINIX NEO X8 PLUS&4xARM Cortex A9 @2.0GHz&64KB/Unknown&8xMali-450 MP&2GB\\ \hline
+		MINIX NEO X8 PLUS&4xARM Cortex A9r4 @2.0GHz&64KB/Unknown&8xMali-450&2GB\\ \hline
 	\end{tabular}
 \end{table}
 
@@ -81,108 +81,98 @@ All of the used scenes models were downloaded from
 
 \begin{figure}[H]
 	\begin{tikzpicture}
-	\begin{axis}[
+	\begin{semilogyaxis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
-	axis lines = left,
 	xlabel = \#threads,
-	ylabel = time (ms),
-	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
+	ylabel = time (s),
+	xtick={1,2,3,4},
+	ytick={200,800,500000},
+	yticklabels={200,800,500000},
+	extra y ticks = 0,
+	extra y tick labels = 0,
+	ymin=0,
+	ymax=500000,
 	width=0.75\textwidth,
 	]
-	\addplot [
-	color=red,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{BVH}
-	\addplot [
-	color=black,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Regular Grid}
 	\addplot [
 	color=blue,
 	mark=*,
 	dashed,
 	] plot coordinates {
 		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
+		(1,500000)
 	};
 	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,782.05)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,235.49)
+	};
+	\addlegendentry{BVH}
 	\label{graph:SamsungTime}
-	\end{axis}
+	\end{semilogyaxis}
 	\end{tikzpicture}
 	\caption{Time in the Conference scene}
 \end{figure}
 
 \begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-axis lines = left,
-xlabel = \#threads,
-ylabel = speedup,
-xtick={0,1,2,3,4},
-ytick={0,1,...,10},
-width=0.75\textwidth,
-]
-\addplot [
-color=red,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{BVH}
-\addplot [
-color=black,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Regular Grid}
-\addplot [
-color=blue,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Naive}
-\label{graph:SamsungSpeedup}
-\end{axis}
-\end{tikzpicture}
-\caption{Speedup in the Conference scene}
+	\begin{tikzpicture}
+	\begin{semilogyaxis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = time (s),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	ytick={200,400,...,800,500000},
+	yticklabels={200,400,...,800,500000},
+	width=0.75\textwidth,
+	scaled ticks=false,
+	yticklabel style={
+		/pgf/number format/.cd,
+		fixed,
+		precision=0,
+		/pgf/number format/fixed zerofill,
+	}
+	]
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   500000)
+		(Porsche,  	72)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   782.05)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	
+		\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   235.49)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	
+	\end{semilogyaxis}
+	\label{graph:SamsungTime2}
+	\end{tikzpicture}
+	\caption{Time with Samsung smartphone}
 \end{figure}
 
 \begin{figure}[H]
@@ -190,29 +180,36 @@ dashed,
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
+	scaled ticks=false,
+	yticklabel style={
+		/pgf/number format/.cd,
+		fixed,
+		precision=0,
+		/pgf/number format/fixed zerofill,
+	}
 	]
 	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}
@@ -222,572 +219,33 @@ dashed,
 \end{figure}
 
 \begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-ylabel = memory (MB),
-symbolic x coords={scene 1, scene 2, scene 3},
-xtick=data,
-width=0.75\textwidth,
-]
-\addplot[ybar,fill=red,color=red,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   85)
-	(scene 2,  	85)
-	(scene 3,   105)
-};
-\addlegendentry{BVH}
-\addplot[ybar,fill=black,color=black,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   80)
-	(scene 2,  	80)
-	(scene 3,   99)
-};
-\addlegendentry{Regular Grid}
-\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   70)
-	(scene 2,  	77)
-	(scene 3,   91)
-};
-\addlegendentry{Naive}
-\end{axis}
-\label{graph:SamsungMemory}
-\end{tikzpicture}
-\caption{Memory usage in the Samsung Galaxy smart phone}
-\end{figure}
-
-\subsubsection{Raspberry Pi 2 Model B}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	axis lines = left,
-	xlabel = \#threads,
-	ylabel = time (ms),
-	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
-	width=0.75\textwidth,
-	]
-	\addplot [
-	color=red,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{BVH}
-	\addplot [
-	color=black,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot [
-	color=blue,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Naive}
-	\label{graph:RaspberryTime}
-	\end{axis}
-	\end{tikzpicture}
-\end{figure}
-
-\begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-axis lines = left,
-xlabel = \#threads,
-ylabel = speedup,
-xtick={0,1,2,3,4},
-ytick={0,1,...,10},
-width=0.75\textwidth,
-]
-\addplot [
-color=red,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{BVH}
-\addplot [
-color=black,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Regular Grid}
-\addplot [
-color=blue,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Naive}
-\label{graph:RaspberrySpeedup}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
-	xtick=data,
-	width=0.75\textwidth,
-	]
-	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
-	};
-	\addlegendentry{BVH}
-	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
-	};
-	\addlegendentry{Naive}
-	\end{axis}
-	\label{graph:RaspberryConstruct}
-	\end{tikzpicture}
-	\caption{Time to construct accelerators in the Raspberry Pi 2 Model B}
-\end{figure}
-
-\begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-ylabel = memory (MB),
-symbolic x coords={scene 1, scene 2, scene 3},
-xtick=data,
-width=0.75\textwidth,
-]
-\addplot[ybar,fill=red,color=red,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   85)
-	(scene 2,  	85)
-	(scene 3,   105)
-};
-\addlegendentry{BVH}
-\addplot[ybar,fill=black,color=black,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   80)
-	(scene 2,  	80)
-	(scene 3,   99)
-};
-\addlegendentry{Regular Grid}
-\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   70)
-	(scene 2,  	77)
-	(scene 3,   91)
-};
-\addlegendentry{Naive}
-\end{axis}
-\label{graph:RaspberryMemory}
-\end{tikzpicture}
-\caption{Memory usage in the Raspberry Pi 2 Model B}
-\end{figure}
-
-
-\subsubsection{MINIX NEO X8-H PLUS}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	axis lines = left,
-	xlabel = \#threads,
-	ylabel = time (ms),
-	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
-	width=0.75\textwidth,
-	]
-	\addplot [
-	color=red,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{BVH}
-	\addplot [
-	color=black,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot [
-	color=blue,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Naive}
-	\label{graph:MinixTime}
-	\end{axis}
-	\end{tikzpicture}
-\end{figure}
-
-\begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-axis lines = left,
-xlabel = \#threads,
-ylabel = speedup,
-xtick={0,1,2,3,4},
-ytick={0,1,...,10},
-width=0.75\textwidth,
-]
-\addplot [
-color=red,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{BVH}
-\addplot [
-color=black,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Regular Grid}
-\addplot [
-color=blue,
-mark=*,
-dashed,
-] plot coordinates {
-	(0,0.0)
-	(1,1.0)
-	(2,1.0)
-	(3,1.0)
-	(4,1.0)
-};
-\addlegendentry{Naive}
-\label{graph:MinixSpeedup}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
-	xtick=data,
-	width=0.75\textwidth,
-	]
-	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
-	};
-	\addlegendentry{BVH}
-	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
-	};
-	\addlegendentry{Naive}
-	\end{axis}
-	\label{graph:MinixConstruct}
-	\end{tikzpicture}
-	\caption{Time to construct accelerators in the MINIX NEO X8-H PLUS}
-\end{figure}
-
-\begin{figure}[H]
-\begin{tikzpicture}
-\begin{axis}[
-legend style={at={(1.05,1.00)},anchor=north west},
-ylabel = memory (MB),
-symbolic x coords={scene 1, scene 2, scene 3},
-xtick=data,
-width=0.75\textwidth,
-]
-\addplot[ybar,fill=red,color=red,area legend,width=4.30\textwidth] coordinates {
-	(scene 1,   0)
-	(scene 1,   85)
-	(scene 2,  	85)
-	(scene 3,   105)
-};
-\addlegendentry{BVH}
-\addplot[ybar,fill=black,color=black,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   80)
-	(scene 2,  	80)
-	(scene 3,   99)
-};
-\addlegendentry{Regular Grid}
-\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-	(scene 1,   0)
-	(scene 1,   70)
-	(scene 2,  	77)
-	(scene 3,   91)
-};
-\addlegendentry{Naive}
-\end{axis}
-\label{graph:MinixMemory}
-\end{tikzpicture}
-\caption{Memory usage in the MINIX NEO X8-H PLUS}
-\end{figure}
-
-\subsection{Path Tracing Shader}
-
-\subsubsection{Samsung Galaxy Fresh Duos GT-S7392}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	axis lines = left,
-	xlabel = \#threads,
-	ylabel = time (ms),
-	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
-	width=0.75\textwidth,
-	]
-	\addplot [
-	color=red,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{BVH}
-	\addplot [
-	color=black,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot [
-	color=blue,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Naive}
-	\label{graph:SamsungTime}
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Time in the Conference scene}
-\end{figure}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	axis lines = left,
-	xlabel = \#threads,
-	ylabel = speedup,
-	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
-	width=0.75\textwidth,
-	]
-	\addplot [
-	color=red,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{BVH}
-	\addplot [
-	color=black,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot [
-	color=blue,
-	mark=*,
-	dashed,
-	] plot coordinates {
-		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
-	};
-	\addlegendentry{Naive}
-	\label{graph:SamsungSpeedup}
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Speedup in the Conference scene}
-\end{figure}
-
-\begin{figure}[H]
-	\begin{tikzpicture}
-	\begin{axis}[
-	legend style={at={(1.05,1.00)},anchor=north west},
-	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
-	xtick=data,
-	width=0.75\textwidth,
-	]
-	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
-	};
-	\addlegendentry{BVH}
-	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
-	};
-	\addlegendentry{Regular Grid}
-	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
-	};
-	\addlegendentry{Naive}
-	\end{axis}
-	\label{graph:SamsungConstruct}
-	\end{tikzpicture}
-	\caption{Time to construct accelerators in the Samsung Galaxy smart phone}
-\end{figure}
-
-\begin{figure}[H]
 	\begin{tikzpicture}
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = memory (MB),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
 	]
 	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   85)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   80)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   70)
-		(scene 2,  	77)
-		(scene 3,   91)
+		(Conference,   0)
+		(Conference,   65)
+		(Porsche,  	72)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}
@@ -810,7 +268,7 @@ width=0.75\textwidth,
 	width=0.75\textwidth,
 	]
 	\addplot [
-	color=red,
+	color=blue,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -820,7 +278,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{BVH}
+	\addlegendentry{Naive}
 	\addplot [
 	color=black,
 	mark=*,
@@ -834,7 +292,7 @@ width=0.75\textwidth,
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
-	color=blue,
+	color=red,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -844,7 +302,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{Naive}
+	\addlegendentry{BVH}
 	\label{graph:RaspberryTime}
 	\end{axis}
 	\end{tikzpicture}
@@ -862,7 +320,7 @@ width=0.75\textwidth,
 	width=0.75\textwidth,
 	]
 	\addplot [
-	color=red,
+	color=blue,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -872,7 +330,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{BVH}
+	\addlegendentry{Naive}
 	\addplot [
 	color=black,
 	mark=*,
@@ -886,7 +344,7 @@ width=0.75\textwidth,
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
-	color=blue,
+	color=red,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -896,7 +354,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{Naive}
+	\addlegendentry{BVH}
 	\label{graph:RaspberrySpeedup}
 	\end{axis}
 	\end{tikzpicture}
@@ -907,29 +365,29 @@ width=0.75\textwidth,
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
 	]
 	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}
@@ -943,29 +401,29 @@ width=0.75\textwidth,
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = memory (MB),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
 	]
 	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   85)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   80)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   70)
-		(scene 2,  	77)
-		(scene 3,   91)
+		(Conference,   0)
+		(Conference,   70)
+		(Porsche,  	77)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}
@@ -989,7 +447,7 @@ width=0.75\textwidth,
 	width=0.75\textwidth,
 	]
 	\addplot [
-	color=red,
+	color=blue,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -999,7 +457,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{BVH}
+	\addlegendentry{Naive}
 	\addplot [
 	color=black,
 	mark=*,
@@ -1013,7 +471,7 @@ width=0.75\textwidth,
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
-	color=blue,
+	color=red,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -1023,7 +481,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{Naive}
+	\addlegendentry{BVH}
 	\label{graph:MinixTime}
 	\end{axis}
 	\end{tikzpicture}
@@ -1041,7 +499,7 @@ width=0.75\textwidth,
 	width=0.75\textwidth,
 	]
 	\addplot [
-	color=red,
+	color=blue,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -1051,7 +509,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{BVH}
+	\addlegendentry{Naive}
 	\addplot [
 	color=black,
 	mark=*,
@@ -1065,7 +523,7 @@ width=0.75\textwidth,
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
-	color=blue,
+	color=red,
 	mark=*,
 	dashed,
 	] plot coordinates {
@@ -1075,7 +533,7 @@ width=0.75\textwidth,
 		(3,1.0)
 		(4,1.0)
 	};
-	\addlegendentry{Naive}
+	\addlegendentry{BVH}
 	\label{graph:MinixSpeedup}
 	\end{axis}
 	\end{tikzpicture}
@@ -1086,29 +544,29 @@ width=0.75\textwidth,
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = time (ms),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
 	]
 	\addplot[ybar,fill=red,color=red,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   5800)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   3000)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
-	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   0)
-		(scene 2,  	77)
-		(scene 3,   91)
+		\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}
@@ -1122,29 +580,568 @@ width=0.75\textwidth,
 	\begin{axis}[
 	legend style={at={(1.05,1.00)},anchor=north west},
 	ylabel = memory (MB),
-	symbolic x coords={scene 1, scene 2, scene 3},
+	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
 	width=0.75\textwidth,
 	]
 	\addplot[ybar,fill=red,color=red,area legend,width=4.30\textwidth] coordinates {
-		(scene 1,   0)
-		(scene 1,   85)
-		(scene 2,  	85)
-		(scene 3,   105)
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
 	};
 	\addlegendentry{BVH}
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   80)
-		(scene 2,  	80)
-		(scene 3,   99)
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
-		(scene 1,   0)
-		(scene 1,   70)
-		(scene 2,  	77)
-		(scene 3,   91)
+		(Conference,   0)
+		(Conference,   70)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:MinixMemory}
+	\end{tikzpicture}
+	\caption{Memory usage in the MINIX NEO X8-H PLUS}
+\end{figure}
+
+\subsection{Path Tracing Shader}
+
+\subsubsection{Samsung Galaxy Fresh Duos GT-S7392}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:SamsungTime}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Time in the Conference scene}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = speedup,
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:SamsungSpeedup}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Speedup in the Conference scene}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = time (ms),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:SamsungConstruct}
+	\end{tikzpicture}
+	\caption{Time to construct accelerators in the Samsung Galaxy smart phone}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = memory (MB),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   70)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:SamsungMemory}
+	\end{tikzpicture}
+	\caption{Memory usage in the Samsung Galaxy smart phone}
+\end{figure}
+
+\subsubsection{Raspberry Pi 2 Model B}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:RaspberryTime}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = speedup,
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:RaspberrySpeedup}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = time (ms),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:RaspberryConstruct}
+	\end{tikzpicture}
+	\caption{Time to construct accelerators in the Raspberry Pi 2 Model B}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = memory (MB),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   70)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:RaspberryMemory}
+	\end{tikzpicture}
+	\caption{Memory usage in the Raspberry Pi 2 Model B}
+\end{figure}
+
+
+\subsubsection{MINIX NEO X8-H PLUS}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = time (ms),
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:MinixTime}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	axis lines = left,
+	xlabel = \#threads,
+	ylabel = speedup,
+	xtick={0,1,2,3,4},
+	ytick={0,1,...,10},
+	width=0.75\textwidth,
+	]
+	\addplot [
+	color=blue,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Naive}
+	\addplot [
+	color=black,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot [
+	color=red,
+	mark=*,
+	dashed,
+	] plot coordinates {
+		(0,0.0)
+		(1,1.0)
+		(2,1.0)
+		(3,1.0)
+		(4,1.0)
+	};
+	\addlegendentry{BVH}
+	\label{graph:MinixSpeedup}
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = time (ms),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   5800)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   3000)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   0)
+		(Porsche,  	77)
+		(Cornell Box,   91)
+	};
+	\addlegendentry{Naive}
+	\end{axis}
+	\label{graph:MinixConstruct}
+	\end{tikzpicture}
+	\caption{Time to construct accelerators in the MINIX NEO X8-H PLUS}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	legend style={at={(1.05,1.00)},anchor=north west},
+	ylabel = memory (MB),
+	symbolic x coords={Conference, Porsche, Cornell Box},
+	xtick=data,
+	width=0.75\textwidth,
+	]
+	\addplot[ybar,fill=red,color=red,area legend,width=4.30\textwidth] coordinates {
+		(Conference,   0)
+		(Conference,   85)
+		(Porsche,  	85)
+		(Cornell Box,   105)
+	};
+	\addlegendentry{BVH}
+	\addplot[ybar,fill=black,color=black,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   80)
+		(Porsche,  	80)
+		(Cornell Box,   99)
+	};
+	\addlegendentry{Regular Grid}
+	\addplot[ybar,fill=blue,color=blue,area legend] coordinates {
+		(Conference,   0)
+		(Conference,   70)
+		(Porsche,  	77)
+		(Cornell Box,   91)
 	};
 	\addlegendentry{Naive}
 	\end{axis}

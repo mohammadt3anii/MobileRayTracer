@@ -23,9 +23,9 @@
 \contentsline {subsection}{\numberline {3.3.2}Renderer}{16}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}Scene}{17}{subsection.3.3.3}
 \contentsline {subsection}{\numberline {3.3.4}Shapes}{17}{subsection.3.3.4}
-\contentsline {subsubsection}{Plane}{18}{lstnumber.3.3.1}
+\contentsline {subsubsection}{Plane}{18}{lstnumber.3.3.3}
 \contentsline {subsubsection}{Sphere}{19}{figure.caption.19}
-\contentsline {subsubsection}{Triangle}{19}{figure.caption.20}
+\contentsline {subsubsection}{Triangle}{20}{figure.caption.20}
 \contentsline {subsection}{\numberline {3.3.5}Acceleration Structures}{21}{subsection.3.3.5}
 \contentsline {subsubsection}{Regular Grid}{22}{subsection.3.3.5}
 \contentsline {subsubsection}{Bounding Volume Hierarchy}{23}{figure.caption.22}

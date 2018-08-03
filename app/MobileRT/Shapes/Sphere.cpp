@@ -3,6 +3,7 @@
 //
 
 #include "MobileRT/Shapes/Sphere.hpp"
+#include <algorithm>
 
 using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
@@ -15,22 +16,28 @@ Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
 
 Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
-    const ::glm::vec3 &centerToOrigin {ray.origin_ - center_};
+    const ::glm::vec3 &originToCenter{center_ - ray.origin_};
+    const float projectionOnDirection{::glm::dot(originToCenter, ray.direction_)};
 
+    const float originToCenterMagnitude{::glm::length(originToCenter)};
     //A = 1.0 - normalized vectors
-    const float B {2.0f * ::glm::dot(centerToOrigin, ray.direction_)};
-    const float squareMagnitude {::glm::length(centerToOrigin) * ::glm::length(centerToOrigin)};
-    const float C {squareMagnitude - this->sq_radius_};
-    const float discriminant {B * B - 4.0f * C};
+    const float A{1.0f};
+    const float B{2.0f * -projectionOnDirection};
+    const float C{originToCenterMagnitude * originToCenterMagnitude - this->sq_radius_};
+    const float discriminant{B * B - 4.0f * A * C};
     //don't intersect (ignores tangent point of the sphere)
-    if (discriminant <= 0.0f) { return intersection; }
+    if (discriminant < 0.0f) {
+        return intersection;
+    }
 
-    //ray intersects the sphere in 2 points
+    //if discriminant > 0 - ray intersects the sphere in 2 points
+    //if discriminant == 0 - ray intersects the sphere in 1 point
     const float rootDiscriminant {::std::sqrt(discriminant)};
     const float distanceToIntersection1 {-B + rootDiscriminant};
     const float distanceToIntersection2 {-B - rootDiscriminant};
     //distance between intersection and camera = smaller root = closer intersection
-    const float distanceToIntersection {::std::min(distanceToIntersection1, distanceToIntersection2) * 0.5f};
+    const float distanceToIntersection{
+            ::std::min(distanceToIntersection1, distanceToIntersection2) / (2.0f * A)};
 
     const float Epsilon {1.0e-05f};
     //const float Epsilon {::std::numeric_limits<float>::epsilon()};

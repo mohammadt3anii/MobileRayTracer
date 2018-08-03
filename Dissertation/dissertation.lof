@@ -13,8 +13,8 @@
 \contentsline {figure}{\numberline {9}{\ignorespaces The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.\relax }}{15}{figure.caption.16}
 \contentsline {figure}{\numberline {10}{\ignorespaces Illustration of tiling the image plane.\relax }}{16}{figure.caption.17}
 \contentsline {figure}{\numberline {11}{\ignorespaces Illustration of shadow rays casting (\cite {ShadowRays}).\relax }}{17}{figure.caption.18}
-\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{18}{figure.caption.19}
-\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{19}{figure.caption.20}
+\contentsline {figure}{\numberline {12}{\ignorespaces Illustration of a ray intersecting a plane (\cite {PlaneRayIntersection}).\relax }}{19}{figure.caption.19}
+\contentsline {figure}{\numberline {13}{\ignorespaces Illustration of a ray intersecting a sphere in two points (\cite {SphereRayIntersection}).\relax }}{20}{figure.caption.20}
 \contentsline {figure}{\numberline {14}{\ignorespaces Illustration of a ray intersecting a triangle (\cite {TriangleRayIntersection}).\relax }}{21}{figure.caption.21}
 \contentsline {figure}{\numberline {15}{\ignorespaces Illustration of traversing a regular grid acceleration structure (\cite {RegularGrid}).\relax }}{23}{figure.caption.22}
 \contentsline {figure}{\numberline {16}{\ignorespaces Illustration of traversing a Bounding Volume Hierarchy acceleration structure (\cite {BVH}).\relax }}{24}{figure.caption.23}
@@ -52,7 +52,7 @@
 \contentsline {figure}{\numberline {42}{\ignorespaces Illustration of Porsche 911 GT2 scene, rendered with shader Whitted in MobileRT.\relax }}{56}{figure.caption.51}
 \contentsline {figure}{\numberline {43}{\ignorespaces Illustration of Cornell Box scene, rendered with shader Whitted in MobileRT.\relax }}{57}{figure.caption.52}
 \contentsline {figure}{\numberline {44}{\ignorespaces Time in the Conference scene\relax }}{58}{figure.caption.53}
-\contentsline {figure}{\numberline {45}{\ignorespaces Speedup in the Conference scene\relax }}{59}{figure.caption.54}
+\contentsline {figure}{\numberline {45}{\ignorespaces Time with Samsung smartphone\relax }}{59}{figure.caption.54}
 \contentsline {figure}{\numberline {46}{\ignorespaces Time to construct accelerators in Samsung Galaxy smart phone\relax }}{59}{figure.caption.55}
 \contentsline {figure}{\numberline {47}{\ignorespaces Memory usage in the Samsung Galaxy smart phone\relax }}{60}{figure.caption.56}
 \contentsline {figure}{\numberline {48}{\ignorespaces Time to construct accelerators in the Raspberry Pi 2 Model B\relax }}{61}{figure.caption.59}

@@ -171,7 +171,7 @@ Those libraries are:
 	Before using this library, it was implemented our own mathematics library and its performance was very bad compared with this library.
 	\item tinyobjloader (\cite{tinyobjloader}): used to load scenes from wavefront obj files into the main memory.
 	\item Google Test (\cite{GoogleTest}): used to create some unit tests and to mock some classes.
-	This is important in order to have a maintainable code 
+	This is important in order to have a safe and maintainable code.
 \end{itemize}
 
 \par
@@ -180,7 +180,7 @@ Besides being dependent on these threes libraries, this library also depends on 
 
 \par
 The OpenGL ES 2.0 is necessary in order to let the application rasterize one frame of the scene so the user can view it without having to wait a long time to render it with the ray tracer.
-For example, in the Conference scene, the OpenGL can rasterize one frame in less than 17ms compared with 500ms that the NoShadows shader takes.
+For example, in the Conference scene, the OpenGL in the Samsung Galaxy Fresh Duos can rasterize one frame in less than 17ms compared with 500ms that the NoShadows shader takes.
 This is done by copying the scene data from native code to the OpenGL of JVM with the help of JNI.
 
 \begin{figure}[H]
@@ -201,10 +201,10 @@ But, unfortunately the NDK only provides CMake up to the version 3.6.0, so proje
 The CMake generate makefiles that call the available C++ compilers in the Android Environment.
 The NDK in Android Studio uses, by default, the LLVM Project, which is a collection of modular and reusable compiler and toolchain technologies.
 This toolchain provides Clang, which is C/C++/Objective-C compiler that aims to deliver amazingly fast compiles and extremely useful error and warning messages for the programmers.
-Unfortunately, this compiler only provides features up to C++ 14.
+Unfortunately, this compiler only provides features up to C++ 14, so developers can't use the most recent features of C++ 17.
 
 \par
-Last, but not least, it is important to mention that all the code of this application, including the ray tracer library, the rendering components and the Graphical User Interface are available in the github.
+Last, but not least, it is important to mention that all the code of this application, including the ray tracer library, the rendering components and the Graphical User Interface are available in the github, which is a web-based hosting service for version control using Git.
 It is 100\% open source and it is accessed in the web page:
 \url{https://github.com/PTPuscas/MobileRayTracer}.
 
@@ -269,21 +269,38 @@ The shadow ray is represented by the yellow line pointed to the light source.
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed three types of shapes: plane, sphere and triangle.
 One way to allow this would be to use the process of inheritance available in C++.
-Which means, for example, create a class called Shape and create sub classes like Triangle, Plane or Sphere that derived from that class.
+Which means, for example, create a class called Shape and create sub classes like Triangle, Plane or Sphere that are derived from that class.
 And each of those classes would implement different intersect methods.
 In this way, it would be possible for the programmer to develop his own custom shapes as new Rendering Components.
 But of course, the benefit of this flexibility also brings the downside of performance loss as the application will have at runtime to figure out which of the derived classes is required to call.
+Because, calling a virtual function requires a v-table lookup, and can make it 2-3 times slower than a normal function.
 The other way to do it is by developing each shape class without inheritance and being each class independent of each other.
 This can have greater performance but the downside is that the programmer cannot add new shapes to the library.
+This ray tracer was implemented this way because it is not important to let the user add his own shapes as rendering components as with only the triangles it is possible to render many types of custom shapes.
+Also, the performance is important in the intersect method of the shapes because it is a method that can be called millions of times while rendering a scene.
 
-All shapes provide one important method:
+So, all shapes provide three important methods:
 
 \begin{lstlisting}[caption={Main methods in Shape}, captionpos=b, label=Shape]
 Intersection intersect(const Intersection &intersection, const Ray &ray) const noexcept;
+bool intersect(const AABB &box) const noexcept;
+AABB getAABB() const noexcept;
 \end{lstlisting}
 
-This method determines if a ray intersects the shape and returns the intersection.
-It is important to mention that, obviously, each shape was developed with different algorithm.
+The first
+$intersect$
+method determines if a ray intersects the shape and returns the intersection.
+It is important to mention that, obviously, each shape was developed with different algorithms.
+
+The second
+$intersect$
+method checks if an AABB intersects the shape, and returns only true or false.
+This is useful to determine in which AABB the shape belongs in the regular grid.
+
+Finally, the
+$getAABB$
+method, as the name implies returns the smallest AABB that surrounds the shape.
+This is used in the creation of the acceleration structures because it is simpler to intersect an AABB than a shape.
 
 \subsubsection{Plane}
 
@@ -296,9 +313,9 @@ So, the intersect method implemented has the following algorithm:
 
 \begin{lstlisting}[caption={Algorithm of Ray plane intersection}, captionpos=b, label=Plane]
 projection = planeNormal . rayDirection
-if (|projection| <= 0) return false
+if (|projection| < epsilon) return false
 distance = planeNormal . (planePoint - rayOrigin) / projection
-if (distance <= 0 || distance > rayMaxDistance) return false
+if (distance < epsilon || distance > rayMaxDistance) return false
 intersectionPoint = rayOrigin + rayDirection * distance
 return Intersection(intersectionPoint, planeNormal, material)
 \end{lstlisting}
@@ -311,6 +328,9 @@ return Intersection(intersectionPoint, planeNormal, material)
 	\includegraphics[keepaspectratio,scale=0.4]{RayToPlane.png}
 \end{figure}
 
+\par
+
+
 \subsubsection{Sphere}
 
 \par
@@ -319,18 +339,20 @@ The sphere is also an important primitive shape because it allows the user to bu
 \par
 The construction of a sphere requires just the point in the center and the radius of the sphere.
 It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
+The algorithm used in this library was the algebraic version.
 So, the intersect method implemented has the following algorithm:
 
 \begin{lstlisting}[caption={Algorithm of Ray sphere intersection}, captionpos=b, label=Sphere]
 centerToOrigin = rayOrigin - sphereCenter
+A = 1
 B = 2 * centerToOrigin . rayDirection
-C = centerToOrigin.magnitude - radius
-disciminant = B^2 - 4*C
-if (discriminant <= 0) return false
-distance1 = (-B + sqrt{discriminant} * 0.5)
-distance2 = (-B - sqrt{discriminant} * 0.5)
-distance = min(distance1, distance2)
-if (distance <= 0 || distance > rayMaxDistance) return false
+C = centerToOrigin.magnitude ^ 2 - radius ^ 2
+disciminant = B^2 - 4*A*C
+if (discriminant < 0) return false
+distance1 = -B + sqrt{discriminant}
+distance2 = -B - sqrt{discriminant}
+distance = min(distance1, distance2) / 2 P A
+if (distance < epsilon || distance >= rayMaxDistance) return false
 intersectionPoint = rayOrigin + rayDirection * distance
 sphereNormal = intersectionPoint - sphereCenter
 return Intersection(intersectionPoint, sphereNormal, material)
@@ -356,7 +378,7 @@ $[AB, AC]$
 and the normal of the triangle.
 This is needed in order to execute the Möller-Trumbore algorithm (\cite{RayTriangleIntersection}) for the intersection of a ray with a triangle.
 The Möller–Trumbore ray-triangle intersection algorithm, named after its inventors Tomas Möller and Ben Trumbore, is a fast method for calculating the intersection of a ray and a triangle in three dimensions without needing precomputation of the plane equation of the plane containing the triangle.
-It only needs to store 1 triangle vertex, 2 triangle vectors and the triangle normal, which means that each triangle needs only to store 12 floating point values, or 48 bytes.
+It only needs to store 1 triangle vertex and 2 triangle vectors, which means that each triangle needs only to store 9 floating point values, or 36 bytes.
 So, the intersect method implemented has the following algorithm:
 
 \begin{lstlisting}[caption={Algorithm of Ray triangle intersection (\cite{LightHouseRayTriangle})}, captionpos=b, label=Triangle]
@@ -371,6 +393,7 @@ v = (rayDirection . perpendicularVector2) / projection
 if(v < 0 || (u + v) > 1) return false
 distance = (AC . perpendicularVector2) / projection
 intersectionPoint = rayOrigin + rayDirection * distance
+triangleNormal = AB x AC
 return Intersection(intersectionPoint, triangleNormal, material)
 \end{lstlisting}
 

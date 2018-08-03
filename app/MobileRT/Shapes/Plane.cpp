@@ -27,9 +27,9 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
     }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    const ::glm::vec3 vecToOrigin {point_ - ray.origin_};
-    const float distanceToIntersection {
-            ::glm::dot(normal_, vecToOrigin) / normalized_projection};
+    const ::glm::vec3 vecToPlane{point_ - ray.origin_};
+    const float scalarProjectionVecToPlaneOnNormal{::glm::dot(normal_, vecToPlane)};
+    const float distanceToIntersection{scalarProjectionVecToPlaneOnNormal / normalized_projection};
 
     // is it in front of the eye?
     // is it farther than the ray length ??
