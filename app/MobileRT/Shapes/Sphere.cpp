@@ -21,7 +21,7 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
 
     const float originToCenterMagnitude{::glm::length(originToCenter)};
     //A = 1.0 - normalized vectors
-    const float A{1.0f};
+    const float A{::glm::dot(ray.direction_, ray.direction_)};
     const float B{2.0f * -projectionOnDirection};
     const float C{originToCenterMagnitude * originToCenterMagnitude - this->sq_radius_};
     const float discriminant{B * B - 4.0f * A * C};
@@ -39,15 +39,14 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
     const float distanceToIntersection{
             ::std::min(distanceToIntersection1, distanceToIntersection2) / (2.0f * A)};
 
-    const float Epsilon {1.0e-05f};
-    //const float Epsilon {::std::numeric_limits<float>::epsilon()};
-    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < 1.0e-05f || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
 
     // if so, then we have an intersection
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
-    const Intersection &res{intersectionPoint, distanceToIntersection, center_};
+    const ::glm::vec3 &intersectionNormal{::glm::normalize(intersectionPoint - center_)};
+    const Intersection &res{intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
     return res;
 }
 

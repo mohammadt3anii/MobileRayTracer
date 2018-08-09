@@ -107,7 +107,7 @@ bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
 }
 
 bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
-    Intersection intersection {};
+    Intersection intersection{RayLengthMax, nullptr};
     const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {

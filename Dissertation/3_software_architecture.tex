@@ -309,16 +309,28 @@ The plane is an essential primitive shape because it allows the user to build in
 
 \par
 The construction of a plane requires just an arbitrary point in the plane and the normal of the plane.
-So, the intersect method implemented has the following algorithm:
+So, the intersect method implemented has the following algorithm taken from \cite{RayPlane}:
 
-\begin{lstlisting}[caption={Algorithm of Ray plane intersection}, captionpos=b, label=Plane]
-projection = planeNormal . rayDirection
-if (|projection| < epsilon) return false
-distance = planeNormal . (planePoint - rayOrigin) / projection
-if (distance < epsilon || distance > rayMaxDistance) return false
-intersectionPoint = rayOrigin + rayDirection * distance
-return Intersection(intersectionPoint, planeNormal, material)
-\end{lstlisting}
+$n \cdot (q - x) = 0$\\
+Let
+$r(t) = p + v*t$
+be the equation of the ray.
+Then any point
+$x$
+on the plane satisfies the equation:\\
+$n \cdot (q - r(t)) = 0$\\
+$n \cdot (q - p - v*t) = 0$\\
+$n \cdot (q - p) = (n \cdot v) * t$\\
+$t = [ n \cdot (q - p) ] / (n \cdot v)$
+\begin{conditions*}
+	n  &  normal of the plane\\
+	q  &  point on the plane\\
+	x  &  any point on the plane\\
+	r(t)  &  equation of the ray\\
+	p & origin of the ray\\
+	v & direction of the ray\\
+	t & distance of the ray\\
+\end{conditions*}
 
 
 \begin{figure}[H]
@@ -340,23 +352,16 @@ The sphere is also an important primitive shape because it allows the user to bu
 The construction of a sphere requires just the point in the center and the radius of the sphere.
 It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
 The algorithm used in this library was the algebraic version.
-So, the intersect method implemented has the following algorithm:
-
-\begin{lstlisting}[caption={Algorithm of Ray sphere intersection}, captionpos=b, label=Sphere]
-centerToOrigin = rayOrigin - sphereCenter
-A = 1
-B = 2 * centerToOrigin . rayDirection
-C = centerToOrigin.magnitude ^ 2 - radius ^ 2
-disciminant = B^2 - 4*A*C
-if (discriminant < 0) return false
-distance1 = -B + sqrt{discriminant}
-distance2 = -B - sqrt{discriminant}
-distance = min(distance1, distance2) / 2 P A
-if (distance < epsilon || distance >= rayMaxDistance) return false
-intersectionPoint = rayOrigin + rayDirection * distance
-sphereNormal = intersectionPoint - sphereCenter
-return Intersection(intersectionPoint, sphereNormal, material)
-\end{lstlisting}
+So, the intersect method implemented has the following algorithm taken from \cite{RaySphere}:
+\[
+t=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+\]
+where
+\begin{conditions*}
+	a  &  $\|rayDirection\| ^ 2$\\
+	b  &  $2 * rayOriginToSphereCenter \cdot rayDirection$\\
+	c  &  $\|rayOriginToSphereCenter\| ^ 2 - sphereRadius ^ 2$
+\end{conditions*}
 
 \begin{figure}[H]
 	\centering

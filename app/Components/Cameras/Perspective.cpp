@@ -30,7 +30,8 @@ Ray Perspective::generateRay(const float u, const float v,
     const float upFactor{fastArcTan(tanValueUp) + deviationV};
     const ::glm::vec3 &up{this->up_ * upFactor};
     const ::glm::vec3 &dest{this->position_ + this->direction_ + right + up};
-    const Ray &ray{::glm::normalize(dest - position_), this->position_, 1};
+    const ::glm::vec3 &rayDirection{::glm::normalize(dest - position_)};
+    const Ray &ray{rayDirection, this->position_, 1};
     return ray;
 }
 

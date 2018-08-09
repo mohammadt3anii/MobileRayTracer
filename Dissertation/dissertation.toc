@@ -33,22 +33,22 @@
 \contentsline {subsection}{\numberline {3.3.6}Primitive}{25}{subsection.3.3.6}
 \contentsline {section}{\numberline {3.4}Rendering Components}{25}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Shaders}{26}{subsection.3.4.1}
-\contentsline {subsubsection}{DepthMap}{27}{lstnumber.3.8.4}
+\contentsline {subsubsection}{DepthMap}{27}{lstnumber.3.6.4}
 \contentsline {subsubsection}{DiffuseMaterial}{28}{figure.caption.26}
 \contentsline {subsubsection}{NoShadows}{28}{figure.caption.27}
 \contentsline {subsubsection}{Whitted}{29}{figure.caption.28}
 \contentsline {subsubsection}{PathTracer}{32}{figure.caption.31}
 \contentsline {subsection}{\numberline {3.4.2}Samplers}{37}{subsection.3.4.2}
-\contentsline {subsubsection}{Constant}{37}{lstnumber.3.17.1}
-\contentsline {subsubsection}{Stratified}{37}{lstnumber.3.18.1}
-\contentsline {subsubsection}{HaltonSequence}{38}{lstnumber.3.19.8}
-\contentsline {subsubsection}{MersenneTwister}{39}{lstnumber.3.21.10}
+\contentsline {subsubsection}{Constant}{37}{lstnumber.3.15.1}
+\contentsline {subsubsection}{Stratified}{37}{lstnumber.3.16.1}
+\contentsline {subsubsection}{HaltonSequence}{38}{lstnumber.3.17.8}
+\contentsline {subsubsection}{MersenneTwister}{39}{lstnumber.3.19.10}
 \contentsline {subsection}{\numberline {3.4.3}Lights}{40}{subsection.3.4.3}
-\contentsline {subsubsection}{Point light}{41}{lstnumber.3.23.2}
-\contentsline {subsubsection}{Area light}{42}{lstnumber.3.25.1}
+\contentsline {subsubsection}{Point light}{41}{lstnumber.3.21.2}
+\contentsline {subsubsection}{Area light}{42}{lstnumber.3.23.1}
 \contentsline {subsection}{\numberline {3.4.4}Cameras}{43}{subsection.3.4.4}
 \contentsline {subsubsection}{Perspective Camera}{46}{figure.caption.44}
-\contentsline {subsubsection}{Orthographic Camera}{47}{lstnumber.3.32.8}
+\contentsline {subsubsection}{Orthographic Camera}{47}{lstnumber.3.30.8}
 \contentsline {subsection}{\numberline {3.4.5}Object Loaders}{48}{subsection.3.4.5}
 \contentsline {subsubsection}{OBJ Loader}{49}{subsection.3.4.5}
 \contentsline {chapter}{\numberline {4}\spacedlowsmallcaps {Android challenges}}{51}{chapter.4}

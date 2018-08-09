@@ -1,4 +1,4 @@
-\begin{thebibliography}{54}
+\begin{thebibliography}{56}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -19,6 +19,12 @@ Armen Barsegyan.
 \newblock URL
   \url{http://cgicoffee.com/blog/2018/03/what-is-nvidia-rtx-directx-dxr}.
 \newblock Accessed: July 2018.
+
+\bibitem[belthaczar()]{RayPlane}
+belthaczar.
+\newblock Ray/plane intersection point.
+\newblock URL \url{http://www.idevgames.com/forums/thread-5744.html}.
+\newblock Accessed: August 2018.
 
 \bibitem[Bishop()]{CPU_SIMD}
 Russ Bishop.
@@ -77,6 +83,13 @@ Le~Journal du~Net.
 \newblock URL
   \url{https://www.journaldunet.com/solutions/mobilite/mobile-device-management-comparatif-des-offres}.
 \newblock Accessed: May 2018.
+
+\bibitem[Feminella()]{RaySphere}
+John Feminella.
+\newblock How to set up quadratic equation for a ray/sphere intersection?
+\newblock URL
+  \url{https://stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection}.
+\newblock Accessed: August 2018.
 
 \bibitem[Fernandes()]{LightHouseRayTriangle}
 António José Borba~Ramires Fernandes.

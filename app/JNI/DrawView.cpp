@@ -232,6 +232,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    //Fix this race condition
     if (renderer_ != nullptr) {
         renderer_->stopRender();
     }
@@ -924,6 +925,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
+    //Fix this race condition
     if (renderer_ != nullptr) {
         renderer_->stopRender();
     }
@@ -1114,14 +1116,16 @@ extern "C"
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {
-    ::std::int32_t res{0};
-    /*{
-        const ::std::lock_guard<::std::mutex> lock {mutex_};
+    ::std::uint32_t sample{0};
+    {
+        //const ::std::lock_guard<::std::mutex> lock {mutex_};
+        //Fix this race condition
         if (renderer_ != nullptr) {
-            res = renderer_->getSample();
+            sample = renderer_->getSample();
         }
-    }*/
+    }
     env->ExceptionClear();
+    const ::std::int32_t res{static_cast<::std::int32_t> (sample)};
     return res;
 }
 

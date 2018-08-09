@@ -38,6 +38,7 @@ namespace MobileRT {
     const ::std::int32_t RayDepthMin{4};
     const ::std::int32_t RayDepthMax{8};
     const ::std::int32_t NumberOfBlocks{256};
+    const float Epsilon{1.0e-06f};
 
     ::std::int32_t roundDownToMultipleOf(::std::int32_t value, ::std::int32_t multiple) noexcept;
 

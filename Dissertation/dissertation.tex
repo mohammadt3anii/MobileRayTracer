@@ -24,6 +24,12 @@
 \usepackage[cache=false]{minted}
 \usepackage{amsmath}
 \usepackage{caption}
+\usepackage{array,tabularx}
+
+\newenvironment{conditions*}
+{\par\vspace{\abovedisplayskip}\noindent
+	\tabularx{\columnwidth}{>{$}l<{$} @{\ : } >{\raggedright\arraybackslash}X}}
+{\endtabularx\par\vspace{\belowdisplayskip}}
 
 \DeclareCaptionType{MyEquation}[][List of equations]
 \captionsetup[MyEquation]{labelformat=empty}

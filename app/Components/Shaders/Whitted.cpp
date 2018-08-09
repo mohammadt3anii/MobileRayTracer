@@ -37,12 +37,7 @@ bool Whitted::shade(
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const ::glm::vec3 &shadingNormal{
-            (::glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?
-            // entering the object
-            intersection.normal_ :
-            // We have to reverse the normal now
-            intersection.symNormal_};
+    const ::glm::vec3 &shadingNormal{intersection.normal_};
 
     // shadowed direct lighting - only for diffuse materials
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {

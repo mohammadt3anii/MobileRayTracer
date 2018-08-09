@@ -22,7 +22,7 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
     // planes have two sides!!!
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
     const float normalized_projection {::glm::dot(normal_, ray.direction_)};
-    if (::std::abs(normalized_projection) < ::std::numeric_limits<float>::epsilon()) {
+    if (::std::abs(normalized_projection) < Epsilon) {
         return intersection;
     }
 
@@ -33,12 +33,13 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
 
     // if so, then we have an intersection
-    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal_, this};
+    const ::glm::vec3 intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
+    const Intersection &res{intersectionPoint, distanceToIntersection, normal_, this};
     return res;
 }
 

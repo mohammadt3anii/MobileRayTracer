@@ -24,10 +24,11 @@ Intersection Triangle::intersect(const Intersection &intersection, const Ray &ra
 
     const ::glm::vec3 &perpendicularVector {::glm::cross(ray.direction_, AC_)};
     const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-    if (::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon()) {
+    if (::std::abs(normalizedProjection) < Epsilon) {
         return intersection;
     }
 
+    //u v = barycentric coordinates (uv-space are inside a unit triangle)
     const float normalizedProjectionInv {1.0f / normalizedProjection};
     const ::glm::vec3 &vectorToCamera {ray.origin_ - pointA_};
     const float u {normalizedProjectionInv * ::glm::dot(vectorToCamera, perpendicularVector)};
@@ -45,11 +46,17 @@ Intersection Triangle::intersect(const Intersection &intersection, const Ray &ra
     // the intersection point is on the line
     const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
 
-    if (distanceToIntersection < ::std::numeric_limits<float>::epsilon() || distanceToIntersection >= intersection.length_) {
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
         return intersection;
     }
-    const ::glm::vec3 &normal{::glm::normalize(::glm::cross(AB_, AC_))};
-    const Intersection &res{ray.origin_, ray.direction_, distanceToIntersection, normal, this};
+    const ::glm::vec3 &intersectionNormal1{::glm::normalize(::glm::cross(AB_, AC_))};
+    const ::glm::vec3 &intersectionNormal2{::glm::normalize(::glm::cross(AC_, AB_))};
+    const ::glm::vec3 &intersectionNormal{
+            ::glm::dot(intersectionNormal1, ray.direction_) < 0.0f ? intersectionNormal1
+                                                                   : intersectionNormal2};
+
+    const ::glm::vec3 &intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
+    const Intersection &res{intersectionPoint, distanceToIntersection, intersectionNormal, this};
     return res;
 }
 
@@ -137,8 +144,7 @@ bool Triangle::intersect(const AABB &box) const noexcept {
             [&](const ::glm::vec3 &vec) noexcept -> bool {
                 const ::glm::vec3 &perpendicularVector {::glm::cross(vec, AC_)};
                 const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
-                const bool res{
-                        ::std::abs(normalizedProjection) < ::std::numeric_limits<float>::epsilon()};
+                const bool res{::std::abs(normalizedProjection) < Epsilon};
                 return res;
             }
     };
@@ -152,7 +158,7 @@ bool Triangle::intersect(const AABB &box) const noexcept {
     const ::glm::vec3 &pointB {pointA_ + AB_};
     const ::glm::vec3 &pointC {pointA_ + AC_};
     const bool intersectedBC {intersectRayAABB(pointB, pointC - pointB)};
-    Intersection intersection {};
+    Intersection intersection{RayLengthMax, nullptr};
     const float lastDist {intersection.length_};
     intersection = intersect(intersection, ray);
     const bool intersectedRay {intersection.length_ < lastDist};

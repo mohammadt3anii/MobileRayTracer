@@ -17,7 +17,7 @@ NoShadows::NoShadows(Scene scene, const ::std::uint32_t samplesLight,
 }
 
 bool NoShadows::shade(
-    ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
+        ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &) noexcept {
 
     const ::glm::vec3 &Le {intersection.material_->Le_};
     //stop if it intersects a light source
@@ -28,12 +28,7 @@ bool NoShadows::shade(
 
     const ::glm::vec3 &kD {intersection.material_->Kd_};
 
-    const ::glm::vec3 &shadingNormal {
-            (::glm::dot(ray.direction_, intersection.normal_) < 0.0f) ?
-            // entering the object
-            intersection.normal_ :
-            // We have to reverse the normal now
-            intersection.symNormal_};
+    const ::glm::vec3 &shadingNormal{intersection.normal_};
 
     // direct lighting - only for diffuse materials
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {

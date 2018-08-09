@@ -51,10 +51,7 @@ bool PathTracer::shade(
     // if the cosine between the ray and the normal is less than 0 then
     // the ray intersected the object from the inside and the shading normal
     // should be symmetric to the geometric normal
-    const ::glm::vec3 &shadingNormal {
-            (::glm::dot(ray.direction_,intersection.normal_) < 0.0f) ?
-            intersection.normal_ :// entering the object
-            intersection.symNormal_};// We have to reverse the normal now
+    const ::glm::vec3 &shadingNormal{intersection.normal_};
 
     bool intersectedLight {false};
 
