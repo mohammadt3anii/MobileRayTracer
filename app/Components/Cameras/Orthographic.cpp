@@ -26,7 +26,7 @@ Ray Orthographic::generateRay(const float u, const float v,
     const ::glm::vec3 &right{this->right_ * rightFactor + this->right_ * deviationU};
     const float upFactor{(0.5f - v) * this->sizeV_};
     const ::glm::vec3 &up{this->up_ * upFactor + this->up_ * deviationV};
-    const Ray &ray{this->direction_, this->position_ + right + up, 1};
+    const Ray ray {this->direction_, this->position_ + right + up, 1};
     return ray;
 }
 
@@ -37,7 +37,7 @@ AABB Orthographic::getAABB() const noexcept {
     const ::glm::vec3 &max {this->position_ +
                       this->right_ * (1.0f - 0.5f) * this->sizeH_ + this->right_ * 0.5f +
                       this->up_ * (0.5f - 1.0f) * this->sizeV_ + this->up_ * 0.5f};
-    const AABB &res{min, max};
+    const AABB res {min, max};
     return res;
 }
 

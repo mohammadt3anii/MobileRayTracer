@@ -38,7 +38,7 @@ float Camera::getBlock(const ::std::uint32_t sample) noexcept {
 AABB Camera::getAABB() const noexcept {
     const ::glm::vec3 &min {position_};
     const ::glm::vec3 &max {position_};
-    const AABB &res{min, max};
+    const AABB res {min, max};
     return res;
 }
 

@@ -39,7 +39,7 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
 
     // if so, then we have an intersection
     const ::glm::vec3 intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
-    const Intersection &res{intersectionPoint, distanceToIntersection, normal_, this};
+    const Intersection res {intersectionPoint, distanceToIntersection, normal_, this};
     return res;
 }
 
@@ -73,7 +73,7 @@ AABB Plane::getAABB() const noexcept {
     const ::glm::vec3 &rightDir {getRightVector()};
     const ::glm::vec3 &min {this->point_ + rightDir * -100.0f};
     const ::glm::vec3 &max {this->point_ + rightDir * 100.0f};
-    const AABB &res{min, max};
+    const AABB res {min, max};
     return res;
 }
 

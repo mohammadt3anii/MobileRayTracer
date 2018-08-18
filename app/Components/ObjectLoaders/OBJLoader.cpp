@@ -2,11 +2,11 @@
 // Created by puscas on 30/07/17.
 //
 
+#include <cstring>
 #include <fstream>
 #include <tinyobjloader/tiny_obj_loader.h>
 #include "Components/ObjectLoaders/OBJLoader.hpp"
 #include "Components/Lights/AreaLight.hpp"
-#include "JNI/DrawView.hpp"
 
 using ::Components::AreaLight;
 using ::Components::OBJLoader;
@@ -19,9 +19,9 @@ OBJLoader::OBJLoader(const ::std::string &obj, const ::std::string &materials) n
 }
 
 void OBJLoader::process() noexcept {
-    ::std::ifstream objStream{objText_};
+    ::std::ifstream objStream {objText_};
     objStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-    ::std::ifstream matStream{materialsText_};
+    ::std::ifstream matStream {materialsText_};
     matStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::tinyobj::MaterialStreamReader matStreamReader {matStream};
     ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!materialsText_.empty()? &matStreamReader : nullptr};
@@ -46,8 +46,7 @@ void OBJLoader::process() noexcept {
 }
 
 bool OBJLoader::fillScene(Scene *const scene,
-                          ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda,
-                          JNIEnv *const env) noexcept {
+                          ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda) noexcept {
     size_t numberTriangles{0};
 
     for (const auto &shape : shapes_) {
@@ -55,17 +54,6 @@ bool OBJLoader::fillScene(Scene *const scene,
             const size_t triangles{static_cast<size_t>(shape.mesh.num_face_vertices.at(f) / 3)};
             numberTriangles += triangles;
         }
-    }
-
-    const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/MainActivity")};
-    const jmethodID mainActivityMethodId{
-            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
-    const jint needMem{(static_cast<jint>(numberTriangles * 3 * 3 * sizeof(float) +
-                                          numberTriangles * 13 * sizeof(float))) / 1048576};
-    const jboolean result{
-            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, needMem)};
-    if (result) {
-        return false;
     }
 
     scene->triangles_.reserve(numberTriangles);
@@ -126,7 +114,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
                 const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
                 const ::glm::vec3 &vertex3 {-vx3, vy3, vz3};
-                const ::MobileRT::Triangle &triangle{vertex1, vertex2, vertex3};
+                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3};
 
                 // per-face material
                 const ::std::int32_t materialID{shape.mesh.material_ids.at(f)};
@@ -155,7 +143,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                     }
                     const ::glm::vec3 &emission {e1, e2, e3};
                     const float indexRefraction{m.ior};
-                    const Material &material{diffuse, specular, transmittance, indexRefraction,
+                    const Material material {diffuse, specular, transmittance, indexRefraction,
                                              emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
                         const ::glm::vec3 &p1 {vx1, vy1, vz1};
@@ -172,7 +160,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const ::glm::vec3 &transmittance{0.0f, 0.0f, 0.0f};
                     const float indexRefraction{1.0f};
                     const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
-                    const Material &material{diffuse, specular, transmittance, indexRefraction,
+                    const Material material {diffuse, specular, transmittance, indexRefraction,
                                              emission};
                     scene->triangles_.emplace_back(triangle, material);
                 }

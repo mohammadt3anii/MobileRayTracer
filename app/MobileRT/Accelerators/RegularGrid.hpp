@@ -39,7 +39,7 @@ namespace MobileRT {
         ::std::int32_t bitCounter(::std::uint32_t n) const noexcept;
 
     public:
-        explicit RegularGrid() noexcept = default;
+        explicit RegularGrid() noexcept {}
 
         explicit RegularGrid(AABB sceneBounds, Scene *scene, ::std::int32_t gridSize) noexcept;
 

@@ -16,8 +16,8 @@
 namespace MobileRT {
     class Shader {
     public:
-        Scene scene_{};
-        RegularGrid regularGrid_{};
+        Scene scene_ {};
+        RegularGrid regularGrid_ {};
 
         BVH<Plane> bvhPlanes_{};
         BVH<Sphere> bvhSpheres_{};

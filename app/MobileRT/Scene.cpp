@@ -81,7 +81,7 @@ Intersection Scene::shadowTrace(Intersection intersection, const Ray &ray) noexc
 
 void Scene::resetSampling() noexcept {
     for (const auto &light : this->lights_) {
-        light->resetSampling();
+        light.get()->resetSampling();
     }
 }
 

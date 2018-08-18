@@ -7,7 +7,7 @@
 
 MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
     // point light - white
-    const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       1.0f,
@@ -18,26 +18,26 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                                                                            0.0f}));
 
     // triangle - yellow
-    const ::MobileRT::Material &yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
+    const ::MobileRT::Material yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 1.001f},
             ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, yellowMat);
 
     // sphere - mirror
-    const ::MobileRT::Material &MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                        ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f}, MirrorMat);
 
     // sphere - green
-    const ::MobileRT::Material &GreenMat {::glm::vec3 {0.0f, 0.9f, 0.0f},
+    const ::MobileRT::Material GreenMat {::glm::vec3 {0.0f, 0.9f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.2f, 0.0f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {-0.45f, -0.1f, 0.0f}, 0.35f}, GreenMat);
 
     // back wall - white
-    const ::MobileRT::Material &lightGrayMat {::glm::vec3 {0.7f, 0.7f, 0.7f}};
+    const ::MobileRT::Material lightGrayMat {::glm::vec3 {0.7f, 0.7f, 0.7f}};
     scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, 0.0f, 1.0f}, ::glm::vec3 {0.0f, 0.0f, -1.0f}},
                                lightGrayMat);
@@ -58,12 +58,12 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                lightGrayMat);
 
     // left wall - red
-    const ::MobileRT::Material &redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
+    const ::MobileRT::Material redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {-1.0f, 0.0f, 0.0f}, ::glm::vec3 {1.0f, 0.0f, 0.0f}}, redMat);
 
     // right wall - blue
-    const ::MobileRT::Material &blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
+    const ::MobileRT::Material blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {1.0f, 0.0f, 0.0f}, ::glm::vec3 {-1.0f, 0.0f, 0.0f}}, blueMat);
 
@@ -71,7 +71,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
 }
 
 MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
-    const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       1.0f,
@@ -111,40 +111,40 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
                                                                                             -0.25f}));
 
     // triangle - yellow
-    const ::MobileRT::Material &yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
+    const ::MobileRT::Material yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 1.001f},
             ::glm::vec3 {-0.5f, -0.5f, 0.99f}}, yellowMat);
 
     // triangle - green
-    const ::MobileRT::Material &greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
+    const ::MobileRT::Material greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {-0.5f, 0.5f, 0.99f},
             ::glm::vec3 {-0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 0.99f}}, greenMat);
 
     // sphere - mirror
-    const ::MobileRT::Material &MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                        ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f}, MirrorMat);
 
     // sphere - transmission
-    const ::MobileRT::Material &TransmissionMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material TransmissionMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                              ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                              ::glm::vec3 {0.9f, 0.9f, 0.9f}, 1.9f};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {-0.4f, -0.3f, 0.0f}, 0.35f}, TransmissionMat);
 
     // back wall - white
-    const ::MobileRT::Material &lightGrayMat {::glm::vec3 {0.7f, 0.7f, 0.7f}};
+    const ::MobileRT::Material lightGrayMat {::glm::vec3 {0.7f, 0.7f, 0.7f}};
     scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, 0.0f, 1.0f}, ::glm::vec3 {0.0f, 0.0f, -1.0f}},
                                lightGrayMat);
 
     // front wall - light blue
-    const ::MobileRT::Material &lightBlueMat {::glm::vec3 {0.0f, 0.9f, 0.9f}};
+    const ::MobileRT::Material lightBlueMat {::glm::vec3 {0.0f, 0.9f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, 0.0f, -4.0f}, ::glm::vec3 {0.0f, 0.0f, 1.0f}},
                                lightBlueMat);
@@ -158,12 +158,12 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
                                        ::glm::vec3 {0.0f, 1.0f, 0.0f}, ::glm::vec3 {0.0f, -1.0f, 0.0f}},
                                lightGrayMat);
     // left wall - red
-    const ::MobileRT::Material &redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
+    const ::MobileRT::Material redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {-1.0f, 0.0f, 0.0f}, ::glm::vec3 {1.0f, 0.0f, 0.0f}}, redMat);
 
     // right wall - blue
-    const ::MobileRT::Material &blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
+    const ::MobileRT::Material blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {1.0f, 0.0f, 0.0f}, ::glm::vec3 {-1.0f, 0.0f, 0.0f}}, blueMat);
 
@@ -182,8 +182,8 @@ MobileRT::Scene spheresScene(MobileRT::Scene scene) noexcept {
                                                                                    4.0f}));*/
 
     // create diffuse Materials
-    const ::MobileRT::Material &sandMat{::glm::vec3 {0.914f, 0.723f, 0.531f}};
-    const ::MobileRT::Material &redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
+    const ::MobileRT::Material sandMat{::glm::vec3 {0.914f, 0.723f, 0.531f}};
+    const ::MobileRT::Material redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
     /*const ::MobileRT::Material &mirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                         ::glm::vec3 {0.9f, 0.9f, 0.9f}};*/
     //const ::MobileRT::Material &greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
@@ -213,7 +213,7 @@ MobileRT::Scene spheresScene(MobileRT::Scene scene) noexcept {
 
 MobileRT::Scene spheresScene2(MobileRT::Scene scene) noexcept {
     // create one light source
-    const ::MobileRT::Material &lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    const ::MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                       1.0f,
@@ -224,14 +224,14 @@ MobileRT::Scene spheresScene2(MobileRT::Scene scene) noexcept {
                                                                                             4.0f}));
 
     // create diffuse Materials
-    const ::MobileRT::Material &sandMat {::glm::vec3 {0.914f, 0.723f, 0.531f}};
-    const ::MobileRT::Material &redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
-    const ::MobileRT::Material &blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
-    const ::MobileRT::Material &yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f},
+    const ::MobileRT::Material sandMat {::glm::vec3 {0.914f, 0.723f, 0.531f}};
+    const ::MobileRT::Material redMat {::glm::vec3 {0.9f, 0.0f, 0.0f}};
+    const ::MobileRT::Material blueMat {::glm::vec3 {0.0f, 0.0f, 0.9f}};
+    const ::MobileRT::Material yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f},
                                        ::glm::vec3 {0.8f, 0.8f, 0.4f}};
-    const ::MobileRT::Material &mirrorMat {::glm::vec3 {0.2f, 0.2f, 0.2f},
+    const ::MobileRT::Material mirrorMat {::glm::vec3 {0.2f, 0.2f, 0.2f},
                                        ::glm::vec3 {0.9f, 0.9f, 0.9f}};
-    const ::MobileRT::Material &greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
+    const ::MobileRT::Material greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
     // create one sphere
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {-1.0f, 1.0f, 6.0f}, 1.0f}, redMat);

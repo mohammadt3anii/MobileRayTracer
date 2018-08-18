@@ -19,6 +19,7 @@
 #include "MobileRT/Scene.hpp"
 #include "Scenes.hpp"
 #include <chrono>
+#include <cstring>
 #include <fstream>
 
 static void
@@ -52,21 +53,6 @@ work_thread(
         LOG("pathMtl = ", mtlFileName);
 
         ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
-        ::std::ifstream obj {objFileName};
-        obj.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-        ::std::ifstream mtl {mtlFileName};
-        mtl.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-        ::std::string line {};
-        ::std::stringstream ssObj {""};
-        while (::std::getline(obj, line)) {
-            ssObj << line << '\n';
-        }
-        ::std::stringstream ssMtl{""};
-        while (::std::getline(mtl, line)) {
-            ssMtl << line << '\n';
-        }
-        ::Components::OBJLoader objLoader {ssObj.str(), ssMtl.str()};
-        objLoader.process();
         ::std::int32_t numberOfLights_ {0};
 
         const float ratio {
@@ -125,19 +111,19 @@ work_thread(
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
             default: {
-                //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::HaltonSeq> ();});
-                //objLoader.fillScene (&scene_, []() noexcept -> ::std::unique_ptr<::Components::StaticHaltonSeq> {return ::std::make_unique<::Components::MersenneTwister> ();});
+                ::Components::OBJLoader objLoader {objFileName, mtlFileName};
                 objLoader.process();
                 if (!objLoader.isProcessed()) {
                     exit(0);
                 }
-                objLoader.fillScene(&scene_,
-                                    []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                //objLoader.fillScene (&scene_, []() { return ::std::make_unique<::Components::HaltonSeq> (); });
+                //objLoader.fillScene (&scene_, []() {return ::std::make_unique<::Components::MersenneTwister> (); });
 
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
                 maxDist = ::glm::vec3 {1, 1, 1};
-                const ::MobileRT::Material &lightMat{::glm::vec3 {0.0f, 0.0f, 0.0f},
+                const ::MobileRT::Material lightMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      ::glm::vec3 {0.0f, 0.0f, 0.0f},
                                                      1.0f,

@@ -19,7 +19,6 @@ static float fps_{0.0f};
 static ::std::int64_t timeFrame_{0};
 static ::std::int64_t timeRenderer_{0};
 static ::std::int32_t numberOfLights_{0};
-static ::std::int32_t accelerator_{0};
 
 
 extern "C"
@@ -48,7 +47,7 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    ::MobileRT::Camera *const camera{renderer_->camera_.get()};
+    ::MobileRT::Camera *const camera{renderer_.get()->camera_.get()};
     const unsigned long arraySize{20};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -111,8 +110,8 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_->shader_->scene_.triangles_.empty() ?
-            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
+            !renderer_.get()->shader_->scene_.triangles_.empty() ?
+            renderer_.get()->shader_->scene_.triangles_ : renderer_.get()->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -123,11 +122,11 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
             if (directBuffer != nullptr) {
                 int i{0};
                 for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-                    const ::glm::vec4 &pointA{triangle.shape_.pointA_, 1.0f};
-                    const ::glm::vec4 &pointB{pointA.x + triangle.shape_.AB_.x,
+                    const ::glm::vec4 &pointA {triangle.shape_.pointA_, 1.0f};
+                    const ::glm::vec4 &pointB {pointA.x + triangle.shape_.AB_.x,
                                               pointA.y + triangle.shape_.AB_.y,
                                               pointA.z + triangle.shape_.AB_.z, 1.0f};
-                    const ::glm::vec4 &pointC{pointA.x + triangle.shape_.AC_.x,
+                    const ::glm::vec4 &pointC {pointA.x + triangle.shape_.AC_.x,
                                               pointA.y + triangle.shape_.AC_.y,
                                               pointA.z + triangle.shape_.AC_.z, 1.0f};
 
@@ -159,8 +158,8 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_->shader_->scene_.triangles_.empty() ?
-            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
+            !renderer_.get()->shader_->scene_.triangles_.empty() ?
+            renderer_.get()->shader_->scene_.triangles_ : renderer_.get()->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -234,7 +233,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept {
     //Fix this race condition
     if (renderer_ != nullptr) {
-        renderer_->stopRender();
+        renderer_.get()->stopRender();
     }
     working_ = State::STOPPED;
     LOG("WORKING = STOPPED");
@@ -257,7 +256,6 @@ extern "C"
 ) noexcept {
     width_ = width;
     height_ = height;
-    accelerator_ = accelerator;
     LOG("INITIALIZE");
     const jstring globalObjFile {static_cast<jstring>(env->NewGlobalRef(localObjFile))};
     const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
@@ -382,8 +380,7 @@ extern "C"
                     return -1;
                 }
                 const bool sceneBuilt{objLoader.fillScene(&scene_,
-                                                          []() { return ::std::make_unique<Components::StaticHaltonSeq>(); },
-                                                          env)};
+                                                          []() { return ::std::make_unique<Components::StaticHaltonSeq>(); })};
                 if (!sceneBuilt) {
                     return -1;
                 }
@@ -886,12 +883,12 @@ extern "C"
             }
         }
                 const ::std::int32_t triangles{
-                static_cast<int32_t> (shader_->scene_.triangles_.size())};
+                static_cast<int32_t> (shader_.get()->scene_.triangles_.size())};
                 const ::std::int32_t spheres{
-                static_cast<int32_t> (shader_->scene_.spheres_.size())};
+                static_cast<int32_t> (shader_.get()->scene_.spheres_.size())};
                 const ::std::int32_t planes{
-                        static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
-                numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
+                        static_cast<::std::int32_t> (shader_.get()->scene_.planes_.size())};
+                numberOfLights_ = static_cast<::std::int32_t> (shader_.get()->scene_.lights_.size());
                 const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
@@ -927,7 +924,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
 ) noexcept {
     //Fix this race condition
     if (renderer_ != nullptr) {
-        renderer_->stopRender();
+        renderer_.get()->stopRender();
     }
     if (thread_ != nullptr) {
         {
@@ -965,12 +962,12 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         [=]() noexcept -> void {
         assert(env != nullptr);
         const ::std::int32_t jniError {
-                javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                javaVM_.get()->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                 JNI_VERSION_1_6)};
 
         assert(jniError == JNI_OK || jniError == JNI_EDETACHED);
         {
-            const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+            const ::std::int32_t result {javaVM_.get()->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
             assert(result == JNI_OK);
             static_cast<void>(result);
         }
@@ -1001,7 +998,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
                 const ::std::chrono::steady_clock::time_point start{
                         ::std::chrono::steady_clock::now()};
                 if (renderer_ != nullptr) {
-                    renderer_->renderFrame(dstPixels, nThreads, stride);
+                    renderer_.get()->renderFrame(dstPixels, nThreads, stride);
                 }
                 const ::std::chrono::steady_clock::time_point end{
                         ::std::chrono::steady_clock::now()};
@@ -1024,14 +1021,14 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
         env->DeleteGlobalRef(globalBitmap);
         {
-            const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+            const ::std::int32_t result {javaVM_.get()->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                               JNI_VERSION_1_6)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
             env->ExceptionClear();
         if (jniThread == JNI_EDETACHED) {
-            const ::std::int32_t result {javaVM_->DetachCurrentThread()};
+            const ::std::int32_t result {javaVM_.get()->DetachCurrentThread()};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
@@ -1039,7 +1036,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
     if (async) {
         thread_ = ::std::make_unique<::std::thread>(lambda);
-        thread_->detach();
+        thread_.get()->detach();
     } else {
         lambda();
     }
@@ -1121,7 +1118,7 @@ extern "C"
         //const ::std::lock_guard<::std::mutex> lock {mutex_};
         //Fix this race condition
         if (renderer_ != nullptr) {
-            sample = renderer_->getSample();
+            sample = renderer_.get()->getSample();
         }
     }
     env->ExceptionClear();

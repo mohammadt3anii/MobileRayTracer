@@ -3,7 +3,6 @@
 //
 
 #include "MobileRT/Material.hpp"
-#include <utility>
 
 using ::MobileRT::Material;
 

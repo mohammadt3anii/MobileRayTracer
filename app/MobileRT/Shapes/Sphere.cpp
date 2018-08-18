@@ -46,7 +46,7 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
     // if so, then we have an intersection
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
     const ::glm::vec3 &intersectionNormal{::glm::normalize(intersectionPoint - center_)};
-    const Intersection &res{intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
+    const Intersection res {intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
     return res;
 }
 
@@ -63,7 +63,7 @@ AABB Sphere::getAABB() const noexcept {
     const float radius {::std::sqrt(this->sq_radius_)};
     const ::glm::vec3 &min {this->center_ - radius};
     const ::glm::vec3 &max {this->center_ + radius};
-    const AABB &res{min, max};
+    const AABB res {min, max};
     return res;
 }
 

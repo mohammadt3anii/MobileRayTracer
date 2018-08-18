@@ -53,10 +53,11 @@ namespace MobileRT {
         ::std::ostringstream oss{""};
         static_cast<void> (::std::initializer_list<::std::int32_t> {(oss << args, 0)...});
         oss << '\n';
+        const ::std::string &line {oss.str()};
 #ifdef ANDROID
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", oss.str().c_str());
+        __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", line.c_str());
 #else
-        ::std::cout << oss.str();
+        ::std::cout << line;
 #endif
     }
 

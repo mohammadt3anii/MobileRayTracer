@@ -56,7 +56,7 @@ Intersection Triangle::intersect(const Intersection &intersection, const Ray &ra
                                                                    : intersectionNormal2};
 
     const ::glm::vec3 &intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
-    const Intersection &res{intersectionPoint, distanceToIntersection, intersectionNormal, this};
+    const Intersection res {intersectionPoint, distanceToIntersection, intersectionNormal, this};
     return res;
 }
 
@@ -72,7 +72,7 @@ AABB Triangle::getAABB() const noexcept {
     const ::glm::vec3 &pointC {pointA_ + AC_};
     const ::glm::vec3 &min {::glm::min(pointA_, ::glm::min(pointB, pointC))};
     const ::glm::vec3 &max {::glm::max(pointA_, ::glm::max(pointB, pointC))};
-    const AABB &res{min, max};
+    const AABB res {min, max};
     return res;
 }
 
@@ -152,7 +152,7 @@ bool Triangle::intersect(const AABB &box) const noexcept {
     const ::glm::vec3 &min {box.pointMin_};
     const ::glm::vec3 &max {box.pointMax_};
     const ::glm::vec3 &vec {max - min};
-    const Ray &ray {vec, min, 1};
+    const Ray ray {vec, min, 1};
     const bool intersectedAB {intersectRayAABB(this->pointA_, this->AB_)};
     const bool intersectedAC {intersectRayAABB(this->pointA_, this->AC_)};
     const ::glm::vec3 &pointB {pointA_ + AB_};

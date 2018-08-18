@@ -8,7 +8,6 @@
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Scene.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
-#include <jni.h>
 #include <memory>
 #include <string>
 
@@ -35,8 +34,7 @@ namespace MobileRT {
         bool isProcessed() const noexcept;
 
         virtual bool fillScene(Scene *scene,
-                               ::std::function<::std::unique_ptr<Sampler>()> lambda,
-                               JNIEnv *env) noexcept = 0;
+                               ::std::function<::std::unique_ptr<Sampler>()> lambda) noexcept = 0;
     };
 }//namespace MobileRT
 

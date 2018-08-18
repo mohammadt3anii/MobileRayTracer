@@ -14,6 +14,7 @@ execute_process( COMMAND git clone https://github.com/Microsoft/GSL
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-double-promotion -Wno-undef" CACHE STRING "CUSTOM" FORCE )
 add_subdirectory( glm )
+set( CMAKE_CXX_FLAGS "-fPIC" CACHE STRING "CUSTOM" FORCE )
 add_subdirectory( googletest )
 add_subdirectory( tinyobjloader )
 
