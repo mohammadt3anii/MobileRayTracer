@@ -23,3 +23,9 @@
 **/*.dat
 **/node_modules/**
 **/WavefrontOBJs/**
+**/*.aux
+**/*.lof
+**/*.log
+**/*.lot
+**/*.toc
+**/*.synctex.gz
