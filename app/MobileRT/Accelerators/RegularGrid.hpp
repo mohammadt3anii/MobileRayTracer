@@ -15,9 +15,9 @@ namespace MobileRT {
 
     class RegularGrid final {
     private:
-        ::std::vector<::std::vector<Primitive < Triangle> *>> triangles_ {};
-        ::std::vector<::std::vector<Primitive < Sphere> *>> spheres_ {};
-        ::std::vector<::std::vector<Primitive < Plane> *>> planes_ {};
+        ::std::vector<::std::vector<Primitive < Triangle> *>> triangles_;
+        ::std::vector<::std::vector<Primitive < Sphere> *>> spheres_;
+        ::std::vector<::std::vector<Primitive < Plane> *>> planes_;
         ::std::int32_t gridSize_{};
         ::std::int32_t gridShift_{};
         AABB m_Extends{};
@@ -39,7 +39,7 @@ namespace MobileRT {
         ::std::int32_t bitCounter(::std::uint32_t n) const noexcept;
 
     public:
-        explicit RegularGrid() noexcept {}
+        explicit RegularGrid() noexcept = default;
 
         explicit RegularGrid(AABB sceneBounds, Scene *scene, ::std::int32_t gridSize) noexcept;
 
