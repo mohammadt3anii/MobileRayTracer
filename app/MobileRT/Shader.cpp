@@ -149,7 +149,7 @@ void Shader::resetSampling() noexcept {
     const float cosTheta{::std::sqrt(
             r2)};// square root of distance from center - cos(theta) = cos(elevation angle)
 
-    ::glm::vec3 u{::std::abs(normal.x) > 0.1f ? ::glm::vec3 {0.0f, 1.0f, 0.0f} :
+    ::glm::vec3 u{::std::abs(normal[0]) > 0.1f ? ::glm::vec3 {0.0f, 1.0f, 0.0f} :
                   ::glm::vec3 {1.0f, 0.0f, 0.0f}};
     u = ::glm::normalize(::glm::cross(u, normal));// second axis
     const ::glm::vec3 &v{::glm::cross(normal, u)};// final axis

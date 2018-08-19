@@ -256,7 +256,7 @@ work_thread(
                 }
 
                 //breakfast_room
-                if (::std::strstr(objFileName, "breakfast_room")) {
+                if (::std::strstr(objFileName, "breakfast_room") != nullptr) {
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {0.0f, 0.0f, -5.0f},
                             ::glm::vec3 {0.0f, 0.0f, 0.0f},

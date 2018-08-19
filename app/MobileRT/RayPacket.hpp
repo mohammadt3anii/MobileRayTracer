@@ -22,8 +22,8 @@ namespace MobileRT {
 
     public:
         explicit RayPacket(
-            const ::std::array<::glm::vec3, RayPacketSize> directions,
-            const ::std::array<::glm::vec3, RayPacketSize> origins,
+            ::std::array<::glm::vec3, RayPacketSize> directions,
+            ::std::array<::glm::vec3, RayPacketSize> origins,
             ::std::int32_t depth, const void *primitive = nullptr) noexcept;
 
         RayPacket(const RayPacket &rayPacket) noexcept = default;

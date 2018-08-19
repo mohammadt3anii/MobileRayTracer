@@ -7,7 +7,11 @@
 #include <iostream>
 
 ::std::int32_t main(::std::int32_t argc, char **argv) noexcept {
-    assert(argc == 15);
+    if (argc != 15) {
+        LOG("Wrong number of arguments: ", argc, ", must be 15");
+        ::std::cin.ignore();
+        ::std::exit(1);
+    }
     const ::gsl::multi_span<char *> &args {argv, argc};
 
     const ::std::int32_t threads{static_cast<::std::int32_t> (strtol(args[1], nullptr, 0))};
@@ -46,7 +50,6 @@
     ssPrintStdOut >> printStdOut;
     ssAsync >> ::std::boolalpha >> async;
     ssShowImage >> ::std::boolalpha >> showImage;
-    assert(tAsync && tPrint && tShowImage);
 
     const ::std::uint32_t size {static_cast<::std::uint32_t>(width_) * static_cast<::std::uint32_t>(height_)};
     ::std::vector<::std::uint32_t> bitmap(size);

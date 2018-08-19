@@ -22,9 +22,9 @@ namespace MobileRT {
         ::std::int32_t lastRayID_{};
 
     public:
-        Primitive(const T &shape, const Material &material) noexcept;
+        explicit Primitive() noexcept = delete;
 
-        Primitive() noexcept = delete;
+        explicit Primitive(const T &shape, const Material &material) noexcept;
 
         Primitive(const Primitive &primitive) noexcept = default;
 

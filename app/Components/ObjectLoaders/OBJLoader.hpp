@@ -12,14 +12,14 @@
 namespace Components {
     class OBJLoader final : public ::MobileRT::ObjectLoader {
     private:
-        ::std::string objText_ {};
-        ::std::string materialsText_ {};
+        ::std::string objFilePath_ {};
+        ::std::string mtlFilePath_ {};
         ::tinyobj::attrib_t attrib_ {};
-        ::std::vector<::tinyobj::shape_t> shapes_{};
-        ::std::vector<::tinyobj::material_t> materials_{};
+        ::std::vector<::tinyobj::shape_t> shapes_ {};
+        ::std::vector<::tinyobj::material_t> materials_ {};
 
     public:
-        explicit OBJLoader(const ::std::string &obj, const ::std::string &materials) noexcept;
+        explicit OBJLoader(::std::string obj, ::std::string materials) noexcept;
 
         OBJLoader(const OBJLoader &objLoader) noexcept = delete;
 

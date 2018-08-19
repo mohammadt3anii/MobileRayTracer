@@ -2,29 +2,29 @@
 // Created by puscas on 30/07/17.
 //
 
+#include "Components/ObjectLoaders/OBJLoader.hpp"
+#include "Components/Lights/AreaLight.hpp"
 #include <cstring>
 #include <fstream>
 #include <tinyobjloader/tiny_obj_loader.h>
-#include "Components/ObjectLoaders/OBJLoader.hpp"
-#include "Components/Lights/AreaLight.hpp"
 
 using ::Components::AreaLight;
 using ::Components::OBJLoader;
 using ::MobileRT::Material;
 using ::MobileRT::Scene;
 
-OBJLoader::OBJLoader(const ::std::string &obj, const ::std::string &materials) noexcept :
-        objText_{obj},
-        materialsText_{materials} {
+OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
+        objFilePath_{::std::move(obj)},
+        mtlFilePath_{::std::move(materials)} {
 }
 
 void OBJLoader::process() noexcept {
-    ::std::ifstream objStream {objText_};
+    ::std::ifstream objStream {objFilePath_};
     objStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
-    ::std::ifstream matStream {materialsText_};
+    ::std::ifstream matStream {mtlFilePath_};
     matStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::tinyobj::MaterialStreamReader matStreamReader {matStream};
-    ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!materialsText_.empty()? &matStreamReader : nullptr};
+    ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!mtlFilePath_.empty()? &matStreamReader : nullptr};
     ::std::string err {};
     errno = 0;
 
@@ -173,16 +173,16 @@ bool OBJLoader::fillScene(Scene *const scene,
 }
 
 OBJLoader::~OBJLoader() noexcept {
-    this->objText_.clear();
-    this->materialsText_.clear();
+    this->objFilePath_.clear();
+    this->mtlFilePath_.clear();
     this->attrib_.normals.clear();
     this->attrib_.texcoords.clear();
     this->attrib_.vertices.clear();
     this->shapes_.clear();
     this->materials_.clear();
 
-    this->objText_.shrink_to_fit();
-    this->materialsText_.shrink_to_fit();
+    this->objFilePath_.shrink_to_fit();
+    this->mtlFilePath_.shrink_to_fit();
     this->attrib_.normals.shrink_to_fit();
     this->attrib_.texcoords.shrink_to_fit();
     this->attrib_.vertices.shrink_to_fit();

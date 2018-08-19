@@ -17,7 +17,7 @@ NoShadows::NoShadows(Scene scene, const ::std::uint32_t samplesLight,
 }
 
 bool NoShadows::shade(
-        ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &) noexcept {
+        ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &/*ray*/) noexcept {
 
     const ::glm::vec3 &Le {intersection.material_->Le_};
     //stop if it intersects a light source

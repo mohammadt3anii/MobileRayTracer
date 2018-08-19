@@ -47,7 +47,7 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    ::MobileRT::Camera *const camera{renderer_.get()->camera_.get()};
+    ::MobileRT::Camera *const camera{renderer_->camera_.get()};
     const unsigned long arraySize{20};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -110,8 +110,8 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_.get()->shader_->scene_.triangles_.empty() ?
-            renderer_.get()->shader_->scene_.triangles_ : renderer_.get()->shader_->bvhTriangles_.primitives_};
+            !renderer_->shader_->scene_.triangles_.empty() ?
+            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -158,8 +158,8 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_.get()->shader_->scene_.triangles_.empty() ?
-            renderer_.get()->shader_->scene_.triangles_ : renderer_.get()->shader_->bvhTriangles_.primitives_};
+            !renderer_->shader_->scene_.triangles_.empty() ?
+            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -233,7 +233,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 ) noexcept {
     //Fix this race condition
     if (renderer_ != nullptr) {
-        renderer_.get()->stopRender();
+        renderer_->stopRender();
     }
     working_ = State::STOPPED;
     LOG("WORKING = STOPPED");
@@ -883,12 +883,12 @@ extern "C"
             }
         }
                 const ::std::int32_t triangles{
-                static_cast<int32_t> (shader_.get()->scene_.triangles_.size())};
+                static_cast<int32_t> (shader_->scene_.triangles_.size())};
                 const ::std::int32_t spheres{
-                static_cast<int32_t> (shader_.get()->scene_.spheres_.size())};
+                static_cast<int32_t> (shader_->scene_.spheres_.size())};
                 const ::std::int32_t planes{
-                        static_cast<::std::int32_t> (shader_.get()->scene_.planes_.size())};
-                numberOfLights_ = static_cast<::std::int32_t> (shader_.get()->scene_.lights_.size());
+                        static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
+                numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
                 const ::std::int32_t nPrimitives{triangles + spheres + planes};
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
@@ -924,7 +924,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
 ) noexcept {
     //Fix this race condition
     if (renderer_ != nullptr) {
-        renderer_.get()->stopRender();
+        renderer_->stopRender();
     }
     if (thread_ != nullptr) {
         {
@@ -962,12 +962,12 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         [=]() noexcept -> void {
         assert(env != nullptr);
         const ::std::int32_t jniError {
-                javaVM_.get()->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                 JNI_VERSION_1_6)};
 
         assert(jniError == JNI_OK || jniError == JNI_EDETACHED);
         {
-            const ::std::int32_t result {javaVM_.get()->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+            const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
             assert(result == JNI_OK);
             static_cast<void>(result);
         }
@@ -998,7 +998,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
                 const ::std::chrono::steady_clock::time_point start{
                         ::std::chrono::steady_clock::now()};
                 if (renderer_ != nullptr) {
-                    renderer_.get()->renderFrame(dstPixels, nThreads, stride);
+                    renderer_->renderFrame(dstPixels, nThreads, stride);
                 }
                 const ::std::chrono::steady_clock::time_point end{
                         ::std::chrono::steady_clock::now()};
@@ -1021,14 +1021,14 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
         env->DeleteGlobalRef(globalBitmap);
         {
-            const ::std::int32_t result {javaVM_.get()->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+            const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
                                               JNI_VERSION_1_6)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
             env->ExceptionClear();
         if (jniThread == JNI_EDETACHED) {
-            const ::std::int32_t result {javaVM_.get()->DetachCurrentThread()};
+            const ::std::int32_t result {javaVM_->DetachCurrentThread()};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
@@ -1036,7 +1036,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
     if (async) {
         thread_ = ::std::make_unique<::std::thread>(lambda);
-        thread_.get()->detach();
+        thread_->detach();
     } else {
         lambda();
     }
@@ -1118,7 +1118,7 @@ extern "C"
         //const ::std::lock_guard<::std::mutex> lock {mutex_};
         //Fix this race condition
         if (renderer_ != nullptr) {
-            sample = renderer_.get()->getSample();
+            sample = renderer_->getSample();
         }
     }
     env->ExceptionClear();
