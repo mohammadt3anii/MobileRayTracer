@@ -13,13 +13,13 @@ RegularGrid::RegularGrid(AABB sceneBounds, Scene *const scene,
                          const ::std::int32_t gridSize) noexcept :
         triangles_{
                 ::std::vector<::std::vector<::MobileRT::Primitive<Triangle> *>> {
-                        static_cast<size_t> (gridSize * gridSize * gridSize)}},
+                        static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         spheres_{
                 ::std::vector<::std::vector<::MobileRT::Primitive<Sphere> *>> {
-                        static_cast<size_t> (gridSize * gridSize * gridSize)}},
+                        static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         planes_{
                 ::std::vector<::std::vector<::MobileRT::Primitive<Plane> *>> {
-                        static_cast<size_t> (gridSize * gridSize * gridSize)}},
+                        static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
         gridShift_{bitCounter(static_cast<::std::uint32_t>(gridSize)) - 1},
         m_Extends(sceneBounds),//world boundaries
@@ -115,11 +115,11 @@ void RegularGrid::addPrimitives
             for (::std::int32_t y{y1}; y <= y2; ++y) {
                 for (::std::int32_t z{z1}; z <= z2; ++z) {
                     // construct aabb for current cell
-                    const size_t idx{
-                            static_cast<size_t>(x) +
-                            static_cast<size_t>(y) * static_cast<size_t>(gridSize_) +
-                            static_cast<size_t>(z) * static_cast<size_t>(gridSize_) *
-                            static_cast<size_t>(gridSize_)};
+                    const ::std::size_t idx {
+                            static_cast<::std::size_t>(x) +
+                            static_cast<::std::size_t>(y) * static_cast<::std::size_t>(gridSize_) +
+                            static_cast<::std::size_t>(z) * static_cast<::std::size_t>(gridSize_) *
+                            static_cast<::std::size_t>(gridSize_)};
                     const ::glm::vec3 &pos {m_Extends.pointMin_[0] + x * dx,
                                       m_Extends.pointMin_[1] + y * dy,
                                       m_Extends.pointMin_[2] + z * dz};
@@ -237,10 +237,10 @@ Intersection RegularGrid::intersect(
     // start stepping
     // trace primary ray
     while (true) {
-        const size_t index{
-                static_cast<size_t>(X) +
-                (static_cast<size_t>(Y) << gridShift_) +
-                (static_cast<size_t>(Z) << (gridShift_ * 2))};
+        const ::std::size_t index{
+                static_cast<::std::size_t>(X) +
+                (static_cast<::std::size_t>(Y) << gridShift_) +
+                (static_cast<::std::size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix.at(index)};
         for (auto *const primitive : primitivesList) {
             const float lastDist {intersection.length_};
@@ -286,9 +286,9 @@ Intersection RegularGrid::intersect(
     }
     testloop:
     while (true) {
-        const size_t index{static_cast<size_t>(X) +
-                           (static_cast<size_t>(Y) << gridShift_) +
-                           (static_cast<size_t>(Z) << (gridShift_ * 2))};
+        const ::std::size_t index{static_cast<::std::size_t>(X) +
+                           (static_cast<::std::size_t>(Y) << gridShift_) +
+                           (static_cast<::std::size_t>(Z) << (gridShift_ * 2))};
         ::std::vector<T *> primitivesList{primitivesMatrix.at(index)};
         for (auto *const primitive : primitivesList) {
             intersection = primitive->intersect(intersection, ray);
