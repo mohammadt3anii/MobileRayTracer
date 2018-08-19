@@ -20,6 +20,8 @@ namespace Components {
             const ::MobileRT::Ray &ray) noexcept final;
 
     public:
+        explicit DepthMap () noexcept = delete;
+
         explicit DepthMap(
             ::MobileRT::Scene scene,
             const ::glm::vec3 &maxPoint,

@@ -17,6 +17,8 @@ namespace Components {
             const ::MobileRT::Ray &ray) noexcept final;
 
     public:
+        explicit Whitted () noexcept = delete;
+
         explicit Whitted(
             ::MobileRT::Scene scene,
             ::std::uint32_t samplesLight,

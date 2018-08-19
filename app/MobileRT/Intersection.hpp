@@ -19,6 +19,8 @@ namespace MobileRT {
         const void *primitive_{nullptr};
 
     public:
+        explicit Intersection () noexcept = delete;
+
         explicit Intersection(float dist, const void *primitive) noexcept;
 
         explicit Intersection(

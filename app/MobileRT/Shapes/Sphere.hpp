@@ -17,6 +17,8 @@ namespace MobileRT {
         float sq_radius_ {};
 
     public:
+        explicit Sphere () noexcept = delete;
+
         explicit Sphere(const ::glm::vec3 &center, float radius) noexcept;
 
         Sphere(const Sphere &sphere) noexcept = default;

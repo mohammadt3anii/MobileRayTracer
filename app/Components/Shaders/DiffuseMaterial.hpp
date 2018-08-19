@@ -17,6 +17,8 @@ namespace Components {
             const ::MobileRT::Ray &ray) noexcept final;
 
     public:
+        explicit DiffuseMaterial () noexcept = delete;
+
         explicit DiffuseMaterial(::MobileRT::Scene scene, Accelerator accelerator) noexcept;
 
         DiffuseMaterial(const DiffuseMaterial &diffuseMaterial) noexcept = delete;

@@ -17,6 +17,8 @@ namespace Components {
             const ::MobileRT::Ray &ray) noexcept final;
 
     public:
+        explicit NoShadows () noexcept = delete;
+
         explicit NoShadows(
             ::MobileRT::Scene scene,
             ::std::uint32_t samplesLight,

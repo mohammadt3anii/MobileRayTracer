@@ -18,6 +18,8 @@ namespace MobileRT {
         ::glm::vec3 pointA_{};
 
     public:
+        explicit Triangle () noexcept = delete;
+
         explicit Triangle(
                 const ::glm::vec3 &pointA, const ::glm::vec3 &pointB,
                 const ::glm::vec3 &pointC) noexcept;

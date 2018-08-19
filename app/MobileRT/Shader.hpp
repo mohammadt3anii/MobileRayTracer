@@ -45,6 +45,8 @@ namespace MobileRT {
         void initializeAccelerators(Camera *camera) noexcept;
 
     public:
+        explicit Shader () noexcept = delete;
+
         explicit Shader(
             Scene scene,
             ::std::uint32_t samplesLight,

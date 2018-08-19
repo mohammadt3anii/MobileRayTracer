@@ -14,6 +14,8 @@ namespace Components {
         ::glm::vec3 position_{};
 
     public:
+        explicit PointLight () noexcept = delete;
+
         explicit PointLight(
             const ::MobileRT::Material &radiance, const ::glm::vec3 &position) noexcept;
 

@@ -15,6 +15,8 @@ namespace MobileRT {
         const Material radiance_{};
 
     public:
+        explicit Light () noexcept = delete;
+
         explicit Light(const Material &radiance) noexcept;
 
         Light(const Light &light) noexcept = delete;

@@ -30,6 +30,8 @@ namespace MobileRT {
         ::glm::vec3 up_{};
 
     public:
+        explicit Camera () noexcept = delete;
+
         explicit Camera(const ::glm::vec3 &position,
                         const ::glm::vec3 &lookAt, const ::glm::vec3 &up) noexcept;
 

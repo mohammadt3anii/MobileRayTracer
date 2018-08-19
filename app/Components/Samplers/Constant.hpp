@@ -13,6 +13,8 @@ namespace Components {
         const float value_{};
 
     public:
+        explicit Constant () noexcept = delete;
+
         explicit Constant(float value) noexcept;
 
         Constant(const Constant &constant) noexcept = delete;

@@ -19,6 +19,8 @@ namespace Components {
         ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight_{};
 
     public:
+        explicit AreaLight () noexcept = delete;
+
         explicit AreaLight(
             const ::MobileRT::Material &radiance,
             ::std::unique_ptr<::MobileRT::Sampler> samplerPointLight,

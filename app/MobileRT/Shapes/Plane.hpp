@@ -20,6 +20,8 @@ namespace MobileRT {
         ::glm::vec3 getRightVector() const noexcept;
 
     public:
+        explicit Plane () noexcept = delete;
+
         explicit Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept;
 
         Plane(const Plane &plane) noexcept = default;

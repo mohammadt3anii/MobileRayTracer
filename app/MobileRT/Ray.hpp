@@ -18,6 +18,8 @@ namespace MobileRT {
         const void *const primitive_ {};
 
     public:
+        explicit Ray () noexcept = delete;
+
         explicit Ray(const ::glm::vec3 &dir, const ::glm::vec3 &origin,
                      ::std::int32_t depth, const void *primitive = nullptr) noexcept;
 
