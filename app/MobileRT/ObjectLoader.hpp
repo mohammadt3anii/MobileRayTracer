@@ -8,6 +8,7 @@
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Scene.hpp"
 #include "MobileRT/Shapes/Triangle.hpp"
+#include <functional>
 #include <memory>
 #include <string>
 
