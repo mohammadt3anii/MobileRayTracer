@@ -29,4 +29,7 @@
 **/*.log
 **/*.lot
 **/*.toc
+**/*.bbl
+**/*.blg
 **/*.synctex.gz
+**/*.json
