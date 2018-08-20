@@ -128,7 +128,7 @@ function clangtidy {
   ${COMPONENTS_SRCS}/Components/*/*.*pp \
 	${GTK_INTERFACE_SRCS}/*.*pp \
   ${SCENES_SRCS}/*.*pp \
-	-- -std=c++14 -ferror-limit=1 \
+	-- -std=c++14 -stdlib=libc++ -ferror-limit=1 \
   -I ${MOBILERT_SRCS} \
   -I ${COMPONENTS_SRCS} \
   -I ${GTK_INTERFACE_SRCS} \
