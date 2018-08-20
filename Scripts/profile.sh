@@ -4,7 +4,7 @@ MOBILERT_DIR="/mnt/D/Android_Studio_Projects/MobileRayTracer"
 BIN_DIR="${MOBILERT_DIR}/build_native/bin"
 SCRIPTS_DIR="${MOBILERT_DIR}/Scripts"
 PLOT_SCRIPTS_DIR="${SCRIPTS_DIR}/Plot_Scripts"
-OBJS_DIR="${MOBILERT_DIR}/app/src/main/assets/WavefrontOBJs"
+OBJS_DIR="${MOBILERT_DIR}/WavefrontOBJs"
 
 MOBILERT_SRCS="${MOBILERT_DIR}/app"
 COMPONENTS_SRCS="${MOBILERT_DIR}/app"
