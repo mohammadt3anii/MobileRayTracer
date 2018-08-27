@@ -6,6 +6,7 @@ android {
             storeFile file("../MobileRayTracer.jks").absoluteFile
             keyPassword "123456"
             storePassword "123456"
+            v2SigningEnabled true
         }
     }
     compileSdkVersion 27
