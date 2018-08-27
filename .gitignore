@@ -33,3 +33,5 @@
 **/*.blg
 **/*.synctex.gz
 **/*.json
+**/*.upa
+**/*.upb

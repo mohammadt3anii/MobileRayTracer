@@ -18,4 +18,3 @@ rm -rf *.bbl
 rm -rf *.blg
 rm -rf *.upa
 rm -rf *.upb
-rm -rf *.pdf
