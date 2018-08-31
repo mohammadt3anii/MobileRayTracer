@@ -8,10 +8,12 @@ Programming is like building something with primitive blocks and it can be a ver
 That’s why in the programming world there is a whole panoply of free and commercial libraries with APIs that provide a huge quantity of functions for the programmer to use.
 
 \par
-In computer graphics, there are many libraries that provide functionalities to render images based in different techniques.
-Ray tracing can be used for anything to calculate and simulate the path of particles and waves.
+In computer graphics, there are many 3D graphics libraries that provide functionalities to render images based in different techniques.
+Two of the most used render techniques are rasterization and ray tracing.
+Ray tracing can be used to calculate and simulate the path of particles and waves.
 It can simulate the propagation of sound, the path of light and even allows to simulate technologies developed by men like the Wi-fi networks.
 It can render an image by tracing the path of light through pixels in an image plane and simulating the effects of its interactions with virtual objects.
+It can render much more realistic shadows, reflections and refractions and in an easier way than rasterization.
 This technique is capable of producing a very high degree of visual realism but at a great computational cost.
 
 \par
@@ -47,7 +49,7 @@ And it is likely that these systems already have enough processing power to rend
 It is also important to note that there is not much documentation about the advantages and limitations of executing different rendering algorithms in these devices.
 
 \par
-Last but not least, it is important to mention that of all the operating systems available for mobile devices, the one chosen for the ray tracing library was Android.
+Last but not least, it is important to mention that of all the operating systems available for mobile devices, the one chosen for this ray tracing library was Android.
 Because nowadays it is the operating system with the most market share.
 More than 85\% of the mobile devices use Android, and only 14\% of these devices use iOS which is the second most used operating system in these devices.
 And, besides that, it allows to be executed on a variety of different devices: smart phones, tablet computers, smart TVs, smart watches and even laptop / desktop computers.
@@ -67,7 +69,7 @@ The main goal of this dissertation is to assess and demonstrate the advantages o
 
 \par
 It is also intended to promote and facilitate the development of applications for mobile systems that use ray tracing techniques, with special emphasis on rendering applications.
-To do this, will be developed a library that supports the fundamental operations of a ray tracing engine.
+To do this, it will be developed a library that supports the fundamental operations of a ray tracing engine.
 This library will allow the agile development of diverse applications, by using components that invoke the functionality of the library itself.
 
 \par
@@ -79,7 +81,7 @@ Finally, it is important to do a demonstration of the rendering application with
 \section{Document Structure}
 
 \par
-This dissertation is organized in five chapters: Introduction, State of the Art, Software Architecture, Demonstration: Global Illumination and Conclusion \& Future work.
+This dissertation is organized in six chapters: Introduction, State of the Art, Software Architecture, Android challenges, Demonstration: Global Illumination and Conclusion \& Future work.
 
 \par
 The first chapter describes the context and motivation behind this work, as well as its goals.
@@ -87,16 +89,22 @@ Its main purpose is to identify the problem at hand and set up goals that should
 
 \par
 The second chapter introduces the main concepts of ray tracing and compares different implementations of ray tracers already available in the world wide web.
-The reason behind this comparison is to show how many ray tracers are already available to mobile devices and highlight the differences between the features they have.
+The reason behind this comparison is to show how many ray tracers are already available to mobile devices and highlight the differences between the features they provide.
 It also provides some information about the processors of today that helps realize their ability to execute computationally demanding algorithms like ray tracing.
 
 \par
-The third chapter explains the proposed approach and explains each module developed in the library and in the rendering components.
-This chapter ends with an explanation of some Android specifics, such as the user interface by characterizing its work flow and mentioning some of the challenges overcame during the development of the application.
+The third chapter explains the proposed approach and explains each module developed in the library, as well as each of the rendering components.
 
 \par
-The fourth chapter summarizes the key results obtained by executing different algorithms with different number of threads and different acceleration structures.
-And it will also contain a small comparison between the developed application and the Android CPU Raytracer (\cite{Android_CPU_Raytracer}).
+The fourth chapter starts with an explanation of some Android specifics, such as the user interface by characterizing its work flow and mentioning some of the benefits and challenges overcame during the development of the application.
+It also describes some programming decisions made during the development of the ray tracing library.
 
 \par
-Finally, the fifth chapter ends this dissertation with the conclusions that can be withdrawn from this work and proposes some future work.
+The fifth chapter summarizes the key results obtained by executing different algorithms with different number of threads and different acceleration structures.
+And concludes with a small comparison of the features provided in this library and an Android ray tracing engine developed by third parties called Android CPU Raytracer (\cite{Android_CPU_Raytracer}).
+
+\par
+Finally, the last chapter ends this dissertation with the conclusions that can be withdrawn from this work and proposes some future work.
+
+\par
+Last but not least, the Appendix contains this library's API and an example code of how to load a scene from a wavefront obj file.

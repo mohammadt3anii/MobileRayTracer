@@ -40,7 +40,7 @@ Nowadays, the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB w
 \end{figure}
 
 \par
-The multilevel pipeline is another feature inside a processor which allows to reduce the processor's own latency by allowing a form of parallelism called instruction-level parallelism within a single processor.
+The multilevel pipeline is a feature inside a processor which allows to reduce the processor's own latency by allowing a form of parallelism called instruction-level parallelism within a single processor.
 Basically, one instruction is divided in some stages and it allows the possibility to execute different stages of different instructions simultaneously.
 In the early days, the Classic RISC pipeline were typically divided in five stages:
 \begin{itemize}  
@@ -48,7 +48,7 @@ In the early days, the Classic RISC pipeline were typically divided in five stag
 	\item Decoding the instruction
 	\item Executing the instruction where the arguments can be fetched from registers (1 cycle latency) or from memory (2 cycle latency)
 	\item Memory access where it ensured that writing in memory was always performed in the same stage and allowed to use that value in another instruction before it was written in memory
-	\item Writing back the value in the register
+	\item Writing back the result value in the register file
 \end{itemize}
 Nowadays, the current microprocessors have a pipeline with 8-14 stages and can be more complex than the Classic RISC, but the operating principle is the same.
 This allows faster CPU throughput, which means the number of instructions that can be executed in a unit of time is greater, than it would otherwise be possible at a given clock rate.
@@ -62,7 +62,7 @@ This allows faster CPU throughput, which means the number of instructions that c
 
 \par
 The hardware prefetching is, as the name implies, a feature in the processor that makes the processor fetch the data and the instructions before it really needs to execute.
-This allows to reduce the time that the processor waits for the data in the main memory.
+This allows to reduce the time which the processor spends waiting for the main memory data.
 
 \par
 Finally, SIMD instruction set is a set of special instructions that allows the processor to read or write bigger sizes of data.
@@ -87,7 +87,7 @@ Ray tracing is an algorithm that can have a panoply of features or optimizations
 It also, like any application, can have different types of software licenses and be executed in different platforms.
 
 \par
-For this work, the most important features in a ray tracer are: the type of software license, the platform where can be executed, interactivity, progressive and the type of rendering components.
+For this work, the most important features in a ray tracer are: the type of software license, the platform where can be executed, interactivity, if it is progressive and the type of rendering components.
 
 \subsection{Type of software license}
 
@@ -102,8 +102,8 @@ The software license is very important in this work because it lets the user kno
 
 \par
 An application can only be executed in the platforms that the developers compiled the code for.
-So, a ray tracer that can be executed in a desktop may also or may not be executed on another platform, like a mobile device.
-This information is very important in this work because it inform us whether a ray tracer can be executed in a mobile device with the typical Operating System like Android, iOS or Windows 10 Mobile.
+So, a ray tracer that can be executed in a desktop may also or may not be executed on another platform, like in a mobile device.
+This information is very important for this work because it inform us whether a ray tracer can be executed in a mobile device with the typical Operating System like Android, iOS or Windows 10 Mobile.
 
 \subsection{Interactivity}
 
@@ -122,7 +122,7 @@ This means that an image is rendered quickly with some aliasing or noise and it 
 
 \par
 A ray tracer can be developed with the different rendering components programmed separately.
-Some examples of rendering components are: Integrators, Cameras, Scenes, Samplers, Shapes, Lights and Accelerator Structures.
+Some examples of rendering components are: Integrators, Cameras, Scenes, Samplers, Shapes, Lights and Acceleration Structures.
 In some ray tracers, these rendering components can even be programmable by the user.
 This is very important because it allows the user to develop his own renderer based in ray tracing without having to develop every feature in the ray tracer.
 
@@ -134,7 +134,7 @@ The possibility of rendering an image with ray tracing was demonstrated in 1980 
 There is a wide range of different ray tracers available today for the programmer to use, yet the majority can only be used with the traditional personal computer hardware (desktop or laptop).
 
 \par
-The table \ref{comparison state of the art} shows some applications or frameworks that use ray tracing available today and compares them according to their type of license, platform compatibility, interactivity, progressive and whether they allow development of your own rendering components like the integrator and sampler.
+The table \ref{comparison state of the art} shows some applications or frameworks that use ray tracing available today and compares them according to their type of license, platform compatibility, interactivity, if they are progressive and whether they allow development of your own rendering components like the integrator and sampler.
 Note that some of these ray tracers provide only the engine with the basic ray tracing functions, such as creating rays and intersecting them with geometric primitives, so the rendering components are only programmable if the application that uses the engine supports it.
 During the research of the available ray tracers, others than the ones presented in the table were found, but they were excluded because the documentation was very poor without explaining the basic functionalities provided or because there was no documentation at all.
 
@@ -177,11 +177,11 @@ Android CPU Raytracer (\cite{Android_CPU_Raytracer})			& O 	& CPU 				& Y (Andro
 As the table \ref{comparison state of the art} shows, there is a lack of generic ray tracing libraries for the mobile devices.
 Although there are some closed-source ray tracing demo applications, only one ray tracer already available has some sort of documentation and is compatible with mobile devices, in this case with Android.
 This ray tracer is open source, uses only the CPU of the device and has a good performance.
-It even allows interactions with the objects during the render process.
+It only renders spheres and even allows interactions with them during the render process.
 But, it doesn’t support progressive rendering and also does not allow the programmers to use their own rendering components.
 
 \par
-This dissertation aims to fix this lack of libraries, by providing one that contains ray tracing basic functionalities and the ability to let the programmer be able to develop their own rendering components like the sampler, integrator, camera and shapes of virtual objects.
+This dissertation aims to fix this lack of libraries, by providing one that contains ray tracing basic functionalities and the ability to let the programmer be able to develop his own rendering components like the sampler, integrator, camera, types of lights and even develop his own object loader.
 It also studies the drawbacks that these mobile devices may have comparing with the average multi-core personal computer hardware.
 And finally, a small comparison was made with the Android CPU Raytracer (\cite{Android_CPU_Raytracer}) in order to illustrate the advantages and disadvantages of both.
 This comparison is important because it enriches all the work done, as it demonstrates if the performance of the provided features are relatively efficient.
