@@ -25,9 +25,9 @@ namespace MobileRT {
         ::std::uint32_t numberPrimitives_ {0};
     };
 
-    template<typename T>
+    template<typename T, typename Iterator>
     ::std::uint32_t getSplitIndex_SAH (
-        const ::std::vector<AABB> &boxes) noexcept;
+        Iterator itBegin, Iterator itEnd) noexcept;
 
     template<typename T>
     class BVH final {
@@ -101,51 +101,64 @@ BVH<T>::~BVH() noexcept {
         ::std::array<::std::uint32_t, 512> stackBegin {};
         ::std::array<::std::uint32_t, 512> stackEnd {};
 
-        ::std::uint32_t stackPtrId {0};
-        ::std::uint32_t stackPtrBegin {0};
-        ::std::uint32_t stackPtrEnd {0};
-
         ::std::uint32_t maxId {0};
 
-        stackId.at(stackPtrId++) = 0;
-        stackBegin.at(stackPtrBegin++) = 0;
-        stackEnd.at(stackPtrEnd++) = 0;
+        auto itStackId {stackId.begin()};
+        *itStackId = 0;
+        ::std::advance(itStackId, 1);
+
+        auto itStackBegin {stackBegin.begin()};
+        *itStackBegin = 0;
+        ::std::advance(itStackBegin, 1);
+
+        auto itStackEnd {stackEnd.begin()};
+        *itStackEnd = 0;
+        ::std::advance(itStackEnd, 1);
+
+        const auto itBoxes {boxes_.begin()};
+        const auto itPrimitives {primitives_.begin()};
         do {
-            boxes_.at(id).box_ = primitives_.at(begin).getAABB();
-            ::std::vector<AABB> boxes {boxes_.at(id).box_};
+            (itBoxes + static_cast<::std::int32_t> (id))->box_ = (itPrimitives + static_cast<::std::int32_t> (begin))->getAABB();
+            ::std::vector<AABB> boxes {(itBoxes + static_cast<::std::int32_t> (id))->box_};
             const ::std::uint32_t boxPrimitivesSize {end - begin};
             boxes.reserve(boxPrimitivesSize);
             for (::std::uint32_t i {begin + 1}; i < end; ++i) {
-                const AABB &new_box {primitives_.at(i).getAABB()};
-                boxes_.at(id).box_ = surroundingBox(new_box, boxes_.at(id).box_);
+                const AABB &new_box {(itPrimitives + static_cast<::std::int32_t> (i))->getAABB()};
+                (itBoxes + static_cast<::std::int32_t> (id))->box_ = surroundingBox(new_box, (itBoxes + static_cast<::std::int32_t> (id))->box_);
                 boxes.emplace_back(new_box);
             }
 
             if (boxPrimitivesSize <= maxLeafSize) {
-                boxes_.at(id).indexOffset_ = begin;
-                boxes_.at(id).numberPrimitives_ = boxPrimitivesSize;
+                (itBoxes + static_cast<::std::int32_t> (id))->indexOffset_ = begin;
+                (itBoxes + static_cast<::std::int32_t> (id))->numberPrimitives_ = boxPrimitivesSize;
 
-                id = stackId.at(--stackPtrId); // pop
-                begin = stackBegin.at(--stackPtrBegin); // pop
-                end = stackEnd.at(--stackPtrEnd); // pop
+                ::std::advance(itStackId, -1); // pop
+                id = *itStackId;
+                ::std::advance(itStackBegin, -1); // pop
+                begin = *itStackBegin;
+                ::std::advance(itStackEnd, -1); // pop
+                end = *itStackEnd;
             } else {
                 const ::std::uint32_t left {maxId + 1};
-                boxes_.at(id).left_ = left;
+                (itBoxes + static_cast<::std::int32_t> (id))->left_ = left;
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
                 const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
                     //(boxPrimitivesSize + 1) / 2
-                    static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes))
+                    static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes.begin(), boxes.end()))
                 };
 
-                stackId.at(stackPtrId++) = left + 1; // push
-                stackBegin.at(stackPtrBegin++) = begin + splitIndex; // push
-                stackEnd.at(stackPtrEnd++) = end; // push
+                *itStackId = left + 1;
+                ::std::advance(itStackId, 1); // push
+                *itStackBegin = begin + splitIndex;
+                ::std::advance(itStackBegin, 1); // push
+                *itStackEnd = end;
+                ::std::advance(itStackEnd, 1); // push
 
                 id = left;
                 end = begin + splitIndex;
             }
-        } while(stackPtrId > 0);
+        } while(itStackId > stackId.begin());
         LOG("maxNodeId = ", maxId);
         boxes_.erase (boxes_.begin() + static_cast<::std::int32_t>(maxId) + 1, boxes_.end());
         boxes_.shrink_to_fit();
@@ -161,42 +174,51 @@ BVH<T>::~BVH() noexcept {
         }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
-        ::std::uint32_t stackPtrId {0};
-        stackId.at(stackPtrId++) = 0;
+
+        auto itStackId {stackId.begin()};
+        *itStackId = 0;
+        ::std::advance(itStackId, 1);
+
+        const auto itBoxes {boxes_.begin()};
+        const auto itPrimitives {primitives_.begin()};
         do {
-            const BVHNode &node {boxes_.at(id)};
+            const BVHNode &node {*(itBoxes + static_cast<::std::int32_t> (id))};
             if (intersect(node.box_, ray)) {
 
                 const ::std::uint32_t numberPrimitives {node.numberPrimitives_};
                 if (numberPrimitives > 0) {
                     for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
-                        auto& primitive {primitives_.at(node.indexOffset_ + i)};
+                        auto& primitive {*(itPrimitives + static_cast<::std::int32_t> (node.indexOffset_ + i))};
                         intersection = primitive.intersect(intersection, ray);
                     }
-                    id = stackId.at(--stackPtrId); // pop
+                    ::std::advance(itStackId, -1); // pop
+                    id = *itStackId;
                 } else {
                     const ::std::uint32_t left {node.left_};
-                    const BVHNode &childL {boxes_.at(left)};
-                    const BVHNode &childR {boxes_.at(left + 1)};
+                    const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
+                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
 
                     const bool traverseL {intersect(childL.box_, ray)};
                     const bool traverseR {intersect(childR.box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        id = stackId.at(--stackPtrId); // pop
+                        ::std::advance(itStackId, -1); // pop
+                        id = *itStackId;
                     } else {
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stackId.at(stackPtrId++) = left + 1; // push
+                            *itStackId = left + 1;
+                            ::std::advance(itStackId, 1); // push
                         }
                     }
                 }
 
             } else {
-                id = stackId.at(--stackPtrId); // pop
+                ::std::advance(itStackId, -1); // pop
+                id = *itStackId;
             }
 
-        } while (stackPtrId > 0);
+        } while (itStackId > stackId.begin());
         return intersection;
     }
 
@@ -209,77 +231,89 @@ BVH<T>::~BVH() noexcept {
         }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
-        ::std::uint32_t stackPtrId {0};
-        stackId.at(stackPtrId++) = 0;
+
+        auto itStackId {stackId.begin()};
+        *itStackId = 0;
+        ::std::advance(itStackId, 1);
+
+        const auto itBoxes {boxes_.begin()};
+        const auto itPrimitives {primitives_.begin()};
         do {
-            const BVHNode &node {boxes_.at(id)};
+            const BVHNode &node {*(itBoxes + static_cast<::std::int32_t> (id))};
             if (intersect(node.box_, ray)) {
 
                 const ::std::uint32_t numberPrimitives {node.numberPrimitives_};
                 if (numberPrimitives > 0) {
                     for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
-                        auto& primitive {primitives_.at(node.indexOffset_ + i)};
+                        auto& primitive {*(itPrimitives + static_cast<::std::int32_t> (node.indexOffset_ + i))};
                         const float lastDist {intersection.length_};
                         intersection = primitive.intersect(intersection, ray);
                         if (intersection.length_ < lastDist) {
                             return intersection;
                         }
                     }
-                    id = stackId.at(--stackPtrId); // pop
+                    ::std::advance(itStackId, -1); // pop
+                    id = *itStackId;
                 } else {
                     const ::std::uint32_t left {node.left_};
-                    const BVHNode &childL {boxes_.at(left)};
-                    const BVHNode &childR {boxes_.at(left + 1)};
+                    const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
+                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
 
                     const bool traverseL {intersect(childL.box_, ray)};
                     const bool traverseR {intersect(childR.box_, ray)};
 
                     if (!traverseL && !traverseR) {
-                        id = stackId.at(--stackPtrId); // pop
+                        ::std::advance(itStackId, -1); // pop
+                        id = *itStackId;
                     } else {
                         id = (traverseL) ? left : left + 1;
                         if (traverseL && traverseR) {
-                            stackId.at(stackPtrId++) = left + 1; // push
+                            *itStackId = left + 1;
+                            ::std::advance(itStackId, 1); // push
                         }
                     }
                 }
 
             } else {
-                id = stackId.at(--stackPtrId); // pop
+                ::std::advance(itStackId, -1); // pop
+                id = *itStackId;
             }
 
-        } while (stackPtrId > 0);
+        } while (itStackId > stackId.begin());
         return intersection;
     }
 
-    template<typename T>
+    template<typename T, typename Iterator>
     ::std::uint32_t getSplitIndex_SAH (
-        const ::std::vector<AABB> &boxes) noexcept {
-            const ::std::uint32_t N {static_cast<::std::uint32_t>(boxes.size())};
+        const Iterator itBegin, const Iterator itEnd) noexcept {
+            const ::std::uint32_t N {static_cast<::std::uint32_t>(itEnd - itBegin)};
+            const auto itBoxes {itBegin};
 
             ::std::vector<float> left_area (N - maxLeafSize);
-            AABB left_box {boxes.at(0)};
-            left_area.at(0) = left_box.getSurfaceArea();
+            AABB left_box {*itBoxes};
+            const auto itLeftArea {left_area.begin()};
+            *itLeftArea = left_box.getSurfaceArea();
             for (::std::uint32_t i {1}; i < N - maxLeafSize; ++i) {
-                left_box = surroundingBox(left_box, boxes.at(i));
-                left_area.at(i) = left_box.getSurfaceArea();
+                left_box = surroundingBox(left_box, *(itBoxes + static_cast<::std::int32_t> (i)));
+                *(itLeftArea + static_cast<::std::int32_t> (i)) = left_box.getSurfaceArea();
             }
 
             ::std::vector<float> right_area (N - maxLeafSize);
-            AABB right_box {boxes.at(N - 1)};
-            right_area.at(N - maxLeafSize - 1) = right_box.getSurfaceArea();
+            AABB right_box {*(itBoxes + static_cast<::std::int32_t> (N) - 1)};
+            const auto itRightArea {right_area.begin()};
+            *(itRightArea + static_cast<::std::int32_t> (N - maxLeafSize - 1)) = right_box.getSurfaceArea();
             for (::std::uint32_t i {N - 2}; i > maxLeafSize; --i) {
-                right_box = surroundingBox(right_box, boxes.at(i));
-                right_area.at(i - maxLeafSize) = right_box.getSurfaceArea();
+                right_box = surroundingBox(right_box, *(itBoxes + static_cast<::std::int32_t> (i)));
+                *(itRightArea + static_cast<::std::int32_t> (i - maxLeafSize)) = right_box.getSurfaceArea();
             }
 
             ::std::uint32_t splitIndex {maxLeafSize};
             float min_SAH {
-                maxLeafSize * left_area.at(maxLeafSize - 1) +
-                (N - maxLeafSize) * right_area.at(maxLeafSize - 1)};
+                maxLeafSize * *(itLeftArea + static_cast<::std::int32_t> (maxLeafSize - 1)) +
+                (N - maxLeafSize) * *(itRightArea + static_cast<::std::int32_t> (maxLeafSize - 1))};
             for (::std::uint32_t i {maxLeafSize}; i < N - maxLeafSize; ++i) {
-                const float SAH_left {(i + 1) * left_area.at(i)};
-                const float SAH_right {(N - (i + 1)) * right_area.at(i)};
+                const float SAH_left {(i + 1) * *(itLeftArea + static_cast<::std::int32_t> (i))};
+                const float SAH_right {(N - (i + 1)) * *(itRightArea + static_cast<::std::int32_t> (i))};
                 const float SAH {SAH_left + SAH_right};
                 if (SAH < min_SAH) {
                     splitIndex = i + 1;

@@ -23,9 +23,9 @@ namespace {
     ::std::array<float, SIZE> VALUES{};
 
     bool FillThings() {
-        for (::std::uint32_t i{0}; i < SIZE; ++i) {
-            const float value{::MobileRT::haltonSequence(i, 2)};
-            VALUES.at(i) = value;
+        for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
+            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            *it = ::MobileRT::haltonSequence(index, 2);
         }
         static ::std::mt19937 generator{::std::random_device{}()};
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
@@ -140,8 +140,12 @@ void Shader::resetSampling() noexcept {
     static ::std::atomic<::std::uint32_t> sampler {0};
     const ::std::uint32_t current1 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
     const ::std::uint32_t current2 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-    const float uniformRandom1{VALUES.at(current1 & MASK)};
-    const float uniformRandom2{VALUES.at(current2 & MASK)};
+
+    const auto it1 {VALUES.begin() + (current1 & MASK)};
+    const auto it2 {VALUES.begin() + (current2 & MASK)};
+
+    const float uniformRandom1{*it1};
+    const float uniformRandom2{*it2};
 
     const float phi{
             ::glm::two_pi<float>() * uniformRandom1};// random angle around - azimuthal angle
@@ -171,10 +175,11 @@ void Shader::resetSampling() noexcept {
 ::std::uint32_t Shader::getLightIndex () {
     static ::std::atomic<::std::uint32_t> sampler {0};
     const ::std::uint32_t current {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-    const float sample {VALUES.at(current & MASK)};
+
+    const auto it {VALUES.begin() + (current & MASK)};
 
     const ::std::uint32_t sizeLights {static_cast<::std::uint32_t>(scene_.lights_.size())};
-    const float randomNumber {sample};
+    const float randomNumber {*it};
     const ::std::uint32_t chosenLight {
         static_cast<::std::uint32_t> (::std::floor(randomNumber * sizeLights * 0.99999f))};
     return chosenLight;

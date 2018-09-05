@@ -14,9 +14,7 @@ namespace {
     bool FillThings() {
         static ::std::uniform_real_distribution<float> uniform_dist{0.0f, 1.0f};
         static ::std::mt19937 gen(::std::random_device {}());
-        for (::std::uint32_t i{0}; i < SIZE; ++i) {
-            VALUES.at(i) = uniform_dist(gen);
-        }
+        ::std::generate(VALUES.begin(), VALUES.end(), []() {return uniform_dist(gen);});
         return true;
     }
 }//namespace
@@ -28,6 +26,6 @@ StaticMersenneTwister::StaticMersenneTwister() noexcept {
 
 float StaticMersenneTwister::getSample(const ::std::uint32_t /*sample*/) noexcept {
     const ::std::uint32_t current {this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
-    const float res{VALUES.at(current & MASK)};
-    return res;
+    const auto it {VALUES.begin() + (current & MASK)};
+    return *it;
 }

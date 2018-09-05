@@ -12,10 +12,11 @@ namespace {
     ::std::array<float, SIZE> VALUES{};
 
     bool FillThings() {
-        static ::std::mt19937 generator(::std::random_device{}());
-        for (::std::uint32_t i{0}; i < SIZE; ++i) {
-            VALUES.at(i) = ::MobileRT::haltonSequence(i, 2);
+        for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
+            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            *it = ::MobileRT::haltonSequence(index, 2);
         }
+        static ::std::mt19937 generator(::std::random_device{}());
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
         return true;
     }
@@ -35,6 +36,6 @@ StaticHaltonSeq::StaticHaltonSeq(const ::std::uint32_t width, const ::std::uint3
 
 float StaticHaltonSeq::getSample(const ::std::uint32_t /*sample*/) noexcept {
     const ::std::uint32_t current {this->sample_.fetch_add(1, ::std::memory_order_relaxed)};
-    const float res{VALUES.at(current & MASK)};
-    return res;
+    const auto it {VALUES.begin() + (current & MASK)};
+    return *it;
 }

@@ -50,8 +50,8 @@ bool OBJLoader::fillScene(Scene *const scene,
     ::std::size_t numberTriangles{0};
 
     for (const auto &shape : shapes_) {
-        for (::std::size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            const ::std::size_t triangles{static_cast<::std::size_t>(shape.mesh.num_face_vertices.at(f) / 3)};
+        for (const auto num_face_vertice : shape.mesh.num_face_vertices) {
+            const ::std::size_t triangles{static_cast<::std::size_t>(num_face_vertice / 3)};
             numberTriangles += triangles;
         }
     }
@@ -62,7 +62,8 @@ bool OBJLoader::fillScene(Scene *const scene,
         // Loop over faces(polygon)
         ::std::size_t index_offset{0};
         for (::std::size_t f{0}; f < shape.mesh.num_face_vertices.size(); ++f) {
-            const ::std::size_t fv{shape.mesh.num_face_vertices.at(f)};
+            const auto it {shape.mesh.num_face_vertices.begin() + static_cast<::std::int32_t> (f)};
+            const ::std::size_t fv {*it};
 
             if (fv % 3 != 0) {
                 LOG("num_face_vertices [", f, "] = ", fv);
@@ -71,45 +72,37 @@ bool OBJLoader::fillScene(Scene *const scene,
 
             // Loop over vertices in the face.
             for (::std::size_t v{0}; v < fv; v += 3) {
-                const ::tinyobj::index_t idx1{shape.mesh.indices.at(index_offset + v + 0)};
-                const ::tinyobj::real_t vx1{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 0)};
-                const ::tinyobj::real_t vy1{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 1)};
-                const ::tinyobj::real_t vz1{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 2)};
+                const auto itIdx {shape.mesh.indices.begin() + static_cast<::std::int32_t> (index_offset + v)};
 
-                const ::tinyobj::real_t red {
-                        attrib_.colors.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 0)};
-                const ::tinyobj::real_t green {
-                        attrib_.colors.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 1)};
-                const ::tinyobj::real_t blue {
-                        attrib_.colors.at(3 * static_cast<::std::size_t> (idx1.vertex_index) + 2)};
+                const ::tinyobj::index_t idx1 {*(itIdx + 0)};
+                const auto itV1 {attrib_.vertices.begin() + 3 * idx1.vertex_index};
+                const ::tinyobj::real_t vx1 {*(itV1 + 0)};
+                const ::tinyobj::real_t vy1 {*(itV1 + 1)};
+                const ::tinyobj::real_t vz1 {*(itV1 + 2)};
 
-                /*::tinyobj::real_t tx {0};
-                ::tinyobj::real_t ty {0};
-                if (!attrib_.texcoords.empty()) {
-                    tx = attrib_.texcoords.at(2 * static_cast<::std::size_t> (idx1.texcoord_index) + 0);
-                    ty = attrib_.texcoords.at(2 * static_cast<::std::size_t> (idx1.texcoord_index) + 1);
+                const auto itColor {attrib_.colors.begin() + 3 * static_cast<::std::int32_t> (idx1.vertex_index)};
+                const ::tinyobj::real_t red {*(itColor + 0)};
+                const ::tinyobj::real_t green {*(itColor + 1)};
+                const ::tinyobj::real_t blue {*(itColor + 2)};
+
+                /*if (!attrib_.texcoords.empty()) {
+                    const auto itTexCoords {attrib_.texcoords.begin() + 2 * static_cast<::std::int32_t> (idx1.texcoord_index)};
+                    ::tinyobj::real_t tx {*(itTexCoords + 0)};
+                    ::tinyobj::real_t ty {*(itTexCoords + 1)};
                     LOG(tx, ty);
                 }*/
 
+                const ::tinyobj::index_t idx2 {*(itIdx + 1)};
+                const auto itV2 {attrib_.vertices.begin() + 3 * idx2.vertex_index};
+                const ::tinyobj::real_t vx2 {*(itV2 + 0)};
+                const ::tinyobj::real_t vy2 {*(itV2 + 1)};
+                const ::tinyobj::real_t vz2 {*(itV2 + 2)};
 
-                const ::tinyobj::index_t idx2{shape.mesh.indices.at(index_offset + v + 1)};
-                const ::tinyobj::real_t vx2{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx2.vertex_index) + 0)};
-                const ::tinyobj::real_t vy2{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx2.vertex_index) + 1)};
-                const ::tinyobj::real_t vz2{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx2.vertex_index) + 2)};
-
-                const ::tinyobj::index_t idx3{shape.mesh.indices.at(index_offset + v + 2)};
-                const ::tinyobj::real_t vx3{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx3.vertex_index) + 0)};
-                const ::tinyobj::real_t vy3{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx3.vertex_index) + 1)};
-                const ::tinyobj::real_t vz3{
-                        attrib_.vertices.at(3 * static_cast<::std::size_t> (idx3.vertex_index) + 2)};
+                const ::tinyobj::index_t idx3 {*(itIdx + 2)};
+                const auto itV3 {attrib_.vertices.begin() + 3 * idx3.vertex_index};
+                const ::tinyobj::real_t vx3 {*(itV3 + 0)};
+                const ::tinyobj::real_t vy3 {*(itV3 + 1)};
+                const ::tinyobj::real_t vz3 {*(itV3 + 2)};
 
                 const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
                 const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
@@ -117,9 +110,11 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3};
 
                 // per-face material
-                const ::std::int32_t materialID{shape.mesh.material_ids.at(f)};
+                const auto itMaterial {shape.mesh.material_ids.begin() + static_cast<::std::int32_t> (f)};
+                const ::std::int32_t materialID {*itMaterial};
+                const auto itMaterial2 {materials_.begin() + static_cast<::std::int32_t> (materialID)};
                 if (materialID >= 0) {
-                    const ::tinyobj::material_t &m {materials_.at(static_cast<::std::size_t> (materialID))};
+                    const ::tinyobj::material_t &m {*itMaterial2};
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
                     const float d3 {m.diffuse[2]};

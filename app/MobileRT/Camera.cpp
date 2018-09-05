@@ -14,9 +14,9 @@ namespace {
     ::std::array<float, NumberOfBlocks> VALUES;
 
     bool FillThings() {
-        for (::std::uint32_t i{0}; i < NumberOfBlocks; ++i) {
-            const float value{::MobileRT::haltonSequence(i, 2)};
-            VALUES.at(i) = value;
+        for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
+            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            *it = ::MobileRT::haltonSequence(index, 2);
         }
         static ::std::mt19937 generator(::std::random_device{}());
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
@@ -31,8 +31,8 @@ float Camera::getBlock(const ::std::uint32_t sample) noexcept {
         this->block_.fetch_sub(1, ::std::memory_order_relaxed);
         return 1.0f;
     }
-    const float res{VALUES.at(current)};
-    return res;
+    const auto it {VALUES.begin() + current};
+    return *it;
 }
 
 AABB Camera::getAABB() const noexcept {

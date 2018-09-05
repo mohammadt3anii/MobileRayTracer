@@ -116,9 +116,10 @@ work_thread(
                 if (!objLoader.isProcessed()) {
                     exit(0);
                 }
-                objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
                 //objLoader.fillScene (&scene_, []() { return ::std::make_unique<::Components::HaltonSeq> (); });
                 //objLoader.fillScene (&scene_, []() {return ::std::make_unique<::Components::MersenneTwister> (); });
+                objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                //objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticMersenneTwister>(); });
 
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
@@ -405,8 +406,7 @@ work_thread(
             case 2: {
                 //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::HaltonSeq>()};
                 //::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::MersenneTwister> ()};
-                ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
-                        ::std::make_unique<::Components::StaticHaltonSeq>()};
+                ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticHaltonSeq>()};
                 //::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticMersenneTwister> ()};
 
                 shader_ = ::std::make_unique<::Components::PathTracer>(
