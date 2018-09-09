@@ -294,13 +294,13 @@ It is important to mention that, obviously, each shape was developed with differ
 
 The second
 $intersect$
-method checks if an AABB intersects the shape, and returns only true or false.
-This is useful to determine in which AABB the shape belongs in the regular grid.
+method checks if an AABB contains the shape, and returns only true or false.
+This is useful to determine in which AABB the shape belongs to in the regular grid accelerator.
 
 Finally, the
 $getAABB$
 method, as the name implies returns the smallest AABB that surrounds the shape.
-This is used in the creation of the acceleration structures because it is simpler to intersect an AABB than a shape.
+This is used in the building of the acceleration structures because it allows to check if a ray intersects multiple shapes inside an AABB as it is simpler to intersect an AABB than a shape.
 
 \subsubsection{Plane}
 
@@ -386,21 +386,21 @@ The Möller–Trumbore ray-triangle intersection algorithm, named after its inve
 It only needs to store 1 triangle vertex and 2 triangle vectors, which means that each triangle needs only to store 9 floating point values, or 36 bytes.
 So, the intersect method implemented has the following algorithm:
 
-\begin{lstlisting}[caption={Algorithm of Ray triangle intersection (\cite{LightHouseRayTriangle})}, captionpos=b, label=Triangle]
-perpendicularVector = rayDirection x AC
-projection = AB . perpendicularVector
-if(|projection| <= 0) return false
-vectorToRay = rayOrigin - A
-u = (vectorToRay . perpendicularVector) / projection
-if (u < 0 || u > 1) return false
-perpendicularVector2 = vectorToRay x AB
-v = (rayDirection . perpendicularVector2) / projection
-if(v < 0 || (u + v) > 1) return false
-distance = (AC . perpendicularVector2) / projection
-intersectionPoint = rayOrigin + rayDirection * distance
-triangleNormal = AB x AC
-return Intersection(intersectionPoint, triangleNormal, material)
-\end{lstlisting}
+Let
+$r(t) = p + v*t$\\
+$t = (AC \cdot ((rayOrigin - A) * AB)) / (AB \cdot (rayDir * AC)) $\\
+
+\begin{conditions*}
+	A & point A of the triangle\\
+	AB & vector of the triangle from point A to B\\
+	AC & vector of the triangle from point A to C\\
+	rayOrigin & origin point of the ray\\
+	rayDir & direction of the ray\\
+	r(t)  &  equation of the ray\\
+	p & origin of the ray\\
+	v & direction of the ray\\
+	t & distance of the ray\\
+\end{conditions*}
 
 \begin{figure}[H]
 	\centering
