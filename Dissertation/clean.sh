@@ -18,3 +18,9 @@ rm -rf *.bbl
 rm -rf *.blg
 rm -rf *.upa
 rm -rf *.upb
+rm -rf *.abo
+rm -rf *.idx
+rm -rf *.ilg
+rm -rf *.ind
+rm -rf *.dvi
+rm -rf dissertation.pdf

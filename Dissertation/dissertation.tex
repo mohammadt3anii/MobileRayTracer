@@ -25,14 +25,28 @@
 \usepackage{amsmath}
 \usepackage{caption}
 \usepackage{array,tabularx}
-\usepackage[acronym]{glossaries}
 
-\newglossaryentry{API}{name={API},
-	description={Application Programming Interface}}
-\newglossaryentry{library}{name={library},
-	description={A piece of software code that already have implemented some methods or functions and ready for the programmer to use}}
+% ACRONYMS -----------------------------------------------------
 
+%import the necessary package with some options
+\usepackage[acronym,nonumberlist,nomain]{glossaries}
+
+%enable the following to avoid links from the acronym usage to the list
+\glsdisablehyper
+
+%displays the first use of an acronym in italic
+\defglsdisplayfirst[\acronymtype]{\emph{#1#4}}
+
+%the style of the Glossary
+\glossarystyle{listgroup}
+
+% set the name for the acronym entries page
+\renewcommand{\glossaryname}{Glossary}
+
+%this shall be the last thing in the acronym configuration!!
 \makeglossaries
+
+%\loadglsentries[\acronymtype]{acronyms}
 
 \newenvironment{conditions*}
 {\par\vspace{\abovedisplayskip}\noindent
@@ -86,6 +100,17 @@
 
 % Date
 \date{\myear} % change to text if date is not today
+
+% Keywords
+%\keywords{master thesis}
+
+% Glossaries & Acronyms
+\makeglossaries  %  either use this ...
+%\makeindex	   % ... or this
+
+% Define Acronyms
+\input{acronyms}
+\glsaddall[types={\acronymtype}]
 
 \ummetadata % add metadata to the document (author, publisher, ...)
 
@@ -156,10 +181,9 @@ O objetivo principal é disponibilizar uma biblioteca de renderização para dis
 	
 % Summary Lists ------------------------------------
 \tableofcontents
-\glsaddall
-\printglossaries
 \listoffigures
 \listoftables
+\printglossary[type=\acronymtype, style=long]
 \clearpage
 \thispagestyle{empty}
 
