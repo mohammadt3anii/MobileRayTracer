@@ -25,6 +25,14 @@
 \usepackage{amsmath}
 \usepackage{caption}
 \usepackage{array,tabularx}
+\usepackage[acronym]{glossaries}
+
+\newglossaryentry{API}{name={API},
+	description={Application Programming Interface}}
+\newglossaryentry{library}{name={library},
+	description={A piece of software code that already have implemented some methods or functions and ready for the programmer to use}}
+
+\makeglossaries
 
 \newenvironment{conditions*}
 {\par\vspace{\abovedisplayskip}\noindent
@@ -148,6 +156,8 @@ O objetivo principal é disponibilizar uma biblioteca de renderização para dis
 	
 % Summary Lists ------------------------------------
 \tableofcontents
+\glsaddall
+\printglossaries
 \listoffigures
 \listoftables
 \clearpage
@@ -173,14 +183,15 @@ O objetivo principal é disponibilizar uma biblioteca de renderização para dis
 \include{3_software_architecture}
 
 % Chapter - Android
-\include{4_android}
-
-% Chapter - Android -------------------------
 % CHAPTER - falar de como uma aplicaçao android funciona
 % CHAPTER - falar de como se liga codigo C++ nativo com Java interface
 % CHAPTER - falar de cuidados que tive na implementaçao para android
 % CHAPTER - falar das possibilidades do android
 % CHAPTER - falar das desvantagens do android
+\include{4_android}
+
+% Chapter - Demonstration -------------------------
+% CHAPTER - falar dos resultados obtidos
 \include{5_demonstration}
 
 % Chapter - Conclusion/Future Work --------------

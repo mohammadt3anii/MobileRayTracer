@@ -311,25 +311,28 @@ The plane is an essential primitive shape because it allows the user to build in
 The construction of a plane requires just an arbitrary point in the plane and the normal of the plane.
 So, the intersect method implemented has the following algorithm taken from \cite{RayPlane}:
 
-$n \cdot (q - x) = 0$\\
 Let
-$r(t) = p + v*t$
-be the equation of the ray.
-Then any point
-$x$
-on the plane satisfies the equation:\\
-$n \cdot (q - r(t)) = 0$\\
-$n \cdot (q - p - v*t) = 0$\\
-$n \cdot (q - p) = (n \cdot v) * t$\\
-$t = [ n \cdot (q - p) ] / (n \cdot v)$
+\begin{equation}
+\label{intersectionPlane}
+\begin{aligned}
+intersectionPoint = rayOrg + rayDir * dist \\
+n \cdot (q - x) = 0 \\
+n \cdot (q - intersectionPoint) = 0 \\
+n \cdot (q - rayOrg - rayDir * dist) = 0 \\
+n \cdot (q - rayOrg) = (n \cdot rayDir) * dist \\
+dist = [ n \cdot (q - rayOrg) ] / (n \cdot rayDir) \\
+\end{aligned}
+\end{equation}
+
+where
 \begin{conditions*}
-	n  &  normal of the plane\\
-	q  &  point on the plane\\
-	x  &  any point on the plane\\
-	r(t)  &  equation of the ray\\
-	p & origin of the ray\\
-	v & direction of the ray\\
-	t & distance of the ray\\
+	n  &  normal of the plane \\
+	q  &  known point on the plane \\
+	x  &  any point on the plane \\
+	rayOrg & origin of the ray \\
+	rayDir & direction of the ray \\
+	dist & distance of the ray \\
+	intersectionPoint  &  intersection point of the ray in the plane \\
 \end{conditions*}
 
 
@@ -353,14 +356,27 @@ The construction of a sphere requires just the point in the center and the radiu
 It also should be noted that a ray can intersect a sphere at two points and therefore it is necessary to determine the closest intersection point to the origin of the ray.
 The algorithm used in this library was the algebraic version.
 So, the intersect method implemented has the following algorithm taken from \cite{RaySphere}:
-\[
-t=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
-\]
+
+Let
+\begin{equation}
+\label{intersectionSphere}
+\begin{aligned}
+intersectionPoint = rayOrg + rayDir * dist \\
+dist=\frac{-b\pm\sqrt{b^2-4ac}}{2a} \\
+\end{aligned}
+\end{equation}
 where
 \begin{conditions*}
-	a  &  $\|rayDirection\| ^ 2$\\
-	b  &  $2 * rayOriginToSphereCenter \cdot rayDirection$\\
-	c  &  $\|rayOriginToSphereCenter\| ^ 2 - sphereRadius ^ 2$
+	a  &  $\|rayDir\| ^ 2$ \\
+	b  &  $2 * rayOrgToCenter \cdot rayDir$ \\
+	c  &  $\|rayOrgToCenter\| ^ 2 - sphereRadius ^ 2$ \\
+	rayOrgToCenter & vector from the origin point of the ray to the center of the sphere \\
+	sphereRadius & radius of the sphere \\
+	sphereCenter & center point of the sphere \\
+	rayOrg & origin point of the ray \\
+	rayDir & direction of the ray \\
+	dist & distance of the ray \\
+	intersectionPoint  &  intersection point of the ray in the sphere \\
 \end{conditions*}
 
 \begin{figure}[H]
@@ -374,6 +390,7 @@ where
 
 \par
 And finally, obviously the triangle has also been implemented because, as it is the simplest primitive with an area, it allows to build many different object shapes.
+The implemented Ray-Triangle Intersection algorithm was the Möller-Trumbore (\cite{RayTriangleIntersection}) algorithm, which was named after its inventors Tomas Möller and Ben Trumbore.
 
 \par
 The construction of a triangle requires three points
@@ -381,25 +398,29 @@ $[A, B, C]$
 , two vectors
 $[AB, AC]$
 and the normal of the triangle.
-This is needed in order to execute the Möller-Trumbore algorithm (\cite{RayTriangleIntersection}) for the intersection of a ray with a triangle.
-The Möller–Trumbore ray-triangle intersection algorithm, named after its inventors Tomas Möller and Ben Trumbore, is a fast method for calculating the intersection of a ray and a triangle in three dimensions without needing precomputation of the plane equation of the plane containing the triangle.
+This is needed in order to execute the Möller-Trumbore algorithm  for the intersection of a ray with a triangle.
+The Möller–Trumbore ray-triangle intersection algorithm is a fast method for calculating the intersection of a ray and a triangle in three dimensions without the needing to precompute the plane equation containing the triangle.
 It only needs to store 1 triangle vertex and 2 triangle vectors, which means that each triangle needs only to store 9 floating point values, or 36 bytes.
 So, the intersect method implemented has the following algorithm:
 
 Let
-$r(t) = p + v*t$\\
-$t = (AC \cdot ((rayOrigin - A) * AB)) / (AB \cdot (rayDir * AC)) $\\
+\begin{equation}
+\begin{aligned}
+\label{intersectionTriangle}
+intersectionPoint = rayOrg + rayDir * dist \\
+dist = (AC \cdot ((rayOrg - A) * AB)) / (AB \cdot (rayDir * AC)) \\
+\end{aligned}
+\end{equation}
 
+where
 \begin{conditions*}
-	A & point A of the triangle\\
-	AB & vector of the triangle from point A to B\\
-	AC & vector of the triangle from point A to C\\
-	rayOrigin & origin point of the ray\\
-	rayDir & direction of the ray\\
-	r(t)  &  equation of the ray\\
-	p & origin of the ray\\
-	v & direction of the ray\\
-	t & distance of the ray\\
+	A & point A of the triangle \\
+	AB & vector of the triangle from point A to B \\
+	AC & vector of the triangle from point A to C \\
+	rayOrg & origin point of the ray \\
+	rayDir & direction of the ray \\
+	dist & distance of the ray \\
+	intersectionPoint  &  intersection point of the ray in the triangle \\
 \end{conditions*}
 
 \begin{figure}[H]
