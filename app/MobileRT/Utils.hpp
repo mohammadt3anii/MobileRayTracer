@@ -5,6 +5,8 @@
 #ifndef MOBILERT_UTILS_HPP
 #define MOBILERT_UTILS_HPP
 
+#include "Utils_dependent.hpp"
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -13,11 +15,6 @@
 #include <sstream>
 #include <thread>
 #include <vector>
-
-#ifdef ANDROID
-
-#include <android/log.h>
-#endif
 
 namespace MobileRT {
 #define LOG(...) {::MobileRT::log(::MobileRT::getFileName(__FILE__), ":", __LINE__, ": ", __VA_ARGS__);}
@@ -54,11 +51,7 @@ namespace MobileRT {
         static_cast<void> (::std::initializer_list<::std::int32_t> {(oss << args, 0)...});
         oss << '\n';
         const ::std::string &line {oss.str()};
-#ifdef ANDROID
-        __android_log_print(ANDROID_LOG_DEBUG, "LOG", "%s", line.c_str());
-#else
-        ::std::cout << line;
-#endif
+        ::Dependent::printString(line);
     }
 
     ::std::string getFileName(const char *const filepath) noexcept {

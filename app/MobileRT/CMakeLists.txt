@@ -16,8 +16,10 @@ target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLA
 target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
 
 if( DEFINED ANDROID_ABI )
+    target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}/Android_JNI" )
     target_link_libraries( ${PROJECT_NAME} PUBLIC log )
 else()
+    target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}/Linux" )
     target_link_libraries( ${PROJECT_NAME} PUBLIC c++ pthread )
 endif()
 

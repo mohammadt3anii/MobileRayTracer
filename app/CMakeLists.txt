@@ -54,6 +54,7 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 # Set common headers
 set( MOBILE_RT_HEADERS "${CMAKE_SOURCE_DIR}" )
 set( MOBILE_RC_HEADERS "${CMAKE_SOURCE_DIR}" )
+set( MOBILE_DEPENDENT_HEADERS "${CMAKE_SOURCE_DIR}/System_dependent" )
 set( SCENES_HEADERS "${CMAKE_SOURCE_DIR}/Scenes" )
 set( THIRD_PARTY_HEADERS "${CMAKE_SOURCE_DIR}/third_party" )
 set( GSL_HEADERS "${CMAKE_SOURCE_DIR}/third_party/GSL/include" )
@@ -88,6 +89,7 @@ endif()
 add_subdirectory( MobileRT )
 add_subdirectory( Components )
 add_subdirectory( third_party )
+add_subdirectory( System_dependent )
 add_subdirectory( Unit_Testing )
 
 # Project
@@ -103,12 +105,10 @@ endif()
 file( GLOB_RECURSE SCENES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Scenes/**.cpp" )
 
 if( DEFINED ANDROID_ABI )
-	file( GLOB_RECURSE MOBILE_JNI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/JNI/**.cpp" )
-	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_JNI_SOURCES} )
+	add_library( ${PROJECT_NAME} SHARED ${SCENES_SOURCES} ${MOBILE_DEPENDENT_SOURCES} )
 else ()
 	find_package( GTK2 REQUIRED )
-	file( GLOB_RECURSE MOBILE_GTK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/GTK_Interface/**.cpp" )
-	add_executable( ${PROJECT_NAME} ${SCENES_SOURCES} ${MOBILE_GTK_SOURCES} )
+	add_executable( ${PROJECT_NAME} ${SCENES_SOURCES} ${MOBILE_DEPENDENT_SOURCES} )
 endif()
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
@@ -128,7 +128,6 @@ target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLA
 target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
 
 if( DEFINED ANDROID_ABI )
-	target_compile_definitions( ${PROJECT_NAME} PRIVATE -DANDROID=1 )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE android jnigraphics )
 else()
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
