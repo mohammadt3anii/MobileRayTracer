@@ -15,6 +15,20 @@ set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "" CACHE STRING "CUSTOM" FORCE )
 set( CMAKE_CXX_FLAGS_MINSIZEREL "" CACHE STRING "CUSTOM" FORCE )
 set( ANDROID_COMPILER_FLAGS "" CACHE STRING "CUSTOM" FORCE )
 
+set( CMAKE_EXE_LINKER_FLAGS "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_EXE_LINKER_FLAGS_DEBUG "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_EXE_LINKER_FLAGS_RELEASE "-Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions -s -flto=full" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "" CACHE STRING "CUSTOM" FORCE )
+
+set( CMAKE_SHARED_LINKER_FLAGS "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_SHARED_LINKER_FLAGS_DEBUG "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_SHARED_LINKER_FLAGS_RELEASE "-Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions -s -flto=full" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "" CACHE STRING "CUSTOM" FORCE )
+set( CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "" CACHE STRING "CUSTOM" FORCE )
+
+set( GLM_TEST_ENABLE "OFF" CACHE STRING "CUSTOM" FORCE )
+
 # Print all set variables
 get_cmake_property( _variableNames VARIABLES )
 foreach ( _variableName ${_variableNames} )
@@ -55,7 +69,7 @@ set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-gnu-anonymous-struct -Wno-nested-anon-t
 
 set( COMMON_FLAGS_DEBUG -O0 -g3 -fno-optimize-sibling-calls -fno-omit-frame-pointer )
 
-set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections )
+set( COMMON_FLAGS_RELEASE -O3 -DNDEBUG -ffunction-sections -fdata-sections -flto=full )
 
 # Set common linker flags
 set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-exceptions )
@@ -65,8 +79,9 @@ set( COMMON_LINKER_FLAGS_DEBUG  )
 set( COMMON_LINKER_FLAGS_RELEASE -s )
 
 if( NOT DEFINED ANDROID_ABI )
-	set( COMMON_FLAGS "${COMMON_FLAGS}" -flto=full -march=native )
-	set( COMMON_LINKER_FLAGS "${COMMON_LINKER_FLAGS}" -flto=full )
+	set( COMMON_FLAGS "${COMMON_FLAGS}" -march=native )
+else()
+  set( COMMON_FLAGS_RELEASE "${COMMON_FLAGS_RELEASE}" -Wno-unused-command-line-argument )
 endif()
 
 # Add sub directories
@@ -108,7 +123,7 @@ target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLAGS_RELEASE}> )
 
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
+#target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
 target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
 
@@ -117,7 +132,7 @@ if( DEFINED ANDROID_ABI )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE android jnigraphics )
 else()
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
-	target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full -w )
+	target_compile_options( ${PROJECT_NAME} PRIVATE -w )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" )
 	target_link_libraries( ${PROJECT_NAME} PRIVATE GSL )
 endif()
