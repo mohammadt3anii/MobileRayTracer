@@ -10,24 +10,10 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_P
 target_include_directories( ${PROJECT_NAME} PUBLIC "${THIRD_PARTY_HEADERS}/googletest/googletest/include" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "/usr/include/libcxxabi" )
 
-
 target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLAGS_RELEASE}> )
-target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-global-constructors -Wno-weak-vtables )
-
-include( CheckCXXCompilerFlag )
-CHECK_CXX_COMPILER_FLAG( "-Wno-zero-as-null-pointer-constant" FLAG__WNO_ZERO_AS_NULL__SUPPORTED )
-
-if( FLAG__WNO_ZERO_AS_NULL__SUPPORTED )
-  target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-zero-as-null-pointer-constant )
-endif()
-
-target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
-
-if( NOT DEFINED ANDROID_ABI )
-  target_compile_options( ${PROJECT_NAME} PRIVATE -flto=full )
-endif()
+target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-weak-vtables )
 
 target_link_libraries( ${PROJECT_NAME}
 PRIVATE Components gtest

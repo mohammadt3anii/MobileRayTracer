@@ -25,44 +25,44 @@ protected:
 };
 
 TEST_F(TestTriangle, ConstructorVALUES) {
-	ASSERT_EQ(0, triangle->pointA_[0]);
-	ASSERT_EQ(0, triangle->pointA_[1]);
-	ASSERT_EQ(0, triangle->pointA_[2]);
+	ASSERT_EQ(0.0f, triangle->pointA_[0]);
+	ASSERT_EQ(0.0f, triangle->pointA_[1]);
+	ASSERT_EQ(0.0f, triangle->pointA_[2]);
 
 	const ::glm::vec3 pointB {triangle->pointA_ + triangle->AB_};
 	const ::glm::vec3 pointC {triangle->pointA_ + triangle->AC_};
-	ASSERT_EQ(0, pointB[0]);
-	ASSERT_EQ(1, pointB[1]);
-	ASSERT_EQ(0, pointB[2]);
+	ASSERT_EQ(0.0f, pointB[0]);
+	ASSERT_EQ(1.0f, pointB[1]);
+	ASSERT_EQ(0.0f, pointB[2]);
 
-	ASSERT_EQ(0, pointC[0]);
-	ASSERT_EQ(0, pointC[1]);
-	ASSERT_EQ(1, pointC[2]);
+	ASSERT_EQ(0.0f, pointC[0]);
+	ASSERT_EQ(0.0f, pointC[1]);
+	ASSERT_EQ(1.0f, pointC[2]);
 
-	ASSERT_EQ(0, triangle->AC_[0]);
-	ASSERT_EQ(0, triangle->AC_[1]);
-	ASSERT_EQ(1, triangle->AC_[2]);
+	ASSERT_EQ(0.0f, triangle->AC_[0]);
+	ASSERT_EQ(0.0f, triangle->AC_[1]);
+	ASSERT_EQ(1.0f, triangle->AC_[2]);
 
-	ASSERT_EQ(0, triangle->AB_[0]);
-	ASSERT_EQ(1, triangle->AB_[1]);
-	ASSERT_EQ(0, triangle->AB_[2]);
+	ASSERT_EQ(0.0f, triangle->AB_[0]);
+	ASSERT_EQ(1.0f, triangle->AB_[1]);
+	ASSERT_EQ(0.0f, triangle->AB_[2]);
 
 	const ::glm::vec3 bc {pointC - pointB};
-	ASSERT_EQ(0, bc[0]);
-	ASSERT_EQ(-1, bc[1]);
-	ASSERT_EQ(1, bc[2]);
+	ASSERT_EQ(0.0f, bc[0]);
+	ASSERT_EQ(-1.0f, bc[1]);
+	ASSERT_EQ(1.0f, bc[2]);
 }
 
 TEST_F(TestTriangle, AABB) {
 	const AABB box {triangle->getAABB()};
 
-	ASSERT_EQ(0, box.pointMin_[0]);
-	ASSERT_EQ(0, box.pointMin_[1]);
-	ASSERT_EQ(0, box.pointMin_[2]);
+	ASSERT_EQ(0.0f, box.pointMin_[0]);
+	ASSERT_EQ(0.0f, box.pointMin_[1]);
+	ASSERT_EQ(0.0f, box.pointMin_[2]);
 
-	ASSERT_EQ(0, box.pointMax_[0]);
-	ASSERT_EQ(1, box.pointMax_[1]);
-	ASSERT_EQ(1, box.pointMax_[2]);
+	ASSERT_EQ(0.0f, box.pointMax_[0]);
+	ASSERT_EQ(1.0f, box.pointMax_[1]);
+	ASSERT_EQ(1.0f, box.pointMax_[2]);
 }
 
 TEST_F(TestTriangle, intersectBoxInside01) {

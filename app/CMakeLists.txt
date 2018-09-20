@@ -60,8 +60,8 @@ set( GSL_HEADERS "${CMAKE_SOURCE_DIR}/third_party/GSL/include" )
 set( GLM_HEADERS "${CMAKE_SOURCE_DIR}/third_party/glm" )
 
 # Set common flags
-set( COMMON_FLAGS -std=c++14 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
-set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-float-equal -Wno-c++98-compat-pedantic -Wno-padded )
+set( COMMON_FLAGS -std=c++17 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
+set( COMMON_FLAGS "${COMMON_FLAGS}"  -Wno-c++98-compat-pedantic -Wno-padded )
 
 set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-exit-time-destructors -Wno-global-constructors )
 
@@ -76,7 +76,7 @@ set( COMMON_LINKER_FLAGS -Wl,-gc-sections -O3 -discard-all -fno-rtti -fno-except
 
 set( COMMON_LINKER_FLAGS_DEBUG  )
 
-set( COMMON_LINKER_FLAGS_RELEASE -s )
+set( COMMON_LINKER_FLAGS_RELEASE -s -flto=full )
 
 if( NOT DEFINED ANDROID_ABI )
 	set( COMMON_FLAGS "${COMMON_FLAGS}" -march=native )

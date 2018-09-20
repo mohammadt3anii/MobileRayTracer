@@ -12,12 +12,7 @@ execute_process( COMMAND git clone https://github.com/google/googletest
 execute_process( COMMAND git clone https://github.com/Microsoft/GSL
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-double-promotion -Wno-undef" CACHE STRING "CUSTOM" FORCE )
 add_subdirectory( glm )
-set( CMAKE_CXX_FLAGS "-fPIC" CACHE STRING "CUSTOM" FORCE )
 add_subdirectory( tinyobjloader )
 add_subdirectory( googletest )
-
-if( NOT DEFINED ANDROID_ABI )
-  add_subdirectory( GSL )
-endif()
+add_subdirectory( GSL )
