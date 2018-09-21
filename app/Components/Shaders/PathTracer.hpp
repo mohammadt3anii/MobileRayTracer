@@ -7,7 +7,6 @@
 
 #include "MobileRT/Sampler.hpp"
 #include "MobileRT/Shader.hpp"
-#include <iostream>
 #include <memory>
 #include <random>
 

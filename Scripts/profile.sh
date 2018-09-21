@@ -8,7 +8,7 @@ OBJS_DIR="${MOBILERT_DIR}/WavefrontOBJs"
 
 MOBILERT_SRCS="${MOBILERT_DIR}/app"
 COMPONENTS_SRCS="${MOBILERT_DIR}/app"
-GTK_INTERFACE_SRCS="${MOBILERT_DIR}/app/GTK_Interface"
+DEPENDENT_SRCS="${MOBILERT_DIR}/app/System_dependent"
 SCENES_SRCS="${MOBILERT_DIR}/app/Scenes"
 
 THIRDPARTY_HEADERS="${MOBILERT_DIR}/app/third_party"
@@ -126,12 +126,12 @@ function clangtidy {
   ${MOBILERT_SRCS}/MobileRT/*.*pp \
   ${MOBILERT_SRCS}/MobileRT/*/*.*pp \
   ${COMPONENTS_SRCS}/Components/*/*.*pp \
-	${GTK_INTERFACE_SRCS}/*.*pp \
+	${DEPENDENT_SRCS}/Linux/*.*pp \
   ${SCENES_SRCS}/*.*pp \
-	-- -std=c++14 -stdlib=libc++ -ferror-limit=1 \
+	-- -std=c++17 -stdlib=libc++ -ferror-limit=1 \
   -I ${MOBILERT_SRCS} \
   -I ${COMPONENTS_SRCS} \
-  -I ${GTK_INTERFACE_SRCS} \
+  -I ${DEPENDENT_SRCS}/Linux \
   -I ${SCENES_SRCS} \
 	-isystem ${THIRDPARTY_HEADERS} \
   -isystem ${GSL_HEADERS} \

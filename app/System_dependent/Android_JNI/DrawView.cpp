@@ -4,7 +4,6 @@
 
 #include "DrawView.hpp"
 #include <android/bitmap.h>
-#include <fstream>
 #include <glm/glm.hpp>
 #include <mutex>
 

@@ -4,7 +4,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gsl/gsl>
 #include <gtk/gtk.h>
-#include <iostream>
 
 ::std::int32_t main(::std::int32_t argc, char **argv) noexcept {
     if (argc != 15) {

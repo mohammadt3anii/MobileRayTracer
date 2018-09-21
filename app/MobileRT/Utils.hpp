@@ -11,7 +11,6 @@
 #include <chrono>
 #include <cmath>
 #include <glm/glm.hpp>
-#include <iostream>
 #include <sstream>
 #include <thread>
 #include <vector>
