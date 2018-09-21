@@ -43,9 +43,6 @@
     bool async{true};
     bool showImage{true};
 
-    bool tPrint{true};
-    bool tAsync{true};
-    bool tShowImage{true};
     ssPrintStdOut >> ::std::boolalpha;
     ssPrintStdOut >> printStdOut;
     ssAsync >> ::std::boolalpha >> async;

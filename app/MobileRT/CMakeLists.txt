@@ -8,6 +8,7 @@ add_library( ${PROJECT_NAME} SHARED ${MOBILE_RT_SOURCES} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RT_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${GLM_HEADERS}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
@@ -16,11 +17,9 @@ target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLA
 target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
 
 if( DEFINED ANDROID_ABI )
-    target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}/Android_JNI" )
-    target_link_libraries( ${PROJECT_NAME} PUBLIC log )
+  target_link_libraries( ${PROJECT_NAME} PUBLIC log )
 else()
-    target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}/Linux" )
-    target_link_libraries( ${PROJECT_NAME} PUBLIC c++ pthread )
+  target_link_libraries( ${PROJECT_NAME} PUBLIC pthread )
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
