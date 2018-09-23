@@ -318,28 +318,28 @@ class MainRenderer implements Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
         bbVertices.order(ByteOrder.nativeOrder());
         bbVertices.position(0);
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
         bbColors.order(ByteOrder.nativeOrder());
         bbColors.position(0);
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
         bbCamera.order(ByteOrder.nativeOrder());
         bbCamera.position(0);
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
@@ -386,7 +386,7 @@ class MainRenderer implements Renderer {
         GLES20.glGetProgramiv(shaderProgramRaster, GLES20.GL_LINK_STATUS, linkStatusRaster, 0);
         checkGLError();
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
@@ -466,7 +466,7 @@ class MainRenderer implements Renderer {
         GLES20.glUniformMatrix4fv(handleProjection, 1, false, projectionMatrix, 0);
         checkGLError();
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
@@ -479,7 +479,7 @@ class MainRenderer implements Renderer {
         GLES20.glVertexAttribPointer(positionAttrib, 4, GLES20.GL_FLOAT, false, 0, bbVertices);
         checkGLError();
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
@@ -490,7 +490,7 @@ class MainRenderer implements Renderer {
         GLES20.glVertexAttribPointer(colorAttrib, 4, GLES20.GL_FLOAT, false, 0, bbColors);
         checkGLError();
 
-        if (MainActivity.getFreeMemStatic(0)) {
+        if (MainActivity.getFreeMemStatic(1)) {
             return;
         }
 
@@ -499,7 +499,7 @@ class MainRenderer implements Renderer {
 
         final int vertexCount = bbVertices.capacity() / (floatSize * 4);
 
-        if (!MainActivity.getFreeMemStatic(0)) {
+        if (!MainActivity.getFreeMemStatic(1)) {
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
             Log.d("LOG", "glDrawArrays Complete");
             checkGLError();

@@ -263,7 +263,7 @@ extern "C"
             env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
 
 
-    ::std::int32_t res{
+    const ::std::int32_t res {
             [&]() noexcept -> ::std::int32_t {
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
@@ -348,9 +348,8 @@ extern "C"
 
                 assert(mainActivityMethodId != nullptr);
                 {
-                    const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
-                                                         0)};
+                    const jboolean result {
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -358,18 +357,16 @@ extern "C"
 
                 ::Components::OBJLoader objLoader{objFileName, matFileName};
                 {
-                    const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
-                                                         0)};
+                    const jboolean result {
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
                 }
                 objLoader.process();
                 {
-                    const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
-                                                         0)};
+                    const jboolean result {
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -384,9 +381,8 @@ extern "C"
                     return -1;
                 }
                 {
-                    const jboolean result{
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId,
-                                                         0)};
+                    const jboolean result {
+                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -881,23 +877,23 @@ extern "C"
                 break;
             }
         }
-                const ::std::int32_t triangles{
+                const ::std::int32_t triangles {
                 static_cast<int32_t> (shader_->scene_.triangles_.size())};
-                const ::std::int32_t spheres{
+                const ::std::int32_t spheres {
                 static_cast<int32_t> (shader_->scene_.spheres_.size())};
-                const ::std::int32_t planes{
+                const ::std::int32_t planes {
                         static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
                 numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
-                const ::std::int32_t nPrimitives{triangles + spheres + planes};
+                const ::std::int32_t nPrimitives {triangles + spheres + planes};
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
-            const ::std::chrono::time_point<::std::chrono::system_clock> start{
+            const ::std::chrono::time_point<::std::chrono::system_clock> start {
                     ::std::chrono::system_clock::now()};
             renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                     ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
                     static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
                     static_cast<::std::uint32_t>(samplesPixel));
-            const ::std::chrono::time_point<::std::chrono::system_clock> end{
+            const ::std::chrono::time_point<::std::chrono::system_clock> end {
                     ::std::chrono::system_clock::now()};
             timeRenderer_ = ::std::chrono::duration_cast<std::chrono::milliseconds>(
                     end - start).count();
@@ -913,6 +909,15 @@ extern "C"
 
     env->ExceptionClear();
     LOG("PRIMITIVES = ", res);
+
+    {
+      const jboolean result {
+              env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+      if (result) {
+          return -1;
+      }
+    }
+
     return res;
 }
 

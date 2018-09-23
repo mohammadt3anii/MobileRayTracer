@@ -3,6 +3,7 @@
 //
 
 #include "MobileRT/Renderer.hpp"
+#include <gsl/gsl>
 #include <thread>
 #include <vector>
 
@@ -70,6 +71,10 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
     const float pixelHeight{0.5f / this->height_};
     ::glm::vec3 pixelRGB{};
     const ::std::uint32_t samples{this->samplesPixel_};
+
+    ::gsl::span<::std::uint32_t> spanBitmap (bitmap, static_cast<::std::int32_t> (width_ * height_));
+    const auto bitmapItBegin {spanBitmap.begin()};
+
     for (::std::uint32_t sample{0}; sample < samples; ++sample) {
         while (true) {
             const float block{this->camera_->getBlock(sample)};
@@ -96,10 +101,10 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
                     pixelRGB = {};
                     this->shader_->rayTrace(&pixelRGB, ray);
                     const ::std::uint32_t pixelIndex {yWidth + x};
-                    ::std::uint32_t *const bitmapPixel {&bitmap[pixelIndex]};
+                    ::std::uint32_t &bitmapPixel {*(bitmapItBegin + static_cast<::std::int32_t> (pixelIndex))};
                     const ::std::uint32_t pixelColor {
-                            ::MobileRT::incrementalAvg(pixelRGB, *bitmapPixel, sample + 1)};
-                    *bitmapPixel = pixelColor;
+                            ::MobileRT::incrementalAvg(pixelRGB, bitmapPixel, sample + 1)};
+                    bitmapPixel = pixelColor;
                 }
             }
         }

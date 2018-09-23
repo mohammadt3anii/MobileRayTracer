@@ -8,6 +8,7 @@ add_library( ${PROJECT_NAME} SHARED ${MOBILE_RT_SOURCES} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_RT_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${GLM_HEADERS}" )
+target_include_directories( ${PROJECT_NAME} PUBLIC "${GSL_HEADERS}" )
 target_include_directories( ${PROJECT_NAME} PUBLIC "${MOBILE_DEPENDENT_HEADERS}" )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
