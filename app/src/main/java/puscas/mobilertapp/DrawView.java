@@ -149,11 +149,6 @@ public class DrawView extends GLSurfaceView {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public boolean performClick() {
         super.performClick();
         return true;

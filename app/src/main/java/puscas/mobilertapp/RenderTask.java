@@ -15,38 +15,39 @@ import java.util.concurrent.TimeUnit;
 final class RenderTask extends AsyncTask<Void, Void, Void> {
     final List<TouchTracker> touches_ = new ArrayList<>(1);
     private final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
-    private ViewText viewText_;
-    private Runnable updateRender_;
-    private final Runnable timer_ = () -> {
-        final int touchesSize = touches_.size();
-        for (int i = 0; i < touchesSize; i++) {
-            final TouchTracker touch = touches_.get(i);
-            viewText_.moveTouch(touch.x_, touch.y_, touch.primitiveID_);
-        }
-        viewText_.FPS();
-        viewText_.fpsT_ = String.format(Locale.US, "fps:%.1f", viewText_.getFPS());
-        viewText_.fpsRenderT_ = String.format(Locale.US, "[%.1f]", viewText_.fps_);
-        final long timeRenderer = viewText_.getTimeRenderer();
-        viewText_.timeFrameT_ = String.format(Locale.US, ",t:%.2fs", timeRenderer / 1000.0f);
-        final long currentTime = SystemClock.elapsedRealtime();
-        viewText_.timeT_ = String.format(Locale.US, "[%.2fs]", (currentTime - viewText_.start_) / 1000.0f);
-        viewText_.allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
-        viewText_.sampleT_ = "," + viewText_.getSample();
-        final int stage = viewText_.isWorking();
-        viewText_.stageT_ = DrawView.Stage.values()[stage].toString();
-        updateRender_.run();
-        publishProgress();
-        if (stage != DrawView.Stage.busy.id_) {
-            scheduler_.shutdownNow();
-        }
-    };
-    private Runnable finishRender_;
+    private final ViewText viewText_;
+    private final Runnable updateRender_;
+    private final Runnable timer_;
+    private final Runnable finishRender_;
 
     RenderTask(final ViewText viewText, final Runnable updateRender, final Runnable finishRender) {
         super();
         viewText_ = viewText;
         updateRender_ = updateRender;
         finishRender_ = finishRender;
+        timer_ = () -> {
+            final int touchesSize = touches_.size();
+            for (int i = 0; i < touchesSize; i++) {
+                final TouchTracker touch = touches_.get(i);
+                viewText_.moveTouch(touch.x_, touch.y_, touch.primitiveID_);
+            }
+            viewText_.FPS();
+            viewText_.fpsT_ = String.format(Locale.US, "fps:%.1f", viewText_.getFPS());
+            viewText_.fpsRenderT_ = String.format(Locale.US, "[%.1f]", viewText_.fps_);
+            final long timeRenderer = viewText_.getTimeRenderer();
+            viewText_.timeFrameT_ = String.format(Locale.US, ",t:%.2fs", timeRenderer / 1000.0f);
+            final long currentTime = SystemClock.elapsedRealtime();
+            viewText_.timeT_ = String.format(Locale.US, "[%.2fs]", (currentTime - viewText_.start_) / 1000.0f);
+            viewText_.allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
+            viewText_.sampleT_ = "," + viewText_.getSample();
+            final int stage = viewText_.isWorking();
+            viewText_.stageT_ = DrawView.Stage.values()[stage].toString();
+            updateRender_.run();
+            publishProgress();
+            if (stage != DrawView.Stage.busy.id_) {
+                scheduler_.shutdownNow();
+            }
+        };
     }
 
     @Override

@@ -121,7 +121,9 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
             if (directBuffer != nullptr) {
                 int i{0};
                 for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
-                    const ::glm::vec4 &pointA {triangle.shape_.pointA_, 1.0f};
+                    const ::glm::vec4 &pointA{triangle.shape_.pointA_.x,
+                                              triangle.shape_.pointA_.y,
+                                              triangle.shape_.pointA_.z, 1.0f};
                     const ::glm::vec4 &pointB {pointA.x + triangle.shape_.AB_.x,
                                               pointA.y + triangle.shape_.AB_.y,
                                               pointA.z + triangle.shape_.AB_.z, 1.0f};
@@ -217,7 +219,7 @@ static void FPS() noexcept {
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_ViewText_isWorking(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     const ::std::int32_t res{static_cast<::std::int32_t> (working_)};
@@ -227,7 +229,7 @@ extern "C"
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_stopRender(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     //Fix this race condition
@@ -241,7 +243,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 
 extern "C"
 jint Java_puscas_mobilertapp_DrawView_initialize(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject const thiz,
         jint const scene,
         jint const shader,
@@ -922,7 +924,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finishRender(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     //Fix this race condition
@@ -976,7 +978,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         }
         const ::std::int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
 
-        ::std::uint32_t *dstPixels{nullptr};
+            ::std::uint32_t *dstPixels{nullptr};
         {
             const ::std::int32_t ret {AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels))};
             //dstPixels = static_cast<::std::uint32_t *>(env->GetDirectBufferAddress(globalByteBuffer));
@@ -991,7 +993,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
             LOG("ret = ", ret);
         }
 
-        const ::std::uint32_t stride{info.stride};
+            const ::std::uint32_t stride{info.stride};
         ::std::int32_t rep {1};
         do {
             LOG("STARTING RENDERING");
@@ -1048,7 +1050,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_traceTouch(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/,
         jfloat const /*jx*/,
         jfloat const /*jy*/) noexcept {
@@ -1064,7 +1066,7 @@ extern "C"
 
 extern "C"
 void Java_puscas_mobilertapp_ViewText_moveTouch(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/,
         jfloat const /*jx*/,
         jfloat const /*jy*/,
@@ -1086,7 +1088,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
 
 extern "C"
 float Java_puscas_mobilertapp_ViewText_getFPS(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     env->ExceptionClear();
@@ -1104,7 +1106,7 @@ extern "C"
 
 extern "C"
 jlong Java_puscas_mobilertapp_ViewText_getTimeRenderer(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     env->ExceptionClear();
@@ -1113,7 +1115,7 @@ jlong Java_puscas_mobilertapp_ViewText_getTimeRenderer(
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_ViewText_getSample(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     ::std::uint32_t sample{0};
@@ -1131,7 +1133,7 @@ extern "C"
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_resize(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/,
         jint const size
 ) noexcept {
@@ -1144,7 +1146,7 @@ extern "C"
 
 extern "C"
 ::std::int32_t Java_puscas_mobilertapp_DrawView_getNumberOfLights(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
     env->ExceptionClear();

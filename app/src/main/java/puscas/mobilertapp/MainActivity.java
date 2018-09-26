@@ -109,10 +109,6 @@ public final class MainActivity extends Activity {
         }
     }
 
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
     public void onDestroy() {
         super.onDestroy();
         drawView_.onDestroy();
@@ -156,7 +152,7 @@ public final class MainActivity extends Activity {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public boolean CheckStoragePermission() {
+    private boolean CheckStoragePermission() {
         final int PERMISSION_STORAGE = 1;
         final int permissionCheckRead = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permissionCheckRead != PackageManager.PERMISSION_GRANTED) {
@@ -233,12 +229,6 @@ public final class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         drawView_.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        drawView_.onResume();
     }
 
     private boolean checkGL20Support() {
