@@ -82,14 +82,14 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
         jint accelerator,
         jint samplesPixel,
         jint samplesLight,
-        jstring objFile,
-        jstring matFile
+        jstring localObjFile,
+        jstring localMatFile
 ) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_DrawView_finishRender(
-        JNIEnv */*env*/,
-        jobject /*thiz*/
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
@@ -98,14 +98,16 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jobject thiz,
         jobject dstBitmap,
         jint nThreads,
-        jboolean async) noexcept;
+        jboolean async
+) noexcept;
 
 extern "C"
 jint Java_puscas_mobilertapp_DrawView_traceTouch(
         JNIEnv *env,
         jobject thiz,
         jfloat jx,
-        jfloat jy) noexcept;
+        jfloat jy
+) noexcept;
 
 extern "C"
 void Java_puscas_mobilertapp_ViewText_moveTouch(
@@ -130,7 +132,7 @@ jlong Java_puscas_mobilertapp_ViewText_getTimeFrame(
 
 extern "C"
 jlong Java_puscas_mobilertapp_ViewText_getTimeRenderer(
-        JNIEnv *const env,
+        JNIEnv *env,
         jobject thiz
 ) noexcept;
 
@@ -149,12 +151,15 @@ jint Java_puscas_mobilertapp_DrawView_resize(
 
 extern "C"
 jint Java_puscas_mobilertapp_DrawView_getNumberOfLights(
-        JNIEnv * /*env*/,
-        jobject /*thiz*/
+        JNIEnv *env,
+        jobject thiz
 ) noexcept;
 
 extern "C"
 jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
-        JNIEnv *env, jobject thiz, jobject bufferRef) noexcept;
+        JNIEnv *env,
+        jobject thiz,
+        jobject bufferRef
+) noexcept;
 
 #endif //APP_DRAWVIEW_HPP

@@ -35,17 +35,15 @@ class ViewText {
         fps_ = 0.0f;
     }
 
-    static native float getFPS();
+    native float getFPS();
 
-    static native long getTimeFrame();
+    native long getTimeRenderer();
 
-    static native long getTimeRenderer();
+    native void moveTouch(final float x, final float y, final int primitiveId);
 
-    static native void moveTouch(final float x, final float y, final int primitiveId);
+    native int getSample();
 
-    static native int getSample();
-
-    static native int isWorking();
+    native int isWorking();
 
     void FPS() {
         frame_++;

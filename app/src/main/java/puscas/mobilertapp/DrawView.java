@@ -1,6 +1,7 @@
 package puscas.mobilertapp;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -31,6 +32,17 @@ public class DrawView extends GLSurfaceView {
     private ByteBuffer arrayCamera = null;
     private boolean changingConfigurations = false;
     private int numberPrimitives_ = 0;
+    private MainActivity mainActivity_ = null;
+
+    public boolean getFreeMemStatic(final int memoryNeed) {
+        final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        final long availMem = memoryInfo.availMem / 1048576L;
+        final boolean lowMem = memoryInfo.lowMemory;
+        final boolean res = availMem <= (1 + memoryNeed);
+        return res || lowMem;
+    }
 
     public DrawView(final Context context) {
         super(context);
@@ -43,8 +55,6 @@ public class DrawView extends GLSurfaceView {
         viewText_.resetPrint(getWidth(), getHeight(), 0, 0, 0);
         //init();
     }
-
-    static native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
     public void onDestroy() {
         super.onDetachedFromWindow();
@@ -83,25 +93,27 @@ public class DrawView extends GLSurfaceView {
         setEGLContextFactory(eglContextFactory);
     }
 
-    static private native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
+    private native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
-    static private native ByteBuffer initVerticesArray();
+    private native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
 
-    static private native ByteBuffer initColorsArray();
+    private native ByteBuffer initVerticesArray();
 
-    static private native ByteBuffer initCameraArray();
+    private native ByteBuffer initColorsArray();
 
-    static private native ByteBuffer freeNativeBuffer(ByteBuffer bb);
+    private native ByteBuffer initCameraArray();
 
-    static private native void stopRender();
+    private native ByteBuffer freeNativeBuffer(final ByteBuffer bb);
 
-    static native int traceTouch(final float x, final float y);
+    private native void stopRender();
 
-    static private native int getNumberOfLights();
+    private native int getNumberOfLights();
 
-    static native int resize(int size);
+    native int traceTouch(final float x, final float y);
 
-    static native void finishRender();
+    native int resize(final int size);
+
+    native void finishRender();
 
     void freeArrays() {
         arrayVertices = freeNativeBuffer(arrayVertices);
@@ -147,9 +159,10 @@ public class DrawView extends GLSurfaceView {
         return true;
     }
 
-    void setView(final TextView textView) {
+    void setViewAndMainActivity(final TextView textView, final MainActivity mainActivity) {
         viewText_.textView_ = textView;
         viewText_.printText();
+        mainActivity_ = mainActivity;
     }
 
 
@@ -161,47 +174,47 @@ public class DrawView extends GLSurfaceView {
     void startRender() {
         freeArrays();
 
-        if (MainActivity.getFreeMemStatic(1)) {
+        if (getFreeMemStatic(1)) {
             freeArrays();
         }
 
         arrayVertices = initVerticesArray();
 
-        if (MainActivity.getFreeMemStatic(1)) {
+        if (getFreeMemStatic(1)) {
             freeArrays();
         }
 
         arrayColors = initColorsArray();
 
-        if (MainActivity.getFreeMemStatic(1)) {
+        if (getFreeMemStatic(1)) {
             freeArrays();
         }
 
         arrayCamera = initCameraArray();
 
-        if (MainActivity.getFreeMemStatic(1)) {
+        if (getFreeMemStatic(1)) {
             freeArrays();
         }
 
         viewText_.period_ = 250;
         viewText_.buttonRender_.setText(R.string.stop);
-        viewText_.start_ = SystemClock.elapsedRealtime();
+        viewText_.start_ = 0;
         viewText_.printText();
 
-        this.postDelayed(() -> {
+        this.postDelayed(() ->
             queueEvent(() -> {
+                viewText_.start_ = SystemClock.elapsedRealtime();
                 if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
                     renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera, numberPrimitives_);
                 }
 
-                DrawView.renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
-                renderTask_ = new RenderTask(viewText_, this::requestRender);
+                renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
+                renderTask_ = new RenderTask(viewText_, this::requestRender, this::finishRender);
                 renderTask_.execute();
                 final DrawView.TouchHandler touchHandler = new DrawView.TouchHandler();
                 this.setOnTouchListener(touchHandler);
                 requestRender();
-            });
-        }, 100);
+            }), 100);
     }
 
     int createScene(final int scene, final int shader, final int numThreads, final int accelerator,
@@ -253,7 +266,7 @@ public class DrawView extends GLSurfaceView {
 
         @Override
         public final boolean onTouch(final View view, final MotionEvent motionEvent) {
-            if (ViewText.isWorking() != Stage.busy.id_) {
+            if (viewText_.isWorking() != Stage.busy.id_) {
                 return false;
             }
             switch (motionEvent.getActionMasked()) {

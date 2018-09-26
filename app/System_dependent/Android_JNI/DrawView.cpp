@@ -95,7 +95,7 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
                 floatBuffer[i++] = 0.0f;
                 floatBuffer[i++] = 0.0f;
                 floatBuffer[i++] = sizeH;
-                floatBuffer[i++] = sizeV;
+                floatBuffer[i] = sizeV;
             }
         }
     }
@@ -240,9 +240,9 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
 }
 
 extern "C"
-::std::int32_t Java_puscas_mobilertapp_DrawView_initialize(
+jint Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *const env,
-        jobject const /*thiz*/,
+        jobject const thiz,
         jint const scene,
         jint const shader,
         jint const width,
@@ -256,12 +256,11 @@ extern "C"
     width_ = width;
     height_ = height;
     LOG("INITIALIZE");
+    const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/DrawView")};
+    const jmethodID mainActivityMethodId{
+            env->GetMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
     const jstring globalObjFile {static_cast<jstring>(env->NewGlobalRef(localObjFile))};
     const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
-    const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/MainActivity")};
-    const jmethodID mainActivityMethodId{
-            env->GetStaticMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
-
 
     const ::std::int32_t res {
             [&]() noexcept -> ::std::int32_t {
@@ -349,7 +348,7 @@ extern "C"
                 assert(mainActivityMethodId != nullptr);
                 {
                     const jboolean result {
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+                            env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -358,7 +357,7 @@ extern "C"
                 ::Components::OBJLoader objLoader{objFileName, matFileName};
                 {
                     const jboolean result {
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+                            env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -366,7 +365,7 @@ extern "C"
                 objLoader.process();
                 {
                     const jboolean result {
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+                            env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -382,7 +381,7 @@ extern "C"
                 }
                 {
                     const jboolean result {
-                            env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+                            env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
                     if (result) {
                         return -1;
                     }
@@ -912,7 +911,7 @@ extern "C"
 
     {
       const jboolean result {
-              env->CallStaticBooleanMethod(mainActivityClass, mainActivityMethodId, 1)};
+              env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
       if (result) {
           return -1;
       }
@@ -1104,7 +1103,7 @@ extern "C"
 }
 
 extern "C"
-::std::int64_t Java_puscas_mobilertapp_ViewText_getTimeRenderer(
+jlong Java_puscas_mobilertapp_ViewText_getTimeRenderer(
         JNIEnv *const env,
         jobject /*thiz*/
 ) noexcept {

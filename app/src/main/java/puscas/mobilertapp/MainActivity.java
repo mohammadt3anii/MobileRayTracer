@@ -59,17 +59,6 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
-    private static MainActivity mainActivity_;
-
-    static boolean getFreeMemStatic(final int memoryNeed) {
-        final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(ACTIVITY_SERVICE);
-        final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-        final long availMem = memoryInfo.availMem / 1048576L;
-        final long thresholdMem = memoryInfo.threshold / 1048576L;
-        final boolean res = availMem <= (thresholdMem + memoryNeed);
-        return res;
-    }
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -104,7 +93,7 @@ public final class MainActivity extends Activity {
         final String objText = objFile + ".obj";
         final String matText = objFile + ".mtl";
 
-        switch (ViewText.isWorking()) {
+        switch (drawView_.viewText_.isWorking()) {
             case 0:
             case 2:
             case 3://if ray-tracer is idle
@@ -129,21 +118,20 @@ public final class MainActivity extends Activity {
         drawView_.onDestroy();
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            final Uri uri = data.getData();
+        final Uri uri = data.getData();
+        if (resultCode == Activity.RESULT_OK && uri != null) {
             final String sdCardDir = Environment.getExternalStorageDirectory() + "/";
-            if (uri != null) {
-                String filePath = uri.getEncodedPath();
-                filePath = filePath.replace("%2F", "/");
-                filePath = filePath.replace("%3A", "/");
-                filePath = filePath.replace("/document/primary/", sdCardDir);
+            String filePath = uri.getEncodedPath();
+            filePath = filePath.replace("%2F", "/");
+            filePath = filePath.replace("%3A", "/");
+            filePath = filePath.replace("/document/primary/", sdCardDir);
+            filePath = filePath.replace("/document", "/storage");
 
-                final int lastIndex = filePath.lastIndexOf('.');
-                final String objFile = filePath.substring(0, lastIndex);
-                startStopRender(objFile);
-            }
+            final int lastIndex = filePath.lastIndexOf('.');
+            final String objFile = filePath.substring(0, lastIndex);
+            startStopRender(objFile);
         }
     }
 
@@ -160,7 +148,7 @@ public final class MainActivity extends Activity {
             //final String objFile = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/buddha/buddha";
             //final String objFile = "/storage/extSdCard/WavefrontOBJs/buddha/buddha";
             //startStopRender(objFile);
-        } catch (android.content.ActivityNotFoundException ex) {
+        } catch (final android.content.ActivityNotFoundException ex) {
             for (int i = 0; i < 3; ++i) {
                 Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
             }
@@ -215,7 +203,7 @@ public final class MainActivity extends Activity {
         savedInstanceState.putInt("pickerSamplesPixel", samplesPixel);
         savedInstanceState.putInt("pickerSamplesLight", samplesLight);
         savedInstanceState.putInt("pickerSizes", sizes);
-        DrawView.finishRender();
+        drawView_.finishRender();
         drawView_.freeArrays();
     }
 
@@ -226,9 +214,7 @@ public final class MainActivity extends Activity {
             final int size = stream.available();
             final byte[] buffer = new byte[size];
             final int bytes = stream.read(buffer);
-            if (bytes <= 0) {
-                asset = null;
-            } else {
+            if (bytes > 0) {
                 asset = new String(buffer);
             }
         } catch (final OutOfMemoryError e1) {
@@ -275,13 +261,11 @@ public final class MainActivity extends Activity {
         final int[] num_config = new int[1];
         egl.eglChooseConfig(display, configAttribs, configs, 10, num_config);
         egl.eglTerminate(display);
-        final boolean res = num_config[0] > 0;
-        return res;
+        return num_config[0] > 0;
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        mainActivity_ = this;
         super.onCreate(savedInstanceState);
 
         int defaultPickerScene = 0;
@@ -323,6 +307,7 @@ public final class MainActivity extends Activity {
             drawView_.setEGLConfigChooser(8, 8, 8, 8, 24, 0);
             final MainRenderer renderer = new MainRenderer();
             drawView_.renderer_ = renderer;
+            drawView_.renderer_.setDrawView(drawView_);
             drawView_.setRenderer(renderer);
             drawView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             drawView_.renderer_.bitmap_ = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
@@ -351,7 +336,7 @@ public final class MainActivity extends Activity {
                 Log.e("ViewText", "ViewText is NULL !!!");
                 System.exit(0);
             }
-            drawView_.setView(textView);
+            drawView_.setViewAndMainActivity(textView, this);
             drawView_.setPreserveEGLContextOnPause(true);
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
@@ -482,18 +467,18 @@ public final class MainActivity extends Activity {
             final int height = drawView_.getHeight();
 
             float size = 0.05f;
-            int currentWidth = DrawView.resize(Math.round(width * size));
-            int currentHeight = DrawView.resize(Math.round(height * size));
+            int currentWidth = drawView_.resize(Math.round(width * size));
+            int currentHeight = drawView_.resize(Math.round(height * size));
             sizes[0] = "" + currentWidth + 'x' + currentHeight;
             for (int i = 2; i < maxSizes; i++) {
                 size = (i + 1.0f) * 0.1f;
-                currentWidth = DrawView.resize(Math.round(width * size * size));
-                currentHeight = DrawView.resize(Math.round(height * size * size));
+                currentWidth = drawView_.resize(Math.round(width * size * size));
+                currentHeight = drawView_.resize(Math.round(height * size * size));
                 sizes[i - 1] = "" + currentWidth + 'x' + currentHeight;
             }
             size = 1.0f;
-            currentWidth = DrawView.resize(Math.round(width * size * size));
-            currentHeight = DrawView.resize(Math.round(height * size * size));
+            currentWidth = drawView_.resize(Math.round(width * size * size));
+            currentHeight = drawView_.resize(Math.round(height * size * size));
             sizes[maxSizes - 1] = "" + currentWidth + 'x' + currentHeight;
 
             pickerSizes_.setDisplayedValues(sizes);
@@ -502,7 +487,7 @@ public final class MainActivity extends Activity {
 
     public void startRender(final View view) {
         final int scene = pickerScene_.getValue();
-        final int isWorking = ViewText.isWorking();
+        final int isWorking = drawView_.viewText_.isWorking();
         if (scene >= 4 && isWorking != 1) {
             final boolean permissionToReadFile = CheckStoragePermission();
             if (permissionToReadFile) {

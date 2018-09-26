@@ -37,7 +37,8 @@ void OBJLoader::process() noexcept {
     }
 
     if (errno) {
-        LOG("Error (errno): ", ::std::strerror(errno));
+        const ::std::string &strError{::std::strerror(errno)};
+        LOG("Error (errno): ", strError);
     }
 
     if (ret) {

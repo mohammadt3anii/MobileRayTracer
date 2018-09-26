@@ -17,24 +17,22 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
     private final ScheduledExecutorService scheduler_ = Executors.newSingleThreadScheduledExecutor();
     private ViewText viewText_;
     private Runnable updateRender_;
-
     private final Runnable timer_ = () -> {
         final int touchesSize = touches_.size();
         for (int i = 0; i < touchesSize; i++) {
             final TouchTracker touch = touches_.get(i);
-            ViewText.moveTouch(touch.x_, touch.y_, touch.primitiveID_);
+            viewText_.moveTouch(touch.x_, touch.y_, touch.primitiveID_);
         }
         viewText_.FPS();
-        viewText_.fpsT_ = String.format(Locale.US, "fps:%.1f", ViewText.getFPS());
+        viewText_.fpsT_ = String.format(Locale.US, "fps:%.1f", viewText_.getFPS());
         viewText_.fpsRenderT_ = String.format(Locale.US, "[%.1f]", viewText_.fps_);
-        final long timeFrame = ViewText.getTimeFrame();
-        final long timeRenderer = ViewText.getTimeRenderer();
+        final long timeRenderer = viewText_.getTimeRenderer();
         viewText_.timeFrameT_ = String.format(Locale.US, ",t:%.2fs", timeRenderer / 1000.0f);
         final long currentTime = SystemClock.elapsedRealtime();
         viewText_.timeT_ = String.format(Locale.US, "[%.2fs]", (currentTime - viewText_.start_) / 1000.0f);
         viewText_.allocatedT_ = ",m:" + Debug.getNativeHeapAllocatedSize() / 1048576L + "mb";
-        viewText_.sampleT_ = "," + ViewText.getSample();
-        final int stage = ViewText.isWorking();
+        viewText_.sampleT_ = "," + viewText_.getSample();
+        final int stage = viewText_.isWorking();
         viewText_.stageT_ = DrawView.Stage.values()[stage].toString();
         updateRender_.run();
         publishProgress();
@@ -42,11 +40,13 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
             scheduler_.shutdownNow();
         }
     };
+    private Runnable finishRender_;
 
-    RenderTask(final ViewText viewText, final Runnable updateRender) {
+    RenderTask(final ViewText viewText, final Runnable updateRender, final Runnable finishRender) {
         super();
         viewText_ = viewText;
         updateRender_ = updateRender;
+        finishRender_ = finishRender;
     }
 
     @Override
@@ -73,7 +73,7 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
     protected final void onPostExecute(final Void result) {
         viewText_.printText();
         viewText_.buttonRender_.setText(R.string.render);
-        DrawView.finishRender();
+        finishRender_.run();
         updateRender_.run();
     }
 }
