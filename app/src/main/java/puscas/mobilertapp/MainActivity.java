@@ -59,6 +59,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSamplesPixel_;
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
+    private String objFile_;
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -126,8 +127,7 @@ public final class MainActivity extends Activity {
             filePath = filePath.replace("/document", "/storage");
 
             final int lastIndex = filePath.lastIndexOf('.');
-            final String objFile = filePath.substring(0, lastIndex);
-            startStopRender(objFile);
+            objFile_ = filePath.substring(0, lastIndex);
         }
     }
 
@@ -139,11 +139,12 @@ public final class MainActivity extends Activity {
             final Intent intentChooseFile = Intent.createChooser(intent, "Select a File to Upload");
             startActivityForResult(intentChooseFile, 1);
 
-            //final String objFile = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/conference/conference";
-            //final String objFile = "/storage/extSdCard/WavefrontOBJs/conference/conference";
-            //final String objFile = Environment.getExternalStorageDirectory() + "/WavefrontOBJs/buddha/buddha";
-            //final String objFile = "/storage/extSdCard/WavefrontOBJs/buddha/buddha";
-            //startStopRender(objFile);
+            /*final String objFile = "conference/conference";
+            String sdCardPath = Environment.getExternalStorageDirectory() + "/";
+            sdCardPath = sdCardPath.replace("/storage/sdcard0", "/storage/extSdCard");
+            sdCardPath = sdCardPath.replace("/emulated/0", "/1AE9-2819");
+            final String filePath = sdCardPath + "WavefrontOBJs/" + objFile;
+            startStopRender(filePath);*/
         } catch (final android.content.ActivityNotFoundException ex) {
             for (int i = 0; i < 3; ++i) {
                 Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
@@ -226,9 +227,30 @@ public final class MainActivity extends Activity {
     }
 
     @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (objFile_ != null) {
+            startStopRender(objFile_);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        drawView_.onResume();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        drawView_.setPreserveEGLContextOnPause(true);
         drawView_.onPause();
+        objFile_ = null;
     }
 
     private boolean checkGL20Support() {
@@ -290,7 +312,7 @@ public final class MainActivity extends Activity {
             drawView_ = findViewById(R.id.drawLayout);
             if (drawView_ == null) {
                 Log.e("DrawView", "DrawView is NULL !!!");
-                System.exit(0);
+                System.exit(1);
             }
             drawView_.setVisibility(View.INVISIBLE);
             drawView_.setEGLContextClientVersion(2);
@@ -315,28 +337,28 @@ public final class MainActivity extends Activity {
             drawView_.viewText_.buttonRender_ = findViewById(R.id.renderButton);
             if (drawView_.viewText_.buttonRender_ == null) {
                 Log.e("Button", "Button is NULL !!!");
-                System.exit(0);
+                System.exit(1);
             }
-            drawView_.viewText_.buttonRender_.setOnLongClickListener((View v) -> {
+            drawView_.viewText_.buttonRender_.setOnLongClickListener((final View v) -> {
                 this.recreate();
                 return false;
             });
             final TextView textView = findViewById(R.id.timeText);
             if (textView == null) {
                 Log.e("ViewText", "ViewText is NULL !!!");
-                System.exit(0);
+                System.exit(1);
             }
             drawView_.setViewAndMainActivity(textView, this);
             drawView_.setPreserveEGLContextOnPause(true);
         } else {
             Log.e("OpenGLES 2", "Your device doesn't support ES 2. (" + info.reqGlEsVersion + ')');
-            System.exit(0);
+            System.exit(1);
         }
 
         pickerScene_ = findViewById(R.id.pickerScene);
         if (pickerScene_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
 
         pickerScene_.setMinValue(0);
@@ -350,7 +372,7 @@ public final class MainActivity extends Activity {
         pickerShader_ = findViewById(R.id.pickerShader);
         if (pickerShader_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
 
         pickerShader_.setMinValue(0);
@@ -369,7 +391,7 @@ public final class MainActivity extends Activity {
         pickerSamplesPixel_ = findViewById(R.id.pickerSamplesPixel);
         if (pickerSamplesPixel_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
         pickerSamplesPixel_.setMinValue(1);
         pickerSamplesPixel_.setMaxValue(maxSamplesPixel);
@@ -392,7 +414,7 @@ public final class MainActivity extends Activity {
         pickerSamplesLight_ = findViewById(R.id.pickerSamplesLight);
         if (pickerSamplesLight_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
         pickerSamplesLight_.setMinValue(1);
         pickerSamplesLight_.setMaxValue(maxSamplesLight);
@@ -404,7 +426,7 @@ public final class MainActivity extends Activity {
         pickerAccelerator_ = findViewById(R.id.pickerAccelerator);
         if (pickerAccelerator_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
         pickerAccelerator_.setMinValue(0);
         final String[] accelerators = {"Naive", "RegGrid", "BVH", "None"};
@@ -417,7 +439,7 @@ public final class MainActivity extends Activity {
         pickerThreads_ = findViewById(R.id.pickerThreads);
         if (pickerThreads_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
         pickerThreads_.setMinValue(1);
         final int maxCores = MainActivity.getNumberOfCores();
@@ -443,7 +465,7 @@ public final class MainActivity extends Activity {
         pickerSizes_ = findViewById(R.id.pickerSize);
         if (pickerSizes_ == null) {
             Log.e("NumberPicker", "NumberPicker is NULL !!!");
-            System.exit(0);
+            System.exit(1);
         }
         pickerSizes_.setMinValue(1);
         pickerSizes_.setMaxValue(maxSizes);

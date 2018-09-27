@@ -43,6 +43,7 @@ class MainRenderer implements Renderer {
     private int shaderProgram;
     private int shaderProgramRaster;
     private DrawView drawView_ = null;
+    boolean rasterize_;
 
     private void checkGLError() {
         final int glError = GLES20.glGetError();
@@ -92,7 +93,7 @@ class MainRenderer implements Renderer {
                 System.exit(1);
             }
         } else {
-            Log.e("MobileRT", "shader = 0");
+            Log.e("MobileRT", "GLES20.glCreateShader = 0");
             System.exit(1);
         }
         return shader;
@@ -139,6 +140,18 @@ class MainRenderer implements Renderer {
 
     @Override
     public void onDrawFrame(final GL10 gl) {
+        if (rasterize_) {
+            rasterize_ = false;
+            if (drawView_.arrayVertices != null && drawView_.arrayColors != null && drawView_.arrayCamera != null) {
+                copyFrame(drawView_.arrayVertices, drawView_.arrayColors, drawView_.arrayCamera, drawView_.numberPrimitives_);
+            }
+
+            drawView_.renderIntoBitmap(bitmap_, drawView_.numThreads_, true);
+            drawView_.renderTask_ = new RenderTask(drawView_.viewText_, drawView_::requestRender, drawView_::finishRender);
+            drawView_.renderTask_.execute();
+        }
+
+
         GLES20.glUseProgram(shaderProgram);
         checkGLError();
 
@@ -244,7 +257,7 @@ class MainRenderer implements Renderer {
         if (shaderProgram == 0) {
             Log.e("PROGRAM SHADER", "Could not create program: ");
             Log.e("PROGRAM SHADER", GLES20.glGetProgramInfoLog(0));
-            System.exit(0);
+            System.exit(1);
         }
 
         //Attach and link shaders to program
@@ -260,7 +273,7 @@ class MainRenderer implements Renderer {
         GLES20.glGenTextures(Number_Texures, textureHandle, 0);
         if (textureHandle[0] == 0) {
             Log.e("Error loading texture.", "Error loading texture");
-            System.exit(0);
+            System.exit(1);
         }
 
 
@@ -293,7 +306,7 @@ class MainRenderer implements Renderer {
             Log.e("PROGRAM SHADER LOG", "Could not link program: ");
             Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgram));
             GLES20.glDeleteProgram(shaderProgram);
-            System.exit(0);
+            System.exit(1);
         }
 
         //Shader program 1
@@ -318,11 +331,12 @@ class MainRenderer implements Renderer {
         drawView_ = drawView;
     }
 
-    void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera, final int numberPrimitives) {
+    private void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera, final int numberPrimitives) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
         checkGLError();
 
-        final int triangleMembers = (Float.SIZE / Byte.SIZE) * 9;
+        final int floatSize = Float.SIZE / Byte.SIZE;
+        final int triangleMembers = floatSize * 9;
         final int triangleMethods = 8 * 11;
         final int triangleSize = triangleMembers + triangleMethods;
         final int neededMemory = (numberPrimitives * triangleSize) / 1048576;
@@ -352,10 +366,6 @@ class MainRenderer implements Renderer {
             return;
         }
 
-        //Load shaders
-        final int vertexShaderRaster = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);
-        final int fragmentShaderRaster = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCodeRaster);
-
         //Create Program
         if (shaderProgramRaster != 0) {
             GLES20.glDeleteProgram(shaderProgramRaster);
@@ -381,6 +391,10 @@ class MainRenderer implements Renderer {
         GLES20.glEnableVertexAttribArray(colorAttrib2);
         checkGLError();
 
+        //Load shaders
+        final int vertexShaderRaster = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCodeRaster);
+        final int fragmentShaderRaster = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCodeRaster);
+
         //Attach and link shaders to program
         GLES20.glAttachShader(shaderProgramRaster, vertexShaderRaster);
         checkGLError();
@@ -389,6 +403,10 @@ class MainRenderer implements Renderer {
         checkGLError();
 
         GLES20.glLinkProgram(shaderProgramRaster);
+        checkGLError();
+
+        final int[] attachedShadersRaster = new int[1];
+        GLES20.glGetProgramiv(shaderProgramRaster, GLES20.GL_ATTACHED_SHADERS, attachedShadersRaster, 0);
         checkGLError();
 
         final int[] linkStatusRaster = new int[1];
@@ -400,19 +418,19 @@ class MainRenderer implements Renderer {
         }
 
         if (linkStatusRaster[0] != GLES20.GL_TRUE) {
-            Log.e("PROGRAM SHADER LOG", "Could not link program rasterizer: ");
-            Log.e("PROGRAM SHADER LOG", GLES20.glGetProgramInfoLog(shaderProgramRaster));
+            final String strError = GLES20.glGetProgramInfoLog(shaderProgramRaster);
+            Log.e("PROGRAM SHADER LOG", "attachedShadersRaster = " + attachedShadersRaster[0]);
+            Log.e("PROGRAM SHADER LOG", "Could not link program rasterizer: " + strError);
             checkGLError();
             GLES20.glDeleteProgram(shaderProgramRaster);
             checkGLError();
-            System.exit(0);
+            System.exit(1);
         }
 
 
         GLES20.glUseProgram(shaderProgramRaster);
         checkGLError();
 
-        final int floatSize = Float.SIZE / Byte.SIZE;
         final float zNear = 0.1f;
         final float zFar = 1.0e38f;
 

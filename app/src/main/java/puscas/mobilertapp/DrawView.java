@@ -23,15 +23,15 @@ import javax.microedition.khronos.egl.EGLDisplay;
 public class DrawView extends GLSurfaceView {
     final ViewText viewText_ = new ViewText();
     MainRenderer renderer_ = null;
-    private RenderTask renderTask_ = null;
-    private int numThreads_ = 0;
+    RenderTask renderTask_ = null;
+    int numThreads_ = 0;
     private static final int EGL_CONTEXT_CLIENT_VERSION_VALUE = 2;
     private static EGLContext retainedGlContext = null;
-    private ByteBuffer arrayVertices = null;
-    private ByteBuffer arrayColors = null;
-    private ByteBuffer arrayCamera = null;
+    ByteBuffer arrayVertices = null;
+    ByteBuffer arrayColors = null;
+    ByteBuffer arrayCamera = null;
     private boolean changingConfigurations = false;
-    private int numberPrimitives_ = 0;
+    int numberPrimitives_ = 0;
     private MainActivity mainActivity_ = null;
 
     public boolean getFreeMemStatic(final int memoryNeed) {
@@ -95,7 +95,7 @@ public class DrawView extends GLSurfaceView {
 
     private native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
-    private native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
+    native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
 
     private native ByteBuffer initVerticesArray();
 
@@ -123,10 +123,9 @@ public class DrawView extends GLSurfaceView {
 
     @Override
     public void onPause() {
+        super.onPause();
         changingConfigurations = getActivity().isChangingConfigurations();
-        super.onPause();
-        setVisibility(View.GONE);
-        super.onPause();
+        //setVisibility(View.GONE);
     }
 
     @Override
@@ -196,20 +195,11 @@ public class DrawView extends GLSurfaceView {
         viewText_.start_ = 0;
         viewText_.printText();
 
-        this.postDelayed(() ->
-            queueEvent(() -> {
-                viewText_.start_ = SystemClock.elapsedRealtime();
-                if (arrayVertices != null && arrayColors != null && arrayCamera != null) {
-                    renderer_.copyFrame(arrayVertices, arrayColors, arrayCamera, numberPrimitives_);
-                }
-
-                renderIntoBitmap(renderer_.bitmap_, numThreads_, true);
-                renderTask_ = new RenderTask(viewText_, this::requestRender, this::finishRender);
-                renderTask_.execute();
-                final DrawView.TouchHandler touchHandler = new DrawView.TouchHandler();
-                this.setOnTouchListener(touchHandler);
-                requestRender();
-            }), 100);
+        final DrawView.TouchHandler touchHandler = new DrawView.TouchHandler();
+        this.setOnTouchListener(touchHandler);
+        renderer_.rasterize_ = true;
+        viewText_.start_ = SystemClock.elapsedRealtime();
+        requestRender();
     }
 
     int createScene(final int scene, final int shader, final int numThreads, final int accelerator,
@@ -254,7 +244,7 @@ public class DrawView extends GLSurfaceView {
         }
     }
 
-    private final class TouchHandler implements View.OnTouchListener {
+    final class TouchHandler implements View.OnTouchListener {
         TouchHandler() {
             super();
         }
