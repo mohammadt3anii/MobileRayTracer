@@ -5,6 +5,7 @@
 #include "DrawView.hpp"
 #include <android/bitmap.h>
 #include <glm/glm.hpp>
+#include <fstream>
 #include <mutex>
 
 static ::State working_{State::IDLE};
@@ -241,6 +242,17 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
     env->ExceptionClear();
 }
 
+static ::std::streampos fileSize(const char *filePath) {
+    ::std::ifstream file{filePath, ::std::ios::binary};
+
+    const ::std::streampos fileBegin{file.tellg()};
+    file.seekg(0, ::std::ios::end);
+    const ::std::streampos fileSize{file.tellg() - fileBegin};
+    file.close();
+
+    return fileSize;
+}
+
 extern "C"
 jint Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *env,
@@ -360,6 +372,15 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 {
                     const jboolean result {
                             env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
+                    if (result) {
+                        return -1;
+                    }
+                }
+
+                const auto objSize{fileSize(objFileName) / 1048576};
+                {
+                    const jboolean result{
+                            env->CallBooleanMethod(thiz, mainActivityMethodId, 2 * objSize)};
                     if (result) {
                         return -1;
                     }

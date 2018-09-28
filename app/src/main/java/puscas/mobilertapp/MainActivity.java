@@ -143,6 +143,7 @@ public final class MainActivity extends Activity {
 
             /*final String objFile = "conference/conference";
             final String objFile = "buddha/buddha";
+            final String objFile = "powerplant/powerplant";
             String sdCardPath = Environment.getExternalStorageDirectory() + "/";
             sdCardPath = sdCardPath.replace("/storage/sdcard0", "/storage/extSdCard");
             sdCardPath = sdCardPath.replace("/emulated/0", "/1AE9-2819");
@@ -409,6 +410,7 @@ public final class MainActivity extends Activity {
             samplesLight = new String[maxSamplesLight];
         } catch (final OutOfMemoryError e) {
             e.fillInStackTrace();
+            Log.e("mobilertapp:", e.getMessage());
             throw e;
         }
         for (int i = 0; i < maxSamplesLight; i++) {
@@ -457,6 +459,7 @@ public final class MainActivity extends Activity {
             sizes = new String[maxSizes];
         } catch (final OutOfMemoryError e) {
             e.fillInStackTrace();
+            Log.e("mobilertapp:", e.getMessage());
             throw e;
         }
         sizes[0] = String.format(Locale.US, "%.2f", 0.05f) + 'x';

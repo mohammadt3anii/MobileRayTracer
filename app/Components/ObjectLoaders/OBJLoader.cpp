@@ -28,9 +28,11 @@ OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
     ::std::string err {};
     errno = 0;
 
+    LOG("Going to call tinyobj::LoadObj");
     const bool ret {
             ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream,
                                matStreamReaderPtr, true)};
+    LOG("Called tinyobj::LoadObj");
 
     if (!err.empty()) {
         LOG("Error: ", err);
