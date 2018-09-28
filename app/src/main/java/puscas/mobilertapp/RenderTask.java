@@ -45,7 +45,7 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
             updateRender_.run();
             publishProgress();
             if (stage != DrawView.Stage.busy.id_) {
-                scheduler_.shutdownNow();
+                scheduler_.shutdown();
             }
         };
     }
@@ -56,7 +56,7 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
         boolean running = true;
         do {
             try {
-                running = !scheduler_.awaitTermination(1L, TimeUnit.DAYS);
+                running = !scheduler_.awaitTermination(1, TimeUnit.DAYS);
             } catch (final InterruptedException e) {
                 Log.e("InterruptedException", e.getMessage());
                 System.exit(1);
@@ -74,7 +74,7 @@ final class RenderTask extends AsyncTask<Void, Void, Void> {
     protected final void onPostExecute(final Void result) {
         viewText_.printText();
         viewText_.buttonRender_.setText(R.string.render);
-        finishRender_.run();
         updateRender_.run();
+        finishRender_.run();
     }
 }

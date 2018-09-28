@@ -18,7 +18,7 @@ OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
         mtlFilePath_{::std::move(materials)} {
 }
 
-void OBJLoader::process() noexcept {
+::std::int32_t OBJLoader::process() noexcept {
     ::std::ifstream objStream {objFilePath_};
     objStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::std::ifstream matStream {mtlFilePath_};
@@ -43,21 +43,24 @@ void OBJLoader::process() noexcept {
 
     if (ret) {
         isProcessed_ = true;
+        numberTriangles_ = 0;
+        for (const auto &shape : shapes_) {
+            for (const auto num_face_vertice : shape.mesh.num_face_vertices) {
+                const ::std::size_t triangles{static_cast<::std::size_t>(num_face_vertice / 3)};
+                numberTriangles_ += triangles;
+            }
+        }
+    } else {
+        isProcessed_ = false;
+        numberTriangles_ = -1;
     }
+
+    return numberTriangles_;
 }
 
 bool OBJLoader::fillScene(Scene *const scene,
                           ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda) noexcept {
-    ::std::size_t numberTriangles{0};
-
-    for (const auto &shape : shapes_) {
-        for (const auto num_face_vertice : shape.mesh.num_face_vertices) {
-            const ::std::size_t triangles{static_cast<::std::size_t>(num_face_vertice / 3)};
-            numberTriangles += triangles;
-        }
-    }
-
-    scene->triangles_.reserve(numberTriangles);
+    scene->triangles_.reserve(static_cast<::std::size_t> (numberTriangles_));
 
     for (const auto &shape : shapes_) {
         // Loop over faces(polygon)

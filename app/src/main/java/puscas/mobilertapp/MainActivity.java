@@ -101,6 +101,8 @@ public final class MainActivity extends Activity {
                 final int ret = drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText, matText);
                 if (ret != -1) {
                     drawView_.startRender();
+                } else {
+                    this.drawView_.stopDrawing();
                 }
                 break;
 
@@ -140,6 +142,7 @@ public final class MainActivity extends Activity {
             startActivityForResult(intentChooseFile, 1);
 
             /*final String objFile = "conference/conference";
+            final String objFile = "buddha/buddha";
             String sdCardPath = Environment.getExternalStorageDirectory() + "/";
             sdCardPath = sdCardPath.replace("/storage/sdcard0", "/storage/extSdCard");
             sdCardPath = sdCardPath.replace("/emulated/0", "/1AE9-2819");

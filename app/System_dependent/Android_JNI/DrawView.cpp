@@ -232,7 +232,7 @@ void Java_puscas_mobilertapp_DrawView_stopRender(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    //Fix this race condition
+    //TODO: Fix this race condition
     if (renderer_ != nullptr) {
         renderer_->stopRender();
     }
@@ -364,10 +364,15 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                         return -1;
                     }
                 }
-                objLoader.process();
+                const ::std::int32_t numberPrimitives{objLoader.process()};
+                const ::std::int32_t triangleSize{sizeof(::MobileRT::Triangle)};
+                const ::std::int32_t bvhNodeSize{sizeof(::MobileRT::BVHNode)};
+                const ::std::int32_t memPrimitives{(numberPrimitives * triangleSize) / 1048576};
+                const ::std::int32_t memNodes{(2 * numberPrimitives * bvhNodeSize) / 1048576};
                 {
                     const jboolean result {
-                            env->CallBooleanMethod(thiz, mainActivityMethodId, 1)};
+                            env->CallBooleanMethod(thiz, mainActivityMethodId,
+                                                   memPrimitives + memNodes)};
                     if (result) {
                         return -1;
                     }
@@ -927,7 +932,7 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    //Fix this race condition
+    //TODO: Fix this race condition
     if (renderer_ != nullptr) {
         renderer_->stopRender();
     }
@@ -939,7 +944,6 @@ void Java_puscas_mobilertapp_DrawView_finishRender(
             thread_.reset();
             thread_ = nullptr;
             LOG("DELETED RENDERER");
-            renderer_ = nullptr;
         }
     }
     working_ = State::IDLE;
@@ -1121,7 +1125,7 @@ extern "C"
     ::std::uint32_t sample{0};
     {
         //const ::std::lock_guard<::std::mutex> lock {mutex_};
-        //Fix this race condition
+        //TODO: Fix this race condition
         if (renderer_ != nullptr) {
             sample = renderer_->getSample();
         }

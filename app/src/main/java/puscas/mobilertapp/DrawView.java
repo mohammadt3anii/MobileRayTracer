@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -21,27 +22,32 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
 public class DrawView extends GLSurfaceView {
+    private static final int EGL_CONTEXT_CLIENT_VERSION_VALUE = 2;
+    private static EGLContext retainedGlContext = null;
+    int numThreads_ = 0;
+    private MainActivity mainActivity_ = null;
+
     final ViewText viewText_ = new ViewText();
     MainRenderer renderer_ = null;
     RenderTask renderTask_ = null;
-    int numThreads_ = 0;
-    private static final int EGL_CONTEXT_CLIENT_VERSION_VALUE = 2;
-    private static EGLContext retainedGlContext = null;
     ByteBuffer arrayVertices = null;
     ByteBuffer arrayColors = null;
     ByteBuffer arrayCamera = null;
     private boolean changingConfigurations = false;
     int numberPrimitives_ = 0;
-    private MainActivity mainActivity_ = null;
 
     public boolean getFreeMemStatic(final int memoryNeed) {
-        final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(Context.ACTIVITY_SERVICE);
-        final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-        final long availMem = memoryInfo.availMem / 1048576L;
-        final boolean lowMem = memoryInfo.lowMemory;
-        final boolean res = availMem <= (1 + memoryNeed);
-        return res || lowMem;
+        boolean res = true;
+        if (memoryNeed >= 0) {
+            final ActivityManager activityManager = (ActivityManager) mainActivity_.getSystemService(Context.ACTIVITY_SERVICE);
+            final ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            activityManager.getMemoryInfo(memoryInfo);
+            final long availMem = memoryInfo.availMem / 1048576L;
+            final boolean lowMem = memoryInfo.lowMemory;
+            final boolean notEnoughMem = availMem <= (1 + memoryNeed);
+            res = notEnoughMem || lowMem;
+        }
+        return res;
     }
 
     public DrawView(final Context context) {
@@ -95,8 +101,6 @@ public class DrawView extends GLSurfaceView {
 
     private native int initialize(final int scene, final int shader, final int width, final int height, final int accelerator, final int samplesPixel, final int samplesLight, final String objFile, final String matText);
 
-    native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
-
     private native ByteBuffer initVerticesArray();
 
     private native ByteBuffer initColorsArray();
@@ -108,6 +112,8 @@ public class DrawView extends GLSurfaceView {
     private native void stopRender();
 
     private native int getNumberOfLights();
+
+    native void renderIntoBitmap(final Bitmap image, final int numThreads, final boolean async);
 
     native int traceTouch(final float x, final float y);
 
@@ -210,6 +216,7 @@ public class DrawView extends GLSurfaceView {
 
         numberPrimitives_ = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
         if (numberPrimitives_ == -1) {
+            Log.e("MobileRT", "Device without enough memory to render the scene.");
             for (int i = 0; i < 2; ++i) {
                 Toast.makeText(getContext(), "Device without enough memory to render the scene.", Toast.LENGTH_LONG).show();
             }

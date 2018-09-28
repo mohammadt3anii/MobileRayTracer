@@ -16,6 +16,7 @@ namespace MobileRT {
     class ObjectLoader {
     protected:
         bool isProcessed_{false};
+        ::std::int32_t numberTriangles_{-1};
 
     public:
         explicit ObjectLoader() noexcept = default;
@@ -30,7 +31,7 @@ namespace MobileRT {
 
         ObjectLoader &operator=(ObjectLoader &&objectLoader) noexcept = delete;
 
-        virtual void process() noexcept = 0;
+        virtual ::std::int32_t process() noexcept = 0;
 
         bool isProcessed() const noexcept;
 
