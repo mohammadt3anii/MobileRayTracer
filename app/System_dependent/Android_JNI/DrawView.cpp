@@ -367,12 +367,16 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 const ::std::int32_t numberPrimitives{objLoader.process()};
                 const ::std::int32_t triangleSize{sizeof(::MobileRT::Triangle)};
                 const ::std::int32_t bvhNodeSize{sizeof(::MobileRT::BVHNode)};
+                const ::std::int32_t aabbSize{sizeof(::MobileRT::AABB)};
+                const ::std::int32_t floatSize{sizeof(float)};
                 const ::std::int32_t memPrimitives{(numberPrimitives * triangleSize) / 1048576};
                 const ::std::int32_t memNodes{(2 * numberPrimitives * bvhNodeSize) / 1048576};
+                const ::std::int32_t memAABB{(2 * numberPrimitives * aabbSize) / 1048576};
+                const ::std::int32_t memFloat{(2 * numberPrimitives * floatSize) / 1048576};
                 {
                     const jboolean result {
                             env->CallBooleanMethod(thiz, mainActivityMethodId,
-                                                   memPrimitives + memNodes)};
+                                                   memPrimitives + memNodes + memAABB + memFloat)};
                     if (result) {
                         return -1;
                     }
