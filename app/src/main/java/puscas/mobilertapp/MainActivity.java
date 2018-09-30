@@ -119,17 +119,21 @@ public final class MainActivity extends Activity {
 
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        final Uri uri = data.getData();
-        if (resultCode == Activity.RESULT_OK && uri != null) {
-            final String sdCardDir = Environment.getExternalStorageDirectory() + "/";
-            String filePath = uri.getEncodedPath();
-            filePath = filePath.replace("%2F", "/");
-            filePath = filePath.replace("%3A", "/");
-            filePath = filePath.replace("/document/primary/", sdCardDir);
-            filePath = filePath.replace("/document", "/storage");
+        if (data != null) {
+            final Uri uri = data.getData();
+            if (resultCode == Activity.RESULT_OK && uri != null) {
+                final String sdCardDir = Environment.getExternalStorageDirectory() + "/";
+                String filePath = uri.getEncodedPath();
+                if (filePath != null) {
+                    filePath = filePath.replace("%2F", "/");
+                    filePath = filePath.replace("%3A", "/");
+                    filePath = filePath.replace("/document/primary/", sdCardDir);
+                    filePath = filePath.replace("/document", "/storage");
 
-            final int lastIndex = filePath.lastIndexOf('.');
-            objFile_ = filePath.substring(0, lastIndex);
+                    final int lastIndex = filePath.lastIndexOf('.');
+                    objFile_ = filePath.substring(0, lastIndex);
+                }
+            }
         }
     }
 
@@ -144,13 +148,14 @@ public final class MainActivity extends Activity {
             /*final String objFile = "conference/conference";
             final String objFile = "buddha/buddha";
             final String objFile = "powerplant/powerplant";
+            final String objFile = "San_Miguel/san-miguel";
             String sdCardPath = Environment.getExternalStorageDirectory() + "/";
             sdCardPath = sdCardPath.replace("/storage/sdcard0", "/storage/extSdCard");
             sdCardPath = sdCardPath.replace("/emulated/0", "/1AE9-2819");
             final String filePath = sdCardPath + "WavefrontOBJs/" + objFile;
             startStopRender(filePath);*/
         } catch (final android.content.ActivityNotFoundException ex) {
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 6; ++i) {
                 Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
             }
         }

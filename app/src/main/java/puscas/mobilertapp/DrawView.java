@@ -217,7 +217,7 @@ public class DrawView extends GLSurfaceView {
         numberPrimitives_ = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
         if (numberPrimitives_ == -1) {
             Log.e("MobileRT", "Device without enough memory to render the scene.");
-            for (int i = 0; i < 2; ++i) {
+            for (int i = 0; i < 6; ++i) {
                 Toast.makeText(getContext(), "Device without enough memory to render the scene.", Toast.LENGTH_LONG).show();
             }
             return -1;
