@@ -238,9 +238,10 @@ Intersection RegularGrid::intersect(
     // trace primary ray
     while (true) {
         const ::std::int32_t index {
-                static_cast<::std::int32_t> (X) +
-                (static_cast<::std::int32_t>(Y) << gridShift_) +
-                (static_cast<::std::int32_t>(Z) << (gridShift_ * 2))};
+            static_cast<int32_t>(
+                static_cast<::std::uint32_t> (X) +
+                (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
+                (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
         const auto it {primitivesMatrix.begin() + index};
         ::std::vector<T *> primitivesList {*it};
         for (auto *const primitive : primitivesList) {
@@ -288,9 +289,10 @@ Intersection RegularGrid::intersect(
     testloop:
     while (true) {
         const ::std::int32_t index {
-                static_cast<::std::int32_t> (X) +
-                (static_cast<::std::int32_t>(Y) << gridShift_) +
-                (static_cast<::std::int32_t>(Z) << (gridShift_ * 2))};
+            static_cast<int32_t>(
+                static_cast<::std::uint32_t> (X) +
+                (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
+                (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
         const auto it {primitivesMatrix.begin() + index};
         ::std::vector<T *> primitivesList {*it};
         for (auto *const primitive : primitivesList) {

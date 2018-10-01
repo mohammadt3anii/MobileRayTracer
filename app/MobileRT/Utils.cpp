@@ -29,9 +29,9 @@ namespace MobileRT {
         const ::glm::vec3 &sample, const ::std::uint32_t avg,
         const ::std::uint32_t numSample) noexcept {
 
-        const ::std::uint32_t lastRed{avg & 0xFF};
-        const ::std::uint32_t lastGreen{(avg >> 8) & 0xFF};
-        const ::std::uint32_t lastBlue{(avg >> 16) & 0xFF};
+        const ::std::uint32_t lastRed{avg & 0xFFu};
+        const ::std::uint32_t lastGreen{(avg >> 8u) & 0xFFu};
+        const ::std::uint32_t lastBlue{(avg >> 16u) & 0xFFu};
 
         const ::std::uint32_t samplerRed{static_cast<::std::uint32_t> (sample[0] * 255)};
         const ::std::uint32_t samplerGreen{static_cast<::std::uint32_t> (sample[1] * 255)};
@@ -45,7 +45,7 @@ namespace MobileRT {
         const ::std::uint32_t retG {::std::min(currentGreen, 255u)};
         const ::std::uint32_t retB {::std::min(currentBlue, 255u)};
 
-        const ::std::uint32_t res{0xFF000000 | (retB << 16) | (retG << 8) | retR};
+        const ::std::uint32_t res{0xFF000000u | (retB << 16u) | (retG << 8u) | retR};
 
         return res;
     }

@@ -12,9 +12,10 @@ namespace {
     ::std::array<float, SIZE> VALUES;
 
     bool FillThings() {
-        static ::std::uniform_real_distribution<float> uniform_dist{0.0f, 1.0f};
-        static ::std::mt19937 gen(::std::random_device {}());
-        ::std::generate(VALUES.begin(), VALUES.end(), []() {return uniform_dist(gen);});
+        static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
+        static ::std::random_device randomDevice {"/dev/urandom"};
+        static ::std::mt19937 generator {randomDevice()};
+        ::std::generate(VALUES.begin(), VALUES.end(), []() {return uniform_dist(generator);});
         return true;
     }
 }//namespace

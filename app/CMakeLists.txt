@@ -101,8 +101,7 @@ else ()
 
 	target_include_directories( ${PROJECT_NAME} PRIVATE "${GTK2_INCLUDE_DIRS}" )
 	target_compile_options( ${PROJECT_NAME} PRIVATE -Wno-reserved-id-macro -Wno-documentation-unknown-command -Wno-old-style-cast -Wno-documentation -Wno-zero-as-null-pointer-constant -Wno-redundant-parens -Wno-unused-variable -Wno-weak-vtables -Wno-sign-conversion )
-	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" )
-	target_link_libraries( ${PROJECT_NAME} PRIVATE GSL )
+	target_link_libraries( ${PROJECT_NAME} PRIVATE "${GTK2_LIBRARIES}" GSL )
 endif()
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
@@ -119,10 +118,8 @@ target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLA
 
 #target_compile_options( ${PROJECT_NAME} PRIVATE $<$<NOT:$<BOOL:ANDROID_ABI MATCHES "^mips(64)?$" >>:-flto=full> )
 
-target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
-
 target_link_libraries( ${PROJECT_NAME}
-PRIVATE Components tinyobjloader
+PRIVATE glm Components tinyobjloader
 general "${COMMON_LINKER_FLAGS}"
 debug "${COMMON_LINKER_FLAGS_DEBUG}"
 optimized "${COMMON_LINKER_FLAGS_RELEASE}"

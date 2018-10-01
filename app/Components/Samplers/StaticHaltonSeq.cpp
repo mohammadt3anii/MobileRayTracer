@@ -16,7 +16,8 @@ namespace {
             const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
             *it = ::MobileRT::haltonSequence(index, 2);
         }
-        static ::std::mt19937 generator(::std::random_device{}());
+        static ::std::random_device randomDevice {"/dev/urandom"};
+        static ::std::mt19937 generator {randomDevice()};
         ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
         return true;
     }

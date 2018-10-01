@@ -15,8 +15,6 @@ target_compile_options( ${PROJECT_NAME} PRIVATE ${COMMON_FLAGS} )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:${COMMON_FLAGS_DEBUG}> )
 target_compile_options( ${PROJECT_NAME} PRIVATE $<$<CONFIG:RELEASE>:${COMMON_FLAGS_RELEASE}> )
 
-target_link_libraries( ${PROJECT_NAME} PRIVATE glm )
-
 if( DEFINED ANDROID_ABI )
   target_link_libraries( ${PROJECT_NAME} PUBLIC log )
 else()
@@ -24,7 +22,7 @@ else()
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-PUBLIC atomic PRIVATE
+PRIVATE glm atomic
 general "${COMMON_LINKER_FLAGS}"
 debug "${COMMON_LINKER_FLAGS_DEBUG}"
 optimized "${COMMON_LINKER_FLAGS_RELEASE}"

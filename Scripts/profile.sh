@@ -119,16 +119,16 @@ function execute {
 
 
 function clangtidy {
-  clang-tidy-5.0 \
+  clang-tidy \
 	-analyze-temporary-dtors \
-	-checks='*,-*llvm-header-guard*' \
+	-checks='*,-*llvm-header-guard*,-fuchsia-default-arguments' \
 	-header-filter='.*' \
   ${MOBILERT_SRCS}/MobileRT/*.*pp \
   ${MOBILERT_SRCS}/MobileRT/*/*.*pp \
   ${COMPONENTS_SRCS}/Components/*/*.*pp \
 	${DEPENDENT_SRCS}/Linux/*.*pp \
   ${SCENES_SRCS}/*.*pp \
-	-- -std=c++17 -stdlib=libc++ -ferror-limit=1 \
+	-- -std=c++17 -ferror-limit=1 -stdlib=libstdc++ \
   -I ${MOBILERT_SRCS} \
   -I ${COMPONENTS_SRCS} \
   -I ${DEPENDENT_SRCS}/Linux \
