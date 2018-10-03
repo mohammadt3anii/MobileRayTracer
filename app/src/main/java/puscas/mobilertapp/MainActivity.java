@@ -236,11 +236,6 @@ public final class MainActivity extends Activity {
     }
 
     @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         if (objFile_ != null) {
