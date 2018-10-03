@@ -20,7 +20,7 @@ else()
 endif()
 
 # Remove default flags
-set(ANDROID_COMPILER_FLAGS "" CACHE STRING "CUSTOM" FORCE)
+set( ANDROID_COMPILER_FLAGS "" CACHE STRING "CUSTOM" FORCE )
 
 set( CMAKE_CXX_FLAGS "-fPIC -Wno-weak-vtables" CACHE STRING "CUSTOM" FORCE )
 set( CMAKE_CXX_FLAGS_DEBUG "-D_GLIBCXX_DEBUG" CACHE STRING "CUSTOM" FORCE )
@@ -58,7 +58,7 @@ set( GLM_HEADERS "${CMAKE_SOURCE_DIR}/third_party/glm" )
 
 # Set common flags
 set( COMMON_FLAGS "${COMMON_FLAGS}" -std=c++17 -pedantic-errors -Weverything -pedantic -Wpedantic -Wall -Wextra -Wfatal-errors -Werror -ferror-limit=1 )
-set(COMMON_FLAGS "${COMMON_FLAGS}" -Wno-c++98-compat-pedantic -Wno-padded)
+set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-c++98-compat-pedantic -Wno-padded )
 set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-exit-time-destructors -Wno-global-constructors )
 set( COMMON_FLAGS "${COMMON_FLAGS}" -Wno-gnu-anonymous-struct -Wno-nested-anon-types )
 
