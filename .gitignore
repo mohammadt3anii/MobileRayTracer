@@ -43,3 +43,6 @@
 **/*.glo
 **/*.acr
 **/*.ist
+**/*.out.ps
+**/*.fdb_latexmk
+**/*.fls

@@ -23,4 +23,7 @@ rm -rf *.idx
 rm -rf *.ilg
 rm -rf *.ind
 rm -rf *.dvi
+rm -rf *.out.ps
+rm -rf *.fdb_latexmk
+rm -rf *.fls
 rm -rf dissertation.pdf
