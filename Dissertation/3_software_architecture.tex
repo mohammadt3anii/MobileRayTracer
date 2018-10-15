@@ -222,7 +222,7 @@ void stopRender() noexcept;
 \end{lstlisting}
 
 \par
-The \textit{renderFrame} method starts the rendering process and writes the calculated light luminance of each pixel in the parameter \textit{bitmap}.
+The \textit{renderFrame} method starts the rendering process and writes the calculated light luminance of each pixel in the array parameter \textit{bitmap}.
 This method also allows to choose the number of threads that will render the image into the bitmap, and needs the \textit{stride} of that bitmap array.
 Besides rendering the scene in a progressive way, the image plane is divided into 256 tiles of pixels and it is traced one primary ray per pixel in each tile.
 This allows the user to wait less time in order to view the scene being rendering.
@@ -235,7 +235,7 @@ This allows the user to wait less time in order to view the scene being renderin
 \end{figure}
 
 \par
-The \textit{stopRender} method only serves to stop the rendering process without cleaning the pixels' colors already calculated.
+The \textit{stopRender} method only serves to stop the rendering process without resetting the pixels' colors already calculated.
 
 \subsection{Scene}
 
@@ -250,7 +250,7 @@ Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
 
 \par
 The \textit{trace}, as the name implies, is a method that tries to intersect a ray with all the primitives and light sources in the scene.
-And It returns the closest intersection to the origin of that ray.
+And it returns the closest intersection to the origin of that ray.
 This method is used to determine the intersection of the casted ray with the primitives in the scene.
 
 \par
@@ -438,7 +438,7 @@ where
 As previously stated, the rendering algorithms based on ray tracing can be very computationally demanding, like Path Tracing and Bidirectional Path Tracing.
 These algorithms are very computationally demanding because if the scene is very complex, made with millions of primitives, it is necessary to try to intersect every ray casted into the scene with those millions of primitives.
 This task is, obviously, very time consuming and can waste a lot of battery power on the mobile device.
-Luckly, there are already known techniques, called acceleration structures, that helps to accelerate this process by reducing the number of intersections.
+Luckily, there are already known techniques, called acceleration structures, that helps to accelerate this process by reducing the number of intersections.
 
 \par
 There are two types of approaches that acceleration structures can have:
@@ -524,7 +524,7 @@ In this library, the BVH class is a template, because this way, it is possible t
 
 \par
 As it was said above, the library uses the Surface Area Heuristic in order to split the scene.
-The algorithm used in the library is very simple, it just needs to calculate the minimum area surface of the sum of left and right subtrees, as following:
+The algorithm used in the library is very simple, it just needs to calculate the minimum area surface of the sum of left and right sub-trees, as following:
 
 \begin{equation}
 SAH_{optimal} = min(S_L * N_L + S_R * N_R)
@@ -620,7 +620,7 @@ $intersection$
 contains the calculated information about the intersection of a ray with the nearest primitive of the scene like the intersection point, its normal and the material of the intersected material.
 Finally the parameter
 $ray$
-is where the information about the ray like the origin of the ray and its direction is accessed.
+is where the information about the ray like its origin and its direction is accessed.
 
 \par
 The method
