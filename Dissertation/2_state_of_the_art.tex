@@ -24,13 +24,17 @@ This is why ray tracing can't provide interactive frame rates with ease.
 
 \par
 Fortunately, the present state of available technology provides affordable machines with multiple CPU cores that can work in parallel and with great performance.
-This is achieved thanks to features developed inside the processor like the cache, the multilevel pipeline, the hardware prefetching and SIMD instruction set already available in the current processors.
+This is achieved thanks to Micro-architectural techniques developed inside the processor that are used to exploit ILP, like:
+the CPU cache, the Instruction pipelining, the Cache prefetching, the Superscalar execution, the Out-of-order execution, the Register renaming, the Speculative execution, the Branch prediction and the SIMD instruction set already available in the current processors.
 
 \par
 The cache is a very small and fast multilevel memory inside the processor that temporarily stores the data read from the main memory.
+\par
 This memory allows reading its content at a very low latency in the order of magnitude of around 1 nanosecond in the first level, 10 nanoseconds at second level and 50 nanoseconds at third level compared to the typical 100 nanoseconds of a DDR main memory.
+Like it was said, the CPU cache can be around 100x faster than the RAM.
+\par
 The downside is that it is very small because its cost are much higher than a typical RAM memory.
-Nowadays, the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB which is very little compared to the typical 16GB provided by the memory RAM.
+Nowadays, the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB which is very little compared to the typical 16GB provided by the RAM.
 
 \begin{figure}[H]
 	\centering
@@ -40,7 +44,7 @@ Nowadays, the level 1 has 64kB, the level 2 has 256kB and the level 3 has 8 MB w
 \end{figure}
 
 \par
-The multilevel pipeline is a feature inside a processor which allows to reduce the processor's own latency by allowing a form of parallelism called instruction-level parallelism within a single processor.
+The Instruction pipelining is a feature inside a processor which allows to reduce the processor's own latency by allowing a form of parallelism called instruction-level parallelism within a single processor.
 Basically, one instruction is divided in some stages and it allows the possibility to execute different stages of different instructions simultaneously.
 In the early days, the Classic RISC pipeline were typically divided in five stages:
 \begin{itemize}  
@@ -61,13 +65,36 @@ This allows faster CPU throughput, which means the number of instructions that c
 \end{figure}
 
 \par
-The hardware prefetching is, as the name implies, a feature in the processor that makes the processor fetch the data and the instructions before it really needs to execute.
+The Cache prefetching is, as the name implies, a feature in the processor that makes the processor fetch the data and the instructions from the RAM to the CPU cache before it really needs to read or execute.
 This allows to reduce the time which the processor spends waiting for the main memory data.
 
 \par
-Finally, SIMD instruction set is a set of special instructions that allows the processor to read or write bigger sizes of data.
+Superscalar execution is when the CPU uses multiple functional units simultaneously for the same type of task.
+For example, the CPU can fetch, decode and even execute two instructions at the same time.
+
+\begin{figure}[H]
+	\centering
+	\caption{Illustration of a simple superscalar pipeline (\cite{CPU_SuperPipeline}).}
+	\label{Superscalar.}
+	\includegraphics[keepaspectratio,scale=0.2]{Superscalarpipeline.png}
+\end{figure}
+
+\par
+Out-of-order execution is the name of the technique that allows the CPU to reorder the instructions that are gonna be executed.
+This allows the CPU to execute the instructions out of order when they don't have a dependency and so it makes use of instruction cycles that would otherwise be wasted.
+Usually this technique uses the register renaming which is another technique that is used to avoid unnecessary serialization of program operations imposed by the reuse of registers by those operations.
+
+\par
+Speculative execution is the technique where the CPU performs some task that may not be needed.
+This prevents the CPU to having a delay that would have to be incurred by doing the work after it is known that it is needed.
+
+\par
+Branch prediction is the technique where the CPU starts to execute the instructions of a path of a branch before it even knows which branch it needs to take.
+
+\par
+Finally, the SIMD instruction set is a set of special instructions that allows the processor to read or write bigger sizes of data.
 Typically, a 64 bit processor can only work with 64 bits of information at a time during the execution of an instruction.
-This feature can allow to read or write up to 512 bits by using special registers and additional ALUs provided in the processor.
+This feature can allow to read or write up to 256 or even 512 bits by using special registers and additional ALUs provided in the processor.
 
 \begin{figure}[H]
 	\centering
@@ -79,6 +106,7 @@ This feature can allow to read or write up to 512 bits by using special register
 \par
 Nowadays, even mobile devices like smart phones and tablets have multiple CPU cores with features similar to those described above.
 This opens the possibility to execute more computationally demanding algorithms, like ray tracing, in these devices.
+And it is important to mention that all the optimization techniques described above are or can be transparent to the software programmer, and which only the processor and the compiler have to know they exist.
 
 \section{Key features of Ray Tracing for this work}
 
@@ -93,9 +121,16 @@ For this work, the most important features in a ray tracer are: the type of soft
 
 \par
 A software application can have different type of software license, but in order to simplify this dissertation, the software license were grouped into three types: Free, Commercial and Open Source.
+\par
 The license Free means that the user has the right to execute freely the application but cannot copy, modify or distribute the implemented code.
+This includes the Freeware, Shareware and Freemium types of software licenses.
+\par
 The license Commercial means that the user cannot even execute the application without buying it first and cannot copy, modify or distribute the implemented code.
+This includes the Proprietary and Trade secret types of software licenses.
+\par
 The license Open Source means that the user has the right to execute freely the application and can even copy, modify and distribute the implemented code.
+This includes the Public-domain software, and the Permissive and Copyleft types of software licenses like the BSD and GPL.
+\par
 The software license is very important in this work because it lets the user know if he can develop something over the provided software or if he can just use the application.
 
 \subsection{Platform}
@@ -103,6 +138,7 @@ The software license is very important in this work because it lets the user kno
 \par
 An application can only be executed in the platforms that the developers compiled the code for.
 So, a ray tracer that can be executed in a desktop may also or may not be executed on another platform, like in a mobile device.
+Usually, the software is specific for a single Operating System.
 This information is very important for this work because it inform us whether a ray tracer can be executed in a mobile device with the typical Operating System like Android, iOS or Windows 10 Mobile.
 
 \subsection{Interactivity}
