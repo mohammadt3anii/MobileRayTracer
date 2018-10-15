@@ -32,10 +32,10 @@ namespace MobileRT {
     template<typename T>
     class BVH final {
     private:
-        ::std::vector<BVHNode> boxes_{};
+        ::std::vector<BVHNode> boxes_ {};
 
     public:
-        ::std::vector<Primitive<T>> primitives_{};
+        ::std::vector<Primitive<T>> primitives_ {};
 
     private:
         void build() noexcept;
@@ -70,49 +70,44 @@ namespace MobileRT {
     template<typename T>
     BVH<T>::BVH(::std::vector<Primitive<T>> &&primitives) noexcept {
         if (primitives.empty()) {
-            BVHNode bvhNode{};
+            BVHNode bvhNode {};
             boxes_.emplace_back(bvhNode);
             return;
         }
         primitives_ = ::std::move(primitives);
-        const ::std::uint32_t numberPrimitives{static_cast<::std::uint32_t>(primitives_.size())};
-        const ::std::uint32_t maxNodes{numberPrimitives * 2 - 1};
+        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives_.size())};
+        const ::std::uint32_t maxNodes {numberPrimitives * 2 - 1};
         boxes_.resize(maxNodes);
         build();
     }
 
-template<typename T>
-BVH<T>::~BVH() noexcept {
-    boxes_.clear();
-    primitives_.clear();
+    template<typename T>
+    BVH<T>::~BVH() noexcept {
+        boxes_.clear();
+        primitives_.clear();
 
-    ::std::vector<BVHNode>{}.swap(boxes_);
-    ::std::vector<Primitive < T>>
-    {}.swap(primitives_);
-}
+        ::std::vector<BVHNode>{}.swap(boxes_);
+        ::std::vector<Primitive < T>> {}.swap(primitives_);
+    }
 
     template<typename T>
     void BVH<T>::build() noexcept {
         ::std::uint32_t id {0};
         ::std::uint32_t begin {0};
         ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
+        ::std::uint32_t maxId {0};
 
         ::std::array<::std::uint32_t, 512> stackId {};
         ::std::array<::std::uint32_t, 512> stackBegin {};
         ::std::array<::std::uint32_t, 512> stackEnd {};
 
-        ::std::uint32_t maxId {0};
-
         auto itStackId {stackId.begin()};
-        *itStackId = 0;
         ::std::advance(itStackId, 1);
 
         auto itStackBegin {stackBegin.begin()};
-        *itStackBegin = 0;
         ::std::advance(itStackBegin, 1);
 
         auto itStackEnd {stackEnd.begin()};
-        *itStackEnd = 0;
         ::std::advance(itStackEnd, 1);
 
         const auto itBoxes {boxes_.begin()};
@@ -144,7 +139,6 @@ BVH<T>::~BVH() noexcept {
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
                 const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
-                    //(boxPrimitivesSize + 1) / 2
                     static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes.begin(), boxes.end()))
                 };
 
@@ -176,7 +170,6 @@ BVH<T>::~BVH() noexcept {
         ::std::array<::std::uint32_t, 512> stackId {};
 
         auto itStackId {stackId.begin()};
-        *itStackId = 0;
         ::std::advance(itStackId, 1);
 
         const auto itBoxes {boxes_.begin()};
@@ -233,7 +226,6 @@ BVH<T>::~BVH() noexcept {
         ::std::array<::std::uint32_t, 512> stackId {};
 
         auto itStackId {stackId.begin()};
-        *itStackId = 0;
         ::std::advance(itStackId, 1);
 
         const auto itBoxes {boxes_.begin()};
