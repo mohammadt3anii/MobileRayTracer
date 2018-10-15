@@ -172,11 +172,13 @@ Those libraries are:
 	\item tinyobjloader (\cite{tinyobjloader}): used to load scenes from wavefront obj files into the main memory.
 	\item Google Test (\cite{GoogleTest}): used to create some unit tests and to mock some classes.
 	This is important in order to have a safe and maintainable code.
+	\item C++ Standard Library (\cite{C++_stdlib}): used in order to save the data in popular containers like the array and the vector.
+	It also provides some useful utilities like the unique pointers in the Dynamic memory management utilities, the String and the Atomic operations used in the Samplers.
 \end{itemize}
 
 \par
 All these libraries are Android compatible and are reliable in terms of performance and maintenance.
-Besides being dependent on these threes libraries, this library also depends on OpenGL ES 2.0 (\cite{OpenGL_ES_2}) from Android SDK and depends on CMake (\cite{CMake}) in order to compile the application.
+Besides being dependent on these four libraries, this library also depends on OpenGL ES 2.0 (\cite{OpenGL_ES_2}) from Android SDK and depends on CMake (\cite{CMake}) in order to compile the application.
 
 \par
 The OpenGL ES 2.0 is necessary in order to let the application rasterize one frame of the scene so the user can view it without having to wait a long time to render it with the ray tracer.
@@ -185,8 +187,8 @@ This is done by copying the scene data from native code to the OpenGL of JVM wit
 
 \begin{figure}[H]
 	\centering
-	\caption{The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.}
-	\label{The Conference scene rendered with OpenGL ES 2.0 before the ray tracer.}
+	\caption{The Conference scene rendered with OpenGL ES 2.0 before ray tracing the scene.}
+	\label{The Conference scene rendered with OpenGL ES 2.0 before ray tracing the scene.}
 	\includegraphics[width=10cm,height=10cm,keepaspectratio,scale=1.0]{OpenGL_Conference.png}
 \end{figure}
 
@@ -201,7 +203,7 @@ But, unfortunately the NDK only provides CMake up to the version 3.6.0, so proje
 The CMake generate makefiles that call the available C++ compilers in the Android Environment.
 The NDK in Android Studio uses, by default, the LLVM Project, which is a collection of modular and reusable compiler and toolchain technologies.
 This toolchain provides Clang, which is C/C++/Objective-C compiler that aims to deliver amazingly fast compiles and extremely useful error and warning messages for the programmers.
-Unfortunately, this compiler only provides features up to C++ 14, so developers can't use the most recent features of C++ 17.
+Unfortunately, this compiler only provides features up to C++ 17, so developers can't use the most recent features of C++ 20.
 
 \par
 Last, but not least, it is important to mention that all the code of this application, including the ray tracer library, the rendering components and the Graphical User Interface are available in the github, which is a web-based hosting service for version control using Git.
