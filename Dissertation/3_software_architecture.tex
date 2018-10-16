@@ -18,7 +18,7 @@ Although this layer is useful, this dissertation focuses only on the middle and 
 \end{figure}
 
 \par
-The middle layer provides the rendering components which are abstract concepts about rendering which use functionalities that the library itself offers to the programmers.
+The middle layer provides the rendering components, which are abstract concepts about rendering, that use functionalities that the library itself offers to the programmers.
 Some of these rendering components are the camera, the light, the sampler, the integrator and the object loader.
 These rendering components are useful for the programmer since it allows them to use features without having the need to know how these were developed.
 And, of course, this facilitates and accelerates the development of new rendering applications for the programmers.
@@ -52,10 +52,6 @@ As the integrator will be converging to better values.
 This is important in order to give the user a fast rendered image, with some noise or aliasing, and converge it progressively to a better solution with higher details and practically without any visual noise or aliasing.
 
 \par
-Another thought aspect that was studied is the permission of dynamic scenes and / or dynamic cameras, which means to let the programmer modify the camera or the scene while the ray tracer is rendering it.
-This makes possible to build challenging applications and also provide more interesting scenes and more eye candy applications for the final user.
-
-\par
 Last, but not least, is that the code was developed in a modular way, in this case was programmed in an object oriented manner.
 This allows the programmers to code their own rendering components, like the integrator, camera, sampler and light, without having to develop the basic features in the renderer engine.
 
@@ -64,10 +60,10 @@ This allows the programmers to code their own rendering components, like the int
 \par
 In order to take advantage of most of the mobile CPU resources and give a good performance for the applications, the library and the rendering components were developed using the native programming language C++.
 This was achieved by using the Native Development Kit (NDK) provided by the Integrated Development Environment (IDE) Android Studio.
-This way, the mobile device can provide better performance in computationally intensive applications at the expense of the programmer having to manage manually the memory.
-And it facilitates the porting of existing C/C++ code to Android and promotes developing multiplatforms applications.
+This way, the mobile device can provide better performance in computationally intensive applications because it doesn't need the Java garbage collector.
+And it facilitates the porting of existing C/C++ code to Android and promotes developing multi-platforms applications.
 But, it won't ensure device portability despite processor architecture and the number of libraries compatible with the NDK is very scarce.
-It is also important to mention that the User Interface was developed in Java using the traditional Software Development Kit (SDK) provided by the Android Studio because there is no framework in the NDK that helps the programmer design his own user interface.
+It is also important to mention that the User Interface was developed in Java using the traditional Software Development Kit (SDK) provided by the Android Studio because there is no framework in the NDK that helps the programmer design his own User Interface.
 Despite that, its performance is not very important because it doesn't interfere significantly with the others layers of the application.
 
 
@@ -163,7 +159,7 @@ The most important classes that provide functionalities already developed for th
 \subsection{Third parties dependencies}
 
 \par
-Before describing each functionality provided in each class developed, it is important to mention that this library uses three other libraries developed in C++ by third parties.
+Before describing each functionality provided in each class developed, it is important to mention that this library uses four other libraries developed in C++ by third parties.
 Those libraries are:
 
 \begin{itemize}
@@ -270,16 +266,21 @@ The shadow ray is represented by the yellow line pointed to the light source.
 
 \par
 In order to make possible to generate scenes with all kind of objects, it was developed three types of shapes: plane, sphere and triangle.
+
+\par
 One way to allow this would be to use the process of inheritance available in C++.
 Which means, for example, create a class called Shape and create sub classes like Triangle, Plane or Sphere that are derived from that class.
 And each of those classes would implement different intersect methods.
 In this way, it would be possible for the programmer to develop his own custom shapes as new Rendering Components.
 But of course, the benefit of this flexibility also brings the downside of performance loss as the application will have at runtime to figure out which of the derived classes is required to call.
 Because, calling a virtual function requires a v-table lookup, and can make it 2-3 times slower than a normal function.
+
+\par
 The other way to do it is by developing each shape class without inheritance and being each class independent of each other.
 This can have greater performance but the downside is that the programmer cannot add new shapes to the library.
-This ray tracer was implemented this way because it is not important to let the user add his own shapes as rendering components as with only the triangles it is possible to render many types of custom shapes.
-Also, the performance is important in the intersect method of the shapes because it is a method that can be called millions of times while rendering a scene.
+This ray tracer was implemented this way because it is not important to let the user add his own custom shapes as rendering components.
+Because with only the triangles it is possible to render many types of custom shapes.
+Also, the performance is critical in the intersect method of the shapes because it is a method that can be called millions of times while rendering a scene.
 
 So, all shapes provide three important methods:
 
@@ -291,18 +292,19 @@ AABB getAABB() const noexcept;
 
 The first
 $intersect$
-method determines if a ray intersects the shape and returns the intersection.
+method determines if a ray intersects the shape and returns the corresponding intersection.
 It is important to mention that, obviously, each shape was developed with different algorithms.
 
 The second
 $intersect$
-method checks if an AABB contains the shape, and returns only true or false.
+method checks if an AABB contains the shape, and only returns true or false.
 This is useful to determine in which AABB the shape belongs to in the regular grid accelerator.
 
 Finally, the
 $getAABB$
 method, as the name implies returns the smallest AABB that surrounds the shape.
-This is used in the building of the acceleration structures because it allows to check if a ray intersects multiple shapes inside an AABB as it is simpler to intersect an AABB than a shape.
+This is used in the building of the acceleration structures because it allows to check if a ray intersects multiple shapes inside an AABB.
+And it is simpler to intersect an AABB than a shape.
 
 \subsubsection{Plane}
 
@@ -444,7 +446,7 @@ Luckily, there are already known techniques, called acceleration structures, tha
 There are two types of approaches that acceleration structures can have:
 
 \begin{itemize}
-	\item Subdivision of Space: the 3D space of the scene is divided in smaller portions of space which the volume elements can be uniform or irregular:
+	\item Subdivision of Space: the 3D space of the scene is divided into smaller portions of space which each volume element can be uniform or irregular:
 	\begin{itemize}
 		\item Regular Grids
 		\item Octrees
@@ -457,7 +459,7 @@ There are two types of approaches that acceleration structures can have:
 \end{itemize}
 
 \par
-The idea in Subdivision of Space is allowing the intersections to start with the nearest primitives of the ray and is only intersected with the further ones, if these are not in the same direction of the ray.
+The idea in Subdivision of Space is allowing the intersections to start with the nearest primitives of the ray and is only intersected with the further ones, if the closest ones are not in the same direction of the ray.
 These structures also allow the rapid and simultaneous rejection of groups of primitives.
 
 \par
@@ -494,7 +496,7 @@ The figure \ref{RegularGrid.} shows the process of intersecting a ray with the p
 \end{figure}
 
 \par
-The developed ray tracer library provides a regular grid as an acceleration structure and its operation is as shown in the figure.
+The developed ray tracer library provides a regular grid as an acceleration structure and its trace operation is as shown in the figure \ref{RegularGrid.}.
 
 \subsubsection{Bounding Volume Hierarchy}
 
@@ -502,7 +504,7 @@ The developed ray tracer library provides a regular grid as an acceleration stru
 Bounding Volume Hierarchy is another acceleration structure provided in the developed library.
 This structure is different from the regular grid because the space is not divided into voxels of the same size.
 The space is divided in a way where the primitives of the scene are grouped according to the nearest primitives of each.
-This allows to build a structure of voxels where a voxel has, for sure, one or more primitives inside.
+This allows to build a structure of voxels where each voxel has, for sure, one or more primitives inside.
 
 \par
 The figure \ref{BVH.} shows an example of a BVH structure of a scene.
@@ -564,8 +566,8 @@ This method calls the \textit{intersect} of the Shape and it returns the closest
 It is used to determine the intersection of the casted ray with the primitives in the scene.
 
 \par
-The \textit{getAABB} is the method that returns the AABB voxel that surrounds the primitive.
-It also calls the \textit{getAABB} from the Shape and it is used to construct the Acceleration Structures.
+The \textit{getAABB} is the method that returns the AABB voxel that surrounds the primitive as it just returns the call of \textit{getAABB} from the Shape.
+It is used to construct the Acceleration Structures.
 
 
 \section{Rendering Components}
@@ -602,6 +604,8 @@ In summary, a shader, in this context, is the algorithm of a BRDF.
 \par
 There were developed five shaders: NoShadows, Whitted, PathTracer, DepthMap and DiffuseMaterial.
 All shaders provide only one main method that allows the user to calculate the RGB color of a pixel with the information of a ray casted into the scene and its nearest calculated intersection.
+This method was implemented differently in each shader.
+Besides that method, the class Shader provides three other important methods that all shaders have access to:
 
 \begin{lstlisting}[caption={Main methods of Shader}, captionpos=b, label=Shader]
 virtual bool shade(glm::vec3 *rgb, const Intersection &intersection, const Ray &ray) noexcept = 0;
@@ -627,7 +631,6 @@ The method
 $getCosineSampleHemisphere$
 calculates a random direction in World coordinates around an hemisphere with a given
 $normal$.
-
 This method is used to cast new secondary rays in the scene in order to simulate the indirect light.
 This is typically used in Path Tracers.
 
@@ -635,7 +638,7 @@ This is typically used in Path Tracers.
 
 \par
 DepthMap is a very simple shader that calculates an image or image channel that contains information relating to the distance of the surfaces of scene objects from a viewpoint (\cite{DepthMap}).
-It is useful to various things like simulating the effect of uniformly dense semi-transparent media within a scene - such as fog, smoke or large volumes of water; or even to create Shadow Maps.
+It is useful to various things like simulating the effect of uniformly dense semi-transparent media within a scene, such as fog, smoke or large volumes of water; or even to create Shadow Maps.
 
 The algorithm is as much as simple as:
 
