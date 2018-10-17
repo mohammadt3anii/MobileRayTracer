@@ -1,10 +1,13 @@
 package puscas.mobilertapp;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -13,6 +16,8 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,6 +158,16 @@ public final class MainActivity extends Activity {
             for (int i = 0; i < 6; ++i) {
                 Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void CheckStoragePermission() {
+        final int PERMISSION_STORAGE = 1;
+        final int permissionCheckRead = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheckRead != PackageManager.PERMISSION_GRANTED) {
+            final String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_STORAGE);
         }
     }
 
@@ -490,6 +505,7 @@ public final class MainActivity extends Activity {
         final int scene = pickerScene_.getValue();
         final int isWorking = drawView_.viewText_.isWorking();
         if (scene >= 4 && isWorking != 1) {
+            CheckStoragePermission();
             showFileChooser();
             return;
         }

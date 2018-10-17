@@ -642,15 +642,51 @@ It is useful to various things like simulating the effect of uniformly dense sem
 
 The algorithm is as much as simple as:
 
-\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
-float maxDist = glm::length(maxPoint - rayOrigin) * 1.1
-float depth = std::max((maxDist - intersectionLength) / maxDist, 0.0)
-rgb = {depth, depth, depth}
-\end{lstlisting}
+%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
+%float maxDist = glm::length(maxPoint - rayOrigin) * 1.1
+%float depth = std::max((maxDist - intersectionLength) / maxDist, 0.0)
+%rgb = {depth, depth, depth}
+%\end{lstlisting}
 
-Where the
-$maxPoint$
-is the furthest 3D point that the user send as parameter in the DepthMap constructor.
+%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
+%maxDist = length(maxPoint - rayOrigin) * 1.1
+%depth = max((maxDist - intersectionLength) / maxDist, 0)
+%rgb = {depth, depth, depth}
+%\end{lstlisting}
+
+%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
+%maxDist = ||maxPoint - rayOrigin||
+%depth = (maxDist - intersectionLength) / maxDist
+%rgb = {depth, depth, depth}
+%\end{lstlisting}
+%$maxDist = \|maxPoint - rayOrigin\|$\\
+%$depth = (maxDist - intersectionLength) / maxDist$\\
+%$rgb = \begin{bmatrix}
+%depth, depth, depth\\
+%\end{bmatrix}$
+
+Let
+\begin{equation}
+\label{DepthMapAlgorithm}
+\begin{aligned}
+maxDist = ||maxPoint - rayOrigin|| \\
+depth = (maxDist - intersectionLength) / maxDist \\
+outputRGB = \begin{bmatrix}
+depth, depth, depth\\
+\end{bmatrix} \\
+\end{aligned}
+\end{equation}
+where
+\begin{conditions*}
+	maxPoint & is the furthest 3D point that the user send as parameter in the DepthMap constructor \\
+	rayOrigin & origin point of the ray \\
+	intersectionLength & the distance from the origin of the ray to the intersection point  \\
+	outputRGB & the output parameter to write the pixel's RGB color \\
+\end{conditions*}
+
+%Where the
+%$maxPoint$
+%is the furthest 3D point that the user send as parameter in the DepthMap constructor.
 
 \begin{figure}[H]
 	\centering
@@ -679,6 +715,14 @@ if (kD > 0) {
 	outputRGB = Le;
 }
 \end{lstlisting}
+
+\begin{numcases}{outputRGB = }
+\label{DiffuseMaterialAlgorithm}
+	kD, & if $kD > 0$\\
+	kS, & if $kS > 0$\\
+	kT, & if $kT > 0$\\
+	Le, & if $Le > 0$
+\end{numcases}
 
 \begin{figure}[H]
 	\centering
@@ -711,6 +755,8 @@ if (intersected material is diffuse) {
   rgb += kD * 0.1 //Ambient light
 }
 \end{lstlisting}
+
+$\forall l \in LightSources$
 
 \begin{figure}[H]
 	\centering
