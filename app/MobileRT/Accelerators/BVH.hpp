@@ -20,7 +20,6 @@ namespace MobileRT {
 
     struct BVHNode {
         AABB box_ {};
-        ::std::uint32_t left_ {0};
         ::std::uint32_t indexOffset_ {0};
         ::std::uint32_t numberPrimitives_ {0};
     };
@@ -135,7 +134,7 @@ namespace MobileRT {
                 end = *itStackEnd;
             } else {
                 const ::std::uint32_t left {maxId + 1};
-                (itBoxes + static_cast<::std::int32_t> (id))->left_ = left;
+                (itBoxes + static_cast<::std::int32_t> (id))->indexOffset_ = left;
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
                 const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
@@ -187,7 +186,7 @@ namespace MobileRT {
                     ::std::advance(itStackId, -1); // pop
                     id = *itStackId;
                 } else {
-                    const ::std::uint32_t left {node.left_};
+                    const ::std::uint32_t left {node.indexOffset_};
                     const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
                     const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
 
@@ -247,7 +246,7 @@ namespace MobileRT {
                     ::std::advance(itStackId, -1); // pop
                     id = *itStackId;
                 } else {
-                    const ::std::uint32_t left {node.left_};
+                    const ::std::uint32_t left {node.indexOffset_};
                     const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
                     const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
 
