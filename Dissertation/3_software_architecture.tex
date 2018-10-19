@@ -856,13 +856,24 @@ Finally, the refracted light in a transmission surface is calculated by using th
 The specular refraction is calculated as follows:
 
 \begin{lstlisting}[caption={Algorithm of Specular Transmission}, captionpos=b, label=Transmission]
-float refractiveIndiceInv = 1.0 / refractiveIndice
-glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
+glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, 1.0 / refractiveIndice)
 Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
 glm::vec3 LiT_RGB
 rayTrace(&LiT_RGB, transmissionRay)
 glm::vec3 specularTransmissionColor = kT * LiT_RGB
 \end{lstlisting}
+
+\begin{algorithm}
+	\label{Transmission}
+	\caption{Algorithm of Specular Transmission}
+	\Input{\var{rayDirection}, \var{shadingNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}}
+	\Output{\var{outputRGB}}
+	
+	$\var{refractDir} \leftarrow glm::refract(\var{rayDirection}, \var{shadingNormal}, 1 / \var{refractiveIndice})$ \\
+	$\var{transmissionRay} \leftarrow Ray (\var{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+	$\var{LiT\_RGB} \leftarrow rayTrace (\var{transmissionRay})$ \\
+	$\var{specularTransmissionColor} \leftarrow \var{kT} * \var{LiT\_RGB}$ \\
+\end{algorithm}
 
 \iffalse
 First, the shading normal is inverted if the origin of the ray was inside a primitive, like a sphere, and if it was not then the refractive index is inverted.
@@ -900,7 +911,7 @@ And, as usual, the transmission ray is traced and its radiance is multiplied by 
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}[caption={Algorithm of Whitted Shader}, captionpos=b, label=Whitted]
+\begin{lstlisting}[caption={Algorithm of Whitted Shader}, captionpos=b, label=Whitted, basicstyle=\small]
 if (intersected material is diffuse) {
   for each light source
     for each sample
@@ -923,14 +934,52 @@ if (intersected material is specular reflective) {
 }
 
 if (intersected material is specular refractive) {
-  float refractiveIndiceInv = 1.0 / refractiveIndice
-  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
+  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, 1 / refractiveIndice)
   Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
   glm::vec3 LiT_RGB
   rayTrace(&LiT_RGB, transmissionRay)
   rgb += kT * LiT_RGB
 }
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{Whitted}
+	\caption{Algorithm of Whitted Shader}
+	\Input{\var{rayDirection}, \var{shadingNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}}
+	\Output{\var{outputRGB}}
+	
+	\uIf{intersected material is diffuse} {
+		\ForAll{\var{LightSources}}{
+			\ForAll{\var{samples}}{
+				$\var{vectorToLight} \leftarrow \var{lightPos} - \var{intersectionPoint}$ \\
+				$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \var{intersectionNormal}$ \\
+				\uIf{\var{cosNL} > $0$}{
+					$\var{shadowRay} \leftarrow Ray(\var{intersectionPoint}, \var{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$ \\
+					\uIf{!shadowTrace (\var{shadowRay})}{
+						$\var{outputRGB} \leftarrow \var{outputRGB} + \var{radLight} * \var{cosNL}$ \\
+					}
+				}
+			}
+		}
+		$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#samples}$ \\
+		$\var{outputRGB} \leftarrow \var{outputRGB} * \var{kD}$ \\
+	}
+
+	\uIf{intersected material is specular reflective} {
+		$\var{reflectionDir} \leftarrow glm::reflect(\var{rayDir}, \var{shadingNormal})$ \\
+		$\var{specularRay} \leftarrow Ray(\var{reflectionDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiS\_RGB} \leftarrow rayTrace(\var{specularRay})$ \\
+		$\var{outputRGB} \leftarrow \var{kS} * \var{LiS\_RGB})$ \\
+	}
+	
+	\uIf{intersected material is specular refractive} {
+		$\var{refractDir} \leftarrow glm::refract(\var{rayDirection}, \var{shadingNormal}, 1 / \var{refractiveIndice})$ \\
+		$\var{transmissionRay} \leftarrow Ray (\var{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiT\_RGB} \leftarrow rayTrace (\var{transmissionRay})$ \\
+		$\var{specularTransmissionColor} \leftarrow \var{kT} * \var{LiT\_RGB}$ \\
+	}
+\end{algorithm}
 
 \begin{figure}[H]
 	\centering
@@ -998,13 +1047,29 @@ float phi = glm::two_pi<float>() * uniformRandom1;// azimuthal angle
 float r2 = uniformRandom2;// random distance from center
 float cosTheta = std::sqrt(r2);// cos(theta) = cos(elevation angle)
 
-glm::vec3 u = std::abs(normal.x) > 0.1 ? glm::vec3 {0.0, 1.0, 0.0} : glm::vec3 {1.0, 0.0, 0.0};
+glm::vec3 u = std::abs(normal.x) > 0.1 ? glm::vec3 {0, 1, 0} : glm::vec3 {1, 0, 0};
 u = glm::normalize(glm::cross(u, normal));// second axis
 glm::vec3 v = glm::cross(normal, u);// final axis
 
 glm::vec3 newDirection = glm::normalize(u * (std::cos(phi) * cosTheta) + v * (std::sin(phi) * cosTheta)
 + normal * std::sqrt(1.0 - r2));
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{Shader}
+	\caption{Method in Shader which generates a random direction in an hemisphere.}
+	\Input{$\vec{normal}$}
+	\Output{$\vec{newDirection}$}
+	
+	$\var{phi} \leftarrow glm::refract(2 * \pi, \var{uniformRandom1})$ \\
+	$\var{r2} \leftarrow \var{uniformRandom2}$ \\
+	$\var{cosTheta} \leftarrow \sqrt{\var{r2}}$ \\
+	$\vec{u} \leftarrow \left| \var{normal.x} \right| > 0? [0,1,0] : [1,0,0]$ \\
+	$\vec{u} \leftarrow normalize(\vec{u} \times \vec{normal})$ \\
+	$\vec{v} \leftarrow \vec{normal} \times \vec{u}$ \\
+	$\vec{newDirection} \leftarrow normalize(\vec{u} * (\cos(\var{phi}) * \var{cosTheta}) + \vec{v} * (\sin(\var{phi}) * \var{cosTheta}) + \vec{normal} * \sqrt(1 - \var{r2})) $ \\
+\end{algorithm}
 
 The figure \ref{Spherical_Coordinates.} shows the spherical coordinate system with the respective polar angle
 $\theta$
