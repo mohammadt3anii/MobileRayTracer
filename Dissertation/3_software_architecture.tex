@@ -1042,7 +1042,7 @@ glm::vec3 getCosineSampleHemisphere(glm::vec3 normal);
 \par
 The algorithm to generate a random direction in an hemisphere was taken from  \cite{CosineSampleHemisphere}, which is as follows:
 
-\begin{lstlisting}[caption={Method in Shader which generates a random direction in an hemisphere.}, captionpos=b, label=Shader]
+\begin{lstlisting}[caption={Method in Shader which generates a random direction in an hemisphere.}, captionpos=b, label=Shader, basicstyle=\small]
 float phi = glm::two_pi<float>() * uniformRandom1;// azimuthal angle
 float r2 = uniformRandom2;// random distance from center
 float cosTheta = std::sqrt(r2);// cos(theta) = cos(elevation angle)
@@ -1118,7 +1118,7 @@ The reflected and refracted light in a specular surface are simulated in a simil
 \par
 So, the algorithm developed in Path Tracer Shader is as following:
 
-\begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer]
+\begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer, basicstyle=\small]
 if (intersected material is diffuse) {
   for each light
     for each sample
@@ -1166,6 +1166,30 @@ if (intersected material is specular refractive) {
   LiT += kT * LiT_RGB
 }
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{Diffuse_Reflection.}
+	\caption{The resolution of diffuse reflected color of an object.}
+	\Input{$\vec{normal}$}
+	\Output{$\vec{newDirection}$}
+	
+	\uIf{intersected material is diffuse}{
+		\ForEach{light}{
+			\ForEach{sample}{
+				$\var{light} \leftarrow \var{samplerLight}.getSample()$
+				$\var{vectorToLight} \leftarrow \var{lightPosition} - \var{intersectionPoint}$
+				$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \vec{shadingNormal}$
+				\uIf{$\var{cosNL} > 0$} {
+					$\vec{shadowRay} \leftarrow Ray(\var{intersectionPoint}, \var{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$
+					\uIf{$!shadowTrace(\var{shadowRay}) > 0$} {
+						$\var{outputRGB} \leftarrow \var{outputRGB} + \var{radLight} * \var{cosNL}$
+					}
+				}
+			}
+		}
+	}
+\end{algorithm}
 
 \begin{figure}[H]
 	\centering
