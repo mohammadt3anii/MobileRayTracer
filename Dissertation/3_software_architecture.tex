@@ -669,9 +669,9 @@ Let
 \begin{equation}
 \label{DepthMapAlgorithm}
 \begin{aligned}
-maxDist = ||maxPoint - rayOrigin|| \\
-depth = (maxDist - intersectionLength) / maxDist \\
-outputRGB = \begin{bmatrix}
+maxDist & = ||maxPoint - rayOrigin|| \\
+depth & = (maxDist - intersectionLength) / maxDist \\
+outputRGB & = \begin{bmatrix}
 depth, depth, depth\\
 \end{bmatrix} \\
 \end{aligned}
@@ -704,17 +704,17 @@ But, in case the primitive material does not have diffuse color, the specular co
 This is can be useful to debug the application because it renders the scene, including all types of materials, very fast.
 And the algorithm is very simple as illustrated below:
 
-\begin{lstlisting}[caption={Algorithm of DiffuseMaterial Shader}, captionpos=b, label=DiffuseMaterial]
-if (kD > 0) {
-	outputRGB = kD;
-} else if (kS > 0) {
-	outputRGB = kS;
-} else if (kT > 0) {
-	outputRGB = kT;
-} else if (Le > 0) {
-	outputRGB = Le;
-}
-\end{lstlisting}
+%\begin{lstlisting}[caption={Algorithm of DiffuseMaterial Shader}, captionpos=b, label=DiffuseMaterial]
+%if (kD > 0) {
+%	outputRGB = kD;
+%} else if (kS > 0) {
+%	outputRGB = kS;
+%} else if (kT > 0) {
+%	outputRGB = kT;
+%} else if (Le > 0) {
+%	outputRGB = Le;
+%}
+%\end{lstlisting}
 
 \begin{numcases}{outputRGB = }
 \label{DiffuseMaterialAlgorithm}
@@ -723,6 +723,26 @@ if (kD > 0) {
 	kT, & if $kT > 0$\\
 	Le, & if $Le > 0$
 \end{numcases}
+
+\begin{algorithm}
+	\label{DiffuseMaterialAlgorithm}
+	\caption{DiffuseMaterial Algorithm}
+	\Input{\var{kD}, \var{kS}, \var{kT}, \var{Le}}
+	\Output{\var{outputRGB}}
+	
+	\eIf{\var{kD} > $0$}{
+		$\var{outputRGB} \leftarrow \var{kD}$ \\
+	}{\eIf{\var{kS} > $0$}{
+			$\var{outputRGB} \leftarrow \var{kS}$ \\
+		}{\eIf{\var{kS} > $0$}{
+				$\var{outputRGB} \leftarrow \var{kT}$ \\
+			}{\uIf{\var{Le} > $0$}{
+					$\var{outputRGB} \leftarrow \var{Le}$ \\
+				}
+			}
+		}
+	}
+\end{algorithm}
 
 \begin{figure}[H]
 	\centering
@@ -756,7 +776,46 @@ if (intersected material is diffuse) {
 }
 \end{lstlisting}
 
-$\forall l \in LightSources$
+Let
+\begin{equation}
+\label{NoShadowsAlgorithm}
+\begin{aligned}
+\forall{l \in LightSources \ldotp \forall s \in samples},\\
+vectorToLight & = lightPos - intersectionPoint \\
+cosNL & = vectorToLight . intersectionNormal \\
+if (cosNL > 0) rgb & += kD * radLight * cosNL \\
+rgb & /= \#samples \\
+rgb & /= \#lights \\
+rgb & += kD * 0.1 \\
+\end{aligned}
+\end{equation}
+where
+\begin{conditions*}
+	maxPoint & is the furthest 3D point that the user send as parameter in the DepthMap constructor \\
+	rayOrigin & origin point of the ray \\
+	intersectionLength & the distance from the origin of the ray to the intersection point  \\
+	outputRGB & the output parameter to write the pixel's RGB color \\
+\end{conditions*}
+
+\begin{algorithm}
+	\label{NoShadowsAlgorithm}
+	\caption{NoShadows Algorithm}
+	\Input{\var{intersectionPoint}, \var{intersectionNormal}}
+	\Output{\var{outputRGB}}
+	
+	\ForAll{\var{LightSources}}{
+		\ForAll{\var{samples}}{
+			$\var{vectorToLight} \leftarrow \var{lightPos} - \var{intersectionPoint}$ \\
+			$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \var{intersectionNormal}$ \\
+			\uIf{\var{cosNL} > $0$}{
+				$\var{outputRGB} \leftarrow \var{outputRGB} + (\var{kD} * \var{radLight} * \var{cosNL})$ \\
+			}
+			$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#samples}$ \\
+			$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#lights}$ \\
+			$\var{outputRGB} \leftarrow \var{outputRGB} + \var{kD} * 0.1$ \\
+		}
+	}
+\end{algorithm}
 
 \begin{figure}[H]
 	\centering
