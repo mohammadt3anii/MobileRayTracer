@@ -642,47 +642,25 @@ It is useful to various things like simulating the effect of uniformly dense sem
 
 The algorithm is as much as simple as:
 
-%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
-%float maxDist = glm::length(maxPoint - rayOrigin) * 1.1
-%float depth = std::max((maxDist - intersectionLength) / maxDist, 0.0)
-%rgb = {depth, depth, depth}
-%\end{lstlisting}
+\begin{algorithm}
+	\small
+	\label{DepthMap}
+	\caption{Algorithm of DepthMap Shader}
+	\Input{\var{maxPoint}, \var{rayOrigin},\var{intersectionLength}}
+	\Output{\var{outputRGB}}
+	
+	$\var{maxDist} \gets ||\var{maxPoint} - \var{rayOrigin}||$ \\
+	$\var{depth} \gets (\var{maxDist} - \var{intersectionLength}) / \var{maxDist}$ \\
+	$\var{outputRGB} \gets [\var{depth}, \var{depth}, \var{depth}]$ \\
+\end{algorithm}
 
-%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
-%maxDist = length(maxPoint - rayOrigin) * 1.1
-%depth = max((maxDist - intersectionLength) / maxDist, 0)
-%rgb = {depth, depth, depth}
-%\end{lstlisting}
-
-%\begin{lstlisting}[caption={Algorithm of DepthMap Shader}, captionpos=b, label=DepthMap]
-%maxDist = ||maxPoint - rayOrigin||
-%depth = (maxDist - intersectionLength) / maxDist
-%rgb = {depth, depth, depth}
-%\end{lstlisting}
-%$maxDist = \|maxPoint - rayOrigin\|$\\
-%$depth = (maxDist - intersectionLength) / maxDist$\\
-%$rgb = \begin{bmatrix}
-%depth, depth, depth\\
-%\end{bmatrix}$
-
-Let
-\begin{equation}
-\label{DepthMapAlgorithm}
-\begin{aligned}
-maxDist & = ||maxPoint - rayOrigin|| \\
-depth & = (maxDist - intersectionLength) / maxDist \\
-outputRGB & = \begin{bmatrix}
-depth, depth, depth\\
-\end{bmatrix} \\
-\end{aligned}
-\end{equation}
-where
-\begin{conditions*}
-	maxPoint & is the furthest 3D point that the user send as parameter in the DepthMap constructor \\
-	rayOrigin & origin point of the ray \\
-	intersectionLength & the distance from the origin of the ray to the intersection point  \\
-	outputRGB & the output parameter to write the pixel's RGB color \\
-\end{conditions*}
+%where
+%\begin{conditions*}
+%	maxPoint & is the furthest 3D point that the user send as parameter in the DepthMap constructor \\
+%	rayOrigin & origin point of the ray \\
+%	intersectionLength & the distance from the origin of the ray to the intersection point  \\
+%	outputRGB & the output parameter to write the pixel's RGB color \\
+%\end{conditions*}
 
 %Where the
 %$maxPoint$
@@ -704,40 +682,21 @@ But, in case the primitive material does not have diffuse color, the specular co
 This is can be useful to debug the application because it renders the scene, including all types of materials, very fast.
 And the algorithm is very simple as illustrated below:
 
-%\begin{lstlisting}[caption={Algorithm of DiffuseMaterial Shader}, captionpos=b, label=DiffuseMaterial]
-%if (kD > 0) {
-%	outputRGB = kD;
-%} else if (kS > 0) {
-%	outputRGB = kS;
-%} else if (kT > 0) {
-%	outputRGB = kT;
-%} else if (Le > 0) {
-%	outputRGB = Le;
-%}
-%\end{lstlisting}
-
-\begin{numcases}{outputRGB = }
-\label{DiffuseMaterialAlgorithm}
-	kD, & if $kD > 0$\\
-	kS, & if $kS > 0$\\
-	kT, & if $kT > 0$\\
-	Le, & if $Le > 0$
-\end{numcases}
-
 \begin{algorithm}
-	\label{DiffuseMaterialAlgorithm}
-	\caption{DiffuseMaterial Algorithm}
+	\small
+	\label{DiffuseMaterial}
+	\caption{Algorithm of DiffuseMaterial Shader}
 	\Input{\var{kD}, \var{kS}, \var{kT}, \var{Le}}
 	\Output{\var{outputRGB}}
 	
 	\eIf{\var{kD} > $0$}{
-		$\var{outputRGB} \leftarrow \var{kD}$ \\
+		$\var{outputRGB} \gets \var{kD}$ \\
 	}{\eIf{\var{kS} > $0$}{
-			$\var{outputRGB} \leftarrow \var{kS}$ \\
+			$\var{outputRGB} \gets \var{kS}$ \\
 		}{\eIf{\var{kS} > $0$}{
-				$\var{outputRGB} \leftarrow \var{kT}$ \\
+				$\var{outputRGB} \gets \var{kT}$ \\
 			}{\uIf{\var{Le} > $0$}{
-					$\var{outputRGB} \leftarrow \var{Le}$ \\
+					$\var{outputRGB} \gets \var{Le}$ \\
 				}
 			}
 		}
@@ -763,57 +722,26 @@ This can be useful in order to let the user render a scene with good details and
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}[caption={Algorithm of NoShadows Shader}, captionpos=b, label=NoShadows]
-if (intersected material is diffuse) {
-  for each light source
-  	for each sample
-	    vectorToLight = lightPosition - intersectionPoint
-	    cos_N_L = vectorToLight . intersectionNormal
-	    if (cos_N_L > 0) rgb += kD * radLight * cos_N_L
-  rgb /= #samples
-  rgb /= #lights
-  rgb += kD * 0.1 //Ambient light
-}
-\end{lstlisting}
-
-Let
-\begin{equation}
-\label{NoShadowsAlgorithm}
-\begin{aligned}
-\forall{l \in LightSources \ldotp \forall s \in samples},\\
-vectorToLight & = lightPos - intersectionPoint \\
-cosNL & = vectorToLight . intersectionNormal \\
-if (cosNL > 0) rgb & += kD * radLight * cosNL \\
-rgb & /= \#samples \\
-rgb & /= \#lights \\
-rgb & += kD * 0.1 \\
-\end{aligned}
-\end{equation}
-where
-\begin{conditions*}
-	maxPoint & is the furthest 3D point that the user send as parameter in the DepthMap constructor \\
-	rayOrigin & origin point of the ray \\
-	intersectionLength & the distance from the origin of the ray to the intersection point  \\
-	outputRGB & the output parameter to write the pixel's RGB color \\
-\end{conditions*}
-
 \begin{algorithm}
-	\label{NoShadowsAlgorithm}
-	\caption{NoShadows Algorithm}
+	\small
+	\label{NoShadows}
+	\caption{Algorithm of NoShadows Shader}
 	\Input{\var{intersectionPoint}, \var{intersectionNormal}}
 	\Output{\var{outputRGB}}
 	
-	\ForAll{\var{LightSources}}{
-		\ForAll{\var{samples}}{
-			$\var{vectorToLight} \leftarrow \var{lightPos} - \var{intersectionPoint}$ \\
-			$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \var{intersectionNormal}$ \\
-			\uIf{\var{cosNL} > $0$}{
-				$\var{outputRGB} \leftarrow \var{outputRGB} + (\var{kD} * \var{radLight} * \var{cosNL})$ \\
+	\uIf{intersected material is diffuse}{
+		\ForEach{light}{
+			\ForEach{sample}{
+				$\vec{vectorToLight} \gets \var{lightPos} - \var{intersectionPoint}$ \\
+				$\var{cosNL} \gets \vec{vectorToLight} \cdot \vec{intersectionNormal}$ \\
+				\uIf{\var{cosNL} > $0$}{
+					$\var{outputRGB} \gets \var{outputRGB} + (\var{kD} * \var{radLight} * \var{cosNL})$ \\
+				}
 			}
-			$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#samples}$ \\
-			$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#lights}$ \\
-			$\var{outputRGB} \leftarrow \var{outputRGB} + \var{kD} * 0.1$ \\
 		}
+		$\var{outputRGB} \gets \var{outputRGB} / \var{\#samples}$ \\
+		$\var{outputRGB} \gets \var{outputRGB} / \var{\#lights}$ \\
+		$\var{outputRGB} \gets \var{outputRGB} + \var{kD} * 0.1$ \\
 	}
 \end{algorithm}
 
@@ -855,24 +783,17 @@ Finally, the refracted light in a transmission surface is calculated by using th
 
 The specular refraction is calculated as follows:
 
-\begin{lstlisting}[caption={Algorithm of Specular Transmission}, captionpos=b, label=Transmission]
-glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, 1.0 / refractiveIndice)
-Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
-glm::vec3 LiT_RGB
-rayTrace(&LiT_RGB, transmissionRay)
-glm::vec3 specularTransmissionColor = kT * LiT_RGB
-\end{lstlisting}
-
 \begin{algorithm}
+	\small
 	\label{Transmission}
 	\caption{Algorithm of Specular Transmission}
-	\Input{\var{rayDirection}, \var{shadingNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}}
-	\Output{\var{outputRGB}}
+	\Input{\var{rayDir}, \var{intersectionNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}}
+	\Output{\var{specularTransmissionColor}}
 	
-	$\var{refractDir} \leftarrow glm::refract(\var{rayDirection}, \var{shadingNormal}, 1 / \var{refractiveIndice})$ \\
-	$\var{transmissionRay} \leftarrow Ray (\var{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
-	$\var{LiT\_RGB} \leftarrow rayTrace (\var{transmissionRay})$ \\
-	$\var{specularTransmissionColor} \leftarrow \var{kT} * \var{LiT\_RGB}$ \\
+	$\vec{refractDir} \gets glm::refract(\vec{rayDir}, \vec{intersectionNormal}, 1 / \var{refractiveIndice})$ \\
+	$\var{transmissionRay} \gets Ray (\vec{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+	$\var{LiT\_RGB} \gets rayTrace (\var{transmissionRay})$ \\
+	$\var{specularTransmissionColor} \gets \var{kT} * \var{LiT\_RGB}$ \\
 \end{algorithm}
 
 \iffalse
@@ -911,73 +832,42 @@ And, as usual, the transmission ray is traced and its radiance is multiplied by 
 \par
 The algorithm developed is as following:
 
-\begin{lstlisting}[caption={Algorithm of Whitted Shader}, captionpos=b, label=Whitted, basicstyle=\small]
-if (intersected material is diffuse) {
-  for each light source
-    for each sample
-      vectorToLight = lightPosition - intersectionPoint
-      cos_N_L = vectorToLight . shadingNormal
-      if (cos_N_L > 0) {
-        Ray shadowRay(intersectionPoint, vectorToLight, distanceToLight, rayDepth + 1)
-        if (!shadowTrace(shadowRay)) rgb += radLight * cos_N_L
-      }
-  rgb *= kD
-  rgb /= #samples
-}
-
-if (intersected material is specular reflective) {
-  glm::vec3 reflectionDir = glm::reflect(rayDirection, shadingNormal)
-  Ray specularRay (reflectionDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
-  glm::vec3 LiS_RGB
-  rayTrace(&LiS_RGB, specularRay)
-  rgb += kS * LiS_RGB
-}
-
-if (intersected material is specular refractive) {
-  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, 1 / refractiveIndice)
-  Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
-  glm::vec3 LiT_RGB
-  rayTrace(&LiT_RGB, transmissionRay)
-  rgb += kT * LiT_RGB
-}
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{Whitted}
 	\caption{Algorithm of Whitted Shader}
-	\Input{\var{rayDirection}, \var{shadingNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}}
+	\Input{\var{rayDirection}, \var{intersectionNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive},  \var{kT}, \var{kS}}
 	\Output{\var{outputRGB}}
 	
 	\uIf{intersected material is diffuse} {
-		\ForAll{\var{LightSources}}{
-			\ForAll{\var{samples}}{
-				$\var{vectorToLight} \leftarrow \var{lightPos} - \var{intersectionPoint}$ \\
-				$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \var{intersectionNormal}$ \\
+		\ForEach{light}{
+			\ForEach{sample}{
+				$\vec{vectorToLight} \gets \var{lightPos} - \var{intersectionPoint}$ \\
+				$\var{cosNL} \gets \vec{vectorToLight} \cdot \vec{intersectionNormal}$ \\
 				\uIf{\var{cosNL} > $0$}{
-					$\var{shadowRay} \leftarrow Ray(\var{intersectionPoint}, \var{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$ \\
+					$\var{shadowRay} \gets Ray(\var{intersectionPoint}, \vec{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$ \\
 					\uIf{!shadowTrace (\var{shadowRay})}{
-						$\var{outputRGB} \leftarrow \var{outputRGB} + \var{radLight} * \var{cosNL}$ \\
+						$\var{outputRGB} \gets \var{outputRGB} + \var{radLight} * \var{cosNL}$ \\
 					}
 				}
 			}
 		}
-		$\var{outputRGB} \leftarrow \var{outputRGB} / \var{\#samples}$ \\
-		$\var{outputRGB} \leftarrow \var{outputRGB} * \var{kD}$ \\
+		$\var{outputRGB} \gets \var{outputRGB} * \var{kD}$ \\
+		$\var{outputRGB} \gets \var{outputRGB} / \var{\#samples}$ \\
 	}
 
 	\uIf{intersected material is specular reflective} {
-		$\var{reflectionDir} \leftarrow glm::reflect(\var{rayDir}, \var{shadingNormal})$ \\
-		$\var{specularRay} \leftarrow Ray(\var{reflectionDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
-		$\var{LiS\_RGB} \leftarrow rayTrace(\var{specularRay})$ \\
-		$\var{outputRGB} \leftarrow \var{kS} * \var{LiS\_RGB})$ \\
+		$\vec{reflectionDir} \gets glm::reflect(\vec{rayDir}, \vec{intersectionNormal})$ \\
+		$\var{specularRay} \gets Ray(\vec{reflectionDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiS\_RGB} \gets rayTrace(\var{specularRay})$ \\
+		$\var{outputRGB} \gets \var{outputRGB} + \var{kS} * \var{LiS\_RGB})$ \\
 	}
 	
 	\uIf{intersected material is specular refractive} {
-		$\var{refractDir} \leftarrow glm::refract(\var{rayDirection}, \var{shadingNormal}, 1 / \var{refractiveIndice})$ \\
-		$\var{transmissionRay} \leftarrow Ray (\var{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
-		$\var{LiT\_RGB} \leftarrow rayTrace (\var{transmissionRay})$ \\
-		$\var{specularTransmissionColor} \leftarrow \var{kT} * \var{LiT\_RGB}$ \\
+		$\vec{refractDir} \gets glm::refract(\vec{rayDir}, \vec{intersectionNormal}, 1 / \var{refractiveIndice})$ \\
+		$\var{transmissionRay} \gets Ray (\vec{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiT\_RGB} \gets rayTrace (\var{transmissionRay})$ \\
+		$\var{outputRGB} \gets \var{outputRGB} + \var{kT} * \var{LiT\_RGB}$ \\
 	}
 \end{algorithm}
 
@@ -1042,33 +932,20 @@ glm::vec3 getCosineSampleHemisphere(glm::vec3 normal);
 \par
 The algorithm to generate a random direction in an hemisphere was taken from  \cite{CosineSampleHemisphere}, which is as follows:
 
-\begin{lstlisting}[caption={Method in Shader which generates a random direction in an hemisphere.}, captionpos=b, label=Shader, basicstyle=\small]
-float phi = glm::two_pi<float>() * uniformRandom1;// azimuthal angle
-float r2 = uniformRandom2;// random distance from center
-float cosTheta = std::sqrt(r2);// cos(theta) = cos(elevation angle)
-
-glm::vec3 u = std::abs(normal.x) > 0.1 ? glm::vec3 {0, 1, 0} : glm::vec3 {1, 0, 0};
-u = glm::normalize(glm::cross(u, normal));// second axis
-glm::vec3 v = glm::cross(normal, u);// final axis
-
-glm::vec3 newDirection = glm::normalize(u * (std::cos(phi) * cosTheta) + v * (std::sin(phi) * cosTheta)
-+ normal * std::sqrt(1.0 - r2));
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{Shader}
 	\caption{Method in Shader which generates a random direction in an hemisphere.}
 	\Input{$\vec{normal}$}
-	\Output{$\vec{newDirection}$}
+	\Output{$\vec{newDir}$}
 	
-	$\var{phi} \leftarrow glm::refract(2 * \pi, \var{uniformRandom1})$ \\
-	$\var{r2} \leftarrow \var{uniformRandom2}$ \\
-	$\var{cosTheta} \leftarrow \sqrt{\var{r2}}$ \\
-	$\vec{u} \leftarrow \left| \var{normal.x} \right| > 0? [0,1,0] : [1,0,0]$ \\
-	$\vec{u} \leftarrow normalize(\vec{u} \times \vec{normal})$ \\
-	$\vec{v} \leftarrow \vec{normal} \times \vec{u}$ \\
-	$\vec{newDirection} \leftarrow normalize(\vec{u} * (\cos(\var{phi}) * \var{cosTheta}) + \vec{v} * (\sin(\var{phi}) * \var{cosTheta}) + \vec{normal} * \sqrt(1 - \var{r2})) $ \\
+	$\var{phi} \gets 2 * \pi * \var{uniformRandom1}$ \\
+	$\var{r2} \gets \var{uniformRandom2}$ \\
+	$\var{cosTheta} \gets \sqrt{\var{r2}}$ \\
+	$\vec{u} \gets \left| \var{normal.x} \right| > 0.1? [0,1,0] : [1,0,0]$ \\
+	$\vec{u} \gets normalize(\vec{u} \times \vec{normal})$ \\
+	$\vec{v} \gets \vec{normal} \times \vec{u}$ \\
+	$\vec{newDir} \gets normalize(\vec{u} * (\cos(\var{phi}) * \var{cosTheta}) + \vec{v} * (\sin(\var{phi}) * \var{cosTheta}) + \vec{normal} * \sqrt(1 - \var{r2})) $ \\
 \end{algorithm}
 
 The figure \ref{Spherical_Coordinates.} shows the spherical coordinate system with the respective polar angle
@@ -1118,77 +995,60 @@ The reflected and refracted light in a specular surface are simulated in a simil
 \par
 So, the algorithm developed in Path Tracer Shader is as following:
 
-\begin{lstlisting}[caption={Algorithm of Path Tracer Shader}, captionpos=b, label=PathTracer, basicstyle=\small]
-if (intersected material is diffuse) {
-  for each light
-    for each sample
-      light = samplerLight.getSample()
-      vectorToLight = lightPosition - intersectionPoint
-      cos_N_L = vectorToLight . shadingNormal
-      if (cos_N_L > 0) {
-        Ray shadowRay(intersectionPoint, vectorToLight, distanceToLight, rayDepth + 1)
-        if (!shadowTrace(shadowRay)) rgb += radLight * cos_N_L
-      }
-  rgb *= kD
-  rgb *= #lights
-  rgb /= #samples
-
-  if (rayDepth <= RAY_DEPTH_MIN || uniform_dist(gen) > finish_probability) {
-    glm::vec3 newDirection = getCosineSampleHemisphere(shadingNormal)
-    Ray normalizedSecundaryRay (newDirection, intersectionPoint, rayDepth + 1,
-    intersectionPrimitive)
-    
-    glm::vec3 LiD_RGB
-    intersectedLight = rayTrace(&LiD_RGB, normalizedSecundaryRay)
-
-    if (rayDepth > RAY_DEPTH_MIN) LiD /= continue_probability
-    if (Ld > 0 && intersectedLight) LiD = 0
-
-    rgb += LiD
-  }
-
-}
-
-if (intersected material is specular reflective) {
-  glm::vec3 reflectionDir = glm::reflect(rayDirection, shadingNormal)
-  Ray specularRay (reflectionDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
-  glm::vec3 LiS_RGB
-  rayTrace(&LiS_RGB, specularRay)
-  LiS += kS * LiS_RGB
-}
-
-if (intersected material is specular refractive) {
-  float refractiveIndiceInv = 1.0 / refractiveIndice
-  glm::vec3 refractDir = glm::refract(rayDirection, shadingNormal, refractiveIndiceInv)
-  Ray transmissionRay (refractDir, intersectionPoint, rayDepth + 1, intersectionPrimitive)
-  glm::vec3 LiT_RGB
-  rayTrace(&LiT_RGB, transmissionRay)
-  LiT += kT * LiT_RGB
-}
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
-	\label{Diffuse_Reflection.}
-	\caption{The resolution of diffuse reflected color of an object.}
-	\Input{$\vec{normal}$}
-	\Output{$\vec{newDirection}$}
+	\label{PathTracer}
+	\caption{Algorithm of Path Tracer Shader}
+	\Input{\var{rayDir}, \var{intersectionNormal}, \var{refractiveIndice}, \var{rayDepth}, \var{intersectionPoint}, \var{intersectionPrimitive}, \var{kD}, \var{kT}, \var{kS}}
+	\Output{\var{outputRGB}}
 	
 	\uIf{intersected material is diffuse}{
 		\ForEach{light}{
 			\ForEach{sample}{
-				$\var{light} \leftarrow \var{samplerLight}.getSample()$
-				$\var{vectorToLight} \leftarrow \var{lightPosition} - \var{intersectionPoint}$
-				$\var{cosNL} \leftarrow \var{vectorToLight} \cdot \vec{shadingNormal}$
+				$\var{lightPos} \gets \var{samplerLight}.getSample()$
+				$\vec{vectorToLight} \gets \var{lightPos} - \var{intersectionPoint}$ \\
+				$\var{cosNL} \gets \vec{vectorToLight} \cdot \vec{intersectionNormal}$ \\
 				\uIf{$\var{cosNL} > 0$} {
-					$\vec{shadowRay} \leftarrow Ray(\var{intersectionPoint}, \var{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$
-					\uIf{$!shadowTrace(\var{shadowRay}) > 0$} {
-						$\var{outputRGB} \leftarrow \var{outputRGB} + \var{radLight} * \var{cosNL}$
+					$\vec{shadowRay} \gets Ray(\var{intersectionPoint}, \vec{vectorToLight}, \var{distanceToLight}, \var{rayDepth} + 1)$ \\
+					\uIf{$!shadowTrace(\var{shadowRay})$} {
+						$\var{Ld} \gets \var{Ld} + \var{radLight} * \var{cosNL}$ \\
 					}
 				}
 			}
 		}
+		$\var{Ld} \gets \var{Ld} * \var{kD}$ \\
+		$\var{Ld} \gets \var{Ld} * \var{\#lights}$ \\
+		$\var{Ld} \gets \var{Ld} / \var{\#samples}$ \\
+		
+		\uIf{\var{rayDepth} <= RAY\_DEPTH\_MIN || uniform\_dist(gen) > finish\_probability} {
+			$\vec{newDir} \gets getCosineSampleHemisphere (\vec{intersectionNormal})$ \\
+			$\var{secundaryRay} \gets Ray(\vec{newDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+			$\var{LiD\_RGB} \gets rayTrace(\var{secundaryRay})$ \\
+			$\var{LiD} \gets \var{kD} * \var{LiD\_RGB}$ \\
+			\uIf{rayDepth > RAY\_DEPTH\_MIN} {
+				$\var{LiD} \gets \var{LiD} / \var{continue\_probability}$ \\
+			}
+			\uIf{\var{Ld} > 0} {
+				$\var{LiD} \gets 0$ \\
+			}
+		}
 	}
+		
+	\uIf{intersected material is specular reflective} {
+		$\vec{reflectionDir} \gets glm::reflect(\vec{rayDir}, \vec{intersectionNormal})$ \\
+		$\var{specularRay} \gets Ray(\vec{reflectionDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiS\_RGB} \gets rayTrace(\var{specularRay})$ \\
+		$\var{LiS} \gets \var{kS} * \var{LiS\_RGB}$ \\
+	}
+	
+	\uIf{intersected material is specular refractive} {
+		$\vec{refractDir} \gets glm::refract(\vec{rayDir}, \vec{intersectionNormal}, 1 / \var{refractiveIndice})$ \\
+		$\var{transmissionRay} \gets Ray (\vec{refractDir}, \var{intersectionPoint}, \var{rayDepth} + 1, \var{intersectionPrimitive})$ \\
+		$\var{LiT\_RGB} \gets rayTrace (\var{transmissionRay})$ \\
+		$\var{LiT} \gets \var{kT} * \var{LiT\_RGB}$ \\
+	}
+
+	$\var{outputRGB} \gets \var{outputRGB} + \var{Ld} + \var{LiD} + \var{LiS} + \var{LiT}$ \\
 \end{algorithm}
 
 \begin{figure}[H]
@@ -1264,6 +1124,24 @@ resSample = task / domainSize
 return resSample
 \end{lstlisting}
 
+\begin{algorithm}
+	\small
+	\label{Stratified}
+	\caption{Algorithm of Stratified Sampler}
+	\Input{\var{sampleNumber}}
+	\Output{\var{resSample}}
+	
+	$\var{sample} \gets \var{sample} + 1$ //atomic operation \\
+	$\var{current} \gets \var{sample}$ \\
+	\eIf{current >= (domainSize * (sampleNumber + 1))}{
+		$\var{sample} \gets \var{sample} - 1$ //atomic operation \\
+		$\var{resSample} \gets 1$ \\
+	} {
+		$\var{task} \gets \var{current} - (\var{sampleNumber} * \var{domainSize})$ \\
+		$\var{resSample} \gets \var{task} * \var{domainSize}$ \\
+	}
+\end{algorithm}
+
 This algorithm ensures that if the current sample is greater than the domain size, then it will always return 1 which means the end of the sampler.
 
 
@@ -1299,6 +1177,24 @@ float resSample = MobileRT::haltonSequence(task, 2)
 return resSample
 \end{lstlisting}
 
+\begin{algorithm}
+	\small
+	\label{HaltonSequenceSampler}
+	\caption{Algorithm of HaltonSequence Sampler}
+	\Input{\var{sampleNumber}}
+	\Output{\var{resSample}}
+	
+	$\var{sample} \gets \var{sample} + 1$ //atomic operation \\
+	$\var{current} \gets \var{sample}$ \\
+	\eIf{current >= (domainSize * (sampleNumber + 1))}{
+		$\var{sample} \gets \var{sample} - 1$ //atomic operation \\
+		$\var{resSample} \gets 1$ \\
+	} {
+		$\var{task} \gets \var{current} - (\var{sampleNumber} * \var{domainSize})$ \\
+		$\var{resSample} \gets haltonSequence(\var{task}, 2)$ \\
+	}
+\end{algorithm}
+
 \par
 As it can be seen in listing \ref{HaltonSequenceSampler}, most of the Halton Sequence Sampler is similar to the Stratified Sampler.
 The only difference is the call to the \textit{haltonSequence} method where it computes the Halton sequence for an arbitrary index and base number.
@@ -1318,6 +1214,22 @@ float haltonSequence(unsigned index, unsigned base) {
 	return result;
 }
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{HaltonSequence}
+	\caption{Developed method of HaltonSequence}
+	\Input{\var{index}, \var{base}}
+	\Output{\var{result}}
+	
+	$\var{f} \gets 1$ \\
+	$\var{result} \gets 0$ \\
+	\While{$\var{index} > 0$}{
+		$\var{f} \gets \var{f} \div \var{base}$ \\
+		$\var{result} \gets \var{result} + \var{f} \times (\var{index} \mod \var{base})$ \\
+		$\var{index} \gets \floor{\var{index} \div \var{base}}$ \\
+	}
+\end{algorithm}
 
 \subsubsection{MersenneTwister}
 

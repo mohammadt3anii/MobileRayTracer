@@ -46,3 +46,4 @@
 **/*.out.ps
 **/*.fdb_latexmk
 **/*.fls
+**/*.loa

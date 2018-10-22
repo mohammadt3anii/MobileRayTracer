@@ -86,8 +86,8 @@ All of the used scenes models were downloaded from
 	xlabel = \#threads,
 	ylabel = time (s),
 	xtick={1,2,3,4},
-	ytick={200,800,500000},
-	yticklabels={200,800,500000},
+	ytick={156.68,687.74,500000},
+	yticklabels={156.68,687.74,500000},
 	extra y ticks = 0,
 	extra y tick labels = 0,
 	ymin=0,
@@ -109,7 +109,7 @@ All of the used scenes models were downloaded from
 	dashed,
 	] plot coordinates {
 		(0,0.0)
-		(1,782.05)
+		(1,687.74)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
@@ -118,7 +118,7 @@ All of the used scenes models were downloaded from
 	dashed,
 	] plot coordinates {
 		(0,0.0)
-		(1,235.49)
+		(1,156.68)
 	};
 	\addlegendentry{BVH}
 	\label{graph:SamsungTime}
@@ -134,8 +134,8 @@ All of the used scenes models were downloaded from
 	ylabel = time (s),
 	symbolic x coords={Conference, Porsche, Cornell Box},
 	xtick=data,
-	ytick={200,400,...,800,500000},
-	yticklabels={200,400,...,800,500000},
+	ytick={156.68,687.74,500000},
+	yticklabels={156.68,687.74,500000},
 	width=0.75\textwidth,
 	scaled ticks=false,
 	yticklabel style={
@@ -155,7 +155,7 @@ All of the used scenes models were downloaded from
 
 	\addplot[ybar,fill=black,color=black,area legend] coordinates {
 		(Conference,   0)
-		(Conference,   782.05)
+		(Conference,   687.74)
 		(Porsche,  	80)
 		(Cornell Box,   99)
 	};
@@ -163,7 +163,7 @@ All of the used scenes models were downloaded from
 	
 		\addplot[ybar,fill=red,color=red,area legend] coordinates {
 		(Conference,   0)
-		(Conference,   235.49)
+		(Conference,   156.68)
 		(Porsche,  	85)
 		(Cornell Box,   105)
 	};
@@ -443,7 +443,7 @@ All of the used scenes models were downloaded from
 	xlabel = \#threads,
 	ylabel = time (ms),
 	xtick={0,1,2,3,4},
-	ytick={0,1,...,10},
+	ytick={0,533,586,760,1300},
 	width=0.75\textwidth,
 	]
 	\addplot [
@@ -464,10 +464,10 @@ All of the used scenes models were downloaded from
 	dashed,
 	] plot coordinates {
 		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
+		(1,1348.24)
+		(2,760.105)
+		(3,586)
+		(4,533.495)
 	};
 	\addlegendentry{Regular Grid}
 	\addplot [
@@ -476,15 +476,16 @@ All of the used scenes models were downloaded from
 	dashed,
 	] plot coordinates {
 		(0,0.0)
-		(1,1.0)
-		(2,1.0)
-		(3,1.0)
-		(4,1.0)
+		(1,375.945)
+		(2,188.99)
+		(3,125.425)
+		(4,97.885)
 	};
 	\addlegendentry{BVH}
 	\label{graph:MinixTime}
 	\end{axis}
 	\end{tikzpicture}
+	\caption{Time in the Conference scene}
 \end{figure}
 
 \begin{figure}[H]
