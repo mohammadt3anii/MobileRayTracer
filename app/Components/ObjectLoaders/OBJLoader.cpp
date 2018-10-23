@@ -25,17 +25,22 @@ OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
     matStream.exceptions(::std::ifstream::goodbit | ::std::ifstream::badbit);
     ::tinyobj::MaterialStreamReader matStreamReader {matStream};
     ::tinyobj::MaterialStreamReader *const matStreamReaderPtr {!mtlFilePath_.empty()? &matStreamReader : nullptr};
-    ::std::string err {};
+    ::std::string errors {};
+    ::std::string warnings {};
     errno = 0;
 
     LOG("Going to call tinyobj::LoadObj");
     const bool ret {
-            ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &err, &objStream,
+            ::tinyobj::LoadObj(&attrib_, &shapes_, &materials_, &warnings, &errors, &objStream,
                                matStreamReaderPtr, true)};
     LOG("Called tinyobj::LoadObj");
 
-    if (!err.empty()) {
-        LOG("Error: ", err);
+    if (!errors.empty()) {
+        LOG("Error: ", errors);
+    }
+
+    if (!warnings.empty()) {
+        LOG("Warning: ", warnings);
     }
 
     if (errno) {
