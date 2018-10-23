@@ -37,6 +37,9 @@
 \SetKwInOut{Output}{output}
 
 \newcommand{\var}{\texttt}
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+
+\SetCommentSty{mycommfont}
 
 % ACRONYMS -----------------------------------------------------
 
@@ -195,6 +198,7 @@ O objetivo principal é disponibilizar uma biblioteca de renderização para dis
 \tableofcontents
 \listoffigures
 \listoftables
+\listofalgorithms
 \printglossary[type=\acronymtype, style=long]
 \clearpage
 \thispagestyle{empty}

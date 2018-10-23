@@ -935,7 +935,7 @@ The algorithm to generate a random direction in an hemisphere was taken from  \c
 \begin{algorithm}
 	\small
 	\label{Shader}
-	\caption{Method in Shader which generates a random direction in an hemisphere.}
+	\caption{Algorithm in Shader which generates a random direction in an hemisphere.}
 	\Input{$\vec{normal}$}
 	\Output{$\vec{newDir}$}
 	
@@ -1113,17 +1113,6 @@ The algorithm of the
 $getSample$
 is then:
 
-\begin{lstlisting}[caption={Algorithm of Stratified Sampler}, captionpos=b, label=Stratified]
-current = sample++ //atomic operation
-if (current >= (domainSize * (sampleNumber + 1))) {
-  sample--
-  return 1
-}
-unsigned task = current - (sampleNumber * domainSize)
-resSample = task / domainSize
-return resSample
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{Stratified}
@@ -1131,10 +1120,10 @@ return resSample
 	\Input{\var{sampleNumber}}
 	\Output{\var{resSample}}
 	
-	$\var{sample} \gets \var{sample} + 1$ //atomic operation \\
+	$\var{sample} \gets \var{sample} + 1$ \tcp{atomic operation}
 	$\var{current} \gets \var{sample}$ \\
 	\eIf{current >= (domainSize * (sampleNumber + 1))}{
-		$\var{sample} \gets \var{sample} - 1$ //atomic operation \\
+		$\var{sample} \gets \var{sample} - 1$ \tcp{atomic operation}
 		$\var{resSample} \gets 1$ \\
 	} {
 		$\var{task} \gets \var{current} - (\var{sampleNumber} * \var{domainSize})$ \\
@@ -1166,17 +1155,6 @@ The algorithm of the
 $getSample$
 is as following:
 
-\begin{lstlisting}[caption={Algorithm of HaltonSequence Sampler}, captionpos=b, label=HaltonSequenceSampler]
-current = sample++ //atomic operation
-if (current >= (domainSize * (sampleNumber + 1))) {
-  sample--
-  return 1
-}
-unsigned task = current - (sampleNumber * domainSize)
-float resSample = MobileRT::haltonSequence(task, 2)
-return resSample
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{HaltonSequenceSampler}
@@ -1184,10 +1162,10 @@ return resSample
 	\Input{\var{sampleNumber}}
 	\Output{\var{resSample}}
 	
-	$\var{sample} \gets \var{sample} + 1$ //atomic operation \\
+	$\var{sample} \gets \var{sample} + 1$ \tcp{atomic operation}
 	$\var{current} \gets \var{sample}$ \\
 	\eIf{current >= (domainSize * (sampleNumber + 1))}{
-		$\var{sample} \gets \var{sample} - 1$ //atomic operation \\
+		$\var{sample} \gets \var{sample} - 1$ \tcp{atomic operation}
 		$\var{resSample} \gets 1$ \\
 	} {
 		$\var{task} \gets \var{current} - (\var{sampleNumber} * \var{domainSize})$ \\
@@ -1202,23 +1180,10 @@ The only difference is the call to the \textit{haltonSequence} method where it c
 \par
 The Halton sequence algorithm is very simple as shown in listing \ref{HaltonSequence} and it was taken from \cite{HaltonSequence}.
 
-\begin{lstlisting}[caption={Developed method of HaltonSequence}, captionpos=b, label=HaltonSequence]
-float haltonSequence(unsigned index, unsigned base) {
-	float f = 1.0
-	float result = 0.0
-	while (index > 0) {
-		f /= base
-		result += f * (index % base)
-		index = std::floor(index / base)
-	}
-	return result;
-}
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{HaltonSequence}
-	\caption{Developed method of HaltonSequence}
+	\caption{Algorithm of Halton Sequence}
 	\Input{\var{index}, \var{base}}
 	\Output{\var{result}}
 	
@@ -1262,6 +1227,18 @@ static std::mt19937 gen(std::random_device {}())
 float res = uniform_dist(gen)
 return res
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{MersenneTwister}
+	\caption{Algorithm of MersenneTwister Sampler}
+	\Input{}
+	\Output{\var{res}}
+	
+	$\var{uniform\_dist} \gets std::uniform\_real\_distribution (0, 1)$ \\
+	$\var{gen} \gets std::mt19937 (std::random\_device())$ \\
+	$\var{res} \gets \var{uniform\_dist(gen)}$ \\
+\end{algorithm}
 
 \par
 As can be seen in listing \ref{MersenneTwister}, the algorithm is very simple because it just constructs two objects in the first time the method is called:
@@ -1318,6 +1295,16 @@ method is very simple because it only returns the position of the light source d
 return lightPosition
 \end{lstlisting}
 
+\begin{algorithm}
+	\small
+	\label{getPositionPointLight}
+	\caption{Algorithm of getPosition in Point light}
+	\Input{}
+	\Output{\var{lightPosition}}
+	
+	return \var{lightPosition} \\
+\end{algorithm}
+
 \par
 And the
 $intersect$
@@ -1327,6 +1314,16 @@ This is because the probability of a ray intersecting a single 3D point in the w
 \begin{lstlisting}[caption={Algorithm of intersect in Point light}, captionpos=b, label=intersectPointLight]
 return intersection
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{getPositionPointLight}
+	\caption{Algorithm of intersect in Point light}
+	\Input{\var{intersection}, \var{ray}}
+	\Output{\var{intersection}}
+	
+	return \var{intersection} \\
+\end{algorithm}
 
 \subsubsection{Area light}
 
@@ -1392,9 +1389,25 @@ if (R + S >= 1.0) {
 	R = 1.0 - R;
 	S = 1.0 - S;
 }
-glm::vec3 position = triangle.pointA + R * triangle.AB + S * triangle.AC
+glm::vec3 position = triangle.A + R * triangle.AB + S * triangle.AC
 return position
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{AreaLight}
+	\caption{Algorithm of getPosition in Area light}
+	\Input{}
+	\Output{\var{position}}
+	
+	$\var{R} \gets \var{samplerPointLight}.getSample()$ \\
+	$\var{S} \gets \var{samplerPointLight}.getSample()$ \\
+	\uIf{$\var{R} + \var{S} \geq 1$}{
+		$\var{R} \gets 1 - \var{R}$ \\
+		$\var{S} \gets 1 - \var{S}$ \\
+	}
+	$\var{position} \gets \var{triangle}.A + \var{R} \times \var{triangle}.AB + S \times \var{triangle}.AC$ \\
+\end{algorithm}
 
 \par
 And the
@@ -1547,6 +1560,22 @@ Ray ray = Ray(glm::normalize(rayDirection), cameraPosition)
 return ray
 \end{lstlisting}
 
+\begin{algorithm}
+	\small
+	\label{Perspective}
+	\caption{Algorithm of generateRay in Perspective Camera}
+	\Input{\var{u}, \var{v}, \var{deviationU}, \var{deviationV}}
+	\Output{\var{ray}}
+	
+	$\var{rightFactor} \gets arctan(\var{hFov} \times (\var{u} - 0.5)) + \var{deviationU}$ \\
+	$\vec{rightVector} \gets \var{right} * \var{rightFactor}$ \\
+	$\var{upFactor} \gets arctan(\var{vFov} \times (0.5 - \var{v})) + \var{deviationV}$ \\
+	$\vec{upVector} \gets \var{up} \times \var{upFactor}$ \\
+	$\var{destinationPoint} \gets \var{cameraPos} + \vec{cameraDir} + \vec{rightVector} + \vec{upVector}$ \\
+	$\vec{rayDir} \gets \var{destinationPoint} - \var{cameraPos}$ \\
+	$\var{ray} \gets Ray(normalize(\vec{rayDir}), \var{cameraPos})$ \\
+\end{algorithm}
+
 
 \subsubsection{Orthographic Camera}
 
@@ -1584,6 +1613,21 @@ glm::vec3 rayOrigin = cameraPosition + rightVector + upVector
 Ray ray = Ray (cameraDirection, rayOrigin)
 return ray
 \end{lstlisting}
+
+\begin{algorithm}
+	\small
+	\label{Orthographic}
+	\caption{Algorithm of generateRay in Orthographic Camera}
+	\Input{\var{u}, \var{v}, \var{deviationU}, \var{deviationV}}
+	\Output{\var{ray}}
+	
+	$\var{rightFactor} \gets (\var{u} - 0.5) \times \var{sizeH}$ \\
+	$\vec{rightVector} \gets \var{right} \times \var{rightFactor} + \var{right} \times \var{deviationU}$ \\
+	$\var{upFactor} \gets (0.5 - \var{v}) \times \var{sizeV}$ \\
+	$\vec{upVector} \gets \var{up} \times \var{upFactor} + \var{up} \times \var{deviationV}$ \\
+	$\var{rayOrigin} \gets \var{cameraPos} + \vec{rightVector} + \vec{upVector}$ \\
+	$\var{ray} \gets Ray(\vec{cameraDir}, \var{rayOrigin})$ \\
+\end{algorithm}
 
 \begin{figure}[H]
 	\centering
