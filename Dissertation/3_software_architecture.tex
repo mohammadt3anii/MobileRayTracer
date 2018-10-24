@@ -1221,13 +1221,6 @@ So the algorithm of the
 $getSample$
 is just:
 
-\begin{lstlisting}[caption={Algorithm of MersenneTwister Sampler}, captionpos=b, label=MersenneTwister]
-static std::uniform_real_distribution<float> uniform_dist {0.0, 1.0}
-static std::mt19937 gen(std::random_device {}())
-float res = uniform_dist(gen)
-return res
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{MersenneTwister}
@@ -1291,10 +1284,6 @@ Therefore, the
 $getPosition$
 method is very simple because it only returns the position of the light source determined in its constructor:
 
-\begin{lstlisting}[caption={Algorithm of getPosition in Point light}, captionpos=b, label=getPositionPointLight]
-return lightPosition
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{getPositionPointLight}
@@ -1310,10 +1299,6 @@ And the
 $intersect$
 method is also quite simple because the ray parameter never intersects the point light.
 This is because the probability of a ray intersecting a single 3D point in the world is practically null.
-
-\begin{lstlisting}[caption={Algorithm of intersect in Point light}, captionpos=b, label=intersectPointLight]
-return intersection
-\end{lstlisting}
 
 \begin{algorithm}
 	\small
@@ -1381,17 +1366,6 @@ RandomPointPosition = A + R*AB + S*AC
 So, the
 $getPosition$
 algorithm is as following:
-
-\begin{lstlisting}[caption={Algorithm of getPosition in Area light}, captionpos=b, label=AreaLight]
-float R = samplerPointLight->getSample()
-float S = samplerPointLight->getSample()
-if (R + S >= 1.0) {
-	R = 1.0 - R;
-	S = 1.0 - S;
-}
-glm::vec3 position = triangle.A + R * triangle.AB + S * triangle.AC
-return position
-\end{lstlisting}
 
 \begin{algorithm}
 	\small
@@ -1549,17 +1523,6 @@ $rayDirection = destinationPoint - cameraPosition$
 .
 The origin of the ray is the position of the camera, because in a perspective camera, all rays come from the same point: the point where the camera is located.
 
-\begin{lstlisting}[caption={Algorithm of generateRay in Perspective Camera}, captionpos=b, label=Perspective]
-float rightFactor = arctan(hFov * (u - 0.5)) + deviationU
-glm::vec3 rightVector = right * rightFactor
-float upFactor = arctan(vFov * (0.5 - v)) + deviationV
-glm::vec3 upVector = up * upFactor
-glm::vec3 destinationPoint = cameraPosition + cameraDirection + rightVector + upVector
-glm::vec3 rayDirection = destinationPoint - cameraPosition
-Ray ray = Ray(glm::normalize(rayDirection), cameraPosition)
-return ray
-\end{lstlisting}
-
 \begin{algorithm}
 	\small
 	\label{Perspective}
@@ -1603,16 +1566,6 @@ values from the parameters.
 Then, the origin of the ray is:
 $rayOrigin = cameraPosition + rightVector + upVector$
 .
-
-\begin{lstlisting}[caption={Algorithm of generateRay in Orthographic Camera}, captionpos=b, label=Orthographic]
-float rightFactor = (u - 0.5) * sizeH
-glm::vec3 rightVector = right * rightFactor + right * deviationU
-float upFactor = (0.5 - v) * sizeV
-glm::vec3 upVector = up * upFactor + up * deviationV
-glm::vec3 rayOrigin = cameraPosition + rightVector + upVector
-Ray ray = Ray (cameraDirection, rayOrigin)
-return ray
-\end{lstlisting}
 
 \begin{algorithm}
 	\small
