@@ -522,3 +522,435 @@ if (::std::strstr(objFileName, "CornellBox") != nullptr) {
 		::glm::vec3 {0.5f, 1.58f, -0.5f}));
 }
 \end{lstlisting}
+
+
+\section{Execution times}
+
+\subsection{Samsung}
+
+\par
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 686.57 & 687.74 \\ \hline
+		2 & Regular Grid & 687.4 & \\ \hline
+		3 & Regular Grid & 689.89 & \\ \hline
+		4 & Regular Grid & 688.08 & \\ \hline
+		5 & Regular Grid & 693.28 & \\ \hline
+		6 & Regular Grid & 685.28 & \\ \hline
+		1 & BVH & 160.5 & 156.68 \\ \hline
+		2 & BVH & 156.66 & \\ \hline
+		3 & BVH & 155.78 & \\ \hline
+		4 & BVH & 156.89 & \\ \hline
+		5 & BVH & 156.7 & \\ \hline
+		6 & BVH & 156.4 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Conference in Samsung with 1 thread}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 686.57 & 687.74 \\ \hline
+		2 & Regular Grid & 687.4 & \\ \hline
+		3 & Regular Grid & 689.89 & \\ \hline
+		4 & Regular Grid & 688.08 & \\ \hline
+		5 & Regular Grid & 693.28 & \\ \hline
+		6 & Regular Grid & 685.28 & \\ \hline
+		1 & BVH & 36.44 & 36.965 \\ \hline
+		2 & BVH & 37.25 & \\ \hline
+		3 & BVH & 37.47 & \\ \hline
+		4 & BVH & 36.71 & \\ \hline
+		5 & BVH & 37.22 & \\ \hline
+		6 & BVH & 36.24 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Porsche in Samsung with 1 thread}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & 5.74 & 5.805 \\ \hline
+		2 & Naive & 5.79 & \\ \hline
+		3 & Naive & 5.79 & \\ \hline
+		4 & Naive & 5.82 & \\ \hline
+		5 & Naive & 5.87 & \\ \hline
+		6 & Naive & 5.97 & \\ \hline
+		1 & Regular Grid & 9.5 & 9.78 \\ \hline
+		2 & Regular Grid & 9.88 & \\ \hline
+		3 & Regular Grid & 9.71 & \\ \hline
+		4 & Regular Grid & 9.8 & \\ \hline
+		5 & Regular Grid & 10.29 & \\ \hline
+		6 & Regular Grid & 9.76 & \\ \hline
+		1 & BVH & 4.5 & 4.505 \\ \hline
+		2 & BVH & 4.51 & \\ \hline
+		3 & BVH & 4.52 & \\ \hline
+		4 & BVH & 4.84 & \\ \hline
+		5 & BVH & 4.3 & \\ \hline
+		6 & BVH & 4.37 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Cornell Box in Samsung with 1 thread}
+\end{table}
+
+
+\subsection{Minix}
+
+\par
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 1227.69 & 1348.24 \\ \hline
+		2 & Regular Grid & 1232.9 & \\ \hline
+		3 & Regular Grid & 1346.01 & \\ \hline
+		4 & Regular Grid & 1350.47 & \\ \hline
+		5 & Regular Grid & 1363.95 & \\ \hline
+		6 & Regular Grid & 1351.98 & \\ \hline
+		1 & BVH & 377.67 & 375.945 \\ \hline
+		2 & BVH & 379.7 & \\ \hline
+		3 & BVH & 368.92 & \\ \hline
+		4 & BVH & 377.49 & \\ \hline
+		5 & BVH & 366.84 & \\ \hline
+		6 & BVH & 374.4 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Conference in Minix with 1 thread}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 692.66 & 760.105 \\ \hline
+		2 & Regular Grid & 699.16 & \\ \hline
+		3 & Regular Grid & 755.02 & \\ \hline
+		4 & Regular Grid & 769.03 & \\ \hline
+		5 & Regular Grid & 765.19 & \\ \hline
+		6 & Regular Grid & 766.95 & \\ \hline
+		1 & BVH & 189.97 & 188.99 \\ \hline
+		2 & BVH & 190.13 & \\ \hline
+		3 & BVH & 188.62 & \\ \hline
+		4 & BVH & 189.36 & \\ \hline
+		5 & BVH & 188.14 & \\ \hline
+		6 & BVH & 188.17 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Conference in Minix with 2 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 542.45 & 586 \\ \hline
+		2 & Regular Grid & 544.2 & \\ \hline
+		3 & Regular Grid & 590.96 & \\ \hline
+		4 & Regular Grid & 590.43 & \\ \hline
+		5 & Regular Grid & 589.02 & \\ \hline
+		6 & Regular Grid & 582.98 & \\ \hline
+		1 & BVH & 125.19 & 125.425 \\ \hline
+		2 & BVH & 125.87 & \\ \hline
+		3 & BVH & 125.66 & \\ \hline
+		4 & BVH & 125.91 & \\ \hline
+		5 & BVH & 124.64 & \\ \hline
+		6 & BVH & 124.38 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Conference in Minix with 3 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 498.19 & 533.495 \\ \hline
+		2 & Regular Grid & 501.15 & \\ \hline
+		3 & Regular Grid & 538.21 & \\ \hline
+		4 & Regular Grid & 534.03 & \\ \hline
+		5 & Regular Grid & 536.21 & \\ \hline
+		6 & Regular Grid & 532.96 & \\ \hline
+		1 & BVH & 97.95 & 97.885 \\ \hline
+		2 & BVH & 97.61 & \\ \hline
+		3 & BVH & 97.86 & \\ \hline
+		4 & BVH & 97.88 & \\ \hline
+		5 & BVH & 97.89 & \\ \hline
+		6 & BVH & 97.93 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Conference in Minix with 4 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 7514.95 & 7519.725 \\ \hline
+		2 & Regular Grid & 7524.5 & \\ \hline
+		3 & Regular Grid & 7642.47 & \\ \hline
+		4 & Regular Grid & 7480.97 & \\ \hline
+		5 & Regular Grid & 7509.22 & \\ \hline
+		6 & Regular Grid & 7578.22 & \\ \hline
+		1 & BVH & 43.97 & 44.83 \\ \hline
+		2 & BVH & 44.97 & \\ \hline
+		3 & BVH & 44.95 & \\ \hline
+		4 & BVH & 44.69 & \\ \hline
+		5 & BVH & 44.97 & \\ \hline
+		6 & BVH & 44.71 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Porsche in Minix with 1 thread}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 4180.98 & 4207.985 \\ \hline
+		2 & Regular Grid & 4191.74 & \\ \hline
+		3 & Regular Grid & 4210.47 & \\ \hline
+		4 & Regular Grid & 4205.5 & \\ \hline
+		5 & Regular Grid & 4231.48 & \\ \hline
+		6 & Regular Grid & 4210.97 & \\ \hline
+		1 & BVH & 22.72 & 22.46 \\ \hline
+		2 & BVH & 22.46 & \\ \hline
+		3 & BVH & 22.19 & \\ \hline
+		4 & BVH & 22.48 & \\ \hline
+		5 & BVH & 22.46 & \\ \hline
+		6 & BVH & 22.19 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Porsche in Minix with 2 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 3196.47 & 3188.225 \\ \hline
+		2 & Regular Grid & 3192.22 & \\ \hline
+		3 & Regular Grid & 3109.72 & \\ \hline
+		4 & Regular Grid & 3141.01 & \\ \hline
+		5 & Regular Grid & 3186.72 & \\ \hline
+		6 & Regular Grid & 3189.73 & \\ \hline
+		1 & BVH & 15.46 & 15.46 \\ \hline
+		2 & BVH & 15.47 & \\ \hline
+		3 & BVH & 15.48 & \\ \hline
+		4 & BVH & 15.22 & \\ \hline
+		5 & BVH & 15.22 & \\ \hline
+		6 & BVH & 15.46 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Porsche in Minix with 3 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & X & X \\ \hline
+		2 & Naive & X & \\ \hline
+		3 & Naive & X & \\ \hline
+		4 & Naive & X & \\ \hline
+		5 & Naive & X & \\ \hline
+		6 & Naive & X & \\ \hline
+		1 & Regular Grid & 2782.51 & 2795.735 \\ \hline
+		2 & Regular Grid & 2801.48 & \\ \hline
+		3 & Regular Grid & 2802.97 & \\ \hline
+		4 & Regular Grid & 2808.21 & \\ \hline
+		5 & Regular Grid & 2747.94 & \\ \hline
+		6 & Regular Grid & 2789.99 & \\ \hline
+		1 & BVH & 12.46 & 12.46 \\ \hline
+		2 & BVH & 12.46 & \\ \hline
+		3 & BVH & 12.45 & \\ \hline
+		4 & BVH & 12.46 & \\ \hline
+		5 & BVH & 12.47 & \\ \hline
+		6 & BVH & 12.49 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Porsche in Minix with 4 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & 9.99 & 9.95 \\ \hline
+		2 & Naive & 9.95 & \\ \hline
+		3 & Naive & 9.95 & \\ \hline
+		4 & Naive & 9.95 & \\ \hline
+		5 & Naive & 9.95 & \\ \hline
+		6 & Naive & 9.67 & \\ \hline
+		1 & Regular Grid & 14.69 & 14.695 \\ \hline
+		2 & Regular Grid & 14.2 & \\ \hline
+		3 & Regular Grid & 14.45 & \\ \hline
+		4 & Regular Grid & 14.7 & \\ \hline
+		5 & Regular Grid & 14.96 & \\ \hline
+		6 & Regular Grid & 14.71 & \\ \hline
+		1 & BVH & 5.22 & 5.23 \\ \hline
+		2 & BVH & 5.24 & \\ \hline
+		3 & BVH & 5.31 & \\ \hline
+		4 & BVH & 5.28 & \\ \hline
+		5 & BVH & 5.22 & \\ \hline
+		6 & BVH & 4.99 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Cornell Box in Minix with 1 thread}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & 5.47 & 5.45 \\ \hline
+		2 & Naive & 5.44 & \\ \hline
+		3 & Naive & 5.48 & \\ \hline
+		4 & Naive & 5.45 & \\ \hline
+		5 & Naive & 5.45 & \\ \hline
+		6 & Naive & 5.44 & \\ \hline
+		1 & Regular Grid & 8.45 & 8.225 \\ \hline
+		2 & Regular Grid & 8.23 & \\ \hline
+		3 & Regular Grid & 8.19 & \\ \hline
+		4 & Regular Grid & 8.22 & \\ \hline
+		5 & Regular Grid & 8.19 & \\ \hline
+		6 & Regular Grid & 8.44 & \\ \hline
+		1 & BVH & 2.71 & 2.825 \\ \hline
+		2 & BVH & 2.98 & \\ \hline
+		3 & BVH & 2.7 & \\ \hline
+		4 & BVH & 2.97 & \\ \hline
+		5 & BVH & 2.71 & \\ \hline
+		6 & BVH & 2.94 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Cornell Box in Minix with 2 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & 4.01 & 3.71 \\ \hline
+		2 & Naive & 3.71 & \\ \hline
+		3 & Naive & 3.7 & \\ \hline
+		4 & Naive & 3.69 & \\ \hline
+		5 & Naive & 3.71 & \\ \hline
+		6 & Naive & 3.71 & \\ \hline
+		1 & Regular Grid & 6.19 & 6.255 \\ \hline
+		2 & Regular Grid & 6.21 & \\ \hline
+		3 & Regular Grid & 6.27 & \\ \hline
+		4 & Regular Grid & 6.41 & \\ \hline
+		5 & Regular Grid & 6.42 & \\ \hline
+		6 & Regular Grid & 6.24 & \\ \hline
+		1 & BVH & 1.95 & 1.97 \\ \hline
+		2 & BVH & 1.97 & \\ \hline
+		3 & BVH & 2 & \\ \hline
+		4 & BVH & 1.94 & \\ \hline
+		5 & BVH & 1.97 & \\ \hline
+		6 & BVH & 1.99 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Cornell Box in Minix with 3 threads}
+\end{table}
+
+\begin{table}[H]
+	\small
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\#Measurement & Accelerator & Time (s) & Median \\ \hline
+		1 & Naive & 3.21 & 3.2 \\ \hline
+		2 & Naive & 3.2 & \\ \hline
+		3 & Naive & 3.2 & \\ \hline
+		4 & Naive & 3.18 & \\ \hline
+		5 & Naive & 3.2 & \\ \hline
+		6 & Naive & 3.2 & \\ \hline
+		1 & Regular Grid & 5.67 & 5.695 \\ \hline
+		2 & Regular Grid & 5.68 & \\ \hline
+		3 & Regular Grid & 5.69 & \\ \hline
+		4 & Regular Grid & 5.71 & \\ \hline
+		5 & Regular Grid & 5.7 & \\ \hline
+		6 & Regular Grid & 5.7 & \\ \hline
+		1 & BVH & 1.72 & 1.72 \\ \hline
+		2 & BVH & 1.72 & \\ \hline
+		3 & BVH & 1.97 & \\ \hline
+		4 & BVH & 1.71 & \\ \hline
+		5 & BVH & 1.71 & \\ \hline
+		6 & BVH & 1.97 & \\ \hline
+	\end{tabular}
+	\label{Time}
+	\caption{Execution times of scene Cornell Box in Minix with 4 threads}
+\end{table}
