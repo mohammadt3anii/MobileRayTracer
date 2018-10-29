@@ -71,7 +71,7 @@ namespace MobileRT {
 
 
     template<typename T>
-    bool intersect(const Primitive<T> &primitive, const AABB &box) noexcept {
+    bool intersectBox(const Primitive<T> &primitive, const AABB &box) noexcept {
         const bool res{primitive.shape_.intersect(box)};
         return res;
     }

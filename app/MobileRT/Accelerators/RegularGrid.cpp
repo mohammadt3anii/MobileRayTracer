@@ -126,7 +126,7 @@ void RegularGrid::addPrimitives
                     const AABB &cell {pos, pos + ::glm::vec3 {dx, dy, dz}};
                     //LOG("min=(", pos[0], ", ", pos[1], ", ", pos[2], ") max=(", dx, ", ", dy, ",", dz, ")");
                     // do an accurate aabb / primitive intersection test
-                    const bool intersectedBox{::MobileRT::intersect(primitive, cell)};
+                    const bool intersectedBox{::MobileRT::intersectBox(primitive, cell)};
                     if (intersectedBox) {
                         grid_primitives[idx].emplace_back(&primitive);
                         //LOG("add idx = ", idx, " index = ", index);
