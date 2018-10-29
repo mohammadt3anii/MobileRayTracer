@@ -14,6 +14,7 @@ using ::MobileRT::BVH;
 using ::MobileRT::Camera;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
+using ::MobileRT::RegularGrid;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
@@ -62,7 +63,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
             Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
             const AABB sceneBounds {min - 0.01f, max + 0.01f};
-            regularGrid_ = RegularGrid {sceneBounds, &scene_, 32};
+            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), 32};
+            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), 32};
+            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), 32};
             break;
         }
         case Accelerator::BVH: {
@@ -92,7 +95,9 @@ bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGrid_.shadowTrace(intersection, ray);
+            intersection = this->regularGridPlanes_.shadowTrace(intersection, ray);
+            intersection = this->regularGridSpheres_.shadowTrace(intersection, ray);
+            intersection = this->regularGridTriangles_.shadowTrace(intersection, ray);
             break;
         }
 
@@ -117,7 +122,10 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGrid_.trace(intersection, ray);
+            intersection = this->regularGridPlanes_.trace(intersection, ray);
+            intersection = this->regularGridSpheres_.trace(intersection, ray);
+            intersection = this->regularGridTriangles_.trace(intersection, ray);
+            intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
 
