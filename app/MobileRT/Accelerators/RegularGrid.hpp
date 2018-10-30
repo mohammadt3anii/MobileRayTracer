@@ -70,7 +70,7 @@ namespace MobileRT {
         gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)[2]},
         // precalculate size of a cell (for x, y, and z)
         m_CW{(m_Extends.pointMax_ - m_Extends.pointMin_) * (1.0f / gridSize_)},
-        hasPrimitives_{false} {
+        hasPrimitives_{primitives.empty()? false : true} {
         LOG("scene min=(", m_Extends.pointMin_[0], ", ", m_Extends.pointMin_[1], ", ",
             m_Extends.pointMin_[2], ") max=(", m_Extends.pointMax_[0], ", ",
             m_Extends.pointMax_[1], ", ", m_Extends.pointMax_[2], ")");
@@ -161,7 +161,6 @@ namespace MobileRT {
                         const bool intersectedBox{::MobileRT::intersectBox(primitive, cell)};
                         if (intersectedBox) {
                             grid_primitives[idx].emplace_back(&primitive);
-                            hasPrimitives_ = true;
                             //LOG("add idx = ", idx, " index = ", index);
                         }
                     }
