@@ -53,16 +53,29 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             break;
         }
         case Accelerator::REGULAR_GRID: {
-            ::glm::vec3 min {RayLengthMax};
-            ::glm::vec3 max {-RayLengthMax};
             ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
             ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
             ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
-            Scene::getBounds<Primitive<Triangle>>(triangles, &min, &max);
-            Scene::getBounds<Primitive<Sphere>>(spheres, &min, &max);
-            Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
-            Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
-            const AABB sceneBounds {min - 0.01f, max + 0.01f};
+
+            ::glm::vec3 minPlanes {RayLengthMax};
+            ::glm::vec3 maxPlanes {-RayLengthMax};
+            ::glm::vec3 minSpheres {RayLengthMax};
+            ::glm::vec3 maxSpheres {-RayLengthMax};
+            ::glm::vec3 minTriangles {RayLengthMax};
+            ::glm::vec3 maxTriangles {-RayLengthMax};
+
+            Scene::getBounds<Primitive<Plane>>(planes, &minPlanes, &maxPlanes);
+            Scene::getBounds<Primitive<Sphere>>(spheres, &minSpheres, &maxSpheres);
+            Scene::getBounds<Primitive<Triangle>>(triangles, &minTriangles, &maxTriangles);
+            
+            Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
+            Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
+            Scene::getBounds(::std::vector<Camera *> {camera}, &minTriangles, &maxTriangles);
+
+            const AABB sceneBoundsPlanes {minPlanes - 0.01f, maxPlanes + 0.01f};
+            const AABB sceneBoundsSpheres {minSpheres - 0.01f, maxSpheres + 0.01f};
+            const AABB sceneBoundsTriangles {minTriangles - 0.01f, maxTriangles + 0.01f};
+
             const ::std::int32_t sizePlanes {static_cast<::std::int32_t> (planes.size())};
             const ::std::int32_t sizeSpheres {static_cast<::std::int32_t> (spheres.size())};
             const ::std::int32_t sizeTriangles {static_cast<::std::int32_t> (triangles.size())};
@@ -87,9 +100,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             LOG("gridSizePlanes = ", gridSizePlanes);
             LOG("gridSizeSpheres = ", gridSizeSpheres);
             LOG("gridSizeTriangles = ", gridSizeTriangles);
-            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), gridSizePlanes};
-            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), gridSizeSpheres};
-            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), gridSizeTriangles};
+            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBoundsPlanes, ::std::move(scene_.planes_), gridSizePlanes};
+            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBoundsSpheres, ::std::move(scene_.spheres_), gridSizeSpheres};
+            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBoundsTriangles, ::std::move(scene_.triangles_), gridSizeTriangles};
             break;
         }
         case Accelerator::BVH: {

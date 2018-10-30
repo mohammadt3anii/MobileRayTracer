@@ -71,8 +71,8 @@ float Plane::getZ() const noexcept {
 
 AABB Plane::getAABB() const noexcept {
     const ::glm::vec3 &rightDir {getRightVector()};
-    const ::glm::vec3 &min {this->point_ + rightDir * -2.0f};
-    const ::glm::vec3 &max {this->point_ + rightDir * 2.0f};
+    const ::glm::vec3 &min {this->point_ + rightDir * -100.0f};
+    const ::glm::vec3 &max {this->point_ + rightDir * 100.0f};
     const AABB res {min, max};
     return res;
 }
