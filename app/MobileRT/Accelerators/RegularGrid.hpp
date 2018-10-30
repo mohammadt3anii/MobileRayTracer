@@ -76,10 +76,11 @@ namespace MobileRT {
         const ::std::size_t vectorSize{static_cast<::std::size_t>(gridSize * gridSize * gridSize)};
         primitives_.reserve(vectorSize);
 
-        addPrimitives(::std::move(primitives), this->primitives_);
-        LOG("PRIMITIVES = ", this->primitives_.size());
+        LOG("PRIMITIVES = ", primitives.size());
         LOG("gridSize_ = ", this->gridSize_);
         LOG("gridShift_ = ", this->gridShift_);
+        LOG("hasPrimitives_ = ", this->hasPrimitives_);
+        addPrimitives(::std::move(primitives), this->primitives_);
     }
 
     template<typename T>
