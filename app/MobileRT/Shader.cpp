@@ -75,6 +75,8 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             const AABB sceneBoundsPlanes {minPlanes - 0.01f, maxPlanes + 0.01f};
             const AABB sceneBoundsSpheres {minSpheres - 0.01f, maxSpheres + 0.01f};
             const AABB sceneBoundsTriangles {minTriangles - 0.01f, maxTriangles + 0.01f};
+            /*const AABB sceneBounds {::glm::min(::glm::min(minPlanes, minSpheres), minTriangles),
+                                    ::glm::max(::glm::max(maxPlanes, maxSpheres), maxTriangles)};*/
 
             const ::std::int32_t sizePlanes {static_cast<::std::int32_t> (planes.size())};
             const ::std::int32_t sizeSpheres {static_cast<::std::int32_t> (spheres.size())};

@@ -185,12 +185,18 @@ namespace MobileRT {
         ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};
         ::std::int32_t Y{static_cast<::std::int32_t>(cell[1])};
         ::std::int32_t Z{static_cast<::std::int32_t>(cell[2])};
-        const bool notInGrid{(X < 0) || (X >= gridSize_) ||
+        /*const bool notInGrid{(X < 0) || (X >= gridSize_) ||
                             (Y < 0) || (Y >= gridSize_) ||
                             (Z < 0) || (Z >= gridSize_)};
         if (notInGrid && gridSize_ > 1) {
             return intersection;
-        }
+        }*/
+        X = X < 0? 0 : X;
+        Y = Y < 0? 0 : Y;
+        Z = Z < 0? 0 : Z;
+        X = X >= gridSize_? gridSize_ - 1 : X;
+        Y = Y >= gridSize_? gridSize_ - 1 : Y;
+        Z = Z >= gridSize_? gridSize_ - 1 : Z;
 
         ::std::int32_t stepX, outX;
         ::std::int32_t stepY, outY;
