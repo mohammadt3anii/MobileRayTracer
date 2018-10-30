@@ -68,8 +68,8 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Sphere>>(spheres, &minSpheres, &maxSpheres);
             Scene::getBounds<Primitive<Triangle>>(triangles, &minTriangles, &maxTriangles);
             
-            Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
-            Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
+            //Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
+            //Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
             Scene::getBounds(::std::vector<Camera *> {camera}, &minTriangles, &maxTriangles);
 
             const AABB sceneBoundsPlanes {minPlanes - 0.01f, maxPlanes + 0.01f};
