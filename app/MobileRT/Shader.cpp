@@ -63,9 +63,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
             Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
             const AABB sceneBounds {min - 0.01f, max + 0.01f};
-            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), 32};
-            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), 32};
-            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), 32};
+            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), 128};
+            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), 128};
+            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), 128};
             break;
         }
         case Accelerator::BVH: {
