@@ -36,49 +36,6 @@ Intersection Scene::traceLights(Intersection intersection, const Ray &ray) const
     return intersection;
 }
 
-template<typename T>
-Intersection Scene::trace(::std::vector<T> &primitives, Intersection intersection,
-                  const Ray &ray) noexcept {
-    for (T &primitive : primitives) {
-        intersection = primitive.intersect(intersection, ray);
-    }
-    return intersection;
-}
-
-Intersection Scene::trace(Intersection intersection, const Ray &ray) noexcept {
-    intersection =
-        trace<::MobileRT::Primitive<::MobileRT::Triangle>>(this->triangles_, intersection, ray);
-    intersection =
-        trace<::MobileRT::Primitive<::MobileRT::Sphere>>(this->spheres_, intersection, ray);
-    intersection =
-        trace<::MobileRT::Primitive<::MobileRT::Plane>>(this->planes_, intersection, ray);
-    intersection = traceLights(intersection, ray);
-    return intersection;
-}
-
-template<typename T>
-Intersection Scene::shadowTrace(::std::vector<T> &primitives, Intersection intersection,
-                        const Ray &ray) const noexcept {
-    for (T &primitive : primitives) {
-        const float lastDist {intersection.length_};
-        intersection = primitive.intersect(intersection, ray);
-        if (intersection.length_ < lastDist) {
-            return intersection;
-        }
-    }
-    return intersection;
-}
-
-Intersection Scene::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
-    intersection =
-            shadowTrace<::MobileRT::Primitive<Triangle>>(this->triangles_, intersection, ray);
-    intersection =
-            shadowTrace<::MobileRT::Primitive<Sphere>>(this->spheres_, intersection, ray);
-    intersection =
-            shadowTrace<::MobileRT::Primitive<Plane>>(this->planes_, intersection, ray);
-    return intersection;
-}
-
 void Scene::resetSampling() noexcept {
     for (const auto &light : this->lights_) {
         light->resetSampling();

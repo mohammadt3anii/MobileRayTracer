@@ -25,7 +25,7 @@ namespace Components {
     public:
         explicit PathTracer () noexcept = delete;
 
-        explicit PathTracer(::MobileRT::Scene scene,
+        explicit PathTracer(::MobileRT::Scene &&scene,
                             ::std::unique_ptr<::MobileRT::Sampler> samplerRussianRoulette,
                             ::std::uint32_t samplesLight, Accelerator accelerator) noexcept;
 

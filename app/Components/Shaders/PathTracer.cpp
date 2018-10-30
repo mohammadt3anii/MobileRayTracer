@@ -12,7 +12,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-PathTracer::PathTracer(Scene scene,
+PathTracer::PathTracer(Scene &&scene,
                        ::std::unique_ptr<Sampler> samplerRussianRoulette,
                        const ::std::uint32_t samplesLight,
                        const Accelerator accelerator) noexcept :

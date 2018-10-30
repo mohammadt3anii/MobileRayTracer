@@ -6,6 +6,7 @@
 #define MOBILERT_SHADER_HPP
 
 #include "MobileRT/Accelerators/BVH.hpp"
+#include "MobileRT/Accelerators/Naive.hpp"
 #include "MobileRT/Accelerators/RegularGrid.hpp"
 #include "MobileRT/Camera.hpp"
 #include "MobileRT/Intersection.hpp"
@@ -17,6 +18,11 @@ namespace MobileRT {
     class Shader {
     public:
         Scene scene_ {};
+
+        Naive<Plane> naivePlanes_ {};
+        Naive<Sphere> naiveSpheres_ {};
+        Naive<Triangle> naiveTriangles_ {};
+
         RegularGrid<Plane> regularGridPlanes_ {};
         RegularGrid<Sphere> regularGridSpheres_ {};
         RegularGrid<Triangle> regularGridTriangles_ {};
@@ -50,7 +56,7 @@ namespace MobileRT {
         explicit Shader () noexcept = delete;
 
         explicit Shader(
-            Scene scene,
+            Scene &&scene,
             ::std::uint32_t samplesLight,
             Accelerator accelerator) noexcept;
 
@@ -67,8 +73,6 @@ namespace MobileRT {
         bool rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept;
 
         bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
-
-        Intersection traceTouch(Intersection intersection, const Ray &ray) noexcept;
 
         virtual void resetSampling() noexcept;
 

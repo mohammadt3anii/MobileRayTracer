@@ -20,7 +20,7 @@ namespace Components {
         explicit Whitted () noexcept = delete;
 
         explicit Whitted(
-            ::MobileRT::Scene scene,
+            ::MobileRT::Scene &&scene,
             ::std::uint32_t samplesLight,
             Accelerator accelerator) noexcept;
 

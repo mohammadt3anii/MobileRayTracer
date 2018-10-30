@@ -11,7 +11,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-NoShadows::NoShadows(Scene scene, const ::std::uint32_t samplesLight,
+NoShadows::NoShadows(Scene &&scene, const ::std::uint32_t samplesLight,
                      const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }

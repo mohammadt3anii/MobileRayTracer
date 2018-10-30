@@ -36,26 +36,33 @@ namespace {
 }//namespace
 
 Shader::Shader(
-    Scene scene,
+    Scene &&scene,
     const ::std::uint32_t samplesLight,
     const Accelerator accelerator) noexcept :
         scene_{::std::move(scene)},
         accelerator_{accelerator},
-        samplesLight_{samplesLight}
-{
+        samplesLight_{samplesLight} {
     static bool unused{FillThings()};
     static_cast<void> (unused);
+}
+
+Shader::~Shader() noexcept {
+    LOG("SHADER DELETED");
 }
 
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
     switch (accelerator_) {
         case Accelerator::NAIVE: {
+            naivePlanes_ = ::MobileRT::Naive<MobileRT::Plane> {::std::move(scene_.planes_)};
+            naiveSpheres_ = ::MobileRT::Naive<MobileRT::Sphere> {::std::move(scene_.spheres_)};
+            naiveTriangles_ = ::MobileRT::Naive<MobileRT::Triangle> {::std::move(scene_.triangles_)};
             break;
         }
+
         case Accelerator::REGULAR_GRID: {
-            ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
-            ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
             ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
+            ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
+            ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
 
             ::glm::vec3 minPlanes {RayLengthMax};
             ::glm::vec3 maxPlanes {-RayLengthMax};
@@ -107,6 +114,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBoundsTriangles, ::std::move(scene_.triangles_), gridSizeTriangles};
             break;
         }
+
         case Accelerator::BVH: {
             bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
             bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
@@ -116,47 +124,15 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
     }
 }
 
-Intersection Shader::traceTouch(Intersection intersection, const Ray &ray) noexcept {
-    const Intersection &res{this->scene_.trace(intersection, ray)};
-    return res;
-}
-
-Shader::~Shader() noexcept {
-    LOG("SHADER DELETED");
-}
-
-bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
-    const float lastDist {intersection.length_};
-    switch (accelerator_) {
-        case Accelerator::NAIVE: {
-            intersection = this->scene_.shadowTrace(intersection, ray);
-            break;
-        }
-
-        case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGridPlanes_.shadowTrace(intersection, ray);
-            intersection = this->regularGridSpheres_.shadowTrace(intersection, ray);
-            intersection = this->regularGridTriangles_.shadowTrace(intersection, ray);
-            break;
-        }
-
-        case Accelerator::BVH: {
-            intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
-            intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
-            intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
-            break;
-        }
-    }
-    const bool res{intersection.length_ < lastDist};
-    return res;
-}
-
 bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
     Intersection intersection{RayLengthMax, nullptr};
     const float lastDist {intersection.length_};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            intersection = this->scene_.trace(intersection, ray);
+            intersection = this->naivePlanes_.trace(intersection, ray);
+            intersection = this->naiveSpheres_.trace(intersection, ray);
+            intersection = this->naiveTriangles_.trace(intersection, ray);
+            intersection = this->scene_.traceLights(intersection, ray);
             break;
         }
 
@@ -177,6 +153,34 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
         }
     }
     const bool res{intersection.length_ < lastDist && shade(rgb, intersection, ray)};
+    return res;
+}
+
+bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
+    const float lastDist {intersection.length_};
+    switch (accelerator_) {
+        case Accelerator::NAIVE: {
+            intersection = this->naivePlanes_.shadowTrace(intersection, ray);
+            intersection = this->naiveSpheres_.shadowTrace(intersection, ray);
+            intersection = this->naiveTriangles_.shadowTrace(intersection, ray);
+            break;
+        }
+
+        case Accelerator::REGULAR_GRID: {
+            intersection = this->regularGridPlanes_.shadowTrace(intersection, ray);
+            intersection = this->regularGridSpheres_.shadowTrace(intersection, ray);
+            intersection = this->regularGridTriangles_.shadowTrace(intersection, ray);
+            break;
+        }
+
+        case Accelerator::BVH: {
+            intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
+            intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
+            intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
+            break;
+        }
+    }
+    const bool res{intersection.length_ < lastDist};
     return res;
 }
 

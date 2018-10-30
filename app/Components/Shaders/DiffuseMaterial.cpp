@@ -9,7 +9,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-DiffuseMaterial::DiffuseMaterial(Scene scene, const Accelerator accelerator) noexcept :
+DiffuseMaterial::DiffuseMaterial(Scene &&scene, const Accelerator accelerator) noexcept :
         Shader{::std::move(scene), 0, accelerator} {
 }
 

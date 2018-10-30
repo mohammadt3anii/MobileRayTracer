@@ -110,8 +110,11 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_->shader_->scene_.triangles_.empty() ?
-            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
+            !renderer_->shader_->naiveTriangles_.primitives_.empty()?
+            renderer_->shader_->naiveTriangles_.primitives_ :
+            !renderer_->shader_->bvhTriangles_.primitives_.empty()?
+            renderer_->shader_->bvhTriangles_.primitives_ :
+            renderer_->shader_->scene_.triangles_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};
@@ -160,8 +163,11 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         jobject /*thiz*/
 ) noexcept {
     const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
-            !renderer_->shader_->scene_.triangles_.empty() ?
-            renderer_->shader_->scene_.triangles_ : renderer_->shader_->bvhTriangles_.primitives_};
+            !renderer_->shader_->naiveTriangles_.primitives_.empty()?
+            renderer_->shader_->naiveTriangles_.primitives_ :
+            !renderer_->shader_->bvhTriangles_.primitives_.empty()?
+            renderer_->shader_->bvhTriangles_.primitives_ :
+            renderer_->shader_->scene_.triangles_};
     const unsigned long arraySize{triangles.size() * 3 * 4};
     const jlong arrayBytes{static_cast<jlong> (arraySize) * static_cast<jlong> (sizeof(jfloat))};
     jobject directBuffer{nullptr};

@@ -10,7 +10,7 @@ using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
 DepthMap::DepthMap(
-    Scene scene, const ::glm::vec3 &maxPoint, const Accelerator accelerator) noexcept
+    Scene &&scene, const ::glm::vec3 &maxPoint, const Accelerator accelerator) noexcept
         :
         Shader{::std::move(scene), 0, accelerator},
         maxPoint_{maxPoint} {

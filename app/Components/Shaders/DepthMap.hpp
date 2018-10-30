@@ -23,7 +23,7 @@ namespace Components {
         explicit DepthMap () noexcept = delete;
 
         explicit DepthMap(
-            ::MobileRT::Scene scene,
+            ::MobileRT::Scene &&scene,
             const ::glm::vec3 &maxPoint,
             Accelerator accelerator) noexcept;
 

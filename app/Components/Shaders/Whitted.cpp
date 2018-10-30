@@ -10,7 +10,7 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Scene;
 
-Whitted::Whitted(Scene scene, const ::std::uint32_t samplesLight, Accelerator accelerator) noexcept :
+Whitted::Whitted(Scene &&scene, const ::std::uint32_t samplesLight, Accelerator accelerator) noexcept :
         Shader{::std::move(scene), samplesLight, accelerator} {
 }
 

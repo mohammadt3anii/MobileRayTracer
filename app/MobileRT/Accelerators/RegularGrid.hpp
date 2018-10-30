@@ -25,13 +25,9 @@ namespace MobileRT {
         bool hasPrimitives_ {};
 
     private:
-        void addPrimitives
-                (::std::vector<Primitive<T>> &&primitives,
-                 ::std::vector<::std::vector<Primitive<T>*>> &grid_primitives) noexcept;
+        void addPrimitives(::std::vector<Primitive<T>> &&primitives) noexcept;
 
-        Intersection intersect(const ::std::vector<::std::vector<Primitive<T> *>> &primitivesMatrix,
-                       Intersection intersection,
-                       const Ray &ray, bool shadowTrace = false) noexcept;
+        Intersection intersect(Intersection intersection, const Ray &ray, bool shadowTrace = false) noexcept;
 
     public:
         explicit RegularGrid() noexcept = default;
@@ -80,7 +76,7 @@ namespace MobileRT {
         LOG("gridSize_ = ", this->gridSize_);
         LOG("gridShift_ = ", this->gridShift_);
         LOG("hasPrimitives_ = ", this->hasPrimitives_);
-        addPrimitives(::std::move(primitives), this->primitives_);
+        addPrimitives(::std::move(primitives));
     }
 
     template<typename T>
@@ -90,9 +86,7 @@ namespace MobileRT {
     }
 
     template<typename T>
-    void RegularGrid<T>::addPrimitives
-                (::std::vector<Primitive<T>> &&primitives,
-                 ::std::vector<::std::vector<Primitive<T>*>> &grid_primitives) noexcept {
+    void RegularGrid<T>::addPrimitives(::std::vector<Primitive<T>> &&primitives) noexcept {
         ::std::int32_t index{0};
 
         // calculate cell width, height and depth
@@ -151,7 +145,7 @@ namespace MobileRT {
                         // do an accurate aabb / primitive intersection test
                         const bool intersectedBox{::MobileRT::intersectBox(primitive, cell)};
                         if (intersectedBox) {
-                            grid_primitives[idx].emplace_back(&primitive);
+                            primitives_[idx].emplace_back(&primitive);
                             //LOG("add idx = ", idx, " index = ", index);
                         }
                     }
@@ -163,7 +157,7 @@ namespace MobileRT {
     template<typename T>
     Intersection RegularGrid<T>::trace(Intersection intersection, const Ray &ray) noexcept {
         if (hasPrimitives_ == true) {
-            intersection = intersect(this->primitives_, intersection, ray);
+            intersection = intersect(intersection, ray);
         }
         return intersection;
     }
@@ -171,16 +165,14 @@ namespace MobileRT {
     template<typename T>
     Intersection RegularGrid<T>::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
         if (hasPrimitives_ == true) {
-            intersection = intersect(this->primitives_, intersection, ray, true);
+            intersection = intersect(intersection, ray, true);
         }
         return intersection;
     }
 
     template<typename T>
-    Intersection RegularGrid<T>::intersect(
-    const ::std::vector<::std::vector<Primitive<T>*>> &primitivesMatrix,
-    Intersection intersection, const Ray &ray,
-    const bool shadowTrace) noexcept {
+    Intersection RegularGrid<T>::intersect(Intersection intersection, const Ray &ray,
+        const bool shadowTrace) noexcept {
         // setup 3DDDA (double check reusability of primary ray data)
         const ::glm::vec3 &cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
         ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};
@@ -266,7 +258,7 @@ namespace MobileRT {
                     static_cast<::std::uint32_t> (X) +
                     (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
                     (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
-            const auto it {primitivesMatrix.begin() + index};
+            const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
                 const float lastDist {intersection.length_};
@@ -317,7 +309,7 @@ namespace MobileRT {
                     static_cast<::std::uint32_t> (X) +
                     (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
                     (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
-            const auto it {primitivesMatrix.begin() + index};
+            const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
                 intersection = primitive->intersect(intersection, ray);

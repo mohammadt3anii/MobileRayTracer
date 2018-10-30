@@ -20,7 +20,7 @@ namespace Components {
         explicit NoShadows () noexcept = delete;
 
         explicit NoShadows(
-            ::MobileRT::Scene scene,
+            ::MobileRT::Scene &&scene,
             ::std::uint32_t samplesLight,
             Accelerator accelerator) noexcept;
 
