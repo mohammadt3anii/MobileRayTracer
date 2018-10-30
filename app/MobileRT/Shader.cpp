@@ -68,13 +68,13 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Sphere>>(spheres, &minSpheres, &maxSpheres);
             Scene::getBounds<Primitive<Triangle>>(triangles, &minTriangles, &maxTriangles);
             
-            //Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
-            //Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
+            Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
+            Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
             Scene::getBounds(::std::vector<Camera *> {camera}, &minTriangles, &maxTriangles);
 
-            const AABB sceneBoundsPlanes {minPlanes - 0.01f, maxPlanes + 0.01f};
-            const AABB sceneBoundsSpheres {minSpheres - 0.01f, maxSpheres + 0.01f};
-            const AABB sceneBoundsTriangles {minTriangles - 0.01f, maxTriangles + 0.01f};
+            const AABB sceneBoundsPlanes {minPlanes - Epsilon, maxPlanes + Epsilon};
+            const AABB sceneBoundsSpheres {minSpheres - Epsilon, maxSpheres + Epsilon};
+            const AABB sceneBoundsTriangles {minTriangles - Epsilon, maxTriangles + Epsilon};
             /*const AABB sceneBounds {::glm::min(::glm::min(minPlanes, minSpheres), minTriangles),
                                     ::glm::max(::glm::max(maxPlanes, maxSpheres), maxTriangles)};*/
 

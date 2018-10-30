@@ -123,8 +123,8 @@ bool OBJLoader::fillScene(Scene *const scene,
                 // per-face material
                 const auto itMaterial {shape.mesh.material_ids.begin() + static_cast<::std::int32_t> (f)};
                 const ::std::int32_t materialID {*itMaterial};
-                const auto itMaterial2 {materials_.begin() + static_cast<::std::int32_t> (materialID)};
                 if (materialID >= 0) {
+                    const auto itMaterial2 {materials_.begin() + static_cast<::std::int32_t> (materialID)};
                     const ::tinyobj::material_t &m {*itMaterial2};
                     const float d1 {m.diffuse[0]};
                     const float d2 {m.diffuse[1]};
