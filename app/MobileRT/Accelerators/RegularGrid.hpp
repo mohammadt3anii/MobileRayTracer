@@ -78,6 +78,8 @@ namespace MobileRT {
 
         addPrimitives(::std::move(primitives), this->primitives_);
         LOG("PRIMITIVES = ", this->primitives_.size());
+        LOG("gridSize_ = ", this->gridSize_);
+        LOG("gridShift_ = ", this->gridShift_);
     }
 
     template<typename T>

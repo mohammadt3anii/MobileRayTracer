@@ -69,9 +69,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             LOG("sizePlanes = ", sizePlanes);
             LOG("sizeSpheres = ", sizeSpheres);
             LOG("sizeTriangles = ", sizeTriangles);
-            const ::std::int32_t auxPlanes {roundUpToPowerOf2(bitCounter(sizePlanes))};
-            const ::std::int32_t auxSpheres {roundUpToPowerOf2(bitCounter(sizeSpheres))};
-            const ::std::int32_t auxTriangles {roundUpToPowerOf2(bitCounter(sizeTriangles))};
+            const ::std::int32_t auxPlanes {sizePlanes > 6? roundUpToPowerOf2(bitCounter(sizePlanes)) : 2};
+            const ::std::int32_t auxSpheres {sizeSpheres > 6? roundUpToPowerOf2(bitCounter(sizeSpheres)) : 2};
+            const ::std::int32_t auxTriangles {sizeTriangles > 6? roundUpToPowerOf2(bitCounter(sizeTriangles)) : 2};
             LOG("auxPlanes = ", auxPlanes);
             LOG("auxSpheres = ", auxSpheres);
             LOG("auxTriangles = ", auxTriangles);

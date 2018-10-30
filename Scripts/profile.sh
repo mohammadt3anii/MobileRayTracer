@@ -30,6 +30,12 @@ done
 OBJ="${OBJS_DIR}/conference/conference.obj"
 MTL="${OBJS_DIR}/conference/conference.mtl"
 
+OBJ="${OBJS_DIR}/Porsche/Porsche_911_GT2.obj"
+MTL="${OBJS_DIR}/Porsche/Porsche_911_GT2.mtl"
+
+OBJ="${OBJS_DIR}/CornellBox/CornellBox-Mirror.obj"
+MTL="${OBJS_DIR}/CornellBox/CornellBox-Mirror.mtl"
+
 OBJ="${OBJS_DIR}/teapot/teapot.obj"
 MTL="${OBJS_DIR}/teapot/teapot.mtl"
 
@@ -54,8 +60,6 @@ OBJ="${OBJS_DIR}/CornellBox/CornellBox-Glossy-Floor.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Glossy-Floor.mtl"
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Glossy.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Glossy.mtl"
-OBJ="${OBJS_DIR}/CornellBox/CornellBox-Mirror.obj"
-MTL="${OBJS_DIR}/CornellBox/CornellBox-Mirror.mtl"
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Original.obj"
 MTL="${OBJS_DIR}/CornellBox/CornellBox-Original.mtl"
 OBJ="${OBJS_DIR}/CornellBox/CornellBox-Sphere.obj"
