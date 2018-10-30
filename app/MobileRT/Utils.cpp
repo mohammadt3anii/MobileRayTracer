@@ -12,6 +12,26 @@ namespace MobileRT {
         return res;
     }
 
+    ::std::int32_t roundUpToPowerOf2(::std::int32_t value) noexcept {
+        value--;
+        value |= value >> 1;
+        value |= value >> 2;
+        value |= value >> 4;
+        value |= value >> 8;
+        value |= value >> 16;
+        value++;
+        return value;
+    }
+
+    ::std::int32_t bitCounter(::std::int32_t n) noexcept {
+        ::std::int32_t counter{0};
+        while (n > 0) {
+            ++counter;
+            n >>= 1;
+        }
+        return counter;
+    }
+
     //https://en.wikipedia.org/wiki/Halton_sequence
     float haltonSequence(::std::uint32_t index, const ::std::uint32_t base) noexcept {
         float f{1.0f};

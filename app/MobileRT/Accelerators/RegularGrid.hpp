@@ -33,8 +33,6 @@ namespace MobileRT {
                        Intersection intersection,
                        const Ray &ray, bool shadowTrace = false) noexcept;
 
-        ::std::int32_t bitCounter(::std::uint32_t n) const noexcept;
-
     public:
         explicit RegularGrid() noexcept = default;
 
@@ -62,7 +60,7 @@ namespace MobileRT {
                 ::std::vector<::std::vector<::MobileRT::Primitive<T> *>> {
                         static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
-        gridShift_{bitCounter(static_cast<::std::uint32_t>(gridSize)) - 1},
+        gridShift_{bitCounter(gridSize) - 1},
         m_Extends(sceneBounds),//world boundaries
         // precalculate 1 / size of a cell (for x, y and z)
         m_SR{gridSize_ / (m_Extends.pointMax_ - m_Extends.pointMin_)[0],
@@ -86,16 +84,6 @@ namespace MobileRT {
     RegularGrid<T>::~RegularGrid() noexcept {
         primitives_.clear();
         ::std::vector<::std::vector<Primitive<T> *>> {}.swap(primitives_);
-    }
-
-    template<typename T>
-    ::std::int32_t RegularGrid<T>::bitCounter(::std::uint32_t n) const noexcept {
-        ::std::int32_t counter{0};
-        while (n > 0) {
-            ++counter;
-            n >>= 1;
-        }
-        return counter;
     }
 
     template<typename T>

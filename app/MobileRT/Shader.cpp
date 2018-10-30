@@ -63,9 +63,33 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             Scene::getBounds<Primitive<Plane>>(planes, &min, &max);
             Scene::getBounds(::std::vector<Camera *> {camera}, &min, &max);
             const AABB sceneBounds {min - 0.01f, max + 0.01f};
-            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), 128};
-            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), 128};
-            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), 128};
+            const ::std::int32_t sizePlanes {static_cast<::std::int32_t> (planes.size())};
+            const ::std::int32_t sizeSpheres {static_cast<::std::int32_t> (spheres.size())};
+            const ::std::int32_t sizeTriangles {static_cast<::std::int32_t> (triangles.size())};
+            LOG("sizePlanes = ", sizePlanes);
+            LOG("sizeSpheres = ", sizeSpheres);
+            LOG("sizeTriangles = ", sizeTriangles);
+            const ::std::int32_t auxPlanes {roundUpToPowerOf2(bitCounter(sizePlanes))};
+            const ::std::int32_t auxSpheres {roundUpToPowerOf2(bitCounter(sizeSpheres))};
+            const ::std::int32_t auxTriangles {roundUpToPowerOf2(bitCounter(sizeTriangles))};
+            LOG("auxPlanes = ", auxPlanes);
+            LOG("auxSpheres = ", auxSpheres);
+            LOG("auxTriangles = ", auxTriangles);
+            const ::std::int32_t auxPlanes2 {roundUpToPowerOf2(bitCounter(auxPlanes)) / 2};
+            const ::std::int32_t auxSpheres2 {roundUpToPowerOf2(bitCounter(auxSpheres)) / 2};
+            const ::std::int32_t auxTriangles2 {roundUpToPowerOf2(bitCounter(auxTriangles)) / 2};
+            LOG("auxPlanes2 = ", auxPlanes2);
+            LOG("auxSpheres2 = ", auxSpheres2);
+            LOG("auxTriangles2 = ", auxTriangles2);
+            const ::std::int32_t gridSizePlanes {auxPlanes2? auxPlanes * auxPlanes2 : auxPlanes};
+            const ::std::int32_t gridSizeSpheres {auxSpheres2? auxSpheres * auxSpheres2 : auxSpheres};
+            const ::std::int32_t gridSizeTriangles {auxTriangles2? auxTriangles * auxTriangles2 : auxTriangles};
+            LOG("gridSizePlanes = ", gridSizePlanes);
+            LOG("gridSizeSpheres = ", gridSizeSpheres);
+            LOG("gridSizeTriangles = ", gridSizeTriangles);
+            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBounds, ::std::move(scene_.planes_), gridSizePlanes};
+            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBounds, ::std::move(scene_.spheres_), gridSizeSpheres};
+            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBounds, ::std::move(scene_.triangles_), gridSizeTriangles};
             break;
         }
         case Accelerator::BVH: {
