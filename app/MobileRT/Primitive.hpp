@@ -19,7 +19,6 @@ namespace MobileRT {
     public:
         T shape_{};
         Material material_{};
-        ::std::int32_t lastRayID_{};
 
     public:
         explicit Primitive() noexcept = delete;
@@ -60,24 +59,16 @@ namespace MobileRT {
 
     template<typename T>
     bool Primitive<T>::intersect(Intersection *const intersection, const Ray &ray) noexcept {
-        bool intersected {false};
-        if (this->lastRayID_ != ray.id_) {
-             intersected = this->shape_.intersect(intersection, ray);
-            if (intersected) {
-                intersection->material_ = &this->material_;
-            }
+        const bool intersected {this->shape_.intersect(intersection, ray)};
+        if (intersected) {
+            intersection->material_ = &this->material_;
         }
-        lastRayID_ = ray.id_;
         return intersected;
     }
 
     template<typename T>
     bool Primitive<T>::intersect(const Ray &ray, const float dist) noexcept {
-        bool intersected {false};
-        if (this->lastRayID_ != ray.id_) {
-             intersected = this->shape_.intersect(ray, dist);
-        }
-        lastRayID_ = ray.id_;
+        const bool intersected {this->shape_.intersect(ray, dist)};
         return intersected;
     }
 

@@ -14,7 +14,6 @@ namespace MobileRT {
         const ::glm::vec3 origin_ {};
         const ::glm::vec3 direction_  {};
         const ::std::int32_t depth_{};
-        const ::std::int32_t id_ {};
         const void *const primitive_ {};
 
     public:
