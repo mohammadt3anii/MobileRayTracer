@@ -5,7 +5,7 @@
 #ifndef MOBILERT_ACCELERATORS_REGULARGRID_HPP
 #define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Primitive.hpp"
 #include "MobileRT/Scene.hpp"
 #include <glm/glm.hpp>

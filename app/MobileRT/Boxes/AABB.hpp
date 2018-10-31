@@ -2,8 +2,8 @@
 // Created by puscas on 06-03-2017.
 //
 
-#ifndef MOBILERT_ACCELERATORS_AABB_HPP
-#define MOBILERT_ACCELERATORS_AABB_HPP
+#ifndef MOBILERT_BOXES_AABB_HPP
+#define MOBILERT_BOXES_AABB_HPP
 
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Material.hpp"
@@ -40,4 +40,4 @@ namespace MobileRT {
     bool intersect(const AABB &box, const Ray &ray) noexcept;
 }//namespace MobileRT
 
-#endif //MOBILERT_ACCELERATORS_AABB_HPP
+#endif //MOBILERT_BOXES_AABB_HPP

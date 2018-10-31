@@ -5,7 +5,7 @@
 #ifndef MOBILERT_SHAPES_PLANE_HPP
 #define MOBILERT_SHAPES_PLANE_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Ray.hpp"
 #include <glm/glm.hpp>

@@ -5,7 +5,7 @@
 #ifndef MOBILERT_PRIMITIVE_HPP
 #define MOBILERT_PRIMITIVE_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Material.hpp"
 #include "MobileRT/Ray.hpp"
 #include "MobileRT/Shapes/Plane.hpp"

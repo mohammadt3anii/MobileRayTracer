@@ -5,7 +5,7 @@
 #ifndef MOBILERT_SCENE_HPP
 #define MOBILERT_SCENE_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Light.hpp"
 #include "MobileRT/Material.hpp"

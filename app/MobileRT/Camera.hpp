@@ -5,7 +5,7 @@
 #ifndef MOBILERT_CAMERA_HPP
 #define MOBILERT_CAMERA_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Ray.hpp"
 #include <algorithm>
 #include <atomic>

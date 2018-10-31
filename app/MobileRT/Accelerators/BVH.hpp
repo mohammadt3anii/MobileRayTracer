@@ -5,7 +5,7 @@
 #ifndef MOBILERT_ACCELERATORS_BVH_HPP
 #define MOBILERT_ACCELERATORS_BVH_HPP
 
-#include "MobileRT/Accelerators/AABB.hpp"
+#include "MobileRT/Boxes/AABB.hpp"
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Scene.hpp"
 #include <algorithm>
