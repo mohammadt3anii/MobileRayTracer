@@ -57,7 +57,7 @@ namespace MobileRT {
     bool Naive<T>::trace(Intersection *const intersection,
                   const Ray &ray) noexcept {
         bool intersected {false};
-        for (::MobileRT::Primitive<T> &primitive : primitives_) {
+        for (auto &primitive : primitives_) {
             intersected |= primitive.intersect(intersection, ray);
         }
         return intersected;
@@ -65,7 +65,7 @@ namespace MobileRT {
 
     template<typename T>
     bool Naive<T>::shadowTrace(const Ray &ray, const float dist) noexcept {
-        for (::MobileRT::Primitive<T> &primitive : primitives_) {
+        for (auto &primitive : primitives_) {
             const bool intersected {primitive.intersect(ray, dist)};
             if (intersected) {
                 return true;

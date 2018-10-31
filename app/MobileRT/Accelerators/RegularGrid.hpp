@@ -101,7 +101,7 @@ bitCounter(static_cast
         const float dz_reci{dz > 0 ? 1.0f / dz : 1.0f};
 
         // store primitives in the grid cells
-        for (Primitive<T> &primitive : primitives) {
+        for (auto &primitive : primitives) {
             ++index;
             const AABB bound{primitive.getAABB()};
             const ::glm::vec3 &bv1 {bound.pointMin_};

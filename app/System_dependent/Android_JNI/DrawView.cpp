@@ -125,7 +125,7 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
             directBuffer = env->NewDirectByteBuffer(floatBuffer, arrayBytes);
             if (directBuffer != nullptr) {
                 int i{0};
-                for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+                for (const auto &triangle : triangles) {
                     const ::glm::vec4 &pointA{triangle.shape_.pointA_.x,
                                               triangle.shape_.pointA_.y,
                                               triangle.shape_.pointA_.z, 1.0f};
@@ -178,7 +178,7 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
             directBuffer = env->NewDirectByteBuffer(floatBuffer, arrayBytes);
             if (directBuffer != nullptr) {
                 int i{0};
-                for (const ::MobileRT::Primitive<::MobileRT::Triangle> &triangle : triangles) {
+                for (const auto &triangle : triangles) {
                     const ::glm::vec3 &kD{triangle.material_.Kd_};
                     const ::glm::vec3 &kS{triangle.material_.Ks_};
                     const ::glm::vec3 &kT{triangle.material_.Kt_};

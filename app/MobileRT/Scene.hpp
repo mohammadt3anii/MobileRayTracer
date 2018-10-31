@@ -46,7 +46,7 @@ namespace MobileRT {
         template<typename T>
         static void getBounds(
             const ::std::vector<T *> primitives, ::glm::vec3 *const min, ::glm::vec3 *const max) {
-            for (const T *const primitive : primitives) {
+            for (const auto *const primitive : primitives) {
                 AABBbounds(primitive->getAABB(), min, max);
             }
         }

@@ -27,11 +27,9 @@ Scene::~Scene() noexcept {
 }
 
 bool Scene::traceLights(Intersection *const intersection, const Ray &ray) const noexcept {
-    const ::std::uint32_t lightsSize {static_cast<::std::uint32_t> (lights_.size())};
     bool intersected {false};
-    for (::std::uint32_t i {0}; i < lightsSize; ++i) {
-        const Light &light{*this->lights_[static_cast<::std::uint32_t> (i)]};
-        intersected |= light.intersect(intersection, ray);
+    for (const auto &light : this->lights_) {
+        intersected |= light->intersect(intersection, ray);
     }
 
     return intersected;
