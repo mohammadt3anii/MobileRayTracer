@@ -26,7 +26,7 @@ static void
 work_thread(
     ::std::uint32_t *const bitmap, const ::std::int32_t width,
     const ::std::int32_t height, const ::std::int32_t threads,
-    const ::std::int32_t shader, const ::std::int32_t scene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
+    const ::std::int32_t nShader, const ::std::int32_t nScene, const ::std::int32_t samplesPixel, const ::std::int32_t samplesLight,
     ::std::int32_t repeats, const ::std::int32_t accelerator, const bool printStdOut,
     const char *const objFileName, const char *const mtlFileName) {
     ::std::ostringstream ss{""};
@@ -39,11 +39,11 @@ work_thread(
         old_buf_stderr = ::std::cerr.rdbuf(ss.rdbuf());
     }
     {
-        LOG("width_ = ", width);
-        LOG("height_ = ", height);
+        LOG("width = ", width);
+        LOG("height = ", height);
         LOG("threads = ", threads);
-        LOG("shader = ", shader);
-        LOG("scene = ", scene);
+        LOG("nShader = ", nShader);
+        LOG("nScene = ", nScene);
         LOG("samplesPixel = ", samplesPixel);
         LOG("samplesLight = ", samplesLight);
         LOG("repeats = ", repeats);
@@ -59,20 +59,25 @@ work_thread(
             ::std::max(static_cast<float>(width) / height, static_cast<float>(height) / width)};
         const float hfovFactor {width > height ? ratio : 1.0f};
         const float vfovFactor {width < height ? ratio : 1.0f};
-        ::MobileRT::Scene scene_ {};
+        ::MobileRT::Scene scene {};
         ::std::unique_ptr<::MobileRT::Sampler> samplerPixel {};
-        ::std::unique_ptr<::MobileRT::Shader> shader_ {};
-        ::std::unique_ptr<::MobileRT::Camera> camera {};
+        ::std::unique_ptr<::MobileRT::Shader> shader {};
+        ::std::unique_ptr<::MobileRT::Camera> camera {
+                ::std::make_unique<::Components::Perspective>(
+                        ::glm::vec3 {0.0f, 0.0f, -3.4f},
+                        ::glm::vec3 {0.0f, 0.0f, 1.0f},
+                        ::glm::vec3 {0.0f, 1.0f, 0.0f},
+                        45.0f * hfovFactor, 45.0f * vfovFactor)};
         ::glm::vec3 maxDist{};
 
-        switch (scene) {
+        switch (nScene) {
             case 0:
                 camera = ::std::make_unique<::Components::Perspective>(
                         ::glm::vec3 {0.0f, 0.0f, -3.4f},
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                scene_ = cornellBoxScene(::std::move(scene_));
+                scene = cornellBoxScene(::std::move(scene));
                 maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
@@ -87,7 +92,7 @@ work_thread(
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f},
                   60.0f * hfovFactor, 60.0f * vfovFactor);*/
-                scene_ = spheresScene(::std::move(scene_));
+                scene = spheresScene(::std::move(scene));
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
 
@@ -97,7 +102,7 @@ work_thread(
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         45.0f * hfovFactor, 45.0f * vfovFactor);
-                scene_ = cornellBoxScene2(::std::move(scene_));
+                scene = cornellBoxScene2(::std::move(scene));
                 maxDist = ::glm::vec3 {1, 1, 1};
                 break;
 
@@ -107,7 +112,7 @@ work_thread(
                         ::glm::vec3 {0.0f, 0.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         60.0f * hfovFactor, 60.0f * vfovFactor);
-                scene_ = spheresScene2(::std::move(scene_));
+                scene = spheresScene2(::std::move(scene));
                 maxDist = ::glm::vec3 {8, 8, 8};
                 break;
             default: {
@@ -116,10 +121,10 @@ work_thread(
                 if (!objLoader.isProcessed()) {
                     exit(0);
                 }
-                //objLoader.fillScene (&scene_, []() { return ::std::make_unique<::Components::HaltonSeq> (); });
-                //objLoader.fillScene (&scene_, []() {return ::std::make_unique<::Components::MersenneTwister> (); });
-                objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
-                //objLoader.fillScene(&scene_, []() { return ::std::make_unique<Components::StaticMersenneTwister>(); });
+                //objLoader.fillScene (&scene, []() { return ::std::make_unique<::Components::HaltonSeq> (); });
+                //objLoader.fillScene (&scene, []() {return ::std::make_unique<::Components::MersenneTwister> (); });
+                objLoader.fillScene(&scene, []() { return ::std::make_unique<Components::StaticHaltonSeq>(); });
+                //objLoader.fillScene(&scene, []() { return ::std::make_unique<Components::StaticMersenneTwister>(); });
 
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
@@ -140,7 +145,7 @@ work_thread(
 
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
@@ -148,7 +153,7 @@ work_thread(
                             ::glm::vec3 {-0.5f, 1.58f, -0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
@@ -160,7 +165,7 @@ work_thread(
                 if (::std::strstr(objFileName, "conference") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-100.0f, 640.0f, -100.0f},
@@ -168,7 +173,7 @@ work_thread(
                             ::glm::vec3 {100.0f, 640.0f, 100.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-100.0f, 640.0f, -100.0f},
@@ -190,7 +195,7 @@ work_thread(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-30.0f, 100.0f, -30.0f},
@@ -198,7 +203,7 @@ work_thread(
                             ::glm::vec3 {30.0f, 100.0f, 30.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-30.0f, 100.0f, -30.0f},
@@ -215,7 +220,7 @@ work_thread(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -223,7 +228,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -240,7 +245,7 @@ work_thread(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -248,7 +253,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -265,7 +270,7 @@ work_thread(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -273,7 +278,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -285,7 +290,7 @@ work_thread(
                 if (::std::strstr(objFileName, "buddha") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -293,7 +298,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -311,7 +316,7 @@ work_thread(
                 if (::std::strstr(objFileName, "erato") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -319,7 +324,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -337,7 +342,7 @@ work_thread(
                 if (::std::strstr(objFileName, "gallery") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -345,7 +350,7 @@ work_thread(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -363,7 +368,7 @@ work_thread(
                 if (::std::strstr(objFileName, "Porsche") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-1.0f, 2.1f, 1.0f},
@@ -371,7 +376,7 @@ work_thread(
                             ::glm::vec3 {1.0f, 2.1f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-1.0f, 2.1f, 1.0f},
@@ -384,14 +389,14 @@ work_thread(
                     const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveDown{planeDown,
                                                                                       planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveDown);
+                    scene.planes_.emplace_back(planePrimitiveDown);
 
                     const ::glm::vec3 planePointUp{0.0f, 2.2f, 0.0f};
                     const ::glm::vec3 planeNormalUp{0.0f, -1.0f, 0.0f};
                     const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveUp{planeUp,
                                                                                     planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveUp);
+                    scene.planes_.emplace_back(planePrimitiveUp);
 
                     const ::MobileRT::Material planeMaterialLeft{::glm::vec3 {0.9f, 0.0f, 0.0f}};
                     const ::glm::vec3 planePointLeft{-4.1f, 0.0f, 0.0f};
@@ -399,7 +404,7 @@ work_thread(
                     const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveLeft{planeLeft,
                                                                                       planeMaterialLeft};
-                    scene_.planes_.emplace_back(planePrimitiveLeft);
+                    scene.planes_.emplace_back(planePrimitiveLeft);
 
                     const ::MobileRT::Material planeMaterialRight{::glm::vec3 {0.0f, 0.0f, 0.9f}};
                     const ::glm::vec3 planePointRight{1.1f, 0.0f, 0.0f};
@@ -407,14 +412,14 @@ work_thread(
                     const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveRight{planeRight,
                                                                                        planeMaterialRight};
-                    scene_.planes_.emplace_back(planePrimitiveRight);
+                    scene.planes_.emplace_back(planePrimitiveRight);
 
                     const ::glm::vec3 planePointBack{0.0f, 0.0f, -4.6f};
                     const ::glm::vec3 planeNormalBack{0.0f, 0.0f, 1.0f};
                     const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveBack{planeBack,
                                                                                       planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveBack);
+                    scene.planes_.emplace_back(planePrimitiveBack);
 
                     const ::MobileRT::Material planeMaterialForward{::glm::vec3 {0.0f, 0.9f, 0.9f}};
                     const ::glm::vec3 planePointForward{0.0f, 0.0f, 2.3f};
@@ -422,7 +427,7 @@ work_thread(
                     const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward};
                     const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveForward{
                             planeForward, planeMaterialForward};
-                    scene_.planes_.emplace_back(planePrimitiveForward);
+                    scene.planes_.emplace_back(planePrimitiveForward);
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {-4.0f, 2.0f, -4.5f},
@@ -440,9 +445,9 @@ work_thread(
         } else {
             samplerPixel = ::std::make_unique<::Components::Constant>(0.5f);
         }
-        switch (shader) {
+        switch (nShader) {
             case 1: {
-                shader_ = ::std::make_unique<::Components::Whitted>(::std::move(scene_),
+                shader = ::std::make_unique<::Components::Whitted>(::std::move(scene),
                                                                     samplesLight,
                                                                     ::MobileRT::Shader::Accelerator(
                                                                             accelerator));
@@ -455,44 +460,44 @@ work_thread(
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticHaltonSeq>()};
                 //::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette {::std::make_unique<::Components::StaticMersenneTwister> ()};
 
-                shader_ = ::std::make_unique<::Components::PathTracer>(
-                        ::std::move(scene_), ::std::move(samplerRussianRoulette), samplesLight,
+                shader = ::std::make_unique<::Components::PathTracer>(
+                        ::std::move(scene), ::std::move(samplerRussianRoulette), samplesLight,
                         ::MobileRT::Shader::Accelerator(accelerator));
                 break;
             }
 
             case 3: {
-                shader_ = ::std::make_unique<::Components::DepthMap>(::std::move(scene_), maxDist,
+                shader = ::std::make_unique<::Components::DepthMap>(::std::move(scene), maxDist,
                                                                      ::MobileRT::Shader::Accelerator(
                                                                              accelerator));
                 break;
             }
 
             case 4: {
-                shader_ = ::std::make_unique<::Components::DiffuseMaterial>(::std::move(scene_),
+                shader = ::std::make_unique<::Components::DiffuseMaterial>(::std::move(scene),
                                                                             ::MobileRT::Shader::Accelerator(
                                                                                     accelerator));
                 break;
             }
 
             default: {
-                shader_ = ::std::make_unique<::Components::NoShadows>(::std::move(scene_),
+                shader = ::std::make_unique<::Components::NoShadows>(::std::move(scene),
                                                                       samplesLight,
                                                                       ::MobileRT::Shader::Accelerator(
                                                                               accelerator));
                 break;
             }
         }
-        const ::std::int32_t triangles{static_cast<::std::int32_t> (shader_->scene_.triangles_.size())};
-        const ::std::int32_t spheres{static_cast<::std::int32_t> (shader_->scene_.spheres_.size())};
-        const ::std::int32_t planes{static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
-        numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
+        const ::std::int32_t triangles{static_cast<::std::int32_t> (shader->scene_.triangles_.size())};
+        const ::std::int32_t spheres{static_cast<::std::int32_t> (shader->scene_.spheres_.size())};
+        const ::std::int32_t planes{static_cast<::std::int32_t> (shader->scene_.planes_.size())};
+        numberOfLights_ = static_cast<::std::int32_t> (shader->scene_.lights_.size());
         const ::std::int32_t nPrimitives = triangles + spheres + planes;
 
         LOG("Started creating Renderer");
         const auto startCreating{::std::chrono::system_clock::now()};
         renderer_ = ::std::make_unique<::MobileRT::Renderer>(
-                ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
+                ::std::move(shader), ::std::move(camera), ::std::move(samplerPixel),
                 static_cast<::std::uint32_t>(width), static_cast<::std::uint32_t>(height),
                 static_cast<::std::uint32_t>(samplesPixel));
         const auto endCreating{::std::chrono::system_clock::now()};
@@ -505,8 +510,8 @@ work_thread(
         LOG("PRIMITIVES = ", nPrimitives);
         LOG("LIGHTS = ", numberOfLights_);
         LOG("threads = ", threads);
-        LOG("shader = ", shader);
-        LOG("scene = ", scene);
+        LOG("nShader = ", nShader);
+        LOG("nScene = ", nScene);
         LOG("samplesPixel = ", samplesPixel);
         LOG("samplesLight = ", samplesLight);
         LOG("width_ = ", width);
