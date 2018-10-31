@@ -32,7 +32,7 @@ namespace MobileRT {
     public:
         explicit RegularGrid() noexcept = default;
 
-        explicit RegularGrid<T>(AABB sceneBounds, ::std::vector<Primitive<T>> &&primitives, ::std::int32_t gridSize) noexcept;
+        explicit RegularGrid<T> (AABB sceneBounds, ::std::vector<Primitive<T>> &&primitives, ::std::int32_t gridSize) noexcept;
 
         RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 
@@ -53,7 +53,7 @@ namespace MobileRT {
     RegularGrid<T>::RegularGrid(AABB sceneBounds, ::std::vector<Primitive<T>> &&primitives,
                          const ::std::int32_t gridSize) noexcept :
         primitives_{
-                ::std::vector<::std::vector<::MobileRT::Primitive<T> *>> {
+                ::std::vector<::std::vector<::MobileRT::Primitive<T>*>> {
                         static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
         gridShift_{bitCounter(gridSize) - 1},
@@ -69,7 +69,7 @@ namespace MobileRT {
             m_Extends.pointMin_[2], ") max=(", m_Extends.pointMax_[0], ", ",
             m_Extends.pointMax_[1], ", ", m_Extends.pointMax_[2], ")");
 
-        const ::std::size_t vectorSize{static_cast<::std::size_t>(gridSize * gridSize * gridSize)};
+        const ::std::size_t vectorSize{static_cast<::std::size_t> (gridSize * gridSize * gridSize)};
         primitives_.reserve(vectorSize);
 
         LOG("PRIMITIVES = ", primitives.size());
@@ -82,7 +82,7 @@ namespace MobileRT {
     template<typename T>
     RegularGrid<T>::~RegularGrid() noexcept {
         primitives_.clear();
-        ::std::vector<::std::vector<Primitive<T> *>> {}.swap(primitives_);
+        ::std::vector<::std::vector<Primitive<T>*>> {}.swap(primitives_);
     }
 
     template<typename T>
@@ -108,20 +108,20 @@ namespace MobileRT {
             const ::glm::vec3 &bv2 {bound.pointMax_};
 
             // find out which cells could contain the primitive (based on aabb)
-            ::std::int32_t x1{static_cast<::std::int32_t>((bv1[0] - m_Extends.pointMin_[0]) * dx_reci)};
-            ::std::int32_t x2{static_cast<::std::int32_t>((bv2[0] - m_Extends.pointMin_[0]) * dx_reci) + 1};
+            ::std::int32_t x1{static_cast<::std::int32_t> ((bv1[0] - m_Extends.pointMin_[0]) * dx_reci)};
+            ::std::int32_t x2{static_cast<::std::int32_t> ((bv2[0] - m_Extends.pointMin_[0]) * dx_reci) + 1};
             x1 = (x1 < 0) ? 0 : x1;
             x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
             x2 = ::std::fabs(sizeX) < Epsilon? 0 : x2;
             x1 = x1 > x2 ? x2 : x1;
-            ::std::int32_t y1{static_cast<::std::int32_t>((bv1[1] - m_Extends.pointMin_[1]) * dy_reci)};
-            ::std::int32_t y2{static_cast<::std::int32_t>((bv2[1] - m_Extends.pointMin_[1]) * dy_reci) + 1};
+            ::std::int32_t y1{static_cast<::std::int32_t> ((bv1[1] - m_Extends.pointMin_[1]) * dy_reci)};
+            ::std::int32_t y2{static_cast<::std::int32_t> ((bv2[1] - m_Extends.pointMin_[1]) * dy_reci) + 1};
             y1 = (y1 < 0) ? 0 : y1;
             y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
             y2 = ::std::fabs(sizeY) < Epsilon? 0 : y2;
             y1 = y1 > y2 ? y2 : y1;
-            ::std::int32_t z1{static_cast<::std::int32_t>((bv1[2] - m_Extends.pointMin_[2]) * dz_reci)};
-            ::std::int32_t z2{static_cast<::std::int32_t>((bv2[2] - m_Extends.pointMin_[2]) * dz_reci) + 1};
+            ::std::int32_t z1{static_cast<::std::int32_t> ((bv1[2] - m_Extends.pointMin_[2]) * dz_reci)};
+            ::std::int32_t z2{static_cast<::std::int32_t> ((bv2[2] - m_Extends.pointMin_[2]) * dz_reci) + 1};
             z1 = (z1 < 0) ? 0 : z1;
             z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
             z2 = ::std::fabs(sizeZ) < Epsilon? 0 : z2;
@@ -133,10 +133,10 @@ namespace MobileRT {
                     for (::std::int32_t z{z1}; z <= z2; ++z) {
                         // construct aabb for current cell
                         const ::std::size_t idx {
-                                static_cast<::std::size_t>(x) +
-                                static_cast<::std::size_t>(y) * static_cast<::std::size_t>(gridSize_) +
-                                static_cast<::std::size_t>(z) * static_cast<::std::size_t>(gridSize_) *
-                                static_cast<::std::size_t>(gridSize_)};
+                                static_cast<::std::size_t> (x) +
+                                static_cast<::std::size_t> (y) * static_cast<::std::size_t> (gridSize_) +
+                                static_cast<::std::size_t> (z) * static_cast<::std::size_t> (gridSize_) *
+                                static_cast<::std::size_t> (gridSize_)};
                         const ::glm::vec3 &pos {m_Extends.pointMin_[0] + x * dx,
                                         m_Extends.pointMin_[1] + y * dy,
                                         m_Extends.pointMin_[2] + z * dz};
@@ -175,9 +175,9 @@ namespace MobileRT {
         const bool shadowTrace) noexcept {
         // setup 3DDDA (double check reusability of primary ray data)
         const ::glm::vec3 &cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
-        ::std::int32_t X{static_cast<::std::int32_t>(cell[0])};
-        ::std::int32_t Y{static_cast<::std::int32_t>(cell[1])};
-        ::std::int32_t Z{static_cast<::std::int32_t>(cell[2])};
+        ::std::int32_t X{static_cast<::std::int32_t> (cell[0])};
+        ::std::int32_t Y{static_cast<::std::int32_t> (cell[1])};
+        ::std::int32_t Z{static_cast<::std::int32_t> (cell[2])};
         /*const bool notInGrid{(X < 0) || (X >= gridSize_) ||
                             (Y < 0) || (Y >= gridSize_) ||
                             (Z < 0) || (Z >= gridSize_)};
@@ -254,10 +254,10 @@ namespace MobileRT {
         // trace primary ray
         while (true) {
             const ::std::int32_t index {
-                static_cast<int32_t>(
-                    static_cast<::std::uint32_t> (X) +
-                    (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
-                    (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
+                static_cast<int32_t> (
+                     static_cast<::std::uint32_t> (X) +
+                    (static_cast<::std::uint32_t> (Y) << static_cast<::std::uint32_t> (gridShift_)) +
+                    (static_cast<::std::uint32_t> (Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
             const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
@@ -305,10 +305,10 @@ namespace MobileRT {
         testloop:
         while (true) {
             const ::std::int32_t index {
-                static_cast<int32_t>(
-                    static_cast<::std::uint32_t> (X) +
-                    (static_cast<::std::uint32_t>(Y) << static_cast<::std::uint32_t> (gridShift_)) +
-                    (static_cast<::std::uint32_t>(Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
+                static_cast<int32_t> (
+                     static_cast<::std::uint32_t> (X) +
+                    (static_cast<::std::uint32_t> (Y) << static_cast<::std::uint32_t> (gridShift_)) +
+                    (static_cast<::std::uint32_t> (Z) << (static_cast<::std::uint32_t> (gridShift_) * 2u)))};
             const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {

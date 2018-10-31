@@ -42,7 +42,7 @@ bool Whitted::shade(
     // shadowed direct lighting - only for diffuse materials
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {
         const ::std::uint32_t sizeLights {
-            static_cast<::std::uint32_t>(scene_.lights_.size())};
+            static_cast<::std::uint32_t> (scene_.lights_.size())};
         if (sizeLights > 0) {
             const ::std::uint32_t samplesLight {this->samplesLight_};
             for (::std::uint32_t i {0}; i < samplesLight; ++i) {

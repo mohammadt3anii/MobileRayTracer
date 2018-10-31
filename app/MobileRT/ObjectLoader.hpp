@@ -36,7 +36,7 @@ namespace MobileRT {
         bool isProcessed() const noexcept;
 
         virtual bool fillScene(Scene *scene,
-                               ::std::function<::std::unique_ptr<Sampler>()> lambda) noexcept = 0;
+                               ::std::function<::std::unique_ptr<Sampler> ()> lambda) noexcept = 0;
     };
 }//namespace MobileRT
 

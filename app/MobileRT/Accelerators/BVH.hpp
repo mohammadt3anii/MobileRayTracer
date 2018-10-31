@@ -42,8 +42,7 @@ namespace MobileRT {
     public:
         explicit BVH() noexcept = default;
 
-        explicit BVH<T>(
-                ::std::vector<Primitive<T>> &&primitives) noexcept;
+        explicit BVH<T> (::std::vector<Primitive<T>> &&primitives) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
 
@@ -74,7 +73,7 @@ namespace MobileRT {
             return;
         }
         primitives_ = ::std::move(primitives);
-        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t>(primitives_.size())};
+        const ::std::uint32_t numberPrimitives {static_cast<::std::uint32_t> (primitives_.size())};
         const ::std::uint32_t maxNodes {numberPrimitives * 2 - 1};
         boxes_.resize(maxNodes);
         build();
@@ -85,15 +84,15 @@ namespace MobileRT {
         boxes_.clear();
         primitives_.clear();
 
-        ::std::vector<BVHNode>{}.swap(boxes_);
-        ::std::vector<Primitive < T>> {}.swap(primitives_);
+        ::std::vector<BVHNode> {}.swap(boxes_);
+        ::std::vector<Primitive<T>> {}.swap(primitives_);
     }
 
     template<typename T>
     void BVH<T>::build() noexcept {
         ::std::uint32_t id {0};
         ::std::uint32_t begin {0};
-        ::std::uint32_t end {static_cast<::std::uint32_t>(primitives_.size())};
+        ::std::uint32_t end {static_cast<::std::uint32_t> (primitives_.size())};
         ::std::uint32_t maxId {0};
 
         ::std::array<::std::uint32_t, 512> stackId {};
@@ -138,7 +137,7 @@ namespace MobileRT {
                 maxId = left + 1 > maxId? left + 1 : maxId;
 
                 const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
-                    static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes.begin(), boxes.end()))
+                    static_cast<::std::uint32_t> (getSplitIndex_SAH<T> (boxes.begin(), boxes.end()))
                 };
 
                 *itStackId = left + 1;
@@ -153,9 +152,9 @@ namespace MobileRT {
             }
         } while(itStackId > stackId.begin());
         LOG("maxNodeId = ", maxId);
-        boxes_.erase (boxes_.begin() + static_cast<::std::int32_t>(maxId) + 1, boxes_.end());
+        boxes_.erase (boxes_.begin() + static_cast<::std::int32_t> (maxId) + 1, boxes_.end());
         boxes_.shrink_to_fit();
-        ::std::vector<BVHNode>{boxes_}.swap(boxes_);
+        ::std::vector<BVHNode> {boxes_}.swap(boxes_);
     }
 
     template<typename T>
@@ -277,7 +276,7 @@ namespace MobileRT {
     template<typename T, typename Iterator>
     ::std::uint32_t getSplitIndex_SAH (
         const Iterator itBegin, const Iterator itEnd) noexcept {
-            const ::std::uint32_t N {static_cast<::std::uint32_t>(itEnd - itBegin)};
+            const ::std::uint32_t N {static_cast<::std::uint32_t> (itEnd - itBegin)};
             const auto itBoxes {itBegin};
 
             ::std::vector<float> left_area (N - maxLeafSize);

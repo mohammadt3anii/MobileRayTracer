@@ -17,8 +17,8 @@ Renderer::Renderer(::std::unique_ptr<Shader> shader,
         camera_{::std::move(camera)},
         shader_{::std::move(shader)},
         samplerPixel_{::std::move(samplerPixel)},
-        blockSizeX_{width / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks))},
-        blockSizeY_{height / static_cast<::std::uint32_t>(::std::sqrt(NumberOfBlocks))},
+        blockSizeX_{width / static_cast<::std::uint32_t> (::std::sqrt(NumberOfBlocks))},
+        blockSizeY_{height / static_cast<::std::uint32_t> (::std::sqrt(NumberOfBlocks))},
         sample_{0},
         width_{width},
         height_{height},
@@ -31,7 +31,7 @@ Renderer::Renderer(::std::unique_ptr<Shader> shader,
 void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t numThreads,
                            const ::std::uint32_t stride) noexcept {
     LOG("numThreads = ", numThreads);
-    const ::std::uint32_t realWidth {stride / static_cast<::std::uint32_t>(sizeof(::std::uint32_t))};
+    const ::std::uint32_t realWidth {stride / static_cast<::std::uint32_t> (sizeof(::std::uint32_t))};
     LOG("realWidth = ", realWidth);
     LOG("width_ = ", width_);
 
@@ -42,7 +42,7 @@ void Renderer::renderFrame(::std::uint32_t *const bitmap, const ::std::int32_t n
 
     const ::std::int32_t numChildren{numThreads - 1};
     ::std::vector<::std::thread> threads {};
-    threads.reserve(static_cast<::std::uint32_t>(numChildren));
+    threads.reserve(static_cast<::std::uint32_t> (numChildren));
 
     for (::std::int32_t i{0}; i < numChildren; ++i) {
         threads.emplace_back(&Renderer::renderScene, this, bitmap, i, realWidth);
@@ -82,7 +82,7 @@ void Renderer::renderScene(::std::uint32_t *const bitmap, const ::std::int32_t t
             const ::std::uint32_t roundBlock{
                     static_cast<::std::uint32_t> (::std::roundf(block * this->domainSize_))};
             const ::std::uint32_t pixel{
-                    static_cast<::std::uint32_t>(roundBlock * this->blockSizeX_ % resolution_)};
+                    static_cast<::std::uint32_t> (roundBlock * this->blockSizeX_ % resolution_)};
             const ::std::uint32_t startY{
                     ((pixel / this->width_) * this->blockSizeY_) % this->height_};
             const ::std::uint32_t endY{startY + this->blockSizeY_};

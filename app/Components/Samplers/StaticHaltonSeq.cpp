@@ -13,7 +13,7 @@ namespace {
 
     bool FillThings() {
         for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
-            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            const ::std::uint32_t index {static_cast<uint32_t> (::std::distance(VALUES.begin(), it))};
             *it = ::MobileRT::haltonSequence(index, 2);
         }
         static ::std::random_device randomDevice {"/dev/urandom"};

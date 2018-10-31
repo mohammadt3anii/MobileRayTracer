@@ -15,7 +15,7 @@ namespace {
 
     bool FillThings() {
         for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
-            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            const ::std::uint32_t index {static_cast<uint32_t> (::std::distance(VALUES.begin(), it))};
             *it = ::MobileRT::haltonSequence(index, 2);
         }
         static ::std::random_device randomDevice {"/dev/urandom"};
@@ -70,11 +70,11 @@ void Camera::resetSampling() noexcept {
 }
 
 float Camera::degToRad(const float deg) const noexcept {
-    const float radians{(deg * ::glm::pi<float>()) / 180.0f};
+    const float radians{(deg * ::glm::pi<float> ()) / 180.0f};
     return radians;
 }
 
 float Camera::radToDeg(const float rad) const noexcept {
-    const float degrees{(rad / ::glm::pi<float>()) * 180.0f};
+    const float degrees{(rad / ::glm::pi<float> ()) * 180.0f};
     return degrees;
 }

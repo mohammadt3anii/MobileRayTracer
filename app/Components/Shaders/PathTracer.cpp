@@ -59,7 +59,7 @@ bool PathTracer::shade(
     //Ld = Ld (p->Wr)
     if (::glm::any(::glm::greaterThan(kD, ::glm::vec3 {0}))) {
         const ::std::uint32_t sizeLights {
-            static_cast<::std::uint32_t>(scene_.lights_.size())};
+            static_cast<::std::uint32_t> (scene_.lights_.size())};
         if (sizeLights > 0) {
             const ::std::uint32_t samplesLight {this->samplesLight_};
             //direct light

@@ -36,7 +36,7 @@ namespace Components {
         ::std::int32_t process() noexcept final;
 
         bool fillScene(::MobileRT::Scene *scene,
-                       ::std::function<::std::unique_ptr<::MobileRT::Sampler>()> lambda) noexcept final;
+                       ::std::function<::std::unique_ptr<::MobileRT::Sampler> ()> lambda) noexcept final;
     };
 }//namespace Components
 

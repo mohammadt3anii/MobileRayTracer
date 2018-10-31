@@ -25,7 +25,7 @@ namespace {
 
     bool FillThings() {
         for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
-            const ::std::uint32_t index {static_cast<uint32_t>(::std::distance(VALUES.begin(), it))};
+            const ::std::uint32_t index {static_cast<uint32_t> (::std::distance(VALUES.begin(), it))};
             *it = ::MobileRT::haltonSequence(index, 2);
         }
         static ::std::random_device randomDevice {"/dev/urandom"};
@@ -53,9 +53,9 @@ Shader::~Shader() noexcept {
 void Shader::initializeAccelerators(Camera *const camera) noexcept {
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            naivePlanes_ = ::MobileRT::Naive<MobileRT::Plane> {::std::move(scene_.planes_)};
-            naiveSpheres_ = ::MobileRT::Naive<MobileRT::Sphere> {::std::move(scene_.spheres_)};
-            naiveTriangles_ = ::MobileRT::Naive<MobileRT::Triangle> {::std::move(scene_.triangles_)};
+            naivePlanes_ = ::MobileRT::Naive {::std::move(scene_.planes_)};
+            naiveSpheres_ = ::MobileRT::Naive {::std::move(scene_.spheres_)};
+            naiveTriangles_ = ::MobileRT::Naive {::std::move(scene_.triangles_)};
             break;
         }
 
@@ -71,19 +71,17 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             ::glm::vec3 minTriangles {RayLengthMax};
             ::glm::vec3 maxTriangles {-RayLengthMax};
 
-            Scene::getBounds<Primitive<Plane>>(planes, &minPlanes, &maxPlanes);
-            Scene::getBounds<Primitive<Sphere>>(spheres, &minSpheres, &maxSpheres);
-            Scene::getBounds<Primitive<Triangle>>(triangles, &minTriangles, &maxTriangles);
+            Scene::getBounds(planes, &minPlanes, &maxPlanes);
+            Scene::getBounds(spheres, &minSpheres, &maxSpheres);
+            Scene::getBounds(triangles, &minTriangles, &maxTriangles);
             
-            Scene::getBounds(::std::vector<Camera *> {camera}, &minPlanes, &maxPlanes);
-            Scene::getBounds(::std::vector<Camera *> {camera}, &minSpheres, &maxSpheres);
-            Scene::getBounds(::std::vector<Camera *> {camera}, &minTriangles, &maxTriangles);
+            Scene::getBounds(::std::vector<Camera*> {camera}, &minPlanes, &maxPlanes);
+            Scene::getBounds(::std::vector<Camera*> {camera}, &minSpheres, &maxSpheres);
+            Scene::getBounds(::std::vector<Camera*> {camera}, &minTriangles, &maxTriangles);
 
             const AABB sceneBoundsPlanes {minPlanes - Epsilon, maxPlanes + Epsilon};
             const AABB sceneBoundsSpheres {minSpheres - Epsilon, maxSpheres + Epsilon};
             const AABB sceneBoundsTriangles {minTriangles - Epsilon, maxTriangles + Epsilon};
-            /*const AABB sceneBounds {::glm::min(::glm::min(minPlanes, minSpheres), minTriangles),
-                                    ::glm::max(::glm::max(maxPlanes, maxSpheres), maxTriangles)};*/
 
             const ::std::int32_t sizePlanes {static_cast<::std::int32_t> (planes.size())};
             const ::std::int32_t sizeSpheres {static_cast<::std::int32_t> (spheres.size())};
@@ -109,16 +107,16 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             LOG("gridSizePlanes = ", gridSizePlanes);
             LOG("gridSizeSpheres = ", gridSizeSpheres);
             LOG("gridSizeTriangles = ", gridSizeTriangles);
-            regularGridPlanes_ = ::MobileRT::RegularGrid<MobileRT::Plane> {sceneBoundsPlanes, ::std::move(scene_.planes_), gridSizePlanes};
-            regularGridSpheres_ = ::MobileRT::RegularGrid<MobileRT::Sphere> {sceneBoundsSpheres, ::std::move(scene_.spheres_), gridSizeSpheres};
-            regularGridTriangles_ = ::MobileRT::RegularGrid<MobileRT::Triangle> {sceneBoundsTriangles, ::std::move(scene_.triangles_), gridSizeTriangles};
+            regularGridPlanes_ = ::MobileRT::RegularGrid {sceneBoundsPlanes, ::std::move(scene_.planes_), gridSizePlanes};
+            regularGridSpheres_ = ::MobileRT::RegularGrid {sceneBoundsSpheres, ::std::move(scene_.spheres_), gridSizeSpheres};
+            regularGridTriangles_ = ::MobileRT::RegularGrid {sceneBoundsTriangles, ::std::move(scene_.triangles_), gridSizeTriangles};
             break;
         }
 
         case Accelerator::BVH: {
-            bvhPlanes_ = ::MobileRT::BVH<MobileRT::Plane> {::std::move(scene_.planes_)};
-            bvhSpheres_ = ::MobileRT::BVH<MobileRT::Sphere> {::std::move(scene_.spheres_)};
-            bvhTriangles_ = ::MobileRT::BVH<MobileRT::Triangle> {::std::move(scene_.triangles_)};
+            bvhPlanes_ = ::MobileRT::BVH {::std::move(scene_.planes_)};
+            bvhSpheres_ = ::MobileRT::BVH {::std::move(scene_.spheres_)};
+            bvhTriangles_ = ::MobileRT::BVH {::std::move(scene_.triangles_)};
             break;
         }
     }
@@ -200,7 +198,7 @@ void Shader::resetSampling() noexcept {
     const float uniformRandom2{*it2};
 
     const float phi{
-            ::glm::two_pi<float>() * uniformRandom1};// random angle around - azimuthal angle
+            ::glm::two_pi<float> () * uniformRandom1};// random angle around - azimuthal angle
     const float r2{uniformRandom2};// random distance from center
     const float cosTheta{::std::sqrt(
             r2)};// square root of distance from center - cos(theta) = cos(elevation angle)
@@ -216,7 +214,7 @@ void Shader::resetSampling() noexcept {
     direction = ::glm::normalize(direction);
 
     /*float phi2 {::std::acos(::std::sqrt(1.0f - uniformRandom1))};
-    float theta2 = ::glm::two_pi<float>() * r2;
+    float theta2 = ::glm::two_pi<float> () * r2;
     ::glm::vec3 dir {sin(phi2) * cos(theta2),
                     cos(phi2),
                      sin(phi2) * sin(theta2)};*/
@@ -230,7 +228,7 @@ void Shader::resetSampling() noexcept {
 
     const auto it {VALUES.begin() + (current & MASK)};
 
-    const ::std::uint32_t sizeLights {static_cast<::std::uint32_t>(scene_.lights_.size())};
+    const ::std::uint32_t sizeLights {static_cast<::std::uint32_t> (scene_.lights_.size())};
     const float randomNumber {*it};
     const ::std::uint32_t chosenLight {
         static_cast<::std::uint32_t> (::std::floor(randomNumber * sizeLights * 0.99999f))};

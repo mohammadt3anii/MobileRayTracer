@@ -53,7 +53,7 @@ OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
         numberTriangles_ = 0;
         for (const auto &shape : shapes_) {
             for (const auto num_face_vertice : shape.mesh.num_face_vertices) {
-                const ::std::size_t triangles{static_cast<::std::size_t>(num_face_vertice / 3)};
+                const ::std::size_t triangles{static_cast<::std::size_t> (num_face_vertice / 3)};
                 numberTriangles_ += triangles;
             }
         }
@@ -66,7 +66,7 @@ OBJLoader::OBJLoader(::std::string obj, ::std::string materials) noexcept :
 }
 
 bool OBJLoader::fillScene(Scene *const scene,
-                          ::std::function<::std::unique_ptr<MobileRT::Sampler>()> lambda) noexcept {
+                          ::std::function<::std::unique_ptr<MobileRT::Sampler> ()> lambda) noexcept {
     scene->triangles_.reserve(static_cast<::std::size_t> (numberTriangles_));
 
     for (const auto &shape : shapes_) {
@@ -156,7 +156,7 @@ bool OBJLoader::fillScene(Scene *const scene,
                         const ::glm::vec3 &p2 {vx2, vy2, vz2};
                         const ::glm::vec3 &p3 {vx3, vy3, vz3};
                         scene->lights_.emplace_back(
-                                ::std::make_unique<AreaLight>(material, lambda(), p1, p2, p3));
+                                ::std::make_unique<AreaLight> (material, lambda(), p1, p2, p3));
                     } else {
                         scene->triangles_.emplace_back(triangle, material);
                     }
@@ -195,8 +195,8 @@ OBJLoader::~OBJLoader() noexcept {
     this->shapes_.shrink_to_fit();
     this->materials_.shrink_to_fit();
 
-    ::std::vector<::tinyobj::shape_t>{}.swap(this->shapes_);
-    ::std::vector<::tinyobj::material_t>{}.swap(this->materials_);
+    ::std::vector<::tinyobj::shape_t> {}.swap(this->shapes_);
+    ::std::vector<::tinyobj::material_t> {}.swap(this->materials_);
 
     LOG("OBJLOADER DELETED");
 }
