@@ -37,9 +37,9 @@ namespace MobileRT {
 
         Naive &operator=(Naive &&naive) noexcept = default;
 
-        Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+        bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+        bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
     };
 
     template<typename T>
@@ -54,25 +54,25 @@ namespace MobileRT {
     }
 
     template<typename T>
-    Intersection Naive<T>::trace(Intersection intersection,
+    bool Naive<T>::trace(Intersection *const intersection,
                   const Ray &ray) noexcept {
+        bool intersected {false};
         for (::MobileRT::Primitive<T> &primitive : primitives_) {
-            intersection = primitive.intersect(intersection, ray);
+            intersected |= primitive.intersect(intersection, ray);
         }
-        return intersection;
+        return intersected;
     }
 
     template<typename T>
-    Intersection Naive<T>::shadowTrace(Intersection intersection,
+    bool Naive<T>::shadowTrace(Intersection intersection,
                         const Ray &ray) noexcept {
         for (::MobileRT::Primitive<T> &primitive : primitives_) {
-            const float lastDist{intersection.length_};
-            intersection = primitive.intersect(intersection, ray);
-            if (intersection.length_ < lastDist) {
-                return intersection;
+            const bool intersected {primitive.intersect(&intersection, ray)};
+            if (intersected) {
+                return true;
             }
         }
-        return intersection;
+        return false;
     }
 
 }//namespace MobileRT

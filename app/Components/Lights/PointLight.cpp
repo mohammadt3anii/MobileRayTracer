@@ -21,6 +21,6 @@ PointLight::PointLight(const Material &radiance, const ::glm::vec3 &position) no
 void PointLight::resetSampling() noexcept {
 }
 
-Intersection PointLight::intersect(Intersection intersection, const Ray &/*ray*/) const noexcept {
-    return intersection;
+bool PointLight::intersect(Intersection *const /*intersection*/, const Ray &/*ray*/) const noexcept {
+    return false;
 }

@@ -91,7 +91,7 @@ SCENES="2"
 ACCELERATORS="1 2"
 
 function execute {
-  THREAD="4"
+  THREAD="8"
   SHADER="1"
   SCENE="4"
   ACC="2"

@@ -13,9 +13,9 @@ Plane::Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept :
         point_{point} {
 }
 
-Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
+bool Plane::intersect(Intersection *const intersection, const Ray &ray) const noexcept {
     if (ray.primitive_ == this) {
-        return intersection;
+        return false;
     }
 
     // is ray parallel or contained in the Plane ??
@@ -23,7 +23,7 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
     //const float normalized_projection {this->normal_.dotProduct(ray.direction_)};
     const float normalized_projection {::glm::dot(normal_, ray.direction_)};
     if (::std::abs(normalized_projection) < Epsilon) {
-        return intersection;
+        return false;
     }
 
     //https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
@@ -33,14 +33,14 @@ Intersection Plane::intersect(const Intersection &intersection, const Ray &ray) 
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection.length_) {
-        return intersection;
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection->length_) {
+        return false;
     }
 
     // if so, then we have an intersection
     const ::glm::vec3 intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
-    const Intersection res {intersectionPoint, distanceToIntersection, normal_, this};
-    return res;
+    *intersection = Intersection {intersectionPoint, distanceToIntersection, normal_, this};
+    return true;
 }
 
 void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {

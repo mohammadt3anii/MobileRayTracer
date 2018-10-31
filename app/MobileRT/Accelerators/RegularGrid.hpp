@@ -27,7 +27,7 @@ namespace MobileRT {
     private:
         void addPrimitives(::std::vector<Primitive<T>> &&primitives) noexcept;
 
-        Intersection intersect(Intersection intersection, const Ray &ray, bool shadowTrace = false) noexcept;
+        bool intersect(Intersection *intersection, const Ray &ray, bool shadowTrace = false) noexcept;
 
     public:
         explicit RegularGrid() noexcept = default;
@@ -44,9 +44,9 @@ namespace MobileRT {
 
         RegularGrid &operator=(RegularGrid &&regularGrid) noexcept = default;
 
-        Intersection trace(Intersection intersection, const Ray &ray) noexcept;
+        bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        Intersection shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+        bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
     };
 
     template<typename T>
@@ -157,35 +157,32 @@ bitCounter(static_cast
     }
 
     template<typename T>
-    Intersection RegularGrid<T>::trace(Intersection intersection, const Ray &ray) noexcept {
+    bool RegularGrid<T>::trace(Intersection *const intersection, const Ray &ray) noexcept {
         if (hasPrimitives_) {
-            intersection = intersect(intersection, ray);
+            const bool intersected {intersect(intersection, ray)};
+            return intersected;
         }
-        return intersection;
+        return false;
     }
 
     template<typename T>
-    Intersection RegularGrid<T>::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
+    bool RegularGrid<T>::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
         if (hasPrimitives_) {
-            intersection = intersect(intersection, ray, true);
+            const bool intersected {intersect(&intersection, ray, true)};
+            return intersected;
         }
-        return intersection;
+        return false;
     }
 
     template<typename T>
-    Intersection RegularGrid<T>::intersect(Intersection intersection, const Ray &ray,
+    bool RegularGrid<T>::intersect(Intersection *const intersection, const Ray &ray,
         const bool shadowTrace) noexcept {
         // setup 3DDDA (double check reusability of primary ray data)
         const ::glm::vec3 &cell {(ray.origin_ - m_Extends.pointMin_) * m_SR};
         ::std::int32_t X{static_cast<::std::int32_t> (cell[0])};
         ::std::int32_t Y{static_cast<::std::int32_t> (cell[1])};
         ::std::int32_t Z{static_cast<::std::int32_t> (cell[2])};
-        /*const bool notInGrid{(X < 0) || (X >= gridSize_) ||
-                            (Y < 0) || (Y >= gridSize_) ||
-                            (Z < 0) || (Z >= gridSize_)};
-        if (notInGrid && gridSize_ > 1) {
-            return intersection;
-        }*/
+
         X = X < 0? 0 : X;
         Y = Y < 0? 0 : Y;
         Z = Z < 0? 0 : Z;
@@ -251,6 +248,7 @@ bitCounter(static_cast
         } else {
             tmax[2] = (RayLengthMax);
         }
+        bool intersected {false};
 
         // start stepping
         // trace primary ray
@@ -263,11 +261,10 @@ bitCounter(static_cast
             const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
-                const float lastDist {intersection.length_};
-                intersection = primitive->intersect(intersection, ray);
-                if (intersection.length_ < lastDist) {
+                intersected |= primitive->intersect(intersection, ray);
+                if (intersected) {
                     if (shadowTrace) {
-                        return intersection;
+                        return intersected;
                     }
                     goto testloop;
                 }
@@ -277,13 +274,13 @@ bitCounter(static_cast
                 if (tmax[0] < tmax[2]) {
                     X += stepX;
                     if (X == outX) {
-                        return intersection;
+                        return intersected;
                     }
                     tmax[0] = (tmax[0] + tdelta[0]);
                 } else {
                     Z += stepZ;
                     if (Z == outZ) {
-                        return intersection;
+                        return intersected;
                     }
                     tmax[2] = (tmax[2] + tdelta[2]);
                 }
@@ -291,13 +288,13 @@ bitCounter(static_cast
                 if (tmax[1] < tmax[2]) {
                     Y += stepY;
                     if (Y == outY) {
-                        return intersection;
+                        return intersected;
                     }
                     tmax[1] = (tmax[1] + tdelta[1]);
                 } else {
                     Z += stepZ;
                     if (Z == outZ) {
-                        return intersection;
+                        return intersected;
                     }
                     tmax[2] = (tmax[2] + tdelta[2]);
                 }
@@ -314,11 +311,11 @@ bitCounter(static_cast
             const auto it {this->primitives_.begin() + index};
             ::std::vector<Primitive<T> *> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
-                intersection = primitive->intersect(intersection, ray);
+                intersected |= primitive->intersect(intersection, ray);
             }
             if (tmax[0] < tmax[1]) {
                 if (tmax[0] < tmax[2]) {
-                    if (intersection.length_ < tmax[0]) {
+                    if (intersection->length_ < tmax[0]) {
                         break;
                     }
                     X += stepX;
@@ -327,7 +324,7 @@ bitCounter(static_cast
                     }
                     tmax[0] = (tmax[0] + tdelta[0]);
                 } else {
-                    if (intersection.length_ < tmax[2]) {
+                    if (intersection->length_ < tmax[2]) {
                         break;
                     }
                     Z += stepZ;
@@ -338,7 +335,7 @@ bitCounter(static_cast
                 }
             } else {
                 if (tmax[1] < tmax[2]) {
-                    if (intersection.length_ < tmax[1]) {
+                    if (intersection->length_ < tmax[1]) {
                         break;
                     }
                     Y += stepY;
@@ -347,7 +344,7 @@ bitCounter(static_cast
                     }
                     tmax[1] = (tmax[1] + tdelta[1]);
                 } else {
-                    if (intersection.length_ < tmax[2]) {
+                    if (intersection->length_ < tmax[2]) {
                         break;
                     }
                     Z += stepZ;
@@ -358,7 +355,7 @@ bitCounter(static_cast
                 }
             }
         }
-        return intersection;
+        return intersected;
     }
 
 }//namespace MobileRT

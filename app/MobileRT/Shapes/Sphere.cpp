@@ -14,7 +14,7 @@ Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
         sq_radius_{radius * radius} {
 }
 
-Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray) const noexcept {
+bool Sphere::intersect(Intersection *const intersection, const Ray &ray) const noexcept {
     //stackoverflow.com/questions/1986378/how-to-set-up-quadratic-equation-for-a-ray-sphere-intersection
     const ::glm::vec3 &originToCenter{center_ - ray.origin_};
     const float projectionOnDirection{::glm::dot(originToCenter, ray.direction_)};
@@ -27,7 +27,7 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
     const float discriminant{B * B - 4.0f * A * C};
     //don't intersect (ignores tangent point of the sphere)
     if (discriminant < 0.0f) {
-        return intersection;
+        return false;
     }
 
     //if discriminant > 0 - ray intersects the sphere in 2 points
@@ -39,15 +39,15 @@ Intersection Sphere::intersect(const Intersection &intersection, const Ray &ray)
     const float distanceToIntersection{
             ::std::min(distanceToIntersection1, distanceToIntersection2) / (2.0f * A)};
 
-    if (distanceToIntersection < 1.0e-05f || distanceToIntersection >= intersection.length_) {
-        return intersection;
+    if (distanceToIntersection < 1.0e-05f || distanceToIntersection >= intersection->length_) {
+        return false;
     }
 
     // if so, then we have an intersection
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
-    const ::glm::vec3 &intersectionNormal{::glm::normalize(intersectionPoint - center_)};
-    const Intersection res {intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
-    return res;
+    const ::glm::vec3 &intersectionNormal {::glm::normalize(intersectionPoint - center_)};
+    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
+    return true;
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {

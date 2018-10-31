@@ -33,7 +33,7 @@ namespace MobileRT {
 
         virtual void resetSampling() noexcept = 0;
 
-        virtual Intersection intersect(Intersection intersection, const Ray &ray) const noexcept = 0;
+        virtual bool intersect(Intersection *intersection, const Ray &ray) const noexcept = 0;
     };
 }//namespace MobileRT
 

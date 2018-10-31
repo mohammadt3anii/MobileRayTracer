@@ -33,8 +33,8 @@ namespace Components {
 
         void resetSampling() noexcept final;
 
-        ::MobileRT::Intersection intersect(
-            ::MobileRT::Intersection intersection,
+        bool intersect(
+            ::MobileRT::Intersection *intersection,
             const ::MobileRT::Ray &ray) const noexcept final;
     };
 }//namespace Components

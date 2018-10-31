@@ -39,7 +39,7 @@ namespace MobileRT {
 
         Scene &operator=(Scene &&scene) noexcept = default;
 
-        Intersection traceLights(Intersection intersection, const Ray &ray) const noexcept;
+        bool traceLights(Intersection *intersection, const Ray &ray) const noexcept;
 
         void resetSampling() noexcept;
 

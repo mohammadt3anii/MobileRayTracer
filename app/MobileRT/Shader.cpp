@@ -139,63 +139,63 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
 }
 
 bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
-    Intersection intersection{RayLengthMax, nullptr};
-    const float lastDist {intersection.length_};
+    Intersection intersection {RayLengthMax, nullptr};
+    bool intersected {false};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            intersection = this->naivePlanes_.trace(intersection, ray);
-            intersection = this->naiveSpheres_.trace(intersection, ray);
-            intersection = this->naiveTriangles_.trace(intersection, ray);
-            intersection = this->scene_.traceLights(intersection, ray);
+            intersected |= this->naivePlanes_.trace(&intersection, ray);
+            intersected |= this->naiveSpheres_.trace(&intersection, ray);
+            intersected |= this->naiveTriangles_.trace(&intersection, ray);
+            intersected |= this->scene_.traceLights(&intersection, ray);
             break;
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGridPlanes_.trace(intersection, ray);
-            intersection = this->regularGridSpheres_.trace(intersection, ray);
-            intersection = this->regularGridTriangles_.trace(intersection, ray);
-            intersection = this->scene_.traceLights(intersection, ray);
+            intersected |= this->regularGridPlanes_.trace(&intersection, ray);
+            intersected |= this->regularGridSpheres_.trace(&intersection, ray);
+            intersected |= this->regularGridTriangles_.trace(&intersection, ray);
+            intersected |= this->scene_.traceLights(&intersection, ray);
             break;
         }
 
         case Accelerator::BVH: {
-            intersection = this->bvhPlanes_.trace(intersection, ray);
-            intersection = this->bvhSpheres_.trace(intersection, ray);
-            intersection = this->bvhTriangles_.trace(intersection, ray);
-            intersection = this->scene_.traceLights(intersection, ray);
+            intersected |= this->bvhPlanes_.trace(&intersection, ray);
+            intersected |= this->bvhSpheres_.trace(&intersection, ray);
+            intersected |= this->bvhTriangles_.trace(&intersection, ray);
+            intersected |= this->scene_.traceLights(&intersection, ray);
             break;
         }
     }
-    const bool res{intersection.length_ < lastDist && shade(rgb, intersection, ray)};
+    const bool intersectedLight {intersected? shade(rgb, intersection, ray) : false};
+    const bool res {intersected && intersectedLight};
     return res;
 }
 
 bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
-    const float lastDist {intersection.length_};
+    bool intersected {false};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            intersection = this->naivePlanes_.shadowTrace(intersection, ray);
-            intersection = this->naiveSpheres_.shadowTrace(intersection, ray);
-            intersection = this->naiveTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->naivePlanes_.shadowTrace(intersection, ray);
+            intersected |= this->naiveSpheres_.shadowTrace(intersection, ray);
+            intersected |= this->naiveTriangles_.shadowTrace(intersection, ray);
             break;
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersection = this->regularGridPlanes_.shadowTrace(intersection, ray);
-            intersection = this->regularGridSpheres_.shadowTrace(intersection, ray);
-            intersection = this->regularGridTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->regularGridPlanes_.shadowTrace(intersection, ray);
+            intersected |= this->regularGridSpheres_.shadowTrace(intersection, ray);
+            intersected |= this->regularGridTriangles_.shadowTrace(intersection, ray);
             break;
         }
 
         case Accelerator::BVH: {
-            intersection = this->bvhPlanes_.shadowTrace(intersection, ray);
-            intersection = this->bvhSpheres_.shadowTrace(intersection, ray);
-            intersection = this->bvhTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->bvhPlanes_.shadowTrace(intersection, ray);
+            intersected |= this->bvhSpheres_.shadowTrace(intersection, ray);
+            intersected |= this->bvhTriangles_.shadowTrace(intersection, ray);
             break;
         }
     }
-    const bool res{intersection.length_ < lastDist};
-    return res;
+    return intersected;
 }
 
 void Shader::resetSampling() noexcept {

@@ -26,14 +26,15 @@ Scene::~Scene() noexcept {
     LOG("SCENE DELETED");
 }
 
-Intersection Scene::traceLights(Intersection intersection, const Ray &ray) const noexcept {
+bool Scene::traceLights(Intersection *const intersection, const Ray &ray) const noexcept {
     const ::std::uint32_t lightsSize {static_cast<::std::uint32_t> (lights_.size())};
+    bool intersected {false};
     for (::std::uint32_t i {0}; i < lightsSize; ++i) {
         const Light &light{*this->lights_[static_cast<::std::uint32_t> (i)]};
-        intersection = light.intersect(intersection, ray);
+        intersected |= light.intersect(intersection, ray);
     }
 
-    return intersection;
+    return intersected;
 }
 
 void Scene::resetSampling() noexcept {

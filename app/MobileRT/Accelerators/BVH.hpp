@@ -54,11 +54,11 @@ namespace MobileRT {
 
         BVH &operator=(BVH &&bVH) noexcept = default;
 
-        Intersection trace(
-          Intersection intersection,
+        bool trace(
+          Intersection *intersection,
           const Ray &ray) noexcept;
 
-        Intersection shadowTrace(
+        bool shadowTrace(
           Intersection intersection,
           const Ray &ray) noexcept;
     };
@@ -158,11 +158,11 @@ namespace MobileRT {
     }
 
     template<typename T>
-    Intersection BVH<T>::trace(
-            Intersection intersection,
+    bool BVH<T>::trace(
+            Intersection *intersection,
             const Ray &ray) noexcept {
         if(primitives_.empty()) {
-            return intersection;
+            return false;
         }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
@@ -172,6 +172,7 @@ namespace MobileRT {
 
         const auto itBoxes {boxes_.begin()};
         const auto itPrimitives {primitives_.begin()};
+        bool intersected {false};
         do {
             const BVHNode &node {*(itBoxes + static_cast<::std::int32_t> (id))};
             if (intersect(node.box_, ray)) {
@@ -180,7 +181,7 @@ namespace MobileRT {
                 if (numberPrimitives > 0) {
                     for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
                         auto& primitive {*(itPrimitives + static_cast<::std::int32_t> (node.indexOffset_ + i))};
-                        intersection = primitive.intersect(intersection, ray);
+                        intersected |= primitive.intersect(intersection, ray);
                     }
                     ::std::advance(itStackId, -1); // pop
                     id = *itStackId;
@@ -210,15 +211,15 @@ namespace MobileRT {
             }
 
         } while (itStackId > stackId.begin());
-        return intersection;
+        return intersected;
     }
 
     template<typename T>
-    Intersection BVH<T>::shadowTrace(
+    bool BVH<T>::shadowTrace(
         Intersection intersection,
         const Ray &ray) noexcept {
         if(primitives_.empty()) {
-            return intersection;
+            return false;
         }
         ::std::uint32_t id {0};
         ::std::array<::std::uint32_t, 512> stackId {};
@@ -236,10 +237,9 @@ namespace MobileRT {
                 if (numberPrimitives > 0) {
                     for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
                         auto& primitive {*(itPrimitives + static_cast<::std::int32_t> (node.indexOffset_ + i))};
-                        const float lastDist {intersection.length_};
-                        intersection = primitive.intersect(intersection, ray);
-                        if (intersection.length_ < lastDist) {
-                            return intersection;
+                        const bool intersected {primitive.intersect(&intersection, ray)};
+                        if (intersected) {
+                            return true;
                         }
                     }
                     ::std::advance(itStackId, -1); // pop
@@ -270,7 +270,7 @@ namespace MobileRT {
             }
 
         } while (itStackId > stackId.begin());
-        return intersection;
+        return false;
     }
 
     template<typename T, typename Iterator>
