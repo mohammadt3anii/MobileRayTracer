@@ -65,15 +65,15 @@ namespace MobileRT {
     template<typename T>
     Intersection Naive<T>::shadowTrace(Intersection intersection,
                         const Ray &ray) noexcept {
-    for (::MobileRT::Primitive<T> &primitive : primitives_) {
-        const float lastDist {intersection.length_};
-        intersection = primitive.intersect(intersection, ray);
-        if (intersection.length_ < lastDist) {
-            return intersection;
+        for (::MobileRT::Primitive<T> &primitive : primitives_) {
+            const float lastDist{intersection.length_};
+            intersection = primitive.intersect(intersection, ray);
+            if (intersection.length_ < lastDist) {
+                return intersection;
+            }
         }
+        return intersection;
     }
-    return intersection;
-}
 
 }//namespace MobileRT
 

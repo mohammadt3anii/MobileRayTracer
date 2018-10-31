@@ -10,11 +10,9 @@
 #include <random>
 #include <utility>
 
-using ::MobileRT::BVH;
 using ::MobileRT::Camera;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
-using ::MobileRT::RegularGrid;
 using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
@@ -83,27 +81,45 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             const AABB sceneBoundsSpheres {minSpheres - Epsilon, maxSpheres + Epsilon};
             const AABB sceneBoundsTriangles {minTriangles - Epsilon, maxTriangles + Epsilon};
 
-            const ::std::int32_t sizePlanes {static_cast<::std::int32_t> (planes.size())};
-            const ::std::int32_t sizeSpheres {static_cast<::std::int32_t> (spheres.size())};
-            const ::std::int32_t sizeTriangles {static_cast<::std::int32_t> (triangles.size())};
+            const ::std::uint32_t sizePlanes{static_cast<::std::uint32_t> (planes.size())};
+            const ::std::uint32_t sizeSpheres{static_cast<::std::uint32_t> (spheres.size())};
+            const ::std::uint32_t sizeTriangles{static_cast<::std::uint32_t> (triangles.size())};
             LOG("sizePlanes = ", sizePlanes);
             LOG("sizeSpheres = ", sizeSpheres);
             LOG("sizeTriangles = ", sizeTriangles);
-            const ::std::int32_t auxPlanes {sizePlanes > 6? roundUpToPowerOf2(bitCounter(sizePlanes)) : 2};
-            const ::std::int32_t auxSpheres {sizeSpheres > 6? roundUpToPowerOf2(bitCounter(sizeSpheres)) : 2};
-            const ::std::int32_t auxTriangles {sizeTriangles > 6? roundUpToPowerOf2(bitCounter(sizeTriangles)) : 2};
+            const ::std::int32_t auxPlanes{sizePlanes > 6 ?
+                                           static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                   bitCounter(sizePlanes))) : 2};
+            const ::std::int32_t auxSpheres{sizeSpheres > 6 ?
+                                            static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                    bitCounter(sizeSpheres))) : 2};
+            const ::std::int32_t auxTriangles{sizeTriangles > 6 ?
+                                              static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                      bitCounter(sizeTriangles))) : 2};
             LOG("auxPlanes = ", auxPlanes);
             LOG("auxSpheres = ", auxSpheres);
             LOG("auxTriangles = ", auxTriangles);
-            const ::std::int32_t auxPlanes2 {roundUpToPowerOf2(bitCounter(auxPlanes)) / 2};
-            const ::std::int32_t auxSpheres2 {roundUpToPowerOf2(bitCounter(auxSpheres)) / 2};
-            const ::std::int32_t auxTriangles2 {roundUpToPowerOf2(bitCounter(auxTriangles)) / 2};
+            const ::std::int32_t auxPlanes2{static_cast<::std::int32_t> (
+                                                    roundUpToPowerOf2(bitCounter(
+                                                            static_cast<::std::uint32_t> (auxPlanes))) /
+                                                    2)};
+            const ::std::int32_t auxSpheres2{static_cast<::std::int32_t> (
+                                                     roundUpToPowerOf2(bitCounter(
+                                                             static_cast<::std::uint32_t> (auxSpheres))) /
+                                                     2)};
+            const ::std::int32_t auxTriangles2{static_cast<::std::int32_t> (
+                                                       roundUpToPowerOf2(bitCounter(
+                                                               static_cast<::std::uint32_t> (auxTriangles))) /
+                                                       2)};
             LOG("auxPlanes2 = ", auxPlanes2);
             LOG("auxSpheres2 = ", auxSpheres2);
             LOG("auxTriangles2 = ", auxTriangles2);
-            const ::std::int32_t gridSizePlanes {auxPlanes2? auxPlanes * auxPlanes2 : auxPlanes};
-            const ::std::int32_t gridSizeSpheres {auxSpheres2? auxSpheres * auxSpheres2 : auxSpheres};
-            const ::std::int32_t gridSizeTriangles {auxTriangles2? auxTriangles * auxTriangles2 : auxTriangles};
+            const ::std::int32_t gridSizePlanes{
+                    auxPlanes2 > 0 ? auxPlanes * auxPlanes2 : auxPlanes};
+            const ::std::int32_t gridSizeSpheres{
+                    auxSpheres2 > 0 ? auxSpheres * auxSpheres2 : auxSpheres};
+            const ::std::int32_t gridSizeTriangles{
+                    auxTriangles2 > 0 ? auxTriangles * auxTriangles2 : auxTriangles};
             LOG("gridSizePlanes = ", gridSizePlanes);
             LOG("gridSizeSpheres = ", gridSizeSpheres);
             LOG("gridSizeTriangles = ", gridSizeTriangles);

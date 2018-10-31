@@ -28,7 +28,8 @@ extern "C"
 
     JNIEnv *jniENV{nullptr};
     {
-        const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(&jniENV), JNI_VERSION_1_6)};
+        const ::std::int32_t result{
+                javaVM_->GetEnv(reinterpret_cast<void **> (&jniENV), JNI_VERSION_1_6)};
         assert(result == JNI_OK);
         static_cast<void> (result);
     }
@@ -79,9 +80,9 @@ jobject Java_puscas_mobilertapp_DrawView_initCameraArray(
             floatBuffer[i++] = 1.0f;
 
             ::Components::Perspective *perspective{
-                    dynamic_cast<::Components::Perspective *>(camera)};
+                    dynamic_cast<::Components::Perspective *> (camera)};
             ::Components::Orthographic *orthographic{
-                    dynamic_cast<::Components::Orthographic *>(camera)};
+                    dynamic_cast<::Components::Orthographic *> (camera)};
             if (perspective != nullptr) {
                 const float hFov{perspective->getHFov()};
                 const float vFov{perspective->getVFov()};
@@ -279,8 +280,8 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
     const jclass mainActivityClass{env->FindClass("puscas/mobilertapp/DrawView")};
     const jmethodID mainActivityMethodId{
             env->GetMethodID(mainActivityClass, "getFreeMemStatic", "(I)Z")};
-    const jstring globalObjFile {static_cast<jstring>(env->NewGlobalRef(localObjFile))};
-    const jstring globalMatFile {static_cast<jstring>(env->NewGlobalRef(localMatFile))};
+    const jstring globalObjFile{static_cast<jstring> (env->NewGlobalRef(localObjFile))};
+    const jstring globalMatFile{static_cast<jstring> (env->NewGlobalRef(localMatFile))};
 
     const ::std::int32_t res {
             [&]() noexcept -> ::std::int32_t {
@@ -289,7 +290,8 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
             renderer_ = nullptr;
         }
         const float ratio {
-            ::std::max(static_cast<float>(width_) / height_, static_cast<float>(height_) / width_)};
+                ::std::max(static_cast<float> (width_) / height_,
+                           static_cast<float> (height_) / width_)};
         const float hfovFactor{width_ > height_ ? ratio : 1.0f};
         const float vfovFactor{width_ < height_ ? ratio : 1.0f};
         ::MobileRT::Scene scene_{};
@@ -314,7 +316,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
             case 1: {
                 const float sizeH{10.0f * hfovFactor};
                 const float sizeV{10.0f * vfovFactor};
-                /*camera = ::std::make_unique<Components::Perspective>(
+                /*camera = ::std::make_unique<Components::Perspective> (
                         ::glm::vec3 {4.0f, 4.0f, -8.0f},
                         ::glm::vec3 {4.0f, 4.0f, 4.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
@@ -324,7 +326,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 1.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         sizeH, sizeV);
-                /*camera = ::std::make_unique<Components::Perspective>(
+                /*camera = ::std::make_unique<Components::Perspective> (
                   ::glm::vec3 {0.0f, 0.5f, 1.0f},
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f},
@@ -444,16 +446,16 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
 
                     /*::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            ::std::make_unique<Components::StaticHaltonSeq> ()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
                             ::glm::vec3 {-0.5f, 1.58f, 0.5f},
                             ::glm::vec3 {-0.5f, 1.58f, -0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                            ::std::make_unique<Components::StaticHaltonSeq> ()};
+                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
@@ -879,7 +881,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
         switch (shader) {
             case 1: {
                 shader_ = ::std::make_unique<Components::Whitted>(::std::move(scene_), samplesLight,
-                                                                ::MobileRT::Shader::Accelerator(
+                                                                  ::MobileRT::Shader::Accelerator(
                                                                         accelerator));
                 break;
             }
@@ -896,21 +898,22 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
 
             case 3: {
                 shader_ = ::std::make_unique<Components::DepthMap>(::std::move(scene_), maxDist,
-                                                                 ::MobileRT::Shader::Accelerator(
+                                                                   ::MobileRT::Shader::Accelerator(
                                                                          accelerator));
                 break;
             }
 
             case 4: {
                 shader_ = ::std::make_unique<Components::DiffuseMaterial>(::std::move(scene_),
-                                                                        ::MobileRT::Shader::Accelerator(
+                                                                          ::MobileRT::Shader::Accelerator(
                                                                                 accelerator));
                 break;
             }
 
             default: {
-                shader_ = ::std::make_unique<Components::NoShadows>(::std::move(scene_), samplesLight,
-                                                                  ::MobileRT::Shader::Accelerator(
+                shader_ = ::std::make_unique<Components::NoShadows>(::std::move(scene_),
+                                                                    samplesLight,
+                                                                    ::MobileRT::Shader::Accelerator(
                                                                           accelerator));
                 break;
             }
@@ -929,8 +932,8 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                     ::std::chrono::system_clock::now()};
             renderer_ = ::std::make_unique<::MobileRT::Renderer>(
                     ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
-                    static_cast<::std::uint32_t>(width_), static_cast<::std::uint32_t>(height_),
-                    static_cast<::std::uint32_t>(samplesPixel));
+                    static_cast<::std::uint32_t> (width_), static_cast<::std::uint32_t> (height_),
+                    static_cast<::std::uint32_t> (samplesPixel));
             const ::std::chrono::time_point<::std::chrono::system_clock> end {
                     ::std::chrono::system_clock::now()};
             timeRenderer_ = ::std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -994,7 +997,7 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         jint const nThreads,
         jboolean const async
 ) noexcept {
-    jobject globalBitmap{static_cast<jobject>(env->NewGlobalRef(localBitmap))};
+    jobject globalBitmap{static_cast<jobject> (env->NewGlobalRef(localBitmap))};
 
     working_ = State::BUSY;
     LOG("WORKING = BUSY");
@@ -1003,21 +1006,23 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
         [=]() noexcept -> void {
         assert(env != nullptr);
         const ::std::int32_t jniError {
-                javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
+                javaVM_->GetEnv(reinterpret_cast<void **> (const_cast<JNIEnv **> (&env)),
                                 JNI_VERSION_1_6)};
 
         assert(jniError == JNI_OK || jniError == JNI_EDETACHED);
         {
-            const ::std::int32_t result {javaVM_->AttachCurrentThread(const_cast<JNIEnv **>(&env), nullptr)};
+            const ::std::int32_t result{
+                    javaVM_->AttachCurrentThread(const_cast<JNIEnv **> (&env), nullptr)};
             assert(result == JNI_OK);
-            static_cast<void>(result);
+            static_cast<void> (result);
         }
         const ::std::int32_t jniThread {jniError == JNI_EDETACHED? JNI_EDETACHED : JNI_OK};
 
             ::std::uint32_t *dstPixels{nullptr};
         {
-            const ::std::int32_t ret {AndroidBitmap_lockPixels(env, globalBitmap, reinterpret_cast<void **>(&dstPixels))};
-            //dstPixels = static_cast<::std::uint32_t *>(env->GetDirectBufferAddress(globalByteBuffer));
+            const ::std::int32_t ret{AndroidBitmap_lockPixels(env, globalBitmap,
+                                                              reinterpret_cast<void **> (&dstPixels))};
+            //dstPixels = static_cast<::std::uint32_t*> (env->GetDirectBufferAddress(globalByteBuffer));
             assert(ret == JNI_OK);
             LOG("ret = ", ret);
         }
@@ -1062,8 +1067,9 @@ void Java_puscas_mobilertapp_DrawView_renderIntoBitmap(
 
         env->DeleteGlobalRef(globalBitmap);
         {
-            const ::std::int32_t result {javaVM_->GetEnv(reinterpret_cast<void **>(const_cast<JNIEnv **>(&env)),
-                                              JNI_VERSION_1_6)};
+            const ::std::int32_t result{
+                    javaVM_->GetEnv(reinterpret_cast<void **> (const_cast<JNIEnv **> (&env)),
+                                    JNI_VERSION_1_6)};
             assert(result == JNI_OK);
             static_cast<void> (result);
         }
@@ -1111,7 +1117,7 @@ void Java_puscas_mobilertapp_ViewText_moveTouch(
     /*const float u {static_cast<float> (jx) / width_};
     const float v {static_cast<float> (jy) / height_};
     const ::MobileRT::Ray &ray {renderer_->camera_->generateRay(u, v, 0.0f, 0.0f)};
-    const ::std::uint32_t index {static_cast<::std::uint32_t>(primitiveIndex)};
+    const ::std::uint32_t index {static_cast<::std::uint32_t> (primitiveIndex)};
     const ::MobileRT::Plane plane {
             ::glm::vec3 {0.0f, 0.0f, renderer_->shader_->scene_.planes_[index].shape_.getZ()},
             ::glm::vec3 {0.0f, 0.0f, -1.0f}};
@@ -1174,7 +1180,7 @@ extern "C"
         jint const size
 ) noexcept {
     const ::std::int32_t res{::MobileRT::roundDownToMultipleOf(size,
-                                                               static_cast<::std::int32_t>(::std::sqrt(
+                                                               static_cast<::std::int32_t> (::std::sqrt(
                                                                        MobileRT::NumberOfBlocks)))};
     env->ExceptionClear();
     return res;
@@ -1197,7 +1203,7 @@ jobject Java_puscas_mobilertapp_DrawView_freeNativeBuffer(
 ) noexcept {
     if (bufferRef != nullptr) {
         void *buffer{env->GetDirectBufferAddress(bufferRef)};
-        float *const floatBuffer{static_cast<float *>(buffer)};
+        float *const floatBuffer{static_cast<float *> (buffer)};
         delete[] floatBuffer;
     }
     return nullptr;

@@ -38,9 +38,9 @@ namespace MobileRT {
 
     ::std::int32_t roundDownToMultipleOf(::std::int32_t value, ::std::int32_t multiple) noexcept;
 
-    ::std::int32_t roundUpToPowerOf2(::std::int32_t value) noexcept;
+    ::std::uint32_t roundUpToPowerOf2(::std::uint32_t value) noexcept;
 
-    ::std::int32_t bitCounter(::std::int32_t n) noexcept;
+    ::std::uint32_t bitCounter(::std::uint32_t n) noexcept;
 
     float haltonSequence(::std::uint32_t index, ::std::uint32_t base) noexcept;
 

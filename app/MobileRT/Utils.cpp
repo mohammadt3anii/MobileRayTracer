@@ -12,19 +12,19 @@ namespace MobileRT {
         return res;
     }
 
-    ::std::int32_t roundUpToPowerOf2(::std::int32_t value) noexcept {
-        value--;
-        value |= value >> 1;
-        value |= value >> 2;
-        value |= value >> 4;
-        value |= value >> 8;
-        value |= value >> 16;
-        value++;
+    ::std::uint32_t roundUpToPowerOf2(::std::uint32_t value) noexcept {
+        --value;
+        value |= value >> 1u;
+        value |= value >> 2u;
+        value |= value >> 4u;
+        value |= value >> 8u;
+        value |= value >> 16u;
+        ++value;
         return value;
     }
 
-    ::std::int32_t bitCounter(::std::int32_t n) noexcept {
-        ::std::int32_t counter{0};
+    ::std::uint32_t bitCounter(::std::uint32_t n) noexcept {
+        ::std::uint32_t counter{0};
         while (n > 0) {
             ++counter;
             n >>= 1;
