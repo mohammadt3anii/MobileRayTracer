@@ -110,7 +110,7 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
+    const ::std::vector<::MobileRT::Triangle> &triangles{
             !renderer_->shader_->naiveTriangles_.primitives_.empty()?
             renderer_->shader_->naiveTriangles_.primitives_ :
             !renderer_->shader_->bvhTriangles_.primitives_.empty()?
@@ -126,15 +126,15 @@ jobject Java_puscas_mobilertapp_DrawView_initVerticesArray(
             if (directBuffer != nullptr) {
                 int i{0};
                 for (const auto &triangle : triangles) {
-                    const ::glm::vec4 &pointA{triangle.shape_.pointA_.x,
-                                              triangle.shape_.pointA_.y,
-                                              triangle.shape_.pointA_.z, 1.0f};
-                    const ::glm::vec4 &pointB {pointA.x + triangle.shape_.AB_.x,
-                                              pointA.y + triangle.shape_.AB_.y,
-                                              pointA.z + triangle.shape_.AB_.z, 1.0f};
-                    const ::glm::vec4 &pointC {pointA.x + triangle.shape_.AC_.x,
-                                              pointA.y + triangle.shape_.AC_.y,
-                                              pointA.z + triangle.shape_.AC_.z, 1.0f};
+                    const ::glm::vec4 &pointA{triangle.pointA_.x,
+                                              triangle.pointA_.y,
+                                              triangle.pointA_.z, 1.0f};
+                    const ::glm::vec4 &pointB {pointA.x + triangle.AB_.x,
+                                              pointA.y + triangle.AB_.y,
+                                              pointA.z + triangle.AB_.z, 1.0f};
+                    const ::glm::vec4 &pointC {pointA.x + triangle.AC_.x,
+                                              pointA.y + triangle.AC_.y,
+                                              pointA.z + triangle.AC_.z, 1.0f};
 
                     floatBuffer[i++] = pointA.x;
                     floatBuffer[i++] = pointA.y;
@@ -163,7 +163,7 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
         JNIEnv *env,
         jobject /*thiz*/
 ) noexcept {
-    const ::std::vector<::MobileRT::Primitive<::MobileRT::Triangle>> &triangles{
+    const ::std::vector<::MobileRT::Triangle> &triangles{
             !renderer_->shader_->naiveTriangles_.primitives_.empty()?
             renderer_->shader_->naiveTriangles_.primitives_ :
             !renderer_->shader_->bvhTriangles_.primitives_.empty()?
@@ -179,10 +179,11 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
             if (directBuffer != nullptr) {
                 int i{0};
                 for (const auto &triangle : triangles) {
-                    const ::glm::vec3 &kD{triangle.material_.Kd_};
-                    const ::glm::vec3 &kS{triangle.material_.Ks_};
-                    const ::glm::vec3 &kT{triangle.material_.Kt_};
-                    const ::glm::vec3 &lE{triangle.material_.Le_};
+                    const ::std::size_t materialId {static_cast<::std::size_t> (triangle.materialId_)};
+                    const ::glm::vec3 &kD{renderer_->shader_->scene_.materials_[materialId].Kd_};
+                    const ::glm::vec3 &kS{renderer_->shader_->scene_.materials_[materialId].Ks_};
+                    const ::glm::vec3 &kT{renderer_->shader_->scene_.materials_[materialId].Kt_};
+                    const ::glm::vec3 &lE{renderer_->shader_->scene_.materials_[materialId].Le_};
                     ::glm::vec3 color{kD};
 
                     color = ::glm::all(::glm::greaterThan(kS, color)) ? kS : color;
@@ -688,48 +689,45 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                     const ::MobileRT::Material planeMaterialBack{::glm::vec3 {0.7f, 0.7f, 0.7f}};
                     const ::glm::vec3 planePointDown{0.0f, -1.0f, 0.0f};
                     const ::glm::vec3 planeNormalDown{0.0f, 1.0f, 0.0f};
-                    const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveDown{planeDown,
-                                                                                      planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveDown);
+                    const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown,
+                                                      static_cast<::std::int32_t> (scene_.materials_.size())};
+                    scene_.planes_.emplace_back(planeDown);
+                    const ::std::int32_t materialBackId {static_cast<::std::int32_t> (scene_.materials_.size())};
+                    scene_.materials_.emplace_back(planeMaterialBack);
 
                     const ::glm::vec3 planePointUp{0.0f, 2.2f, 0.0f};
                     const ::glm::vec3 planeNormalUp{0.0f, -1.0f, 0.0f};
-                    const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveUp{planeUp,
-                                                                                    planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveUp);
+                    const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp, materialBackId};
+                    scene_.planes_.emplace_back(planeUp);
 
                     const ::MobileRT::Material planeMaterialLeft{::glm::vec3 {0.9f, 0.0f, 0.0f}};
                     const ::glm::vec3 planePointLeft{-4.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalLeft{1.0f, 0.0f, 0.0f};
-                    const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveLeft{planeLeft,
-                                                                                      planeMaterialLeft};
-                    scene_.planes_.emplace_back(planePrimitiveLeft);
+                    const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft,
+                                                      static_cast<::std::int32_t> (scene_.materials_.size())};
+                    scene_.planes_.emplace_back(planeLeft);
+                    scene_.materials_.emplace_back(planeMaterialLeft);
 
                     const ::MobileRT::Material planeMaterialRight{::glm::vec3 {0.0f, 0.0f, 0.9f}};
                     const ::glm::vec3 planePointRight{1.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalRight{-1.0f, 0.0f, 0.0f};
-                    const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveRight{planeRight,
-                                                                                       planeMaterialRight};
-                    scene_.planes_.emplace_back(planePrimitiveRight);
+                    const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight,
+                                                       static_cast<::std::int32_t> (scene_.materials_.size())};
+                    scene_.planes_.emplace_back(planeRight);
+                    scene_.materials_.emplace_back(planeMaterialRight);
 
                     const ::glm::vec3 planePointBack{0.0f, 0.0f, -4.6f};
                     const ::glm::vec3 planeNormalBack{0.0f, 0.0f, 1.0f};
-                    const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveBack{planeBack,
-                                                                                      planeMaterialBack};
-                    scene_.planes_.emplace_back(planePrimitiveBack);
+                    const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack, materialBackId};
+                    scene_.planes_.emplace_back(planeBack);
 
                     const ::MobileRT::Material planeMaterialForward{::glm::vec3 {0.0f, 0.9f, 0.9f}};
                     const ::glm::vec3 planePointForward{0.0f, 0.0f, 2.3f};
                     const ::glm::vec3 planeNormalForward{0.0f, 0.0f, -1.0f};
-                    const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveForward{
-                            planeForward, planeMaterialForward};
-                    scene_.planes_.emplace_back(planePrimitiveForward);
+                    const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward,
+                                                         static_cast<::std::int32_t> (scene_.materials_.size())};
+                    scene_.planes_.emplace_back(planeForward);
+                    scene_.materials_.emplace_back(planeMaterialForward);
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {-4.0f, 2.0f, -4.5f},

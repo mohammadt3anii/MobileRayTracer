@@ -6,7 +6,6 @@
 #define MOBILERT_ACCELERATORS_REGULARGRID_HPP
 
 #include "MobileRT/Boxes/AABB.hpp"
-#include "MobileRT/Primitive.hpp"
 #include "MobileRT/Scene.hpp"
 #include <glm/glm.hpp>
 #include <vector>
@@ -16,7 +15,7 @@ namespace MobileRT {
     template<typename T>
     class RegularGrid final {
     private:
-        ::std::vector<::std::vector<Primitive<T> *>> primitives_;
+        ::std::vector<::std::vector<T*>> primitives_;
         ::std::int32_t gridSize_{};
         ::std::uint32_t gridShift_{};
         AABB m_Extends{};
@@ -25,12 +24,12 @@ namespace MobileRT {
         bool hasPrimitives_ {};
 
     private:
-        void addPrimitives(::std::vector<Primitive<T>> &&primitives) noexcept;
+        void addPrimitives(::std::vector<T> &&primitives) noexcept;
 
     public:
         explicit RegularGrid() noexcept = default;
 
-        explicit RegularGrid<T> (AABB sceneBounds, ::std::vector<Primitive<T>> &&primitives, ::std::int32_t gridSize) noexcept;
+        explicit RegularGrid<T> (AABB sceneBounds, ::std::vector<T> &&primitives, ::std::int32_t gridSize) noexcept;
 
         RegularGrid(const RegularGrid &regularGrid) noexcept = delete;
 
@@ -44,14 +43,14 @@ namespace MobileRT {
 
         bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        bool shadowTrace(const Ray &ray, const float dist) noexcept;
+        bool shadowTrace(const Ray &ray, float dist) noexcept;
     };
 
     template<typename T>
-    RegularGrid<T>::RegularGrid(AABB sceneBounds, ::std::vector<Primitive<T>> &&primitives,
+    RegularGrid<T>::RegularGrid(AABB sceneBounds, ::std::vector<T> &&primitives,
                          const ::std::int32_t gridSize) noexcept :
         primitives_{
-                ::std::vector<::std::vector<::MobileRT::Primitive<T>*>> {
+                ::std::vector<::std::vector<T*>> {
                         static_cast<::std::size_t> (gridSize * gridSize * gridSize)}},
         gridSize_{gridSize},
 gridShift_{
@@ -82,11 +81,11 @@ bitCounter(static_cast
     template<typename T>
     RegularGrid<T>::~RegularGrid() noexcept {
         primitives_.clear();
-        ::std::vector<::std::vector<Primitive<T>*>> {}.swap(primitives_);
+        ::std::vector<::std::vector<T*>> {}.swap(primitives_);
     }
 
     template<typename T>
-    void RegularGrid<T>::addPrimitives(::std::vector<Primitive<T>> &&primitives) noexcept {
+    void RegularGrid<T>::addPrimitives(::std::vector<T> &&primitives) noexcept {
         ::std::int32_t index{0};
 
         // calculate cell width, height and depth
@@ -143,7 +142,7 @@ bitCounter(static_cast
                         const AABB &cell {pos, pos + ::glm::vec3 {dx, dy, dz}};
                         //LOG("min=(", pos[0], ", ", pos[1], ", ", pos[2], ") max=(", dx, ", ", dy, ",", dz, ")");
                         // do an accurate aabb / primitive intersection test
-                        const bool intersectedBox{::MobileRT::intersectBox(primitive, cell)};
+                        const bool intersectedBox{primitive.intersectBox(cell)};
                         if (intersectedBox) {
                             primitives_[idx].emplace_back(&primitive);
                             //LOG("add idx = ", idx, " index = ", index);
@@ -241,7 +240,7 @@ bitCounter(static_cast
                      (static_cast<::std::uint32_t> (Y) << gridShift_) +
                      (static_cast<::std::uint32_t> (Z) << (gridShift_ * 2u)))};
             const auto it {this->primitives_.begin() + index};
-            ::std::vector<Primitive<T> *> primitivesList {*it};
+            ::std::vector<T*> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
                 intersected |= primitive->intersect(intersection, ray);
                 if (intersected) {
@@ -288,7 +287,7 @@ bitCounter(static_cast
                      (static_cast<::std::uint32_t> (Y) << gridShift_) +
                      (static_cast<::std::uint32_t> (Z) << (gridShift_ * 2u)))};
             const auto it {this->primitives_.begin() + index};
-            ::std::vector<Primitive<T> *> primitivesList {*it};
+            ::std::vector<T*> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
                 intersected |= primitive->intersect(intersection, ray);
             }
@@ -423,7 +422,7 @@ bitCounter(static_cast
                      (static_cast<::std::uint32_t> (Y) << gridShift_) +
                      (static_cast<::std::uint32_t> (Z) << (gridShift_ * 2u)))};
             const auto it {this->primitives_.begin() + index};
-            ::std::vector<Primitive<T> *> primitivesList {*it};
+            ::std::vector<T*> primitivesList {*it};
             for (auto *const primitive : primitivesList) {
                 const bool intersected {primitive->intersect(ray, dist)};
                 if (intersected) {

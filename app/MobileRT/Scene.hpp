@@ -9,8 +9,10 @@
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Light.hpp"
 #include "MobileRT/Material.hpp"
-#include "MobileRT/Primitive.hpp"
 #include "MobileRT/Ray.hpp"
+#include "MobileRT/Shapes/Plane.hpp"
+#include "MobileRT/Shapes/Sphere.hpp"
+#include "MobileRT/Shapes/Triangle.hpp"
 #include "MobileRT/Utils.hpp"
 #include <glm/glm.hpp>
 #include <vector>
@@ -18,10 +20,11 @@
 namespace MobileRT {
     class Scene final {
     public:
-        ::std::vector<Primitive<Triangle>> triangles_{};
-        ::std::vector<Primitive<Sphere>> spheres_{};
-        ::std::vector<Primitive<Plane>> planes_{};
-        ::std::vector<::std::unique_ptr<Light>> lights_{};
+        ::std::vector<Triangle> triangles_ {};
+        ::std::vector<Sphere> spheres_ {};
+        ::std::vector<Plane> planes_ {};
+        ::std::vector<Material> materials_ {};
+        ::std::vector<::std::unique_ptr<Light>> lights_ {};
 
     private:
         static void AABBbounds(const AABB &box, ::glm::vec3 *min, ::glm::vec3 *max);

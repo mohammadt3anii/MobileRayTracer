@@ -72,7 +72,7 @@ namespace MobileRT {
 
         bool rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept;
 
-        bool shadowTrace(const Ray &ray, const float dist) noexcept;
+        bool shadowTrace(const Ray &ray, float dist) noexcept;
 
         virtual void resetSampling() noexcept;
 

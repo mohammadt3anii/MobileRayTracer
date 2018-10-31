@@ -9,7 +9,6 @@
 #include "MobileRT/Intersection.hpp"
 #include "MobileRT/Light.hpp"
 #include "MobileRT/Material.hpp"
-#include "MobileRT/Primitive.hpp"
 #include "MobileRT/Ray.hpp"
 #include "MobileRT/Utils.hpp"
 #include <glm/glm.hpp>
@@ -20,12 +19,12 @@ namespace MobileRT {
     template<typename T>
     class Naive final {
     public:
-        ::std::vector<Primitive<T>> primitives_ {};
+        ::std::vector<T> primitives_ {};
 
     public:
         explicit Naive() noexcept = default;
 
-        explicit Naive(::std::vector<Primitive<T>> &&primitives) noexcept;
+        explicit Naive(::std::vector<T> &&primitives) noexcept;
 
         Naive(const Naive &naive) noexcept = delete;
 
@@ -39,18 +38,18 @@ namespace MobileRT {
 
         bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        bool shadowTrace(const Ray &ray, const float dist) noexcept;
+        bool shadowTrace(const Ray &ray, float dist) noexcept;
     };
 
     template<typename T>
-    Naive<T>::Naive(::std::vector<Primitive<T>> &&primitives) noexcept :
+    Naive<T>::Naive(::std::vector<T> &&primitives) noexcept :
         primitives_{::std::move(primitives)} {
     }
 
     template<typename T>
     Naive<T>::~Naive() noexcept {
         primitives_.clear();
-        ::std::vector<Primitive<T>> {}.swap(primitives_);
+        ::std::vector<T> {}.swap(primitives_);
     }
 
     template<typename T>

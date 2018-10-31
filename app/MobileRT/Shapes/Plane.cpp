@@ -8,9 +8,10 @@ using ::MobileRT::AABB;
 using ::MobileRT::Plane;
 using ::MobileRT::Intersection;
 
-Plane::Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept :
+Plane::Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal, const ::std::int32_t materialId) noexcept :
         normal_{::glm::normalize(normal)},
-        point_{point} {
+        point_{point},
+        materialId_{materialId} {
 }
 
 bool Plane::intersect(Intersection *const intersection, const Ray &ray) const noexcept {
@@ -39,7 +40,7 @@ bool Plane::intersect(Intersection *const intersection, const Ray &ray) const no
 
     // if so, then we have an intersection
     const ::glm::vec3 intersectionPoint{ray.origin_ + ray.direction_ * distanceToIntersection};
-    *intersection = Intersection {intersectionPoint, distanceToIntersection, normal_, this};
+    *intersection = Intersection {intersectionPoint, distanceToIntersection, normal_, this, materialId_};
     return true;
 }
 
@@ -63,12 +64,10 @@ bool Plane::intersect(const Ray &ray, const float dist) const noexcept {
 
     // is it in front of the eye?
     // is it farther than the ray length ??
-    if (distanceToIntersection < Epsilon || distanceToIntersection >= dist) {
-        return false;
-    }
+    const bool intersected {distanceToIntersection > Epsilon && distanceToIntersection < dist};
 
     // if so, then we have an intersection
-    return true;
+    return intersected;
 }
 
 void Plane::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -124,7 +123,7 @@ float Plane::distance(const ::glm::vec3 &point) const noexcept {
     return res;
 }
 
-bool Plane::intersect(const AABB &box) const noexcept {
+bool Plane::intersectBox(const AABB &box) const noexcept {
     const ::glm::vec3 &positiveVertex {box.pointMax_};
     const ::glm::vec3 &negativeVertex {box.pointMin_};
 

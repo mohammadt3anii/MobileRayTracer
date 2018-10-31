@@ -15,11 +15,12 @@ namespace MobileRT {
     private:
         ::glm::vec3 center_ {};
         float sq_radius_ {};
+        ::std::int32_t materialId_ {};
 
     public:
         explicit Sphere () noexcept = delete;
 
-        explicit Sphere(const ::glm::vec3 &center, float radius) noexcept;
+        explicit Sphere(const ::glm::vec3 &center, float radius, ::std::int32_t materialId) noexcept;
 
         Sphere(const Sphere &sphere) noexcept = default;
 
@@ -33,7 +34,7 @@ namespace MobileRT {
 
         bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
 
-        bool intersect(const Ray &ray, const float dist) const noexcept;
+        bool intersect(const Ray &ray, float dist) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 
@@ -41,7 +42,7 @@ namespace MobileRT {
 
         AABB getAABB() const noexcept;
 
-        bool intersect(const AABB &box) const noexcept;
+        bool intersectBox(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

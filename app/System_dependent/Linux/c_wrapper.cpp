@@ -388,48 +388,46 @@ work_thread(
                     const ::MobileRT::Material planeMaterialBack{::glm::vec3 {0.7f, 0.7f, 0.7f}};
                     const ::glm::vec3 planePointDown{0.0f, -1.0f, 0.0f};
                     const ::glm::vec3 planeNormalDown{0.0f, 1.0f, 0.0f};
-                    const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveDown{planeDown,
-                                                                                      planeMaterialBack};
-                    scene.planes_.emplace_back(planePrimitiveDown);
+                    const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown,
+                        static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeDown);
+                    const ::std::int32_t materialBackId {static_cast<::std::int32_t> (scene.materials_.size())};
+
+                    scene.materials_.emplace_back(planeMaterialBack);
 
                     const ::glm::vec3 planePointUp{0.0f, 2.2f, 0.0f};
                     const ::glm::vec3 planeNormalUp{0.0f, -1.0f, 0.0f};
-                    const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveUp{planeUp,
-                                                                                    planeMaterialBack};
-                    scene.planes_.emplace_back(planePrimitiveUp);
+                    const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp, materialBackId};
+                    scene.planes_.emplace_back(planeUp);
 
                     const ::MobileRT::Material planeMaterialLeft{::glm::vec3 {0.9f, 0.0f, 0.0f}};
                     const ::glm::vec3 planePointLeft{-4.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalLeft{1.0f, 0.0f, 0.0f};
-                    const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveLeft{planeLeft,
-                                                                                      planeMaterialLeft};
-                    scene.planes_.emplace_back(planePrimitiveLeft);
+                    const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft,
+                        static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeLeft);
+                    scene.materials_.emplace_back(planeMaterialLeft);
 
                     const ::MobileRT::Material planeMaterialRight{::glm::vec3 {0.0f, 0.0f, 0.9f}};
                     const ::glm::vec3 planePointRight{1.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalRight{-1.0f, 0.0f, 0.0f};
-                    const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveRight{planeRight,
-                                                                                       planeMaterialRight};
-                    scene.planes_.emplace_back(planePrimitiveRight);
+                    const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight,
+                        static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeRight);
+                    scene.materials_.emplace_back(planeMaterialRight);
 
                     const ::glm::vec3 planePointBack{0.0f, 0.0f, -4.6f};
                     const ::glm::vec3 planeNormalBack{0.0f, 0.0f, 1.0f};
-                    const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveBack{planeBack,
-                                                                                      planeMaterialBack};
-                    scene.planes_.emplace_back(planePrimitiveBack);
+                    const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack, materialBackId};
+                    scene.planes_.emplace_back(planeBack);
 
                     const ::MobileRT::Material planeMaterialForward{::glm::vec3 {0.0f, 0.9f, 0.9f}};
                     const ::glm::vec3 planePointForward{0.0f, 0.0f, 2.3f};
                     const ::glm::vec3 planeNormalForward{0.0f, 0.0f, -1.0f};
-                    const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward};
-                    const ::MobileRT::Primitive<::MobileRT::Plane> planePrimitiveForward{
-                            planeForward, planeMaterialForward};
-                    scene.planes_.emplace_back(planePrimitiveForward);
+                    const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward,
+                        static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeForward);
+                    scene.materials_.emplace_back(planeMaterialForward);
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {-4.0f, 2.0f, -4.5f},

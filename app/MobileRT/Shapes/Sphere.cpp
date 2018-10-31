@@ -9,9 +9,10 @@ using ::MobileRT::AABB;
 using ::MobileRT::Sphere;
 using ::MobileRT::Intersection;
 
-Sphere::Sphere(const ::glm::vec3 &center, const float radius) noexcept :
+Sphere::Sphere(const ::glm::vec3 &center, const float radius, const ::std::int32_t materialId) noexcept :
         center_{center},
-        sq_radius_{radius * radius} {
+        sq_radius_{radius * radius},
+        materialId_{materialId} {
 }
 
 bool Sphere::intersect(Intersection *const intersection, const Ray &ray) const noexcept {
@@ -46,7 +47,7 @@ bool Sphere::intersect(Intersection *const intersection, const Ray &ray) const n
     // if so, then we have an intersection
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
     const ::glm::vec3 &intersectionNormal {::glm::normalize(intersectionPoint - center_)};
-    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, nullptr};
+    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, nullptr, materialId_};
     return true;
 }
 
@@ -75,12 +76,10 @@ bool Sphere::intersect(const Ray &ray, const float dist) const noexcept {
     const float distanceToIntersection{
             ::std::min(distanceToIntersection1, distanceToIntersection2) / (2.0f * A)};
 
-    if (distanceToIntersection < 1.0e-05f || distanceToIntersection >= dist) {
-        return false;
-    }
+    const bool intersected {distanceToIntersection > 1.0e-05f && distanceToIntersection < dist};
 
     // if so, then we have an intersection
-    return true;
+    return intersected;
 }
 
 void Sphere::moveTo(const float x, const float y) noexcept {
@@ -100,7 +99,7 @@ AABB Sphere::getAABB() const noexcept {
     return res;
 }
 
-bool Sphere::intersect(const AABB &box) const noexcept {
+bool Sphere::intersectBox(const AABB &box) const noexcept {
     float dmin {0};
     const ::glm::vec3 &v1 {box.pointMin_};
     const ::glm::vec3 &v2 {box.pointMax_};

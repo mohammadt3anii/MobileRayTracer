@@ -15,6 +15,7 @@ namespace MobileRT {
     private:
         ::glm::vec3 normal_{};    // normal to the plane
         ::glm::vec3 point_{};   // point in the plane
+        ::std::int32_t materialId_ {};
 
     private:
         ::glm::vec3 getRightVector() const noexcept;
@@ -22,7 +23,8 @@ namespace MobileRT {
     public:
         explicit Plane () noexcept = delete;
 
-        explicit Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal) noexcept;
+        explicit Plane(const ::glm::vec3 &point, const ::glm::vec3 &normal,
+            ::std::int32_t materialId) noexcept;
 
         Plane(const Plane &plane) noexcept = default;
 
@@ -36,7 +38,7 @@ namespace MobileRT {
 
         bool intersect(Intersection *intersection, const Ray &ray) const noexcept;
 
-        bool intersect(const Ray &ray, const float dist) const noexcept;
+        bool intersect(const Ray &ray, float dist) const noexcept;
 
         void moveTo(float x, float y) noexcept;
 
@@ -46,7 +48,7 @@ namespace MobileRT {
 
         float distance(const ::glm::vec3 &point) const noexcept;
 
-        bool intersect(const AABB &box) const noexcept;
+        bool intersectBox(const AABB &box) const noexcept;
     };
 }//namespace MobileRT
 

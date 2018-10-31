@@ -13,7 +13,6 @@
 using ::MobileRT::Camera;
 using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
-using ::MobileRT::Primitive;
 using ::MobileRT::Shader;
 
 namespace {
@@ -58,9 +57,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
         }
 
         case Accelerator::REGULAR_GRID: {
-            ::std::vector<Primitive<Plane> *> planes{convertVector(this->scene_.planes_)};
-            ::std::vector<Primitive<Sphere> *> spheres{convertVector(this->scene_.spheres_)};
-            ::std::vector<Primitive<Triangle> *> triangles{convertVector(this->scene_.triangles_)};
+            ::std::vector<Plane*> planes{convertVector(this->scene_.planes_)};
+            ::std::vector<Sphere*> spheres{convertVector(this->scene_.spheres_)};
+            ::std::vector<Triangle*> triangles{convertVector(this->scene_.triangles_)};
 
             ::glm::vec3 minPlanes {RayLengthMax};
             ::glm::vec3 maxPlanes {-RayLengthMax};
@@ -165,6 +164,9 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
             intersected |= this->scene_.traceLights(&intersection, ray);
             break;
         }
+    }
+    if (intersection.material_ == nullptr) {
+        intersection.material_ = &scene_.materials_[static_cast<::std::size_t> (intersection.materialId_)];
     }
     const bool intersectedLight {intersected? shade(rgb, intersection, ray) : false};
     const bool res {intersected && intersectedLight};

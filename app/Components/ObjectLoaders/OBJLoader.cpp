@@ -118,7 +118,6 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const ::glm::vec3 &vertex1 {-vx1, vy1, vz1};
                 const ::glm::vec3 &vertex2 {-vx2, vy2, vz2};
                 const ::glm::vec3 &vertex3 {-vx3, vy3, vz3};
-                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3};
 
                 // per-face material
                 const auto itMaterial {shape.mesh.material_ids.begin() + static_cast<::std::int32_t> (f)};
@@ -158,7 +157,20 @@ bool OBJLoader::fillScene(Scene *const scene,
                         scene->lights_.emplace_back(
                                 ::std::make_unique<AreaLight> (material, lambda(), p1, p2, p3));
                     } else {
-                        scene->triangles_.emplace_back(triangle, material);
+                        ::std::vector<::MobileRT::Material>::iterator itMat {
+                            ::std::find(scene->materials_.begin(), scene->materials_.end(), material)};
+                        if (itMat != scene->materials_.end()) {
+                            const ::std::int32_t index {static_cast<int32_t>(
+                                ::std::distance(scene->materials_.begin(), itMat))};
+                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index};
+                            scene->triangles_.emplace_back(triangle);
+                        } else {
+                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
+                                static_cast<int32_t>(scene->materials_.size())};
+                            scene->materials_.emplace_back(material);
+                            scene->triangles_.emplace_back(triangle);
+                        }
+                        
                     }
                 } else {
                     const ::glm::vec3 &diffuse{red, green, blue};
@@ -168,7 +180,19 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
                     const Material material {diffuse, specular, transmittance, indexRefraction,
                                              emission};
-                    scene->triangles_.emplace_back(triangle, material);
+
+                    auto itMat {::std::find(scene->materials_.begin(), scene->materials_.end(), material)};
+                    if (itMat != scene->materials_.end()) {
+                        const ::std::int32_t index {static_cast<int32_t>(
+                            ::std::distance(scene->materials_.begin(), itMat))};
+                        const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index};
+                        scene->triangles_.emplace_back(triangle);
+                    } else {
+                        const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
+                            static_cast<int32_t>(scene->materials_.size())};
+                        scene->materials_.emplace_back(material);
+                        scene->triangles_.emplace_back(triangle);
+                    }
                 }
             }
             index_offset += fv;

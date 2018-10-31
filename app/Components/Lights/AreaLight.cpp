@@ -15,7 +15,7 @@ AreaLight::AreaLight(
     ::std::unique_ptr<Sampler> samplerPointLight,
     const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC) noexcept :
         Light(radiance),
-        triangle_{pointA, pointB, pointC},
+        triangle_{pointA, pointB, pointC, -1},
         samplerPointLight_{::std::move(samplerPointLight)} {
 }
 

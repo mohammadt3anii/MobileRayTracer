@@ -10,11 +10,12 @@ using ::MobileRT::Triangle;
 using ::MobileRT::Intersection;
 
 Triangle::Triangle(
-        const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC) noexcept :
+        const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+        const ::std::int32_t materialId) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
-        pointA_{pointA}
-{
+        pointA_{pointA},
+        materialId_{materialId} {
 }
 
 bool Triangle::intersect(Intersection *const intersection, const Ray &ray) const noexcept {
@@ -56,7 +57,7 @@ bool Triangle::intersect(Intersection *const intersection, const Ray &ray) const
                                                                    : intersectionNormal2};
 
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
-    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, this};
+    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, this, materialId_};
     return true;
 }
 
@@ -89,10 +90,8 @@ bool Triangle::intersect(const Ray &ray, const float dist) const noexcept {
     // the intersection point is on the line
     const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
 
-    if (distanceToIntersection < Epsilon || distanceToIntersection >= dist) {
-        return false;
-    }
-    return true;
+    const bool intersected {distanceToIntersection > Epsilon && distanceToIntersection < dist};
+    return intersected;
 }
 
 void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
@@ -111,7 +110,7 @@ AABB Triangle::getAABB() const noexcept {
     return res;
 }
 
-bool Triangle::intersect(const AABB &box) const noexcept {
+bool Triangle::intersectBox(const AABB &box) const noexcept {
     auto intersectRayAABB {
         [&](const ::glm::vec3 &orig, const ::glm::vec3 &vec) noexcept -> bool {
             ::glm::vec3 T_1 {};

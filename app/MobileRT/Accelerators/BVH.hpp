@@ -34,7 +34,7 @@ namespace MobileRT {
         ::std::vector<BVHNode> boxes_ {};
 
     public:
-        ::std::vector<Primitive<T>> primitives_ {};
+        ::std::vector<T> primitives_ {};
 
     private:
         void build() noexcept;
@@ -42,7 +42,7 @@ namespace MobileRT {
     public:
         explicit BVH() noexcept = default;
 
-        explicit BVH<T> (::std::vector<Primitive<T>> &&primitives) noexcept;
+        explicit BVH<T> (::std::vector<T> &&primitives) noexcept;
 
         BVH(const BVH &bVH) noexcept = delete;
 
@@ -56,13 +56,13 @@ namespace MobileRT {
 
         bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        bool shadowTrace(const Ray &ray, const float dist) noexcept;
+        bool shadowTrace(const Ray &ray, float dist) noexcept;
     };
 
 
 
     template<typename T>
-    BVH<T>::BVH(::std::vector<Primitive<T>> &&primitives) noexcept {
+    BVH<T>::BVH(::std::vector<T> &&primitives) noexcept {
         if (primitives.empty()) {
             BVHNode bvhNode {};
             boxes_.emplace_back(bvhNode);
@@ -81,7 +81,7 @@ namespace MobileRT {
         primitives_.clear();
 
         ::std::vector<BVHNode> {}.swap(boxes_);
-        ::std::vector<Primitive<T>> {}.swap(primitives_);
+        ::std::vector<T> {}.swap(primitives_);
     }
 
     template<typename T>
