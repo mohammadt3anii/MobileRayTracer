@@ -39,7 +39,7 @@ namespace MobileRT {
 
         bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        bool shadowTrace(Intersection intersection, const Ray &ray) noexcept;
+        bool shadowTrace(const Ray &ray, const float dist) noexcept;
     };
 
     template<typename T>
@@ -64,10 +64,9 @@ namespace MobileRT {
     }
 
     template<typename T>
-    bool Naive<T>::shadowTrace(Intersection intersection,
-                        const Ray &ray) noexcept {
+    bool Naive<T>::shadowTrace(const Ray &ray, const float dist) noexcept {
         for (::MobileRT::Primitive<T> &primitive : primitives_) {
-            const bool intersected {primitive.intersect(&intersection, ray)};
+            const bool intersected {primitive.intersect(ray, dist)};
             if (intersected) {
                 return true;
             }

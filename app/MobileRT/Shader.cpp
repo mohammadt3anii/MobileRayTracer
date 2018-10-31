@@ -139,7 +139,7 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
 }
 
 bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
-    Intersection intersection {RayLengthMax, nullptr};
+    Intersection intersection {RayLengthMax};
     bool intersected {false};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
@@ -171,27 +171,27 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
     return res;
 }
 
-bool Shader::shadowTrace(Intersection intersection, const Ray &ray) noexcept {
+bool Shader::shadowTrace(const Ray &ray, const float dist) noexcept {
     bool intersected {false};
     switch (accelerator_) {
         case Accelerator::NAIVE: {
-            intersected |= this->naivePlanes_.shadowTrace(intersection, ray);
-            intersected |= this->naiveSpheres_.shadowTrace(intersection, ray);
-            intersected |= this->naiveTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->naivePlanes_.shadowTrace(ray, dist);
+            intersected |= this->naiveSpheres_.shadowTrace(ray, dist);
+            intersected |= this->naiveTriangles_.shadowTrace(ray, dist);
             break;
         }
 
         case Accelerator::REGULAR_GRID: {
-            intersected |= this->regularGridPlanes_.shadowTrace(intersection, ray);
-            intersected |= this->regularGridSpheres_.shadowTrace(intersection, ray);
-            intersected |= this->regularGridTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->regularGridPlanes_.shadowTrace(ray, dist);
+            intersected |= this->regularGridSpheres_.shadowTrace(ray, dist);
+            intersected |= this->regularGridTriangles_.shadowTrace(ray, dist);
             break;
         }
 
         case Accelerator::BVH: {
-            intersected |= this->bvhPlanes_.shadowTrace(intersection, ray);
-            intersected |= this->bvhSpheres_.shadowTrace(intersection, ray);
-            intersected |= this->bvhTriangles_.shadowTrace(intersection, ray);
+            intersected |= this->bvhPlanes_.shadowTrace(ray, dist);
+            intersected |= this->bvhSpheres_.shadowTrace(ray, dist);
+            intersected |= this->bvhTriangles_.shadowTrace(ray, dist);
             break;
         }
     }

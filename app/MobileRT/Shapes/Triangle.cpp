@@ -60,6 +60,41 @@ bool Triangle::intersect(Intersection *const intersection, const Ray &ray) const
     return true;
 }
 
+bool Triangle::intersect(const Ray &ray, const float dist) const noexcept {
+    if (ray.primitive_ == this) {
+        return false;
+    }
+
+    const ::glm::vec3 &perpendicularVector {::glm::cross(ray.direction_, AC_)};
+    const float normalizedProjection {::glm::dot(AB_, perpendicularVector)};
+    if (::std::abs(normalizedProjection) < Epsilon) {
+        return false;
+    }
+
+    //u v = barycentric coordinates (uv-space are inside a unit triangle)
+    const float normalizedProjectionInv {1.0f / normalizedProjection};
+    const ::glm::vec3 &vectorToCamera {ray.origin_ - pointA_};
+    const float u {normalizedProjectionInv * ::glm::dot(vectorToCamera, perpendicularVector)};
+    if (u < 0.0f || u > 1.0f) {
+        return false;
+    }
+
+    const ::glm::vec3 &upPerpendicularVector {::glm::cross(vectorToCamera, AB_)};
+    const float v {normalizedProjectionInv * ::glm::dot (ray.direction_, upPerpendicularVector)};
+    if (v < 0.0f || (u + v) > 1.0f) {
+        return false;
+    }
+
+    // at this stage we can compute t to find out where
+    // the intersection point is on the line
+    const float distanceToIntersection {normalizedProjectionInv * ::glm::dot(AC_, upPerpendicularVector)};
+
+    if (distanceToIntersection < Epsilon || distanceToIntersection >= dist) {
+        return false;
+    }
+    return true;
+}
+
 void Triangle::moveTo(const float /*x*/, const float /*y*/) noexcept {
 }
 
@@ -161,7 +196,7 @@ bool Triangle::intersect(const AABB &box) const noexcept {
     const ::glm::vec3 &pointB {pointA_ + AB_};
     const ::glm::vec3 &pointC {pointA_ + AC_};
     const bool intersectedBC {intersectRayAABB(pointB, pointC - pointB)};
-    Intersection intersection {RayLengthMax, nullptr};
+    Intersection intersection {RayLengthMax};
     const bool intersectedRay {intersect(&intersection, ray)};
     const bool insideTriangle {isOverTriangle(vec)};
     const bool res{

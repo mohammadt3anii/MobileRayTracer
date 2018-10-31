@@ -21,7 +21,7 @@ namespace MobileRT {
     public:
         explicit Intersection () noexcept = delete;
 
-        explicit Intersection(float dist, const void *primitive) noexcept;
+        explicit Intersection(float dist) noexcept;
 
         explicit Intersection(
                 const ::glm::vec3 &intPoint,

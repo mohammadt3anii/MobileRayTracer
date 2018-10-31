@@ -81,8 +81,7 @@ bool PathTracer::shade(
                         vectorToLight, intersection.point_, rayDepth + 1, intersection.primitive_};
                     //intersection between shadow ray and the closest primitive
                     //if there are no primitives between intersection and the light
-                    Intersection intersectLight {distanceToLight, intersection.primitive_};
-                    if (!shadowTrace(intersectLight, shadowRay)) {
+                    if (!shadowTrace(shadowRay, distanceToLight)) {
                         //Ld += kD * radLight * cosNormalLight * sizeLights / samplesLight
                         Ld += light.radiance_.Le_ * cosNormalLight;
                     }

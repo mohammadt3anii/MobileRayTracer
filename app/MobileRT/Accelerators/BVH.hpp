@@ -54,13 +54,9 @@ namespace MobileRT {
 
         BVH &operator=(BVH &&bVH) noexcept = default;
 
-        bool trace(
-          Intersection *intersection,
-          const Ray &ray) noexcept;
+        bool trace(Intersection *intersection, const Ray &ray) noexcept;
 
-        bool shadowTrace(
-          Intersection intersection,
-          const Ray &ray) noexcept;
+        bool shadowTrace(const Ray &ray, const float dist) noexcept;
     };
 
 
@@ -215,9 +211,7 @@ namespace MobileRT {
     }
 
     template<typename T>
-    bool BVH<T>::shadowTrace(
-        Intersection intersection,
-        const Ray &ray) noexcept {
+    bool BVH<T>::shadowTrace(const Ray &ray, const float dist) noexcept {
         if(primitives_.empty()) {
             return false;
         }
@@ -237,7 +231,7 @@ namespace MobileRT {
                 if (numberPrimitives > 0) {
                     for (::std::uint32_t i {0}; i < numberPrimitives; ++i) {
                         auto& primitive {*(itPrimitives + static_cast<::std::int32_t> (node.indexOffset_ + i))};
-                        const bool intersected {primitive.intersect(&intersection, ray)};
+                        const bool intersected {primitive.intersect(ray, dist)};
                         if (intersected) {
                             return true;
                         }
