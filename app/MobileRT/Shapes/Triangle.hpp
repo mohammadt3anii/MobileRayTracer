@@ -16,6 +16,9 @@ namespace MobileRT {
         ::glm::vec3 AC_ {};
         ::glm::vec3 AB_ {};
         ::glm::vec3 pointA_ {};
+        ::glm::vec3 normalA_ {};
+        ::glm::vec3 normalB_ {};
+        ::glm::vec3 normalC_ {};
         ::std::int32_t materialId_ {};
 
     public:
@@ -24,6 +27,11 @@ namespace MobileRT {
         explicit Triangle(
                 const ::glm::vec3 &pointA, const ::glm::vec3 &pointB,
                 const ::glm::vec3 &pointC, ::std::int32_t materialId) noexcept;
+
+        explicit Triangle(
+                const ::glm::vec3 &pointA, const ::glm::vec3 &pointB,
+                const ::glm::vec3 &pointC, ::std::int32_t materialId,
+                const ::glm::vec3 &normalA, const ::glm::vec3 &normalB, const ::glm::vec3 &normalC) noexcept;
 
         Triangle(const Triangle &triangle) noexcept = default;
 

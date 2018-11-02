@@ -15,6 +15,22 @@ Triangle::Triangle(
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         pointA_{pointA},
+        normalA_{::glm::normalize(::glm::cross(AC_, AB_))},
+        normalB_{::glm::normalize(::glm::cross(AC_, AB_))},
+        normalC_{::glm::normalize(::glm::cross(AC_, AB_))},
+        materialId_{materialId} {
+}
+
+Triangle::Triangle(
+        const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+        const ::std::int32_t materialId,
+        const ::glm::vec3 &normalA, const ::glm::vec3 &normalB, const ::glm::vec3 &normalC) noexcept :
+        AC_{pointC - pointA},
+        AB_{pointB - pointA},
+        pointA_{pointA},
+        normalA_{normalA},
+        normalB_{normalB},
+        normalC_{normalC},
         materialId_{materialId} {
 }
 
@@ -50,11 +66,14 @@ bool Triangle::intersect(Intersection *const intersection, const Ray &ray) const
     if (distanceToIntersection < Epsilon || distanceToIntersection >= intersection->length_) {
         return false;
     }
-    const ::glm::vec3 &intersectionNormal1{::glm::normalize(::glm::cross(AB_, AC_))};
+    /*const ::glm::vec3 &intersectionNormal1{::glm::normalize(::glm::cross(AB_, AC_))};
     const ::glm::vec3 &intersectionNormal2{::glm::normalize(::glm::cross(AC_, AB_))};
     const ::glm::vec3 &intersectionNormal{
             ::glm::dot(intersectionNormal1, ray.direction_) < 0.0f ? intersectionNormal1
-                                                                   : intersectionNormal2};
+                                                                   : intersectionNormal2};*/
+    
+    const float w {1.0f - u - v};
+    const ::glm::vec3 &intersectionNormal{normalA_ * w + normalB_ * u + normalC_ * v};
 
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
     *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, this, materialId_};

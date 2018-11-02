@@ -132,7 +132,10 @@ namespace MobileRT {
                 (itBoxes + static_cast<::std::int32_t> (id))->indexOffset_ = left;
                 maxId = ::std::max(right, maxId);
 
-                const ::std::uint32_t splitIndex {getSplitIndex_SAH<T> (boxes.begin(), boxes.end())};
+                const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
+                    static_cast<::std::uint32_t>(getSplitIndex_SAH<T>(boxes.begin(), boxes.end()))
+                };
+
 
                 *itStackId = right;
                 ::std::advance(itStackId, 1); // push

@@ -282,3 +282,68 @@ TEST_F(TestTriangle, intersectRayOutside06) {
 	const bool intersected {triangle->intersect(&intersection, ray)};
 	ASSERT_EQ(false, intersected);
 }
+
+TEST_F(TestTriangle, normalTest1) {
+	const ::glm::vec3 orig {0.25f, 0.5f, -1.0f};
+	const ::glm::vec3 dir {0, 0, 1.0f};
+	const Ray ray {dir, orig, 1};
+	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
+		::glm::normalize(::glm::vec3{-1, -1, -1}),
+		::glm::normalize(::glm::vec3{-1, 1, -1}),
+		::glm::normalize(::glm::vec3{1, 1, -1})};
+    Intersection intersection {::MobileRT::RayLengthMax};
+	const bool intersected {triangle2.intersect(&intersection, ray)};
+	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
+	ASSERT_EQ(true, intersected);
+}
+
+TEST_F(TestTriangle, normalTest2) {
+	const ::glm::vec3 orig {0,0,-1};
+	const ::glm::vec3 dir {0, 0, 1.0f};
+	const Ray ray {dir, orig, 1};
+	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
+		::glm::normalize(::glm::vec3{-1, -1, -1}),
+		::glm::normalize(::glm::vec3{-1, 1, -1}),
+		::glm::normalize(::glm::vec3{1, 1, -1})};
+    Intersection intersection {::MobileRT::RayLengthMax};
+	const bool intersected {triangle2.intersect(&intersection, ray)};
+	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
+	ASSERT_EQ(true, intersected);
+	ASSERT_EQ(intersection.normal_.x, triangle2.normalA_.x);
+	ASSERT_EQ(intersection.normal_.y, triangle2.normalA_.y);
+	ASSERT_EQ(intersection.normal_.z, triangle2.normalA_.z);
+}
+
+TEST_F(TestTriangle, normalTest3) {
+	const ::glm::vec3 orig {0,1,-1};
+	const ::glm::vec3 dir {0, 0, 1.0f};
+	const Ray ray {dir, orig, 1};
+	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
+		::glm::normalize(::glm::vec3{-1, -1, -1}),
+		::glm::normalize(::glm::vec3{-1, 1, -1}),
+		::glm::normalize(::glm::vec3{1, 1, -1})};
+    Intersection intersection {::MobileRT::RayLengthMax};
+	const bool intersected {triangle2.intersect(&intersection, ray)};
+	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
+	ASSERT_EQ(true, intersected);
+	ASSERT_EQ(intersection.normal_.x, triangle2.normalB_.x);
+	ASSERT_EQ(intersection.normal_.y, triangle2.normalB_.y);
+	ASSERT_EQ(intersection.normal_.z, triangle2.normalB_.z);
+}
+
+TEST_F(TestTriangle, normalTest4) {
+	const ::glm::vec3 orig {1,1,-1};
+	const ::glm::vec3 dir {0, 0, 1.0f};
+	const Ray ray {dir, orig, 1};
+	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
+		::glm::normalize(::glm::vec3{-1, -1, -1}),
+		::glm::normalize(::glm::vec3{-1, 1, -1}),
+		::glm::normalize(::glm::vec3{1, 1, -1})};
+    Intersection intersection {::MobileRT::RayLengthMax};
+	const bool intersected {triangle2.intersect(&intersection, ray)};
+	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
+	ASSERT_EQ(true, intersected);
+	ASSERT_EQ(intersection.normal_.x, triangle2.normalC_.x);
+	ASSERT_EQ(intersection.normal_.y, triangle2.normalC_.y);
+	ASSERT_EQ(intersection.normal_.z, triangle2.normalC_.z);
+}
