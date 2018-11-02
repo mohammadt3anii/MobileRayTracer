@@ -142,6 +142,10 @@ class MainRenderer implements Renderer {
     public void onDrawFrame(final GL10 gl) {
         if (rasterize_) {
             rasterize_ = false;
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
+            checkGLError();
+            GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+            checkGLError();
             if (drawView_.arrayVertices != null && drawView_.arrayColors != null && drawView_.arrayCamera != null) {
                 copyFrame(drawView_.arrayVertices, drawView_.arrayColors, drawView_.arrayCamera, drawView_.numberPrimitives_);
             }
@@ -332,9 +336,6 @@ class MainRenderer implements Renderer {
     }
 
     private void copyFrame(final ByteBuffer bbVertices, final ByteBuffer bbColors, final ByteBuffer bbCamera, final int numberPrimitives) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
-        checkGLError();
-
         final int floatSize = Float.SIZE / Byte.SIZE;
         final int triangleMembers = floatSize * 9;
         final int triangleMethods = 8 * 11;

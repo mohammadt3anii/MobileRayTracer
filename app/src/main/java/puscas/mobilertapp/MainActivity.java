@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public final class MainActivity extends Activity {
     private NumberPicker pickerSamplesLight_;
     private NumberPicker pickerSizes_;
     private String objFile_;
+    private CheckBox checkBoxRasterize_;
 
     private static int getNumCoresOldPhones() {
         int res = 0;
@@ -93,6 +95,7 @@ public final class MainActivity extends Activity {
         final int height = Integer.parseInt(strResolution.substring(strResolution.indexOf('x') + 1, strResolution.length()));
         final String objText = objFile + ".obj";
         final String matText = objFile + ".mtl";
+        final boolean rasterize = checkBoxRasterize_.isChecked();
 
         switch (drawView_.viewText_.isWorking()) {
             case 0:
@@ -100,7 +103,7 @@ public final class MainActivity extends Activity {
             case 3://if ray-tracer is idle
                 final int ret = drawView_.createScene(scene, shader, threads, accelerator, samplesPixel, samplesLight, width, height, objText, matText);
                 if (ret != -1) {
-                    drawView_.startRender();
+                    drawView_.startRender(rasterize);
                 } else {
                     this.drawView_.stopDrawing();
                 }
@@ -155,7 +158,7 @@ public final class MainActivity extends Activity {
             final String filePath = sdCardPath + "WavefrontOBJs/" + objFile;
             startStopRender(filePath);*/
         } catch (final android.content.ActivityNotFoundException ex) {
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_LONG).show();
             }
         }
@@ -385,7 +388,7 @@ public final class MainActivity extends Activity {
         pickerShader_.setValue(defaultPickerShader);
         pickerShader_.setDisplayedValues(shaders);
 
-        final int maxSamplesPixel = 10;
+        final int maxSamplesPixel = 9;
         final String[] samplesPixel = new String[maxSamplesPixel];
         for (int i = 0; i < maxSamplesPixel; i++) {
             samplesPixel[i] = Integer.toString((i + 1) * (i + 1));
@@ -402,7 +405,7 @@ public final class MainActivity extends Activity {
         pickerSamplesPixel_.setValue(defaultPickerSamplesPixel);
         pickerSamplesPixel_.setDisplayedValues(samplesPixel);
 
-        final int maxSamplesLight = 100;
+        final int maxSamplesLight = 99;
         final String[] samplesLight;
         try {
             samplesLight = new String[maxSamplesLight];
@@ -476,6 +479,12 @@ public final class MainActivity extends Activity {
         pickerSizes_.setWrapSelectorWheel(true);
         pickerSizes_.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         pickerSizes_.setValue(defaultPickerSizes);
+
+        checkBoxRasterize_ = findViewById(R.id.checkBoxPreview);
+        if (checkBoxRasterize_ == null) {
+            Log.e("CheckBoxRasterize", "CheckBoxRasterize is NULL !!!");
+            System.exit(1);
+        }
 
         ViewTreeObserver vto = drawView_.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(() -> {

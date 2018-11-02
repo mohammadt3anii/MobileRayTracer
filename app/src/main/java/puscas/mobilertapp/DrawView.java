@@ -171,29 +171,24 @@ public class DrawView extends GLSurfaceView {
         stopRender();
     }
 
-    void startRender() {
+    void startRender(final boolean rasterize) {
         freeArrays();
 
-        if (getFreeMemStatic(1)) {
-            freeArrays();
-        }
+        if (rasterize) {
+            arrayVertices = initVerticesArray();
+            if (getFreeMemStatic(1)) {
+                freeArrays();
+            }
 
-        arrayVertices = initVerticesArray();
+            arrayColors = initColorsArray();
+            if (getFreeMemStatic(1)) {
+                freeArrays();
+            }
 
-        if (getFreeMemStatic(1)) {
-            freeArrays();
-        }
-
-        arrayColors = initColorsArray();
-
-        if (getFreeMemStatic(1)) {
-            freeArrays();
-        }
-
-        arrayCamera = initCameraArray();
-
-        if (getFreeMemStatic(1)) {
-            freeArrays();
+            arrayCamera = initCameraArray();
+            if (getFreeMemStatic(1)) {
+                freeArrays();
+            }
         }
 
         viewText_.period_ = 250;
@@ -217,7 +212,7 @@ public class DrawView extends GLSurfaceView {
         numberPrimitives_ = initialize(scene, shader, width, height, accelerator, samplesPixel, samplesLight, objFile, matText);
         if (numberPrimitives_ == -1) {
             Log.e("MobileRT", "Device without enough memory to render the scene.");
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 Toast.makeText(getContext(), "Device without enough memory to render the scene.", Toast.LENGTH_LONG).show();
             }
             return -1;
