@@ -86,6 +86,12 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             LOG("sizePlanes = ", sizePlanes);
             LOG("sizeSpheres = ", sizeSpheres);
             LOG("sizeTriangles = ", sizeTriangles);
+            /*const ::std::int32_t auxPlanes {::std::max(2, static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                   bitCounter(sizePlanes))))};
+            const ::std::int32_t auxSpheres {::std::max(2, static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                   bitCounter(sizeSpheres))))};
+            const ::std::int32_t auxTriangles {::std::max(2, static_cast<::std::int32_t> (roundUpToPowerOf2(
+                                                   bitCounter(sizeTriangles))))};*/
             const ::std::int32_t auxPlanes{sizePlanes > 6 ?
                                            static_cast<::std::int32_t> (roundUpToPowerOf2(
                                                    bitCounter(sizePlanes))) : 2};
@@ -113,12 +119,9 @@ void Shader::initializeAccelerators(Camera *const camera) noexcept {
             LOG("auxPlanes2 = ", auxPlanes2);
             LOG("auxSpheres2 = ", auxSpheres2);
             LOG("auxTriangles2 = ", auxTriangles2);
-            const ::std::int32_t gridSizePlanes{
-                    auxPlanes2 > 0 ? auxPlanes * auxPlanes2 : auxPlanes};
-            const ::std::int32_t gridSizeSpheres{
-                    auxSpheres2 > 0 ? auxSpheres * auxSpheres2 : auxSpheres};
-            const ::std::int32_t gridSizeTriangles{
-                    auxTriangles2 > 0 ? auxTriangles * auxTriangles2 : auxTriangles};
+            const ::std::int32_t gridSizePlanes {::std::max(auxPlanes * auxPlanes2, auxPlanes)};
+            const ::std::int32_t gridSizeSpheres {::std::max(auxSpheres * auxSpheres2, auxSpheres)};
+            const ::std::int32_t gridSizeTriangles {::std::max(auxTriangles * auxTriangles2, auxTriangles)};
             LOG("gridSizePlanes = ", gridSizePlanes);
             LOG("gridSizeSpheres = ", gridSizeSpheres);
             LOG("gridSizeTriangles = ", gridSizeTriangles);
@@ -169,8 +172,7 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
         intersection.material_ = &scene_.materials_[static_cast<::std::size_t> (intersection.materialId_)];
     }
     const bool intersectedLight {intersected? shade(rgb, intersection, ray) : false};
-    const bool res {intersected && intersectedLight};
-    return res;
+    return intersectedLight;
 }
 
 bool Shader::shadowTrace(const Ray &ray, const float dist) noexcept {

@@ -117,7 +117,7 @@ bool Triangle::intersectBox(const AABB &box) const noexcept {
             ::glm::vec3 T_2 {}; // vectors to hold the T-values for every direction
             float t_near {::std::numeric_limits<float>::min()};
             float t_far {::std::numeric_limits<float>::max()};
-            if (::std::fabs(vec[0]) < Epsilon) {
+            if (::std::abs(vec[0]) < Epsilon) {
                 // ray parallel to planes in this direction
                 if ((orig[0] < box.pointMin_[0]) ||
                     ((orig[0] + vec[0]) > box.pointMax_[0])) {
@@ -136,7 +136,7 @@ bool Triangle::intersectBox(const AABB &box) const noexcept {
                     return false;
                 }
             }
-            if (::std::fabs(vec[1]) < Epsilon) {
+            if (::std::abs(vec[1]) < Epsilon) {
                 // ray parallel to planes in this direction
                 if ((orig[1] < box.pointMin_[1]) ||
                     ((orig[1] + vec[1]) > box.pointMax_[1])) {
@@ -155,7 +155,7 @@ bool Triangle::intersectBox(const AABB &box) const noexcept {
                     return false;
                 }
             }
-            if (::std::fabs(vec[2]) < Epsilon) {
+            if (::std::abs(vec[2]) < Epsilon) {
                 // ray parallel to planes in this direction
                 if ((orig[2] < box.pointMin_[2]) ||
                     ((orig[2] + vec[2]) > box.pointMax_[2])) {

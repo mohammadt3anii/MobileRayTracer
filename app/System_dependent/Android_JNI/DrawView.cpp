@@ -186,9 +186,9 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
                     const ::glm::vec3 &lE{renderer_->shader_->scene_.materials_[materialId].Le_};
                     ::glm::vec3 color{kD};
 
-                    color = ::glm::all(::glm::greaterThan(kS, color)) ? kS : color;
-                    color = ::glm::all(::glm::greaterThan(kT, color)) ? kT : color;
-                    color = ::glm::all(::glm::greaterThan(lE, color)) ? lE : color;
+                    color = ::glm::max(kS, color);
+                    color = ::glm::max(kT, color);
+                    color = ::glm::max(lE, color);
 
                     floatBuffer[i++] = color.r;
                     floatBuffer[i++] = color.g;
@@ -290,11 +290,9 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
             const ::std::lock_guard<::std::mutex> lock {mutex_};
             renderer_ = nullptr;
         }
-        const float ratio {
-                ::std::max(static_cast<float> (width_) / height_,
-                           static_cast<float> (height_) / width_)};
-        const float hfovFactor{width_ > height_ ? ratio : 1.0f};
-        const float vfovFactor{width_ < height_ ? ratio : 1.0f};
+        const float ratio {static_cast<float> (width) / static_cast<float> (height)};
+        const float hfovFactor{::std::max(ratio, 1.0f)};
+        const float vfovFactor{::std::max(1 / ratio, 1.0f)};
         ::MobileRT::Scene scene_{};
         ::std::unique_ptr<MobileRT::Sampler> samplerPixel{};
         ::std::unique_ptr<MobileRT::Shader> shader_{};

@@ -109,21 +109,21 @@ bitCounter(static_cast
             // find out which cells could contain the primitive (based on aabb)
             ::std::int32_t x1{static_cast<::std::int32_t> ((bv1[0] - m_Extends.pointMin_[0]) * dx_reci)};
             ::std::int32_t x2{static_cast<::std::int32_t> ((bv2[0] - m_Extends.pointMin_[0]) * dx_reci) + 1};
-            x1 = (x1 < 0) ? 0 : x1;
-            x2 = (x2 > (gridSize_ - 1)) ? gridSize_ - 1 : x2;
-            x2 = ::std::fabs(sizeX) < Epsilon? 0 : x2;
-            x1 = x1 > x2 ? x2 : x1;
+            x1 = ::std::max(0, x1);
+            x2 = ::std::min(gridSize_ - 1, x2);
+            x2 = ::std::abs(sizeX) < Epsilon? 0 : x2;
+            x1 = ::std::min(x1, x2);
             ::std::int32_t y1{static_cast<::std::int32_t> ((bv1[1] - m_Extends.pointMin_[1]) * dy_reci)};
             ::std::int32_t y2{static_cast<::std::int32_t> ((bv2[1] - m_Extends.pointMin_[1]) * dy_reci) + 1};
-            y1 = (y1 < 0) ? 0 : y1;
-            y2 = (y2 > (gridSize_ - 1)) ? gridSize_ - 1 : y2;
-            y2 = ::std::fabs(sizeY) < Epsilon? 0 : y2;
-            y1 = y1 > y2 ? y2 : y1;
+            y1 = ::std::max(0, y1);
+            y2 = ::std::min(gridSize_ - 1, y2);
+            y2 = ::std::abs(sizeY) < Epsilon? 0 : y2;
+            y1 = ::std::min(y2, y1);
             ::std::int32_t z1{static_cast<::std::int32_t> ((bv1[2] - m_Extends.pointMin_[2]) * dz_reci)};
             ::std::int32_t z2{static_cast<::std::int32_t> ((bv2[2] - m_Extends.pointMin_[2]) * dz_reci) + 1};
-            z1 = (z1 < 0) ? 0 : z1;
-            z2 = (z2 > (gridSize_ - 1)) ? gridSize_ - 1 : z2;
-            z2 = ::std::fabs(sizeZ) < Epsilon? 0 : z2;
+            z1 = ::std::max(0, z1);
+            z2 = ::std::min(gridSize_ - 1, z2);
+            z2 = ::std::abs(sizeZ) < Epsilon? 0 : z2;
             z1 = ::std::min(z2, z1);
 
             //loop over candidate cells
@@ -164,12 +164,12 @@ bitCounter(static_cast
         ::std::int32_t Y{static_cast<::std::int32_t> (cell[1])};
         ::std::int32_t Z{static_cast<::std::int32_t> (cell[2])};
 
-        X = X < 0? 0 : X;
-        Y = Y < 0? 0 : Y;
-        Z = Z < 0? 0 : Z;
-        X = X >= gridSize_? gridSize_ - 1 : X;
-        Y = Y >= gridSize_? gridSize_ - 1 : Y;
-        Z = Z >= gridSize_? gridSize_ - 1 : Z;
+        X = ::std::max(0, X);
+        Y = ::std::max(0, Y);
+        Z = ::std::max(0, Z);
+        X = ::std::min(gridSize_ - 1, X);
+        Y = ::std::min(gridSize_ - 1, Y);
+        Z = ::std::min(gridSize_ - 1, Z);
 
         ::std::int32_t stepX, outX;
         ::std::int32_t stepY, outY;
@@ -206,7 +206,7 @@ bitCounter(static_cast
         }
 
         ::glm::vec3 tmax{}, tdelta{};
-        if (::std::fabs(ray.direction_[0]) > Epsilon) {
+        if (::std::abs(ray.direction_[0]) > Epsilon) {
             const float rxr{1.0f / ray.direction_[0]};
             tmax[0] = ((cb[0] - ray.origin_[0]) * rxr);
             tdelta[0] = (m_CW[0] * stepX * rxr);
@@ -214,7 +214,7 @@ bitCounter(static_cast
             tmax[0] = (RayLengthMax);
         }
 
-        if (::std::fabs(ray.direction_[1]) > Epsilon) {
+        if (::std::abs(ray.direction_[1]) > Epsilon) {
             const float ryr{1.0f / ray.direction_[1]};
             tmax[1] = ((cb[1] - ray.origin_[1]) * ryr);
             tdelta[1] = (m_CW[1] * stepY * ryr);
@@ -222,7 +222,7 @@ bitCounter(static_cast
             tmax[1] = (RayLengthMax);
         }
 
-        if (::std::fabs(ray.direction_[2]) > Epsilon) {
+        if (::std::abs(ray.direction_[2]) > Epsilon) {
             const float rzr{1.0f / ray.direction_[2]};
             tmax[2] = ((cb[2] - ray.origin_[2]) * rzr);
             tdelta[2] = (m_CW[2] * stepZ * rzr);
@@ -347,12 +347,12 @@ bitCounter(static_cast
         ::std::int32_t Y{static_cast<::std::int32_t> (cell[1])};
         ::std::int32_t Z{static_cast<::std::int32_t> (cell[2])};
 
-        X = X < 0? 0 : X;
-        Y = Y < 0? 0 : Y;
-        Z = Z < 0? 0 : Z;
-        X = X >= gridSize_? gridSize_ - 1 : X;
-        Y = Y >= gridSize_? gridSize_ - 1 : Y;
-        Z = Z >= gridSize_? gridSize_ - 1 : Z;
+        X = ::std::max(0, X);
+        Y = ::std::max(0, Y);
+        Z = ::std::max(0, Z);
+        X = ::std::min(gridSize_ - 1, X);
+        Y = ::std::min(gridSize_ - 1, Y);
+        Z = ::std::min(gridSize_ - 1, Z);
 
         ::std::int32_t stepX, outX;
         ::std::int32_t stepY, outY;
@@ -389,7 +389,7 @@ bitCounter(static_cast
         }
 
         ::glm::vec3 tmax{}, tdelta{};
-        if (::std::fabs(ray.direction_[0]) > Epsilon) {
+        if (::std::abs(ray.direction_[0]) > Epsilon) {
             const float rxr{1.0f / ray.direction_[0]};
             tmax[0] = ((cb[0] - ray.origin_[0]) * rxr);
             tdelta[0] = (m_CW[0] * stepX * rxr);
@@ -397,7 +397,7 @@ bitCounter(static_cast
             tmax[0] = (RayLengthMax);
         }
 
-        if (::std::fabs(ray.direction_[1]) > Epsilon) {
+        if (::std::abs(ray.direction_[1]) > Epsilon) {
             const float ryr{1.0f / ray.direction_[1]};
             tmax[1] = ((cb[1] - ray.origin_[1]) * ryr);
             tdelta[1] = (m_CW[1] * stepY * ryr);
@@ -405,7 +405,7 @@ bitCounter(static_cast
             tmax[1] = (RayLengthMax);
         }
 
-        if (::std::fabs(ray.direction_[2]) > Epsilon) {
+        if (::std::abs(ray.direction_[2]) > Epsilon) {
             const float rzr{1.0f / ray.direction_[2]};
             tmax[2] = ((cb[2] - ray.origin_[2]) * rzr);
             tdelta[2] = (m_CW[2] * stepZ * rzr);

@@ -55,11 +55,9 @@ work_thread(
         ::std::unique_ptr<::MobileRT::Renderer> renderer_ {};
         ::std::int32_t numberOfLights_ {0};
 
-        const float ratio {
-                ::std::max(static_cast<float> (width) / height,
-                           static_cast<float> (height) / width)};
-        const float hfovFactor {width > height ? ratio : 1.0f};
-        const float vfovFactor {width < height ? ratio : 1.0f};
+        const float ratio {static_cast<float> (width) / static_cast<float> (height)};
+        const float hfovFactor{::std::max(ratio, 1.0f)};
+        const float vfovFactor{::std::max(1 / ratio, 1.0f)};
         ::MobileRT::Scene scene {};
         ::std::unique_ptr<::MobileRT::Sampler> samplerPixel {};
         ::std::unique_ptr<::MobileRT::Shader> shader {};

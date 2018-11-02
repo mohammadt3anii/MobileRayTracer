@@ -25,8 +25,7 @@ namespace MobileRT {
     };
 
     template<typename T, typename Iterator>
-    ::std::uint32_t getSplitIndex_SAH (
-        Iterator itBegin, Iterator itEnd) noexcept;
+    ::std::uint32_t getSplitIndex_SAH (Iterator itBegin, Iterator itEnd) noexcept;
 
     template<typename T>
     class BVH final {
@@ -129,14 +128,13 @@ namespace MobileRT {
                 end = *itStackEnd;
             } else {
                 const ::std::uint32_t left {maxId + 1};
+                const ::std::uint32_t right {left + 1};
                 (itBoxes + static_cast<::std::int32_t> (id))->indexOffset_ = left;
-                maxId = left + 1 > maxId? left + 1 : maxId;
+                maxId = ::std::max(right, maxId);
 
-                const ::std::uint32_t splitIndex {boxPrimitivesSize <= 2*maxLeafSize? 2 :
-                    static_cast<::std::uint32_t> (getSplitIndex_SAH<T> (boxes.begin(), boxes.end()))
-                };
+                const ::std::uint32_t splitIndex {getSplitIndex_SAH<T> (boxes.begin(), boxes.end())};
 
-                *itStackId = left + 1;
+                *itStackId = right;
                 ::std::advance(itStackId, 1); // push
                 *itStackBegin = begin + splitIndex;
                 ::std::advance(itStackBegin, 1); // push
@@ -183,8 +181,9 @@ namespace MobileRT {
                     id = *itStackId;
                 } else {
                     const ::std::uint32_t left {node.indexOffset_};
+                    const ::std::uint32_t right {left + 1};
                     const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
-                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
+                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (right))};
 
                     const bool traverseL {intersect(childL.box_, ray)};
                     const bool traverseR {intersect(childR.box_, ray)};
@@ -193,9 +192,9 @@ namespace MobileRT {
                         ::std::advance(itStackId, -1); // pop
                         id = *itStackId;
                     } else {
-                        id = (traverseL) ? left : left + 1;
+                        id = (traverseL) ? left : right;
                         if (traverseL && traverseR) {
-                            *itStackId = left + 1;
+                            *itStackId = right;
                             ::std::advance(itStackId, 1); // push
                         }
                     }
@@ -240,8 +239,9 @@ namespace MobileRT {
                     id = *itStackId;
                 } else {
                     const ::std::uint32_t left {node.indexOffset_};
+                    const ::std::uint32_t right {left + 1};
                     const BVHNode &childL {*(itBoxes + static_cast<::std::int32_t> (left))};
-                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (left + 1))};
+                    const BVHNode &childR {*(itBoxes + static_cast<::std::int32_t> (right))};
 
                     const bool traverseL {intersect(childL.box_, ray)};
                     const bool traverseR {intersect(childR.box_, ray)};
@@ -250,9 +250,9 @@ namespace MobileRT {
                         ::std::advance(itStackId, -1); // pop
                         id = *itStackId;
                     } else {
-                        id = (traverseL) ? left : left + 1;
+                        id = (traverseL) ? left : right;
                         if (traverseL && traverseR) {
-                            *itStackId = left + 1;
+                            *itStackId = right;
                             ::std::advance(itStackId, 1); // push
                         }
                     }

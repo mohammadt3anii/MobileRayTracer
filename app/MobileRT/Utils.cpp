@@ -8,7 +8,7 @@ namespace MobileRT {
 
     ::std::int32_t roundDownToMultipleOf(const ::std::int32_t value, const ::std::int32_t multiple) noexcept {
         const ::std::int32_t rest{value % multiple};
-        const ::std::int32_t res{rest > 1 ? value - rest : value};
+        const ::std::int32_t res{value - rest};
         return res;
     }
 
