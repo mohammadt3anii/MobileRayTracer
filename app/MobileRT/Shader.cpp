@@ -168,11 +168,14 @@ bool Shader::rayTrace(::glm::vec3 *rgb, const Ray &ray) noexcept {
             break;
         }
     }
-    if (intersection.material_ == nullptr) {
-        intersection.material_ = &scene_.materials_[static_cast<::std::size_t> (intersection.materialId_)];
+    if (intersected) {
+        if (intersection.materialId_ >= 0) {
+            intersection.material_ = &scene_.materials_[static_cast<::std::size_t> (intersection.materialId_)];
+        }
+        const bool intersectedLight {shade(rgb, intersection, ray)};
+        return intersectedLight;
     }
-    const bool intersectedLight {intersected? shade(rgb, intersection, ray) : false};
-    return intersectedLight;
+    return false;
 }
 
 bool Shader::shadowTrace(const Ray &ray, const float dist) noexcept {

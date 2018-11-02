@@ -155,7 +155,7 @@ namespace MobileRT {
     bool BVH<T>::trace(
             Intersection *intersection,
             const Ray &ray) noexcept {
-        if(primitives_.empty()) {
+        if (primitives_.empty()) {
             return false;
         }
         ::std::uint32_t id {0};
@@ -211,7 +211,7 @@ namespace MobileRT {
 
     template<typename T>
     bool BVH<T>::shadowTrace(const Ray &ray, const float dist) noexcept {
-        if(primitives_.empty()) {
+        if (primitives_.empty()) {
             return false;
         }
         ::std::uint32_t id {0};
