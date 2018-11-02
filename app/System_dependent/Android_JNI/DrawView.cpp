@@ -265,8 +265,8 @@ extern "C"
 jint Java_puscas_mobilertapp_DrawView_initialize(
         JNIEnv *env,
         jobject const thiz,
-        jint const scene,
-        jint const shader,
+        jint const nScene,
+        jint const nShader,
         jint const width,
         jint const height,
         jint const accelerator,
@@ -293,12 +293,12 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
         const float ratio {static_cast<float> (width) / static_cast<float> (height)};
         const float hfovFactor{::std::max(ratio, 1.0f)};
         const float vfovFactor{::std::max(1 / ratio, 1.0f)};
-        ::MobileRT::Scene scene_{};
+        ::MobileRT::Scene scene{};
         ::std::unique_ptr<MobileRT::Sampler> samplerPixel{};
-        ::std::unique_ptr<MobileRT::Shader> shader_{};
+        ::std::unique_ptr<MobileRT::Shader> shader{};
         ::std::unique_ptr<MobileRT::Camera> camera{};
         ::glm::vec3 maxDist{0, 0, 0};
-        switch (scene) {
+        switch (nScene) {
             case 0: {
                 const float fovX{45.0f * hfovFactor};
                 const float fovY{45.0f * vfovFactor};
@@ -307,7 +307,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         fovX, fovY);
-                scene_ = cornellBoxScene(::std::move(scene_));
+                scene = cornellBoxScene(::std::move(scene));
                 maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;
@@ -330,7 +330,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                   ::glm::vec3 {0.0f, 0.0f, 7.0f},
                   ::glm::vec3 {0.0f, 1.0f, 0.0f},
                   60.0f  * hfovFactor, 60.0f * vfovFactor);*/
-                scene_ = spheresScene(::std::move(scene_));
+                scene = spheresScene(::std::move(scene));
                 maxDist = ::glm::vec3 {8, 8, 8};
             }
                 break;
@@ -343,7 +343,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.0f, 1.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         fovX, fovY);
-                scene_ = cornellBoxScene2(::std::move(scene_));
+                scene = cornellBoxScene2(::std::move(scene));
                 maxDist = ::glm::vec3 {1, 1, 1};
             }
                 break;
@@ -356,7 +356,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                         ::glm::vec3 {0.0f, 0.0f, 7.0f},
                         ::glm::vec3 {0.0f, 1.0f, 0.0f},
                         fovX, fovY);
-                scene_ = spheresScene2(::std::move(scene_));
+                scene = spheresScene2(::std::move(scene));
                 maxDist = ::glm::vec3 {8, 8, 8};
             }
                 break;
@@ -414,7 +414,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (!objLoader.isProcessed()) {
                     return -1;
                 }
-                const bool sceneBuilt{objLoader.fillScene(&scene_,
+                const bool sceneBuilt{objLoader.fillScene(&scene,
                                                           []() { return ::std::make_unique<Components::StaticHaltonSeq>(); })};
                 if (!sceneBuilt) {
                     return -1;
@@ -446,7 +446,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
 
                     /*::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq> ()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
@@ -454,7 +454,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {-0.5f, 1.58f, -0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq> ()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {0.5f, 1.58f, 0.5f},
@@ -466,7 +466,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "conference") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-100.0f, 640.0f, -100.0f},
@@ -474,7 +474,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {100.0f, 640.0f, 100.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-100.0f, 640.0f, -100.0f},
@@ -496,7 +496,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-30.0f, 100.0f, -30.0f},
@@ -504,7 +504,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {30.0f, 100.0f, 30.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-30.0f, 100.0f, -30.0f},
@@ -521,7 +521,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -529,7 +529,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -546,7 +546,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -554,7 +554,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -571,7 +571,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -579,7 +579,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -591,7 +591,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "buddha") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -599,7 +599,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -617,7 +617,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "erato") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -625,7 +625,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -643,7 +643,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "gallery") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -651,7 +651,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.3f, 1.0f, -0.3f},
@@ -669,7 +669,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "Porsche") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-1.0f, 2.1f, 1.0f},
@@ -677,7 +677,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {1.0f, 2.1f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-1.0f, 2.1f, 1.0f},
@@ -688,44 +688,44 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                     const ::glm::vec3 planePointDown{0.0f, -1.0f, 0.0f};
                     const ::glm::vec3 planeNormalDown{0.0f, 1.0f, 0.0f};
                     const ::MobileRT::Plane planeDown{planePointDown, planeNormalDown,
-                                                      static_cast<::std::int32_t> (scene_.materials_.size())};
-                    scene_.planes_.emplace_back(planeDown);
-                    const ::std::int32_t materialBackId {static_cast<::std::int32_t> (scene_.materials_.size())};
-                    scene_.materials_.emplace_back(planeMaterialBack);
+                                                      static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeDown);
+                    const ::std::int32_t materialBackId {static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.materials_.emplace_back(planeMaterialBack);
 
                     const ::glm::vec3 planePointUp{0.0f, 2.2f, 0.0f};
                     const ::glm::vec3 planeNormalUp{0.0f, -1.0f, 0.0f};
                     const ::MobileRT::Plane planeUp{planePointUp, planeNormalUp, materialBackId};
-                    scene_.planes_.emplace_back(planeUp);
+                    scene.planes_.emplace_back(planeUp);
 
                     const ::MobileRT::Material planeMaterialLeft{::glm::vec3 {0.9f, 0.0f, 0.0f}};
                     const ::glm::vec3 planePointLeft{-4.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalLeft{1.0f, 0.0f, 0.0f};
                     const ::MobileRT::Plane planeLeft{planePointLeft, planeNormalLeft,
-                                                      static_cast<::std::int32_t> (scene_.materials_.size())};
-                    scene_.planes_.emplace_back(planeLeft);
-                    scene_.materials_.emplace_back(planeMaterialLeft);
+                                                      static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeLeft);
+                    scene.materials_.emplace_back(planeMaterialLeft);
 
                     const ::MobileRT::Material planeMaterialRight{::glm::vec3 {0.0f, 0.0f, 0.9f}};
                     const ::glm::vec3 planePointRight{1.1f, 0.0f, 0.0f};
                     const ::glm::vec3 planeNormalRight{-1.0f, 0.0f, 0.0f};
                     const ::MobileRT::Plane planeRight{planePointRight, planeNormalRight,
-                                                       static_cast<::std::int32_t> (scene_.materials_.size())};
-                    scene_.planes_.emplace_back(planeRight);
-                    scene_.materials_.emplace_back(planeMaterialRight);
+                                                       static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeRight);
+                    scene.materials_.emplace_back(planeMaterialRight);
 
                     const ::glm::vec3 planePointBack{0.0f, 0.0f, -4.6f};
                     const ::glm::vec3 planeNormalBack{0.0f, 0.0f, 1.0f};
                     const ::MobileRT::Plane planeBack{planePointBack, planeNormalBack, materialBackId};
-                    scene_.planes_.emplace_back(planeBack);
+                    scene.planes_.emplace_back(planeBack);
 
                     const ::MobileRT::Material planeMaterialForward{::glm::vec3 {0.0f, 0.9f, 0.9f}};
                     const ::glm::vec3 planePointForward{0.0f, 0.0f, 2.3f};
                     const ::glm::vec3 planeNormalForward{0.0f, 0.0f, -1.0f};
                     const ::MobileRT::Plane planeForward{planePointForward, planeNormalForward,
-                                                         static_cast<::std::int32_t> (scene_.materials_.size())};
-                    scene_.planes_.emplace_back(planeForward);
-                    scene_.materials_.emplace_back(planeMaterialForward);
+                                                         static_cast<::std::int32_t> (scene.materials_.size())};
+                    scene.planes_.emplace_back(planeForward);
+                    scene.materials_.emplace_back(planeMaterialForward);
 
                     camera = ::std::make_unique<::Components::Perspective>(
                             ::glm::vec3 {-4.0f, 2.0f, -4.5f},
@@ -738,7 +738,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "powerplant") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-1.0f, 1.5f, 1.0f},
@@ -746,7 +746,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {1.0f, 1.5f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-1.0f, 1.5f, 1.0f},
@@ -764,7 +764,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "roadBike") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -772,7 +772,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -790,7 +790,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "San_Miguel") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -798,7 +798,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -816,7 +816,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "sportsCar") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -824,7 +824,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-0.5f, 1.5f, 0.5f},
@@ -842,7 +842,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 if (::std::strstr(objFileName, "Elvira_Holiday") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
                             ::glm::vec3 {-50.5f, 41.5f, 50.5f},
@@ -850,7 +850,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {50.5f, 41.5f, 50.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
                             ::std::make_unique<Components::StaticHaltonSeq>()};
-                    scene_.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
+                    scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
                             ::glm::vec3 {-50.5f, 41.5f, 50.5f},
@@ -874,9 +874,9 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
         } else {
             samplerPixel = ::std::make_unique<Components::Constant>(0.5f);
         }
-        switch (shader) {
+        switch (nShader) {
             case 1: {
-                shader_ = ::std::make_unique<Components::Whitted>(::std::move(scene_), samplesLight,
+                shader = ::std::make_unique<Components::Whitted>(::std::move(scene), samplesLight,
                                                                   ::MobileRT::Shader::Accelerator(
                                                                         accelerator));
                 break;
@@ -886,28 +886,28 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
                         ::std::make_unique<Components::StaticHaltonSeq>()};
 
-                shader_ = ::std::make_unique<Components::PathTracer>(
-                        ::std::move(scene_), ::std::move(samplerRussianRoulette), samplesLight,
+                shader = ::std::make_unique<Components::PathTracer>(
+                        ::std::move(scene), ::std::move(samplerRussianRoulette), samplesLight,
                         ::MobileRT::Shader::Accelerator(accelerator));
                 break;
             }
 
             case 3: {
-                shader_ = ::std::make_unique<Components::DepthMap>(::std::move(scene_), maxDist,
+                shader = ::std::make_unique<Components::DepthMap>(::std::move(scene), maxDist,
                                                                    ::MobileRT::Shader::Accelerator(
                                                                          accelerator));
                 break;
             }
 
             case 4: {
-                shader_ = ::std::make_unique<Components::DiffuseMaterial>(::std::move(scene_),
+                shader = ::std::make_unique<Components::DiffuseMaterial>(::std::move(scene),
                                                                           ::MobileRT::Shader::Accelerator(
                                                                                 accelerator));
                 break;
             }
 
             default: {
-                shader_ = ::std::make_unique<Components::NoShadows>(::std::move(scene_),
+                shader = ::std::make_unique<Components::NoShadows>(::std::move(scene),
                                                                     samplesLight,
                                                                     ::MobileRT::Shader::Accelerator(
                                                                           accelerator));
@@ -915,19 +915,19 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
             }
         }
                 const ::std::int32_t triangles {
-                static_cast<int32_t> (shader_->scene_.triangles_.size())};
+                static_cast<int32_t> (shader->scene_.triangles_.size())};
                 const ::std::int32_t spheres {
-                static_cast<int32_t> (shader_->scene_.spheres_.size())};
+                static_cast<int32_t> (shader->scene_.spheres_.size())};
                 const ::std::int32_t planes {
-                        static_cast<::std::int32_t> (shader_->scene_.planes_.size())};
-                numberOfLights_ = static_cast<::std::int32_t> (shader_->scene_.lights_.size());
+                        static_cast<::std::int32_t> (shader->scene_.planes_.size())};
+                numberOfLights_ = static_cast<::std::int32_t> (shader->scene_.lights_.size());
                 const ::std::int32_t nPrimitives {triangles + spheres + planes};
         {
             const ::std::lock_guard<::std::mutex> lock {mutex_};
             const ::std::chrono::time_point<::std::chrono::system_clock> start {
                     ::std::chrono::system_clock::now()};
             renderer_ = ::std::make_unique<::MobileRT::Renderer>(
-                    ::std::move(shader_), ::std::move(camera), ::std::move(samplerPixel),
+                    ::std::move(shader), ::std::move(camera), ::std::move(samplerPixel),
                     static_cast<::std::uint32_t> (width_), static_cast<::std::uint32_t> (height_),
                     static_cast<::std::uint32_t> (samplesPixel));
             const ::std::chrono::time_point<::std::chrono::system_clock> end {
