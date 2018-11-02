@@ -242,7 +242,7 @@ void Shader::resetSampling() noexcept {
     return direction;
 }
 
-::std::uint32_t Shader::getLightIndex () {
+::MobileRT::Light& Shader::getLight () {
     static ::std::atomic<::std::uint32_t> sampler {0};
     const ::std::uint32_t current {sampler.fetch_add(1, ::std::memory_order_relaxed)};
 
@@ -252,5 +252,6 @@ void Shader::resetSampling() noexcept {
     const float randomNumber {*it};
     const ::std::uint32_t chosenLight {
         static_cast<::std::uint32_t> (::std::floor(randomNumber * sizeLights * 0.99999f))};
-    return chosenLight;
+    Light &light {*scene_.lights_[chosenLight]};
+    return light;
 }

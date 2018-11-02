@@ -76,7 +76,7 @@ namespace MobileRT {
 
         virtual void resetSampling() noexcept;
 
-        ::std::uint32_t getLightIndex ();
+        ::MobileRT::Light &getLight ();
     };
 }//namespace MobileRT
 

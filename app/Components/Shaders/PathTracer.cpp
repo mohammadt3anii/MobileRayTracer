@@ -65,8 +65,7 @@ bool PathTracer::shade(
             //direct light
             for (::std::uint32_t i {0}; i < samplesLight; ++i) {
                 //PDF = 1 / sizeLights
-                const ::std::uint32_t chosenLight {getLightIndex()};
-                Light &light(*scene_.lights_[chosenLight]);
+                Light &light(getLight());
                 //calculates vector starting in intersection to the light
                 const ::glm::vec3 lightPosition {light.getPosition()};
                 ::glm::vec3 vectorToLight {lightPosition - intersection.point_};
