@@ -19,7 +19,7 @@ DepthMap::DepthMap(
 bool DepthMap::shade(
     ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &ray) noexcept {
 
-    const float maxDist {::glm::length(maxPoint_ - ray.origin_) * 1.1f};
+    const float maxDist {::glm::length(maxPoint_ - ray.origin_) * 2.0f};
     const float depth {::std::max((maxDist - intersection.length_) / maxDist, 0.0f)};
     *rgb = {depth, depth, depth};
     return false;
