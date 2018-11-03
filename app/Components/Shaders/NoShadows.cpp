@@ -19,14 +19,22 @@ NoShadows::NoShadows(Scene &&scene, const ::std::uint32_t samplesLight,
 bool NoShadows::shade(
         ::glm::vec3 *const rgb, const Intersection &intersection, const Ray &/*ray*/) noexcept {
 
-    const ::glm::vec3 &Le {intersection.material_->Le_};
-    //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
-        *rgb = Le;
-        return true;
+    ::glm::vec3 primitiveColor {intersection.primitiveColor_};
+    ::glm::vec3 kD {};
+    float refractiveIndice {1.0f};
+    const bool useMaterial {intersection.material_ != nullptr};
+    if (useMaterial) {
+        const ::glm::vec3 &Le{intersection.material_->Le_};
+        //stop if it intersects a light source
+        if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
+            *rgb = Le;
+            return true;
+        }
+        kD = intersection.material_->Kd_;
+        refractiveIndice = intersection.material_->refractiveIndice_;
+    } else {
+        kD = primitiveColor;
     }
-
-    const ::glm::vec3 &kD {intersection.material_->Kd_};
 
     const ::glm::vec3 &shadingNormal{intersection.normal_};
 

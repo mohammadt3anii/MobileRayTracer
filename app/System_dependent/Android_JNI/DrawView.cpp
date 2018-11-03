@@ -179,17 +179,21 @@ jobject Java_puscas_mobilertapp_DrawView_initColorsArray(
             if (directBuffer != nullptr) {
                 int i{0};
                 for (const auto &triangle : triangles) {
-                    const ::std::size_t materialId {static_cast<::std::size_t> (triangle.materialId_)};
-                    const ::glm::vec3 &kD{renderer_->shader_->scene_.materials_[materialId].Kd_};
-                    const ::glm::vec3 &kS{renderer_->shader_->scene_.materials_[materialId].Ks_};
-                    const ::glm::vec3 &kT{renderer_->shader_->scene_.materials_[materialId].Kt_};
-                    const ::glm::vec3 &lE{renderer_->shader_->scene_.materials_[materialId].Le_};
-                    ::glm::vec3 color{kD};
-
-                    color = ::glm::max(kS, color);
-                    color = ::glm::max(kT, color);
-                    color = ::glm::max(lE, color);
-
+                    const ::std::int32_t materialId {triangle.materialId_};
+                    ::glm::vec3 color {};
+                    if (materialId >= 0) {
+                        const ::std::size_t materialIndex {static_cast<::std::size_t> (triangle.materialId_)};
+                        const ::glm::vec3 &kD{renderer_->shader_->scene_.materials_[materialIndex].Kd_};
+                        const ::glm::vec3 &kS{renderer_->shader_->scene_.materials_[materialIndex].Ks_};
+                        const ::glm::vec3 &kT{renderer_->shader_->scene_.materials_[materialIndex].Kt_};
+                        const ::glm::vec3 &lE{renderer_->shader_->scene_.materials_[materialIndex].Le_};
+                        color = kD;
+                        color = ::glm::max(kS, color);
+                        color = ::glm::max(kT, color);
+                        color = ::glm::max(lE, color);
+                    } else {
+                        color = (triangle.colorA_ + triangle.colorB_ + triangle.colorC_) / 3.0f;
+                    }
                     floatBuffer[i++] = color.r;
                     floatBuffer[i++] = color.g;
                     floatBuffer[i++] = color.b;
@@ -415,7 +419,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                     return -1;
                 }
                 const bool sceneBuilt{objLoader.fillScene(&scene,
-                                                          []() { return ::std::make_unique<Components::StaticHaltonSeq>(); })};
+                                                          []() { return ::std::make_unique<Components::MersenneTwister>(); })};
                 if (!sceneBuilt) {
                     return -1;
                 }
@@ -445,7 +449,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             fovX, fovY);
 
                     /*::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq> ()};
+                            ::std::make_unique<Components::MersenneTwister> ()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -453,7 +457,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {-0.5f, 1.58f, 0.5f},
                             ::glm::vec3 {-0.5f, 1.58f, -0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq> ()};
+                            ::std::make_unique<Components::MersenneTwister> ()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight> (
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -465,7 +469,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //conference
                 if (::std::strstr(objFileName, "conference") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -473,7 +477,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {100.0f, 640.0f, -100.0f},
                             ::glm::vec3 {100.0f, 640.0f, 100.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -495,7 +499,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -503,7 +507,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {30.0f, 100.0f, -30.0f},
                             ::glm::vec3 {30.0f, 100.0f, 30.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -520,7 +524,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -528,7 +532,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -545,7 +549,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -553,7 +557,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -570,7 +574,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.0f, 1.0f, 0.0f},
                             fovX, fovY);
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -578,7 +582,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -590,7 +594,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //buddha
                 if (::std::strstr(objFileName, "buddha") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -598,7 +602,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -616,7 +620,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //erato
                 if (::std::strstr(objFileName, "erato") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -624,7 +628,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -642,7 +646,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //gallery
                 if (::std::strstr(objFileName, "gallery") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -650,7 +654,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.3f, 1.0f, -0.3f},
                             ::glm::vec3 {0.3f, 1.0f, 0.3f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -668,7 +672,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //Porsche
                 if (::std::strstr(objFileName, "Porsche") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -676,7 +680,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {1.0f, 2.1f, -1.0f},
                             ::glm::vec3 {1.0f, 2.1f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -737,7 +741,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //Power Plant
                 if (::std::strstr(objFileName, "powerplant") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -745,7 +749,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {1.0f, 1.5f, -1.0f},
                             ::glm::vec3 {1.0f, 1.5f, 1.0f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -763,7 +767,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //Road Bike
                 if (::std::strstr(objFileName, "roadBike") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -771,7 +775,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, -0.5f},
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -789,7 +793,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //San Miguel
                 if (::std::strstr(objFileName, "San_Miguel") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -797,7 +801,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, -0.5f},
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -815,7 +819,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //Sports Car
                 if (::std::strstr(objFileName, "sportsCar") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -823,7 +827,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {0.5f, 1.5f, -0.5f},
                             ::glm::vec3 {0.5f, 1.5f, 0.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -841,7 +845,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 //Elvira_Holiday
                 if (::std::strstr(objFileName, "Elvira_Holiday") != nullptr) {
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint1),
@@ -849,7 +853,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                             ::glm::vec3 {50.5f, 41.5f, -50.5f},
                             ::glm::vec3 {50.5f, 41.5f, 50.5f}));
                     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-                            ::std::make_unique<Components::StaticHaltonSeq>()};
+                            ::std::make_unique<Components::MersenneTwister>()};
                     scene.lights_.emplace_back(::std::make_unique<::Components::AreaLight>(
                             lightMat,
                             ::std::move(samplerPoint2),
@@ -870,7 +874,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
                 break;
         }
         if (samplesPixel > 1) {
-            samplerPixel = ::std::make_unique<Components::StaticHaltonSeq>();
+            samplerPixel = ::std::make_unique<Components::MersenneTwister>();
         } else {
             samplerPixel = ::std::make_unique<Components::Constant>(0.5f);
         }
@@ -884,7 +888,7 @@ jint Java_puscas_mobilertapp_DrawView_initialize(
 
             case 2: {
                 ::std::unique_ptr<MobileRT::Sampler> samplerRussianRoulette{
-                        ::std::make_unique<Components::StaticHaltonSeq>()};
+                        ::std::make_unique<Components::MersenneTwister>()};
 
                 shader = ::std::make_unique<Components::PathTracer>(
                         ::std::move(scene), ::std::move(samplerRussianRoulette), samplesLight,
