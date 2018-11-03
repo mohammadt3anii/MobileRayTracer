@@ -30,20 +30,31 @@ bool PathTracer::shade(
         return false;
     }
 
-    const ::glm::vec3 &Le{intersection.material_->Le_};
-    //stop if it intersects a light source
-    if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
-        *rgb = Le;
-        return true;
+    ::glm::vec3 primitiveColor {intersection.primitiveColor_};
+    ::glm::vec3 kD {};
+    ::glm::vec3 kS {};
+    ::glm::vec3 kT {};
+    float refractiveIndice {1.0f};
+    const bool useMaterial {intersection.material_ != nullptr};
+    if (useMaterial) {
+        const ::glm::vec3 &Le{intersection.material_->Le_};
+        //stop if it intersects a light source
+        if (::glm::any(::glm::greaterThan(Le, ::glm::vec3 {0}))) {
+            *rgb = Le;
+            return true;
+        }
+        kD = intersection.material_->Kd_;
+        kS = intersection.material_->Ks_;
+        kT = intersection.material_->Kt_;
+        refractiveIndice = intersection.material_->refractiveIndice_;
+    } else {
+        kD = primitiveColor;
     }
+
     ::glm::vec3 Ld {};
     ::glm::vec3 LiD {};
     ::glm::vec3 LiS {};
     ::glm::vec3 LiT {};
-
-    const ::glm::vec3 &kD {intersection.material_->Kd_};
-    const ::glm::vec3 &kS {intersection.material_->Ks_};
-    const ::glm::vec3 &kT {intersection.material_->Kt_};
     const float finish_probability {0.5f};
     const float continue_probability {1.0f - finish_probability};
 
@@ -136,9 +147,8 @@ bool PathTracer::shade(
     // specular transmission
     if (::glm::any(::glm::greaterThan(kT, ::glm::vec3 {0}))) {
         //PDF = 1 / 2 Pi
-        const float refractiveIndice {1.0f / intersection.material_->refractiveIndice_};
         const ::glm::vec3 &refractDir {
-            ::glm::refract(ray.direction_, shadingNormal, refractiveIndice)};
+            ::glm::refract(ray.direction_, shadingNormal, 1.0f / refractiveIndice)};
         const Ray transmissionRay {
             refractDir, intersection.point_, rayDepth + 1, intersection.primitive_};
         ::glm::vec3 LiT_RGB {};

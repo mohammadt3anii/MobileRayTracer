@@ -290,7 +290,10 @@ TEST_F(TestTriangle, normalTest1) {
 	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
 		::glm::normalize(::glm::vec3{-1, -1, -1}),
 		::glm::normalize(::glm::vec3{-1, 1, -1}),
-		::glm::normalize(::glm::vec3{1, 1, -1})};
+		::glm::normalize(::glm::vec3{1, 1, -1}),
+		::glm::vec3{1, 0, 0},
+		::glm::vec3{0, 1, 0},
+		::glm::vec3{0, 0, 1}};
     Intersection intersection {::MobileRT::RayLengthMax};
 	const bool intersected {triangle2.intersect(&intersection, ray)};
 	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
@@ -304,7 +307,10 @@ TEST_F(TestTriangle, normalTest2) {
 	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
 		::glm::normalize(::glm::vec3{-1, -1, -1}),
 		::glm::normalize(::glm::vec3{-1, 1, -1}),
-		::glm::normalize(::glm::vec3{1, 1, -1})};
+		::glm::normalize(::glm::vec3{1, 1, -1}),
+		::glm::vec3{1, 0, 0},
+		::glm::vec3{0, 1, 0},
+		::glm::vec3{0, 0, 1}};
     Intersection intersection {::MobileRT::RayLengthMax};
 	const bool intersected {triangle2.intersect(&intersection, ray)};
 	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
@@ -321,7 +327,10 @@ TEST_F(TestTriangle, normalTest3) {
 	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
 		::glm::normalize(::glm::vec3{-1, -1, -1}),
 		::glm::normalize(::glm::vec3{-1, 1, -1}),
-		::glm::normalize(::glm::vec3{1, 1, -1})};
+		::glm::normalize(::glm::vec3{1, 1, -1}),
+		::glm::vec3{1, 0, 0},
+		::glm::vec3{0, 1, 0},
+		::glm::vec3{0, 0, 1}};
     Intersection intersection {::MobileRT::RayLengthMax};
 	const bool intersected {triangle2.intersect(&intersection, ray)};
 	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);
@@ -338,7 +347,10 @@ TEST_F(TestTriangle, normalTest4) {
 	Triangle triangle2 {::glm::vec3 {0,0,0}, ::glm::vec3 {0,1,0}, ::glm::vec3 {1,1,0}, -1, 
 		::glm::normalize(::glm::vec3{-1, -1, -1}),
 		::glm::normalize(::glm::vec3{-1, 1, -1}),
-		::glm::normalize(::glm::vec3{1, 1, -1})};
+		::glm::normalize(::glm::vec3{1, 1, -1}),
+		::glm::vec3{1, 0, 0},
+		::glm::vec3{0, 1, 0},
+		::glm::vec3{0, 0, 1}};
     Intersection intersection {::MobileRT::RayLengthMax};
 	const bool intersected {triangle2.intersect(&intersection, ray)};
 	LOG("x = ", intersection.normal_.x, " y = ", intersection.normal_.y, " z = ", intersection.normal_.z);

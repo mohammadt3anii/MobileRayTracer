@@ -18,15 +18,22 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
                                                                                            0.0f}));
 
     // triangle - yellow
-    const ::MobileRT::Material yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
+    //const ::MobileRT::Material yellowMat {::glm::vec3 {0.9f, 0.9f, 0.0f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 1.001f},
-            ::glm::vec3 {-0.5f, -0.5f, 0.99f}, static_cast<int32_t>(scene.materials_.size())});
-    scene.materials_.emplace_back(yellowMat);
+            ::glm::vec3 {-0.5f, -0.5f, 0.99f},
+            -1,
+            ::glm::vec3 {0, 0, -1},
+            ::glm::vec3 {0, 0, -1},
+            ::glm::vec3 {0, 0, -1},
+            ::glm::vec3 {1, 0, 0},
+            ::glm::vec3 {0, 1, 0},
+            ::glm::vec3 {0, 0, 1}});
+    //scene.materials_.emplace_back(yellowMat);
 
     // sphere - mirror
-    const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+    /*const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
                                        ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f,
@@ -46,7 +53,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
     scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, 0.0f, 1.0f}, ::glm::vec3 {0.0f, 0.0f, -1.0f},
                                        static_cast<int32_t>(scene.materials_.size())});
-    scene.materials_.emplace_back(lightGrayMat);
+    scene.materials_.emplace_back(lightGrayMat);*/
 
     // front wall - light blue
     /*const ::MobileRT::Material &lightBlueMat {::glm::vec3 {0.0f, 0.9f, 0.9f}};
@@ -54,7 +61,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
        ::glm::vec3 {0.0f, 0.0f, -3.5f}, ::glm::vec3 {0.0f, 0.0f, 1.0f}}, lightBlueMat);*/
 
     // floor - white
-    scene.planes_.emplace_back(MobileRT::Plane {
+    /*scene.planes_.emplace_back(MobileRT::Plane {
                                        ::glm::vec3 {0.0f, -1.0f, 0.0f}, ::glm::vec3 {0.0f, 1.0f, 0.0f},
                                        static_cast<int32_t>(scene.materials_.size())});
     scene.materials_.emplace_back(lightGrayMat);
@@ -77,7 +84,7 @@ MobileRT::Scene cornellBoxScene(MobileRT::Scene scene) noexcept {
     scene.planes_.emplace_back(MobileRT::Plane {
             ::glm::vec3 {1.0f, 0.0f, 0.0f}, ::glm::vec3 {-1.0f, 0.0f, 0.0f},
             static_cast<int32_t>(scene.materials_.size())});
-    scene.materials_.emplace_back(blueMat);
+    scene.materials_.emplace_back(blueMat);*/
 
     return scene;
 }
@@ -132,17 +139,23 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
     scene.materials_.emplace_back(yellowMat);
 
     // triangle - green
-    const ::MobileRT::Material greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
+    //const ::MobileRT::Material greenMat {::glm::vec3 {0.0f, 0.9f, 0.0f}};
+    const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
+                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.triangles_.emplace_back(MobileRT::Triangle {
             ::glm::vec3 {-0.5f, 0.5f, 0.99f},
             ::glm::vec3 {-0.5f, -0.5f, 0.99f},
             ::glm::vec3 {0.5f, 0.5f, 0.99f},
-            static_cast<int32_t>(scene.materials_.size())});
-    scene.materials_.emplace_back(greenMat);
+            static_cast<int32_t>(scene.materials_.size()),
+            ::glm::vec3 {-1, 1, -1},
+            ::glm::vec3 {-1, -1, -1},
+            ::glm::vec3 {1, 1, -1},
+            ::glm::vec3 {1, 1, 1},
+            ::glm::vec3 {1, 1, 1},
+            ::glm::vec3 {1, 1, 1}});
+    scene.materials_.emplace_back(MirrorMat);
 
     // sphere - mirror
-    const ::MobileRT::Material MirrorMat {::glm::vec3 {0.0f, 0.0f, 0.0f},
-                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     scene.spheres_.emplace_back(MobileRT::Sphere {
             ::glm::vec3 {0.45f, -0.65f, 0.4f}, 0.35f,
             static_cast<int32_t>(scene.materials_.size())});

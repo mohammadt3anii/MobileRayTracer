@@ -15,10 +15,13 @@ Intersection::Intersection(
         const float dist,
         const ::glm::vec3 &normal,
         const void *const primitive,
-        const ::std::int32_t materialId) noexcept :
+        const ::std::int32_t materialId,
+        ::glm::vec3 primitiveColor) noexcept :
         point_(intPoint),
         normal_(normal),
         length_(dist),
         primitive_(primitive),
-        materialId_(materialId) {
+        materialId_(materialId),
+        primitiveColor_{primitiveColor}
+{
 }

@@ -126,17 +126,21 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const ::tinyobj::real_t ny3 {*(itNormal3 + 1)};
                     const ::tinyobj::real_t nz3 {*(itNormal3 + 2)};
 
-                    normal1 = ::glm::vec3 {nx1, ny1, nz1};
-                    normal2 = ::glm::vec3 {nx2, ny2, nz2};
-                    normal3 = ::glm::vec3 {nx3, ny3, nz3};
+                    normal1 = ::glm::normalize(::glm::vec3 {-nx1, ny1, nz1});
+                    normal2 = ::glm::normalize(::glm::vec3 {-nx2, ny2, nz2});
+                    normal3 = ::glm::normalize(::glm::vec3 {-nx3, ny3, nz3});
                 }
+                const float normalDist1 {::glm::length(normal1)};
+                const float normalDist2 {::glm::length(normal2)};
+                const float normalDist3 {::glm::length(normal3)};
+                const bool hasNormal {normalDist1 > 0 && normalDist2 > 0 && normalDist3 > 0};
 
                 const auto itColor1 {attrib_.colors.begin() + 3 * static_cast<::std::int32_t> (idx1.vertex_index)};
                 const ::tinyobj::real_t red1 {*(itColor1 + 0)};
                 const ::tinyobj::real_t green1 {*(itColor1 + 1)};
                 const ::tinyobj::real_t blue1 {*(itColor1 + 2)};
 
-                /*const auto itColor2 {attrib_.colors.begin() + 3 * static_cast<::std::int32_t> (idx2.vertex_index)};
+                const auto itColor2 {attrib_.colors.begin() + 3 * static_cast<::std::int32_t> (idx2.vertex_index)};
                 const ::tinyobj::real_t red2 {*(itColor2 + 0)};
                 const ::tinyobj::real_t green2 {*(itColor2 + 1)};
                 const ::tinyobj::real_t blue2 {*(itColor2 + 2)};
@@ -144,7 +148,11 @@ bool OBJLoader::fillScene(Scene *const scene,
                 const auto itColor3 {attrib_.colors.begin() + 3 * static_cast<::std::int32_t> (idx3.vertex_index)};
                 const ::tinyobj::real_t red3 {*(itColor3 + 0)};
                 const ::tinyobj::real_t green3 {*(itColor3 + 1)};
-                const ::tinyobj::real_t blue3 {*(itColor3 + 2)};*/
+                const ::tinyobj::real_t blue3 {*(itColor3 + 2)};
+
+                const ::glm::vec3 &color1 {red1, green1, blue1};
+                const ::glm::vec3 &color2 {red2, green2, blue2};
+                const ::glm::vec3 &color3 {red3, green3, blue3};
 
                 /*if (!attrib_.texcoords.empty()) {
                     const auto itTexCoords {attrib_.texcoords.begin() + 2 * static_cast<::std::int32_t> (idx1.texcoord_index)};
@@ -185,60 +193,50 @@ bool OBJLoader::fillScene(Scene *const scene,
                     const Material material {diffuse, specular, transmittance, indexRefraction,
                                              emission};
                     if (e1 > 0.0f || e2 > 0.0f || e3 > 0.0f) {
-                        const ::glm::vec3 &p1 {vx1, vy1, vz1};
-                        const ::glm::vec3 &p2 {vx2, vy2, vz2};
-                        const ::glm::vec3 &p3 {vx3, vy3, vz3};
                         scene->lights_.emplace_back(
-                                ::std::make_unique<AreaLight> (material, lambda(), p1, p2, p3));
+                                ::std::make_unique<AreaLight> (material, lambda(), vertex1, vertex2, vertex3));
                     } else {
                         ::std::vector<::MobileRT::Material>::iterator itMat {
                             ::std::find(scene->materials_.begin(), scene->materials_.end(), material)};
                         if (itMat != scene->materials_.end()) {
-                            const ::std::int32_t index {static_cast<int32_t>(
-                                ::std::distance(scene->materials_.begin(), itMat))};
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index};
-                            scene->triangles_.emplace_back(triangle);
+                            if (hasNormal) {
+                                const ::std::int32_t index {static_cast<int32_t>(
+                                    ::std::distance(scene->materials_.begin(), itMat))};
+                                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index,
+                                    normal1, normal2, normal3, color1, color2, color3};
+                                scene->triangles_.emplace_back(triangle);
+                            } else {
+                                const ::std::int32_t index {static_cast<int32_t>(
+                                    ::std::distance(scene->materials_.begin(), itMat))};
+                                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index,
+                                    color1, color2, color3};
+                                scene->triangles_.emplace_back(triangle);
+                            }
                         } else {
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
-                                static_cast<int32_t>(scene->materials_.size())};
-                            scene->materials_.emplace_back(material);
-                            scene->triangles_.emplace_back(triangle);
+                            if (hasNormal) {
+                                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
+                                    static_cast<int32_t>(scene->materials_.size()),
+                                    normal1, normal2, normal3, color1, color2, color3};
+                                scene->materials_.emplace_back(material);
+                                scene->triangles_.emplace_back(triangle);
+                            } else {
+                                const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
+                                    static_cast<int32_t>(scene->materials_.size()),
+                                    color1, color2, color3};
+                                scene->materials_.emplace_back(material);
+                                scene->triangles_.emplace_back(triangle);
+                            }
                         }
-                        
                     }
                 } else {
-                    const ::glm::vec3 &diffuse{red1, green1, blue1};
-                    const ::glm::vec3 &specular{0.0f, 0.0f, 0.0f};
-                    const ::glm::vec3 &transmittance{0.0f, 0.0f, 0.0f};
-                    const float indexRefraction{1.0f};
-                    const ::glm::vec3 &emission{0.0f, 0.0f, 0.0f};
-                    const Material material {diffuse, specular, transmittance, indexRefraction,
-                                             emission};
-
-                    auto itMat {::std::find(scene->materials_.begin(), scene->materials_.end(), material)};
-                    if (itMat != scene->materials_.end()) {
-                        const ::std::int32_t index {static_cast<int32_t>(
-                            ::std::distance(scene->materials_.begin(), itMat))};
-                        if (!attrib_.normals.empty()) {
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index,
-                                normal1, normal2, normal3};
-                            scene->triangles_.emplace_back(triangle);
-                        } else {
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, index};
-                            scene->triangles_.emplace_back(triangle);
-                        }
+                    if (hasNormal) {
+                        const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, -1,
+                            normal1, normal2, normal3, color1, color2, color3};
+                        scene->triangles_.emplace_back(triangle);
                     } else {
-                        if (!attrib_.normals.empty()) {
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
-                                static_cast<int32_t>(scene->materials_.size()), normal1, normal2, normal3};
-                            scene->materials_.emplace_back(material);
-                            scene->triangles_.emplace_back(triangle);
-                        } else {
-                            const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3,
-                                static_cast<int32_t>(scene->materials_.size())};
-                            scene->materials_.emplace_back(material);
-                            scene->triangles_.emplace_back(triangle);
-                        }
+                        const ::MobileRT::Triangle triangle {vertex1, vertex2, vertex3, -1,
+                            color1, color2, color3};
+                        scene->triangles_.emplace_back(triangle);
                     }
                 }
             }

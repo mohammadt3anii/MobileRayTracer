@@ -18,6 +18,7 @@ namespace MobileRT {
         float length_{RayLengthMax};// ray length parameter
         const void *primitive_{nullptr};
         ::std::int32_t materialId_ {};
+        ::glm::vec3 primitiveColor_ {};
 
     public:
         explicit Intersection () noexcept = delete;
@@ -28,7 +29,8 @@ namespace MobileRT {
                 const ::glm::vec3 &intPoint,
                 float dist,
                 const ::glm::vec3 &normal,
-                const void *primitive, ::std::int32_t materialId) noexcept;
+                const void *primitive, ::std::int32_t materialId,
+                ::glm::vec3 primitiveColor = ::glm::vec3 {1}) noexcept;
 
         Intersection(const Intersection &intersection) noexcept = default;
 

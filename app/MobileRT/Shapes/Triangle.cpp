@@ -24,13 +24,33 @@ Triangle::Triangle(
 Triangle::Triangle(
         const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
         const ::std::int32_t materialId,
-        const ::glm::vec3 &normalA, const ::glm::vec3 &normalB, const ::glm::vec3 &normalC) noexcept :
+        const ::glm::vec3 &normalA, const ::glm::vec3 &normalB, const ::glm::vec3 &normalC,
+        const ::glm::vec3 &colorA, const ::glm::vec3 &colorB, const ::glm::vec3 &colorC) noexcept :
         AC_{pointC - pointA},
         AB_{pointB - pointA},
         pointA_{pointA},
         normalA_{normalA},
         normalB_{normalB},
         normalC_{normalC},
+        colorA_{colorA},
+        colorB_{colorB},
+        colorC_{colorC},
+        materialId_{materialId} {
+}
+
+Triangle::Triangle(
+        const ::glm::vec3 &pointA, const ::glm::vec3 &pointB, const ::glm::vec3 &pointC,
+        const ::std::int32_t materialId,
+        const ::glm::vec3 &colorA, const ::glm::vec3 &colorB, const ::glm::vec3 &colorC) noexcept :
+        AC_{pointC - pointA},
+        AB_{pointB - pointA},
+        pointA_{pointA},
+        normalA_{::glm::normalize(::glm::cross(AC_, AB_))},
+        normalB_{::glm::normalize(::glm::cross(AC_, AB_))},
+        normalC_{::glm::normalize(::glm::cross(AC_, AB_))},
+        colorA_{colorA},
+        colorB_{colorB},
+        colorC_{colorC},
         materialId_{materialId} {
 }
 
@@ -74,9 +94,11 @@ bool Triangle::intersect(Intersection *const intersection, const Ray &ray) const
     
     const float w {1.0f - u - v};
     const ::glm::vec3 &intersectionNormal{normalA_ * w + normalB_ * u + normalC_ * v};
+    const ::glm::vec3 &intersectionColor{colorA_ * w + colorB_ * u + colorC_ * v};
 
     const ::glm::vec3 &intersectionPoint {ray.origin_ + ray.direction_ * distanceToIntersection};
-    *intersection = Intersection {intersectionPoint, distanceToIntersection, intersectionNormal, this, materialId_};
+    *intersection = Intersection {intersectionPoint, distanceToIntersection,
+        intersectionNormal, this, materialId_, intersectionColor};
     return true;
 }
 
