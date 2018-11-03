@@ -15,23 +15,6 @@ using ::MobileRT::Intersection;
 using ::MobileRT::Ray;
 using ::MobileRT::Shader;
 
-namespace {
-    const ::std::uint32_t MASK{0xFFFFF};
-    const ::std::uint32_t SIZE{MASK + 1};
-    ::std::array<float, SIZE> VALUES{};
-
-    bool FillThings() {
-        for (auto it {VALUES.begin()}; it < VALUES.end(); std::advance(it, 1)) {
-            const ::std::uint32_t index {static_cast<uint32_t> (::std::distance(VALUES.begin(), it))};
-            *it = ::MobileRT::haltonSequence(index, 2);
-        }
-        static ::std::random_device randomDevice {"/dev/urandom"};
-        static ::std::mt19937 generator {randomDevice()};
-        ::std::shuffle(VALUES.begin(), VALUES.end(), generator);
-        return true;
-    }
-}//namespace
-
 Shader::Shader(
     Scene &&scene,
     const ::std::uint32_t samplesLight,
@@ -39,8 +22,6 @@ Shader::Shader(
         scene_{::std::move(scene)},
         accelerator_{accelerator},
         samplesLight_{samplesLight} {
-    static bool unused{FillThings()};
-    static_cast<void> (unused);
 }
 
 Shader::~Shader() noexcept {
@@ -210,15 +191,11 @@ void Shader::resetSampling() noexcept {
 }
 
 ::glm::vec3 Shader::getCosineSampleHemisphere(const ::glm::vec3 &normal) const noexcept {
-    static ::std::atomic<::std::uint32_t> sampler {0};
-    const ::std::uint32_t current1 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-    const ::std::uint32_t current2 {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-
-    const auto it1 {VALUES.begin() + (current1 & MASK)};
-    const auto it2 {VALUES.begin() + (current2 & MASK)};
-
-    const float uniformRandom1{*it1};
-    const float uniformRandom2{*it2};
+    thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
+    thread_local static ::std::random_device randomDevice {"/dev/urandom"};
+    thread_local static ::std::mt19937 generator {randomDevice()};
+    const float uniformRandom1 {uniform_dist(generator)};
+    const float uniformRandom2 {uniform_dist(generator)};
 
     const float phi{
             ::glm::two_pi<float> () * uniformRandom1};// random angle around - azimuthal angle
@@ -246,13 +223,12 @@ void Shader::resetSampling() noexcept {
 }
 
 ::MobileRT::Light& Shader::getLight () {
-    static ::std::atomic<::std::uint32_t> sampler {0};
-    const ::std::uint32_t current {sampler.fetch_add(1, ::std::memory_order_relaxed)};
-
-    const auto it {VALUES.begin() + (current & MASK)};
+    thread_local static ::std::uniform_real_distribution<float> uniform_dist {0.0f, 1.0f};
+    thread_local static ::std::random_device randomDevice {"/dev/urandom"};
+    thread_local static ::std::mt19937 generator {randomDevice()};
+    const float randomNumber {uniform_dist(generator)};
 
     const ::std::uint32_t sizeLights {static_cast<::std::uint32_t> (scene_.lights_.size())};
-    const float randomNumber {*it};
     const ::std::uint32_t chosenLight {
         static_cast<::std::uint32_t> (::std::floor(randomNumber * sizeLights * 0.99999f))};
     Light &light {*scene_.lights_[chosenLight]};

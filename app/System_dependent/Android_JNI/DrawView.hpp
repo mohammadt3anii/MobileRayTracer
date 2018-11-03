@@ -14,8 +14,6 @@
 #include "Components/Samplers/Constant.hpp"
 #include "Components/Samplers/HaltonSeq.hpp"
 #include "Components/Samplers/MersenneTwister.hpp"
-#include "Components/Samplers/StaticHaltonSeq.hpp"
-#include "Components/Samplers/StaticMersenneTwister.hpp"
 #include "Components/Samplers/Stratified.hpp"
 #include "Components/Shaders/DepthMap.hpp"
 #include "Components/Shaders/DiffuseMaterial.hpp"

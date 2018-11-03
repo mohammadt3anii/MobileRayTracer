@@ -1,7 +1,6 @@
 #include "Components/Lights/AreaLight.hpp"
 #include "Components/Lights/PointLight.hpp"
 #include "Components/Samplers/MersenneTwister.hpp"
-#include "Components/Samplers/StaticHaltonSeq.hpp"
 #include "Scenes/Scenes.hpp"
 #include <glm/glm.hpp>
 
@@ -96,10 +95,10 @@ MobileRT::Scene cornellBoxScene2(MobileRT::Scene scene) noexcept {
                                       1.0f,
                                       ::glm::vec3 {0.9f, 0.9f, 0.9f}};
     ::std::unique_ptr<MobileRT::Sampler> samplerPoint1{
-            ::std::make_unique<Components::StaticHaltonSeq>()};
+            ::std::make_unique<Components::MersenneTwister>()};
     //::std::unique_ptr<MobileRT::Sampler> samplerPoint1 {::std::make_unique<Components::MersenneTwister> ()};
     ::std::unique_ptr<MobileRT::Sampler> samplerPoint2{
-            ::std::make_unique<Components::StaticHaltonSeq>()};
+            ::std::make_unique<Components::MersenneTwister>()};
     //::std::unique_ptr<MobileRT::Sampler> samplerPoint2 {::std::make_unique<Components::MersenneTwister> ()};
 
     scene.lights_.emplace_back(::std::make_unique<Components::AreaLight>(lightMat,
